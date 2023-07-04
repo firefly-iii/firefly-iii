@@ -21,11 +21,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Api\Autocomplete;
+namespace Tests\integration\Api\Autocomplete;
 
 use Laravel\Passport\Passport;
 use Log;
-use Tests\TestCase;
+use Tests\integration\TestCase;
 
 /**
  * Class AccountControllerTest

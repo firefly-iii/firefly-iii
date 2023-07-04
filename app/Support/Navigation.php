@@ -26,6 +26,9 @@ namespace FireflyIII\Support;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
+use FireflyIII\Support\Calendar\Calculator;
+use FireflyIII\Support\Calendar\Exceptions\IntervalException;
+use FireflyIII\Support\Calendar\Periodicity;
 use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -35,81 +38,88 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class Navigation
 {
+    private Calculator $calculator;
+
+    public function __construct(Calculator $calculator = null)
+    {
+        $this->calculator = ($calculator instanceof Calculator) ?: new Calculator();
+    }
+
+    /**
+     * @param Carbon      $epoch
+     * @param Periodicity $periodicity
+     * @param int         $skipInterval
+     * @return Carbon
+     */
+    public function nextDateByInterval(Carbon $epoch, Periodicity $periodicity, int $skipInterval = 0): Carbon
+    {
+        try {
+            return $this->calculator->nextDateByInterval($epoch, $periodicity, $skipInterval);
+        } catch (IntervalException $exception) {
+            Log::warning($exception->getMessage(), ['exception' => $exception]);
+        } catch (\Throwable $exception) {
+            Log::error($exception->getMessage(), ['exception' => $exception]);
+        }
+
+        Log::debug(
+            "Any error occurred to calculate the next date.",
+            ['date' => $epoch, 'periodicity' => $periodicity->name, 'skipInterval' => $skipInterval]
+        );
+
+        return $epoch;
+    }
+
     /**
      * @param Carbon $theDate
      * @param string $repeatFreq
      * @param int    $skip
      *
      * @return Carbon
+     * @deprecated This method will be substituted by nextDateByInterval()
      */
-    public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip): Carbon
+    public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip = 0): Carbon
     {
         $date = clone $theDate;
         $add  = ($skip + 1);
 
         $functionMap = [
-            '1D'        => 'addDays',
-            'daily'     => 'addDays',
-            '1W'        => 'addWeeks',
-            'weekly'    => 'addWeeks',
-            'week'      => 'addWeeks',
-            '1M'        => 'addMonths',
-            'month'     => 'addMonths',
-            'monthly'   => 'addMonths',
-            '3M'        => 'addMonths',
-            'quarter'   => 'addMonths',
-            'quarterly' => 'addMonths',
-            '6M'        => 'addMonths',
-            'half-year' => 'addMonths',
-            'year'      => 'addYears',
-            'yearly'    => 'addYears',
-            '1Y'        => 'addYears',
-            'custom'    => 'addMonths', // custom? just add one month.
+            '1D'        => Periodicity::Daily,
+            'daily'     => Periodicity::Daily,
+            '1W'        => Periodicity::Weekly,
+            'weekly'    => Periodicity::Weekly,
+            'week'      => Periodicity::Weekly,
+            '1M'        => Periodicity::Monthly,
+            'month'     => Periodicity::Monthly,
+            'monthly'   => Periodicity::Monthly,
+            '3M'        => Periodicity::Quarterly,
+            'quarter'   => Periodicity::Quarterly,
+            'quarterly' => Periodicity::Quarterly,
+            '6M'        => Periodicity::HalfYearly,
+            'half-year' => Periodicity::HalfYearly,
+            'year'      => Periodicity::Yearly,
+            'yearly'    => Periodicity::Yearly,
+            '1Y'        => Periodicity::Yearly,
+            'custom'    => Periodicity::Monthly, // custom? just add one month.
             // last X periods? Jump the relevant month / quarter / year
-            'last7'     => 'addDays',
-            'last30'    => 'addMonths',
-            'last90'    => 'addMonths',
-            'last365'   => 'addYears',
-            'MTD'       => 'addMonths',
-            'QTD'       => 'addMonths',
-            'YTD'       => 'addYears',
-        ];
-        $modifierMap = [
-            'quarter'   => 3,
-            '3M'        => 3,
-            'quarterly' => 3,
-            '6M'        => 6,
-            'half-year' => 6,
-            'last7'     => 7,
-            'last90'    => 3,
-            'QTD'       => 3,
+            'last7'     => Periodicity::Weekly,
+            'last30'    => Periodicity::Monthly,
+            'last90'    => Periodicity::Quarterly,
+            'last365'   => Periodicity::Yearly,
+            'MTD'       => Periodicity::Monthly,
+            'QTD'       => Periodicity::Quarterly,
+            'YTD'       => Periodicity::Yearly,
         ];
 
         if (!array_key_exists($repeatFreq, $functionMap)) {
-            Log::error(sprintf('Cannot do addPeriod for $repeat_freq "%s"', $repeatFreq));
-
+            Log::error(sprintf(
+                'The periodicity %s is unknown. Choose one of available periodicity: %s',
+                $repeatFreq,
+                join(', ', array_keys($functionMap))
+            ));
             return $theDate;
         }
-        if (array_key_exists($repeatFreq, $modifierMap)) {
-            $add *= $modifierMap[$repeatFreq];
-        }
-        $function = $functionMap[$repeatFreq];
-        $date->$function($add);
 
-        // if period is 1M and diff in month is 2 and new DOM > 1, sub a number of days:
-        // AND skip is 1
-        // result is:
-        // '2019-01-29', '2019-02-28'
-        // '2019-01-30', '2019-02-28'
-        // '2019-01-31', '2019-02-28'
-
-        $months     = ['1M', 'month', 'monthly'];
-        $difference = $date->month - $theDate->month;
-        if (1 === $add && 2 === $difference && $date->day > 0 && in_array($repeatFreq, $months, true)) {
-            $date->subDays($date->day);
-        }
-
-        return $date;
+        return $this->nextDateByInterval($theDate, $functionMap[$repeatFreq], $skip);
     }
 
     /**

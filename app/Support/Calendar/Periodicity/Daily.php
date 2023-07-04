@@ -1,7 +1,7 @@
 <?php
+
 /**
- * CreatesApplication.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,30 +18,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace Tests;
+namespace FireflyIII\Support\Calendar\Periodicity;
 
-use Illuminate\Contracts\Console\Kernel;
-use Illuminate\Foundation\Application;
+use Carbon\Carbon;
 
-/**
- * Trait CreatesApplication
- *
- */
-trait CreatesApplication
+final class Daily extends Interval
 {
-    /**
-     * Creates the application.
-     *
-     * @return Application
-     */
-    public function createApplication()
+    public function nextDate(Carbon $date, int $interval = 1): Carbon
     {
-        $app = require __DIR__ . '/../bootstrap/app.php';
-
-        $app->make(Kernel::class)->bootstrap();
-
-        return $app;
+        return ($date->clone())->addDays($this->skip($interval));
     }
 }

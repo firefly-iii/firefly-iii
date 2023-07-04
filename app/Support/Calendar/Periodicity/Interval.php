@@ -1,7 +1,7 @@
 <?php
-/*
- * CollectsValues.php
- * Copyright (c) 2020 james@firefly-iii.org
+
+/**
+ * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,22 +19,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Support\Calendar\Periodicity;
 
-namespace Tests\Traits;
-
-use FireflyIII\User;
-
-/**
- * Trait CollectsValues
- */
-trait CollectsValues
+abstract class Interval implements Interspacable
 {
-    /**
-     * @return User
-     */
-    public function user(): User
+    const INTERVAL = 1;
+
+    public function skip(int $skip): int
     {
-        return User::where('email', 'james@firefly')->first();
+        return static::INTERVAL * $skip;
     }
 }
