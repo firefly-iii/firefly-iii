@@ -82,9 +82,6 @@ class Navigation
      */
     public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip = 0): Carbon
     {
-        $date = clone $theDate;
-        $add  = ($skip + 1);
-
         $functionMap = [
             '1D'        => Periodicity::Daily,
             'daily'     => Periodicity::Daily,
@@ -219,11 +216,8 @@ class Navigation
             return $date;
         }
         if ('half-year' === $repeatFreq || '6M' === $repeatFreq) {
-            $month = $date->month;
-            $date->startOfYear();
-            if ($month >= 7) {
-                $date->addMonths(6);
-            }
+            $skipTo = $date->month > 7 ? 6 : 0;
+            $date->startOfYear()->addMonths($skipTo);
 
             return $date;
         }
