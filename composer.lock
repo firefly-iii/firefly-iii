@@ -3211,16 +3211,16 @@
         },
         {
             "name": "league/oauth2-server",
-            "version": "8.5.2",
+            "version": "8.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/oauth2-server.git",
-                "reference": "8ab731e84eef904b5913ba31b38116acf8ea50b6"
+                "reference": "eb91b4190e7f6169053ebf8ffa352d47e756b2ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/oauth2-server/zipball/8ab731e84eef904b5913ba31b38116acf8ea50b6",
-                "reference": "8ab731e84eef904b5913ba31b38116acf8ea50b6",
+                "url": "https://api.github.com/repos/thephpleague/oauth2-server/zipball/eb91b4190e7f6169053ebf8ffa352d47e756b2ce",
+                "reference": "eb91b4190e7f6169053ebf8ffa352d47e756b2ce",
                 "shasum": ""
             },
             "require": {
@@ -3287,7 +3287,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/oauth2-server/issues",
-                "source": "https://github.com/thephpleague/oauth2-server/tree/8.5.2"
+                "source": "https://github.com/thephpleague/oauth2-server/tree/8.5.3"
             },
             "funding": [
                 {
@@ -3295,7 +3295,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-06-16T15:32:47+00:00"
+            "time": "2023-07-05T23:01:32+00:00"
         },
         {
             "name": "league/uri",
