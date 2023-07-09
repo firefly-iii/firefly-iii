@@ -236,6 +236,7 @@ class BudgetLimitController extends Controller
         }
 
         $limit = $this->blRepository->update($budgetLimit, ['amount' => $amount]);
+        app('preferences')->mark();
         $array = $limit->toArray();
 
         $spentArr                  = $this->opsRepository->sumExpenses(
