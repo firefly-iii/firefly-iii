@@ -1,8 +1,11 @@
-* text=auto
-*.css linguist-vendored
-*.scss linguist-vendored
-*.js linguist-vendored
+* text=auto eol=lf
+
+*.blade.php diff=html
+*.css diff=css
+*.html diff=html
+*.md diff=markdown
+*.php diff=php
+
+/.github export-ignore
 CHANGELOG.md export-ignore
-/tests       export-ignore
-/phpunit.xml export-ignore
-/.ci export-ignore
+.styleci.yml export-ignore
