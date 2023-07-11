@@ -337,8 +337,8 @@ class UpdateRequest extends FormRequest
 
 
             // currency info
-            'transactions.*.currency_id'            => 'numeric|exists:transaction_currencies,id',
-            'transactions.*.currency_code'          => 'min:3|max:51|exists:transaction_currencies,code',
+            'transactions.*.currency_id'            => 'numeric|exists:transaction_currencies,id|nullable',
+            'transactions.*.currency_code'          => 'min:3|max:51|exists:transaction_currencies,code|nullable',
             'transactions.*.foreign_currency_id'    => 'nullable|numeric|exists:transaction_currencies,id',
             'transactions.*.foreign_currency_code'  => 'nullable|min:3|max:51|exists:transaction_currencies,code',
 
@@ -358,7 +358,7 @@ class UpdateRequest extends FormRequest
             'transactions.*.destination_name'       => 'between:1,255|nullable',
 
             // budget, category, bill and piggy
-            'transactions.*.budget_id'              => ['mustExist:budgets,id', new BelongsUser()],
+            'transactions.*.budget_id'              => ['mustExist:budgets,id', new BelongsUser(), 'nullable'],
             'transactions.*.budget_name'            => ['between:1,255', 'nullable', new BelongsUser()],
             'transactions.*.category_id'            => ['mustExist:categories,id', new BelongsUser(), 'nullable'],
             'transactions.*.category_name'          => 'between:1,255|nullable',
@@ -368,7 +368,7 @@ class UpdateRequest extends FormRequest
             // other interesting fields
             'transactions.*.reconciled'             => [new IsBoolean()],
             'transactions.*.notes'                  => 'min:1|max:50000|nullable',
-            'transactions.*.tags'                   => 'between:0,255',
+            'transactions.*.tags'                   => 'between:0,255|nullable',
 
             // meta info fields
             'transactions.*.internal_reference'     => 'min:1|max:255|nullable',
