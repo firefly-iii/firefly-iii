@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
 import laravel from 'laravel-vite-plugin';
 
 
@@ -10,7 +10,7 @@ const host = 'firefly.sd.local';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: ['resources/assets/v4/sass/app.scss', 'resources/assets/v4/app.js'],
             refresh: true,
 
         }),
@@ -21,7 +21,7 @@ export default defineConfig({
         usePolling: true,
         allowedHosts: '*.sd.local',
         host: '0.0.0.0',
-        hmr: { host },
+        hmr: {host},
         cors: true,
         https: {
             key: fs.readFileSync(`/vagrant/tls-certificates/wildcard.sd.local.key`),
