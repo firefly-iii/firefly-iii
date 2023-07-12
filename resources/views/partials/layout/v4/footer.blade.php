@@ -1,12 +1,11 @@
 <footer class="app-footer">
     <!--begin::To the end-->
-    <div class="float-end d-none d-sm-inline">Anything you want</div>
+    <div class="float-end d-none d-sm-inline">
+        v<a href="{{ route('debug') }}">{{ $FF_VERSION }}</a>
+    </div>
     <!--end::To the end-->
     <!--begin::Copyright-->
-    <strong>
-        Copyright &copy; 2014-2023
-        <a href="https://adminlte.io">AdminLTE.io</a>.
-    </strong>
-    All rights reserved.
+    <a href="https://github.com/firefly-iii/firefly-iii/">Firefly III</a> &copy; James Cole,
+    <a href="https://github.com/firefly-iii/firefly-iii/blob/main/LICENSE">AGPL-3.0-or-later</a>
     <!--end::Copyright-->
 </footer>

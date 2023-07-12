@@ -1,4 +1,7 @@
 @extends('layout.v4.default')
+@section('vite')
+    @vite(['resources/assets/v4/index.js'])
+@endsection
 @section('content')
 
     <div class="app-content">
@@ -11,6 +14,7 @@
                 <button x-on:click="count++">Increment</button>
 
                 <span x-text="count"></span>
+                <button x-on:click="handleClick">KLIK</button>
             </div>
 
         </div>

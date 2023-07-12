@@ -11,6 +11,12 @@ import BasicStore from './store/Basic';
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+// include popper js
+import '@popperjs/core';
+
+// include bootstrap
+import * as bootstrap from 'bootstrap'
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -34,12 +40,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 // });
 
 
-
 window.Alpine = Alpine
-
 Alpine.start()
 
 
 window.BasicStore = new BasicStore;
-
 window.BasicStore.init();

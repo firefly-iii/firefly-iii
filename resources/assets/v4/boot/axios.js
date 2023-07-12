@@ -1,6 +1,6 @@
 /*
- * basic.js
- * Copyright (c) 2021 james@firefly-iii.org
+ * axios.js
+ * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,14 +18,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../boot/axios";
+import axios from 'axios'
 
-export default class Preferences {
-    async getByName(name) {
-        return await api.get('/api/v1/preferences/' + name);
-    }
+// Be careful when using SSR for cross-request state pollution
+// due to creating a Singleton instance here;
+// If any client changes this (global) instance, it might be a
+// good idea to move this instance creation inside of the
+// "export default () => {}" function below (which runs individually
+// for each client)
 
-    postByName(name, value) {
-        return api.post('/api/v1/preferences', {name: name, data: value});
-    }
-}
+
+// for use inside Vue files (Options API) through this.$axios and this.$api
+
+
+const url = '/';
+const api = axios.create({baseURL: url, withCredentials: true});
+
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = url;
+
+export {api}

@@ -24,9 +24,14 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2"
   },
   "resources/assets/v4/app.js": {
-    "file": "assets/app-9ad4de64.js",
+    "file": "assets/app-afb3782a.js",
     "isEntry": true,
     "src": "resources/assets/v4/app.js"
+  },
+  "resources/assets/v4/index.js": {
+    "file": "assets/index-4ed993c7.js",
+    "isEntry": true,
+    "src": "resources/assets/v4/index.js"
   },
   "resources/assets/v4/sass/app.scss": {
     "file": "assets/app-40e01f65.css",

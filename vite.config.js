@@ -10,7 +10,11 @@ const host = 'firefly.sd.local';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/assets/v4/sass/app.scss', 'resources/assets/v4/app.js'],
+            input: [
+                'resources/assets/v4/sass/app.scss',
+                'resources/assets/v4/app.js',
+                'resources/assets/v4/index.js'
+            ],
             refresh: true,
 
         }),
