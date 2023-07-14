@@ -35,36 +35,36 @@
                 <!-- begin date range drop down -->
                 <li class="nav-item dropdown">
                     <a class="nav-link daterange-holder" data-bs-toggle="dropdown" href="#"></a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                        <a href="#" class="dropdown-item daterange-current" @click="handleClick">
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end" x-data="">
+                        <a href="#" class="dropdown-item daterange-current">
 
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" @click="handleClick" class="dropdown-item daterange-next">
+                        <a href="#" x-on:click="app.changeDateRange" class="dropdown-item daterange-next">
                             next
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item daterange-prev">
+                        <a href="#" class="dropdown-item daterange-prev" @click="app.changeDateRange">
                             prev
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item daterange-7d">
+                        <a href="#" class="dropdown-item daterange-7d" @click="app.changeDateRange">
                             {{ __('firefly.last_seven_days') }}
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item daterange-90d">
+                        <a href="#" class="dropdown-item daterange-90d" @click="app.changeDateRange">
                             {{ __('firefly.last_thirty_days') }}
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item daterange-mtd">
+                        <a href="#" class="dropdown-item daterange-mtd" @click="app.changeDateRange">
                             {{ __('firefly.month_to_date') }}
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item daterange-ytd">
+                        <a href="#" class="dropdown-item daterange-ytd" @click="app.changeDateRange">
                             {{ __('firefly.year_to_date') }}
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer daterange-custom">
+                        <a href="#" class="dropdown-item dropdown-footer daterange-custom" @click="app.doCustomRange">
                             {{ __('firefly.customRange') }}
                         </a>
                     </div>

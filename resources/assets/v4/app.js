@@ -10,7 +10,8 @@ import {
     startOfQuarter,
     startOfWeek,
     startOfYear,
-    subDays, subMonths
+    subDays,
+    subMonths
 } from "date-fns";
 import format from './util/format'
 
@@ -26,8 +27,14 @@ class MainApp {
     language = 'en-US';
 
     constructor() {
-        //console.log('MainApp constructor');
-        // TODO load range from local storage (Apline)
+        let start = window.BasicStore.getFromLocalStorage('start');
+        let end = window.BasicStore.getFromLocalStorage('end');
+        if (null !== start && null !== end) {
+            this.range = {
+                start: new Date(start),
+                end: new Date(end),
+            };
+        }
     }
 
     init() {
@@ -39,9 +46,8 @@ class MainApp {
         window.__localeId__ = this.language;
 
         // the range is always null but later on we will store it in BasicStore.
-        if (null === this.range.start && null === this.range.end
-            && null === this.defaultRange.start && null === this.defaultRange.end
-        ) {
+        if (null === this.range.start && null === this.range.end && null === this.defaultRange.start && null === this.defaultRange.end) {
+            this.range.start = new Date;
             this.setDatesFromViewRange();
         }
     }
@@ -51,7 +57,7 @@ class MainApp {
         let end;
         let viewRange = this.viewRange;
 
-        let today = new Date;
+        let today = this.range.start;
         switch (viewRange) {
             case 'last365':
                 start = startOfDay(subDays(today, 365));
@@ -142,7 +148,6 @@ class MainApp {
     }
 
     buildDateRange() {
-
         // generate ranges
         let nextRange = this.getNextRange();
         let prevRange = this.getPrevRange();
@@ -199,54 +204,74 @@ class MainApp {
     }
 
     getNextRange() {
-        let nextMonth = addMonths(this.range.start, 1);
+        let start = startOfMonth(this.range.start);
+        let nextMonth = addMonths(start, 1);
         let end = endOfMonth(nextMonth);
         return {start: nextMonth, end: end};
     }
 
     getPrevRange() {
-        let prevMonth = subMonths(this.range.start, 1);
+        let start = startOfMonth(this.range.start);
+        let prevMonth = subMonths(start, 1);
         let end = endOfMonth(prevMonth);
         return {start: prevMonth, end: end};
     }
 
     ytd() {
-        let end = this.range.start;
+        let end = new Date;
         let start = startOfYear(this.range.start);
         return {start: start, end: end};
     }
 
     mtd() {
-        let end = this.range.start;
+
+        let end = new Date;
         let start = startOfMonth(this.range.start);
         return {start: start, end: end};
     }
 
     lastDays(days) {
-        let end = this.range.start;
+        let end = new Date;
         let start = subDays(end, days);
         return {start: start, end: end};
+    }
+
+    changeDateRange(e) {
+        let target = e.currentTarget;
+        //alert('OK 3');
+        let start = new Date(target.getAttribute('data-start'));
+        let end = new Date(target.getAttribute('data-end'));
+        e.preventDefault();
+        window.app.setStart(start);
+        window.app.setEnd(end);
+        window.app.buildDateRange();
+        return false;
+    }
+
+    setStart(date) {
+        this.range.start = date;
+        window.BasicStore.store('start', date);
+    }
+
+    setEnd(date) {
+        this.range.end = date;
+        window.BasicStore.store('end', date);
     }
 }
 
 let app = new MainApp();
 
 // Listen for the basic store, we need it to continue with the
-document.addEventListener(
-    "BasicStoreReady",
-    (e) => {
-        // e.target matches elem
-        app.init();
-        app.buildDateRange();
-    },
-    false,
-);
+document.addEventListener("BasicStoreReady", (e) => {
+    app.init();
+    app.buildDateRange();
+}, false,);
 
-function handleClick(e) {
-    console.log('here we are');
-    e.preventDefault();
-    alert('OK');
-    return false;
+if (window.BasicStore.isReady()) {
+    app.init();
+    app.buildDateRange();
 }
 
-export {app, handleClick};
+window.app = app;
+
+export default app;

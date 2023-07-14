@@ -14,7 +14,7 @@
                 <button x-on:click="count++">Increment</button>
 
                 <span x-text="count"></span>
-                <button x-on:click="handleClick">KLIK</button>
+                <button x-on:click="app.changeDateRange">KLIK</button>
             </div>
 
         </div>
