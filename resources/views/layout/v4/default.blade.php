@@ -36,11 +36,11 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link daterange-holder" data-bs-toggle="dropdown" href="#"></a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end" x-data="">
-                        <a href="#" class="dropdown-item daterange-current">
+                        <a href="#" class="dropdown-item daterange-current" @click="app.changeDateRange">
 
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" x-on:click="app.changeDateRange" class="dropdown-item daterange-next">
+                        <a href="#" @click="app.changeDateRange" class="dropdown-item daterange-next">
                             next
                         </a>
                         <div class="dropdown-divider"></div>
@@ -65,7 +65,7 @@
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item dropdown-footer daterange-custom" @click="app.doCustomRange">
-                            {{ __('firefly.customRange') }}
+                            TODO {{ __('firefly.customRange') }}
                         </a>
                     </div>
                 </li>

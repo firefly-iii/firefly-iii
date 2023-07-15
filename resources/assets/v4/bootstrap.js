@@ -40,9 +40,5 @@ import * as bootstrap from 'bootstrap'
 // });
 
 
-window.Alpine = Alpine
-Alpine.start()
-
-
 window.BasicStore = new BasicStore;
 window.BasicStore.init();

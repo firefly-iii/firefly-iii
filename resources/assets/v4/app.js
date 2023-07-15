@@ -27,37 +27,48 @@ class MainApp {
     language = 'en-US';
 
     constructor() {
-        let start = window.BasicStore.getFromLocalStorage('start');
-        let end = window.BasicStore.getFromLocalStorage('end');
+        console.log('MainApp constructor');
+        let start = window.BasicStore.get('start');
+        let end = window.BasicStore.get('end');
         if (null !== start && null !== end) {
+            console.log('start + end is not null, recycle it.');
             this.range = {
                 start: new Date(start),
                 end: new Date(end),
             };
+            return;
         }
+        console.log('start + end = null!');
+
     }
 
     init() {
+        console.log('MainApp init');
         // get values from store and use them accordingly.
-        this.viewRange = window.BasicStore.viewRange;
-        this.locale = window.BasicStore.locale;
-        this.language = window.BasicStore.language;
+        this.viewRange = window.BasicStore.get('viewRange');
+        this.locale = window.BasicStore.get('locale');
+        this.language = window.BasicStore.get('language');
         this.locale = 'equal' === this.locale ? this.language : this.locale;
         window.__localeId__ = this.language;
 
         // the range is always null but later on we will store it in BasicStore.
-        if (null === this.range.start && null === this.range.end && null === this.defaultRange.start && null === this.defaultRange.end) {
-            this.range.start = new Date;
-            this.setDatesFromViewRange();
+        if (null === this.range.start && null === this.range.end) {
+            console.log('start + end = null, calling setDatesFromViewRange()');
+            this.range = this.setDatesFromViewRange(new Date);
         }
+        console.log('MainApp: set defaultRange');
+        this.defaultRange = this.setDatesFromViewRange(new Date);
+        // default range is always the current period (initialized ahead)
     }
 
-    setDatesFromViewRange() {
+    setDatesFromViewRange(today) {
+        console.log('MainApp: setDatesFromViewRange');
         let start;
         let end;
         let viewRange = this.viewRange;
 
-        let today = this.range.start;
+        console.log('MainApp: viewRange: ' + viewRange);
+
         switch (viewRange) {
             case 'last365':
                 start = startOfDay(subDays(today, 365));
@@ -143,11 +154,12 @@ class MainApp {
                 end = endOfDay(end);
                 break;
         }
-        this.range = {start: start, end: end};
-        this.defaultRange = {start: start, end: end};
+        console.log('MainApp: setDatesFromViewRange done!');
+        return {start: start, end: end};
     }
 
     buildDateRange() {
+        console.log('MainApp: buildDateRange');
         // generate ranges
         let nextRange = this.getNextRange();
         let prevRange = this.getPrevRange();
@@ -164,9 +176,9 @@ class MainApp {
 
         // set the current one
         element = document.getElementsByClassName('daterange-current')[0];
-        element.textContent = format(this.range.start) + ' - ' + format(this.range.end);
-        element.setAttribute('data-start', format(this.range.start, 'yyyy-MM-dd'));
-        element.setAttribute('data-end', format(this.range.end, 'yyyy-MM-dd'));
+        element.textContent = format(this.defaultRange.start) + ' - ' + format(this.defaultRange.end);
+        element.setAttribute('data-start', format(this.defaultRange.start, 'yyyy-MM-dd'));
+        element.setAttribute('data-end', format(this.defaultRange.end, 'yyyy-MM-dd'));
 
         // generate next range
         element = document.getElementsByClassName('daterange-next')[0];
@@ -201,6 +213,7 @@ class MainApp {
         element.setAttribute('data-end', format(ytd.end, 'yyyy-MM-dd'));
 
         // custom range.
+        console.log('MainApp: buildDateRange end');
     }
 
     getNextRange() {
@@ -237,23 +250,29 @@ class MainApp {
     }
 
     changeDateRange(e) {
+        console.log('MainApp: changeDateRange');
         let target = e.currentTarget;
         //alert('OK 3');
         let start = new Date(target.getAttribute('data-start'));
         let end = new Date(target.getAttribute('data-end'));
+        console.log('MainApp: Change date range', start, end);
         e.preventDefault();
+        // TODO send start + end to the store and trigger this again?
         window.app.setStart(start);
         window.app.setEnd(end);
         window.app.buildDateRange();
+        console.log('MainApp: end changeDateRange');
         return false;
     }
 
     setStart(date) {
+        console.log('MainApp: setStart');
         this.range.start = date;
         window.BasicStore.store('start', date);
     }
 
     setEnd(date) {
+        console.log('MainApp: setEnd');
         this.range.end = date;
         window.BasicStore.store('end', date);
     }
@@ -263,13 +282,19 @@ let app = new MainApp();
 
 // Listen for the basic store, we need it to continue with the
 document.addEventListener("BasicStoreReady", (e) => {
+    console.log('MainApp: app.js from event handler');
     app.init();
     app.buildDateRange();
+    const event = new Event("AppReady");
+    document.dispatchEvent(event);
 }, false,);
 
 if (window.BasicStore.isReady()) {
+    console.log('MainApp: app.js from store ready');
     app.init();
     app.buildDateRange();
+    const event = new Event("AppReady");
+    document.dispatchEvent(event);
 }
 
 window.app = app;

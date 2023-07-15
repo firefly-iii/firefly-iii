@@ -41,8 +41,6 @@
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="v4/css/adminlte.css">
     <!--end::Required Plugin(AdminLTE)-->
-
-    @vite(['resources/assets/v4/sass/app.scss', 'resources/assets/v4/app.js'])
     @yield('vite')
 
 </head>

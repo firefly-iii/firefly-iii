@@ -16,6 +16,7 @@
         "@popperjs/core": "^2.11.8",
         "alpinejs": "^3.12.3",
         "bootstrap": "^5.3.0",
-        "date-fns": "^2.30.0"
+        "date-fns": "^2.30.0",
+        "store2": "^2.14.2"
     }
 }
