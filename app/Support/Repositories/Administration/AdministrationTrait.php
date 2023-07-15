@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * AdministrationTrait.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -20,6 +20,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Support\Repositories\Administration;
 
@@ -41,17 +43,16 @@ trait AdministrationTrait
     /**
      * @return int
      */
-    public function getAdministrationId(): int
-    {
+    public function getAdministrationId(): int {
         return $this->administrationId;
     }
 
     /**
      * @param int $administrationId
+     *
      * @throws FireflyException
      */
-    public function setAdministrationId(int $administrationId): void
-    {
+    public function setAdministrationId(int $administrationId): void {
         $this->administrationId = $administrationId;
         $this->refreshAdministration();
     }
@@ -60,8 +61,7 @@ trait AdministrationTrait
      * @return void
      * @throws FireflyException
      */
-    private function refreshAdministration(): void
-    {
+    private function refreshAdministration(): void {
         if (null !== $this->administrationId) {
             $memberships = GroupMembership::where('user_id', $this->user->id)
                                           ->where('user_group_id', $this->administrationId)
@@ -77,10 +77,10 @@ trait AdministrationTrait
 
     /**
      * @param Authenticatable|User|null $user
+     *
      * @return void
      */
-    public function setUser(Authenticatable | User | null $user): void
-    {
+    public function setUser(Authenticatable | User | null $user): void {
         if (null !== $user) {
             $this->user = $user;
         }

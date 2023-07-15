@@ -1,8 +1,8 @@
 <?php
 
-declare(strict_types=1);
 
-/**
+/*
+ * CalculatorProvider.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,44 +21,30 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\unit\Support\Calendar;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
+use Generator;
 use Tests\unit\Support\Calendar\Periodicity\IntervalProvider;
 
 readonly class CalculatorProvider
 {
     public IntervalProvider $intervalProvider;
-    public Periodicity $periodicity;
-    public string $label;
-    public int $skip;
+    public string           $label;
+    public Periodicity      $periodicity;
+    public int              $skip;
 
-    private function __construct(IntervalProvider $intervalProvider, Periodicity $periodicity, int $skip = 0)
-    {
+    private function __construct(IntervalProvider $intervalProvider, Periodicity $periodicity, int $skip = 0) {
         $this->skip             = $skip;
         $this->intervalProvider = $intervalProvider;
         $this->periodicity      = $periodicity;
         $this->label            = "{$periodicity->name} {$intervalProvider->label}";
     }
 
-    public static function from(Periodicity $periodicity, IntervalProvider $interval, int $skip = 0): CalculatorProvider
-    {
-        return new self($interval, $periodicity, $skip);
-    }
-
-    public function epoch(): Carbon
-    {
-        return $this->intervalProvider->epoch;
-    }
-
-    public function expected(): Carbon
-    {
-        return $this->intervalProvider->expected;
-    }
-
-    public static function providePeriodicityWithSkippedIntervals(): \Generator
-    {
+    public static function providePeriodicityWithSkippedIntervals(): Generator {
         $intervals = [
             CalculatorProvider::from(Periodicity::Daily, new IntervalProvider(Carbon::now(), Carbon::now()->addDays(2)), 1),
             CalculatorProvider::from(Periodicity::Daily, new IntervalProvider(Carbon::now(), Carbon::now()->addDays(3)), 2),
@@ -129,5 +115,17 @@ readonly class CalculatorProvider
         foreach ($intervals as $index => $interval) {
             yield "#{$index} {$interval->label}" => [$interval];
         }
+    }
+
+    public static function from(Periodicity $periodicity, IntervalProvider $interval, int $skip = 0): CalculatorProvider {
+        return new self($interval, $periodicity, $skip);
+    }
+
+    public function epoch(): Carbon {
+        return $this->intervalProvider->epoch;
+    }
+
+    public function expected(): Carbon {
+        return $this->intervalProvider->expected;
     }
 }

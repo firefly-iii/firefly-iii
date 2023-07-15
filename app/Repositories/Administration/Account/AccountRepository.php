@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * AccountRepository.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -21,6 +21,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Repositories\Administration\Account;
 
 use FireflyIII\Support\Repositories\Administration\AdministrationTrait;
@@ -36,8 +38,7 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function searchAccount(string $query, array $types, int $limit): Collection
-    {
+    public function searchAccount(string $query, array $types, int $limit): Collection {
         // search by group, not by user
         $dbQuery = $this->userGroup->accounts()
                                    ->where('active', true)

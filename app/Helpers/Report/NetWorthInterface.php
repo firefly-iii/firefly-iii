@@ -49,6 +49,7 @@ interface NetWorthInterface
      *
      * @param Collection $accounts
      * @param Carbon     $date
+     *
      * @return array
      * @deprecated
      */

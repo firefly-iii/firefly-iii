@@ -49,6 +49,7 @@ class RemoteUserGuard implements Guard
      *
      * @param UserProvider $provider
      * @param Application  $app
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

@@ -226,6 +226,7 @@ interface CurrencyRepositoryInterface
      * @param TransactionCurrency $toCurrency
      * @param Carbon              $date
      * @param float               $rate
+     *
      * @return CurrencyExchangeRate
      */
     public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate;

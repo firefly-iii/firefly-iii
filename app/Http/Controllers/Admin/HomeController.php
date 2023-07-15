@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Admin;
 
 use FireflyIII\Events\AdminRequestedTestMessage;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Support\Facades\FireflyConfig;
@@ -84,6 +83,7 @@ class HomeController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function notifications(Request $request): RedirectResponse

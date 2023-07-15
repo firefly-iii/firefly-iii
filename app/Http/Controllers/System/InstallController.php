@@ -138,6 +138,7 @@ class InstallController extends Controller
     /**
      * @param string $command
      * @param array  $args
+     *
      * @return bool
      * @throws FireflyException
      */

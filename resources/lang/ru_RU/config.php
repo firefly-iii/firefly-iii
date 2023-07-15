@@ -42,7 +42,7 @@ return [
 
     //'month_and_day'           => '%B %e, %Y',
     'month_and_day_moment_js'  => 'D MMM YYYY',
-    'month_and_day_fns'        => 'd MMMM yyyy',
+    'month_and_day_fns'        => 'D MMMM YYYY',
     'month_and_day_js'         => 'Do MMMM YYYY',
 
     //'month_and_date_day'      => '%A %B %e, %Y',
@@ -65,7 +65,7 @@ return [
 
     //'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'             => 'Do MMMM YYYY, @ HH:mm:ss',
-    'date_time_fns'            => 'do MMMM yyyy, @ HH:mm:ss',
+    'date_time_fns'            => 'Do MMMM yyyy, @ HH:mm:ss',
 
     //'specific_day'            => '%e %B %Y',
     'specific_day_js'          => 'D MMMM YYYY',

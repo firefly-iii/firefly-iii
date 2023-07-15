@@ -75,6 +75,7 @@ class UpdateGroupInformation extends Command
 
     /**
      * @param User $user
+     *
      * @return void
      */
     private function updateGroupInfo(User $user): void

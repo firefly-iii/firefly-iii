@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * ShowController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -20,6 +20,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Controllers\Model\Budget;
 
@@ -42,8 +44,7 @@ class ShowController extends Controller
     /**
      *
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
@@ -59,8 +60,7 @@ class ShowController extends Controller
      * TODO add URL
      *
      */
-    public function budgeted(DateRequest $request, Budget $budget): JsonResponse
-    {
+    public function budgeted(DateRequest $request, Budget $budget): JsonResponse {
         $data      = $request->getAll();
         $result    = $this->repository->budgetedInPeriodForBudget($budget, $data['start'], $data['end']);
         $converted = $this->cerSum(array_values($result));
@@ -73,8 +73,7 @@ class ShowController extends Controller
      * TODO add URL
      *
      */
-    public function spent(DateRequest $request, Budget $budget): JsonResponse
-    {
+    public function spent(DateRequest $request, Budget $budget): JsonResponse {
         $data      = $request->getAll();
         $result    = $this->repository->spentInPeriodForBudget($budget, $data['start'], $data['end']);
         $converted = $this->cerSum(array_values($result));

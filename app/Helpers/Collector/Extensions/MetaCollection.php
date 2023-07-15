@@ -320,6 +320,7 @@ trait MetaCollection
 
     /**
      * @param string $url
+     *
      * @return GroupCollectorInterface
      */
     public function externalUrlContains(string $url): GroupCollectorInterface
@@ -335,6 +336,7 @@ trait MetaCollection
 
     /**
      * @param string $url
+     *
      * @return GroupCollectorInterface
      */
     public function externalUrlDoesNotContain(string $url): GroupCollectorInterface
@@ -350,6 +352,7 @@ trait MetaCollection
 
     /**
      * @param string $url
+     *
      * @return GroupCollectorInterface
      */
     public function externalUrlDoesNotEnd(string $url): GroupCollectorInterface
@@ -365,6 +368,7 @@ trait MetaCollection
 
     /**
      * @param string $url
+     *
      * @return GroupCollectorInterface
      */
     public function externalUrlDoesNotStart(string $url): GroupCollectorInterface
@@ -382,6 +386,7 @@ trait MetaCollection
 
     /**
      * @param string $url
+     *
      * @return GroupCollectorInterface
      */
     public function externalUrlEnds(string $url): GroupCollectorInterface
@@ -397,6 +402,7 @@ trait MetaCollection
 
     /**
      * @param string $url
+     *
      * @return GroupCollectorInterface
      */
     public function externalUrlStarts(string $url): GroupCollectorInterface

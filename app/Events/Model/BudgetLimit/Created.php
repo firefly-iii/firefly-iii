@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * Created.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -21,6 +21,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Events\Model\BudgetLimit;
 
 use FireflyIII\Events\Event;
@@ -39,8 +41,7 @@ class Created extends Event
     /**
      * @param BudgetLimit $budgetLimit
      */
-    public function __construct(BudgetLimit $budgetLimit)
-    {
+    public function __construct(BudgetLimit $budgetLimit) {
         $this->budgetLimit = $budgetLimit;
     }
 }

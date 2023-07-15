@@ -1,8 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
-/**
+/*
+ * BimonthlyTest.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -20,6 +19,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace Tests\unit\Support\Calendar\Periodicity;
 

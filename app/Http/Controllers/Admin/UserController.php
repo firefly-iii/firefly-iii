@@ -89,6 +89,7 @@ class UserController extends Controller
 
     /**
      * @param InvitedUser $invitedUser
+     *
      * @return JsonResponse
      */
     public function deleteInvite(InvitedUser $invitedUser): JsonResponse
@@ -192,6 +193,7 @@ class UserController extends Controller
 
     /**
      * @param InviteUserFormRequest $request
+     *
      * @return RedirectResponse
      */
     public function invite(InviteUserFormRequest $request): RedirectResponse

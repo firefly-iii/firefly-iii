@@ -176,6 +176,7 @@ class ConvertToDeposit implements ActionInterface
 
     /**
      * @param TransactionJournal $journal
+     *
      * @return Account
      * @throws FireflyException
      */
@@ -191,6 +192,7 @@ class ConvertToDeposit implements ActionInterface
 
     /**
      * @param TransactionJournal $journal
+     *
      * @return Account
      * @throws FireflyException
      */

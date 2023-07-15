@@ -416,6 +416,7 @@ class TransactionJournalFactory
     /**
      * @param Account|null $sourceAccount
      * @param Account|null $destinationAccount
+     *
      * @return array
      */
     private function reconciliationSanityCheck(?Account $sourceAccount, ?Account $destinationAccount): array
@@ -457,7 +458,7 @@ class TransactionJournalFactory
         Log::debug('Now in getCurrencyByAccount()');
 
         return match ($type) {
-            default => $this->getCurrency($currency, $source),
+            default                  => $this->getCurrency($currency, $source),
             TransactionType::DEPOSIT => $this->getCurrency($currency, $destination),
         };
     }

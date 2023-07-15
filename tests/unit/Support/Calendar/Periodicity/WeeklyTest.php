@@ -1,8 +1,8 @@
 <?php
 
-declare(strict_types=1);
 
-/**
+/*
+ * WeeklyTest.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,6 +21,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\unit\Support\Calendar\Periodicity;
 
 use Carbon\Carbon;
@@ -35,13 +37,11 @@ use FireflyIII\Support\Calendar\Periodicity\Interval;
  */
 class WeeklyTest extends IntervalTestCase
 {
-    public static function factory(): Interval
-    {
+    public static function factory(): Interval {
         return new Periodicity\Weekly();
     }
 
-    public static function provideIntervals(): array
-    {
+    public static function provideIntervals(): array {
         return [
             new IntervalProvider(Carbon::now(), Carbon::now()->addWeek()),
             new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-07')),

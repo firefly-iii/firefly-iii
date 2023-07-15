@@ -282,6 +282,7 @@ interface BillRepositoryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
+     *
      * @return array
      */
     public function sumPaidInRange(Carbon $start, Carbon $end): array;
@@ -291,6 +292,7 @@ interface BillRepositoryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
+     *
      * @return array
      */
     public function sumUnpaidInRange(Carbon $start, Carbon $end): array;

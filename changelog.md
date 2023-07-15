@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.17 - 2023-07-16
+
+### Added
+- 
+
+- New date calculation code and tests, thanks to @tonicospinelli!
+
+### Removed
+
+- Heroku support
+
+### Fixed
+
+- [Issue 7704](https://github.com/firefly-iii/firefly-iii/issues/7704) Date issues with bills
+- Cache issue in budgets
+- Fixed the account validation for transfer transactions
+
+### API
+
+- Various fields would not accept `null` values
+
 ## 6.0.16 - 2023-06-28
 
 ### Changed

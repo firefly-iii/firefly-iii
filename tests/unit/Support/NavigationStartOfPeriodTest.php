@@ -1,6 +1,7 @@
 <?php
 
-/**
+/*
+ * NavigationStartOfPeriodTest.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -37,14 +38,12 @@ class NavigationStartOfPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
-    public function __construct(string $name)
-    {
+    public function __construct(string $name) {
         parent::__construct($name);
         $this->navigation = new Navigation();
     }
 
-    public static function provideDates(): array
-    {
+    public static function provideDates(): array {
         return [
             'custom'    => ['frequency' => 'custom', 'from' => Carbon::now(), 'expected' => Carbon::now()],
             '1D'        => ['frequency' => '1D', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfDay()],
@@ -73,17 +72,7 @@ class NavigationStartOfPeriodTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideDates
-     */
-    public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected)
-    {
-        $period = $this->navigation->startOfPeriod($from, $frequency);
-        $this->assertEquals($expected->toDateString(), $period->toDateString());
-    }
-
-    public static function provideUnknownFrequencies(): array
-    {
+    public static function provideUnknownFrequencies(): array {
         return [
             '1day'    => ['frequency' => '1day', 'from' => Carbon::now(), 'expected' => Carbon::now()],
             'unknown' => ['frequency' => 'unknown', 'from' => Carbon::now(), 'expected' => Carbon::now()->startOfDay()],
@@ -92,13 +81,20 @@ class NavigationStartOfPeriodTest extends TestCase
     }
 
     /**
+     * @dataProvider provideDates
+     */
+    public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected) {
+        $period = $this->navigation->startOfPeriod($from, $frequency);
+        $this->assertEquals($expected->toDateString(), $period->toDateString());
+    }
+
+    /**
      * @dataProvider provideUnknownFrequencies
      */
-    public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(string $frequency, Carbon $from, Carbon $expected)
-    {
+    public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(string $frequency, Carbon $from, Carbon $expected) {
         Log::shouldReceive('error')
-            ->with(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $frequency))
-            ->andReturnNull();
+           ->with(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $frequency))
+           ->andReturnNull();
 
         $period = $this->navigation->startOfPeriod($from, $frequency);
         $this->assertEquals($expected->toDateString(), $period->toDateString());

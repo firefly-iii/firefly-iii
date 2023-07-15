@@ -94,6 +94,7 @@ class DownloadExchangeRates implements ShouldQueue
 
     /**
      * @param TransactionCurrency $currency
+     *
      * @return void
      * @throws GuzzleException
      */
@@ -126,8 +127,9 @@ class DownloadExchangeRates implements ShouldQueue
 
     /**
      * @param TransactionCurrency $currency
-     * @param Carbon $date
-     * @param array $rates
+     * @param Carbon              $date
+     * @param array               $rates
+     *
      * @return void
      */
     private function saveRates(TransactionCurrency $currency, Carbon $date, array $rates): void
@@ -145,6 +147,7 @@ class DownloadExchangeRates implements ShouldQueue
 
     /**
      * @param string $code
+     *
      * @return TransactionCurrency|null
      */
     private function getCurrency(string $code): ?TransactionCurrency
@@ -175,8 +178,9 @@ class DownloadExchangeRates implements ShouldQueue
     /**
      * @param TransactionCurrency $from
      * @param TransactionCurrency $to
-     * @param Carbon $date
-     * @param float $rate
+     * @param Carbon              $date
+     * @param float               $rate
+     *
      * @return void
      */
     private function saveRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date, float $rate): void

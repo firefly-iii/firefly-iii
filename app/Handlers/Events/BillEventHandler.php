@@ -38,6 +38,7 @@ class BillEventHandler
 {
     /**
      * @param WarnUserAboutBill $event
+     *
      * @return void
      */
     public function warnAboutBill(WarnUserAboutBill $event): void

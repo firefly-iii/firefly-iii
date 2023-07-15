@@ -54,6 +54,7 @@ class UserLogin extends Notification
      * Get the array representation of the notification.
      *
      * @param mixed $notifiable
+     *
      * @return array
      */
     public function toArray($notifiable)
@@ -67,6 +68,7 @@ class UserLogin extends Notification
      * Get the mail representation of the notification.
      *
      * @param mixed $notifiable
+     *
      * @return MailMessage
      */
     public function toMail($notifiable)
@@ -92,6 +94,7 @@ class UserLogin extends Notification
      * Get the Slack representation of the notification.
      *
      * @param mixed $notifiable
+     *
      * @return SlackMessage
      */
     public function toSlack($notifiable)
@@ -114,6 +117,7 @@ class UserLogin extends Notification
      * Get the notification's delivery channels.
      *
      * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)

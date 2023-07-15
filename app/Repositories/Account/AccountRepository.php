@@ -766,7 +766,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param array $data
+     * @param array   $data
      *
      * @return Account
      * @throws FireflyException

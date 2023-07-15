@@ -41,8 +41,7 @@ if (!function_exists('envNonEmpty')) {
      *
      * @return mixed|null
      */
-    function envNonEmpty(string $key, $default = null)
-    {
+    function envNonEmpty(string $key, $default = null) {
         $result = env($key, $default);
         if (is_string($result) && '' === $result) {
             $result = $default;
@@ -59,8 +58,7 @@ if (!function_exists('stringIsEqual')) {
      *
      * @return bool
      */
-    function stringIsEqual(string $left, string $right): bool
-    {
+    function stringIsEqual(string $left, string $right): bool {
         return $left === $right;
     }
 }

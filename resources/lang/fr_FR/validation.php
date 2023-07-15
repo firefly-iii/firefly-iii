@@ -238,8 +238,8 @@ return [
     'withdrawal_dest_need_data'   => '[a] Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
     'withdrawal_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 
-    'withdrawal_dest_iban_exists' => 'This destination account IBAN is already in use by an asset account or a liability and cannot be used as a withdrawal destination.',
-    'deposit_src_iban_exists'     => 'This source account IBAN is already in use by an asset account or a liability and cannot be used as a deposit source.',
+    'withdrawal_dest_iban_exists' => 'Cet IBAN de compte de destination est déjà utilisé par un compte d\'actif ou un passif et ne peut pas être utilisé comme destination de dépense.',
+    'deposit_src_iban_exists'     => 'Cet IBAN de compte source est déjà utilisé par un compte d\'actif ou un passif et ne peut pas être utilisé comme source de dépôt.',
 
     'reconciliation_source_bad_data' => 'Impossible de trouver un compte de rapprochement valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
 

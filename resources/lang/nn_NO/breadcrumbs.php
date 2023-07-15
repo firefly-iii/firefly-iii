@@ -35,8 +35,8 @@
 declare(strict_types=1);
 
 return [
-    'home'             => 'Hjem',
-    'budgets'          => 'Budsjetter',
+    'home'             => 'Heim',
+    'budgets'          => 'Budsjett',
     'subscriptions'    => 'Abonnementer',
     'transactions'     => 'Transaksjoner',
     'title_expenses'   => 'Utgifter',

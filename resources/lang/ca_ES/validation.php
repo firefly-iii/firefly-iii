@@ -238,8 +238,8 @@ return [
     'withdrawal_dest_need_data'   => '[a] Cal obtenir un identificador o nom del compte destí per a continuar.',
     'withdrawal_dest_bad_data'    => 'No s\'ha pogut trobar un compte de destí vàlid buscant l\'ID ":id" o el nom ":name".',
 
-    'withdrawal_dest_iban_exists' => 'This destination account IBAN is already in use by an asset account or a liability and cannot be used as a withdrawal destination.',
-    'deposit_src_iban_exists'     => 'This source account IBAN is already in use by an asset account or a liability and cannot be used as a deposit source.',
+    'withdrawal_dest_iban_exists' => 'L\'IBAN de destí ja està sent utilitzat per un altre compte d\'actius o passius, i no pot ser utilitzat com a destinació de retirada.',
+    'deposit_src_iban_exists'     => 'L\'IBAN font ja està sent utilitzat per un altre compte d\'actius o passius, i no pot ser utilitzat com a destinació de dipòsit.',
 
     'reconciliation_source_bad_data' => 'No s\'ha pogut trobar un compte de consolidació vàlid al cercar per la ID ":id" o el nom ":name".',
 

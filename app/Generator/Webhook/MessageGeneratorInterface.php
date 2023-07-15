@@ -58,6 +58,7 @@ interface MessageGeneratorInterface
 
     /**
      * @param Collection $webhooks
+     *
      * @return void
      */
     public function setWebhooks(Collection $webhooks): void;

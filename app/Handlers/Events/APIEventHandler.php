@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use Exception;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Notifications\User\NewAccessToken;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Facades\Log;

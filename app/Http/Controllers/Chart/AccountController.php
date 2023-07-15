@@ -517,6 +517,7 @@ class AccountController extends Controller
      *
      * @param Carbon     $start
      * @param Carbon     $end
+     *
      * @return JsonResponse
      * @throws FireflyException
      * @throws JsonException

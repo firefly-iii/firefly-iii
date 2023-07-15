@@ -38,7 +38,7 @@ trait TransferValidation
      */
     protected function validateTransferDestination(array $array): bool
     {
-        $accountId = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
         $accountName = array_key_exists('name', $array) ? $array['name'] : null;
         $accountIban = array_key_exists('iban', $array) ? $array['iban'] : null;
         Log::debug('Now in validateTransferDestination', $array);
@@ -65,7 +65,7 @@ trait TransferValidation
         // must not be the same as the source account
         if (null !== $this->source && $this->source->id === $this->destination->id) {
             $this->sourceError = 'Source and destination are the same.';
-            $this->destError = 'Source and destination are the same.';
+            $this->destError   = 'Source and destination are the same.';
 
             return false;
         }
@@ -95,9 +95,9 @@ trait TransferValidation
      */
     protected function validateTransferSource(array $array): bool
     {
-        $accountId = array_key_exists('id', $array) ? $array['id'] : null;
-        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
-        $accountIban = array_key_exists('iban', $array) ? $array['iban'] : null;
+        $accountId     = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountName   = array_key_exists('name', $array) ? $array['name'] : null;
+        $accountIban   = array_key_exists('iban', $array) ? $array['iban'] : null;
         $accountNumber = array_key_exists('number', $array) ? $array['number'] : null;
         Log::debug('Now in validateTransferSource', $array);
         // source can be any of the following types.

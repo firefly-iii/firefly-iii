@@ -131,17 +131,17 @@ class ParseDateString
         $today = today(config('app.timezone'))->startOfDay();
 
         return match ($keyword) {
-            default => $today,
-            'yesterday' => $today->subDay(),
-            'tomorrow' => $today->addDay(),
-            'start of this week' => $today->startOfWeek(),
-            'end of this week' => $today->endOfWeek(),
-            'start of this month' => $today->startOfMonth(),
-            'end of this month' => $today->endOfMonth(),
+            default                 => $today,
+            'yesterday'             => $today->subDay(),
+            'tomorrow'              => $today->addDay(),
+            'start of this week'    => $today->startOfWeek(),
+            'end of this week'      => $today->endOfWeek(),
+            'start of this month'   => $today->startOfMonth(),
+            'end of this month'     => $today->endOfMonth(),
             'start of this quarter' => $today->startOfQuarter(),
-            'end of this quarter' => $today->endOfQuarter(),
-            'start of this year' => $today->startOfYear(),
-            'end of this year' => $today->endOfYear(),
+            'end of this quarter'   => $today->endOfQuarter(),
+            'start of this year'    => $today->startOfYear(),
+            'end of this year'      => $today->endOfYear(),
         };
     }
 

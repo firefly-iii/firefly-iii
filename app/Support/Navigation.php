@@ -32,6 +32,7 @@ use FireflyIII\Support\Calendar\Periodicity;
 use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 /**
  * Class Navigation.
@@ -46,30 +47,6 @@ class Navigation
     public function __construct(Calculator $calculator = null)
     {
         $this->calculator = ($calculator instanceof Calculator) ?: new Calculator();
-    }
-
-    /**
-     * @param Carbon      $epoch
-     * @param Periodicity $periodicity
-     * @param int         $skipInterval
-     * @return Carbon
-     */
-    public function nextDateByInterval(Carbon $epoch, Periodicity $periodicity, int $skipInterval = 0): Carbon
-    {
-        try {
-            return $this->calculator->nextDateByInterval($epoch, $periodicity, $skipInterval);
-        } catch (IntervalException $exception) {
-            Log::warning($exception->getMessage(), ['exception' => $exception]);
-        } catch (\Throwable $exception) {
-            Log::error($exception->getMessage(), ['exception' => $exception]);
-        }
-
-        Log::debug(
-            "Any error occurred to calculate the next date.",
-            ['date' => $epoch, 'periodicity' => $periodicity->name, 'skipInterval' => $skipInterval]
-        );
-
-        return $epoch;
     }
 
     /**
@@ -120,6 +97,31 @@ class Navigation
         }
 
         return $this->nextDateByInterval($theDate, $functionMap[$repeatFreq], $skip);
+    }
+
+    /**
+     * @param Carbon      $epoch
+     * @param Periodicity $periodicity
+     * @param int         $skipInterval
+     *
+     * @return Carbon
+     */
+    public function nextDateByInterval(Carbon $epoch, Periodicity $periodicity, int $skipInterval = 0): Carbon
+    {
+        try {
+            return $this->calculator->nextDateByInterval($epoch, $periodicity, $skipInterval);
+        } catch (IntervalException $exception) {
+            Log::warning($exception->getMessage(), ['exception' => $exception]);
+        } catch (Throwable $exception) {
+            Log::error($exception->getMessage(), ['exception' => $exception]);
+        }
+
+        Log::debug(
+            'Any error occurred to calculate the next date.',
+            ['date' => $epoch, 'periodicity' => $periodicity->name, 'skipInterval' => $skipInterval]
+        );
+
+        return $epoch;
     }
 
     /**
@@ -223,14 +225,14 @@ class Navigation
         }
 
         $result = match ($repeatFreq) {
-            'last7' => $date->subDays(7)->startOfDay(),
-            'last30' => $date->subDays(30)->startOfDay(),
-            'last90' => $date->subDays(90)->startOfDay(),
+            'last7'   => $date->subDays(7)->startOfDay(),
+            'last30'  => $date->subDays(30)->startOfDay(),
+            'last90'  => $date->subDays(90)->startOfDay(),
             'last365' => $date->subDays(365)->startOfDay(),
-            'MTD' => $date->startOfMonth()->startOfDay(),
-            'QTD' => $date->firstOfQuarter()->startOfDay(),
-            'YTD' => $date->startOfYear()->startOfDay(),
-            default => null,
+            'MTD'     => $date->startOfMonth()->startOfDay(),
+            'QTD'     => $date->firstOfQuarter()->startOfDay(),
+            'YTD'     => $date->startOfYear()->startOfDay(),
+            default   => null,
         };
         if (null !== $result) {
             return $result;
@@ -300,14 +302,14 @@ class Navigation
         }
 
         $result = match ($repeatFreq) {
-            'last7' => $currentEnd->addDays(7)->startOfDay(),
-            'last30' => $currentEnd->addDays(30)->startOfDay(),
-            'last90' => $currentEnd->addDays(90)->startOfDay(),
+            'last7'   => $currentEnd->addDays(7)->startOfDay(),
+            'last30'  => $currentEnd->addDays(30)->startOfDay(),
+            'last90'  => $currentEnd->addDays(90)->startOfDay(),
             'last365' => $currentEnd->addDays(365)->startOfDay(),
-            'MTD' => $currentEnd->startOfMonth()->startOfDay(),
-            'QTD' => $currentEnd->firstOfQuarter()->startOfDay(),
-            'YTD' => $currentEnd->startOfYear()->startOfDay(),
-            default => null,
+            'MTD'     => $currentEnd->startOfMonth()->startOfDay(),
+            'QTD'     => $currentEnd->firstOfQuarter()->startOfDay(),
+            'YTD'     => $currentEnd->startOfYear()->startOfDay(),
+            default   => null,
         };
         if (null !== $result) {
             return $result;
@@ -385,6 +387,7 @@ class Navigation
      * range to a normal range.
      *
      * @param bool $correct
+     *
      * @return string
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

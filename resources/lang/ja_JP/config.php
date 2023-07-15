@@ -72,13 +72,13 @@ return [
 
     //'week_in_year'            => 'Week %V, %G',
     'week_in_year_js'          => '[Week] W, GGGG',
-    'week_in_year_fns'         => "yyyy年w[週目]",
+    'week_in_year_fns'         => "'Week' w, yyyy",
 
     //'year'                    => '%Y',
     'year_js'                  => 'YYYY年',
 
     //'half_year'               => '%B %Y',
-    'half_year_js'             => '\QQ YYYY',
+    'half_year_js'             => 'YYYY年第Q四半期',
 
     'quarter_fns'   => "yyyy年第Q四半期",
     'half_year_fns' => "yyyy年H[半期]",

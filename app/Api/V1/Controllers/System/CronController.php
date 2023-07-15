@@ -43,7 +43,7 @@ class CronController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/about/getCron
      *
      * @param CronRequest $request
-     * @param string $token
+     * @param string      $token
      *
      * @return JsonResponse
      * @throws ContainerExceptionInterface

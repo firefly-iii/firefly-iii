@@ -42,6 +42,7 @@ interface RecurringRepositoryInterface
     /**
      * @param Recurrence $recurrence
      * @param Carbon     $date
+     *
      * @return bool
      */
     public function createdPreviously(Recurrence $recurrence, Carbon $date): bool;

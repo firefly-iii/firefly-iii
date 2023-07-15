@@ -171,6 +171,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param BudgetLimit $limit
      * @param Carbon      $start
      * @param Carbon      $end
+     *
      * @return int
      */
     private function daysInOverlap(BudgetLimit $limit, Carbon $start, Carbon $end): int
@@ -374,6 +375,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     /**
      * @param Budget $budget
      * @param string $text
+     *
      * @return void
      */
     private function setNoteText(Budget $budget, string $text): void
@@ -405,6 +407,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     /**
      * @param Budget $budget
      * @param array  $data
+     *
      * @throws FireflyException
      * @throws JsonException
      */

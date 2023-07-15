@@ -45,8 +45,9 @@ trait ModifiesPiggyBanks
 
     /**
      * @param PiggyBankRepetition $repetition
-     * @param string $amount
-     * @param TransactionJournal $journal
+     * @param string              $amount
+     * @param TransactionJournal  $journal
+     *
      * @return void
      */
     public function addAmountToRepetition(PiggyBankRepetition $repetition, string $amount, TransactionJournal $journal): void
@@ -63,9 +64,10 @@ trait ModifiesPiggyBanks
     }
 
     /**
-     * @param PiggyBank $piggyBank
-     * @param string $amount
+     * @param PiggyBank               $piggyBank
+     * @param string                  $amount
      * @param TransactionJournal|null $journal
+     *
      * @return bool
      */
     public function removeAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool
@@ -87,6 +89,7 @@ trait ModifiesPiggyBanks
      * @param PiggyBank               $piggyBank
      * @param string                  $amount
      * @param TransactionJournal|null $journal
+     *
      * @return bool
      */
     public function addAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool

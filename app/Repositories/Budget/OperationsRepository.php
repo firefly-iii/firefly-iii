@@ -288,6 +288,7 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @param Collection|null          $accounts
      * @param Collection|null          $budgets
      * @param TransactionCurrency|null $currency
+     *
      * @return array
      * @deprecated
      */

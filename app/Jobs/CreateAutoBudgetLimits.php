@@ -314,6 +314,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
 
     /**
      * @param AutoBudget $autoBudget
+     *
      * @return void
      */
     private function createAdjustedLimit(AutoBudget $autoBudget): void

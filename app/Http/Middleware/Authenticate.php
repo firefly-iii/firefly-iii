@@ -121,6 +121,7 @@ class Authenticate
     /**
      * @param User|null $user
      * @param array     $guards
+     *
      * @return void
      * @throws AuthenticationException
      */
