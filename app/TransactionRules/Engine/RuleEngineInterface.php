@@ -57,6 +57,7 @@ interface RuleEngineInterface
 
     /**
      * @param bool $refreshTriggers
+     *
      * @return void
      */
     public function setRefreshTriggers(bool $refreshTriggers): void;

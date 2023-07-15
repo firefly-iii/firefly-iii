@@ -161,6 +161,7 @@ class ReconcileController extends Controller
      *
      * @return RedirectResponse|Redirector
      * @throws DuplicateTransactionException
+     * @throws JsonException
      */
     public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end)
     {

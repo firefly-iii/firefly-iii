@@ -64,6 +64,8 @@ class Cron extends Command
 
     /**
      * @return int
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {

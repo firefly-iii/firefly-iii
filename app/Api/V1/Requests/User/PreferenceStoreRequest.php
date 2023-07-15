@@ -27,6 +27,9 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class PreferenceStoreRequest
+ */
 class PreferenceStoreRequest extends FormRequest
 {
     use ChecksLogin;

@@ -675,6 +675,7 @@ class FireflyValidator extends Validator
     /**
      * @param $attribute
      * @param $value
+     *
      * @return bool
      */
     public function validateUniqueCurrencyCode($attribute, $value): bool
@@ -686,6 +687,7 @@ class FireflyValidator extends Validator
      * @param string $field
      * @param string $attribute
      * @param string $value
+     *
      * @return bool
      */
     public function validateUniqueCurrency(string $field, string $attribute, string $value): bool
@@ -696,6 +698,7 @@ class FireflyValidator extends Validator
     /**
      * @param $attribute
      * @param $value
+     *
      * @return bool
      */
     public function validateUniqueCurrencyName($attribute, $value): bool
@@ -706,6 +709,7 @@ class FireflyValidator extends Validator
     /**
      * @param $attribute
      * @param $value
+     *
      * @return bool
      */
     public function validateUniqueCurrencySymbol($attribute, $value): bool

@@ -24,6 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Controllers\System;
 
+/**
+ * Class ConfigurationController
+ */
 class ConfigurationController
 {
 }

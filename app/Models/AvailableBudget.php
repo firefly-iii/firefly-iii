@@ -126,6 +126,9 @@ class AvailableBudget extends Model
         return $this->belongsTo(TransactionCurrency::class);
     }
 
+    /**
+     * @return Attribute
+     */
     protected function amount(): Attribute
     {
         return Attribute::make(

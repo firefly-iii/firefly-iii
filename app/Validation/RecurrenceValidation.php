@@ -167,6 +167,11 @@ trait RecurrenceValidation
         }
     }
 
+    /**
+     * @param Validator $validator
+     *
+     * @return void
+     */
     public function validateRecurringConfig(Validator $validator)
     {
         $data        = $validator->getData();
@@ -322,7 +327,9 @@ trait RecurrenceValidation
     }
 
     /**
-     * @param Validator $validator
+     * @param Recurrence $recurrence
+     * @param Validator  $validator
+     *
      * @return void
      */
     protected function validateTransactionId(Recurrence $recurrence, Validator $validator): void

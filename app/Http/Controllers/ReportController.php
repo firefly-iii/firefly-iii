@@ -313,11 +313,11 @@ class ReportController extends Controller
     public function options(string $reportType)
     {
         $result = match ($reportType) {
-            default => $this->noReportOptions(),
+            default    => $this->noReportOptions(),
             'category' => $this->categoryReportOptions(),
-            'budget' => $this->budgetReportOptions(),
-            'tag' => $this->tagReportOptions(),
-            'double' => $this->doubleReportOptions(),
+            'budget'   => $this->budgetReportOptions(),
+            'tag'      => $this->tagReportOptions(),
+            'double'   => $this->doubleReportOptions(),
         };
 
         return response()->json(['html' => $result]);
@@ -381,12 +381,12 @@ class ReportController extends Controller
         }
 
         $url = match ($reportType) {
-            default => route('reports.report.default', [$accounts, $start, $end]),
+            default    => route('reports.report.default', [$accounts, $start, $end]),
             'category' => route('reports.report.category', [$accounts, $categories, $start, $end]),
-            'audit' => route('reports.report.audit', [$accounts, $start, $end]),
-            'budget' => route('reports.report.budget', [$accounts, $budgets, $start, $end]),
-            'tag' => route('reports.report.tag', [$accounts, $tags, $start, $end]),
-            'double' => route('reports.report.double', [$accounts, $double, $start, $end]),
+            'audit'    => route('reports.report.audit', [$accounts, $start, $end]),
+            'budget'   => route('reports.report.budget', [$accounts, $budgets, $start, $end]),
+            'tag'      => route('reports.report.tag', [$accounts, $tags, $start, $end]),
+            'double'   => route('reports.report.double', [$accounts, $double, $start, $end]),
         };
 
         return redirect($url);

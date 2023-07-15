@@ -1,7 +1,9 @@
 <?php
-/**
- * CreatesApplication.php
- * Copyright (c) 2019 james@firefly-iii.org
+
+
+/*
+ * DailyTest.php
+ * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,30 +20,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace Tests;
+namespace Tests\unit\Support\Calendar\Periodicity;
 
-use Illuminate\Contracts\Console\Kernel;
-use Illuminate\Foundation\Application;
+use Carbon\Carbon;
+use FireflyIII\Support\Calendar\Periodicity;
+use FireflyIII\Support\Calendar\Periodicity\Interval;
 
 /**
- * Trait CreatesApplication
- *
+ * @group unit-test
+ * @group support
+ * @group calendar
+ * @group periodicity
  */
-trait CreatesApplication
+class DailyTest extends IntervalTestCase
 {
-    /**
-     * Creates the application.
-     *
-     * @return Application
-     */
-    public function createApplication()
+    public static function factory(): Interval
     {
-        $app = require __DIR__ . '/../bootstrap/app.php';
+        return new Periodicity\Daily();
+    }
 
-        $app->make(Kernel::class)->bootstrap();
-
-        return $app;
+    public static function provideIntervals(): array
+    {
+        return [
+            new IntervalProvider(Carbon::now(), Carbon::tomorrow()),
+            new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-01')),
+        ];
     }
 }

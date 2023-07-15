@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceTransactionMeta;
@@ -60,7 +59,6 @@ class MigrateRecurrenceMeta extends Command
      *
      * @return int
      * @throws ContainerExceptionInterface
-     * @throws FireflyException
      * @throws JsonException
      * @throws NotFoundExceptionInterface
      */

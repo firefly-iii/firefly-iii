@@ -169,6 +169,12 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         return $query->get(['journal_links.*']);
     }
 
+    /**
+     * @param TransactionJournal $one
+     * @param TransactionJournal $two
+     *
+     * @return TransactionJournalLink|null
+     */
     public function getLink(TransactionJournal $one, TransactionJournal $two): ?TransactionJournalLink
     {
         $left = TransactionJournalLink::whereDestinationId($one->id)->whereSourceId($two->id)->first();

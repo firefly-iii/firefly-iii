@@ -105,6 +105,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     /**
      * @param array $transactions
+     *
      * @return array
      */
     private function transformTransactions(array $transactions): array
@@ -117,6 +118,11 @@ class TransactionGroupTransformer extends AbstractTransformer
         return $return;
     }
 
+    /**
+     * @param array $transaction
+     *
+     * @return array
+     */
     private function transformTransaction(array $transaction): array
     {
         $transaction         = new NullArrayObject($transaction);
@@ -262,6 +268,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     /**
      * @param string|null $string
+     *
      * @return Carbon|null
      */
     private function date(?string $string): ?Carbon

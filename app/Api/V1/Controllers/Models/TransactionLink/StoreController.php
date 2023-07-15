@@ -35,6 +35,9 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
+/**
+ * Class StoreController
+ */
 class StoreController extends Controller
 {
     use TransactionFilter;

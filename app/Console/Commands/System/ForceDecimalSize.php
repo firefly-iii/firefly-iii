@@ -92,7 +92,6 @@ class ForceDecimalSize extends Command
     /**
      * Execute the console command.
      *
-     * @throws FireflyException
      */
     public function handle(): int
     {
@@ -110,6 +109,9 @@ class ForceDecimalSize extends Command
         return 0;
     }
 
+    /**
+     * @return void
+     */
     private function determineDatabaseType(): void
     {
         // switch stuff based on database connection:
@@ -155,6 +157,7 @@ class ForceDecimalSize extends Command
      * This method loops all enabled currencies and then calls the method that will fix all objects in this currency.
      *
      * @return void
+     * @throws FireflyException
      */
     private function correctAmountsByCurrency(): void
     {

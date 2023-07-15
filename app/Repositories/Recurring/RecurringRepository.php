@@ -567,6 +567,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      *
      * @return Recurrence
      * @throws FireflyException
+     * @throws JsonException
      */
     public function store(array $data): Recurrence
     {

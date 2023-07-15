@@ -89,6 +89,7 @@ class FixAccountTypes extends Command
      * @param TransactionJournal $journal
      *
      * @throws FireflyException
+     * @throws JsonException
      */
     private function inspectJournal(TransactionJournal $journal): void
     {

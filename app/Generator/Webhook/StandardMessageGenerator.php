@@ -103,6 +103,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
     /**
      * @param Webhook $webhook
+     *
      * @throws FireflyException
      * @throws JsonException
      */
@@ -118,6 +119,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     /**
      * @param Webhook $webhook
      * @param Model   $model
+     *
      * @throws FireflyException
      * @throws JsonException
      */

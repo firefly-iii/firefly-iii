@@ -75,6 +75,7 @@ class WebhookTransformer extends AbstractTransformer
     /**
      * @param string $type
      * @param int    $value
+     *
      * @return string
      */
     private function getEnum(string $type, int $value): string

@@ -24,13 +24,15 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
+/**
+ * Class AppendBudgetLimitPeriods
+ */
 class AppendBudgetLimitPeriods extends Command
 {
     use ShowsFriendlyMessages;
@@ -54,7 +56,6 @@ class AppendBudgetLimitPeriods extends Command
      *
      * @return int
      * @throws ContainerExceptionInterface
-     * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
     public function handle(): int

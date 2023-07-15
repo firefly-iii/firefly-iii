@@ -104,6 +104,7 @@ interface UserRepositoryInterface
 
     /**
      * @param InvitedUser $invite
+     *
      * @return void
      */
     public function deleteInvite(InvitedUser $invite): void;
@@ -158,6 +159,7 @@ interface UserRepositoryInterface
     /**
      * @param User $user
      * @param int  $groupId
+     *
      * @return array
      */
     public function getRolesInGroup(User $user, int $groupId): array;
@@ -182,12 +184,14 @@ interface UserRepositoryInterface
     /**
      * @param User|Authenticatable|null $user
      * @param string                    $email
+     *
      * @return InvitedUser
      */
     public function inviteUser(User | Authenticatable | null $user, string $email): InvitedUser;
 
     /**
      * @param string $code
+     *
      * @return void
      */
     public function redeemCode(string $code): void;
@@ -245,6 +249,7 @@ interface UserRepositoryInterface
 
     /**
      * @param string $code
+     *
      * @return bool
      */
     public function validateInviteCode(string $code): bool;

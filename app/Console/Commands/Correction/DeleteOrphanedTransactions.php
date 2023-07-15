@@ -65,6 +65,9 @@ class DeleteOrphanedTransactions extends Command
         return 0;
     }
 
+    /**
+     * @return void
+     */
     private function deleteOrphanedJournals(): void
     {
         $set   = TransactionJournal::leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')

@@ -39,6 +39,7 @@ trait ConvertsExchangeRates
 
     /**
      * @param array $set
+     *
      * @return array
      */
     public function cerChartSet(array $set): array
@@ -84,6 +85,7 @@ trait ConvertsExchangeRates
 
     /**
      * @param int $currencyId
+     *
      * @return TransactionCurrency
      */
     private function getCurrency(int $currencyId): TransactionCurrency
@@ -99,6 +101,7 @@ trait ConvertsExchangeRates
      * @param TransactionCurrency $from
      * @param TransactionCurrency $to
      * @param Carbon              $date
+     *
      * @return string
      */
     private function getRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
@@ -154,6 +157,7 @@ trait ConvertsExchangeRates
     /**
      * @param TransactionCurrency $currency
      * @param Carbon              $date
+     *
      * @return string
      */
     private function getEuroRate(TransactionCurrency $currency, Carbon $date): string
@@ -203,6 +207,7 @@ trait ConvertsExchangeRates
      * the user.
      *
      * @param array $entries
+     *
      * @return array
      */
     public function cerSum(array $entries): array
@@ -253,6 +258,14 @@ trait ConvertsExchangeRates
         return $return;
     }
 
+    /**
+     * @param string              $amount
+     * @param TransactionCurrency $from
+     * @param TransactionCurrency $to
+     * @param Carbon|null         $date
+     *
+     * @return string
+     */
     private function convertAmount(string $amount, TransactionCurrency $from, TransactionCurrency $to, ?Carbon $date = null): string
     {
         Log::debug(sprintf('Converting %s from %s to %s', $amount, $from->code, $to->code));

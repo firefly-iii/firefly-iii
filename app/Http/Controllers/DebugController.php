@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Artisan;
 use DB;
 use Exception;
 use FireflyConfig;
@@ -34,6 +33,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
@@ -88,6 +88,7 @@ class DebugController extends Controller
         app('preferences')->mark();
         $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range', 'temp-mfa-secret', 'temp-mfa-codes']);
         Log::debug('Call cache:clear...');
+
         Artisan::call('cache:clear');
         Log::debug('Call config:clear...');
         Artisan::call('config:clear');

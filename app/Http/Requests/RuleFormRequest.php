@@ -86,6 +86,7 @@ class RuleFormRequest extends FormRequest
 
     /**
      * @param array $array
+     *
      * @return array
      */
     public static function replaceAmountTrigger(array $array): array

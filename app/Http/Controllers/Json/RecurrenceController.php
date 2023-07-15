@@ -32,8 +32,6 @@ use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class RecurrenceController
@@ -145,17 +143,14 @@ class RecurrenceController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function suggest(Request $request): JsonResponse
     {
-        $string      = '' === (string)$request->get('date') ? date('Y-m-d') : (string)$request->get('date');
-        $today       = today(config('app.timezone'))->startOfDay();
+        $string = '' === (string)$request->get('date') ? date('Y-m-d') : (string)$request->get('date');
+        $today  = today(config('app.timezone'))->startOfDay();
         try {
             $date = Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'))->startOfDay();
-        } catch(InvalidFormatException $e) {
+        } catch (InvalidFormatException $e) {
             $date = Carbon::today(config('app.timezone'));
         }
         $preSelected = (string)$request->get('pre_select');

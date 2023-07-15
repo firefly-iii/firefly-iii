@@ -33,6 +33,7 @@ use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 /**
  * Class RecurrenceUpdateService
@@ -212,6 +213,9 @@ class RecurrenceUpdateService
      *
      * @param Recurrence $recurrence
      * @param array      $transactions
+     *
+     * @throws FireflyException
+     * @throws JsonException
      */
     private function updateTransactions(Recurrence $recurrence, array $transactions): void
     {
@@ -271,6 +275,7 @@ class RecurrenceUpdateService
     /**
      * @param Recurrence $recurrence
      * @param array      $combination
+     *
      * @return void
      */
     private function updateCombination(Recurrence $recurrence, array $combination): void
@@ -352,6 +357,7 @@ class RecurrenceUpdateService
     /**
      * @param Recurrence $recurrence
      * @param int        $transactionId
+     *
      * @return void
      */
     private function deleteTransaction(Recurrence $recurrence, int $transactionId): void

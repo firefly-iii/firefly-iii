@@ -97,6 +97,9 @@ class DeleteEmptyJournals extends Command
         }
     }
 
+    /**
+     * @return void
+     */
     private function deleteEmptyJournals(): void
     {
         $count = 0;

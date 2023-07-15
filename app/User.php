@@ -419,6 +419,7 @@ class User extends Authenticatable
      *
      * @param string            $driver
      * @param Notification|null $notification
+     *
      * @return mixed
      */
     public function routeNotificationFor($driver, $notification = null)
@@ -439,8 +440,8 @@ class User extends Authenticatable
 
         return match ($driver) {
             'database' => $this->notifications(),
-            'mail' => $email,
-            default => null,
+            'mail'     => $email,
+            default    => null,
         };
     }
 
@@ -468,6 +469,7 @@ class User extends Authenticatable
      * Route notifications for the Slack channel.
      *
      * @param Notification $notification
+     *
      * @return string
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

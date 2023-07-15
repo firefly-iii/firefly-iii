@@ -64,6 +64,8 @@ class MigrateToGroups extends Command
      * Execute the console command.
      *
      * @return int
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {

@@ -45,8 +45,8 @@ class BillController extends Controller
      * @return mixed|string
      * @throws FireflyException
      */
-    public function overview(Collection $accounts, Carbon $start, Carbon $end)
-    {   // chart properties for cache:
+    public function overview(Collection $accounts, Carbon $start, Carbon $end)   // chart properties for cache:
+    {
         $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);

@@ -42,6 +42,7 @@ class AdminEventHandler
 {
     /**
      * @param InvitationCreated $event
+     *
      * @return void
      */
     public function sendInvitationNotification(InvitationCreated $event): void
@@ -79,6 +80,7 @@ class AdminEventHandler
      * Send new version message to admin.
      *
      * @param NewVersionAvailable $event
+     *
      * @return void
      */
     public function sendNewVersion(NewVersionAvailable $event): void

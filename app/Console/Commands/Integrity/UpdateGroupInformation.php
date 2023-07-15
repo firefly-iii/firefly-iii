@@ -73,6 +73,11 @@ class UpdateGroupInformation extends Command
         return 0;
     }
 
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
     private function updateGroupInfo(User $user): void
     {
         $group = $user->userGroup;

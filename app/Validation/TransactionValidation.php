@@ -159,6 +159,7 @@ trait TransactionValidation
      * @param int       $index
      * @param array     $source
      * @param array     $destination
+     *
      * @return void
      */
     protected function sanityCheckReconciliation(Validator $validator, string $transactionType, int $index, array $source, array $destination): void
@@ -193,6 +194,7 @@ trait TransactionValidation
      * @param array            $transaction
      * @param string           $transactionType
      * @param int              $index
+     *
      * @return void
      */
     private function sanityCheckForeignCurrency(
@@ -293,6 +295,7 @@ trait TransactionValidation
 
     /**
      * @param Account $account
+     *
      * @return bool
      */
     private function isLiabilityOrAsset(Account $account): bool
@@ -302,6 +305,7 @@ trait TransactionValidation
 
     /**
      * @param Account $account
+     *
      * @return bool
      */
     private function isLiability(Account $account): bool
@@ -315,6 +319,7 @@ trait TransactionValidation
 
     /**
      * @param Account $account
+     *
      * @return bool
      */
     private function isAsset(Account $account): bool
@@ -325,6 +330,7 @@ trait TransactionValidation
 
     /**
      * @param array $transaction
+     *
      * @return bool
      */
     private function hasForeignCurrencyInfo(array $transaction): bool
@@ -349,6 +355,8 @@ trait TransactionValidation
      *
      * @param Validator        $validator
      * @param TransactionGroup $transactionGroup
+     *
+     * @throws FireflyException
      */
     public function validateAccountInformationUpdate(Validator $validator, TransactionGroup $transactionGroup): void
     {
@@ -402,11 +410,11 @@ trait TransactionValidation
             array_key_exists('source_number', $transaction)
         ) {
             Log::debug('Will try to validate source account information.');
-            $sourceId    = (int)($transaction['source_id'] ?? 0);
-            $sourceName  = $transaction['source_name'] ?? null;
-            $sourceIban = $transaction['source_iban'] ?? null;
+            $sourceId     = (int)($transaction['source_id'] ?? 0);
+            $sourceName   = $transaction['source_name'] ?? null;
+            $sourceIban   = $transaction['source_iban'] ?? null;
             $sourceNumber = $transaction['source_number'] ?? null;
-            $validSource = $accountValidator->validateSource(
+            $validSource  = $accountValidator->validateSource(
                 ['id' => $sourceId, 'name' => $sourceName, 'iban' => $sourceIban, 'number' => $sourceNumber]
             );
 
@@ -426,7 +434,7 @@ trait TransactionValidation
         if (
             array_key_exists('destination_id', $transaction) ||
             array_key_exists('destination_name', $transaction) ||
-        array_key_exists('destination_iban', $transaction) ||
+            array_key_exists('destination_iban', $transaction) ||
             array_key_exists('destination_number', $transaction)
 
         ) {
@@ -442,12 +450,12 @@ trait TransactionValidation
                     $accountValidator->source = $source;
                 }
             }
-            $destinationId    = (int)($transaction['destination_id'] ?? 0);
-            $destinationName  = $transaction['destination_name'] ?? null;
-            $destinationIban  = $transaction['destination_iban'] ?? null;
-            $destinationNumber  = $transaction['destination_number'] ?? null;
-            $array            = ['id' => $destinationId, 'name' => $destinationName, 'iban' => $destinationIban, 'number' => $destinationNumber];
-            $validDestination = $accountValidator->validateDestination($array);
+            $destinationId     = (int)($transaction['destination_id'] ?? 0);
+            $destinationName   = $transaction['destination_name'] ?? null;
+            $destinationIban   = $transaction['destination_iban'] ?? null;
+            $destinationNumber = $transaction['destination_number'] ?? null;
+            $array             = ['id' => $destinationId, 'name' => $destinationName, 'iban' => $destinationIban, 'number' => $destinationNumber];
+            $validDestination  = $accountValidator->validateDestination($array);
             // do something with result:
             if (false === $validDestination) {
                 app('log')->warning('Looks like the destination account is not valid so complain to the user about it.');
@@ -775,8 +783,8 @@ trait TransactionValidation
     private function compareAccountData(string $type, array $comparison): bool
     {
         return match ($type) {
-            default => $this->compareAccountDataWithdrawal($comparison),
-            'deposit' => $this->compareAccountDataDeposit($comparison),
+            default    => $this->compareAccountDataWithdrawal($comparison),
+            'deposit'  => $this->compareAccountDataDeposit($comparison),
             'transfer' => $this->compareAccountDataTransfer($comparison),
         };
     }

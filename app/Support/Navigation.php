@@ -26,90 +26,102 @@ namespace FireflyIII\Support;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
+use FireflyIII\Support\Calendar\Calculator;
+use FireflyIII\Support\Calendar\Exceptions\IntervalException;
+use FireflyIII\Support\Calendar\Periodicity;
 use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Throwable;
 
 /**
  * Class Navigation.
  */
 class Navigation
 {
+    private Calculator $calculator;
+
+    /**
+     * @param Calculator|null $calculator
+     */
+    public function __construct(Calculator $calculator = null)
+    {
+        $this->calculator = ($calculator instanceof Calculator) ?: new Calculator();
+    }
+
     /**
      * @param Carbon $theDate
      * @param string $repeatFreq
      * @param int    $skip
      *
      * @return Carbon
+     * @deprecated This method will be substituted by nextDateByInterval()
      */
-    public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip): Carbon
+    public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip = 0): Carbon
     {
-        $date = clone $theDate;
-        $add  = ($skip + 1);
-
         $functionMap = [
-            '1D'        => 'addDays',
-            'daily'     => 'addDays',
-            '1W'        => 'addWeeks',
-            'weekly'    => 'addWeeks',
-            'week'      => 'addWeeks',
-            '1M'        => 'addMonths',
-            'month'     => 'addMonths',
-            'monthly'   => 'addMonths',
-            '3M'        => 'addMonths',
-            'quarter'   => 'addMonths',
-            'quarterly' => 'addMonths',
-            '6M'        => 'addMonths',
-            'half-year' => 'addMonths',
-            'year'      => 'addYears',
-            'yearly'    => 'addYears',
-            '1Y'        => 'addYears',
-            'custom'    => 'addMonths', // custom? just add one month.
+            '1D'        => Periodicity::Daily,
+            'daily'     => Periodicity::Daily,
+            '1W'        => Periodicity::Weekly,
+            'weekly'    => Periodicity::Weekly,
+            'week'      => Periodicity::Weekly,
+            '1M'        => Periodicity::Monthly,
+            'month'     => Periodicity::Monthly,
+            'monthly'   => Periodicity::Monthly,
+            '3M'        => Periodicity::Quarterly,
+            'quarter'   => Periodicity::Quarterly,
+            'quarterly' => Periodicity::Quarterly,
+            '6M'        => Periodicity::HalfYearly,
+            'half-year' => Periodicity::HalfYearly,
+            'year'      => Periodicity::Yearly,
+            'yearly'    => Periodicity::Yearly,
+            '1Y'        => Periodicity::Yearly,
+            'custom'    => Periodicity::Monthly, // custom? just add one month.
             // last X periods? Jump the relevant month / quarter / year
-            'last7'     => 'addDays',
-            'last30'    => 'addMonths',
-            'last90'    => 'addMonths',
-            'last365'   => 'addYears',
-            'MTD'       => 'addMonths',
-            'QTD'       => 'addMonths',
-            'YTD'       => 'addYears',
-        ];
-        $modifierMap = [
-            'quarter'   => 3,
-            '3M'        => 3,
-            'quarterly' => 3,
-            '6M'        => 6,
-            'half-year' => 6,
-            'last7'     => 7,
-            'last90'    => 3,
-            'QTD'       => 3,
+            'last7'     => Periodicity::Weekly,
+            'last30'    => Periodicity::Monthly,
+            'last90'    => Periodicity::Quarterly,
+            'last365'   => Periodicity::Yearly,
+            'MTD'       => Periodicity::Monthly,
+            'QTD'       => Periodicity::Quarterly,
+            'YTD'       => Periodicity::Yearly,
         ];
 
         if (!array_key_exists($repeatFreq, $functionMap)) {
-            Log::error(sprintf('Cannot do addPeriod for $repeat_freq "%s"', $repeatFreq));
-
+            Log::error(sprintf(
+                'The periodicity %s is unknown. Choose one of available periodicity: %s',
+                $repeatFreq,
+                join(', ', array_keys($functionMap))
+            ));
             return $theDate;
         }
-        if (array_key_exists($repeatFreq, $modifierMap)) {
-            $add *= $modifierMap[$repeatFreq];
+
+        return $this->nextDateByInterval($theDate, $functionMap[$repeatFreq], $skip);
+    }
+
+    /**
+     * @param Carbon      $epoch
+     * @param Periodicity $periodicity
+     * @param int         $skipInterval
+     *
+     * @return Carbon
+     */
+    public function nextDateByInterval(Carbon $epoch, Periodicity $periodicity, int $skipInterval = 0): Carbon
+    {
+        try {
+            return $this->calculator->nextDateByInterval($epoch, $periodicity, $skipInterval);
+        } catch (IntervalException $exception) {
+            Log::warning($exception->getMessage(), ['exception' => $exception]);
+        } catch (Throwable $exception) {
+            Log::error($exception->getMessage(), ['exception' => $exception]);
         }
-        $function = $functionMap[$repeatFreq];
-        $date->$function($add);
 
-        // if period is 1M and diff in month is 2 and new DOM > 1, sub a number of days:
-        // AND skip is 1
-        // result is:
-        // '2019-01-29', '2019-02-28'
-        // '2019-01-30', '2019-02-28'
-        // '2019-01-31', '2019-02-28'
+        Log::debug(
+            'Any error occurred to calculate the next date.',
+            ['date' => $epoch, 'periodicity' => $periodicity->name, 'skipInterval' => $skipInterval]
+        );
 
-        $months     = ['1M', 'month', 'monthly'];
-        $difference = $date->month - $theDate->month;
-        if (1 === $add && 2 === $difference && $date->day > 0 && in_array($repeatFreq, $months, true)) {
-            $date->subDays($date->day);
-        }
-
-        return $date;
+        return $epoch;
     }
 
     /**
@@ -206,24 +218,21 @@ class Navigation
             return $date;
         }
         if ('half-year' === $repeatFreq || '6M' === $repeatFreq) {
-            $month = $date->month;
-            $date->startOfYear();
-            if ($month >= 7) {
-                $date->addMonths(6);
-            }
+            $skipTo = $date->month > 7 ? 6 : 0;
+            $date->startOfYear()->addMonths($skipTo);
 
             return $date;
         }
 
         $result = match ($repeatFreq) {
-            'last7' => $date->subDays(7)->startOfDay(),
-            'last30' => $date->subDays(30)->startOfDay(),
-            'last90' => $date->subDays(90)->startOfDay(),
+            'last7'   => $date->subDays(7)->startOfDay(),
+            'last30'  => $date->subDays(30)->startOfDay(),
+            'last90'  => $date->subDays(90)->startOfDay(),
             'last365' => $date->subDays(365)->startOfDay(),
-            'MTD' => $date->startOfMonth()->startOfDay(),
-            'QTD' => $date->firstOfQuarter()->startOfDay(),
-            'YTD' => $date->startOfYear()->startOfDay(),
-            default => null,
+            'MTD'     => $date->startOfMonth()->startOfDay(),
+            'QTD'     => $date->firstOfQuarter()->startOfDay(),
+            'YTD'     => $date->startOfYear()->startOfDay(),
+            default   => null,
         };
         if (null !== $result) {
             return $result;
@@ -293,14 +302,14 @@ class Navigation
         }
 
         $result = match ($repeatFreq) {
-            'last7' => $currentEnd->addDays(7)->startOfDay(),
-            'last30' => $currentEnd->addDays(30)->startOfDay(),
-            'last90' => $currentEnd->addDays(90)->startOfDay(),
+            'last7'   => $currentEnd->addDays(7)->startOfDay(),
+            'last30'  => $currentEnd->addDays(30)->startOfDay(),
+            'last90'  => $currentEnd->addDays(90)->startOfDay(),
             'last365' => $currentEnd->addDays(365)->startOfDay(),
-            'MTD' => $currentEnd->startOfMonth()->startOfDay(),
-            'QTD' => $currentEnd->firstOfQuarter()->startOfDay(),
-            'YTD' => $currentEnd->startOfYear()->startOfDay(),
-            default => null,
+            'MTD'     => $currentEnd->startOfMonth()->startOfDay(),
+            'QTD'     => $currentEnd->firstOfQuarter()->startOfDay(),
+            'YTD'     => $currentEnd->startOfYear()->startOfDay(),
+            default   => null,
         };
         if (null !== $result) {
             return $result;
@@ -378,6 +387,7 @@ class Navigation
      * range to a normal range.
      *
      * @param bool $correct
+     *
      * @return string
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

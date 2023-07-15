@@ -142,6 +142,8 @@ class ExportDataGenerator
 
     /**
      * @return string
+     * @throws CannotInsertRecord
+     * @throws Exception
      * @throws FireflyException
      */
     private function exportAccounts(): string
@@ -227,6 +229,8 @@ class ExportDataGenerator
 
     /**
      * @return string
+     * @throws CannotInsertRecord
+     * @throws Exception
      * @throws FireflyException
      */
     private function exportBills(): string
@@ -294,6 +298,8 @@ class ExportDataGenerator
 
     /**
      * @return string
+     * @throws CannotInsertRecord
+     * @throws Exception
      * @throws FireflyException
      */
     private function exportBudgets(): string
@@ -359,6 +365,8 @@ class ExportDataGenerator
 
     /**
      * @return string
+     * @throws CannotInsertRecord
+     * @throws Exception
      * @throws FireflyException
      */
     private function exportCategories(): string
@@ -408,6 +416,8 @@ class ExportDataGenerator
 
     /**
      * @return string
+     * @throws CannotInsertRecord
+     * @throws Exception
      * @throws FireflyException
      */
     private function exportPiggies(): string
@@ -486,6 +496,8 @@ class ExportDataGenerator
 
     /**
      * @return string
+     * @throws CannotInsertRecord
+     * @throws Exception
      * @throws FireflyException
      */
     private function exportRecurring(): string
@@ -648,6 +660,8 @@ class ExportDataGenerator
 
     /**
      * @return string
+     * @throws CannotInsertRecord
+     * @throws Exception
      * @throws FireflyException
      */
     private function exportRules(): string
@@ -777,8 +791,10 @@ class ExportDataGenerator
 
     /**
      * @return string
-     * @throws FireflyException
+     * @throws CannotInsertRecord
      * @throws ContainerExceptionInterface
+     * @throws Exception
+     * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
     private function exportTags(): string
@@ -838,6 +854,8 @@ class ExportDataGenerator
 
     /**
      * @return string
+     * @throws CannotInsertRecord
+     * @throws Exception
      * @throws FireflyException
      */
     private function exportTransactions(): string

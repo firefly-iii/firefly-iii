@@ -37,6 +37,9 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * Class PurgeController
+ */
 class PurgeController extends Controller
 {
     /**

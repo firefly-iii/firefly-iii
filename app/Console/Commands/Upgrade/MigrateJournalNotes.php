@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Console\Command;
@@ -58,7 +57,6 @@ class MigrateJournalNotes extends Command
      *
      * @return int
      * @throws ContainerExceptionInterface
-     * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
     public function handle(): int

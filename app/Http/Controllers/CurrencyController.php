@@ -208,6 +208,7 @@ class CurrencyController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      * @throws FireflyException
      */
@@ -300,6 +301,7 @@ class CurrencyController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function enableCurrency(Request $request): JsonResponse

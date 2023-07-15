@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use Illuminate\Console\Command;
@@ -58,7 +57,6 @@ class MigrateTagLocations extends Command
      *
      * @return int
      * @throws ContainerExceptionInterface
-     * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
     public function handle(): int
@@ -89,6 +87,9 @@ class MigrateTagLocations extends Command
         return false;
     }
 
+    /**
+     * @return void
+     */
     private function migrateTagLocations(): void
     {
         $tags = Tag::get();

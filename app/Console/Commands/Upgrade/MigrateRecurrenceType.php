@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\TransactionType;
@@ -59,7 +58,6 @@ class MigrateRecurrenceType extends Command
      *
      * @return int
      * @throws ContainerExceptionInterface
-     * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
     public function handle(): int
@@ -104,6 +102,7 @@ class MigrateRecurrenceType extends Command
 
     /**
      * @param Recurrence $recurrence
+     *
      * @return void
      */
     private function migrateRecurrence(Recurrence $recurrence): void

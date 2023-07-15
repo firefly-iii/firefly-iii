@@ -363,6 +363,7 @@ class BudgetReportGenerator
 
     /**
      * @param User $user
+     *
      * @throws FireflyException
      * @throws JsonException
      */

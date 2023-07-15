@@ -134,6 +134,7 @@ class AccountSearch implements GenericSearchInterface
 
     /**
      * @param User|Authenticatable|null $user
+     *
      * @return void
      */
     public function setUser(User | Authenticatable | null $user): void

@@ -71,7 +71,7 @@ return [
     'specific_day_js'          => 'DD [de] MMMM [de] YYYY',
 
     //'week_in_year'            => 'Week %V, %G',
-    'week_in_year_js'          => '[Week] W, GGGG',
+    'week_in_year_js'          => '[Semana] W, GGGG',
     'week_in_year_fns'         => "'Semana' w 'de' yyyy",
 
     //'year'                    => '%Y',

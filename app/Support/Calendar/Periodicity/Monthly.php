@@ -1,8 +1,9 @@
 <?php
 
-/**
- * TestCase.php
- * Copyright (c) 2020 james@firefly-iii.org
+
+/*
+ * Monthly.php
+ * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,36 +20,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace Tests;
+namespace FireflyIII\Support\Calendar\Periodicity;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Tests\Traits\CollectsValues;
+use Carbon\Carbon;
 
 /**
- * Class TestCase
+ * Class Monthly
  */
-abstract class TestCase extends BaseTestCase
+class Monthly extends Interval
 {
-    use CreatesApplication;
-    use CollectsValues;
-
-    protected const MAX_ITERATIONS = 2;
-
     /**
-     * @return array
+     * @param Carbon $date
+     * @param int    $interval
+     *
+     * @return Carbon
      */
-    public function dateRangeProvider(): array
-    {
-        return [
-            'one day'      => ['1D'],
-            'one week'     => ['1W'],
-            'one month'    => ['1M'],
-            'three months' => ['3M'],
-            'six months'   => ['6M'],
-            'one year'     => ['1Y'],
-            'custom range' => ['custom'],
-        ];
+    public function nextDate(Carbon $date, int $interval = 1): Carbon {
+        return ($date->clone())->addMonthsNoOverflow($this->skip($interval));
     }
 }

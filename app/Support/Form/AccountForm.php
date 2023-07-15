@@ -66,6 +66,7 @@ class AccountForm
     /**
      * @param array                           $types
      * @param AccountRepositoryInterface|null $repository
+     *
      * @return array
      */
     private function getAccountsGrouped(array $types, AccountRepositoryInterface $repository = null): array

@@ -35,12 +35,14 @@ interface ALERepositoryInterface
 {
     /**
      * @param Model $model
+     *
      * @return Collection
      */
     public function getForObject(Model $model): Collection;
 
     /**
      * @param array $data
+     *
      * @return AuditLogEntry
      */
     public function store(array $data): AuditLogEntry;

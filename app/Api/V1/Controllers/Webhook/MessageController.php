@@ -35,6 +35,9 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 
+/**
+ * Class MessageController
+ */
 class MessageController extends Controller
 {
     public const RESOURCE_KEY = 'webhook_messages';

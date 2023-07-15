@@ -29,6 +29,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Class BillWarningMail
+ */
 class BillWarningMail extends Mailable
 {
     use Queueable;

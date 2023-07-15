@@ -57,6 +57,7 @@ interface BudgetRepositoryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
+     *
      * @return array
      */
     public function budgetedInPeriod(Carbon $start, Carbon $end): array;
@@ -67,6 +68,7 @@ interface BudgetRepositoryInterface
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
+     *
      * @return array
      */
     public function budgetedInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array;
@@ -173,6 +175,7 @@ interface BudgetRepositoryInterface
 
     /**
      * @param Budget $budget
+     *
      * @return string|null
      */
     public function getNoteText(Budget $budget): ?string;

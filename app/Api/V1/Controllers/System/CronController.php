@@ -28,6 +28,8 @@ use FireflyIII\Api\V1\Requests\System\CronRequest;
 use FireflyIII\Support\Http\Controllers\CronRunner;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class CronController
@@ -44,6 +46,8 @@ class CronController extends Controller
      * @param string      $token
      *
      * @return JsonResponse
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function cron(CronRequest $request, string $token): JsonResponse
     {

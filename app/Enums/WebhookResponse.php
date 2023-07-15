@@ -24,6 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Enums;
 
+/**
+ * Class WebhookResponse
+ */
 enum WebhookResponse: int
 {
     case TRANSACTIONS = 200;

@@ -480,6 +480,7 @@ class GroupCollector implements GroupCollectorInterface
      * Return the groups.
      *
      * @return Collection
+     * @throws FireflyException
      */
     public function getGroups(): Collection
     {
@@ -663,6 +664,7 @@ class GroupCollector implements GroupCollectorInterface
 
     /**
      * @param array $array
+     *
      * @return array
      */
     private function convertToStrings(array $array): array
@@ -771,6 +773,7 @@ class GroupCollector implements GroupCollectorInterface
 
     /**
      * @param Collection $collection
+     *
      * @return Collection
      */
     private function postFilterCollection(Collection $collection): Collection

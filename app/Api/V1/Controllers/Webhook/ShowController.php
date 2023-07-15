@@ -127,6 +127,7 @@ class ShowController extends Controller
      */
     public function triggerTransaction(Webhook $webhook, TransactionGroup $group): JsonResponse
     {
+        app('log')->debug(sprintf('Now in triggerTransaction(%d, %d)', $webhook->id, $group->id));
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser(auth()->user());
@@ -141,6 +142,7 @@ class ShowController extends Controller
         $engine->generateMessages();
 
         // trigger event to send them:
+        app('log')->debug('send event RequestedSendWebhookMessages');
         event(new RequestedSendWebhookMessages());
 
         return response()->json([], 204);

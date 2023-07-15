@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
@@ -72,7 +71,6 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function netWorth(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {

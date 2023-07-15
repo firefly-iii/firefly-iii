@@ -241,6 +241,11 @@ class AccountUpdateService
         return $account;
     }
 
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
     private function getTypeIds(array $array): array
     {
         $return = [];

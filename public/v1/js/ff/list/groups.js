@@ -147,19 +147,19 @@ function updateListButtons() {
  * @returns {boolean}
  */
 function goToMassEdit() {
-    console.log(mass_edit_url + '/' + getCheckboxes());
+    console.log('Mass edit URL is ' + mass_edit_url + '/' + getCheckboxes());
     window.location.href = mass_edit_url + '/' + getCheckboxes();
     return false;
 }
 
 function goToBulkEdit() {
-    console.log(bulk_edit_url + '/' + getCheckboxes());
+    console.log('Mass edit URL is ' + bulk_edit_url + '/' + getCheckboxes());
     window.location.href = bulk_edit_url + '/' + getCheckboxes();
     return false;
 }
 
 function goToMassDelete() {
-    console.log(mass_delete_url + '/' + getCheckboxes());
+    console.log('Mass delete URL is ' + mass_delete_url + '/' + getCheckboxes());
     window.location.href = mass_delete_url + '/' + getCheckboxes();
     return false;
 }
@@ -208,6 +208,7 @@ function updateActionButtons() {
         $('.action-menu').hide();
     }
 }
+
 function cloneTransaction(e) {
     var button = $(e.currentTarget);
     var groupId = parseInt(button.data('id'));

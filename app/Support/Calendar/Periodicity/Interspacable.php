@@ -1,7 +1,9 @@
 <?php
+
+
 /*
- * CollectsValues.php
- * Copyright (c) 2020 james@firefly-iii.org
+ * Interspacable.php
+ * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,20 +23,20 @@
 
 declare(strict_types=1);
 
-namespace Tests\Traits;
+namespace FireflyIII\Support\Calendar\Periodicity;
 
-use FireflyIII\User;
+use Carbon\Carbon;
 
 /**
- * Trait CollectsValues
+ * Interface Interspacable
  */
-trait CollectsValues
+interface Interspacable
 {
     /**
-     * @return User
+     * @param Carbon $date
+     * @param int    $interval
+     *
+     * @return Carbon
      */
-    public function user(): User
-    {
-        return User::where('email', 'james@firefly')->first();
-    }
+    public function nextDate(Carbon $date, int $interval = 1): Carbon;
 }

@@ -38,7 +38,7 @@ return [
     'password' => 'Passord må vera minst seks teikn og samsvare med bekreftelsen.',
     'user'     => 'Me finn ikkje nokon brukar med denne epostadressa.',
     'token'    => 'Passord-nullstillingskoden er ikkje gyldig.',
-    'sent'     => 'Passord-nullstillingslenke sendt!',
+    'sent'     => 'Passord-nullstillingslenkje sendt!',
     'reset'    => 'Passordet er tilbakestilt!',
     'blocked'  => 'Du skal ha for forsøket.',
 ];

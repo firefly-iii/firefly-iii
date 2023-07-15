@@ -68,7 +68,7 @@
           <div class="box-footer">
             <div class="btn-group pull-right">
               <a :href=edit_url class="btn btn-default"><em class="fa fa-pencil"></em> {{ $t('firefly.edit') }}</a>
-              <a id="triggerButton" v-if="active" href="#" @click="submitTest" class="btn btn-default"><em
+              <a id="triggerButton" v-if="active" href="#" @click="submitTest" :class="disabledTrigger ? 'btn btn-default disabled ' : 'btn btn-default'"><em
                   class="fa fa-bolt"></em>
                 {{ $t('list.trigger') }}
               </a>
@@ -270,6 +270,7 @@ export default {
       edit_url: '#',
       delete_url: '#',
       success_message: '',
+      disabledTrigger: false
     };
   },
   methods: {
@@ -284,27 +285,34 @@ export default {
       this.show_secret = !this.show_secret;
     },
     submitTest: function (e) {
+      if (e) {
+        e.preventDefault();
+      }
+      console.log('here we are');
       let journalId = parseInt(prompt('Enter a transaction ID'));
-      if (journalId !== null && journalId > 0 && journalId <= 2 ^ 24) {
+      if (journalId !== null && journalId > 0 && journalId <= 16777216) {
+        console.log('OK 1');
+        this.disabledTrigger = true;
         // disable button. Add informative message.
-        let button = $('#triggerButton');
-        button.prop('disabled', true).addClass('disabled');
+        //let button = $('#triggerButton');
+        //button.prop('disabled', true).addClass('disabled');
 
-        this.success_message = $.text(this.$t('firefly.webhook_was_triggered'));
+        this.success_message = this.$t('firefly.webhook_was_triggered');
         // TODO actually trigger the webhook.
         axios.post('./api/v1/webhooks/' + this.id + '/trigger-transaction/' + journalId, {});
-        button.prop('disabled', false).removeClass('disabled');
+        //button.prop('disabled', false).removeClass('disabled');
+        console.log('OK 2');
 
         // set a time-outs.
         this.loading = true;
         setTimeout(() => {
           this.getWebhook();
+          this.disabledTrigger = false;
         }, 2000);
+        console.log('OK 3');
       }
 
-      if (e) {
-        e.preventDefault();
-      }
+
       return false;
     },
     resetSecret: function () {

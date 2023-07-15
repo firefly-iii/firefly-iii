@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Admin;
 
 use FireflyIII\Events\AdminRequestedTestMessage;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Support\Facades\FireflyConfig;
@@ -58,7 +57,6 @@ class HomeController extends Controller
      * Index of the admin.
      *
      * @return Factory|View
-     * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -83,6 +81,11 @@ class HomeController extends Controller
         return view('admin.index', compact('title', 'mainTitleIcon', 'email', 'notifications', 'slackUrl'));
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function notifications(Request $request): RedirectResponse
     {
         foreach (config('firefly.admin_notifications') as $item) {
