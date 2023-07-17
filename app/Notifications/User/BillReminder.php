@@ -27,7 +27,7 @@ namespace FireflyIII\Notifications\User;
 use FireflyIII\Models\Bill;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\SlackMessage;
+use Illuminate\Notifications\Slack\SlackMessage;
 use Illuminate\Notifications\Notification;
 
 /**
@@ -37,8 +37,8 @@ class BillReminder extends Notification
 {
     use Queueable;
 
-    private Bill   $bill;
-    private int    $diff;
+    private Bill $bill;
+    private int $diff;
     private string $field;
 
     /**
@@ -48,9 +48,9 @@ class BillReminder extends Notification
      */
     public function __construct(Bill $bill, string $field, int $diff)
     {
-        $this->bill  = $bill;
+        $this->bill = $bill;
         $this->field = $field;
-        $this->diff  = $diff;
+        $this->diff = $diff;
     }
 
     /**
@@ -100,7 +100,7 @@ class BillReminder extends Notification
             $message = (string)trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
         }
         $bill = $this->bill;
-        $url  = route('bills.show', [$bill->id]);
+        $url = route('bills.show', [$bill->id]);
         return (new SlackMessage())
             ->warning()
             ->attachment(function ($attachment) use ($bill, $url) {

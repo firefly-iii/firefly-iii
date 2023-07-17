@@ -27,9 +27,9 @@ namespace FireflyIII\Notifications\User;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Notifications\Slack\SlackMessage;
 
 /**
  * Class UserLogin
