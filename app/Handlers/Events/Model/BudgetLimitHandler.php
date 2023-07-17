@@ -49,7 +49,8 @@ class BudgetLimitHandler
      *
      * @return void
      */
-    public function created(Created $event): void {
+    public function created(Created $event): void
+    {
         Log::debug(sprintf('BudgetLimitHandler::created(#%s)', $event->budgetLimit->id));
         $this->updateAvailableBudget($event->budgetLimit);
     }
@@ -59,7 +60,8 @@ class BudgetLimitHandler
      *
      * @return void
      */
-    private function updateAvailableBudget(BudgetLimit $budgetLimit): void {
+    private function updateAvailableBudget(BudgetLimit $budgetLimit): void
+    {
         Log::debug(sprintf('Now in updateAvailableBudget(#%d)', $budgetLimit->id));
 
         // based on the view range of the user (month week quarter etc) the budget limit could
@@ -145,7 +147,8 @@ class BudgetLimitHandler
      *
      * @return void
      */
-    private function calculateAmount(AvailableBudget $availableBudget): void {
+    private function calculateAmount(AvailableBudget $availableBudget): void
+    {
         $repository = app(BudgetLimitRepositoryInterface::class);
         $repository->setUser($availableBudget->user);
         $newAmount = '0';
@@ -173,8 +176,8 @@ class BudgetLimitHandler
             );
             // overlap in days:
             $limitPeriod = Period::make(
-                            $budgetLimit->start_date,
-                            $budgetLimit->end_date,
+                $budgetLimit->start_date,
+                $budgetLimit->end_date,
                 precision : Precision::DAY(),
                 boundaries: Boundaries::EXCLUDE_NONE()
             );
@@ -210,13 +213,14 @@ class BudgetLimitHandler
      *
      * @return string
      */
-    private function getDailyAmount(BudgetLimit $budgetLimit): string {
+    private function getDailyAmount(BudgetLimit $budgetLimit): string
+    {
         if (0 === (int)$budgetLimit->id) {
             return '0';
         }
         $limitPeriod = Period::make(
-                        $budgetLimit->start_date,
-                        $budgetLimit->end_date,
+            $budgetLimit->start_date,
+            $budgetLimit->end_date,
             precision : Precision::DAY(),
             boundaries: Boundaries::EXCLUDE_NONE()
         );
@@ -233,7 +237,8 @@ class BudgetLimitHandler
      *
      * @return void
      */
-    public function deleted(Deleted $event): void {
+    public function deleted(Deleted $event): void
+    {
         Log::debug(sprintf('BudgetLimitHandler::deleted(#%s)', $event->budgetLimit->id));
         $budgetLimit     = $event->budgetLimit;
         $budgetLimit->id = null;
@@ -245,7 +250,8 @@ class BudgetLimitHandler
      *
      * @return void
      */
-    public function updated(Updated $event): void {
+    public function updated(Updated $event): void
+    {
         Log::debug(sprintf('BudgetLimitHandler::updated(#%s)', $event->budgetLimit->id));
         $this->updateAvailableBudget($event->budgetLimit);
     }

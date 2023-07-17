@@ -39,12 +39,14 @@ class NavigationAddPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
-    public function __construct(string $name) {
+    public function __construct(string $name)
+    {
         parent::__construct($name);
         $this->navigation = new Navigation();
     }
 
-    public static function provideFrequencies(): array {
+    public static function provideFrequencies(): array
+    {
         return [
             Periodicity::Daily->name       => ['periodicity' => Periodicity::Daily, 'from' => Carbon::now(), 'expected' => Carbon::tomorrow()],
             Periodicity::Weekly->name      => ['periodicity' => Periodicity::Weekly, 'from' => Carbon::now(), 'expected' => Carbon::now()->addWeeks(1)],
@@ -71,7 +73,8 @@ class NavigationAddPeriodTest extends TestCase
         ];
     }
 
-    public static function provideMonthPeriods(): array {
+    public static function provideMonthPeriods(): array
+    {
         return [
             '1M'                       => ['frequency' => '1M', 'from' => Carbon::parse('2023-06-25'), 'expected' => Carbon::parse('2023-06-25')->addMonths(1)],
             'month'                    => ['frequency' => 'month', 'from' => Carbon::parse('2023-06-25'), 'expected' => Carbon::parse('2023-06-25')->addMonths(1)],
@@ -86,7 +89,8 @@ class NavigationAddPeriodTest extends TestCase
         ];
     }
 
-    public static function providePeriods(): array {
+    public static function providePeriods(): array
+    {
         return [
             '1D'        => ['frequency' => '1D', 'from' => Carbon::now(), 'expected' => Carbon::tomorrow()],
             'daily'     => ['frequency' => 'daily', 'from' => Carbon::now(), 'expected' => Carbon::tomorrow()],
@@ -111,7 +115,8 @@ class NavigationAddPeriodTest extends TestCase
         ];
     }
 
-    public static function providePeriodsWithSkippingParam(): Generator {
+    public static function providePeriodsWithSkippingParam(): Generator
+    {
         $intervals = [
             '2019-01-31 to 2019-02-11' => ['skip' => 10, 'frequency' => 'daily', 'from' => Carbon::parse('2019-01-31'), 'expected' => Carbon::parse('2019-02-11')],
             '1D'                       => ['skip' => 1, 'frequency' => '1D', 'from' => Carbon::now(), 'expected' => Carbon::now()->addDays(2)],
@@ -155,7 +160,8 @@ class NavigationAddPeriodTest extends TestCase
     /**
      * @dataProvider providePeriodsWithSkippingParam
      */
-    public function testGivenAFrequencyAndSkipIntervalWhenCalculateTheDateThenReturnsTheSkippedDateSuccessful(int $skip, string $frequency, Carbon $from, Carbon $expected) {
+    public function testGivenAFrequencyAndSkipIntervalWhenCalculateTheDateThenReturnsTheSkippedDateSuccessful(int $skip, string $frequency, Carbon $from, Carbon $expected)
+    {
         $period = $this->navigation->addPeriod($from, $frequency, $skip);
         $this->assertEquals($expected->toDateString(), $period->toDateString());
     }
@@ -163,7 +169,8 @@ class NavigationAddPeriodTest extends TestCase
     /**
      * @dataProvider providePeriods
      */
-    public function testGivenAFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected) {
+    public function testGivenAFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected)
+    {
         $period = $this->navigation->addPeriod($from, $frequency, 0);
         $this->assertEquals($expected->toDateString(), $period->toDateString());
     }
@@ -171,7 +178,8 @@ class NavigationAddPeriodTest extends TestCase
     /**
      * @dataProvider provideFrequencies
      */
-    public function testGivenAIntervalWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(Periodicity $periodicity, Carbon $from, Carbon $expected) {
+    public function testGivenAIntervalWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(Periodicity $periodicity, Carbon $from, Carbon $expected)
+    {
         $period = $this->navigation->nextDateByInterval($from, $periodicity);
         $this->assertEquals($expected->toDateString(), $period->toDateString());
     }
@@ -179,7 +187,8 @@ class NavigationAddPeriodTest extends TestCase
     /**
      * @dataProvider provideMonthPeriods
      */
-    public function testGivenAMonthFrequencyWhenCalculateTheDateThenReturnsTheLastDayOfMonthSuccessful(string $frequency, Carbon $from, Carbon $expected) {
+    public function testGivenAMonthFrequencyWhenCalculateTheDateThenReturnsTheLastDayOfMonthSuccessful(string $frequency, Carbon $from, Carbon $expected)
+    {
         $period = $this->navigation->addPeriod($from, $frequency, 0);
         $this->assertEquals($expected->toDateString(), $period->toDateString());
     }

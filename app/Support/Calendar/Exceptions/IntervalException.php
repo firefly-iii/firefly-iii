@@ -36,7 +36,7 @@ final class IntervalException extends Exception
 {
     public readonly array       $availableIntervals;
     public readonly Periodicity $periodicity;
-    protected                   $message = 'The periodicity %s is unknown. Choose one of available periodicity: %s';
+    protected $message = 'The periodicity %s is unknown. Choose one of available periodicity: %s';
 
     /**
      * @param Periodicity    $periodicity

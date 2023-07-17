@@ -38,7 +38,8 @@ final class Yearly extends Interval
      *
      * @return Carbon
      */
-    public function nextDate(Carbon $date, int $interval = 1): Carbon {
+    public function nextDate(Carbon $date, int $interval = 1): Carbon
+    {
         return ($date->clone())->addYearsNoOverflow($this->skip($interval));
     }
 }

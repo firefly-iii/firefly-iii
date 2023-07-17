@@ -37,11 +37,13 @@ use FireflyIII\Support\Calendar\Periodicity\Interval;
  */
 class QuarterlyTest extends IntervalTestCase
 {
-    public static function factory(): Interval {
+    public static function factory(): Interval
+    {
         return new Periodicity\Quarterly();
     }
 
-    public static function provideIntervals(): array {
+    public static function provideIntervals(): array
+    {
         return [
             new IntervalProvider(Carbon::now(), Carbon::now()->addMonths(3)),
             new IntervalProvider(Carbon::parse('2019-01-29'), Carbon::parse('2019-04-29')),

@@ -38,7 +38,8 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function searchAccount(string $query, array $types, int $limit): Collection {
+    public function searchAccount(string $query, array $types, int $limit): Collection
+    {
         // search by group, not by user
         $dbQuery = $this->userGroup->accounts()
                                    ->where('active', true)

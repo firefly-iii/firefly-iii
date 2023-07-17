@@ -87,14 +87,14 @@ class VersionCheckResult extends Notification
     public function toSlack($notifiable)
     {
         //        return (new SlackMessage())->text($this->message)
-//            ->sectionBlock(function (SectionBlock $block) {
-//                $button = new ButtonElement('Button');
-//                $button->url('https://github.com/firefly-iii/firefly-iii/releases');
-//                $block->accessory($button);
-//            });
-////            ->attachment(function ($attachment) {
-////                $attachment->title('Firefly III @ GitHub', 'https://github.com/firefly-iii/firefly-iii/releases');
-////            });
+        //            ->sectionBlock(function (SectionBlock $block) {
+        //                $button = new ButtonElement('Button');
+        //                $button->url('https://github.com/firefly-iii/firefly-iii/releases');
+        //                $block->accessory($button);
+        //            });
+        ////            ->attachment(function ($attachment) {
+        ////                $attachment->title('Firefly III @ GitHub', 'https://github.com/firefly-iii/firefly-iii/releases');
+        ////            });
 
 
         return (new SlackMessage())->content($this->message)
@@ -112,6 +112,10 @@ class VersionCheckResult extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail', 'slack'];
+        $slackUrl = (string)app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
+        if (str_starts_with($slackUrl, 'https://hooks.slack.com/services/')) {
+            return ['mail', 'slack'];
+        }
+        return ['mail'];
     }
 }

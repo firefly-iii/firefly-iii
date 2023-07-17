@@ -41,7 +41,8 @@ class Updated extends Event
     /**
      * @param BudgetLimit $budgetLimit
      */
-    public function __construct(BudgetLimit $budgetLimit) {
+    public function __construct(BudgetLimit $budgetLimit)
+    {
         $this->budgetLimit = $budgetLimit;
     }
 }

@@ -44,7 +44,8 @@ class ShowController extends Controller
     /**
      *
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
@@ -60,7 +61,8 @@ class ShowController extends Controller
      * TODO add URL
      *
      */
-    public function budgeted(DateRequest $request, Budget $budget): JsonResponse {
+    public function budgeted(DateRequest $request, Budget $budget): JsonResponse
+    {
         $data      = $request->getAll();
         $result    = $this->repository->budgetedInPeriodForBudget($budget, $data['start'], $data['end']);
         $converted = $this->cerSum(array_values($result));
@@ -73,7 +75,8 @@ class ShowController extends Controller
      * TODO add URL
      *
      */
-    public function spent(DateRequest $request, Budget $budget): JsonResponse {
+    public function spent(DateRequest $request, Budget $budget): JsonResponse
+    {
         $data      = $request->getAll();
         $result    = $this->repository->spentInPeriodForBudget($budget, $data['start'], $data['end']);
         $converted = $this->cerSum(array_values($result));
