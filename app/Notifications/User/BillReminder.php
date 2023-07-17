@@ -27,7 +27,7 @@ namespace FireflyIII\Notifications\User;
 use FireflyIII\Models\Bill;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Slack\SlackMessage;
+use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
 /**
