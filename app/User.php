@@ -53,6 +53,7 @@ use FireflyIII\Notifications\Admin\TestNotification;
 use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Admin\UserRegistration;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
+use FireflyIII\Notifications\User\NewAccessToken;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -484,6 +485,9 @@ class User extends Authenticatable
             return app('fireflyconfig')->get('slack_webhook_url', '')->data;
         }
         if ($notification instanceof VersionCheckResult) {
+            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
+        }
+        if ($notification instanceof NewAccessToken) {
             return app('fireflyconfig')->get('slack_webhook_url', '')->data;
         }
         if ($notification instanceof UserInvitation) {
