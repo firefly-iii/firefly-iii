@@ -62,7 +62,7 @@ return [
     'budgets_index_see_expenses_bar'        => 'Når du brukar pengar vil denne linja fyllast opp.',
     'budgets_index_navigate_periods'        => 'Naviger gjennom perioder for å enkelt definera budsjett på førehand.',
     'budgets_index_new_budget'              => 'Opprett nye budsjett etter behov.',
-    'budgets_index_list_of_budgets'         => 'Bruk denne tabellen til å angi beløp for hvert budsjett og sjå korleis du klarar deg.',
+    'budgets_index_list_of_budgets'         => 'Bruk denne tabellen til å angi beløp for kvart budsjett og sjå korleis du klarar deg.',
     'budgets_index_outro'                   => 'Om du vil vita meir om budsjettering, trykk på hjelp-ikonet øvst til høgre.',
 
 /*
@@ -97,7 +97,7 @@ return [
     'reports_report_tag_pieCharts'              => 'Desse diagramma gir deg innblikk i utgifter og inntekter per tagg, konto, kategori eller budsjett.',
     'reports_report_tag_incomeAndExpensesChart' => 'Dette diagrammet visar dine utgifter og inntekter per tagg.',
 
-    'reports_report_budget_intro'                             => 'Denne rapporten gir deg innblikk i ett eller fleire budsjett.',
+    'reports_report_budget_intro'                             => 'Denne rapporten gjer deg innblikk i eit eller fleire budsjett.',
     'reports_report_budget_pieCharts'                         => 'Desse diagramma gir deg innblikk i utgifter og inntekter per budsjett eller per konto.',
     'reports_report_budget_incomeAndExpensesChart'            => 'Dette diagrammet visar dine utgifter per budsjett.',
 
