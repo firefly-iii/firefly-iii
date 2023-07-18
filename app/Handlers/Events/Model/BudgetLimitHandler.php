@@ -77,7 +77,11 @@ class BudgetLimitHandler
         $end    = app('navigation')->endOfPeriod($end, $viewRange);
         $budget = Budget::find($budgetLimit->budget_id);
         if (null === $budget) {
-            Log::warning('Budget is null, cannot continue.');
+            Log::warning('Budget is null, probably deleted, find deleted version.');
+            $budget = Budget::withTrashed()->find($budgetLimit->budget_id);
+        }
+        if (null === $budget) {
+            Log::warning('Budget is still null, cannot continue, will delete budget limit.');
             $budgetLimit->forceDelete();
             return;
         }
@@ -176,8 +180,8 @@ class BudgetLimitHandler
             );
             // overlap in days:
             $limitPeriod = Period::make(
-                $budgetLimit->start_date,
-                $budgetLimit->end_date,
+                            $budgetLimit->start_date,
+                            $budgetLimit->end_date,
                 precision : Precision::DAY(),
                 boundaries: Boundaries::EXCLUDE_NONE()
             );
@@ -219,8 +223,8 @@ class BudgetLimitHandler
             return '0';
         }
         $limitPeriod = Period::make(
-            $budgetLimit->start_date,
-            $budgetLimit->end_date,
+                        $budgetLimit->start_date,
+                        $budgetLimit->end_date,
             precision : Precision::DAY(),
             boundaries: Boundaries::EXCLUDE_NONE()
         );
