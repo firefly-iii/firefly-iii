@@ -584,6 +584,11 @@ interface GroupCollectorInterface
     public function foreignAmountMore(string $amount): GroupCollectorInterface;
 
     /**
+     * @return bool
+     */
+    public function getExpandGroupSearch(): bool;
+
+    /**
      * Return the transaction journals without group information. Is useful in some instances.
      *
      * @return array
@@ -1073,6 +1078,11 @@ interface GroupCollectorInterface
     public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
+     * @param bool $expandGroupSearch
+     */
+    public function setExpandGroupSearch(bool $expandGroupSearch);
+
+    /**
      * Look for specific external ID's.
      *
      * @param string $externalId
@@ -1502,4 +1512,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function yearIsNot(string $year): GroupCollectorInterface;
+
+
 }
