@@ -196,6 +196,7 @@ return [
 
     // web configuration:
     'trusted_proxies'              => env('TRUSTED_PROXIES', ''),
+    'forceUseHttps'                => env('FORCE_USE_HTTPS', false),
     'layout'                       => envNonEmpty('FIREFLY_III_LAYOUT', 'v1'),
 
     // map configuration
