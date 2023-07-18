@@ -37,11 +37,13 @@ use FireflyIII\Support\Calendar\Periodicity\Interval;
  */
 class WeeklyTest extends IntervalTestCase
 {
-    public static function factory(): Interval {
+    public static function factory(): Interval
+    {
         return new Periodicity\Weekly();
     }
 
-    public static function provideIntervals(): array {
+    public static function provideIntervals(): array
+    {
         return [
             new IntervalProvider(Carbon::now(), Carbon::now()->addWeek()),
             new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-07')),

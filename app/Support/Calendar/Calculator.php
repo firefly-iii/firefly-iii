@@ -46,7 +46,8 @@ class Calculator
      * @return Carbon
      * @throws IntervalException
      */
-    public function nextDateByInterval(Carbon $epoch, Periodicity $periodicity, int $skipInterval = 0): Carbon {
+    public function nextDateByInterval(Carbon $epoch, Periodicity $periodicity, int $skipInterval = 0): Carbon
+    {
         if (!self::isAvailablePeriodicity($periodicity)) {
             throw IntervalException::unavailable($periodicity, self::$intervals);
         }
@@ -62,7 +63,8 @@ class Calculator
      *
      * @return bool
      */
-    public function isAvailablePeriodicity(Periodicity $periodicity): bool {
+    public function isAvailablePeriodicity(Periodicity $periodicity): bool
+    {
         return self::containsInterval($periodicity);
     }
 
@@ -71,14 +73,16 @@ class Calculator
      *
      * @return bool
      */
-    private static function containsInterval(Periodicity $periodicity): bool {
+    private static function containsInterval(Periodicity $periodicity): bool
+    {
         return self::loadIntervalMap()->contains($periodicity);
     }
 
     /**
      * @return SplObjectStorage
      */
-    private static function loadIntervalMap(): SplObjectStorage {
+    private static function loadIntervalMap(): SplObjectStorage
+    {
         if (self::$intervalMap != null) {
             return self::$intervalMap;
         }
@@ -96,7 +100,8 @@ class Calculator
      *
      * @return int
      */
-    private function skipInterval(int $skip): int {
+    private function skipInterval(int $skip): int
+    {
         return self::DEFAULT_INTERVAL + $skip;
     }
 

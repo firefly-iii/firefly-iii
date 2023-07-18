@@ -37,14 +37,16 @@ readonly class CalculatorProvider
     public Periodicity      $periodicity;
     public int              $skip;
 
-    private function __construct(IntervalProvider $intervalProvider, Periodicity $periodicity, int $skip = 0) {
+    private function __construct(IntervalProvider $intervalProvider, Periodicity $periodicity, int $skip = 0)
+    {
         $this->skip             = $skip;
         $this->intervalProvider = $intervalProvider;
         $this->periodicity      = $periodicity;
         $this->label            = "{$periodicity->name} {$intervalProvider->label}";
     }
 
-    public static function providePeriodicityWithSkippedIntervals(): Generator {
+    public static function providePeriodicityWithSkippedIntervals(): Generator
+    {
         $intervals = [
             CalculatorProvider::from(Periodicity::Daily, new IntervalProvider(Carbon::now(), Carbon::now()->addDays(2)), 1),
             CalculatorProvider::from(Periodicity::Daily, new IntervalProvider(Carbon::now(), Carbon::now()->addDays(3)), 2),
@@ -117,15 +119,18 @@ readonly class CalculatorProvider
         }
     }
 
-    public static function from(Periodicity $periodicity, IntervalProvider $interval, int $skip = 0): CalculatorProvider {
+    public static function from(Periodicity $periodicity, IntervalProvider $interval, int $skip = 0): CalculatorProvider
+    {
         return new self($interval, $periodicity, $skip);
     }
 
-    public function epoch(): Carbon {
+    public function epoch(): Carbon
+    {
         return $this->intervalProvider->epoch;
     }
 
-    public function expected(): Carbon {
+    public function expected(): Carbon
+    {
         return $this->intervalProvider->expected;
     }
 }

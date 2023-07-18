@@ -42,7 +42,8 @@ class TriggerRecurrenceRequest extends FormRequest
      *
      * @return array
      */
-    public function getAll(): array {
+    public function getAll(): array
+    {
         return [
             'date' => $this->getCarbonDate('date'),
         ];
@@ -53,7 +54,8 @@ class TriggerRecurrenceRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array {
+    public function rules(): array
+    {
         return [
             'date' => 'required|date',
         ];

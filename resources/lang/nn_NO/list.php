@@ -49,7 +49,7 @@ return [
     'linked_to_rules'       => 'Relevante reglar',
     'active'                => 'Er aktiv?',
     'percentage'            => 'pst.',
-    'recurring_transaction' => 'Gjentakende transaksjon',
+    'recurring_transaction' => 'Gjentakande transaksjon',
     'next_due'              => 'Neste frist',
     'transaction_type'      => 'Type',
     'lastActivity'          => 'Siste aktivitet',
@@ -82,7 +82,7 @@ return [
 
 
     'repeat_freq'             => 'Gjentas',
-    'description'             => 'Beskrivelse',
+    'description'             => 'Beskriving',
     'amount'                  => 'Beløp',
     'date'                    => 'Dato',
     'interest_date'           => 'Rentedato',
@@ -92,7 +92,7 @@ return [
     'payment_date'            => 'Betalingsdato',
     'invoice_date'            => 'Fakturadato',
     'internal_reference'      => 'Intern referanse',
-    'notes'                   => 'Notater',
+    'notes'                   => 'Notat',
     'from'                    => 'Fra',
     'piggy_bank'              => 'Sparegris',
     'to'                      => 'Til',

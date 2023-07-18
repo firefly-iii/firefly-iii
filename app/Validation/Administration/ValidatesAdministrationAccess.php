@@ -46,7 +46,8 @@ trait ValidatesAdministrationAccess
      * @throws AuthenticationException
      * @throws FireflyException
      */
-    protected function validateAdministration(Validator $validator, array $allowedRoles): void {
+    protected function validateAdministration(Validator $validator, array $allowedRoles): void
+    {
         Log::debug('Now in validateAdministration()');
         if (!auth()->check()) {
             Log::error('User is not authenticated.');

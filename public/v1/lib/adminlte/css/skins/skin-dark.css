@@ -498,7 +498,6 @@
 .skin-firefly-iii .input-group textarea {
   background-color: #353c42;
   color: #bec5cb;
-  border: 1px solid #73818f;
 }
 .skin-firefly-iii .list-group {
   color: #bec5cb;
@@ -514,6 +513,9 @@
 .skin-firefly-iii .form-control {
   border-color: #272c30;
   background-color: #353c42;
+}
+.skin-firefly-iii .form-control:focus {
+  border-color: #3c8dbc;
 }
 .skin-firefly-iii .select2 .select2-selection {
   background-color: #353c42;

@@ -61,8 +61,8 @@ return [
     'BIC'                       => 'BIC',
     'verify_password'           => 'パスワードの安全性確認',
     'source_account'            => '支出元口座',
-    'destination_account'       => '宛先口座',
-    'asset_destination_account' => '宛先口座',
+    'destination_account'       => '預け入れ口座',
+    'asset_destination_account' => '預け入れ口座',
     'include_net_worth'         => '純資産に含める',
     'asset_source_account'      => '支出元口座',
     'journal_description'       => '説明',
@@ -94,7 +94,7 @@ return [
     'cc_monthly_payment_date'     => 'クレジットカードの引き落とし日',
     'piggy_bank_id'               => '貯金箱',
     'returnHere'                  => 'ここへ戻る',
-    'returnHereExplanation'       => '保存後、ここに戻って別のものを作成する。',
+    'returnHereExplanation'       => '保存後に戻り作成を続ける。',
     'returnHereUpdateExplanation' => '保存後、ここへ戻る。',
     'description'                 => '説明',
     'expense_account'             => '支出口座',
@@ -176,7 +176,7 @@ return [
     'recurring_areYouSure'        => '定期的な取引「:title」を削除してもよろしいですか？',
     'currency_areYouSure'         => '通貨「:name」を削除してもよろしいですか？',
     'piggyBank_areYouSure'        => '貯金箱「:name」を削除してもよろしいですか？',
-    'journal_areYouSure'          => '「:description」と説明されている取引を削除してもよろしいですか？',
+    'journal_areYouSure'          => '「:description」という説明の取引を削除してもよろしいですか？',
     'mass_journal_are_you_sure'   => 'これらの取引を削除してもよろしいですか？',
 
 /*

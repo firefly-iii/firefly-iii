@@ -43,7 +43,8 @@ trait AdministrationTrait
     /**
      * @return int
      */
-    public function getAdministrationId(): int {
+    public function getAdministrationId(): int
+    {
         return $this->administrationId;
     }
 
@@ -52,7 +53,8 @@ trait AdministrationTrait
      *
      * @throws FireflyException
      */
-    public function setAdministrationId(int $administrationId): void {
+    public function setAdministrationId(int $administrationId): void
+    {
         $this->administrationId = $administrationId;
         $this->refreshAdministration();
     }
@@ -61,7 +63,8 @@ trait AdministrationTrait
      * @return void
      * @throws FireflyException
      */
-    private function refreshAdministration(): void {
+    private function refreshAdministration(): void
+    {
         if (null !== $this->administrationId) {
             $memberships = GroupMembership::where('user_id', $this->user->id)
                                           ->where('user_group_id', $this->administrationId)
@@ -80,7 +83,8 @@ trait AdministrationTrait
      *
      * @return void
      */
-    public function setUser(Authenticatable | User | null $user): void {
+    public function setUser(Authenticatable | User | null $user): void
+    {
         if (null !== $user) {
             $this->user = $user;
         }

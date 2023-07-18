@@ -48,7 +48,8 @@ use Tests\unit\Support\Calendar\Periodicity\YearlyTest;
  */
 class CalculatorTest extends TestCase
 {
-    public static function provideAllPeriodicity(): Generator {
+    public static function provideAllPeriodicity(): Generator
+    {
         $intervals = [];
         $intervals = array_merge($intervals, self::convert(Periodicity::Daily, DailyTest::provideIntervals()));
         $intervals = array_merge($intervals, self::convert(Periodicity::Weekly, WeeklyTest::provideIntervals()));
@@ -65,7 +66,8 @@ class CalculatorTest extends TestCase
         }
     }
 
-    private static function convert(Periodicity $periodicity, array $intervals): array {
+    private static function convert(Periodicity $periodicity, array $intervals): array
+    {
         $periodicityIntervals = [];
         /** @var IntervalProvider $interval */
         foreach ($intervals as $index => $interval) {
@@ -76,7 +78,8 @@ class CalculatorTest extends TestCase
         return $periodicityIntervals;
     }
 
-    public static function provideSkippedIntervals(): Generator {
+    public static function provideSkippedIntervals(): Generator
+    {
         return CalculatorProvider::providePeriodicityWithSkippedIntervals();
     }
 
@@ -84,7 +87,8 @@ class CalculatorTest extends TestCase
      * @dataProvider provideAllPeriodicity
      * @throws IntervalException
      */
-    public function testGivenADailyPeriodicityWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider) {
+    public function testGivenADailyPeriodicityWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider)
+    {
         $calculator = new Calculator();
         $period     = $calculator->nextDateByInterval($provider->epoch(), $provider->periodicity);
         $this->assertEquals($provider->expected()->toDateString(), $period->toDateString());
@@ -94,7 +98,8 @@ class CalculatorTest extends TestCase
      * @dataProvider provideSkippedIntervals
      * @throws IntervalException
      */
-    public function testGivenAnEpochWithSkipIntervalNumberWhenCallTheNextDateBySkippedIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider) {
+    public function testGivenAnEpochWithSkipIntervalNumberWhenCallTheNextDateBySkippedIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider)
+    {
         $calculator = new Calculator();
         $period     = $calculator->nextDateByInterval($provider->epoch(), $provider->periodicity, $provider->skip);
         $this->assertEquals($provider->expected()->toDateString(), $period->toDateString());

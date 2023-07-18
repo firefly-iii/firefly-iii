@@ -94,6 +94,10 @@ class NewAccessToken extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail', 'slack'];
+        $slackUrl = (string)app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
+        if (str_starts_with($slackUrl, 'https://hooks.slack.com/services/')) {
+            return ['mail', 'slack'];
+        }
+        return ['mail'];
     }
 }
