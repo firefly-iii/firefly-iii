@@ -493,7 +493,8 @@ trait TransactionValidation
         }
         /** @var TransactionJournal $journal */
         foreach ($transactionGroup->transactionJournals as $journal) {
-            if ((int)$journal->id === (int)$transaction['transaction_journal_id']) {
+            $journalId = (int)($transaction['transaction_journal_id'] ?? 0);
+            if ((int)$journal->id === $journalId) {
                 return $journal->transactions()->where('amount', '<', 0)->first()->account;
             }
         }
@@ -783,8 +784,8 @@ trait TransactionValidation
     private function compareAccountData(string $type, array $comparison): bool
     {
         return match ($type) {
-            default    => $this->compareAccountDataWithdrawal($comparison),
-            'deposit'  => $this->compareAccountDataDeposit($comparison),
+            default => $this->compareAccountDataWithdrawal($comparison),
+            'deposit' => $this->compareAccountDataDeposit($comparison),
             'transfer' => $this->compareAccountDataTransfer($comparison),
         };
     }
