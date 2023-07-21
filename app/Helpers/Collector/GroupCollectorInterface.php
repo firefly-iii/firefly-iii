@@ -75,120 +75,140 @@ interface GroupCollectorInterface
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameContains(string $name): GroupCollectorInterface;
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameDoesNotContain(string $name): GroupCollectorInterface;
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameDoesNotEnd(string $name): GroupCollectorInterface;
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameDoesNotStart(string $name): GroupCollectorInterface;
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameEnds(string $name): GroupCollectorInterface;
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameIs(string $name): GroupCollectorInterface;
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameIsNot(string $name): GroupCollectorInterface;
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameStarts(string $name): GroupCollectorInterface;
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesAre(string $value): GroupCollectorInterface;
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesAreNot(string $value): GroupCollectorInterface;
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesContains(string $value): GroupCollectorInterface;
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesDoNotContain(string $value): GroupCollectorInterface;
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesDoNotEnd(string $value): GroupCollectorInterface;
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesDoNotStart(string $value): GroupCollectorInterface;
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesEnds(string $value): GroupCollectorInterface;
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesStarts(string $value): GroupCollectorInterface;
 
     /**
      * @param string $day
+     *
      * @return GroupCollectorInterface
      */
     public function dayAfter(string $day): GroupCollectorInterface;
 
     /**
      * @param string $day
+     *
      * @return GroupCollectorInterface
      */
     public function dayBefore(string $day): GroupCollectorInterface;
 
     /**
      * @param string $day
+     *
      * @return GroupCollectorInterface
      */
     public function dayIs(string $day): GroupCollectorInterface;
 
     /**
      * @param string $day
+     *
      * @return GroupCollectorInterface
      */
     public function dayIsNot(string $day): GroupCollectorInterface;
@@ -287,6 +307,7 @@ interface GroupCollectorInterface
      * Exclude a set of categories.
      *
      * @param Collection $categories
+     *
      * @return GroupCollectorInterface
      */
     public function excludeCategories(Collection $categories): GroupCollectorInterface;
@@ -329,6 +350,7 @@ interface GroupCollectorInterface
 
     /**
      * @param string $url
+     *
      * @return GroupCollectorInterface
      */
     public function excludeExternalUrl(string $url): GroupCollectorInterface;
@@ -354,11 +376,11 @@ interface GroupCollectorInterface
     /**
      * Look for specific external ID's.
      *
-     * @param string $externalId
+     * @param string $internalReference
      *
      * @return GroupCollectorInterface
      */
-    public function excludeInternalReference(string $externalId): GroupCollectorInterface;
+    public function excludeInternalReference(string $internalReference): GroupCollectorInterface;
 
     /**
      * Limit the result to NOT a set of specific transaction journals.
@@ -373,6 +395,7 @@ interface GroupCollectorInterface
      * @param Carbon $start
      * @param Carbon $end
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function excludeMetaDateRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface;
@@ -381,6 +404,7 @@ interface GroupCollectorInterface
      * @param Carbon $start
      * @param Carbon $end
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function excludeObjectRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface;
@@ -388,6 +412,7 @@ interface GroupCollectorInterface
     /**
      * @param Carbon $start
      * @param Carbon $end
+     *
      * @return GroupCollectorInterface
      */
     public function excludeRange(Carbon $start, Carbon $end): GroupCollectorInterface;
@@ -433,72 +458,84 @@ interface GroupCollectorInterface
 
     /**
      * @param string $externalId
+     *
      * @return GroupCollectorInterface
      */
     public function externalIdContains(string $externalId): GroupCollectorInterface;
 
     /**
      * @param string $externalId
+     *
      * @return GroupCollectorInterface
      */
     public function externalIdDoesNotContain(string $externalId): GroupCollectorInterface;
 
     /**
      * @param string $externalId
+     *
      * @return GroupCollectorInterface
      */
     public function externalIdDoesNotEnd(string $externalId): GroupCollectorInterface;
 
     /**
      * @param string $externalId
+     *
      * @return GroupCollectorInterface
      */
     public function externalIdDoesNotStart(string $externalId): GroupCollectorInterface;
 
     /**
      * @param string $externalId
+     *
      * @return GroupCollectorInterface
      */
     public function externalIdEnds(string $externalId): GroupCollectorInterface;
 
     /**
      * @param string $externalId
+     *
      * @return GroupCollectorInterface
      */
     public function externalIdStarts(string $externalId): GroupCollectorInterface;
 
     /**
      * @param string $url
+     *
      * @return GroupCollectorInterface
      */
     public function externalUrlContains(string $url): GroupCollectorInterface;
 
     /**
      * @param string $url
+     *
      * @return GroupCollectorInterface
      */
     public function externalUrlDoesNotContain(string $url): GroupCollectorInterface;
 
     /**
      * @param string $url
+     *
      * @return GroupCollectorInterface
      */
     public function externalUrlDoesNotEnd(string $url): GroupCollectorInterface;
 
     /**
      * @param string $url
+     *
      * @return GroupCollectorInterface
      */
     public function externalUrlDoesNotStart(string $url): GroupCollectorInterface;
 
     /**
      * @param string $url
+     *
      * @return GroupCollectorInterface
      */
     public function externalUrlEnds(string $url): GroupCollectorInterface;
 
     /**
      * @param string $url
+     *
      * @return GroupCollectorInterface
      */
     public function externalUrlStarts(string $url): GroupCollectorInterface;
@@ -547,6 +584,11 @@ interface GroupCollectorInterface
     public function foreignAmountMore(string $amount): GroupCollectorInterface;
 
     /**
+     * @return bool
+     */
+    public function getExpandGroupSearch(): bool;
+
+    /**
      * Return the transaction journals without group information. Is useful in some instances.
      *
      * @return array
@@ -587,40 +629,46 @@ interface GroupCollectorInterface
     public function hasNoAttachments(): GroupCollectorInterface;
 
     /**
-     * @param string $externalId
+     * @param string $internalReference
+     *
      * @return GroupCollectorInterface
      */
-    public function internalReferenceContains(string $externalId): GroupCollectorInterface;
+    public function internalReferenceContains(string $internalReference): GroupCollectorInterface;
 
     /**
-     * @param string $externalId
+     * @param string $internalReference
+     *
      * @return GroupCollectorInterface
      */
-    public function internalReferenceDoesNotContain(string $externalId): GroupCollectorInterface;
+    public function internalReferenceDoesNotContain(string $internalReference): GroupCollectorInterface;
 
     /**
-     * @param string $externalId
+     * @param string $internalReference
+     *
      * @return GroupCollectorInterface
      */
-    public function internalReferenceDoesNotEnd(string $externalId): GroupCollectorInterface;
+    public function internalReferenceDoesNotEnd(string $internalReference): GroupCollectorInterface;
 
     /**
-     * @param string $externalId
+     * @param string $internalReference
+     *
      * @return GroupCollectorInterface
      */
-    public function internalReferenceDoesNotStart(string $externalId): GroupCollectorInterface;
+    public function internalReferenceDoesNotStart(string $internalReference): GroupCollectorInterface;
 
     /**
-     * @param string $externalId
+     * @param string $internalReference
+     *
      * @return GroupCollectorInterface
      */
-    public function internalReferenceEnds(string $externalId): GroupCollectorInterface;
+    public function internalReferenceEnds(string $internalReference): GroupCollectorInterface;
 
     /**
-     * @param string $externalId
+     * @param string $internalReference
+     *
      * @return GroupCollectorInterface
      */
-    public function internalReferenceStarts(string $externalId): GroupCollectorInterface;
+    public function internalReferenceStarts(string $internalReference): GroupCollectorInterface;
 
     /**
      * Only journals that are reconciled.
@@ -639,6 +687,7 @@ interface GroupCollectorInterface
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaDayAfter(string $day, string $field): GroupCollectorInterface;
@@ -646,6 +695,7 @@ interface GroupCollectorInterface
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaDayBefore(string $day, string $field): GroupCollectorInterface;
@@ -653,6 +703,7 @@ interface GroupCollectorInterface
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaDayIs(string $day, string $field): GroupCollectorInterface;
@@ -660,6 +711,7 @@ interface GroupCollectorInterface
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaDayIsNot(string $day, string $field): GroupCollectorInterface;
@@ -667,6 +719,7 @@ interface GroupCollectorInterface
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaMonthAfter(string $month, string $field): GroupCollectorInterface;
@@ -674,6 +727,7 @@ interface GroupCollectorInterface
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaMonthBefore(string $month, string $field): GroupCollectorInterface;
@@ -681,6 +735,7 @@ interface GroupCollectorInterface
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaMonthIs(string $month, string $field): GroupCollectorInterface;
@@ -688,6 +743,7 @@ interface GroupCollectorInterface
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaMonthIsNot(string $month, string $field): GroupCollectorInterface;
@@ -695,6 +751,7 @@ interface GroupCollectorInterface
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaYearAfter(string $year, string $field): GroupCollectorInterface;
@@ -702,6 +759,7 @@ interface GroupCollectorInterface
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaYearBefore(string $year, string $field): GroupCollectorInterface;
@@ -709,6 +767,7 @@ interface GroupCollectorInterface
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaYearIs(string $year, string $field): GroupCollectorInterface;
@@ -716,30 +775,35 @@ interface GroupCollectorInterface
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaYearIsNot(string $year, string $field): GroupCollectorInterface;
 
     /**
      * @param string $month
+     *
      * @return GroupCollectorInterface
      */
     public function monthAfter(string $month): GroupCollectorInterface;
 
     /**
      * @param string $month
+     *
      * @return GroupCollectorInterface
      */
     public function monthBefore(string $month): GroupCollectorInterface;
 
     /**
      * @param string $month
+     *
      * @return GroupCollectorInterface
      */
     public function monthIs(string $month): GroupCollectorInterface;
 
     /**
      * @param string $month
+     *
      * @return GroupCollectorInterface
      */
     public function monthIsNot(string $month): GroupCollectorInterface;
@@ -767,6 +831,7 @@ interface GroupCollectorInterface
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function notesDontStartWith(string $value): GroupCollectorInterface;
@@ -802,6 +867,7 @@ interface GroupCollectorInterface
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectDayAfter(string $day, string $field): GroupCollectorInterface;
@@ -809,6 +875,7 @@ interface GroupCollectorInterface
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectDayBefore(string $day, string $field): GroupCollectorInterface;
@@ -816,6 +883,7 @@ interface GroupCollectorInterface
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectDayIs(string $day, string $field): GroupCollectorInterface;
@@ -823,6 +891,7 @@ interface GroupCollectorInterface
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectDayIsNot(string $day, string $field): GroupCollectorInterface;
@@ -830,6 +899,7 @@ interface GroupCollectorInterface
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectMonthAfter(string $month, string $field): GroupCollectorInterface;
@@ -837,6 +907,7 @@ interface GroupCollectorInterface
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectMonthBefore(string $month, string $field): GroupCollectorInterface;
@@ -844,6 +915,7 @@ interface GroupCollectorInterface
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectMonthIs(string $month, string $field): GroupCollectorInterface;
@@ -851,6 +923,7 @@ interface GroupCollectorInterface
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectMonthIsNot(string $month, string $field): GroupCollectorInterface;
@@ -858,6 +931,7 @@ interface GroupCollectorInterface
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectYearAfter(string $year, string $field): GroupCollectorInterface;
@@ -865,6 +939,7 @@ interface GroupCollectorInterface
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectYearBefore(string $year, string $field): GroupCollectorInterface;
@@ -872,6 +947,7 @@ interface GroupCollectorInterface
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectYearIs(string $year, string $field): GroupCollectorInterface;
@@ -879,6 +955,7 @@ interface GroupCollectorInterface
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectYearIsNot(string $year, string $field): GroupCollectorInterface;
@@ -1001,6 +1078,11 @@ interface GroupCollectorInterface
     public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
+     * @param bool $expandGroupSearch
+     */
+    public function setExpandGroupSearch(bool $expandGroupSearch);
+
+    /**
      * Look for specific external ID's.
      *
      * @param string $externalId
@@ -1011,6 +1093,7 @@ interface GroupCollectorInterface
 
     /**
      * @param string $url
+     *
      * @return GroupCollectorInterface
      */
     public function setExternalUrl(string $url): GroupCollectorInterface;
@@ -1036,11 +1119,11 @@ interface GroupCollectorInterface
     /**
      * Look for specific external ID's.
      *
-     * @param string $externalId
+     * @param string $internalReference
      *
      * @return GroupCollectorInterface
      */
-    public function setInternalReference(string $externalId): GroupCollectorInterface;
+    public function setInternalReference(string $internalReference): GroupCollectorInterface;
 
     /**
      * Limit the result to a set of specific transaction journals.
@@ -1065,6 +1148,7 @@ interface GroupCollectorInterface
      *
      * @param Carbon $date
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function setMetaAfter(Carbon $date, string $field): GroupCollectorInterface;
@@ -1074,6 +1158,7 @@ interface GroupCollectorInterface
      *
      * @param Carbon $date
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function setMetaBefore(Carbon $date, string $field): GroupCollectorInterface;
@@ -1101,6 +1186,7 @@ interface GroupCollectorInterface
     /**
      * @param Carbon $date
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function setObjectAfter(Carbon $date, string $field): GroupCollectorInterface;
@@ -1108,6 +1194,7 @@ interface GroupCollectorInterface
     /**
      * @param Carbon $date
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function setObjectBefore(Carbon $date, string $field): GroupCollectorInterface;
@@ -1116,6 +1203,7 @@ interface GroupCollectorInterface
      * @param Carbon $start
      * @param Carbon $end
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function setObjectRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface;
@@ -1159,6 +1247,7 @@ interface GroupCollectorInterface
 
     /**
      * @param string $sepaCT
+     *
      * @return GroupCollectorInterface
      */
     public function setSepaCT(string $sepaCT): GroupCollectorInterface;
@@ -1332,6 +1421,7 @@ interface GroupCollectorInterface
      * Transaction must have meta date field X.
      *
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function withMetaDate(string $field): GroupCollectorInterface;
@@ -1397,25 +1487,31 @@ interface GroupCollectorInterface
 
     /**
      * @param string $year
+     *
      * @return GroupCollectorInterface
      */
     public function yearAfter(string $year): GroupCollectorInterface;
 
     /**
      * @param string $year
+     *
      * @return GroupCollectorInterface
      */
     public function yearBefore(string $year): GroupCollectorInterface;
 
     /**
      * @param string $year
+     *
      * @return GroupCollectorInterface
      */
     public function yearIs(string $year): GroupCollectorInterface;
 
     /**
      * @param string $year
+     *
      * @return GroupCollectorInterface
      */
     public function yearIsNot(string $year): GroupCollectorInterface;
+
+
 }

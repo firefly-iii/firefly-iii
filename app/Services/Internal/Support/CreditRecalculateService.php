@@ -206,10 +206,11 @@ class CreditRecalculateService
     }
 
     /**
-     * @param Account $account
-     * @param string $direction
+     * @param Account     $account
+     * @param string      $direction
      * @param Transaction $transaction
-     * @param string $leftOfDebt
+     * @param string      $leftOfDebt
+     *
      * @return string
      */
     private function processTransaction(Account $account, string $direction, Transaction $transaction, string $leftOfDebt): string

@@ -105,6 +105,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     /**
      * @param array $transactions
+     *
      * @return array
      */
     private function transformTransactions(array $transactions): array
@@ -119,6 +120,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     /**
      * @param array $transaction
+     *
      * @return array
      */
     private function transformTransaction(array $transaction): array
@@ -266,6 +268,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     /**
      * @param string|null $string
+     *
      * @return Carbon|null
      */
     private function date(?string $string): ?Carbon

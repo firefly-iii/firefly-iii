@@ -175,7 +175,7 @@ return [
     'interest'            => 'Процентная ставка',
     'interest_period'     => 'Период начисления процентов',
     'liability_type'      => 'Тип ответственности',
-    'liability_direction' => 'Liability in/out',
+    'liability_direction' => 'Обязательства (входящие и исходящие)',
     'end_date'            => 'Дата окончания',
     'payment_info'        => 'Иформация о платеже',
     'expected_info'       => 'Следующая ожидаемая операция',

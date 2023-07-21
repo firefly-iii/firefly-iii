@@ -46,7 +46,7 @@ return [
     'month_and_day_js'         => 'YYYY年MM月DD日',
 
     //'month_and_date_day'      => '%A %B %e, %Y',
-    'month_and_date_day_js'    => 'YYYY年M月D日 ddd',
+    'month_and_date_day_js'    => 'YYYY年M月D日 dddd',
 
     //'month_and_day_no_year'   => '%B %e',
     'month_and_day_no_year_js' => 'M月D日',
@@ -65,23 +65,23 @@ return [
 
     //'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'             => 'YYYY年MM月DD日 HH:mm:ss',
-    'date_time_fns'            => 'MMMM do, yyyy @ HH:mm:ss',
+    'date_time_fns'            => 'yyyy年MMMM月do日 HH:mm:ss',
 
     //'specific_day'            => '%e %B %Y',
     'specific_day_js'          => 'YYYY年MM月D日',
 
     //'week_in_year'            => 'Week %V, %G',
-    'week_in_year_js'          => '[Week] W, GGGG',
-    'week_in_year_fns'         => "yyyy年w[週目]",
+    'week_in_year_js'          => 'GGGG年W週',
+    'week_in_year_fns'         => "yyyy年w週",
 
     //'year'                    => '%Y',
     'year_js'                  => 'YYYY年',
 
     //'half_year'               => '%B %Y',
-    'half_year_js'             => '\QQ YYYY',
+    'half_year_js'             => 'YYYY年第Q四半期',
 
     'quarter_fns'   => "yyyy年第Q四半期",
-    'half_year_fns' => "yyyy年H[半期]",
+    'half_year_fns' => "yyyy年H半期",
     'dow_1'         => '月曜日',
     'dow_2'         => '火曜日',
     'dow_3'         => '水曜日',

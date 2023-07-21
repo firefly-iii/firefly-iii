@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * AdministrationTrait.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -20,6 +20,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Support\Repositories\Administration;
 
@@ -48,6 +50,7 @@ trait AdministrationTrait
 
     /**
      * @param int $administrationId
+     *
      * @throws FireflyException
      */
     public function setAdministrationId(int $administrationId): void
@@ -77,6 +80,7 @@ trait AdministrationTrait
 
     /**
      * @param Authenticatable|User|null $user
+     *
      * @return void
      */
     public function setUser(Authenticatable | User | null $user): void

@@ -86,11 +86,6 @@ class BillTransformer extends AbstractTransformer
         foreach ($payDates as $string) {
             $payDatesFormatted[] = Carbon::createFromFormat('!Y-m-d', $string, config('app.timezone'))->toAtomString();
         }
-        if (1 === $bill->id) {
-            var_dump($payDates);
-            var_dump($payDatesFormatted);
-            var_dump($paidData['next_expected_match']);
-        }
         $nextExpectedMatch = null;
         if (null !== $paidData['next_expected_match']) {
             $nextExpectedMatch = Carbon::createFromFormat('!Y-m-d', $paidData['next_expected_match'], config('app.timezone'))->toAtomString();
@@ -157,7 +152,7 @@ class BillTransformer extends AbstractTransformer
     {
         Log::debug(sprintf('Now in paidData for bill #%d', $bill->id));
         if (null === $this->parameters->get('start') || null === $this->parameters->get('end')) {
-            //Log::debug('parameters are NULL, return empty array');
+            Log::debug('parameters are NULL, return empty array');
 
             return [
                 'paid_dates'          => [],
@@ -165,15 +160,19 @@ class BillTransformer extends AbstractTransformer
             ];
         }
         // 2023-07-1 sub one day from the start date to fix a possible bug (see #7704)
+        // 2023-07-18 this particular date is used to search for the last paid date.
+        // 2023-07-18 the cloned $searchDate is used to grab the correct transactions.
         /** @var Carbon $start */
         $start = clone $this->parameters->get('start');
         $start->subDay();
+
+        $searchStart = clone $start;
         //Log::debug(sprintf('Parameters are start:%s end:%s', $start->format('Y-m-d'), $this->parameters->get('end')->format('Y-m-d')));
 
         /*
          *  Get from database when bill was paid.
          */
-        $set = $this->repository->getPaidDatesInRange($bill, $start, $this->parameters->get('end'));
+        $set = $this->repository->getPaidDatesInRange($bill, $searchStart, $this->parameters->get('end'));
         //Log::debug(sprintf('Count %d entries in getPaidDatesInRange()', $set->count()));
 
         /*

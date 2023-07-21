@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.18 - 2023-07-19
+
+### Fixed
+
+- Slack messages would fail if not configured.
+- Bill display would include transactions from the previous period.
+- Debug information left in bill overview.
+- [Issue 7694](https://github.com/firefly-iii/firefly-iii/issues/7694) Missing CSS info in dark mode.
+- [Issue 7706](https://github.com/firefly-iii/firefly-iii/issues/7706) Deleting a budget would not reset the available amount.
+- [Issue 7749](https://github.com/firefly-iii/firefly-iii/issues/7749) Account overview would show just 1 transaction from a split of multiple.
+
+## 6.0.17 - 2023-07-16
+
+### Added
+
+- New date calculation code and tests, thanks to @tonicospinelli!
+
+### Removed
+
+- Heroku support
+
+### Fixed
+
+- [Issue 7704](https://github.com/firefly-iii/firefly-iii/issues/7704) Date issues with bills
+- Cache issue in budgets
+- Fixed the account validation for transfer transactions
+
+### API
+
+- Various fields would not accept `null` values
+
 ## 6.0.16 - 2023-06-28
 
 ### Changed
@@ -293,7 +324,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 6.0.0 - 2023-03-03
 
-This is release **6.0.0** of Firefly III.
+This is release
+
+*
+
+*6.0.0
+** of Firefly III.
 
 ### Warnings
 
@@ -305,7 +341,13 @@ This is release **6.0.0** of Firefly III.
 
 ### Notes
 
-- The new **v3** layout is not yet finished, and it should **not** be used to edit or add data.
+- The new
+    *
+  *v3
+  ** layout is not yet finished, and it should
+    *
+  *not
+  ** be used to edit or add data.
 
 ### Added
 
@@ -397,7 +439,11 @@ This is release **6.0.0** of Firefly III.
 ### Warnings
 
 - ⚠️ Make a backup of your database first!
-- ⚠️ This version requires **PHP 8.2**.
+- ⚠️ This version requires
+    *
+  *PHP
+  8.2
+  **.
 
 You can access the new V3 layout under `/v3/`. If you decide to use or test it:
 
@@ -426,7 +472,11 @@ You can access the new V3 layout under `/v3/`. If you decide to use or test it:
 ### Warnings
 
 - ⚠️ Make a backup of your database first!
-- ⚠️ This version requires **PHP 8.2**.
+- ⚠️ This version requires
+    *
+  *PHP
+  8.2
+  **.
 
 You can access the new V3 layout under `/v3/`. If you decide to use or test it:
 
@@ -448,7 +498,11 @@ You can access the new V3 layout under `/v3/`. If you decide to use or test it:
 ### Warnings
 
 - ⚠️ Make a backup of your database first!
-- ⚠️ This version requires **PHP 8.2**.
+- ⚠️ This version requires
+    *
+  *PHP
+  8.2
+  **.
 
 You can access the new V3 layout under `/v3/`. If you decide to use or test it:
 
@@ -498,7 +552,11 @@ destructive upgrade process, this is now "6.0.0". It will again be alpha.1.
 ### Warnings
 
 - ⚠️ Make a backup of your database first!
-- ⚠️ This version requires **PHP 8.2**.
+- ⚠️ This version requires
+    *
+  *PHP
+  8.2
+  **.
 
 You can access the new V3 layout under `/v3/`. If you decide to use or test it:
 
@@ -544,7 +602,11 @@ make a backup of your database first! I guarantee nothing.
 ### Warnings
 
 - ⚠️ Make a backup of your database first!
-- ⚠️ This version requires **PHP 8.2**.
+- ⚠️ This version requires
+    *
+  *PHP
+  8.2
+  **.
 
 You can access the new V3 layout under `/v3/`. If you decide to use or test it:
 
@@ -800,7 +862,8 @@ https://api-docs.firefly-iii.org/.
 - [Issue 6040](https://github.com/firefly-iii/firefly-iii/issues/6040) Could not add or remove money from piggy banks
   without a target.
 - [Issue 6009](https://github.com/firefly-iii/firefly-iii/issues/6009) `has_no_attachments:true` would not return
-  transactions with *deleted* transactions.
+  transactions with
+  *deleted* transactions.
 - [Issue 6050](https://github.com/firefly-iii/firefly-iii/issues/6050) ja_JP is part of the Docker image
 
 ## 5.7.4 - 2022-05-03

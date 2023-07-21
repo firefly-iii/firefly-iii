@@ -21,7 +21,7 @@
 export default {
     "config": {
         "html_language": "ru",
-        "month_and_day_fns": "d MMMM yyyy"
+        "month_and_day_fns": "D MMMM YYYY"
     },
     "form": {
         "name": "\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435",
@@ -60,7 +60,7 @@ export default {
         "liabilities_accounts": "\u0414\u043e\u043b\u0433\u0438"
     },
     "firefly": {
-        "administration_index": "Financial administration",
+        "administration_index": "\u0423\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435 \u0444\u0438\u043d\u0430\u043d\u0441\u0430\u043c\u0438",
         "actions": "\u0414\u0435\u0439\u0441\u0442\u0432\u0438\u044f",
         "edit": "\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c",
         "delete": "\u0423\u0434\u0430\u043b\u0438\u0442\u044c",
@@ -70,7 +70,7 @@ export default {
         "new_budget": "\u041d\u043e\u0432\u044b\u0439 \u0431\u044e\u0434\u0436\u0435\u0442",
         "new_asset_account": "\u041d\u043e\u0432\u044b\u0439 \u0441\u0447\u0435\u0442 \u0430\u043a\u0442\u0438\u0432\u043e\u0432",
         "newTransfer": "\u041d\u043e\u0432\u044b\u0439 \u043f\u0435\u0440\u0435\u0432\u043e\u0434",
-        "submission_options": "Submission options",
+        "submission_options": "\u041e\u043f\u0446\u0438\u0438 \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0438",
         "apply_rules_checkbox": "\u041f\u0440\u0438\u043c\u0435\u043d\u0438\u0442\u044c \u043f\u0440\u0430\u0432\u0438\u043b\u0430",
         "fire_webhooks_checkbox": "Fire webhooks",
         "newDeposit": "\u041d\u043e\u0432\u044b\u0439 \u0434\u043e\u0445\u043e\u0434",

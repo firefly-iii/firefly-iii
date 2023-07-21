@@ -95,12 +95,16 @@ trait TransferValidation
      */
     protected function validateTransferSource(array $array): bool
     {
-        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
-        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
+        $accountId     = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountName   = array_key_exists('name', $array) ? $array['name'] : null;
+        $accountIban   = array_key_exists('iban', $array) ? $array['iban'] : null;
+        $accountNumber = array_key_exists('number', $array) ? $array['number'] : null;
         Log::debug('Now in validateTransferSource', $array);
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);
-        if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
+        if (null === $accountId && null === $accountName
+            && null === $accountIban && null === $accountNumber
+            && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the source of a withdrawal can't be created.
             $this->sourceError = (string)trans('validation.transfer_source_need_data');

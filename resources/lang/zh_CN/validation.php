@@ -61,7 +61,7 @@ return [
     'invalid_selection'              => '您的选择无效',
     'belongs_user'                   => '此值不能用于此字段',
     'at_least_one_transaction'       => '至少需要一笔交易',
-    'recurring_transaction_id'       => 'Need at least one transaction.',
+    'recurring_transaction_id'       => '至少需要一笔交易。',
     'need_id_to_match'               => 'You need to submit this entry with an ID for the API to be able to match it.',
     'too_many_unmatched'             => 'Too many submitted transactions cannot be matched to their respective database entries. Make sure existing entries have a valid ID.',
     'id_does_not_match'              => 'Submitted ID #:id does not match expected ID. Make sure it matches or omit the field.',

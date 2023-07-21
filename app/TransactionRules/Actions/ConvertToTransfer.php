@@ -141,6 +141,7 @@ class ConvertToTransfer implements ActionInterface
 
     /**
      * @param int $journalId
+     *
      * @return string
      */
     private function getSourceType(int $journalId): string
@@ -156,6 +157,7 @@ class ConvertToTransfer implements ActionInterface
 
     /**
      * @param int $journalId
+     *
      * @return string
      */
     private function getDestinationType(int $journalId): string
@@ -214,6 +216,7 @@ class ConvertToTransfer implements ActionInterface
 
     /**
      * @param TransactionJournal $journal
+     *
      * @return Account
      * @throws FireflyException
      */
@@ -271,6 +274,7 @@ class ConvertToTransfer implements ActionInterface
 
     /**
      * @param TransactionJournal $journal
+     *
      * @return Account
      * @throws FireflyException
      */

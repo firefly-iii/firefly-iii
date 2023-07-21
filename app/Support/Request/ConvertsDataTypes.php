@@ -51,6 +51,7 @@ trait ConvertsDataTypes
      *
      * @param string     $key
      * @param mixed|null $default
+     *
      * @return mixed
      */
     abstract public function get(string $key, mixed $default = null): mixed;
@@ -212,6 +213,7 @@ trait ConvertsDataTypes
 
     /**
      * @param string|null $string
+     *
      * @return Carbon|null
      */
     protected function convertDateTime(?string $string): ?Carbon
@@ -324,6 +326,7 @@ trait ConvertsDataTypes
      * trait, OR a stub needs to be added by any other class that uses this train.
      *
      * @param mixed $key
+     *
      * @return mixed
      */
     abstract public function has($key);

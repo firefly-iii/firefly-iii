@@ -339,6 +339,7 @@ class Steam
      *
      * @param null|string $number
      * @param int         $precision
+     *
      * @return string
      */
     public function bcround(?string $number, int $precision = 0): string
@@ -430,6 +431,7 @@ class Steam
 
     /**
      * @param string $ipAddress
+     *
      * @return string
      * @throws FireflyException
      */
@@ -591,6 +593,7 @@ class Steam
      * Additionally fixed a problem with PHP <= 5.2.x with big integers
      *
      * @param string $value
+     *
      * @return string
      */
     public function floatalize(string $value): string

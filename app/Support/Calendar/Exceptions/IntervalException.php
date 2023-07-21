@@ -1,8 +1,8 @@
 <?php
 
-declare(strict_types=1);
 
-/**
+/*
+ * IntervalException.php
  * Copyright (c) 2023 Antonio Spinelli https://github.com/tonicospinelli
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,32 +21,36 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Support\Calendar\Exceptions;
 
+use Exception;
 use FireflyIII\Support\Calendar\Periodicity;
+use Throwable;
 
 /**
  * Class IntervalException
  */
-final class IntervalException extends \Exception
+final class IntervalException extends Exception
 {
+    public readonly array       $availableIntervals;
+    public readonly Periodicity $periodicity;
     protected $message = 'The periodicity %s is unknown. Choose one of available periodicity: %s';
 
-    public readonly Periodicity $periodicity;
-    public readonly array $availableIntervals;
-
     /**
-     * @param Periodicity $periodicity
-     * @param array $intervals
-     * @param int $code
-     * @param \Throwable|null $previous
+     * @param Periodicity    $periodicity
+     * @param array          $intervals
+     * @param int            $code
+     * @param Throwable|null $previous
+     *
      * @return IntervalException
      */
     public static function unavailable(
         Periodicity $periodicity,
         array       $intervals,
         int         $code = 0,
-        ?\Throwable $previous = null
+        ?Throwable  $previous = null
     ): IntervalException {
         $message = sprintf(
             'The periodicity %s is unknown. Choose one of available periodicity: %s',

@@ -86,7 +86,7 @@ return [
     'admin_new_user_registered'               => 'Ein ny brukar har registrert seg. Brukar **:email har fått ID #:id.',
     'registered_welcome'                      => 'Velkomen til [Firefly III](:address). Din registrering er fullført, og denne e-posten er her for å bekrefte det. Kanon!',
     'registered_pw'                           => 'Om du har glemt passordet ditt allereie, kan du tilbakestille det ved å bruka [passord reset tool](:address/password/reset).',
-    'registered_help'                         => 'Det er eit hjelp-ikon i hjørnet øverst til høgre på kvar side. Om du trenger hjelp, kan du klikka på den!',
+    'registered_help'                         => 'Det er eit hjelp-ikon i hjørnet øvst til høgre på kvar side. Om du trenger hjelp, kan du klikka på den!',
     'registered_doc_html'                     => 'Om du ikkje har allereie, vennligst les [grand theory](https://docs.firefly-iii.org/about-firefly-ii/personal-finances).',
     'registered_doc_text'                     => 'Om du ikkje har gjort allereie, vennligst òg les veiledningen for første bruk og den fullstendige beskrivinga.',
     'registered_closing'                      => 'Kos deg!',
@@ -130,7 +130,7 @@ return [
     // reset password
     'reset_pw_subject'                        => 'Din forespørsel om tilbakestilling av passord',
     'reset_pw_instructions'                   => 'Noen prøvde å tilbakestille passordet ditt. Om det var deg, vennligst følg linken nedenfor for å fullføre.',
-    'reset_pw_warning'                        => '**PLEASE** bekrefter at lenken faktisk går til Firefly III slik du forventer at den skal gå!',
+    'reset_pw_warning'                        => '**VER VENLEG** og bekreft at lenkja faktisk peikar mot Firefly III slik du forventer!',
 
     // error
     'error_subject'                           => 'Rett ein feil i Firefly III',

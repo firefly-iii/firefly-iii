@@ -172,6 +172,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     /**
      * @param TransactionJournal $one
      * @param TransactionJournal $two
+     *
      * @return TransactionJournalLink|null
      */
     public function getLink(TransactionJournal $one, TransactionJournal $two): ?TransactionJournalLink

@@ -1302,12 +1302,12 @@ return [
 
 
     // preferences
-    'dark_mode_option_browser'                  => 'Let your browser decide',
-    'dark_mode_option_light'                    => 'Always light',
-    'dark_mode_option_dark'                     => 'Always dark',
+    'dark_mode_option_browser'                  => 'Deixe seu navegador decidir',
+    'dark_mode_option_light'                    => 'Sempre claro',
+    'dark_mode_option_dark'                     => 'Sempre escuro',
     'equal_to_language'                         => '(igual ao idioma)',
-    'dark_mode_preference'                      => 'Dark mode',
-    'dark_mode_preference_help'                 => 'Tell Firefly III when to use dark mode.',
+    'dark_mode_preference'                      => 'Modo escuro',
+    'dark_mode_preference_help'                 => 'Avise ao Firefly III quando usar o modo escuro.',
     'pref_home_screen_accounts'                 => 'Conta da tela inicial',
     'pref_home_screen_accounts_help'            => 'Que conta deve ser exibida na tela inicial?',
     'pref_view_range'                           => 'Ver intervalo',
@@ -1706,7 +1706,7 @@ return [
     'auto_budget_none'                          => 'Sem orçamento automático',
     'auto_budget_reset'                         => 'Definir um valor fixo a cada período',
     'auto_budget_rollover'                      => 'Adicionar valor a cada período',
-    'auto_budget_adjusted'                      => 'Add an amount every period and correct for overspending',
+    'auto_budget_adjusted'                      => 'Adicionar um valor a cada período e corrigir para gastos excessivos',
     'auto_budget_period_daily'                  => 'Diariamente',
     'auto_budget_period_weekly'                 => 'Semanalmente',
     'auto_budget_period_monthly'                => 'Mensalmente',
@@ -1716,7 +1716,7 @@ return [
     'auto_budget_help'                          => 'Você pode ler mais sobre esta função na seção ajuda. Clique no ícone superior direito (?).',
     'auto_budget_reset_icon'                    => 'Este orçamento será definido periodicamente',
     'auto_budget_rollover_icon'                 => 'O valor orçado aumentará periodicamente',
-    'auto_budget_adjusted_icon'                 => 'The budget amount will increase periodically and will correct for overspending',
+    'auto_budget_adjusted_icon'                 => 'O valor do orçamento aumentará periodicamente e correrá para gastos excessivos pendentes',
     'remove_budgeted_amount'                    => 'Remover montante orçado em :currency',
 
     // bills:
@@ -2294,7 +2294,7 @@ return [
     'budgeted'                                  => 'Orçado',
     'period'                                    => 'Período',
     'balance'                                   => 'Saldo',
-    'in_out_period'                             => 'In + out this period',
+    'in_out_period'                             => 'Entrada + Saída deste período',
     'sum'                                       => 'Soma',
     'summary'                                   => 'Resumo',
     'average'                                   => 'Média',
@@ -2372,8 +2372,8 @@ return [
 
 
     // administration
-    'invite_is_already_redeemed'               => 'The invite to ":address" has already been redeemed.',
-    'invite_is_deleted'                        => 'The invite to ":address" has been deleted.',
+    'invite_is_already_redeemed'               => 'O convite para ":address" já foi resgatado.',
+    'invite_is_deleted'                        => 'O convite para ":address" foi removido.',
     'invite_new_user_title'                    => 'Convidar novo usuário',
     'invite_new_user_text'                     => 'Como administrador, você pode convidar usuários para se registrarem na administração do Firefly III. Usando o link direto que você pode compartilhar, eles serão capazes de registrar uma conta. O usuário convidado e seu link de convite aparecerão na tabela abaixo. Você é livre para compartilhar com eles o link do convite.',
     'invited_user_mail'                        => 'E-mail',
@@ -2695,9 +2695,9 @@ return [
     'ale_action_log_add'                 => 'Adicionado :amount ao cofrinho ":name"',
     'ale_action_log_remove'              => 'Retirado :amount do cofrinho ":name"',
     'ale_action_clear_budget'            => 'Removido do orçamento',
-    'ale_action_update_group_title'      => 'Updated transaction group title',
-    'ale_action_update_date'             => 'Updated transaction date',
-    'ale_action_update_order'            => 'Updated transaction order',
+    'ale_action_update_group_title'      => 'Título do grupo de transações atualizado',
+    'ale_action_update_date'             => 'Data de transação atualizada',
+    'ale_action_update_order'            => 'Ordem de transação atualizada',
     'ale_action_clear_category'          => 'Removido da categoria',
     'ale_action_clear_notes'             => 'Anotações removidas',
     'ale_action_clear_tag'               => 'Etiquetas apagadas',

@@ -1,8 +1,8 @@
 <?php
 
-declare(strict_types=1);
 
-/**
+/*
+ * Interval.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,6 +21,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Support\Calendar\Periodicity;
 
 /**
@@ -32,6 +34,7 @@ abstract class Interval implements Interspacable
 
     /**
      * @param int $skip
+     *
      * @return int
      */
     public function skip(int $skip): int

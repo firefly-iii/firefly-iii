@@ -70,9 +70,9 @@ return [
     'require_currency_info'          => 'O conteúdo deste campo é inválido sem informações de moeda.',
     'not_transfer_account'           => 'Esta não é uma conta que possa ser usada para transferências.',
     'require_currency_amount'        => 'O conteúdo deste campo é inválido sem a informação de moeda estrangeira.',
-    'require_foreign_currency'       => 'This field requires a number',
-    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
-    'require_foreign_src'            => 'This field value must match the currency of the source account.',
+    'require_foreign_currency'       => 'Este campo deve ser um número',
+    'require_foreign_dest'           => 'Este valor de campo deve corresponder à moeda da conta de destino.',
+    'require_foreign_src'            => 'Este valor de campo deve corresponder à moeda da conta de origem.',
     'equal_description'              => 'A descrição da transação não pode ser igual à descrição global.',
     'file_invalid_mime'              => 'Arquivo ":name" é do tipo ":mime" que não é aceito como um novo upload.',
     'file_too_large'                 => 'Arquivo ":name" é muito grande.',
@@ -234,20 +234,20 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => 'É necessário obter um ID de uma conta de origem válida e/ou um nome de conta de origem válido para continuar.',
-    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_source_bad_data'  => '[a] Não foi possível encontrar uma conta de origem válida ao procurar por ID ":id" ou nome ":name".',
+    'withdrawal_dest_need_data'   => '[a] É necessário obter um ID de conta de destino válido e/ou um nome de conta de destino válido para continuar.',
     'withdrawal_dest_bad_data'    => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
 
-    'withdrawal_dest_iban_exists' => 'This destination account IBAN is already in use by an asset account or a liability and cannot be used as a withdrawal destination.',
-    'deposit_src_iban_exists'     => 'This source account IBAN is already in use by an asset account or a liability and cannot be used as a deposit source.',
+    'withdrawal_dest_iban_exists' => 'Este IBAN de conta de destino já está em uso por outra conta de ativos ou uma responsabilidade e não pode ser usada como um destino de retirada.',
+    'deposit_src_iban_exists'     => 'Este IBAN de conta de origem já está em uso por outra conta de ativos ou uma responsabilidade e não pode ser usada como uma fonte de depósito.',
 
     'reconciliation_source_bad_data' => 'Não foi possível encontrar uma conta de reconciliação válida ao pesquisar por ID ":id" ou nome ":name".',
 
-    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data' => '[e] Não foi possível encontrar uma conta de origem válida ao procurar por ID ":id" ou nome ":name".',
 
     'deposit_source_need_data' => 'É necessário obter um ID de uma conta de origem válida e/ou um nome de conta de origem válido para continuar.',
-    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'deposit_source_bad_data'  => '[b] Não foi possível encontrar uma conta de origem válida ao procurar por ID ":id" ou nome ":name".',
+    'deposit_dest_need_data'   => '[b] É necessário obter um ID de conta de destino válido e/ou um nome de conta de destino válido para continuar.',
     'deposit_dest_bad_data'    => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
     'deposit_dest_wrong_type'  => 'A conta de destino enviada não é do tipo certo.',
 
@@ -264,22 +264,22 @@ return [
 
 
     'transfer_source_need_data' => 'É necessário obter um ID de uma conta de origem válida e/ou um nome de conta de origem válido para continuar.',
-    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'transfer_source_bad_data'  => '[c] Não foi possível encontrar uma conta de origem válida ao procurar por ID ":id" ou nome ":name".',
+    'transfer_dest_need_data'   => '[c] É necessário obter um ID de conta de destino válido e/ou um nome de conta de destino válido para continuar.',
     'transfer_dest_bad_data'    => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
     'need_id_in_edit'           => 'Cada divisão deve ter transaction_journal_id (ID válido ou 0).',
 
     'ob_source_need_data'           => 'É necessário obter um ID de uma conta de origem válida e/ou um nome de conta de origem válido para continuar.',
     'lc_source_need_data'           => 'É necessário obter um ID de uma conta de origem válida para continuar.',
-    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_need_data'             => '[d] É necessário obter um ID de conta de destino válido e/ou um nome de conta de destino válido para continuar.',
     'ob_dest_bad_data'              => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
     'reconciliation_either_account' => 'Para enviar uma reconciliação, você deve enviar uma conta de origem ou de destino. Não ambos, nem nenhum.',
 
     'generic_invalid_source'      => 'Você não pode usar esta conta como conta de origem.',
     'generic_invalid_destination' => 'Você não pode usar esta conta como conta de destino.',
 
-    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
-    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
+    'generic_no_source'      => 'Você deve enviar as informações da conta de origem ou enviar um ID do diário de transação.',
+    'generic_no_destination' => 'Você deve enviar as informações da conta de destino ou enviar um ID do diário de transação.',
 
     'gte.numeric' => ':attribute deve ser maior ou igual a :value.',
     'gt.numeric'  => 'O campo :attribute deve ser maior que :value.',

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * ShowsFriendlyMessages.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -21,6 +21,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Console\Commands;
 
 /**
@@ -30,6 +32,7 @@ trait ShowsFriendlyMessages
 {
     /**
      * @param string $message
+     *
      * @return void
      */
     public function friendlyError(string $message): void
@@ -39,6 +42,7 @@ trait ShowsFriendlyMessages
 
     /**
      * @param string $message
+     *
      * @return void
      */
     public function friendlyInfo(string $message): void
@@ -48,6 +52,7 @@ trait ShowsFriendlyMessages
 
     /**
      * @param string $message
+     *
      * @return void
      */
     public function friendlyNeutral(string $message): void
@@ -57,6 +62,7 @@ trait ShowsFriendlyMessages
 
     /**
      * @param string $message
+     *
      * @return void
      */
     public function friendlyLine(string $message): void
@@ -66,6 +72,7 @@ trait ShowsFriendlyMessages
 
     /**
      * @param string $message
+     *
      * @return void
      */
     public function friendlyPositive(string $message): void
@@ -75,6 +82,7 @@ trait ShowsFriendlyMessages
 
     /**
      * @param string $message
+     *
      * @return void
      */
     public function friendlyWarning(string $message): void

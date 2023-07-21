@@ -38,6 +38,7 @@ trait AttachmentCollection
 {
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameContains(string $name): GroupCollectorInterface
@@ -116,6 +117,7 @@ trait AttachmentCollection
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameDoesNotContain(string $name): GroupCollectorInterface
@@ -145,6 +147,7 @@ trait AttachmentCollection
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameDoesNotEnd(string $name): GroupCollectorInterface
@@ -174,6 +177,7 @@ trait AttachmentCollection
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameDoesNotStart(string $name): GroupCollectorInterface
@@ -203,6 +207,7 @@ trait AttachmentCollection
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameEnds(string $name): GroupCollectorInterface
@@ -232,6 +237,7 @@ trait AttachmentCollection
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameIs(string $name): GroupCollectorInterface
@@ -258,6 +264,7 @@ trait AttachmentCollection
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameIsNot(string $name): GroupCollectorInterface
@@ -284,6 +291,7 @@ trait AttachmentCollection
 
     /**
      * @param string $name
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNameStarts(string $name): GroupCollectorInterface
@@ -313,6 +321,7 @@ trait AttachmentCollection
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesAre(string $value): GroupCollectorInterface
@@ -339,6 +348,7 @@ trait AttachmentCollection
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesAreNot(string $value): GroupCollectorInterface
@@ -365,6 +375,7 @@ trait AttachmentCollection
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesContains(string $value): GroupCollectorInterface
@@ -391,6 +402,7 @@ trait AttachmentCollection
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesDoNotContain(string $value): GroupCollectorInterface
@@ -417,6 +429,7 @@ trait AttachmentCollection
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesDoNotEnd(string $value): GroupCollectorInterface
@@ -443,6 +456,7 @@ trait AttachmentCollection
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesDoNotStart(string $value): GroupCollectorInterface
@@ -469,6 +483,7 @@ trait AttachmentCollection
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesEnds(string $value): GroupCollectorInterface
@@ -495,6 +510,7 @@ trait AttachmentCollection
 
     /**
      * @param string $value
+     *
      * @return GroupCollectorInterface
      */
     public function attachmentNotesStarts(string $value): GroupCollectorInterface

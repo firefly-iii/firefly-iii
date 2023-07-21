@@ -126,6 +126,7 @@ class CorrectOpeningBalanceCurrencies extends Command
     /**
      * @param Account            $account
      * @param TransactionJournal $journal
+     *
      * @return int
      */
     private function setCorrectCurrency(Account $account, TransactionJournal $journal): int

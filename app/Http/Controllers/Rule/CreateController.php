@@ -241,6 +241,7 @@ class CreateController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function duplicate(Request $request): JsonResponse

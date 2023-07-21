@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\Admin;
 
+use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
@@ -52,6 +53,7 @@ class TestNotification extends Notification
      * Get the array representation of the notification.
      *
      * @param mixed $notifiable
+     *
      * @return array
      */
     public function toArray($notifiable)
@@ -65,6 +67,7 @@ class TestNotification extends Notification
      * Get the mail representation of the notification.
      *
      * @param mixed $notifiable
+     *
      * @return MailMessage
      */
     public function toMail($notifiable)
@@ -78,6 +81,7 @@ class TestNotification extends Notification
      * Get the Slack representation of the notification.
      *
      * @param mixed $notifiable
+     *
      * @return SlackMessage
      */
     public function toSlack($notifiable)
@@ -89,10 +93,17 @@ class TestNotification extends Notification
      * Get the notification's delivery channels.
      *
      * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
     {
-        return ['mail', 'slack'];
+        /** @var User|null $user */
+        $user = auth()->user();
+        $slackUrl = null === $user ? '' : (string)app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
+        if (str_starts_with($slackUrl, 'https://hooks.slack.com/services/')) {
+            return ['mail', 'slack'];
+        }
+        return ['mail'];
     }
 }

@@ -25,7 +25,6 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use DB;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;

@@ -329,6 +329,7 @@ class UserEventHandler
 
     /**
      * @param InvitationCreated $event
+     *
      * @return void
      * @throws FireflyException
      */
@@ -376,6 +377,7 @@ class UserEventHandler
 
     /**
      * @param ActuallyLoggedIn $event
+     *
      * @throws FireflyException
      */
     public function storeUserIPAddress(ActuallyLoggedIn $event): void

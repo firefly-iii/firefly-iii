@@ -1,8 +1,8 @@
 <?php
 
-declare(strict_types=1);
+
 /*
- * Created.php
+ * Deleted.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -20,6 +20,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Events\Model\BudgetLimit;
 

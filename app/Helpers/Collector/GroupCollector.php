@@ -76,6 +76,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->hasNotesInformation  = false;
         $this->hasJoinedTagTables   = false;
         $this->hasJoinedAttTables   = false;
+        $this->expandGroupSearch    = false;
         $this->hasJoinedMetaTables  = false;
         $this->integerFields        = [
             'transaction_group_id',
@@ -455,6 +456,14 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * @return bool
+     */
+    public function getExpandGroupSearch(): bool
+    {
+        return $this->expandGroupSearch;
+    }
+
+    /**
      * Return the transaction journals without group information. Is useful in some instances.
      *
      * @return array
@@ -480,10 +489,16 @@ class GroupCollector implements GroupCollectorInterface
      * Return the groups.
      *
      * @return Collection
-     * @throws FireflyException
      */
     public function getGroups(): Collection
     {
+        if ($this->expandGroupSearch) {
+            // get group ID's for the query:
+            $groupIds = $this->getCollectedGroupIds();
+            // add to query:
+            $this->query->orWhereIn('transaction_journals.transaction_group_id', $groupIds);
+        }
+
         $result = $this->query->get($this->fields);
 
         // now to parse this into an array.
@@ -506,6 +521,14 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * @return array
+     */
+    private function getCollectedGroupIds(): array
+    {
+        return $this->query->get(['transaction_journals.transaction_group_id'])->pluck('transaction_group_id')->toArray();
+    }
+
+    /**
      * @param Collection $collection
      *
      * @return Collection
@@ -516,7 +539,7 @@ class GroupCollector implements GroupCollectorInterface
         $groups = [];
         /** @var TransactionJournal $augumentedJournal */
         foreach ($collection as $augumentedJournal) {
-            $groupId = $augumentedJournal->transaction_group_id;
+            $groupId = (int)$augumentedJournal->transaction_group_id;
 
             if (!array_key_exists($groupId, $groups)) {
                 // make new array
@@ -664,6 +687,7 @@ class GroupCollector implements GroupCollectorInterface
 
     /**
      * @param array $array
+     *
      * @return array
      */
     private function convertToStrings(array $array): array
@@ -772,6 +796,7 @@ class GroupCollector implements GroupCollectorInterface
 
     /**
      * @param Collection $collection
+     *
      * @return Collection
      */
     private function postFilterCollection(Collection $collection): Collection
@@ -867,6 +892,14 @@ class GroupCollector implements GroupCollectorInterface
         );
 
         return $this;
+    }
+
+    /**
+     * @param bool $expandGroupSearch
+     */
+    public function setExpandGroupSearch(bool $expandGroupSearch): void
+    {
+        $this->expandGroupSearch = $expandGroupSearch;
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
-/**
+/*
+ * NavigationStartOfPeriodTest.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -73,15 +74,6 @@ class NavigationStartOfPeriodTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideDates
-     */
-    public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected)
-    {
-        $period = $this->navigation->startOfPeriod($from, $frequency);
-        $this->assertEquals($expected->toDateString(), $period->toDateString());
-    }
-
     public static function provideUnknownFrequencies(): array
     {
         return [
@@ -92,13 +84,22 @@ class NavigationStartOfPeriodTest extends TestCase
     }
 
     /**
+     * @dataProvider provideDates
+     */
+    public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected)
+    {
+        $period = $this->navigation->startOfPeriod($from, $frequency);
+        $this->assertEquals($expected->toDateString(), $period->toDateString());
+    }
+
+    /**
      * @dataProvider provideUnknownFrequencies
      */
     public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(string $frequency, Carbon $from, Carbon $expected)
     {
         Log::shouldReceive('error')
-            ->with(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $frequency))
-            ->andReturnNull();
+           ->with(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $frequency))
+           ->andReturnNull();
 
         $period = $this->navigation->startOfPeriod($from, $frequency);
         $this->assertEquals($expected->toDateString(), $period->toDateString());

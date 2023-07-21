@@ -1,8 +1,8 @@
 <?php
 
-declare(strict_types=1);
 
-/**
+/*
+ * IntervalTestCase.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,18 +21,17 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tests\unit\Support\Calendar\Periodicity;
 
 use FireflyIII\Support\Calendar\Periodicity\Interval;
+use Generator;
 use PHPUnit\Framework\TestCase;
 
 abstract class IntervalTestCase extends TestCase
 {
-    abstract public static function factory(): Interval;
-
-    abstract public static function provideIntervals(): array;
-
-    public static function provider(): \Generator
+    public static function provider(): Generator
     {
         $intervals = static::provideIntervals();
         /** @var IntervalProvider $interval */
@@ -41,9 +40,13 @@ abstract class IntervalTestCase extends TestCase
         }
     }
 
+    abstract public static function provideIntervals(): array;
+
     /**
      * @dataProvider provider
+     *
      * @param IntervalProvider $provider
+     *
      * @return void
      */
     public function testGivenAnEpochWhenCallTheNextDateThenReturnsTheExpectedDateSuccessful(IntervalProvider $provider): void
@@ -51,4 +54,6 @@ abstract class IntervalTestCase extends TestCase
         $period = static::factory()->nextDate($provider->epoch);
         $this->assertEquals($provider->expected->toDateString(), $period->toDateString());
     }
+
+    abstract public static function factory(): Interval;
 }

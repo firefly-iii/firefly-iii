@@ -113,6 +113,7 @@ class ConvertToWithdrawal implements ActionInterface
 
     /**
      * @param TransactionJournal $journal
+     *
      * @return bool
      * @throws FireflyException
      * @throws JsonException
@@ -167,6 +168,7 @@ class ConvertToWithdrawal implements ActionInterface
 
     /**
      * @param TransactionJournal $journal
+     *
      * @return Account
      * @throws FireflyException
      */
@@ -182,6 +184,7 @@ class ConvertToWithdrawal implements ActionInterface
 
     /**
      * @param TransactionJournal $journal
+     *
      * @return Account
      * @throws FireflyException
      */

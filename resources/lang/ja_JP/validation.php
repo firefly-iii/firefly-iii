@@ -61,18 +61,18 @@ return [
     'invalid_selection'              => 'あなたの選択は無効です。',
     'belongs_user'                   => 'この欄ではその値は無効です。',
     'at_least_one_transaction'       => '最低でも一つの取引が必要です。',
-    'recurring_transaction_id'       => 'Need at least one transaction.',
-    'need_id_to_match'               => 'You need to submit this entry with an ID for the API to be able to match it.',
-    'too_many_unmatched'             => 'Too many submitted transactions cannot be matched to their respective database entries. Make sure existing entries have a valid ID.',
-    'id_does_not_match'              => 'Submitted ID #:id does not match expected ID. Make sure it matches or omit the field.',
+    'recurring_transaction_id'       => '少なくとも 1 つの取引が必要です。',
+    'need_id_to_match'               => 'APIを一致させるためにこのエントリをIDで送信する必要があります。',
+    'too_many_unmatched'             => '送信された取引がそれぞれのデータベースエントリと一致しません。既存のエントリに有効なIDがあることを確認してください。',
+    'id_does_not_match'              => '送信されたID #:id は期待されたIDと一致しません。一致させるか、フィールドを省略してください。',
     'at_least_one_repetition'        => '最低でも一回の繰り返しが必要です。',
     'require_repeat_until'           => '繰り返し回数か、終了日 (繰り返し期限) が必要です。両方は使えません。',
     'require_currency_info'          => 'この項目の内容は通貨情報がなければ無効です。',
     'not_transfer_account'           => 'このアカウントは送金に使用できるアカウントではありません。',
     'require_currency_amount'        => 'この項目の内容は、外部金額情報がなければ無効です。',
-    'require_foreign_currency'       => 'This field requires a number',
-    'require_foreign_dest'           => 'This field value must match the currency of the destination account.',
-    'require_foreign_src'            => 'This field value must match the currency of the source account.',
+    'require_foreign_currency'       => 'このフィールドには数字が必要です',
+    'require_foreign_dest'           => 'この項目の値は預け入れ口座の通貨と一致する必要があります。',
+    'require_foreign_src'            => 'この項目の値は、引き出し口座の通貨と一致する必要があります。',
     'equal_description'              => '取引の説明はグローバルな説明と同じであってはいけません。',
     'file_invalid_mime'              => '「:mime」タイプのファイル ":name" は新しいアップロードとして受け付けられません。',
     'file_too_large'                 => 'ファイル ":name"は大きすぎます。',
@@ -173,8 +173,8 @@ return [
     'unique_piggy_bank_for_user' => '貯金箱の名前は一意である必要があります。',
     'unique_object_group'        => 'グループ名は一意でなければなりません',
     'starts_with'                => '値は :values で始まる必要があります。',
-    'unique_webhook'             => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'    => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
+    'unique_webhook'             => 'このURL、トリガー、レスポンス、配信の組み合わせのWebhookがすでにあります。',
+    'unique_existing_webhook'    => 'このURL、トリガー、レスポンス、配信の組み合わせを持つ別のWebhookがすでにあります。',
     'same_account_type'          => 'これらの口座は同じ口座種別でなければなりません',
     'same_account_currency'      => 'これらの口座には同じ通貨設定でなければいけません',
 
@@ -234,20 +234,20 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => '続行するには有効な引き出し元口座 ID および（または）有効な引き出し元口座名を取得する必要があります。',
-    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_source_bad_data'  => '[a] ID「:id」、名称「:name」で検索しましたが、有効な引き出し口座が見つかりませんでした。',
+    'withdrawal_dest_need_data'   => '[a] 続けるには有効な預け入れ口座IDおよび（または）有効な預け入れ口座名が必要があります。',
     'withdrawal_dest_bad_data'    => 'ID「:id」、名称「:name」で検索した結果、有効な預け入れ口座が見つかりませんでした。',
 
-    'withdrawal_dest_iban_exists' => 'This destination account IBAN is already in use by an asset account or a liability and cannot be used as a withdrawal destination.',
-    'deposit_src_iban_exists'     => 'This source account IBAN is already in use by an asset account or a liability and cannot be used as a deposit source.',
+    'withdrawal_dest_iban_exists' => 'この預け入れ口座IBANはすでに資産口座または負債で使用されており、引き出し先として使用することはできません。',
+    'deposit_src_iban_exists'     => 'この引き出し口座IBANはすでに資産口座または負債で使用されており、引き出し元として使用することはできません。',
 
-    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+    'reconciliation_source_bad_data' => 'ID「:id」または名称「:name」で検索しましたが、有効な照合口座が見つかりませんでした。',
 
-    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data' => '[e] ID「:id」、名称「:name」で検索しましたが、有効な引き出し口座が見つかりませんでした。',
 
     'deposit_source_need_data' => '続行するには、有効な引き出し元口座 ID および（または）有効な引き出し元口座名を取得する必要があります。',
-    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'deposit_source_bad_data'  => '[b] ID「:id」、名称「:name」で検索しましたが、有効な引き出し口座が見つかりませんでした。',
+    'deposit_dest_need_data'   => '[b] 続けるには有効な預け入れ口座IDおよび（または）有効な預け入れ口座名が必要があります。',
     'deposit_dest_bad_data'    => 'ID「:id」、名称「:name」で検索した結果、有効な預け入れ先口座が見つかりませんでした。',
     'deposit_dest_wrong_type'  => '預け入れ先口座が適切なタイプではありません。',
 
@@ -264,22 +264,22 @@ return [
 
 
     'transfer_source_need_data' => '続行するには、有効な引き出し元口座 ID および（または）有効な引き出し元口座名を取得する必要があります。',
-    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'transfer_source_bad_data'  => '[c] ID「:id」、名称「:name」で検索しましたが、有効な引き出し口座が見つかりませんでした。',
+    'transfer_dest_need_data'   => '[c] 続けるには有効な預け入れ口座IDおよび（または）有効な預け入れ口座名が必要があります。',
     'transfer_dest_bad_data'    => 'ID「:id」、名称「:name」で検索した結果、有効な預け入れ先口座が見つかりませんでした。',
     'need_id_in_edit'           => '各分割は transaction_journal_id (有効な ID または 0 のいずれか) でなければなりません。',
 
     'ob_source_need_data'           => '続行するには、有効な引き出し元口座 ID および（または）有効な引き出し元口座名を取得する必要があります。',
     'lc_source_need_data'           => '続行するには有効な引き出し元口座 ID が必要です。',
-    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_need_data'             => '[d] 続行するには、有効な預け入れ口座IDおよび（または）有効な預け入れ口座名を得る必要があります。',
     'ob_dest_bad_data'              => 'ID「:id」、名称「:name」で検索した結果、有効な預け入れ先口座が見つかりませんでした。',
-    'reconciliation_either_account' => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
+    'reconciliation_either_account' => '照合を送信するには、引き出し口座または預け入れ口座を送信する必要があります。両方ではありません。',
 
     'generic_invalid_source'      => 'この口座を引き出し元口座として使用することはできません。',
     'generic_invalid_destination' => 'この口座を預け入れ先口座として使用することはできません。',
 
-    'generic_no_source'      => 'You must submit source account information or submit a transaction journal ID.',
-    'generic_no_destination' => 'You must submit destination account information or submit a transaction journal ID.',
+    'generic_no_source'      => '引き出し口座の情報か取引ジャーナルIDを送信する必要があります。',
+    'generic_no_destination' => '預け入れ口座の情報か取引ジャーナルIDを送信する必要があります。',
 
     'gte.numeric' => ':attribute は :value 以上でなければなりません。',
     'gt.numeric'  => ':attribute は :value より大きな値でなければいけません。',
@@ -292,7 +292,7 @@ return [
     'auto_budget_period_mandatory'    => '自動予算期間は必須項目です。',
 
     // no access to administration:
-    'no_access_user_group'            => 'You do not have the correct access rights for this administration.',
+    'no_access_user_group'            => 'この管理のための適切なアクセス権がありません。',
 ];
 
 /*

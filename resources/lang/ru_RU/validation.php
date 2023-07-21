@@ -35,13 +35,13 @@
 declare(strict_types=1);
 
 return [
-    'missing_where'                  => 'Array is missing "where"-clause',
-    'missing_update'                 => 'Array is missing "update"-clause',
-    'invalid_where_key'              => 'JSON contains an invalid key for the "where"-clause',
-    'invalid_update_key'             => 'JSON contains an invalid key for the "update"-clause',
-    'invalid_query_data'             => 'There is invalid data in the %s:%s field of your query.',
-    'invalid_query_account_type'     => 'Your query contains accounts of different types, which is not allowed.',
-    'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
+    'missing_where'                  => 'В массиве отсутствует связка "where" ("где")',
+    'missing_update'                 => 'В массиве отсутствует связка "update" ("обновить")',
+    'invalid_where_key'              => 'JSON содержит недопустимый ключ для связки "where" ("где")',
+    'invalid_update_key'             => 'JSON содержит недопустимый ключ для связки "update" ("обновить")',
+    'invalid_query_data'             => 'В поле %s:%s вашего запроса содержатся неверные данные.',
+    'invalid_query_account_type'     => 'Ваш запрос содержит счета разных типов, что недопустимо.',
+    'invalid_query_currency'         => 'Ваш запрос содержит счета с разными валютами, что недопустимо.',
     'iban'                           => 'Это некорректный IBAN.',
     'zero_or_more'                   => 'Это значение не может быть отрицательным.',
     'date_or_time'                   => 'Значение должно быть корректной датой или временем (ISO 8601).',
@@ -62,7 +62,7 @@ return [
     'belongs_user'                   => 'Данное значение недопустимо для этого поля.',
     'at_least_one_transaction'       => 'Необходима как минимум одна транзакция.',
     'recurring_transaction_id'       => 'Необходима минимум одна транзакция.',
-    'need_id_to_match'               => 'You need to submit this entry with an ID for the API to be able to match it.',
+    'need_id_to_match'               => 'Вы должны отправить эту запись с ID для того, чтобы API мог сопоставить её.',
     'too_many_unmatched'             => 'Слишком много отправленных транзакций не могут быть сопоставлены с соответствующими записями в базе данных. Убедитесь, что существующие записи имеют правильный ID.',
     'id_does_not_match'              => 'Submitted ID #:id does not match expected ID. Make sure it matches or omit the field.',
     'at_least_one_repetition'        => 'Необходима как минимум одна транзакция.',
@@ -238,16 +238,16 @@ return [
     'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'withdrawal_dest_bad_data'    => 'Не удалось найти действительный счёт назначения при поиске ID ":id" или имени ":name".',
 
-    'withdrawal_dest_iban_exists' => 'This destination account IBAN is already in use by an asset account or a liability and cannot be used as a withdrawal destination.',
-    'deposit_src_iban_exists'     => 'This source account IBAN is already in use by an asset account or a liability and cannot be used as a deposit source.',
+    'withdrawal_dest_iban_exists' => 'Этот IBAN счета назначения уже используется счетом актива или обязательства и не может быть использован в качестве назначения для снятия средств.',
+    'deposit_src_iban_exists'     => 'Этот IBAN счета-источника уже используется счетом актива или обязательства и не может быть использован в качестве источника депозита.',
 
     'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
 
-    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data' => '[e] Не удалось найти корректный счёт-источник при поиске ID ":id" или имени ":name".',
 
     'deposit_source_need_data' => 'Для продолжения необходим действительный ID счёта-источника и/или действительное имя счёта.',
-    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'deposit_source_bad_data'  => '[b] Не удалось найти корректный счёт-источник при поиске ID ":id" или имени ":name".',
+    'deposit_dest_need_data'   => '[b] Для продолжения необходим действительный ID счёта назначения и/или действительное имя счёта.',
     'deposit_dest_bad_data'    => 'Не удалось найти действительный счёт назначения при поиске ID ":id" или имени ":name".',
     'deposit_dest_wrong_type'  => 'Сохраняемый счёт назначения - некорректный.',
 

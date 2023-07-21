@@ -131,6 +131,12 @@ class ShowController extends Controller
             ->setLimit($pageSize)
             ->setPage($page)->withAccountInformation()->withCategoryInformation()
             ->setRange($start, $end);
+
+        // this search will not include transaction groups where this asset account (or liability)
+        // is just part of ONE of the journals. To force this:
+        $collector->setExpandGroupSearch(true);
+
+
         $groups = $collector->getPaginatedGroups();
 
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));

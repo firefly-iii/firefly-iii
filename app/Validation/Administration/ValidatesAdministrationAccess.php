@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * ValidatesAdministrationAccess.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -21,6 +21,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Validation\Administration;
 
 use FireflyIII\Exceptions\FireflyException;
@@ -39,6 +41,7 @@ trait ValidatesAdministrationAccess
     /**
      * @param Validator $validator
      * @param array     $allowedRoles
+     *
      * @return void
      * @throws AuthenticationException
      * @throws FireflyException

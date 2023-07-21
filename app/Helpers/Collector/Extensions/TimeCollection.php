@@ -34,6 +34,7 @@ trait TimeCollection
 {
     /**
      * @param string $day
+     *
      * @return GroupCollectorInterface
      */
     public function dayAfter(string $day): GroupCollectorInterface
@@ -44,6 +45,7 @@ trait TimeCollection
 
     /**
      * @param string $day
+     *
      * @return GroupCollectorInterface
      */
     public function dayBefore(string $day): GroupCollectorInterface
@@ -54,6 +56,7 @@ trait TimeCollection
 
     /**
      * @param string $day
+     *
      * @return GroupCollectorInterface
      */
     public function dayIs(string $day): GroupCollectorInterface
@@ -64,6 +67,7 @@ trait TimeCollection
 
     /**
      * @param string $day
+     *
      * @return GroupCollectorInterface
      */
     public function dayIsNot(string $day): GroupCollectorInterface
@@ -76,6 +80,7 @@ trait TimeCollection
      * @param Carbon $start
      * @param Carbon $end
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function excludeMetaDateRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface
@@ -118,6 +123,7 @@ trait TimeCollection
      * @param Carbon $start
      * @param Carbon $end
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function excludeObjectRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface
@@ -134,6 +140,7 @@ trait TimeCollection
     /**
      * @param Carbon $start
      * @param Carbon $end
+     *
      * @return GroupCollectorInterface
      */
     public function excludeRange(Carbon $start, Carbon $end): GroupCollectorInterface
@@ -153,6 +160,7 @@ trait TimeCollection
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaDayAfter(string $day, string $field): GroupCollectorInterface
@@ -176,6 +184,7 @@ trait TimeCollection
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaDayBefore(string $day, string $field): GroupCollectorInterface
@@ -199,6 +208,7 @@ trait TimeCollection
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaDayIs(string $day, string $field): GroupCollectorInterface
@@ -221,6 +231,7 @@ trait TimeCollection
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaDayIsNot(string $day, string $field): GroupCollectorInterface
@@ -243,6 +254,7 @@ trait TimeCollection
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaMonthAfter(string $month, string $field): GroupCollectorInterface
@@ -266,6 +278,7 @@ trait TimeCollection
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaMonthBefore(string $month, string $field): GroupCollectorInterface
@@ -289,6 +302,7 @@ trait TimeCollection
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaMonthIs(string $month, string $field): GroupCollectorInterface
@@ -311,6 +325,7 @@ trait TimeCollection
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaMonthIsNot(string $month, string $field): GroupCollectorInterface
@@ -333,6 +348,7 @@ trait TimeCollection
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaYearAfter(string $year, string $field): GroupCollectorInterface
@@ -356,6 +372,7 @@ trait TimeCollection
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaYearBefore(string $year, string $field): GroupCollectorInterface
@@ -379,6 +396,7 @@ trait TimeCollection
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaYearIs(string $year, string $field): GroupCollectorInterface
@@ -402,6 +420,7 @@ trait TimeCollection
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function metaYearIsNot(string $year, string $field): GroupCollectorInterface
@@ -423,6 +442,7 @@ trait TimeCollection
 
     /**
      * @param string $month
+     *
      * @return GroupCollectorInterface
      */
     public function monthAfter(string $month): GroupCollectorInterface
@@ -433,6 +453,7 @@ trait TimeCollection
 
     /**
      * @param string $month
+     *
      * @return GroupCollectorInterface
      */
     public function monthBefore(string $month): GroupCollectorInterface
@@ -443,6 +464,7 @@ trait TimeCollection
 
     /**
      * @param string $month
+     *
      * @return GroupCollectorInterface
      */
     public function monthIs(string $month): GroupCollectorInterface
@@ -453,6 +475,7 @@ trait TimeCollection
 
     /**
      * @param string $month
+     *
      * @return GroupCollectorInterface
      */
     public function monthIsNot(string $month): GroupCollectorInterface
@@ -464,6 +487,7 @@ trait TimeCollection
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectDayAfter(string $day, string $field): GroupCollectorInterface
@@ -475,6 +499,7 @@ trait TimeCollection
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectDayBefore(string $day, string $field): GroupCollectorInterface
@@ -486,6 +511,7 @@ trait TimeCollection
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectDayIs(string $day, string $field): GroupCollectorInterface
@@ -497,6 +523,7 @@ trait TimeCollection
     /**
      * @param string $day
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectDayIsNot(string $day, string $field): GroupCollectorInterface
@@ -508,6 +535,7 @@ trait TimeCollection
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectMonthAfter(string $month, string $field): GroupCollectorInterface
@@ -519,6 +547,7 @@ trait TimeCollection
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectMonthBefore(string $month, string $field): GroupCollectorInterface
@@ -530,6 +559,7 @@ trait TimeCollection
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectMonthIs(string $month, string $field): GroupCollectorInterface
@@ -541,6 +571,7 @@ trait TimeCollection
     /**
      * @param string $month
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectMonthIsNot(string $month, string $field): GroupCollectorInterface
@@ -552,6 +583,7 @@ trait TimeCollection
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectYearAfter(string $year, string $field): GroupCollectorInterface
@@ -563,6 +595,7 @@ trait TimeCollection
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectYearBefore(string $year, string $field): GroupCollectorInterface
@@ -574,6 +607,7 @@ trait TimeCollection
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectYearIs(string $year, string $field): GroupCollectorInterface
@@ -585,6 +619,7 @@ trait TimeCollection
     /**
      * @param string $year
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function objectYearIsNot(string $year, string $field): GroupCollectorInterface
@@ -643,6 +678,7 @@ trait TimeCollection
     /**
      * @param Carbon $date
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function setMetaAfter(Carbon $date, string $field): GroupCollectorInterface
@@ -667,6 +703,7 @@ trait TimeCollection
     /**
      * @param Carbon $date
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function setMetaBefore(Carbon $date, string $field): GroupCollectorInterface
@@ -691,6 +728,7 @@ trait TimeCollection
      * @param Carbon $start
      * @param Carbon $end
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function setMetaDateRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface
@@ -720,6 +758,7 @@ trait TimeCollection
     /**
      * @param Carbon $date
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function setObjectAfter(Carbon $date, string $field): GroupCollectorInterface
@@ -733,6 +772,7 @@ trait TimeCollection
     /**
      * @param Carbon $date
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function setObjectBefore(Carbon $date, string $field): GroupCollectorInterface
@@ -746,6 +786,7 @@ trait TimeCollection
      * @param Carbon $start
      * @param Carbon $end
      * @param string $field
+     *
      * @return GroupCollectorInterface
      */
     public function setObjectRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface
@@ -800,6 +841,7 @@ trait TimeCollection
 
     /**
      * @param string $year
+     *
      * @return GroupCollectorInterface
      */
     public function yearAfter(string $year): GroupCollectorInterface
@@ -810,6 +852,7 @@ trait TimeCollection
 
     /**
      * @param string $year
+     *
      * @return GroupCollectorInterface
      */
     public function yearBefore(string $year): GroupCollectorInterface
@@ -820,6 +863,7 @@ trait TimeCollection
 
     /**
      * @param string $year
+     *
      * @return GroupCollectorInterface
      */
     public function yearIs(string $year): GroupCollectorInterface
@@ -830,6 +874,7 @@ trait TimeCollection
 
     /**
      * @param string $year
+     *
      * @return GroupCollectorInterface
      */
     public function yearIsNot(string $year): GroupCollectorInterface

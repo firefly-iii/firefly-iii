@@ -148,6 +148,7 @@ class UpdatePiggybank implements ActionInterface
      * @param PiggyBank          $piggyBank
      * @param TransactionJournal $journal
      * @param string             $amount
+     *
      * @return void
      */
     private function removeAmount(PiggyBank $piggyBank, TransactionJournal $journal, string $amount): void
@@ -185,6 +186,7 @@ class UpdatePiggybank implements ActionInterface
      * @param PiggyBank          $piggyBank
      * @param TransactionJournal $journal
      * @param string             $amount
+     *
      * @return void
      */
     private function addAmount(PiggyBank $piggyBank, TransactionJournal $journal, string $amount): void

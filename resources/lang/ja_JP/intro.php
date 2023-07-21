@@ -36,25 +36,25 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Firefly IIIのインデックスページへようこそ。このイントロダクションでは、Firefly IIIがどのように機能するのかをご紹介します。',
-    'index_accounts-chart'                  => 'このチャートは、お客様の資産口座の現在の残高を表示しています。お客様のご希望でここに表示するかどうか選択できます。',
-    'index_box_out_holder'                  => 'この小さな吹き出しとこの横にある吹き出しは、財務状況の概要を表示しています。',
-    'index_help'                            => 'ページや入力欄について助けが必要なら、このボタンを押して下さい。',
+    'index_intro'                           => 'Firefly IIIのホームへようこそ。このイントロダクションでは、Firefly IIIがどのように機能するのかをご紹介します。',
+    'index_accounts-chart'                  => 'このチャートは、あなたの資産口座の現在の残高を表示しています。設定でここに表示するかどうか選択できます。',
+    'index_box_out_holder'                  => 'この小さなボックスと横にあるボックスは、財務状況の概要を表示しています。',
+    'index_help'                            => 'ページや入力欄についてヘルプが必要なら、このボタンを押して下さい。',
     'index_outro'                           => 'Firefly IIIの多くのページはこのような小さなツアーから始まります。もし質問やコメントがある場合は、私に連絡して下さい。楽しんで！',
-    'index_sidebar-toggle'                  => '新しい取引やアカウントなどを作成するには、このアイコン下のメニューを使用して下さい。',
+    'index_sidebar-toggle'                  => '新しい取引や口座などを作成するには、このアイコン下のメニューを使用してください。',
     'index_cash_account'                    => 'これらは今までに作られた口座です。現金支出を管理するため現金口座を使うこともできますが、もちろん強制ではありません。',
 
     // transactions
-    'transactions_create_basic_info'        => '貸方、借方、日付、説明など、取引の基本情報を入力します。',
+    'transactions_create_basic_info'        => '引き出し口座、預け入れ口座、日付、説明など、取引の基本情報を入力します。',
     'transactions_create_amount_info'       => '取引の金額を入力します。必要に応じて、フィールドは自動的に更新されます。',
     'transactions_create_optional_info'     => 'これらのフィールドはすべて任意です。ここにメタデータを追加すると、取引をより整理できます。',
     'transactions_create_split'             => '取引を分割する場合は、このボタンでさらに分割を追加します',
 
     // create account:
     'accounts_create_iban'                  => '口座の有効な IBAN を設定してください。これは将来のデータインポートをとても簡単にします。',
-    'accounts_create_asset_opening_balance' => '資産口座には Firefly III のアカウントの履歴の開始を示す「開始残高」があります。',
+    'accounts_create_asset_opening_balance' => '資産口座には Firefly III の口座履歴の開始を示す「開始残高」を持たせることができます。',
     'accounts_create_asset_currency'        => 'Firefly IIIは複数の通貨をサポートしています。資産口座は一つのメイン通貨を持っており、ここで選択する必要があります。',
-    'accounts_create_asset_virtual'         => '口座に仮想の残高を与えることはしばしば助けになるかもしれません: 余剰は常に実際の残高から差し引かれます。',
+    'accounts_create_asset_virtual'         => '口座に仮想の残高を設定すると便利かもしれません。余剰残高は常に実際の残高から差し引かれます。',
 
     // budgets index
     'budgets_index_intro'                   => '予算はあなたの財務を管理するために使用され、Firefly III の一つの主要機能を構成します。',
@@ -89,9 +89,9 @@ return [
     'reports_report_audit_intro'            => 'このレポートはあなたの経費勘定の詳細を表示します。',
     'reports_report_audit_optionsBox'       => 'あなたが興味のある列を表示したり隠したりするにはこれらのチェックボックスを使用してください。',
 
-    'reports_report_category_intro'                  => 'このレポートは一つまたは複数のカテゴリーの見通しを表示します。',
+    'reports_report_category_intro'                  => 'このレポートはカテゴリの見通しを表示します。',
     'reports_report_category_pieCharts'              => 'これらの図表は支出の見通しやカテゴリ、勘定ごとの収入を表示します。',
-    'reports_report_category_incomeAndExpensesChart' => 'この図表はカテゴリーごとのあなたの支出と収入を表示します。',
+    'reports_report_category_incomeAndExpensesChart' => 'このチャートはカテゴリごとのあなたの支出と収入を表示します。',
 
     'reports_report_tag_intro'                  => 'このレポートはあなたの一つまたは複数のタグの見通しを表示します。',
     'reports_report_tag_pieCharts'              => 'これらのチャートはタグ、勘定、カテゴリ、予算ごとのあなたの支出と収入を表示しています。',
@@ -150,7 +150,7 @@ return [
     'bills_create_name'                                       => '「家賃」や「健康保険」などのわかりやすい名称を使用してください。',
     //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'この請求の最低額と最大額を選択してください。',
-    'bills_create_repeat_freq_holder'                         => 'ほとんどの請求書は毎月の繰り返しですが、別の周期を設定することができます。',
+    'bills_create_repeat_freq_holder'                         => 'ほとんどの請求は毎月の繰り返しですが、別の周期を設定することができます。',
     'bills_create_skip_holder'                                => '請求が2週ごとに繰り返される場合は、1週ごとに1週スキップするために、「スキップ」項目を「1」に設定してください。',
 
     // rules index
@@ -158,7 +158,7 @@ return [
     'rules_index_new_rule_group'                              => 'グループ内のルールを組み合わせることで、管理が容易になります。',
     'rules_index_new_rule'                                    => '好きなだけルールを作ってください。',
     'rules_index_prio_buttons'                                => '適切と思う順に並び変えてください。',
-    'rules_index_test_buttons'                                => 'ルールをテストしたり、既存のトランザクションに適用したりできます。',
+    'rules_index_test_buttons'                                => 'ルールをテストしたり、既存の取引に適用したりできます。',
     'rules_index_rule-triggers'                               => 'ルールには、ドラッグ＆ドロップで並べ替えできる「トリガー」と「アクション」があります。',
     'rules_index_outro'                                       => '右上の (?) アイコンからヘルプページを確認してください。',
 

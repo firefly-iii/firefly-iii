@@ -244,6 +244,7 @@ trait JournalServiceTrait
 
     /**
      * @param array $types
+     *
      * @return null|string
      */
     private function getCreatableType(array $types): ?string

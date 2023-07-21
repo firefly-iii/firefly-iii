@@ -400,9 +400,10 @@ trait AccountServiceTrait
      *
      *
      * @param Account $account
-     * @param string $direction
-     * @param string $openingBalance
-     * @param Carbon $openingBalanceDate
+     * @param string  $direction
+     * @param string  $openingBalance
+     * @param Carbon  $openingBalanceDate
+     *
      * @return TransactionGroup
      * @throws FireflyException
      * @throws JsonException
@@ -612,8 +613,8 @@ trait AccountServiceTrait
      * Since opening balance and date can still be empty strings, it may fail.
      *
      * @param Account $account
-     * @param string $openingBalance
-     * @param Carbon $openingBalanceDate
+     * @param string  $openingBalance
+     * @param Carbon  $openingBalanceDate
      *
      * @return TransactionGroup
      * @throws FireflyException

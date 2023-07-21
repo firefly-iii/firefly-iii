@@ -37,6 +37,7 @@ abstract class AbstractTransformer extends TransformerAbstract
 
     /**
      * @param Collection $objects
+     *
      * @return void
      */
     abstract public function collectMetaData(Collection $objects): void;

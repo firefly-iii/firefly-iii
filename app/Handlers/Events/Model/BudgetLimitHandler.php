@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * BudgetLimitHandler.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -20,6 +20,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events\Model;
 
@@ -44,6 +46,7 @@ class BudgetLimitHandler
 {
     /**
      * @param Created $event
+     *
      * @return void
      */
     public function created(Created $event): void
@@ -54,6 +57,7 @@ class BudgetLimitHandler
 
     /**
      * @param BudgetLimit $budgetLimit
+     *
      * @return void
      */
     private function updateAvailableBudget(BudgetLimit $budgetLimit): void
@@ -73,7 +77,11 @@ class BudgetLimitHandler
         $end    = app('navigation')->endOfPeriod($end, $viewRange);
         $budget = Budget::find($budgetLimit->budget_id);
         if (null === $budget) {
-            Log::warning('Budget is null, cannot continue.');
+            Log::warning('Budget is null, probably deleted, find deleted version.');
+            $budget = Budget::withTrashed()->find($budgetLimit->budget_id);
+        }
+        if (null === $budget) {
+            Log::warning('Budget is still null, cannot continue, will delete budget limit.');
             $budgetLimit->forceDelete();
             return;
         }
@@ -140,6 +148,7 @@ class BudgetLimitHandler
 
     /**
      * @param AvailableBudget $availableBudget
+     *
      * @return void
      */
     private function calculateAmount(AvailableBudget $availableBudget): void
@@ -205,6 +214,7 @@ class BudgetLimitHandler
 
     /**
      * @param BudgetLimit $budgetLimit
+     *
      * @return string
      */
     private function getDailyAmount(BudgetLimit $budgetLimit): string
@@ -228,6 +238,7 @@ class BudgetLimitHandler
 
     /**
      * @param Deleted $event
+     *
      * @return void
      */
     public function deleted(Deleted $event): void
@@ -240,6 +251,7 @@ class BudgetLimitHandler
 
     /**
      * @param Updated $event
+     *
      * @return void
      */
     public function updated(Updated $event): void

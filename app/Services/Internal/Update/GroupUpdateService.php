@@ -42,7 +42,7 @@ class GroupUpdateService
      * Update a transaction group.
      *
      * @param TransactionGroup $transactionGroup
-     * @param array $data
+     * @param array            $data
      *
      * @return TransactionGroup
      * @throws DuplicateTransactionException
