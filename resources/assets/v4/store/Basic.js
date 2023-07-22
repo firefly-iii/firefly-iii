@@ -3,42 +3,37 @@
 import Get from '../api/preferences/index.js';
 import store from 'store2';
 
+
 /**
  * A basic store for Firefly III persistent UI data and preferences.
  */
-class Basic {
+const Basic = () => {
 
     // currently availabel variables:
-    viewRange = '1M';
-    darkMode = 'browser';
-    language = 'en-US';
-    locale = 'en-US';
+    const viewRange = '1M';
+    const darkMode = 'browser';
+    const language = 'en-US';
+    const locale = 'en-US';
+
     // start and end are used by most pages to allow the user to browse back and forth.
-    start = null;
-    end = null;
+    const start = null;
+    const end = null;
 
     // others, to be used in the future.
-    listPageSize = 10;
-    currencyCode = 'AAA';
-    currencyId = '0';
-    ready = false;
-
+    const listPageSize = 10;
+    const currencyCode = 'AAA';
+    const currencyId = '0';
+    const ready = false;
+    //
     // a very basic way to signal the store now contains all variables.
-    count = 0;
-    readyCount = 4;
+    const count = 0;
+    const readyCount = 4;
 
     /**
      *
      */
-    constructor() {
-        console.log('Basic constructor')
-    }
-
-    /**
-     *
-     */
-    init() {
-        console.log('Basic init')
+    const init = () => {
+        console.log('Basic store init')
         this.loadVariable('viewRange')
         this.loadVariable('darkMode')
         this.loadVariable('language')
@@ -49,7 +44,7 @@ class Basic {
      * Load a variable, fresh or from storage.
      * @param name
      */
-    loadVariable(name) {
+    const loadVariable = (name) => {
 
         // currently unused, window.X can be used by the blade template
         // to make things available quicker than if the store has to grab it through the API.
@@ -69,28 +64,29 @@ class Basic {
         let getter = (new Get);
         getter.getByName(name).then((response) => this.parseResponse(name, response));
     }
-
-    parseResponse(name, response) {
+    //
+    const parseResponse = (name, response) => {
         let value = response.data.data.attributes.data;
         this[name] = value;
+        // TODO store.
         store.set(name, value);
         this.triggerReady();
     }
-
-    set(name, value) {
-        this[name] = value;
-        store.set(name, value);
-    }
-
-    get(name) {
-        return store.get(name, this[name]);
-    }
-
-    isReady() {
+    //
+    // set(name, value) {
+    //     this[name] = value;
+    //     store.set(name, value);
+    // }
+    //
+    // get(name) {
+    //     return store.get(name, this[name]);
+    // }
+    //
+    const isReady = () => {
         return this.count === this.readyCount;
     }
 
-    triggerReady() {
+    const triggerReady = () => {
         this.count++;
         if (this.count === this.readyCount) {
             console.log('Basic store is ready!')
@@ -99,6 +95,8 @@ class Basic {
             document.dispatchEvent(event);
         }
     }
+    return {
+        init
+    };
 }
-
-export default Basic;
+export const basic = Basic();

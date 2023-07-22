@@ -5,8 +5,29 @@
  */
 
 import axios from 'axios';
-//import Alpine from 'alpinejs';
-import BasicStore from './store/Basic';
+import store from 'store2';
+import Alpine from "alpinejs";
+import {getVariable} from "./store/get-variable.js";
+import {getViewRange} from "./support/get-viewrange.js";
+
+// wait for 3 promises, because we need those later on.
+window.bootstrapped = false;
+Promise.all([
+    getVariable('viewRange'),
+    getVariable('darkMode'),
+    getVariable('locale')
+]).then((values) => {
+    if (!store.has('start') || !store.has('end')) {
+        // calculate new start and end, and store them.
+        const range = getViewRange(values[0], new Date);
+        store.set('start', range.start);
+        store.set('end', range.end);
+    }
+
+    const event = new Event('firefly-iii-bootstrapped');
+    document.dispatchEvent(event);
+    window.bootstrapped = true;
+});
 
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -14,31 +35,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 // include popper js
 import '@popperjs/core';
 
-// include bootstrap
+// include bootstrap CSS
 import * as bootstrap from 'bootstrap'
 
-/**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
- */
-
-// import Echo from 'laravel-echo';
-
-// import Pusher from 'pusher-js';
-// window.Pusher = Pusher;
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: import.meta.env.VITE_PUSHER_APP_KEY,
-//     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER ?? 'mt1',
-//     wsHost: import.meta.env.VITE_PUSHER_HOST ? import.meta.env.VITE_PUSHER_HOST : `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`,
-//     wsPort: import.meta.env.VITE_PUSHER_PORT ?? 80,
-//     wssPort: import.meta.env.VITE_PUSHER_PORT ?? 443,
-//     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
-//     enabledTransports: ['ws', 'wss'],
-// });
-
-
-window.BasicStore = new BasicStore;
-window.BasicStore.init();
+window.Alpine = Alpine

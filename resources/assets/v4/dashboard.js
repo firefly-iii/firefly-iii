@@ -19,20 +19,23 @@
  */
 
 import './bootstrap.js';
-import Alpine from "alpinejs";
+import boxes from './pages/dashboard/boxes.js';
 
-// move to bootstrap later on?
-window.Alpine = Alpine
+const comps = {boxes};
 
-import dashboard from './pages/dashboard.js';
+function loadPage(comps) {
+    Object.keys(comps).forEach(comp => {
+        let data = comps[comp]();
+        Alpine.data(comp, () => data);
+    });
+    Alpine.start();
+}
 
-const comps = {dashboard};
-
-//import * as comps from '/dist/demo/index.js';
-Object.keys(comps).forEach(comp => {
-    //let data = new comps[comp]();
-    console.log('Loaded component ' + comp);
-    let data = comps[comp]();
-    Alpine.data(comp, () => data);
+// wait for load until bootstrapped event is received.
+document.addEventListener('firefly-iii-bootstrapped', () => {
+    loadPage(comps);
 });
-Alpine.start();
+// or is bootstrapped before event is triggered.
+if (window.bootstrapped) {
+    loadPage(comps);
+}

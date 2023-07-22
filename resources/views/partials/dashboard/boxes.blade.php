@@ -1,8 +1,8 @@
-<div class="row">
+<div class="row" x-data="boxes">
     <!--begin::Col-->
     <div class="col-lg-3 col-6">
         <!--begin::Small Box Widget 1-->
-        <div class="small-box text-bg-primary" x-data="dashboard">
+        <div class="small-box text-bg-primary">
             <div class="inner">
                 <h3 id="balanceAmount">
                     <template x-for="(amount, index) in balanceBox.amounts" :key="index">
@@ -37,7 +37,14 @@
         <!--begin::Small Box Widget 2-->
         <div class="small-box text-bg-success">
             <div class="inner">
-                <h3>TODO amount</h3>
+                <h3>
+                    <template x-for="(amount, index) in billBox.unpaid" :key="index">
+                        <span>
+                            <span x-text="amount"></span><span
+                                :class="{ 'invisible': (billBox.unpaid.length == index+1) }">, </span>
+                        </span>
+                    </template>
+                </h3>
 
                 <p><a href="{{ route('bills.index') }}">{{ __('firefly.bills_to_pay') }}</a></p>
             </div>
@@ -45,7 +52,13 @@
                 <em class="fa-regular fa-calendar"></em>
             </span>
             <span class="small-box-footer">
-                {{ __('firefly.paid') }}: TODO amount
+                {{ __('firefly.paid') }}:
+                <template x-for="(amount, index) in billBox.paid" :key="index">
+                        <span>
+                            <span x-text="amount"></span><span
+                                :class="{ 'invisible': (billBox.paid.length == index+1) }">, </span>
+                        </span>
+                    </template>
             </span>
         </div>
         <!--end::Small Box Widget 2-->
@@ -55,7 +68,14 @@
         <!--begin::Small Box Widget 3-->
         <div class="small-box text-bg-warning">
             <div class="inner">
-                <h3>TODO amount</h3>
+                <h3>
+                    <template x-for="(amount, index) in leftBox.left" :key="index">
+                        <span>
+                            <span x-text="amount"></span><span
+                                :class="{ 'invisible': (leftBox.left.length == index+1) }">, </span>
+                        </span>
+                    </template>
+                </h3>
 
                 <p><a href="{{ route('budgets.index') }}">{{ __('firefly.left_to_spend') }}</a></p>
             </div>
@@ -73,7 +93,14 @@
         <!--begin::Small Box Widget 4-->
         <div class="small-box text-bg-danger">
             <div class="inner">
-                <h3>TODO amount</h3>
+                <h3>
+                    <template x-for="(amount, index) in netBox.net" :key="index">
+                        <span>
+                            <span x-text="amount"></span><span
+                                :class="{ 'invisible': (netBox.net.length == index+1) }">, </span>
+                        </span>
+                    </template>
+                </h3>
 
                 <p>
                     <a href="{{ route('reports.report.default', ['allAssetAccounts','currentYearStart','currentYearEnd']) }}">{{ __('firefly.net_worth') }}</a>
