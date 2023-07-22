@@ -2,9 +2,16 @@
     <!--begin::Col-->
     <div class="col-lg-3 col-6">
         <!--begin::Small Box Widget 1-->
-        <div class="small-box text-bg-primary" x-data="amounts">
+        <div class="small-box text-bg-primary" x-data="dashboard">
             <div class="inner">
-                <h3 id="balanceAmount" x-text="get">TODO amount</h3>
+                <h3 id="balanceAmount">
+                    <template x-for="(amount, index) in balanceBox.amounts" :key="index">
+                        <span>
+                            <span x-text="amount"></span><span
+                                :class="{ 'invisible': (balanceBox.amounts.length == index+1) }">, </span>
+                        </span>
+                    </template>
+                </h3>
 
                 <p>
                     <a href="{{ route('reports.report.default', ['allAssetAccounts',$start->format('Ymd'),$end->format('Ymd')]) }}">{{ __('firefly.in_out_period') }}</a>
@@ -15,7 +22,12 @@
             </span>
 
             <span class="small-box-footer">
-                TODO amount + amount
+                <template x-for="(subtitle, index) in balanceBox.subtitles" :key="index">
+                        <span>
+                            <span x-text="subtitle"></span><span
+                                :class="{ 'invisible': (balanceBox.amounts.length == index+1) }"> &amp; </span>
+                        </span>
+                    </template>
             </span>
         </div>
         <!--end::Small Box Widget 1-->

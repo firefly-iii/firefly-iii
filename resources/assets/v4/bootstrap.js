@@ -5,7 +5,7 @@
  */
 
 import axios from 'axios';
-import Alpine from 'alpinejs';
+//import Alpine from 'alpinejs';
 import BasicStore from './store/Basic';
 
 window.axios = axios;
