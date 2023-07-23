@@ -1,4 +1,4 @@
-@extends('layout.default')
+@extends('layout.v2')
 @section('vite')
     @vite(['resources/assets/v2/sass/app.scss', 'resources/assets/v2/dashboard.js'])
 @endsection

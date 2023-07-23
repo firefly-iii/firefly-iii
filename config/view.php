@@ -21,9 +21,11 @@
 
 declare(strict_types=1);
 
-$path = realpath(base_path('resources/views'));
+$paths = [realpath(base_path('resources/views'))];
 if ('v2' === env('FIREFLY_III_LAYOUT')) {
-    $path = realpath(base_path('resources/views/v2'));
+    $paths = [
+        realpath(base_path('resources/views/v2')),
+        realpath(base_path('resources/views'))];
 }
 
 
@@ -39,7 +41,7 @@ return [
     |
     */
 
-    'paths' => [$path,],
+    'paths' => $paths,
 
     /*
     |--------------------------------------------------------------------------
