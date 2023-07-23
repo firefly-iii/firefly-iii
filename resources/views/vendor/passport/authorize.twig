@@ -10,12 +10,14 @@
 
     {# CSS things #}
     {# libraries #}
-    <link href="v1/lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
-    <link href="v1/lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+    <link href="v1/lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+          nonce="{{ JS_NONCE }}">
+    <link href="v1/lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+          nonce="{{ JS_NONCE }}">
 
     {# the theme #}
-    <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
-    <link href="v1/lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+    <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+          nonce="{{ JS_NONCE }}">
 
     {# Firefly III customisations #}
     <link href="v1/css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
@@ -48,68 +50,69 @@
     </style>
 </head>
 <body class="passport-authorize">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        {{ trans('firefly.authorization_request', {version: config('firefly.version')}) }}
-                    </div>
-                    <div class="panel-body">
-                        {% if client.user.id == user.id %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{ trans('firefly.authorization_request', {version: config('firefly.version')}) }}
+                </div>
+                <div class="panel-body">
+                    {% if client.user.id == user.id %}
                         <p>
                             {{ trans('firefly.authorization_request_intro', {client: client.name|escape})|raw }}
                         </p>
                         <p>
                             {{ trans('firefly.authorization_request_site', {url: client.redirect|phphost})|raw }}
                         </p>
-                        {% endif %}
+                    {% endif %}
 
-                        {% if client.user.id != user.id %}
+                    {% if client.user.id != user.id %}
                         <p class="text-danger">
                             {{ 'authorization_request_invalid'|_ }}
 
                         </p>
-                        {% endif %}
-                        <!-- Scope List -->
-                        {% if scopes|length > 0 %}
-                            <div class="scopes">
-                                    <p><strong>{{ 'scopes_will_be_able'|_ }}</strong></p>
+                    {% endif %}
+                    <!-- Scope List -->
+                    {% if scopes|length > 0 %}
+                        <div class="scopes">
+                            <p><strong>{{ 'scopes_will_be_able'|_ }}</strong></p>
 
-                                    <ul>
-                                        {% for scope in scopes %}
-                                            <li>{{ scope.description }}</li>
-                                        {% endfor %}
-                                    </ul>
-                            </div>
-                        {% endif %}
-
-                        <div class="buttons">
-                            <!-- Authorize Button -->
-                            {% if client.user.id == user.id %}
-                            <form method="post" action="{{ route('index') }}/oauth/authorize">
-                                {{ csrf_field() }}
-
-                                <input type="hidden" name="state" value="{{ request.state }}">
-                                <input type="hidden" name="client_id" value="{{ client.id }}">
-                                <button type="submit" class="btn btn-success btn-approve">{{ 'button_authorize'|_ }}</button>
-                            </form>
-                            {% endif %}
-
-                            <!-- Cancel Button -->
-                            <form method="post" action="{{ route('index') }}/oauth/authorize">
-                                {{ csrf_field() }}
-                                {{ method_field('DELETE') }}
-
-                                <input type="hidden" name="state" value="{{ request.state }}">
-                                <input type="hidden" name="client_id" value="{{ client.id }}">
-                                <button class="btn btn-danger">{{ 'cancel'|_ }}</button>
-                            </form>
+                            <ul>
+                                {% for scope in scopes %}
+                                    <li>{{ scope.description }}</li>
+                                {% endfor %}
+                            </ul>
                         </div>
+                    {% endif %}
+
+                    <div class="buttons">
+                        <!-- Authorize Button -->
+                        {% if client.user.id == user.id %}
+                            <form method="post" action="{{ route('index') }}/oauth/authorize">
+                                {{ csrf_field() }}
+
+                                <input type="hidden" name="state" value="{{ request.state }}">
+                                <input type="hidden" name="client_id" value="{{ client.id }}">
+                                <button type="submit"
+                                        class="btn btn-success btn-approve">{{ 'button_authorize'|_ }}</button>
+                            </form>
+                        {% endif %}
+
+                        <!-- Cancel Button -->
+                        <form method="post" action="{{ route('index') }}/oauth/authorize">
+                            {{ csrf_field() }}
+                            {{ method_field('DELETE') }}
+
+                            <input type="hidden" name="state" value="{{ request.state }}">
+                            <input type="hidden" name="client_id" value="{{ client.id }}">
+                            <button class="btn btn-danger">{{ 'cancel'|_ }}</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>
