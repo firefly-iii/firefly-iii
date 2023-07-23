@@ -136,10 +136,10 @@
      * Constants
      * ------------------------------------------------------------------------
      */
-    const DATA_KEY$3 = 'lte.push-menu';
-    const EVENT_KEY$3 = `.${DATA_KEY$3}`;
-    const EVENT_OPEN = `open${EVENT_KEY$3}`;
-    const EVENT_COLLAPSE = `collapse${EVENT_KEY$3}`;
+    const DATA_KEY$2 = 'lte.push-menu';
+    const EVENT_KEY$2 = `.${DATA_KEY$2}`;
+    const EVENT_OPEN = `open${EVENT_KEY$2}`;
+    const EVENT_COLLAPSE = `collapse${EVENT_KEY$2}`;
     const CLASS_NAME_SIDEBAR_MINI = 'sidebar-mini';
     const CLASS_NAME_SIDEBAR_COLLAPSE = 'sidebar-collapse';
     const CLASS_NAME_SIDEBAR_OPEN = 'sidebar-open';
@@ -282,16 +282,16 @@
      * ------------------------------------------------------------------------
      */
     // const NAME = 'Treeview'
-    const DATA_KEY$2 = 'lte.treeview';
-    const EVENT_KEY$2 = `.${DATA_KEY$2}`;
-    const EVENT_EXPANDED$2 = `expanded${EVENT_KEY$2}`;
-    const EVENT_COLLAPSED$2 = `collapsed${EVENT_KEY$2}`;
+    const DATA_KEY$1 = 'lte.treeview';
+    const EVENT_KEY$1 = `.${DATA_KEY$1}`;
+    const EVENT_EXPANDED$1 = `expanded${EVENT_KEY$1}`;
+    const EVENT_COLLAPSED$1 = `collapsed${EVENT_KEY$1}`;
     // const EVENT_LOAD_DATA_API = `load${EVENT_KEY}`
     const CLASS_NAME_MENU_OPEN = 'menu-open';
     const SELECTOR_NAV_ITEM = '.nav-item';
     const SELECTOR_NAV_LINK = '.nav-link';
     const SELECTOR_TREEVIEW_MENU = '.nav-treeview';
-    const SELECTOR_DATA_TOGGLE$1 = '[data-lte-toggle="treeview"]';
+    const SELECTOR_DATA_TOGGLE = '[data-lte-toggle="treeview"]';
     const Default$1 = {
         animationSpeed: 300
     };
@@ -306,7 +306,7 @@
         }
         open() {
             var _a;
-            const event = new Event(EVENT_EXPANDED$2);
+            const event = new Event(EVENT_EXPANDED$1);
             this._element.classList.add(CLASS_NAME_MENU_OPEN);
             const childElement = (_a = this._element) === null || _a === void 0 ? void 0 : _a.querySelector(SELECTOR_TREEVIEW_MENU);
             if (childElement) {
@@ -316,7 +316,7 @@
         }
         close() {
             var _a;
-            const event = new Event(EVENT_COLLAPSED$2);
+            const event = new Event(EVENT_COLLAPSED$1);
             this._element.classList.remove(CLASS_NAME_MENU_OPEN);
             const childElement = (_a = this._element) === null || _a === void 0 ? void 0 : _a.querySelector(SELECTOR_TREEVIEW_MENU);
             if (childElement) {
@@ -339,7 +339,7 @@
      * ------------------------------------------------------------------------
      */
     onDOMContentLoaded(() => {
-        const button = document.querySelectorAll(SELECTOR_DATA_TOGGLE$1);
+        const button = document.querySelectorAll(SELECTOR_DATA_TOGGLE);
         button.forEach(btn => {
             btn.addEventListener('click', event => {
                 const target = event.target;
@@ -350,64 +350,6 @@
                 }
                 if (targetItem) {
                     const data = new Treeview(targetItem, Default$1);
-                    data.toggle();
-                }
-            });
-        });
-    });
-
-    /**
-     * --------------------------------------------
-     * AdminLTE direct-chat.ts
-     * License MIT
-     * --------------------------------------------
-     */
-    /**
-     * Constants
-     * ====================================================
-     */
-    const DATA_KEY$1 = 'lte.direct-chat';
-    const EVENT_KEY$1 = `.${DATA_KEY$1}`;
-    const EVENT_EXPANDED$1 = `expanded${EVENT_KEY$1}`;
-    const EVENT_COLLAPSED$1 = `collapsed${EVENT_KEY$1}`;
-    const SELECTOR_DATA_TOGGLE = '[data-lte-toggle="chat-pane"]';
-    const SELECTOR_DIRECT_CHAT = '.direct-chat';
-    const CLASS_NAME_DIRECT_CHAT_OPEN = 'direct-chat-contacts-open';
-    /**
-     * Class Definition
-     * ====================================================
-     */
-    class DirectChat {
-        constructor(element) {
-            this._element = element;
-        }
-        toggle() {
-            if (this._element.classList.contains(CLASS_NAME_DIRECT_CHAT_OPEN)) {
-                const event = new Event(EVENT_COLLAPSED$1);
-                this._element.classList.remove(CLASS_NAME_DIRECT_CHAT_OPEN);
-                this._element.dispatchEvent(event);
-            }
-            else {
-                const event = new Event(EVENT_EXPANDED$1);
-                this._element.classList.add(CLASS_NAME_DIRECT_CHAT_OPEN);
-                this._element.dispatchEvent(event);
-            }
-        }
-    }
-    /**
-     *
-     * Data Api implementation
-     * ====================================================
-     */
-    onDOMContentLoaded(() => {
-        const button = document.querySelectorAll(SELECTOR_DATA_TOGGLE);
-        button.forEach(btn => {
-            btn.addEventListener('click', event => {
-                event.preventDefault();
-                const target = event.target;
-                const chatPane = target.closest(SELECTOR_DIRECT_CHAT);
-                if (chatPane) {
-                    const data = new DirectChat(chatPane);
                     data.toggle();
                 }
             });
@@ -604,7 +546,6 @@
     });
 
     exports.CardWidget = CardWidget;
-    exports.DirectChat = DirectChat;
     exports.Layout = Layout;
     exports.PushMenu = PushMenu;
     exports.Treeview = Treeview;

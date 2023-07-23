@@ -15273,6 +15273,60 @@ html.maximized-card {
   margin: 10px 0;
 }
 
+.lockscreen .lockscreen-name {
+  font-weight: 600;
+  text-align: center;
+}
+.lockscreen .lockscreen-logo {
+  margin-bottom: 25px;
+  font-size: 35px;
+  font-weight: 300;
+  text-align: center;
+}
+.lockscreen .lockscreen-logo a {
+  color: var(--bs-emphasis-color);
+}
+.lockscreen .lockscreen-wrapper {
+  max-width: 400px;
+  margin: 0 auto;
+  margin-top: 10%;
+}
+.lockscreen .lockscreen-item {
+  position: relative;
+  width: 290px;
+  padding: 0;
+  margin: 10px auto 30px;
+  background-color: var(--bs-body-bg);
+  border-radius: 4px;
+}
+.lockscreen .lockscreen-image {
+  position: absolute;
+  top: -25px;
+  right: -10px;
+  z-index: 10;
+  padding: 5px;
+  background-color: var(--bs-body-bg);
+  border-radius: 50%;
+}
+.lockscreen .lockscreen-image > img {
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+}
+.lockscreen .lockscreen-credentials {
+  margin-right: 70px;
+}
+.lockscreen .lockscreen-credentials .form-control {
+  border: 0;
+}
+.lockscreen .lockscreen-credentials .btn {
+  padding: 0 10px;
+  border: 0;
+}
+.lockscreen .lockscreen-footer {
+  margin-top: 10px;
+}
+
 .img-size-64,
 .img-size-50,
 .img-size-32 {
