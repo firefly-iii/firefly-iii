@@ -47,7 +47,7 @@ return [
     |
     */
 
-    'view' => 'partials/layout/v4/breadcrumbs',
+    'view' => 'partials/layout/breadcrumbs',
 
     /*
     |--------------------------------------------------------------------------

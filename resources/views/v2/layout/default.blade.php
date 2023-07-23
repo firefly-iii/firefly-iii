@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ trans('config.html_language') }}">
 <!--begin::Head-->
-@include('partials.layout.v4.head')
+@include('partials.layout.head')
 <!--end::Head-->
 
 <!--begin::Body-->
@@ -104,7 +104,7 @@
     </nav>
     <!--end::Header-->
     <!--begin::Sidebar-->
-    @include('partials.layout.v4.sidebar')
+    @include('partials.layout.sidebar')
     <!--end::Sidebar-->
     <!--begin::App Main-->
     <main class="app-main">
@@ -141,13 +141,13 @@
     <!--end::App Main-->
 
     <!--begin::Footer-->
-    @include('partials.layout.v4.footer')
+    @include('partials.layout.footer')
 
     <!--end::Footer-->
 </div>
 <!--end::App Wrapper-->
 <!--begin::Script-->
-@include('partials.layout.v4.scripts')
+@include('partials.layout.scripts')
 <!--end::Script-->
 
 </body>

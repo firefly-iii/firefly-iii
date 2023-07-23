@@ -23,19 +23,14 @@
     "file": "assets/fa-solid-900-7152a693.woff2",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2"
   },
-  "resources/assets/v4/app.js": {
-    "file": "assets/app-4ed993c7.js",
+  "resources/assets/v2/dashboard.js": {
+    "file": "assets/dashboard-e8bd1ddb.js",
     "isEntry": true,
-    "src": "resources/assets/v4/app.js"
+    "src": "resources/assets/v2/dashboard.js"
   },
-  "resources/assets/v4/index.js": {
-    "file": "assets/index-f6fa7443.js",
-    "isEntry": true,
-    "src": "resources/assets/v4/index.js"
-  },
-  "resources/assets/v4/sass/app.scss": {
+  "resources/assets/v2/sass/app.scss": {
     "file": "assets/app-40e01f65.css",
     "isEntry": true,
-    "src": "resources/assets/v4/sass/app.scss"
+    "src": "resources/assets/v2/sass/app.scss"
   }
 }

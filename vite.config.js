@@ -11,9 +11,8 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/assets/v4/sass/app.scss',
-                'resources/assets/v4/app.js',
-                'resources/assets/v4/index.js'
+                'resources/assets/v2/sass/app.scss',
+                'resources/assets/v2/dashboard.js',
             ],
             refresh: true,
 
