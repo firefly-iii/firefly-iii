@@ -1,6 +1,6 @@
 <div class="row" x-data="boxes">
     <!--begin::Col-->
-    <div class="col-lg-3 col-6">
+    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12">
         <!--begin::Small Box Widget 1-->
         <div class="small-box text-bg-primary">
             <div class="inner">
@@ -33,7 +33,7 @@
         <!--end::Small Box Widget 1-->
     </div>
     <!--end::Col-->
-    <div class="col-lg-3 col-6">
+    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12">
         <!--begin::Small Box Widget 2-->
         <div class="small-box text-bg-success">
             <div class="inner">
@@ -64,7 +64,7 @@
         <!--end::Small Box Widget 2-->
     </div>
     <!--end::Col-->
-    <div class="col-lg-3 col-6">
+    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12">
         <!--begin::Small Box Widget 3-->
         <div class="small-box text-bg-warning">
             <div class="inner">
@@ -83,13 +83,19 @@
                 <em class="fa-solid fa-money-check-dollar"></em>
             </span>
             <span class="small-box-footer">
-                {{ __('firefly.per_day') }}: TODO amount
+                {{ __('firefly.per_day') }}:
+                 <template x-for="(amount, index) in leftBox.perDay" :key="index">
+                        <span>
+                            <span x-text="amount"></span><span
+                                :class="{ 'invisible': (leftBox.perDay.length == index+1) }">, </span>
+                        </span>
+                    </template>
             </span>
         </div>
         <!--end::Small Box Widget 3-->
     </div>
     <!--end::Col-->
-    <div class="col-lg-3 col-6">
+    <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12">
         <!--begin::Small Box Widget 4-->
         <div class="small-box text-bg-danger">
             <div class="inner">

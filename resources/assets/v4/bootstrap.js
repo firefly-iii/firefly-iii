@@ -4,9 +4,17 @@
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
+// import things
 import axios from 'axios';
-import store from 'store2';
+import store from "store";
+import observePlugin from 'store/plugins/observe';
 import Alpine from "alpinejs";
+
+// add plugin to store and put in window
+store.addPlugin(observePlugin);
+window.store = store;
+
+// import even more
 import {getVariable} from "./store/get-variable.js";
 import {getViewRange} from "./support/get-viewrange.js";
 
@@ -15,9 +23,10 @@ window.bootstrapped = false;
 Promise.all([
     getVariable('viewRange'),
     getVariable('darkMode'),
-    getVariable('locale')
+    getVariable('locale'),
+    getVariable('language'),
 ]).then((values) => {
-    if (!store.has('start') || !store.has('end')) {
+    if (!store.get('start') || !store.get('end')) {
         // calculate new start and end, and store them.
         const range = getViewRange(values[0], new Date);
         store.set('start', range.start);

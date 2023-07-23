@@ -18,20 +18,64 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 import Summary from "../../api/summary/index.js";
 import {format} from "date-fns";
 import {getVariable} from "../../store/get-variable.js";
-import store from 'store2';
+
 
 export default () => ({
     balanceBox: {amounts: [], subtitles: []},
     billBox: {paid: [], unpaid: []},
     leftBox: {left: [], perDay: []},
     netBox: {net: []},
-    constructor() {
-        console.log('DashboardClass constructor');
-        //
+    loadBoxes() {
+        console.log('loadboxes');
+
+        // get stuff
+        let getter = new Summary();
+        let start = new Date(window.store.get('start'));
+        let end = new Date(window.store.get('end'));
+
+        getter.get(format(start, 'yyyy-MM-dd'), format(end, 'yyyy-MM-dd'), null).then((response) => {
+            // reset boxes:
+            this.balanceBox = {amounts: [], subtitles: []};
+            this.billBox = {paid: [], unpaid: []};
+            this.leftBox = {left: [], perDay: []};
+            this.netBox = {net: []};
+
+            // process new content:
+            for (const i in response.data) {
+                if (response.data.hasOwnProperty(i)) {
+                    const current = response.data[i];
+                    if (i.startsWith('balance-in-')) {
+                        this.balanceBox.amounts.push(current.value_parsed);
+                        this.balanceBox.subtitles.push(current.sub_title);
+                        continue;
+                    }
+                    if (i.startsWith('bills-unpaid-in-')) {
+                        this.billBox.unpaid.push(current.value_parsed);
+                        continue;
+                    }
+                    if (i.startsWith('bills-paid-in-')) {
+                        this.billBox.paid.push(current.value_parsed);
+                        continue;
+                    }
+                    if (i.startsWith('spent-in-')) {
+                        this.leftBox.left.push(current.value_parsed);
+                        continue;
+                    }
+                    if (i.startsWith('left-to-spend-in-')) { // per day
+                        this.leftBox.perDay.push(current.sub_title);
+                        continue;
+                    }
+                    if (i.startsWith('net-worth-in-')) {
+                        this.netBox.net.push(current.value_parsed);
+
+                    }
+                    //console.log('Next up: ', current);
+                }
+            }
+        });
 
     },
 
@@ -41,42 +85,13 @@ export default () => ({
         Promise.all([
             getVariable('viewRange'),
         ]).then((values) => {
-            let getter = new Summary();
-            let start = new Date(store.get('start'));
-            let end = new Date(store.get('end'));
-
-            getter.get(format(start, 'yyyy-MM-dd'), format(end, 'yyyy-MM-dd'), null).then((response) => {
-                for (const i in response.data) {
-                    if (response.data.hasOwnProperty(i)) {
-                        const current = response.data[i];
-                        if (i.startsWith('balance-in-')) {
-                            this.balanceBox.amounts.push(current.value_parsed);
-                            this.balanceBox.subtitles.push(current.sub_title);
-                            continue;
-                        }
-                        if (i.startsWith('bills-unpaid-in-')) {
-                            this.billBox.unpaid.push(current.value_parsed);
-                            continue;
-                        }
-                        if (i.startsWith('bills-paid-in-')) {
-                            this.billBox.paid.push(current.value_parsed);
-                            continue;
-                        }
-                        if (i.startsWith('spent-in-')) {
-                            this.leftBox.left.push(current.value_parsed);
-                        }
-                        if (i.startsWith('net-worth-in-')) {
-                            this.netBox.net.push(current.value_parsed);
-                        }
-
-
-                        console.log('Next up: ', current);
-                    }
-                }
-            });
-
+            this.loadBoxes();
         });
-
-
+        window.store.observe('start', (newValue, oldValue) => {
+            // this.loadBoxes();
+        });
+        window.store.observe('end', (newValue, oldValue) => {
+            this.loadBoxes();
+        });
     },
 });

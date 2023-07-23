@@ -1,7 +1,7 @@
 // basic store for preferred date range and some other vars.
 // used in layout.
 import Get from '../api/preferences/index.js';
-import store from 'store2';
+import store from 'store';
 
 
 /**
@@ -54,8 +54,8 @@ const Basic = () => {
             this.triggerReady();
             return;
         }
-        // load from store2
-        if (store.has(name)) {
+        // load from store
+        if (store.get(name)) {
             this[name] = store.get(name);
             this.triggerReady();
             return;
