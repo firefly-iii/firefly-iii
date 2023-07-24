@@ -5661,16 +5661,16 @@
         },
         {
             "name": "spatie/laravel-html",
-            "version": "3.2.1",
+            "version": "3.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-html.git",
-                "reference": "bf7bdb55cc5ce15c4ec8134aa1df709c0397c397"
+                "reference": "f9dac9f250735dd01d80e023f5acf6f3d10d3b3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-html/zipball/bf7bdb55cc5ce15c4ec8134aa1df709c0397c397",
-                "reference": "bf7bdb55cc5ce15c4ec8134aa1df709c0397c397",
+                "url": "https://api.github.com/repos/spatie/laravel-html/zipball/f9dac9f250735dd01d80e023f5acf6f3d10d3b3f",
+                "reference": "f9dac9f250735dd01d80e023f5acf6f3d10d3b3f",
                 "shasum": ""
             },
             "require": {
@@ -5727,7 +5727,7 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-html/tree/3.2.1"
+                "source": "https://github.com/spatie/laravel-html/tree/3.2.2"
             },
             "funding": [
                 {
@@ -5735,7 +5735,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2023-01-24T23:47:16+00:00"
+            "time": "2023-07-20T18:59:53+00:00"
         },
         {
             "name": "spatie/laravel-ignition",
