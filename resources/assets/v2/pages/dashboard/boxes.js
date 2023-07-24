@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Summary from "../../api/summary/index.js";
+import Summary from "../../api/v1/summary/index.js";
 import {format} from "date-fns";
 import {getVariable} from "../../store/get-variable.js";
 
@@ -28,8 +28,12 @@ export default () => ({
     billBox: {paid: [], unpaid: []},
     leftBox: {left: [], perDay: []},
     netBox: {net: []},
+    loading: false,
     loadBoxes() {
-        console.log('loadboxes');
+        if (this.loading) {
+            return;
+        }
+        this.loading = true;
 
         // get stuff
         let getter = new Summary();
@@ -75,22 +79,17 @@ export default () => ({
                     //console.log('Next up: ', current);
                 }
             }
+            this.loading = false;
         });
 
     },
 
     // Getter
     init() {
-        console.log('Now in boxes');
-        Promise.all([
-            getVariable('viewRange'),
-        ]).then((values) => {
+        Promise.all([getVariable('viewRange'),]).then((values) => {
             this.loadBoxes();
         });
-        window.store.observe('start', (newValue, oldValue) => {
-            // this.loadBoxes();
-        });
-        window.store.observe('end', (newValue, oldValue) => {
+        window.store.observe('end', () => {
             this.loadBoxes();
         });
     },

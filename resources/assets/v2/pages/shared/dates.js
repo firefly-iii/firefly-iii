@@ -24,7 +24,7 @@ export default () => ({
     language: 'en-US',
 
     init() {
-        console.log('Dates init');
+        // console.log('Dates init');
 
         this.range = {
             start: new Date(window.store.get('start')),
@@ -68,7 +68,7 @@ export default () => ({
 
 
     buildDateRange() {
-        console.log('Dates buildDateRange');
+        // console.log('Dates buildDateRange');
 
         // generate ranges
         let nextRange = this.getNextRange();
@@ -123,7 +123,7 @@ export default () => ({
         element.setAttribute('data-end', format(ytd.end, 'yyyy-MM-dd'));
 
         // custom range.
-        console.log('MainApp: buildDateRange end');
+        // console.log('MainApp: buildDateRange end');
     },
 
     getNextRange() {
@@ -161,12 +161,12 @@ export default () => ({
 
     changeDateRange(e) {
         e.preventDefault();
-        console.log('MainApp: changeDateRange');
+        // console.log('MainApp: changeDateRange');
         let target = e.currentTarget;
 
         let start = new Date(target.getAttribute('data-start'));
         let end = new Date(target.getAttribute('data-end'));
-        console.log('MainApp: Change date range', start, end);
+        // console.log('MainApp: Change date range', start, end);
 
         window.store.set('start', start);
         window.store.set('end', end);

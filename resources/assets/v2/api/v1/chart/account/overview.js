@@ -1,6 +1,6 @@
 /*
- * basic.js
- * Copyright (c) 2021 james@firefly-iii.org
+ * overview.js
+ * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,18 +18,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import {api} from "../../boot/axios";
+import {api} from "../../../../boot/axios";
+import {format} from "date-fns";
 
-export default class Preferences {
-    getByName(name) {
-        return api.get('/api/v1/preferences/' + name);
-    }
-
-    getByNameNow(name) {
-        return api.get('/api/v1/preferences/' + name);
-    }
-
-    postByName(name, value) {
-        return api.post('/api/v1/preferences', {name: name, data: value});
+export default class Overview {
+    overview(start, end) {
+        let startStr = format(start, 'y-MM-dd');
+        let endStr = format(end, 'y-MM-dd');
+        return api.get('/api/v1/chart/account/overview', {params: {start: startStr, end: endStr}});
     }
 }

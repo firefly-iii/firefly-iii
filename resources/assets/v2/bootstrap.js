@@ -9,6 +9,7 @@ import axios from 'axios';
 import store from "store";
 import observePlugin from 'store/plugins/observe';
 import Alpine from "alpinejs";
+import * as bootstrap from 'bootstrap'
 
 // add plugin to store and put in window
 store.addPlugin(observePlugin);
@@ -33,6 +34,9 @@ Promise.all([
         store.set('end', range.end);
     }
 
+    // save local in window.__ something
+    window.__localeId__ = values[3];
+
     const event = new Event('firefly-iii-bootstrapped');
     document.dispatchEvent(event);
     window.bootstrapped = true;
@@ -41,10 +45,5 @@ Promise.all([
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-// include popper js
-import '@popperjs/core';
-
-// include bootstrap CSS
-import * as bootstrap from 'bootstrap'
 
 window.Alpine = Alpine

@@ -13,7 +13,7 @@ function getViewRange(viewRange, today) {
     let start;
     let end;
 
-    console.log('getViewRange: ' + viewRange);
+    // console.log('getViewRange: ' + viewRange);
 
     switch (viewRange) {
         case 'last365':
@@ -100,7 +100,6 @@ function getViewRange(viewRange, today) {
             end = endOfDay(end);
             break;
     }
-    console.log('MainApp: setDatesFromViewRange done!');
     return {start: start, end: end};
 }
 

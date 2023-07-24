@@ -1,5 +1,5 @@
 /*
- * dashboard.js
+ * format-money.js
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,26 +18,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import './bootstrap.js';
-import dates from './pages/shared/dates.js';
-import boxes from './pages/dashboard/boxes.js';
-import accounts from './pages/dashboard/accounts.js';
+import {format} from "date-fns";
 
-const comps = {dates, boxes, accounts};
+export default function (amount, currencyCode) {
+    let locale = window.__localeId__.replace('_', '-');
 
-function loadPage(comps) {
-    Object.keys(comps).forEach(comp => {
-        let data = comps[comp]();
-        Alpine.data(comp, () => data);
-    });
-    Alpine.start();
-}
-
-// wait for load until bootstrapped event is received.
-document.addEventListener('firefly-iii-bootstrapped', () => {
-    loadPage(comps);
-});
-// or is bootstrapped before event is triggered.
-if (window.bootstrapped) {
-    loadPage(comps);
+    return Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currencyCode
+    }).format(amount);
 }

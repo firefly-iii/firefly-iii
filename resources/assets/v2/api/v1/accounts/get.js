@@ -1,6 +1,6 @@
 /*
- * index.js
- * Copyright (c) 2023 james@firefly-iii.org
+ * list.js
+ * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,11 +18,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import {api} from "../../../boot/axios";
 
-import {api} from "../../boot/axios.js";
+export default class Get {
 
-export default class Summary {
-    get(start, end, code) {
-        return api.get('/api/v1/summary/basic', {params: {start: start, end: end, code: code}});
+    /**
+     *
+     * @param identifier
+     * @param date
+     * @returns {Promise<AxiosResponse<any>>}
+     */
+    get(identifier, date) {
+        let params = {date: date};
+        if (!date) {
+            return api.get('/api/v1/accounts/' + identifier);
+        }
+        return api.get('/api/v1/accounts/' + identifier, {params: params});
+    }
+
+    /**
+     *
+     * @param identifier
+     * @param page
+     * @returns {Promise<AxiosResponse<any>>}
+     */
+    transactions(identifier, page) {
+        return api.get('/api/v1/accounts/' + identifier + '/transactions', {params: {page: page}});
     }
 }

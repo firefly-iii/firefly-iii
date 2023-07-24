@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ trans('config.html_language') }}">
+<!--  data-bs-theme="dark" -->
 <!--begin::Head-->
 @include('partials.layout.head')
 <!--end::Head-->
@@ -85,7 +86,7 @@
                             {{ __('firefly.profile') }}
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
+                        <a href="{{ route('preferences.index') }}" class="dropdown-item">
                             <i class="fa-solid fa-user-gear me-2"></i>
                             {{ __('firefly.preferences') }}
                         </a>

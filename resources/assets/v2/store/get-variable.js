@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Get from "../api/preferences/index.js";
+import Get from "../api/v1/preferences/index.js";
 
 export function getVariable(name) {
 
@@ -26,17 +26,17 @@ export function getVariable(name) {
     // to make things available quicker than if the store has to grab it through the API.
     // then again, it's not that slow.
     if (window.hasOwnProperty(name)) {
-        console.log('Get from window');
+        // console.log('Get from window');
         return Promise.resolve(window[name]);
     }
     // load from store2, if it's present.
     if (window.store.get(name)) {
-        console.log('Get from store');
+        // console.log('Get from store');
         return Promise.resolve(window.store.get(name));
     }
     let getter = (new Get);
     return getter.getByName(name).then((response) => {
-        console.log('Get from API');
+        // console.log('Get from API');
         return Promise.resolve(parseResponse(name, response));
 
     });
@@ -45,7 +45,7 @@ export function getVariable(name) {
 function parseResponse(name, response) {
     let value = response.data.data.attributes.data;
     window.store.set(name, value);
-    console.log('Store from API');
+    // console.log('Store from API');
     return value;
 }
 

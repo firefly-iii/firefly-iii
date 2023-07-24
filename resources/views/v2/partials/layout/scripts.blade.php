@@ -12,5 +12,5 @@
         crossorigin="anonymous"></script>
 --}}
 <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-<script src="v4/js/adminlte.js"></script>
+<script src="v2/js/adminlte.js"></script>
 <!--end::Required Plugin(AdminLTE)-->
