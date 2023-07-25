@@ -78,9 +78,9 @@ class Cron extends Command
         $force = (bool)$this->option('force');
 
         /*
-         * Fire recurring transaction cron job.
+         * Fire exchange rates cron job.
          */
-        if (true === config('cer.enabled')) {
+        if (true === config('cer.download_enabled')) {
             try {
                 $this->exchangeRatesCronJob($force, $date);
             } catch (FireflyException $e) {

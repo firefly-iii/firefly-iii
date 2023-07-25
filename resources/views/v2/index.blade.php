@@ -22,6 +22,18 @@
                                 </div>
                                 <div class="card-body">
                                     <div id="account-chart"></div>
+                                    <p x-data="accounts">
+                                        <template x-if="autoConvert">
+                                            <button type="button" @click="switchConversion" class="btn btn-info btm-sm">
+                                                Disable auto-convert
+                                            </button>
+                                        </template>
+                                        <template x-if="!autoConvert">
+                                            <button type="button" @click="switchConversion" class="btn btn-info btm-sm">
+                                                Enable auto-convert
+                                            </button>
+                                        </template>
+                                    </p>
                                 </div>
                             </div>
 

@@ -34,7 +34,12 @@ export default () => ({
     loading: false,
     loadingAccounts: false,
     accountList: [],
+    autoConvert: false,
     chart: null,
+    switchConversion() {
+        this.autoConvert = !this.autoConvert;
+        this.loadChart();
+    },
     loadChart() {
         if (this.loading) {
             return;
@@ -91,8 +96,18 @@ export default () => ({
                 if (response.data.hasOwnProperty(i)) {
                     let current = response.data[i];
                     let entry = [];
-                    window.currencies.push(current.currency_code);
-                    for (const [ii, value] of Object.entries(current.entries)) {
+                    let collection = [];
+                    // use the "native" currency code and use the "converted_entries" as array
+                    if (this.autoConvert) {
+                        window.currencies.push(current.native_code);
+                        collection = current.converted_entries;
+                    }
+                    if (!this.autoConvert) {
+                        window.currencies.push(current.currency_code);
+                        collection = current.entries;
+                    }
+
+                    for (const [ii, value] of Object.entries(collection)) {
                         entry.push({x: format(new Date(ii), 'yyyy-MM-dd'), y: parseFloat(value)});
                     }
                     options.series.push({name: current.label, data: entry});
