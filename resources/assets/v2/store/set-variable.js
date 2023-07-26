@@ -18,41 +18,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import Get from "../api/v1/preferences/index.js";
+import Put from "../api/v1/preferences/put.js";
 import Post from "../api/v1/preferences/post.js";
 
-export function getVariable(name, defaultValue = null) {
+export function setVariable(name, value = null) {
 
     // currently unused, window.X can be used by the blade template
     // to make things available quicker than if the store has to grab it through the API.
     // then again, it's not that slow.
-    if (window.hasOwnProperty(name)) {
-        // console.log('Get from window');
-        return Promise.resolve(window[name]);
-    }
-    // load from store2, if it's present.
-    if (window.store.get(name)) {
-        // console.log('Get from store');
-        return Promise.resolve(window.store.get(name));
-    }
-    let getter = (new Get);
-    return getter.getByName(name).then((response) => {
-        // console.log('Get from API');
-        return Promise.resolve(parseResponse(name, response));
+
+    // set in window.x
+    // window[name] = value;
+
+    // set in store:
+    window.store.set(name, value);
+
+    // post to user preferences (because why not):
+    let putter = new Put();
+    putter.put(name, value).then((response) => {
+        // console.log('Put in API');
     }).catch(() => {
         // preference does not exist (yet).
-        // POST it and then return it anyway.
+        // POST it
         let poster = (new Post);
-        poster.post(name, defaultValue).then((response) => {
-            return Promise.resolve(parseResponse(name, response));
+        poster.post(name, value).then((response) => {
+            // console.log('Post in API');
         });
     });
 }
-
-function parseResponse(name, response) {
-    let value = response.data.data.attributes.data;
-    window.store.set(name, value);
-    // console.log('Store from API');
-    return value;
-}
-

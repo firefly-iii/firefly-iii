@@ -20,6 +20,7 @@
 
 import ApexCharts from "apexcharts";
 import {getVariable} from "../../store/get-variable.js";
+import {setVariable} from "../../store/set-variable.js";
 import Dashboard from "../../api/v2/chart/account/dashboard.js";
 import formatLocal from "../../util/format.js";
 import {format} from "date-fns";
@@ -34,10 +35,11 @@ export default () => ({
     loading: false,
     loadingAccounts: false,
     accountList: [],
-    autoConvert: false,
+    autoConversion: false,
     chart: null,
-    switchConversion() {
-        this.autoConvert = !this.autoConvert;
+    switchAutoConversion() {
+        this.autoConversion = !this.autoConversion;
+        setVariable('autoConversion', this.autoConversion);
         this.loadChart();
     },
     loadChart() {
@@ -98,11 +100,11 @@ export default () => ({
                     let entry = [];
                     let collection = [];
                     // use the "native" currency code and use the "converted_entries" as array
-                    if (this.autoConvert) {
+                    if (this.autoConversion) {
                         window.currencies.push(current.native_code);
                         collection = current.converted_entries;
                     }
-                    if (!this.autoConvert) {
+                    if (!this.autoConversion) {
                         window.currencies.push(current.currency_code);
                         collection = current.entries;
                     }
@@ -169,7 +171,7 @@ export default () => ({
                             this.loadingAccounts = false;
                         });
                     }).then(() => {
-                        console.log(this.accountList);
+                        // console.log(this.accountList);
                     });
                 }
             }
@@ -178,8 +180,10 @@ export default () => ({
     },
 
     init() {
-        console.log('init');
-        Promise.all([getVariable('viewRange'),]).then((values) => {
+        // console.log('init');
+        Promise.all([getVariable('viewRange', '1M'), getVariable('autoConversion', false),]).then((values) => {
+            this.autoConversion = values[1];
+            // console.log(values[1]);
             this.loadChart();
             this.loadAccounts();
         });
