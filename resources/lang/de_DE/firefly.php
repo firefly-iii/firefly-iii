@@ -2714,6 +2714,10 @@ return [
     'ale_action_remove_from_piggy'       => 'Sparschwein',
     'ale_action_add_tag'                 => 'Schlagwort hinzugefügt',
 
+    // dashboard
+    'enable_auto_convert'                => 'Enable currency conversion',
+    'disable_auto_convert'               => 'Disable currency conversion',
+
 ];
 
 /*

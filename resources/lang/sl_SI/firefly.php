@@ -2714,6 +2714,10 @@ return [
     'ale_action_remove_from_piggy'       => 'Hranilnik',
     'ale_action_add_tag'                 => 'Dodana oznaka',
 
+    // dashboard
+    'enable_auto_convert'                => 'Enable currency conversion',
+    'disable_auto_convert'               => 'Disable currency conversion',
+
 ];
 
 /*

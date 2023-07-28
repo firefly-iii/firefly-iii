@@ -2312,7 +2312,7 @@ return [
     'left_for_piggy_banks'                      => '저금통 잔액',
     'sum_of_piggy_banks'                        => '저금통 합계',
     'saved_so_far'                              => '지금까지 저장됨',
-    'left_to_save'                              => '왼쪽으로 저장',
+    'left_to_save'                              => '남은 저장',
     'suggested_amount'                          => '월별 권장 절약 금액',
     'add_money_to_piggy_title'                  => '":name" 저금통애 금액 추가',
     'remove_money_from_piggy_title'             => '":name" 저금통에서 금액 제거',
@@ -2695,9 +2695,9 @@ return [
     'ale_action_log_add'                 => '":name" 저금통에 :amount 추가',
     'ale_action_log_remove'              => '":name" 저금통에서 :amount 제거',
     'ale_action_clear_budget'            => '예산에서 제거됨',
-    'ale_action_update_group_title'      => 'Updated transaction group title',
-    'ale_action_update_date'             => 'Updated transaction date',
-    'ale_action_update_order'            => 'Updated transaction order',
+    'ale_action_update_group_title'      => '분할거래 설명 변경',
+    'ale_action_update_date'             => '거래 날짜 변경',
+    'ale_action_update_order'            => '거래 순서 변경',
     'ale_action_clear_category'          => '카테고리에서 제거됨',
     'ale_action_clear_notes'             => '제거된 노트',
     'ale_action_clear_tag'               => '삭제된 태그',
@@ -2713,6 +2713,10 @@ return [
     'ale_action_add_to_piggy'            => '저금통',
     'ale_action_remove_from_piggy'       => '저금통',
     'ale_action_add_tag'                 => '태그 추가',
+
+    // dashboard
+    'enable_auto_convert'                => 'Enable currency conversion',
+    'disable_auto_convert'               => 'Disable currency conversion',
 
 ];
 

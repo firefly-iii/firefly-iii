@@ -322,10 +322,16 @@ class Steam
             $currentBalance    = bcadd($currentBalance, $convertedAmount);
             $balances[$format] = $currentBalance;
 
-            app('log')->debug(sprintf('%s: transaction in %s(!). Conversion rate is %s. %s %s = %s %s', $format, $currency->code, $rate,
-                                      $currency->code, $transaction['amount'],
-                                      $native->code, $convertedAmount
-                              ));
+            app('log')->debug(sprintf(
+                '%s: transaction in %s(!). Conversion rate is %s. %s %s = %s %s',
+                $format,
+                $currency->code,
+                $rate,
+                $currency->code,
+                $transaction['amount'],
+                $native->code,
+                $convertedAmount
+            ));
 
 
         }
@@ -446,14 +452,14 @@ class Steam
                 $rate            = $converter->getCurrencyRate($currency, $native, $date);
                 $convertedAmount = bcmul($transaction['amount'], $rate);
                 $balance         = bcadd($balance, $convertedAmount);
-//                app('log')->debug(sprintf('Date: %s, rate: %s, amount: %s %s, new: %s %s',
-//                                          $date->format('Y-m-d'),
-//                                          $rate,
-//                                          $currency->code,
-//                                          $transaction['amount'],
-//                                          $native->code,
-//                                          $convertedAmount
-//                                  ));
+                //                app('log')->debug(sprintf('Date: %s, rate: %s, amount: %s %s, new: %s %s',
+                //                                          $date->format('Y-m-d'),
+                //                                          $rate,
+                //                                          $currency->code,
+                //                                          $transaction['amount'],
+                //                                          $native->code,
+                //                                          $convertedAmount
+                //                                  ));
             }
             //app('log')->debug(sprintf('Balance from new set #%d is %f', $index, $balance));
         }
