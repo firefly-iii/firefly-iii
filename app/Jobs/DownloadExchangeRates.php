@@ -121,7 +121,7 @@ class DownloadExchangeRates implements ShouldQueue
             app('log')->warning(sprintf('Trying to grab "%s" resulted in bad JSON.', $url));
             return;
         }
-        $date = Carbon::createFromFormat('Y-m-d', $json['date']);
+        $date = Carbon::createFromFormat('Y-m-d', $json['date'], config('app.timezone'));
         $this->saveRates($currency, $date, $json['rates']);
     }
 

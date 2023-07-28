@@ -2714,6 +2714,10 @@ return [
     'ale_action_remove_from_piggy'       => '存钱罐',
     'ale_action_add_tag'                 => '添加标签',
 
+    // dashboard
+    'enable_auto_convert'                => 'Enable currency conversion',
+    'disable_auto_convert'               => 'Disable currency conversion',
+
 ];
 
 /*

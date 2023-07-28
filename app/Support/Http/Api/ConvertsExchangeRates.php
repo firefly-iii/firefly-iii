@@ -26,9 +26,10 @@ namespace FireflyIII\Support\Http\Api;
 
 use Carbon\Carbon;
 use DateTimeInterface;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
-use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\CacheProperties;
 
 /**
  * Trait ConvertsExchangeRates
@@ -49,6 +50,8 @@ trait ConvertsExchangeRates
         }
 
         // if not enabled, return the same array but without conversion:
+        return $set;
+        $this->enabled = false;
         if (false === $this->enabled) {
             $set['converted'] = false;
             return $set;
@@ -69,7 +72,7 @@ trait ConvertsExchangeRates
             $carbon = Carbon::createFromFormat(DateTimeInterface::ATOM, $date);
             $rate   = $this->getRate($currency, $native, $carbon);
             $rate   = '0' === $rate ? '1' : $rate;
-            Log::debug(sprintf('bcmul("%s", "%s")', (string)$entry, $rate));
+            app('log')->debug(sprintf('bcmul("%s", "%s")', (string)$entry, $rate));
             $set['entries'][$date] = (float)bcmul((string)$entry, $rate);
         }
         return $set;
@@ -80,7 +83,7 @@ trait ConvertsExchangeRates
      */
     private function getPreference(): void
     {
-        $this->enabled = true;
+        $this->enabled = config('cer.currency_conversion');
     }
 
     /**
@@ -103,55 +106,65 @@ trait ConvertsExchangeRates
      * @param Carbon              $date
      *
      * @return string
+     * @throws FireflyException
      */
     private function getRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
     {
-        Log::debug(sprintf('getRate(%s, %s, "%s")', $from->code, $to->code, $date->format('Y-m-d')));
+        // first attempt:
+        $rate = $this->getFromDB((int)$from->id, (int)$to->id, $date->format('Y-m-d'));
+        if (null !== $rate) {
+            return $rate;
+        }
+        // no result. perhaps the other way around?
+        $rate = $this->getFromDB((int)$to->id, (int)$from->id, $date->format('Y-m-d'));
+        if (null !== $rate) {
+            return bcdiv('1', $rate);
+        }
+
+        // if nothing in place, fall back on the rate for $from to EUR
+        $first  = $this->getEuroRate($from, $date);
+        $second = $this->getEuroRate($to, $date);
+
+        // combined (if present), they can be used to calculate the necessary conversion rate.
+        if ('0' === $first || '0' === $second) {
+            return '0';
+        }
+
+        $second = bcdiv('1', $second);
+        return bcmul($first, $second);
+    }
+
+    /**
+     * @param int    $from
+     * @param int    $to
+     * @param string $date
+     *
+     * @return string|null
+     */
+    private function getFromDB(int $from, int $to, string $date): ?string
+    {
+        $key = sprintf('cer-%d-%d-%s', $from, $to, $date);
+
+        $cache = new CacheProperties();
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
         /** @var CurrencyExchangeRate $result */
         $result = auth()->user()
                         ->currencyExchangeRates()
-                        ->where('from_currency_id', $from->id)
-                        ->where('to_currency_id', $to->id)
-                        ->where('date', '<=', $date->format('Y-m-d'))
+                        ->where('from_currency_id', $from)
+                        ->where('to_currency_id', $to)
+                        ->where('date', '<=', $date)
                         ->orderBy('date', 'DESC')
                         ->first();
         if (null !== $result) {
             $rate = (string)$result->rate;
-            Log::debug(sprintf('Rate is %s', $rate));
+            $cache->store($rate);
             return $rate;
         }
-        // no result. perhaps the other way around?
-        /** @var CurrencyExchangeRate $result */
-        $result = auth()->user()
-                        ->currencyExchangeRates()
-                        ->where('from_currency_id', $to->id)
-                        ->where('to_currency_id', $from->id)
-                        ->where('date', '<=', $date->format('Y-m-d'))
-                        ->orderBy('date', 'DESC')
-                        ->first();
-        if (null !== $result) {
-            $rate = bcdiv('1', (string)$result->rate);
-            Log::debug(sprintf('Reversed rate is %s', $rate));
-            return $rate;
-        }
-        // try euro rates
-        $result1 = $this->getEuroRate($from, $date);
-        if ('0' === $result1) {
-            Log::debug(sprintf('No exchange rate between EUR and %s', $from->code));
-            return '0';
-        }
-        $result2 = $this->getEuroRate($to, $date);
-        if ('0' === $result2) {
-            Log::debug(sprintf('No exchange rate between EUR and %s', $to->code));
-            return '0';
-        }
-        // still need to inverse rate 2:
-        $result2 = bcdiv('1', $result2);
-        $rate    = bcmul($result1, $result2);
-        Log::debug(sprintf('Rate %s to EUR is %s', $from->code, $result1));
-        Log::debug(sprintf('Rate EUR to %s is %s', $to->code, $result2));
-        Log::debug(sprintf('Rate for %s to %s is %s', $from->code, $to->code, $rate));
-        return $rate;
+        return null;
     }
 
     /**
@@ -159,47 +172,55 @@ trait ConvertsExchangeRates
      * @param Carbon              $date
      *
      * @return string
+     * @throws FireflyException
      */
     private function getEuroRate(TransactionCurrency $currency, Carbon $date): string
     {
-        Log::debug(sprintf('Find rate for %s to Euro', $currency->code));
+        $euroId = $this->getEuroId();
+        if ($euroId === (int)$currency->id) {
+            return '1';
+        }
+        $rate = $this->getFromDB((int)$currency->id, $euroId, $date->format('Y-m-d'));
+
+        if (null !== $rate) {
+            //            app('log')->debug(sprintf('Rate for %s to EUR is %s.', $currency->code, $rate));
+            return $rate;
+        }
+        $rate = $this->getFromDB($euroId, (int)$currency->id, $date->format('Y-m-d'));
+        if (null !== $rate) {
+            $rate = bcdiv('1', $rate);
+            //            app('log')->debug(sprintf('Inverted rate for %s to EUR is %s.', $currency->code, $rate));
+            return $rate;
+        }
+        // grab backup values from config file:
+        $backup = config(sprintf('cer.rates.%s', $currency->code));
+        if (null !== $backup) {
+            $backup = bcdiv('1', (string)$backup);
+            // app('log')->debug(sprintf('Backup rate for %s to EUR is %s.', $currency->code, $backup));
+            return $backup;
+        }
+
+        //        app('log')->debug(sprintf('No rate for %s to EUR.', $currency->code));
+        return '0';
+    }
+
+    /**
+     * @return int
+     * @throws FireflyException
+     */
+    private function getEuroId(): int
+    {
+        $cache = new CacheProperties();
+        $cache->addProperty('cer-euro-id');
+        if ($cache->has()) {
+            return $cache->get();
+        }
         $euro = TransactionCurrency::whereCode('EUR')->first();
         if (null === $euro) {
-            app('log')->warning('Cannot do indirect conversion without EUR.');
-            return '0';
+            throw new FireflyException('Cannot find EUR in system, cannot do currency conversion.');
         }
-
-        // try one way:
-        /** @var CurrencyExchangeRate $result */
-        $result = auth()->user()
-                        ->currencyExchangeRates()
-                        ->where('from_currency_id', $currency->id)
-                        ->where('to_currency_id', $euro->id)
-                        ->where('date', '<=', $date->format('Y-m-d'))
-                        ->orderBy('date', 'DESC')
-                        ->first();
-        if (null !== $result) {
-            $rate = (string)$result->rate;
-            Log::debug(sprintf('Rate for %s to EUR is %s.', $currency->code, $rate));
-            return $rate;
-        }
-        // try the other way around and inverse it.
-        /** @var CurrencyExchangeRate $result */
-        $result = auth()->user()
-                        ->currencyExchangeRates()
-                        ->where('from_currency_id', $euro->id)
-                        ->where('to_currency_id', $currency->id)
-                        ->where('date', '<=', $date->format('Y-m-d'))
-                        ->orderBy('date', 'DESC')
-                        ->first();
-        if (null !== $result) {
-            $rate = bcdiv('1', (string)$result->rate);
-            Log::debug(sprintf('Inverted rate for %s to EUR is %s.', $currency->code, $rate));
-            return $rate;
-        }
-
-        Log::debug(sprintf('No rate for %s to EUR.', $currency->code));
-        return '0';
+        $cache->store((int)$euro->id);
+        return (int)$euro->id;
     }
 
     /**
@@ -268,7 +289,7 @@ trait ConvertsExchangeRates
      */
     private function convertAmount(string $amount, TransactionCurrency $from, TransactionCurrency $to, ?Carbon $date = null): string
     {
-        Log::debug(sprintf('Converting %s from %s to %s', $amount, $from->code, $to->code));
+        app('log')->debug(sprintf('Converting %s from %s to %s', $amount, $from->code, $to->code));
         $date = $date ?? today(config('app.timezone'));
         $rate = $this->getRate($from, $to, $date);
 

@@ -29,8 +29,9 @@ use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -63,6 +64,8 @@ class AccountController extends Controller
      * This endpoint is documented at
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/charts/getChartAccountOverview
      *
+     * The native currency is the preferred currency on the page /currencies.
+     *
      * @param DateRequest $request
      *
      * @return JsonResponse
@@ -77,6 +80,12 @@ class AccountController extends Controller
         $start = $dates['start'];
         /** @var Carbon $end */
         $end = $dates['end'];
+        /** @var User $user */
+        $user = auth()->user();
+
+        // group ID
+        $administrationId = $user->getAdministrationId();
+        $this->repository->setAdministrationId($administrationId);
 
         // user's preferences
         $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT])->pluck('id')->toArray();
@@ -96,35 +105,41 @@ class AccountController extends Controller
             if (null === $currency) {
                 $currency = $default;
             }
-            $currentSet   = [
+            $currentSet     = [
                 'label'                   => $account->name,
+                // the currency that belongs to the account.
                 'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'native_id'               => null,
-                'native_code'             => null,
-                'native_symbol'           => null,
-                'native_decimal_places'   => null,
+
+                // the default currency of the user (may be the same!)
+                'native_id'               => $default->id,
+                'native_code'             => $default->code,
+                'native_symbol'           => $default->symbol,
+                'native_decimal_places'   => $default->decimal_places,
                 'start_date'              => $start->toAtomString(),
                 'end_date'                => $end->toAtomString(),
-                'type'                    => 'line', // line, area or bar
-                'yAxisID'                 => 0, // 0, 1, 2
                 'entries'                 => [],
+                'converted_entries'       => [],
             ];
-            $currentStart = clone $start;
-            $range        = app('steam')->balanceInRange($account, $start, clone $end);
+            $currentStart   = clone $start;
+            $range          = app('steam')->balanceInRange($account, $start, clone $end, $currency);
+            $rangeConverted = app('steam')->balanceInRangeConverted($account, $start, clone $end, $default);
 
-            // 2022-10-11: this method no longer converts to floats
-
-            $previous = array_values($range)[0];
+            $previous          = array_values($range)[0];
+            $previousConverted = array_values($rangeConverted)[0];
             while ($currentStart <= $end) {
-                $format   = $currentStart->format('Y-m-d');
-                $label    = $currentStart->toAtomString();
-                $balance  = array_key_exists($format, $range) ? $range[$format] : $previous;
-                $previous = $balance;
+                $format            = $currentStart->format('Y-m-d');
+                $label             = $currentStart->toAtomString();
+                $balance           = array_key_exists($format, $range) ? $range[$format] : $previous;
+                $balanceConverted  = array_key_exists($format, $rangeConverted) ? $rangeConverted[$format] : $previousConverted;
+                $previous          = $balance;
+                $previousConverted = $balanceConverted;
+
                 $currentStart->addDay();
-                $currentSet['entries'][$label] = $balance;
+                $currentSet['entries'][$label]           = $balance;
+                $currentSet['converted_entries'][$label] = $balanceConverted;
             }
             $currentSet  = $this->cerChartSet($currentSet);
             $chartData[] = $currentSet;

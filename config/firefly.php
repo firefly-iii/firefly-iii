@@ -106,8 +106,9 @@ return [
         'telemetry'    => false,
         'webhooks'     => true,
         'handle_debts' => true,
+        // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.0.18',
+    'version'                      => '6.0.19',
     'api_version'                  => '2.0.4',
     'db_version'                   => 19,
 
@@ -127,7 +128,7 @@ return [
     'disable_csp_header'           => env('DISABLE_CSP_HEADER', false),
     'allow_webhooks'               => env('ALLOW_WEBHOOKS', false),
 
-    // email flags
+    // flags
     'send_report_journals'         => envNonEmpty('SEND_REPORT_JOURNALS', true),
 
     // info for demo site

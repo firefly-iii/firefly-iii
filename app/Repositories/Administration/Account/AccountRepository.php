@@ -25,6 +25,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Administration\Account;
 
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountMeta;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Repositories\Administration\AdministrationTrait;
 use Illuminate\Support\Collection;
 
@@ -35,6 +39,7 @@ class AccountRepository implements AccountRepositoryInterface
 {
     use AdministrationTrait;
 
+
     /**
      * @inheritDoc
      */
@@ -42,11 +47,11 @@ class AccountRepository implements AccountRepositoryInterface
     {
         // search by group, not by user
         $dbQuery = $this->userGroup->accounts()
-                                   ->where('active', true)
-                                   ->orderBy('accounts.order', 'ASC')
-                                   ->orderBy('accounts.account_type_id', 'ASC')
-                                   ->orderBy('accounts.name', 'ASC')
-                                   ->with(['accountType']);
+            ->where('active', true)
+            ->orderBy('accounts.order', 'ASC')
+            ->orderBy('accounts.account_type_id', 'ASC')
+            ->orderBy('accounts.name', 'ASC')
+            ->with(['accountType']);
         if ('' !== $query) {
             // split query on spaces just in case:
             $parts = explode(' ', $query);
@@ -61,5 +66,99 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $dbQuery->take($limit)->get(['accounts.*']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAccountsByType(array $types, ?array $sort = []): Collection
+    {
+        $res = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
+        $query = $this->userGroup->accounts();
+        if (0 !== count($types)) {
+            $query->accountTypeIn($types);
+        }
+
+        // add sort parameters. At this point they're filtered to allowed fields to sort by:
+        if (0 !== count($sort)) {
+            foreach ($sort as $param) {
+                $query->orderBy($param[0], $param[1]);
+            }
+        }
+
+        if (0 === count($sort)) {
+            if (0 !== count($res)) {
+                $query->orderBy('accounts.order', 'ASC');
+            }
+            $query->orderBy('accounts.active', 'DESC');
+            $query->orderBy('accounts.name', 'ASC');
+        }
+        return $query->get(['accounts.*']);
+    }
+
+    /**
+     * @param array $accountIds
+     *
+     * @return Collection
+     */
+    public function getAccountsById(array $accountIds): Collection
+    {
+        $query = $this->userGroup->accounts();
+
+        if (0 !== count($accountIds)) {
+            $query->whereIn('accounts.id', $accountIds);
+        }
+        $query->orderBy('accounts.order', 'ASC');
+        $query->orderBy('accounts.active', 'DESC');
+        $query->orderBy('accounts.name', 'ASC');
+
+        return $query->get(['accounts.*']);
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionCurrency|null
+     */
+    public function getAccountCurrency(Account $account): ?TransactionCurrency
+    {
+        $type = $account->accountType->type;
+        $list = config('firefly.valid_currency_account_types');
+
+        // return null if not in this list.
+        if (!in_array($type, $list, true)) {
+            return null;
+        }
+        $currencyId = (int)$this->getMetaValue($account, 'currency_id');
+        if ($currencyId > 0) {
+            return TransactionCurrency::find($currencyId);
+        }
+
+        return null;
+    }
+
+    /**
+     * Return meta value for account. Null if not found.
+     *
+     * @param Account $account
+     * @param string $field
+     *
+     * @return null|string
+     */
+    public function getMetaValue(Account $account, string $field): ?string
+    {
+        $result = $account->accountMeta->filter(
+            function (AccountMeta $meta) use ($field) {
+                return strtolower($meta->name) === strtolower($field);
+            }
+        );
+        if (0 === $result->count()) {
+            return null;
+        }
+        if (1 === $result->count()) {
+            return (string)$result->first()->data;
+        }
+
+        return null;
     }
 }

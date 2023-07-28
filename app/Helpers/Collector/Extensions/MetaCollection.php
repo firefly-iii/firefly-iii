@@ -64,8 +64,8 @@ trait MetaCollection
             // join bill table
             $this->query->leftJoin('bills', 'bills.id', '=', 'transaction_journals.bill_id');
             // add fields
-            $this->fields[]           = 'bills.id as bill_id';
-            $this->fields[]           = 'bills.name as bill_name';
+            $this->fields[] = 'bills.id as bill_id';
+            $this->fields[] = 'bills.name as bill_name';
             $this->hasBillInformation = true;
         }
 
@@ -104,8 +104,8 @@ trait MetaCollection
             // join cat table
             $this->query->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id');
             // add fields
-            $this->fields[]             = 'budgets.id as budget_id';
-            $this->fields[]             = 'budgets.name as budget_name';
+            $this->fields[] = 'budgets.id as budget_id';
+            $this->fields[] = 'budgets.name as budget_name';
             $this->hasBudgetInformation = true;
         }
 
@@ -157,8 +157,8 @@ trait MetaCollection
             // join cat table
             $this->query->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id');
             // add fields
-            $this->fields[]          = 'categories.id as category_id';
-            $this->fields[]          = 'categories.name as category_name';
+            $this->fields[] = 'categories.id as category_id';
+            $this->fields[] = 'categories.name as category_name';
             $this->hasCatInformation = true;
         }
 
@@ -226,8 +226,10 @@ trait MetaCollection
      */
     public function excludeInternalReference(string $internalReference): GroupCollectorInterface
     {
-        $this->joinMetaDataTables();
+        $internalReference = json_encode($internalReference);
+        $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
+        $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
         $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s%%', $internalReference));
 
@@ -251,6 +253,9 @@ trait MetaCollection
      */
     public function externalIdContains(string $externalId): GroupCollectorInterface
     {
+        $externalId = json_encode($externalId);
+        $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
+
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $externalId));
@@ -263,6 +268,9 @@ trait MetaCollection
      */
     public function externalIdDoesNotContain(string $externalId): GroupCollectorInterface
     {
+        $externalId = json_encode($externalId);
+        $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
+
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
         $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s%%', $externalId));
@@ -275,6 +283,9 @@ trait MetaCollection
      */
     public function externalIdDoesNotEnd(string $externalId): GroupCollectorInterface
     {
+        $externalId = json_encode($externalId);
+        $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
+
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
         $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s"', $externalId));
@@ -287,6 +298,9 @@ trait MetaCollection
      */
     public function externalIdDoesNotStart(string $externalId): GroupCollectorInterface
     {
+        $externalId = json_encode($externalId);
+        $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
+
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('"%s%%', $externalId));
@@ -299,6 +313,9 @@ trait MetaCollection
      */
     public function externalIdEnds(string $externalId): GroupCollectorInterface
     {
+        $externalId = json_encode($externalId);
+        $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
+
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s"', $externalId));
@@ -311,6 +328,9 @@ trait MetaCollection
      */
     public function externalIdStarts(string $externalId): GroupCollectorInterface
     {
+        $externalId = json_encode($externalId);
+        $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
+
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('"%s%%', $externalId));
@@ -465,11 +485,16 @@ trait MetaCollection
     /**
      * @inheritDoc
      */
-    public function internalReferenceContains(string $externalId): GroupCollectorInterface
+    public function internalReferenceContains(string $internalReference): GroupCollectorInterface
     {
+        $internalReference = json_encode($internalReference);
+        $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
+        //var_dump($internalReference);
+        //exit;
+
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $externalId));
+        $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $internalReference));
 
         return $this;
     }
@@ -477,11 +502,14 @@ trait MetaCollection
     /**
      * @inheritDoc
      */
-    public function internalReferenceDoesNotContain(string $externalId): GroupCollectorInterface
+    public function internalReferenceDoesNotContain(string $internalReference): GroupCollectorInterface
     {
+        $internalReference = json_encode($internalReference);
+        $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
+
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s%%', $externalId));
+        $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s%%', $internalReference));
 
         return $this;
     }
@@ -489,11 +517,14 @@ trait MetaCollection
     /**
      * @inheritDoc
      */
-    public function internalReferenceDoesNotEnd(string $externalId): GroupCollectorInterface
+    public function internalReferenceDoesNotEnd(string $internalReference): GroupCollectorInterface
     {
+        $internalReference = json_encode($internalReference);
+        $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
+
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s"', $externalId));
+        $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s"', $internalReference));
 
         return $this;
     }
@@ -501,11 +532,14 @@ trait MetaCollection
     /**
      * @inheritDoc
      */
-    public function internalReferenceDoesNotStart(string $externalId): GroupCollectorInterface
+    public function internalReferenceDoesNotStart(string $internalReference): GroupCollectorInterface
     {
+        $internalReference = json_encode($internalReference);
+        $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
+
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->where('journal_meta.data', 'LIKE', sprintf('"%s%%', $externalId));
+        $this->query->where('journal_meta.data', 'LIKE', sprintf('"%s%%', $internalReference));
 
         return $this;
     }
@@ -513,11 +547,14 @@ trait MetaCollection
     /**
      * @inheritDoc
      */
-    public function internalReferenceEnds(string $externalId): GroupCollectorInterface
+    public function internalReferenceEnds(string $internalReference): GroupCollectorInterface
     {
+        $internalReference = json_encode($internalReference);
+        $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
+
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s"', $externalId));
+        $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s"', $internalReference));
 
         return $this;
     }
@@ -525,11 +562,14 @@ trait MetaCollection
     /**
      * @inheritDoc
      */
-    public function internalReferenceStarts(string $externalId): GroupCollectorInterface
+    public function internalReferenceStarts(string $internalReference): GroupCollectorInterface
     {
+        $internalReference = json_encode($internalReference);
+        $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
+
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->where('journal_meta.data', 'LIKE', sprintf('"%s%%', $externalId));
+        $this->query->where('journal_meta.data', 'LIKE', sprintf('"%s%%', $internalReference));
 
         return $this;
     }
@@ -563,7 +603,7 @@ trait MetaCollection
                 }
             );
             // add fields
-            $this->fields[]            = 'notes.text as notes';
+            $this->fields[] = 'notes.text as notes';
             $this->hasNotesInformation = true;
         }
 
@@ -796,8 +836,10 @@ trait MetaCollection
      */
     public function setInternalReference(string $internalReference): GroupCollectorInterface
     {
-        $this->joinMetaDataTables();
+        $internalReference = json_encode($internalReference);
+        $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
+        $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $internalReference));
 
@@ -871,8 +913,8 @@ trait MetaCollection
         $this->withTagInformation();
 
         // this method adds a "postFilter" to the collector.
-        $list                = $tags->pluck('tag')->toArray();
-        $filter              = function (int $index, array $object) use ($list): bool {
+        $list = $tags->pluck('tag')->toArray();
+        $filter = function (int $index, array $object) use ($list): bool {
             foreach ($object['transactions'] as $transaction) {
                 foreach ($transaction['tags'] as $tag) {
                     if (in_array($tag['name'], $list, true)) {

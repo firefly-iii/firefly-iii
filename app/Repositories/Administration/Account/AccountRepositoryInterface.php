@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Administration\Account;
 
+use FireflyIII\Models\Account;
+use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Support\Collection;
 
 /**
@@ -34,10 +36,42 @@ interface AccountRepositoryInterface
 {
     /**
      * @param string $query
-     * @param array  $types
-     * @param int    $limit
+     * @param array $types
+     * @param int $limit
      *
      * @return Collection
      */
     public function searchAccount(string $query, array $types, int $limit): Collection;
+
+    /**
+     * @param array $types
+     * @param array|null $sort
+     *
+     * @return Collection
+     */
+    public function getAccountsByType(array $types, ?array $sort = []): Collection;
+
+    /**
+     * @param array $accountIds
+     *
+     * @return Collection
+     */
+    public function getAccountsById(array $accountIds): Collection;
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionCurrency|null
+     */
+    public function getAccountCurrency(Account $account): ?TransactionCurrency;
+
+    /**
+     * Return meta value for account. Null if not found.
+     *
+     * @param Account $account
+     * @param string $field
+     *
+     * @return null|string
+     */
+    public function getMetaValue(Account $account, string $field): ?string;
 }

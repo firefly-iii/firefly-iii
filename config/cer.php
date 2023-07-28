@@ -24,50 +24,53 @@ declare(strict_types=1);
 
 return [
 
-    'url'     => 'https://ff3exchangerates.z6.web.core.windows.net',
-    'enabled' => env('ENABLE_EXTERNAL_RATES', false),
+    'url'              => 'https://ff3exchangerates.z6.web.core.windows.net',
+    'enabled'          => true,
+    'download_enabled' => env('ENABLE_EXTERNAL_RATES', false),
+
     // if currencies are added, default rates must be added as well!
     // last exchange rate update: 6-6-2022
     // source: https://www.xe.com/currencyconverter/
-    'date'    => '2022-06-06',
-    'rates'   => [
+    'date'             => '2022-06-06',
+
+    // all rates are from EUR to $currency:
+    'rates'            => [
+
         // europa
-        ['EUR', 'HUF', 387.9629],
-        ['EUR', 'GBP', 0.85420754],
-        ['EUR', 'UAH', 31.659752],
-        ['EUR', 'PLN', 4.581788],
-        ['EUR', 'TRY', 17.801397],
-        ['EUR', 'DKK', 7.4389753],
+        'EUR' => 1,
+        'HUF' => 387.9629,
+        'GBP' => 0.85420754,
+        'UAH' => 31.659752,
+        'PLN' => 4.581788,
+        'TRY' => 17.801397,
+        'DKK' => 7.4389753,
 
         // Americas
-        ['EUR', 'USD', 1.0722281],
-        ['EUR', 'BRL', 5.0973173],
-        ['EUR', 'CAD', 1.3459969],
-        ['EUR', 'MXN', 20.899824],
+        'USD' => 1.0722281,
+        'BRL' => 5.0973173,
+        'CAD' => 1.3459969,
+        'MXN' => 20.899824,
 
         // Oceania currencies
-        ['EUR', 'IDR', 15466.299],
-        ['EUR', 'AUD', 1.4838549],
-        ['EUR', 'NZD', 1.6425829],
+        'IDR' => 15466.299,
+        'AUD' => 1.4838549,
+        'NZD' => 1.6425829,
 
         // africa
-        ['EUR', 'EGP', 19.99735],
-        ['EUR', 'MAD', 10.573307],
-        ['EUR', 'ZAR', 16.413167],
+        'EGP' => 19.99735,
+        'MAD' => 10.573307,
+        'ZAR' => 16.413167,
 
         // asia
-        ['EUR', 'JPY', 140.15257],
-        ['EUR', 'RMB', 7.1194265],
-        ['EUR', 'RUB', 66.000895],
-        ['EUR', 'INR', 83.220481],
+        'JPY' => 140.15257,
+        'RMB' => 7.1194265,
+        'CNY' => 1,
+        'RUB' => 66.000895,
+        'INR' => 83.220481,
 
         // int
-        ['EUR', 'XBT', 0, 00003417],
-        ['EUR', 'BCH', 0.00573987],
-        ['EUR', 'ETH', 0, 00056204],
-
-        ['EUR', 'ILS', 3.5712508],
-        ['EUR', 'CHF', 1.0323891],
-        ['EUR', 'HRK', 7.5220845],
+        'ILS' => 3.5712508,
+        'CHF' => 1.0323891,
+        'HRK' => 7.5220845,
     ],
 ];

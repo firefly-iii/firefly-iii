@@ -376,11 +376,11 @@ interface GroupCollectorInterface
     /**
      * Look for specific external ID's.
      *
-     * @param string $externalId
+     * @param string $internalReference
      *
      * @return GroupCollectorInterface
      */
-    public function excludeInternalReference(string $externalId): GroupCollectorInterface;
+    public function excludeInternalReference(string $internalReference): GroupCollectorInterface;
 
     /**
      * Limit the result to NOT a set of specific transaction journals.
@@ -629,46 +629,46 @@ interface GroupCollectorInterface
     public function hasNoAttachments(): GroupCollectorInterface;
 
     /**
-     * @param string $externalId
+     * @param string $internalReference
      *
      * @return GroupCollectorInterface
      */
-    public function internalReferenceContains(string $externalId): GroupCollectorInterface;
+    public function internalReferenceContains(string $internalReference): GroupCollectorInterface;
 
     /**
-     * @param string $externalId
+     * @param string $internalReference
      *
      * @return GroupCollectorInterface
      */
-    public function internalReferenceDoesNotContain(string $externalId): GroupCollectorInterface;
+    public function internalReferenceDoesNotContain(string $internalReference): GroupCollectorInterface;
 
     /**
-     * @param string $externalId
+     * @param string $internalReference
      *
      * @return GroupCollectorInterface
      */
-    public function internalReferenceDoesNotEnd(string $externalId): GroupCollectorInterface;
+    public function internalReferenceDoesNotEnd(string $internalReference): GroupCollectorInterface;
 
     /**
-     * @param string $externalId
+     * @param string $internalReference
      *
      * @return GroupCollectorInterface
      */
-    public function internalReferenceDoesNotStart(string $externalId): GroupCollectorInterface;
+    public function internalReferenceDoesNotStart(string $internalReference): GroupCollectorInterface;
 
     /**
-     * @param string $externalId
+     * @param string $internalReference
      *
      * @return GroupCollectorInterface
      */
-    public function internalReferenceEnds(string $externalId): GroupCollectorInterface;
+    public function internalReferenceEnds(string $internalReference): GroupCollectorInterface;
 
     /**
-     * @param string $externalId
+     * @param string $internalReference
      *
      * @return GroupCollectorInterface
      */
-    public function internalReferenceStarts(string $externalId): GroupCollectorInterface;
+    public function internalReferenceStarts(string $internalReference): GroupCollectorInterface;
 
     /**
      * Only journals that are reconciled.
@@ -1119,11 +1119,11 @@ interface GroupCollectorInterface
     /**
      * Look for specific external ID's.
      *
-     * @param string $externalId
+     * @param string $internalReference
      *
      * @return GroupCollectorInterface
      */
-    public function setInternalReference(string $externalId): GroupCollectorInterface;
+    public function setInternalReference(string $internalReference): GroupCollectorInterface;
 
     /**
      * Limit the result to a set of specific transaction journals.

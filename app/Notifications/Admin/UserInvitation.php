@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Admin;
 
 use FireflyIII\Models\InvitedUser;
+use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
@@ -100,7 +101,9 @@ class UserInvitation extends Notification
      */
     public function via($notifiable)
     {
-        $slackUrl = (string)app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
+        /** @var User|null $user */
+        $user = auth()->user();
+        $slackUrl = null === $user ? '' : (string)app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
         if (str_starts_with($slackUrl, 'https://hooks.slack.com/services/')) {
             return ['mail', 'slack'];
         }

@@ -57,7 +57,7 @@ trait FiltersWeekends
             $isWeekend = $date->isWeekend();
             if (!$isWeekend) {
                 $return[] = clone $date;
-                Log::debug(sprintf('Date is %s, not a weekend date.', $date->format('D d M Y')));
+                //Log::debug(sprintf('Date is %s, not a weekend date.', $date->format('D d M Y')));
                 continue;
             }
 
@@ -82,7 +82,7 @@ trait FiltersWeekends
                 $return[] = $clone;
                 continue;
             }
-            Log::debug(sprintf('Date is %s, removed from final result', $date->format('D d M Y')));
+            //Log::debug(sprintf('Date is %s, removed from final result', $date->format('D d M Y')));
         }
 
         // filter unique dates

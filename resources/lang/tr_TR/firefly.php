@@ -2715,6 +2715,10 @@ return [
     'ale_action_remove_from_piggy'       => 'Piggy bank',
     'ale_action_add_tag'                 => 'Added tag',
 
+    // dashboard
+    'enable_auto_convert'                => 'Enable currency conversion',
+    'disable_auto_convert'               => 'Disable currency conversion',
+
 ];
 
 /*

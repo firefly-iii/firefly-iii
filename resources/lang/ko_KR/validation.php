@@ -61,10 +61,10 @@ return [
     'invalid_selection'              => '선택이 잘못되었습니다.',
     'belongs_user'                   => '이 값은 이 필드에 유효하지 않습니다.',
     'at_least_one_transaction'       => '하나 이상의 거래가 필요합니다.',
-    'recurring_transaction_id'       => 'Need at least one transaction.',
-    'need_id_to_match'               => 'You need to submit this entry with an ID for the API to be able to match it.',
-    'too_many_unmatched'             => 'Too many submitted transactions cannot be matched to their respective database entries. Make sure existing entries have a valid ID.',
-    'id_does_not_match'              => 'Submitted ID #:id does not match expected ID. Make sure it matches or omit the field.',
+    'recurring_transaction_id'       => '하나 이상의 거래가 필요합니다.',
+    'need_id_to_match'               => 'API가 일치시킬수 있도록 이 엔트리를 ID와 함께 제출해야 합니다.',
+    'too_many_unmatched'             => '제출된 거래가 각각의 데이터베이스 엔트리와 일치하지 않습니다. 기존 엔트리에 유효한 ID가 있는지 확인해 주세요.',
+    'id_does_not_match'              => '입력된 ID #:id가 예상된 ID와 일치하지 않습니다. 일치시키거나 빈칸을 입력하십시오.',
     'at_least_one_repetition'        => '하나 이상의 반복이 필요합니다.',
     'require_repeat_until'           => '반복 횟수 또는 종료 날짜(repeat_until) 가 필요합니다. 둘 다 없습니다.',
     'require_currency_info'          => '이 필드의 내용은 통화 정보가 없으면 유효하지 않습니다.',
@@ -234,20 +234,20 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => '계속하려면 유효한 소스 계정 ID 및/또는 유효한 소스 계정 이름이 필요합니다.',
-    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_source_bad_data'  => '[a] ID ":id" 또는 이름 ":name"을 검색할 때 유효한 소스 계정을 찾을 수 없습니다.',
+    'withdrawal_dest_need_data'   => '[a] 계속하려면 유효한 대상 계정 ID 및/또는 유효한 대상 계정 이름이 필요합니다.',
     'withdrawal_dest_bad_data'    => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 대상 계정을 찾을 수 없습니다.',
 
-    'withdrawal_dest_iban_exists' => 'This destination account IBAN is already in use by an asset account or a liability and cannot be used as a withdrawal destination.',
-    'deposit_src_iban_exists'     => 'This source account IBAN is already in use by an asset account or a liability and cannot be used as a deposit source.',
+    'withdrawal_dest_iban_exists' => '대상 계정의 IBAN이 이미 자산 계정에 사용되고 있거나, 부채는 출금 대상으로 사용될 수 없습니다.',
+    'deposit_src_iban_exists'     => '소스 계정의 IBAN이 이미 자산 계정에 사용되고 있거나, 부채는 입금 소스로 사용될 수 없습니다.',
 
     'reconciliation_source_bad_data' => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 조정 계정을 찾을 수 없습니다.',
 
-    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data' => '[e] ID ":id" 또는 이름 ":name"을 검색할 때 유효한 소스 계정을 찾을 수 없습니다.',
 
     'deposit_source_need_data' => '계속하려면 유효한 소스 계정 ID 및/또는 유효한 소스 계정 이름이 필요합니다.',
-    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'deposit_source_bad_data'  => '[b] ID ":id" 또는 이름 ":name"을 검색할 때 유효한 소스 계정을 찾을 수 없습니다.',
+    'deposit_dest_need_data'   => '[b] 계속하려면 유효한 대상 계정 ID 및/또는 유효한 대상 계정 이름이 필요합니다.',
     'deposit_dest_bad_data'    => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 대상 계정을 찾을 수 없습니다.',
     'deposit_dest_wrong_type'  => '제출된 대상 계정이 올바른 유형이 아닙니다.',
 
@@ -264,14 +264,14 @@ return [
 
 
     'transfer_source_need_data' => '계속하려면 유효한 소스 계정 ID 및/또는 유효한 소스 계정 이름이 필요합니다.',
-    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'transfer_source_bad_data'  => '[c] ID ":id" 또는 이름 ":name"을 검색할 때 유효한 소스 계정을 찾을 수 없습니다.',
+    'transfer_dest_need_data'   => '[c] 계속하려면 유효한 대상 계정 ID 및/또는 유효한 대상 계정 이름이 필요합니다.',
     'transfer_dest_bad_data'    => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 대상 계정을 찾을 수 없습니다.',
     'need_id_in_edit'           => '각 분할에는 transaction_journal_id(유효한 ​​ID 또는 0) 가 있어야 합니다.',
 
     'ob_source_need_data'           => '계속하려면 유효한 소스 계정 ID 및/또는 유효한 소스 계정 이름이 필요합니다.',
     'lc_source_need_data'           => '계속하려면 유효한 소스 계정 ID가 필요합니다.',
-    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_need_data'             => '[d] 계속하려면 유효한 대상 계정 ID 및/또는 유효한 대상 계정 이름이 필요합니다.',
     'ob_dest_bad_data'              => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 대상 계정을 찾을 수 없습니다.',
     'reconciliation_either_account' => '조정을 제출하려면 소스 계정 또는 대상 계정 중 하나를 제출해야 합니다.',
 

@@ -338,7 +338,7 @@ page container: q-ma-xs (margin all, xs) AND q-mb-md to give the page content so
     <q-footer bordered class="bg-grey-8 text-white">
       <q-toolbar>
         <div>
-          <small>Firefly III v v6.0.18 &copy; James Cole, AGPL-3.0-or-later.</small>
+          <small>Firefly III v v6.0.19 &copy; James Cole, AGPL-3.0-or-later.</small>
         </div>
       </q-toolbar>
     </q-footer>
