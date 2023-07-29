@@ -49,6 +49,12 @@ trait CollectorProperties
     private array   $postFilters;
     private HasMany $query;
     private array   $stringFields;
-    private int     $total;
-    private ?User   $user;
+    /*
+     * This array is used to collect ALL tags the user may search for (using 'setTags').
+     * This way the user can call 'setTags' multiple times and get a joined result.
+     *
+     */
+    private array $tags;
+    private int   $total;
+    private ?User $user;
 }

@@ -65,6 +65,7 @@ class GroupCollector implements GroupCollectorInterface
     public function __construct()
     {
         $this->postFilters = [];
+        $this->tags        = [];
         $this->user        = null;
         $this->limit       = null;
         $this->page        = null;

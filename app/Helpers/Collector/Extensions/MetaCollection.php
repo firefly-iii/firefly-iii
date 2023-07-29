@@ -64,8 +64,8 @@ trait MetaCollection
             // join bill table
             $this->query->leftJoin('bills', 'bills.id', '=', 'transaction_journals.bill_id');
             // add fields
-            $this->fields[] = 'bills.id as bill_id';
-            $this->fields[] = 'bills.name as bill_name';
+            $this->fields[]           = 'bills.id as bill_id';
+            $this->fields[]           = 'bills.name as bill_name';
             $this->hasBillInformation = true;
         }
 
@@ -104,8 +104,8 @@ trait MetaCollection
             // join cat table
             $this->query->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id');
             // add fields
-            $this->fields[] = 'budgets.id as budget_id';
-            $this->fields[] = 'budgets.name as budget_name';
+            $this->fields[]             = 'budgets.id as budget_id';
+            $this->fields[]             = 'budgets.name as budget_name';
             $this->hasBudgetInformation = true;
         }
 
@@ -157,8 +157,8 @@ trait MetaCollection
             // join cat table
             $this->query->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id');
             // add fields
-            $this->fields[] = 'categories.id as category_id';
-            $this->fields[] = 'categories.name as category_name';
+            $this->fields[]          = 'categories.id as category_id';
+            $this->fields[]          = 'categories.name as category_name';
             $this->hasCatInformation = true;
         }
 
@@ -603,7 +603,7 @@ trait MetaCollection
                 }
             );
             // add fields
-            $this->fields[] = 'notes.text as notes';
+            $this->fields[]            = 'notes.text as notes';
             $this->hasNotesInformation = true;
         }
 
@@ -896,7 +896,8 @@ trait MetaCollection
     public function setTags(Collection $tags): GroupCollectorInterface
     {
         $this->withTagInformation();
-        $this->query->whereIn('tag_transaction_journal.tag_id', $tags->pluck('id')->toArray());
+        $this->tags = array_merge($this->tags, $tags->pluck('id')->toArray());
+        $this->query->whereIn('tag_transaction_journal.tag_id', $this->tags);
 
         return $this;
     }
@@ -913,8 +914,8 @@ trait MetaCollection
         $this->withTagInformation();
 
         // this method adds a "postFilter" to the collector.
-        $list = $tags->pluck('tag')->toArray();
-        $filter = function (int $index, array $object) use ($list): bool {
+        $list                = $tags->pluck('tag')->toArray();
+        $filter              = function (int $index, array $object) use ($list): bool {
             foreach ($object['transactions'] as $transaction) {
                 foreach ($transaction['tags'] as $tag) {
                     if (in_array($tag['name'], $list, true)) {
