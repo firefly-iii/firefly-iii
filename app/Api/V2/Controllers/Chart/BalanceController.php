@@ -109,6 +109,11 @@ class BalanceController extends Controller
             'currency_code'           => $default->code,
             'currency_name'           => $default->name,
             'currency_decimal_places' => (int)$default->decimal_places,
+            'native_id'               => $defaultCurrencyId,
+            'native_symbol'           => $default->symbol,
+            'native_code'             => $default->code,
+            'native_name'             => $default->name,
+            'native_decimal_places'   => (int)$default->decimal_places,
         ];
 
 
@@ -126,24 +131,28 @@ class BalanceController extends Controller
             // set the array with monetary info, if it does not exist.
             $data[$currencyId] = $data[$currencyId] ?? [
                 'currency_id'             => $currencyId,
-                'currency_symbol'         => $currencySymbol,
-                'currency_code'           => $currencyCode,
-                'currency_name'           => $currencyName,
-                'currency_decimal_places' => $currencyDecimalPlaces,
+                'currency_symbol'         => $journal['currency_symbol'],
+                'currency_code'           => $journal['currency_code'],
+                'currency_name'           => $journal['currency_name'],
+                'currency_decimal_places' => $journal['currency_decimal_places'],
+                // native currency info (could be the same)
+                'native_id'               => (int)$default->id,
+                'native_code'             => $default->code,
+                'native_symbol'           => $default->symbol,
+                'native_decimal_places'   => (int)$default->decimal_places,
             ];
 
-            // set the array with spent/earned in this $period, if it does not exist.
+            // set the array (in monetary info) with spent/earned in this $period, if it does not exist.
             $data[$currencyId][$period] = $data[$currencyId][$period] ?? [
                 'period'           => $period,
                 'spent'            => '0',
                 'earned'           => '0',
-                'spent_converted'  => '0',
-                'earned_converted' => '0',
+                'converted_spent'  => '0',
+                'converted_earned' => '0',
             ];
-            // is this amount in- our outgoing?
-            $key             = 'spent';
-            $amount          = app('steam')->negative($journal['amount']);
-            $amountConverted = $amount;
+            // is this journal's amount in- our outgoing?
+            $key    = 'spent';
+            $amount = app('steam')->negative($journal['amount']);
             // deposit = incoming
             // transfer or reconcile or opening balance, and these accounts are the destination.
             if (
@@ -159,49 +168,67 @@ class BalanceController extends Controller
                     && in_array($journal['destination_account_id'], $ids, true)
                 )
             ) {
-                $key             = 'earned';
-                $amount          = app('steam')->positive($journal['amount']);
-                $amountConverted = $amount;
+                $key    = 'earned';
+                $amount = app('steam')->positive($journal['amount']);
             }
-            // if configured convert the amount, convert the amount to $default
-            if ($convert) {
-                $rate            = $converter->getCurrencyRate($currency, $default, $journal['date']);
-                $amountConverted = bcmul($amount, $rate);
-            }
+            // get conversion rate
+            $rate            = $converter->getCurrencyRate($currency, $default, $journal['date']);
+            $amountConverted = bcmul($amount, $rate);
 
-            $data[$currencyId][$period][$key]          = bcadd($data[$currencyId][$period][$key], $amount);
-            $convertedKey                              = sprintf('%s_converted', $key);
+            // add normal entry
+            $data[$currencyId][$period][$key] = bcadd($data[$currencyId][$period][$key], $amount);
+
+            // add converted entry
+            $convertedKey                              = sprintf('converted_%s', $key);
             $data[$currencyId][$period][$convertedKey] = bcadd($data[$currencyId][$period][$convertedKey], $amountConverted);
         }
 
         // loop this data, make chart bars for each currency:
         /** @var array $currency */
         foreach ($data as $currency) {
+            // income and expense array prepped:
             $income  = [
-                'label'             => 'earned',
-                'currency_id'       => $currency['currency_id'],
-                'currency_symbol'   => $currency['currency_symbol'],
-                'currency_code'     => $currency['currency_code'],
-                'entries'           => [],
-                'converted_entries' => [],
+                'label'                   => 'earned',
+                'currency_id'             => $currency['currency_id'],
+                'currency_symbol'         => $currency['currency_symbol'],
+                'currency_code'           => $currency['currency_code'],
+                'currency_decimal_places' => $currency['currency_decimal_places'],
+                'native_id'               => $currency['native_id'],
+                'native_symbol'           => $currency['native_symbol'],
+                'native_code'             => $currency['native_code'],
+                'native_decimal_places'   => $currency['native_decimal_places'],
+                'entries'                 => [],
+                'converted_entries'       => [],
             ];
             $expense = [
-                'label'             => 'spent',
-                'currency_id'       => $currency['currency_id'],
-                'currency_symbol'   => $currency['currency_symbol'],
-                'currency_code'     => $currency['currency_code'],
-                'entries'           => [],
-                'converted_entries' => [],
+                'label'                   => 'spent',
+                'currency_id'             => $currency['currency_id'],
+                'currency_symbol'         => $currency['currency_symbol'],
+                'currency_code'           => $currency['currency_code'],
+                'currency_decimal_places' => $currency['currency_decimal_places'],
+                'native_id'               => $currency['native_id'],
+                'native_symbol'           => $currency['native_symbol'],
+                'native_code'             => $currency['native_code'],
+                'native_decimal_places'   => $currency['native_decimal_places'],
+                'entries'                 => [],
+                'converted_entries'       => [],
 
             ];
             // loop all possible periods between $start and $end, and add them to the correct dataset.
             $currentStart = clone $start;
             while ($currentStart <= $end) {
-                $key                        = $currentStart->format($format);
-                $title                      = $currentStart->isoFormat($titleFormat);
+                $key   = $currentStart->format($format);
+                $title = $currentStart->isoFormat($titleFormat);
+                // normal entries
                 $income['entries'][$title]  = app('steam')->bcround(($currency[$key]['earned'] ?? '0'), $currency['currency_decimal_places']);
                 $expense['entries'][$title] = app('steam')->bcround(($currency[$key]['spent'] ?? '0'), $currency['currency_decimal_places']);
-                $currentStart               = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
+
+                // converted entries
+                $income['converted_entries'][$title]  = app('steam')->bcround(($currency[$key]['converted_earned'] ?? '0'), $currency['native_decimal_places']);
+                $expense['converted_entries'][$title] = app('steam')->bcround(($currency[$key]['converted_spent'] ?? '0'), $currency['native_decimal_places']);
+
+                // next loop
+                $currentStart = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
             }
 
             $chartData[] = $income;
