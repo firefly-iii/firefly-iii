@@ -48,8 +48,8 @@
                             <div class="col">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h3 class="card-title"><a href="{{ route('accounts.index',['asset']) }}"
-                                                                  title="{{ __('firefly.yourAccounts') }}">budget</a>
+                                        <h3 class="card-title"><a href="{{ route('budgets.index') }}"
+                                                                  title="{{ __('firefly.go_to_budgets') }}">{{ __('firefly.go_to_budgets') }}</a>
                                         </h3>
                                     </div>
                                     <div class="card-body">
