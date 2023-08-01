@@ -2714,6 +2714,10 @@ return [
     'ale_action_remove_from_piggy'       => 'Guardiola',
     'ale_action_add_tag'                 => 'Etiqueta afegida',
 
+    // dashboard
+    'enable_auto_convert'                => 'Enable currency conversion',
+    'disable_auto_convert'               => 'Disable currency conversion',
+
 ];
 
 /*

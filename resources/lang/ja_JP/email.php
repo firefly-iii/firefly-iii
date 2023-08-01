@@ -39,7 +39,7 @@ return [
     'greeting'                                => 'ようこそ',
     'closing'                                 => 'ピーピー',
     'signature'                               => 'Firely-iiiのメールロボット',
-    'footer_ps'                               => ':ipAddressにリクエストされたので、このメール送信されました。',
+    'footer_ps'                               => 'このメールは:ipAddressのリクエストにより送信されました。',
 
     // admin test
     'admin_test_subject'                      => 'あなたの Firefly III からのテストメッセージ',

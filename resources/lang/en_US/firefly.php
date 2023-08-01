@@ -834,12 +834,12 @@ return [
     'rule_trigger_transaction_type'                       => 'Transaction is of type ":trigger_value"',
     'rule_trigger_category_is_choice'                     => 'Category is..',
     'rule_trigger_category_is'                            => 'Category is ":trigger_value"',
-    'rule_trigger_amount_less_choice'                     => 'Amount is less than..',
-    'rule_trigger_amount_less'                            => 'Amount is less than :trigger_value',
+    'rule_trigger_amount_less_choice'                     => 'Amount is less than or equal to ..',
+    'rule_trigger_amount_less'                            => 'Amount is less than or equal to :trigger_value',
     'rule_trigger_amount_is_choice'                       => 'Amount is..',
     'rule_trigger_amount_is'                              => 'Amount is :trigger_value',
-    'rule_trigger_amount_more_choice'                     => 'Amount is more than..',
-    'rule_trigger_amount_more'                            => 'Amount is more than :trigger_value',
+    'rule_trigger_amount_more_choice'                     => 'Amount is more than or equal to..',
+    'rule_trigger_amount_more'                            => 'Amount is more than or equal to :trigger_value',
     'rule_trigger_description_starts_choice'              => 'Description starts with..',
     'rule_trigger_description_starts'                     => 'Description starts with ":trigger_value"',
     'rule_trigger_description_ends_choice'                => 'Description ends with..',
@@ -2615,6 +2615,10 @@ return [
     'ale_action_add_to_piggy'            => 'Piggy bank',
     'ale_action_remove_from_piggy'       => 'Piggy bank',
     'ale_action_add_tag'                 => 'Added tag',
+
+    // dashboard
+    'enable_auto_convert'                => 'Enable currency conversion',
+    'disable_auto_convert'               => 'Disable currency conversion',
 
 ];
 

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.19 - 2023-07-29
+
+### Fixed
+
+- [Issue 7577](https://github.com/firefly-iii/firefly-iii/issues/7577) Firefly III can't search for backward slashes in identifiers
+- [Issue 7762](https://github.com/firefly-iii/firefly-iii/issues/7762) User can't create access token
+
 ## 6.0.18 - 2023-07-19
 
 ### Fixed

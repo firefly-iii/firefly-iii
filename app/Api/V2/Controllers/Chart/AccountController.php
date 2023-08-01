@@ -29,6 +29,7 @@ use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
 use FireflyIII\User;
@@ -90,9 +91,10 @@ class AccountController extends Controller
         // user's preferences
         $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT])->pluck('id')->toArray();
         $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
-        $default    = app('amount')->getDefaultCurrency();
-        $accounts   = $this->repository->getAccountsById($frontPage->data);
-        $chartData  = [];
+        /** @var TransactionCurrency $default */
+        $default   = app('amount')->getDefaultCurrency();
+        $accounts  = $this->repository->getAccountsById($frontPage->data);
+        $chartData = [];
 
         if (!(is_array($frontPage->data) && count($frontPage->data) > 0)) {
             $frontPage->data = $defaultSet;
@@ -113,11 +115,11 @@ class AccountController extends Controller
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
 
-                // the default currency of the user (may be the same!)
-                'native_id'               => $default->id,
+                // the default currency of the user (could be the same!)
+                'native_id'               => (int)$default->id,
                 'native_code'             => $default->code,
                 'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => $default->decimal_places,
+                'native_decimal_places'   => (int)$default->decimal_places,
                 'start_date'              => $start->toAtomString(),
                 'end_date'                => $end->toAtomString(),
                 'entries'                 => [],
@@ -141,7 +143,6 @@ class AccountController extends Controller
                 $currentSet['entries'][$label]           = $balance;
                 $currentSet['converted_entries'][$label] = $balanceConverted;
             }
-            $currentSet  = $this->cerChartSet($currentSet);
             $chartData[] = $currentSet;
         }
 

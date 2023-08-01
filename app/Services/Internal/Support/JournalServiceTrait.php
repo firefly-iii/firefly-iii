@@ -493,10 +493,11 @@ trait JournalServiceTrait
             if ('' !== $string) {
                 $tag = $this->tagFactory->findOrCreate($string);
                 if (null !== $tag) {
-                    $set[] = $tag->id;
+                    $set[] = (int)$tag->id;
                 }
             }
         }
+        $set = array_unique($set);
         Log::debug('End of loop.');
         Log::debug(sprintf('Total nr. of tags: %d', count($tags)), $tags);
         $journal->tags()->sync($set);

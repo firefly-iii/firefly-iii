@@ -64,9 +64,9 @@ class RuleForm
      * @param null       $value
      * @param array|null $options
      *
-     * @return HtmlString
+     * @return string
      */
-    public function ruleGroupListWithEmpty(string $name, $value = null, array $options = null): HtmlString
+    public function ruleGroupListWithEmpty(string $name, $value = null, array $options = null): string
     {
         $options          = $options ?? [];
         $options['class'] = 'form-control';
@@ -85,6 +85,6 @@ class RuleForm
             }
         }
 
-        return Form::select($name, $array, $value, $options);
+        return $this->select($name, $array, $value, $options);
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 /*
- * ExchangeRateConverter.php
+ * OutputVersion.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,41 +21,32 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Support\Http\Api;
+namespace FireflyIII\Console\Commands\System;
 
-use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\TransactionCurrency;
+use Illuminate\Console\Command;
 
-/**
- * Class ExchangeRateConverter
- */
-class ExchangeRateConverter
+class OutputVersion extends Command
 {
-    use ConvertsExchangeRates;
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'firefly-iii:output-version';
 
     /**
-     * @param TransactionCurrency $from
-     * @param TransactionCurrency $to
-     * @param Carbon              $date
+     * The console command description.
      *
-     * @return string
-     * @throws FireflyException
+     * @var string
      */
-    public function getCurrencyRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
+    protected $description = 'Outputs the Firefly III version';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle(): int
     {
-        if (null === $this->enabled) {
-            $this->getPreference();
-        }
-
-        // if not enabled, return "1"
-        if (false === $this->enabled) {
-            return '1';
-        }
-
-        $rate = $this->getRate($from, $to, $date);
-        return '0' === $rate ? '1' : $rate;
+        echo config('firefly.version');
+        return 0;
     }
-
-
 }

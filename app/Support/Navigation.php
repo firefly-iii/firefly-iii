@@ -89,10 +89,10 @@ class Navigation
 
         if (!array_key_exists($repeatFreq, $functionMap)) {
             Log::error(sprintf(
-                'The periodicity %s is unknown. Choose one of available periodicity: %s',
-                $repeatFreq,
-                join(', ', array_keys($functionMap))
-            ));
+                           'The periodicity %s is unknown. Choose one of available periodicity: %s',
+                           $repeatFreq,
+                           join(', ', array_keys($functionMap))
+                       ));
             return $theDate;
         }
 
@@ -516,6 +516,25 @@ class Navigation
     }
 
     /**
+     * Same as preferredCarbonFormat but by string
+     *
+     * @param string $period
+     *
+     * @return string
+     */
+    public function preferredCarbonFormatByPeriod(string $period): string
+    {
+        return match ($period) {
+            default    => 'Y-m-d',
+            //'1D'    => 'Y-m-d',
+            '1W'       => '\WW,Y',
+            '1M'       => 'Y-m',
+            '3M', '6M' => '\QQ,Y',
+            '1Y'       => 'Y',
+        };
+    }
+
+    /**
      * If the date difference between start and end is less than a month, method returns trans(config.month_and_day).
      * If the difference is less than a year, method returns "config.month". If the date difference is larger, method
      * returns "config.year".
@@ -538,6 +557,25 @@ class Navigation
         }
 
         return $format;
+    }
+
+    /**
+     * Same as preferredCarbonLocalizedFormat but based on the period.
+     *
+     * @param string $period
+     *
+     * @return string
+     */
+    public function preferredCarbonLocalizedFormatByPeriod(string $period): string
+    {
+        $locale = app('steam')->getLocale();
+        return match ($period) {
+            default    => (string)trans('config.month_and_day_js', [], $locale),
+            '1W'       => (string)trans('config.week_in_year_js', [], $locale),
+            '1M'       => (string)trans('config.month_js', [], $locale),
+            '3M', '6M' => (string)trans('config.half_year_js', [], $locale),
+            '1Y'       => (string)trans('config.year_js', [], $locale),
+        };
     }
 
     /**

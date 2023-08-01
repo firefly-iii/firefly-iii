@@ -183,13 +183,13 @@ trait ConvertsExchangeRates
         $rate = $this->getFromDB((int)$currency->id, $euroId, $date->format('Y-m-d'));
 
         if (null !== $rate) {
-//            app('log')->debug(sprintf('Rate for %s to EUR is %s.', $currency->code, $rate));
+            //            app('log')->debug(sprintf('Rate for %s to EUR is %s.', $currency->code, $rate));
             return $rate;
         }
         $rate = $this->getFromDB($euroId, (int)$currency->id, $date->format('Y-m-d'));
         if (null !== $rate) {
             $rate = bcdiv('1', $rate);
-//            app('log')->debug(sprintf('Inverted rate for %s to EUR is %s.', $currency->code, $rate));
+            //            app('log')->debug(sprintf('Inverted rate for %s to EUR is %s.', $currency->code, $rate));
             return $rate;
         }
         // grab backup values from config file:
@@ -200,7 +200,7 @@ trait ConvertsExchangeRates
             return $backup;
         }
 
-//        app('log')->debug(sprintf('No rate for %s to EUR.', $currency->code));
+        //        app('log')->debug(sprintf('No rate for %s to EUR.', $currency->code));
         return '0';
     }
 
