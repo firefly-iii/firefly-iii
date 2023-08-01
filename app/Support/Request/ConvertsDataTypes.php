@@ -376,7 +376,7 @@ trait ConvertsDataTypes
     {
         $result = null;
         try {
-            $result = $this->get($field) ? new Carbon($this->get($field)) : null;
+            $result = $this->get($field) ? new Carbon($this->get($field), config('app.timezone')) : null;
         } catch (InvalidFormatException $e) {
             // @ignoreException
         }

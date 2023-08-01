@@ -560,25 +560,6 @@ class Navigation
     }
 
     /**
-     * Same as preferredCarbonLocalizedFormat but based on the period.
-     *
-     * @param string $period
-     *
-     * @return string
-     */
-    public function preferredCarbonLocalizedFormatByPeriod(string $period): string
-    {
-        $locale = app('steam')->getLocale();
-        return match ($period) {
-            default    => (string)trans('config.month_and_day_js', [], $locale),
-            '1W'       => (string)trans('config.week_in_year_js', [], $locale),
-            '1M'       => (string)trans('config.month_js', [], $locale),
-            '3M', '6M' => (string)trans('config.half_year_js', [], $locale),
-            '1Y'       => (string)trans('config.year_js', [], $locale),
-        };
-    }
-
-    /**
      * If the date difference between start and end is less than a month, method returns "endOfDay". If the difference
      * is less than a year, method returns "endOfMonth". If the date difference is larger, method returns "endOfYear".
      *
