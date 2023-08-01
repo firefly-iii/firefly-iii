@@ -24,6 +24,7 @@ namespace FireflyIII\Api\V2\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Chart\BalanceChartRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
@@ -63,11 +64,13 @@ class BalanceController extends Controller
      * Currency is up to the account/transactions in question, but conversion to the default
      * currency is possible.
      *
-     *
+     * If the transaction being processed is already in native currency OR if the
+     * foreign amount is in the native currency, the amount will not be converted.
      *
      * @param BalanceChartRequest $request
      *
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function balance(BalanceChartRequest $request): JsonResponse
     {
@@ -175,6 +178,12 @@ class BalanceController extends Controller
             $rate            = $converter->getCurrencyRate($currency, $default, $journal['date']);
             $amountConverted = bcmul($amount, $rate);
 
+            // perhaps transaction already has the foreign amount in the native currency.
+            if ((int)$journal['foreign_currency_id'] === (int)$default->id) {
+                $amountConverted = $journal['foreign_amount'] ?? '0';
+                $amountConverted = 'earned' === $key ? app('steam')->positive($amountConverted) : app('steam')->negative($amountConverted);
+            }
+
             // add normal entry
             $data[$currencyId][$period][$key] = bcadd($data[$currencyId][$period][$key], $amount);
 
@@ -188,7 +197,7 @@ class BalanceController extends Controller
         foreach ($data as $currency) {
             // income and expense array prepped:
             $income  = [
-                'label'                   => sprintf('earned-%s', $currency['currency_code']),
+                'label'                   => 'earned',
                 'currency_id'             => $currency['currency_id'],
                 'currency_symbol'         => $currency['currency_symbol'],
                 'currency_code'           => $currency['currency_code'],
@@ -204,7 +213,7 @@ class BalanceController extends Controller
                 'native_entries'          => [],
             ];
             $expense = [
-                'label'                   => sprintf('spent-%s', $currency['currency_code']),
+                'label'                   => 'spent',
                 'currency_id'             => $currency['currency_id'],
                 'currency_symbol'         => $currency['currency_symbol'],
                 'currency_code'           => $currency['currency_code'],
@@ -230,8 +239,8 @@ class BalanceController extends Controller
                 $expense['entries'][$label] = app('steam')->bcround(($currency[$key]['spent'] ?? '0'), $currency['currency_decimal_places']);
 
                 // converted entries
-                $income['converted_entries'][$label]  = app('steam')->bcround(($currency[$key]['converted_earned'] ?? '0'), $currency['native_decimal_places']);
-                $expense['converted_entries'][$label] = app('steam')->bcround(($currency[$key]['converted_spent'] ?? '0'), $currency['native_decimal_places']);
+                $income['native_entries'][$label]  = app('steam')->bcround(($currency[$key]['native_earned'] ?? '0'), $currency['native_decimal_places']);
+                $expense['native_entries'][$label] = app('steam')->bcround(($currency[$key]['native_spent'] ?? '0'), $currency['native_decimal_places']);
 
                 // next loop
                 $currentStart = app('navigation')->addPeriod($currentStart, $preferredRange, 0);

@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V2\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
@@ -67,11 +68,15 @@ class AccountController extends Controller
      *
      * The native currency is the preferred currency on the page /currencies.
      *
+     * If a transaction has foreign currency = native currency, the foreign amount will be used, no conversion
+     * will take place.
+     *
      * @param DateRequest $request
      *
      * @return JsonResponse
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @throws FireflyException
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
