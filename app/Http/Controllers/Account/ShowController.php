@@ -198,6 +198,11 @@ class ShowController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page)->withAccountInformation()->withCategoryInformation();
+
+        // this search will not include transaction groups where this asset account (or liability)
+        // is just part of ONE of the journals. To force this:
+        $collector->setExpandGroupSearch(true);
+
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('accounts.show.all', [$account->id]));
         $chartUrl = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
