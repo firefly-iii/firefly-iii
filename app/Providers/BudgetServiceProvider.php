@@ -29,10 +29,14 @@ use FireflyIII\Repositories\Budget\BudgetLimitRepository;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepository;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Administration\Budget\BudgetRepository as AdminBudgetRepository;
+use FireflyIII\Repositories\Administration\Budget\BudgetRepositoryInterface as AdminBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\NoBudgetRepository;
 use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepository;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
+use FireflyIII\Repositories\Administration\Budget\OperationsRepository as AdminOperationsRepository;
+use FireflyIII\Repositories\Administration\Budget\OperationsRepositoryInterface as AdminOperationsRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -54,12 +58,24 @@ class BudgetServiceProvider extends ServiceProvider
     public function register(): void
     {
         // reference to auth is not understood by phpstan.
-
         $this->app->bind(
             BudgetRepositoryInterface::class,
             static function (Application $app) {
                 /** @var BudgetRepositoryInterface $repository */
                 $repository = app(BudgetRepository::class);
+                if ($app->auth->check()) { // @phpstan-ignore-line
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        $this->app->bind(
+            AdminBudgetRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var AdminBudgetRepositoryInterface $repository */
+                $repository = app(AdminBudgetRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }
@@ -116,6 +132,18 @@ class BudgetServiceProvider extends ServiceProvider
             static function (Application $app) {
                 /** @var OperationsRepositoryInterface $repository */
                 $repository = app(OperationsRepository::class);
+                if ($app->auth->check()) { // @phpstan-ignore-line
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+        $this->app->bind(
+            AdminOperationsRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var AdminOperationsRepositoryInterface $repository */
+                $repository = app(AdminOperationsRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
                 }

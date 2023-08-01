@@ -89,10 +89,10 @@ class Navigation
 
         if (!array_key_exists($repeatFreq, $functionMap)) {
             Log::error(sprintf(
-                           'The periodicity %s is unknown. Choose one of available periodicity: %s',
-                           $repeatFreq,
-                           join(', ', array_keys($functionMap))
-                       ));
+                'The periodicity %s is unknown. Choose one of available periodicity: %s',
+                $repeatFreq,
+                join(', ', array_keys($functionMap))
+            ));
             return $theDate;
         }
 

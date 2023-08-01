@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 /*
- * ExchangeRateConverter.php
+ * OperationsRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,40 +21,27 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Support\Http\Api;
+namespace FireflyIII\Repositories\Administration\Budget;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\TransactionCurrency;
+use Illuminate\Support\Collection;
 
 /**
- * Class ExchangeRateConverter
+ * Interface OperationsRepositoryInterface
  */
-class ExchangeRateConverter
+interface OperationsRepositoryInterface
 {
-    use ConvertsExchangeRates;
-
     /**
-     * @param TransactionCurrency $from
-     * @param TransactionCurrency $to
-     * @param Carbon              $date
+     * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
+     * which have the specified budget set to them. It's grouped per currency, with as few details in the array
+     * as possible. Amounts are always negative.
      *
-     * @return string
-     * @throws FireflyException
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param Collection|null $accounts
+     * @param Collection|null $budgets
+     *
+     * @return array
      */
-    public function getCurrencyRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
-    {
-        if (null === $this->enabled) {
-            $this->getPreference();
-        }
-
-        // if not enabled, return "1"
-        if (false === $this->enabled) {
-            return '1';
-        }
-
-        $rate = $this->getRate($from, $to, $date);
-        return '0' === $rate ? '1' : $rate;
-    }
-
+    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
 }

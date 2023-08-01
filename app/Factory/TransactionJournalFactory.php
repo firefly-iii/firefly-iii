@@ -225,6 +225,7 @@ class TransactionJournalFactory
         $journal = TransactionJournal::create(
             [
                 'user_id'                 => $this->user->id,
+                'user_group_id'           => $this->user->user_group_id,
                 'transaction_type_id'     => $type->id,
                 'bill_id'                 => $billId,
                 'transaction_currency_id' => $currency->id,

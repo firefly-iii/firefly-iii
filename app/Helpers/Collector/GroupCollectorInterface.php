@@ -30,6 +30,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -1314,6 +1315,15 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setUser(User $user): GroupCollectorInterface;
+
+    /**
+     * Set the user group object and start the query.
+     *
+     * @param UserGroup $userGroup
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setUserGroup(UserGroup $userGroup): GroupCollectorInterface;
 
     /**
      * Only when does not have these tags

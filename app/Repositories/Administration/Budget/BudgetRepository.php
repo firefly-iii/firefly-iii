@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 /*
- * ExchangeRateConverter.php
+ * BudgetRepository.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,40 +21,26 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Support\Http\Api;
+namespace FireflyIII\Repositories\Administration\Budget;
 
-use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Repositories\Administration\AdministrationTrait;
+use Illuminate\Support\Collection;
 
 /**
- * Class ExchangeRateConverter
+ * Class BudgetRepository
  */
-class ExchangeRateConverter
+class BudgetRepository implements BudgetRepositoryInterface
 {
-    use ConvertsExchangeRates;
+    use AdministrationTrait;
 
     /**
-     * @param TransactionCurrency $from
-     * @param TransactionCurrency $to
-     * @param Carbon              $date
-     *
-     * @return string
-     * @throws FireflyException
+     * @inheritDoc
      */
-    public function getCurrencyRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
+    public function getActiveBudgets(): Collection
     {
-        if (null === $this->enabled) {
-            $this->getPreference();
-        }
-
-        // if not enabled, return "1"
-        if (false === $this->enabled) {
-            return '1';
-        }
-
-        $rate = $this->getRate($from, $to, $date);
-        return '0' === $rate ? '1' : $rate;
+        return $this->userGroup->budgets()->where('active', true)
+                               ->orderBy('order', 'ASC')
+                               ->orderBy('name', 'ASC')
+                               ->get();
     }
-
 }
