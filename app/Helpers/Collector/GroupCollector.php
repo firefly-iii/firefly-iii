@@ -38,6 +38,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
@@ -67,6 +68,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->postFilters = [];
         $this->tags        = [];
         $this->user        = null;
+        $this->userGroup   = null;
         $this->limit       = null;
         $this->page        = null;
 
@@ -82,6 +84,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->integerFields        = [
             'transaction_group_id',
             'user_id',
+            'user_group_id',
             'transaction_journal_id',
             'transaction_type_id',
             'order',
@@ -102,6 +105,7 @@ class GroupCollector implements GroupCollectorInterface
             # group
             'transaction_groups.id as transaction_group_id',
             'transaction_groups.user_id as user_id',
+            'transaction_groups.user_group_id as user_group_id',
             'transaction_groups.created_at as created_at',
             'transaction_groups.updated_at as updated_at',
             'transaction_groups.title as transaction_group_title',
@@ -300,7 +304,20 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function dumpQuery(): void
     {
-        echo $this->query->select($this->fields)->toSql();
+        $query  = $this->query->select($this->fields)->toSql();
+        $params = $this->query->getBindings();
+        foreach ($params as $param) {
+            $replace = sprintf('"%s"', $param);
+            if (is_int($param)) {
+                $replace = (string)$param;
+            }
+            $pos = strpos($query, '?');
+            if ($pos !== false) {
+                $query = substr_replace($query, $replace, $pos, 1);
+            }
+        }
+        echo $query;
+
         echo '<pre>';
         print_r($this->query->getBindings());
         echo '</pre>';
@@ -548,6 +565,7 @@ class GroupCollector implements GroupCollectorInterface
                 $groupArray  = [
                     'id'               => (int)$augumentedJournal->transaction_group_id,
                     'user_id'          => (int)$augumentedJournal->user_id,
+                    'user_group_id'    => (int)$augumentedJournal->user_group_id,
                     // Field transaction_group_title was added by the query.
                     'title'            => $augumentedJournal->transaction_group_title, // @phpstan-ignore-line
                     'transaction_type' => $parsedGroup['transaction_type_type'],
@@ -1053,6 +1071,64 @@ class GroupCollector implements GroupCollectorInterface
         $this->query = $this->user
             //->transactionGroups()
             //->leftJoin('transaction_journals', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
+            ->transactionJournals()
+            ->leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
+
+            // join source transaction.
+            ->leftJoin(
+                'transactions as source',
+                function (JoinClause $join) {
+                    $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
+                         ->where('source.amount', '<', 0);
+                }
+            )
+            // join destination transaction
+            ->leftJoin(
+                'transactions as destination',
+                function (JoinClause $join) {
+                    $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
+                         ->where('destination.amount', '>', 0);
+                }
+            )
+            // left join transaction type.
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->leftJoin('transaction_currencies as currency', 'currency.id', '=', 'source.transaction_currency_id')
+            ->leftJoin('transaction_currencies as foreign_currency', 'foreign_currency.id', '=', 'source.foreign_currency_id')
+            ->whereNull('transaction_groups.deleted_at')
+            ->whereNull('transaction_journals.deleted_at')
+            ->whereNull('source.deleted_at')
+            ->whereNull('destination.deleted_at')
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order', 'ASC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->orderBy('transaction_journals.description', 'DESC')
+            ->orderBy('source.amount', 'DESC');
+    }
+
+    /**
+     * Set the user object and start the query.
+     *
+     * @param User $user
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setUserGroup(UserGroup $userGroup): GroupCollectorInterface
+    {
+        if (null === $this->userGroup) {
+            $this->userGroup = $userGroup;
+            $this->startQueryForGroup();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Build the query.
+     */
+    private function startQueryForGroup(): void
+    {
+        //app('log')->debug('GroupCollector::startQuery');
+        $this->query = $this->userGroup
             ->transactionJournals()
             ->leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
 

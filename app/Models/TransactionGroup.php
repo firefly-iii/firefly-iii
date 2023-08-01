@@ -130,4 +130,12 @@ class TransactionGroup extends Model
     {
         return $this->hasMany(TransactionJournal::class);
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function userGroup(): BelongsTo
+    {
+        return $this->belongsTo(UserGroup::class);
+    }
 }

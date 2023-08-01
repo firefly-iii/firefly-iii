@@ -99,7 +99,7 @@ class Budget extends Model
             'encrypted'  => 'boolean',
         ];
     /** @var array Fields that can be filled */
-    protected $fillable = ['user_id', 'name', 'active', 'order'];
+    protected $fillable = ['user_id', 'name', 'active', 'order', 'user_group_id'];
     /** @var array Hidden from view */
     protected $hidden = ['encrypted'];
 

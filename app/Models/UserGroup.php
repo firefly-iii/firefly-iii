@@ -68,11 +68,31 @@ class UserGroup extends Model
     }
 
     /**
+     * Link to budgets.
+     *
+     * @return HasMany
+     */
+    public function budgets(): HasMany
+    {
+        return $this->hasMany(Budget::class);
+    }
+
+    /**
      *
      * @return HasMany
      */
     public function groupMemberships(): HasMany
     {
         return $this->hasMany(GroupMembership::class);
+    }
+
+    /**
+     * Link to transaction journals.
+     *
+     * @return HasMany
+     */
+    public function transactionJournals(): HasMany
+    {
+        return $this->hasMany(TransactionJournal::class);
     }
 }

@@ -798,10 +798,11 @@ class BudgetRepository implements BudgetRepositoryInterface
         try {
             $newBudget = Budget::create(
                 [
-                    'user_id' => $this->user->id,
-                    'name'    => $data['name'],
-                    'order'   => $order + 1,
-                    'active'  => array_key_exists('active', $data) ? $data['active'] : true,
+                    'user_id'       => $this->user->id,
+                    'user_group_id' => $this->user->user_group_id,
+                    'name'          => $data['name'],
+                    'order'         => $order + 1,
+                    'active'        => array_key_exists('active', $data) ? $data['active'] : true,
                 ]
             );
         } catch (QueryException $e) {

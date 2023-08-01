@@ -148,6 +148,7 @@ class TransactionJournal extends Model
     protected $fillable
         = [
             'user_id',
+            'user_group_id',
             'transaction_type_id',
             'bill_id',
             'tag_count',

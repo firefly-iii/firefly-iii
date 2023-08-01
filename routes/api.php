@@ -88,6 +88,7 @@ Route::group(
     ],
     static function () {
         Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'account.dashboard']);
+        Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
         Route::get('balance/balance', ['uses' => 'BalanceController@balance', 'as' => 'balance.balance']);
     }
 );
