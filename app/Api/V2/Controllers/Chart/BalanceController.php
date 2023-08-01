@@ -28,7 +28,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
+use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -38,7 +38,7 @@ use Illuminate\Support\Collection;
  */
 class BalanceController extends Controller
 {
-    use ConvertsExchangeRates;
+    use CleansChartData;
 
     private AccountRepositoryInterface $repository;
 
@@ -76,6 +76,7 @@ class BalanceController extends Controller
         $start = $params['start'];
         /** @var Carbon $end */
         $end = $params['end'];
+        $end->endOfDay();
         /** @var Collection $accounts */
         $accounts       = $params['accounts'];
         $preferredRange = $params['period'];
@@ -196,6 +197,9 @@ class BalanceController extends Controller
                 'native_symbol'           => $currency['native_symbol'],
                 'native_code'             => $currency['native_code'],
                 'native_decimal_places'   => $currency['native_decimal_places'],
+                'start'                   => $start->toAtomString(),
+                'end'                     => $end->toAtomString(),
+                'period'                  => $preferredRange,
                 'entries'                 => [],
                 'native_entries'          => [],
             ];
@@ -209,6 +213,9 @@ class BalanceController extends Controller
                 'native_symbol'           => $currency['native_symbol'],
                 'native_code'             => $currency['native_code'],
                 'native_decimal_places'   => $currency['native_decimal_places'],
+                'start'                   => $start->toAtomString(),
+                'end'                     => $end->toAtomString(),
+                'period'                  => $preferredRange,
                 'entries'                 => [],
                 'native_entries'          => [],
 
@@ -233,7 +240,7 @@ class BalanceController extends Controller
             $chartData[] = $income;
             $chartData[] = $expense;
         }
-        return response()->json($chartData);
+        return response()->json($this->clean($chartData));
     }
 
 }

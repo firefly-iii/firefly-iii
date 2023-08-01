@@ -31,7 +31,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
+use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Psr\Container\ContainerExceptionInterface;
@@ -42,7 +42,7 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class AccountController extends Controller
 {
-    use ConvertsExchangeRates;
+    use CleansChartData;
 
     private AccountRepositoryInterface $repository;
 
@@ -81,6 +81,7 @@ class AccountController extends Controller
         $start = $dates['start'];
         /** @var Carbon $end */
         $end = $dates['end'];
+        $end->endOfDay();
         /** @var User $user */
         $user = auth()->user();
 
@@ -120,8 +121,9 @@ class AccountController extends Controller
                 'native_code'             => $default->code,
                 'native_symbol'           => $default->symbol,
                 'native_decimal_places'   => (int)$default->decimal_places,
-                'start_date'              => $start->toAtomString(),
-                'end_date'                => $end->toAtomString(),
+                'start'                   => $start->toAtomString(),
+                'end'                     => $end->toAtomString(),
+                'period'                  => '1D',
                 'entries'                 => [],
                 'native_entries'          => [],
             ];
@@ -146,6 +148,6 @@ class AccountController extends Controller
             $chartData[] = $currentSet;
         }
 
-        return response()->json($chartData);
+        return response()->json($this->clean($chartData));
     }
 }
