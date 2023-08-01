@@ -123,7 +123,7 @@ class AccountController extends Controller
                 'start_date'              => $start->toAtomString(),
                 'end_date'                => $end->toAtomString(),
                 'entries'                 => [],
-                'converted_entries'       => [],
+                'native_entries'          => [],
             ];
             $currentStart   = clone $start;
             $range          = app('steam')->balanceInRange($account, $start, clone $end, $currency);
@@ -140,8 +140,8 @@ class AccountController extends Controller
                 $previousConverted = $balanceConverted;
 
                 $currentStart->addDay();
-                $currentSet['entries'][$label]           = $balance;
-                $currentSet['converted_entries'][$label] = $balanceConverted;
+                $currentSet['entries'][$label]        = $balance;
+                $currentSet['native_entries'][$label] = $balanceConverted;
             }
             $chartData[] = $currentSet;
         }

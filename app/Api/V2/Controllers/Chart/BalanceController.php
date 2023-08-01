@@ -81,8 +81,7 @@ class BalanceController extends Controller
         $preferredRange = $params['period'];
 
         // set some formats, based on input parameters.
-        $format      = app('navigation')->preferredCarbonFormatByPeriod($preferredRange);
-        $titleFormat = app('navigation')->preferredCarbonLocalizedFormatByPeriod($preferredRange);
+        $format = app('navigation')->preferredCarbonFormatByPeriod($preferredRange);
 
         // prepare for currency conversion and data collection:
         $ids = $accounts->pluck('id')->toArray();
@@ -144,11 +143,11 @@ class BalanceController extends Controller
 
             // set the array (in monetary info) with spent/earned in this $period, if it does not exist.
             $data[$currencyId][$period] = $data[$currencyId][$period] ?? [
-                'period'           => $period,
-                'spent'            => '0',
-                'earned'           => '0',
-                'converted_spent'  => '0',
-                'converted_earned' => '0',
+                'period'        => $period,
+                'spent'         => '0',
+                'earned'        => '0',
+                'native_spent'  => '0',
+                'native_earned' => '0',
             ];
             // is this journal's amount in- our outgoing?
             $key    = 'spent';
@@ -179,7 +178,7 @@ class BalanceController extends Controller
             $data[$currencyId][$period][$key] = bcadd($data[$currencyId][$period][$key], $amount);
 
             // add converted entry
-            $convertedKey                              = sprintf('converted_%s', $key);
+            $convertedKey                              = sprintf('native_%s', $key);
             $data[$currencyId][$period][$convertedKey] = bcadd($data[$currencyId][$period][$convertedKey], $amountConverted);
         }
 
@@ -198,7 +197,7 @@ class BalanceController extends Controller
                 'native_code'             => $currency['native_code'],
                 'native_decimal_places'   => $currency['native_decimal_places'],
                 'entries'                 => [],
-                'converted_entries'       => [],
+                'native_entries'          => [],
             ];
             $expense = [
                 'label'                   => sprintf('spent-%s', $currency['currency_code']),
@@ -211,21 +210,21 @@ class BalanceController extends Controller
                 'native_code'             => $currency['native_code'],
                 'native_decimal_places'   => $currency['native_decimal_places'],
                 'entries'                 => [],
-                'converted_entries'       => [],
+                'native_entries'          => [],
 
             ];
             // loop all possible periods between $start and $end, and add them to the correct dataset.
             $currentStart = clone $start;
             while ($currentStart <= $end) {
                 $key   = $currentStart->format($format);
-                $title = $currentStart->isoFormat($titleFormat);
+                $label = $currentStart->toAtomString();
                 // normal entries
-                $income['entries'][$title]  = app('steam')->bcround(($currency[$key]['earned'] ?? '0'), $currency['currency_decimal_places']);
-                $expense['entries'][$title] = app('steam')->bcround(($currency[$key]['spent'] ?? '0'), $currency['currency_decimal_places']);
+                $income['entries'][$label]  = app('steam')->bcround(($currency[$key]['earned'] ?? '0'), $currency['currency_decimal_places']);
+                $expense['entries'][$label] = app('steam')->bcround(($currency[$key]['spent'] ?? '0'), $currency['currency_decimal_places']);
 
                 // converted entries
-                $income['converted_entries'][$title]  = app('steam')->bcround(($currency[$key]['converted_earned'] ?? '0'), $currency['native_decimal_places']);
-                $expense['converted_entries'][$title] = app('steam')->bcround(($currency[$key]['converted_spent'] ?? '0'), $currency['native_decimal_places']);
+                $income['converted_entries'][$label]  = app('steam')->bcround(($currency[$key]['converted_earned'] ?? '0'), $currency['native_decimal_places']);
+                $expense['converted_entries'][$label] = app('steam')->bcround(($currency[$key]['converted_spent'] ?? '0'), $currency['native_decimal_places']);
 
                 // next loop
                 $currentStart = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
@@ -234,8 +233,6 @@ class BalanceController extends Controller
             $chartData[] = $income;
             $chartData[] = $expense;
         }
-        //$data = $this->generator->multiSet($chartData);
-
         return response()->json($chartData);
     }
 
