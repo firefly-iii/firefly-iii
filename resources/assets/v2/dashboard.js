@@ -35,9 +35,11 @@ function loadPage(comps) {
 
 // wait for load until bootstrapped event is received.
 document.addEventListener('firefly-iii-bootstrapped', () => {
+    console.log('Loaded through event listener.');
     loadPage(comps);
 });
 // or is bootstrapped before event is triggered.
 if (window.bootstrapped) {
+    console.log('Loaded through window variable.');
     loadPage(comps);
 }

@@ -99,10 +99,10 @@ export default () => ({
                     let current = response.data[i];
                     let entry = [];
                     let collection = [];
-                    // use the "native" currency code and use the "converted_entries" as array
+                    // use the "native" currency code and use the "native_entries" as array
                     if (this.autoConversion) {
                         window.currencies.push(current.native_code);
-                        collection = current.converted_entries;
+                        collection = current.native_entries;
                     }
                     if (!this.autoConversion) {
                         window.currencies.push(current.currency_code);

@@ -24,7 +24,7 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2"
   },
   "resources/assets/v2/dashboard.js": {
-    "file": "assets/dashboard-e8bd1ddb.js",
+    "file": "assets/dashboard-157793a8.js",
     "isEntry": true,
     "src": "resources/assets/v2/dashboard.js"
   },
