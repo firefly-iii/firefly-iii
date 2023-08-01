@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
 /**
@@ -66,9 +67,9 @@ class BalanceController extends Controller
      *
      * @param BalanceChartRequest $request
      *
-     * @return string
+     * @return JsonResponse
      */
-    public function balance(BalanceChartRequest $request): string
+    public function balance(BalanceChartRequest $request): JsonResponse
     {
         $params = $request->getAll();
         /** @var Carbon $start */
@@ -78,7 +79,6 @@ class BalanceController extends Controller
         /** @var Collection $accounts */
         $accounts       = $params['accounts'];
         $preferredRange = $params['period'];
-        $convert        = $params['convert'];
 
         // set some formats, based on input parameters.
         $format      = app('navigation')->preferredCarbonFormatByPeriod($preferredRange);
@@ -188,7 +188,7 @@ class BalanceController extends Controller
         foreach ($data as $currency) {
             // income and expense array prepped:
             $income  = [
-                'label'                   => 'earned',
+                'label'                   => sprintf('earned-%s', $currency['currency_code']),
                 'currency_id'             => $currency['currency_id'],
                 'currency_symbol'         => $currency['currency_symbol'],
                 'currency_code'           => $currency['currency_code'],
@@ -201,7 +201,7 @@ class BalanceController extends Controller
                 'converted_entries'       => [],
             ];
             $expense = [
-                'label'                   => 'spent',
+                'label'                   => sprintf('spent-%s', $currency['currency_code']),
                 'currency_id'             => $currency['currency_id'],
                 'currency_symbol'         => $currency['currency_symbol'],
                 'currency_code'           => $currency['currency_code'],
@@ -234,12 +234,9 @@ class BalanceController extends Controller
             $chartData[] = $income;
             $chartData[] = $expense;
         }
-        var_dump($chartData);
-        exit;
-
         //$data = $this->generator->multiSet($chartData);
 
-        return response()->json($data);
+        return response()->json($chartData);
     }
 
 }

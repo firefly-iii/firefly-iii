@@ -42,7 +42,6 @@ class BalanceChartRequest extends FormRequest
             'start'    => $this->getCarbonDate('start'),
             'end'      => $this->getCarbonDate('end'),
             'accounts' => $this->getAccountList(),
-            'convert'  => $this->boolean('convert'),
             'period'   => $this->string('period'),
         ];
     }
@@ -57,7 +56,6 @@ class BalanceChartRequest extends FormRequest
         return [
             'start'      => 'required|date|after:1900-01-01|before:2099-12-31',
             'end'        => 'required|date|after_or_equal:start|before:2099-12-31|after:1900-01-01',
-            'convert'    => 'nullable|between:0,1|numeric',
             'accounts.*' => 'required|exists:accounts,id',
             'period'     => sprintf('required|in:%s', join(',', config('firefly.valid_view_ranges'))),
         ];

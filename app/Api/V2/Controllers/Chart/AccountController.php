@@ -143,7 +143,6 @@ class AccountController extends Controller
                 $currentSet['entries'][$label]           = $balance;
                 $currentSet['converted_entries'][$label] = $balanceConverted;
             }
-            $currentSet  = $this->cerChartSet($currentSet);
             $chartData[] = $currentSet;
         }
 
