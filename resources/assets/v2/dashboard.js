@@ -22,8 +22,9 @@ import './bootstrap.js';
 import dates from './pages/shared/dates.js';
 import boxes from './pages/dashboard/boxes.js';
 import accounts from './pages/dashboard/accounts.js';
+import budgets from './pages/dashboard/budgets.js';
 
-const comps = {dates, boxes, accounts};
+const comps = {dates, boxes, accounts, budgets};
 
 function loadPage(comps) {
     Object.keys(comps).forEach(comp => {

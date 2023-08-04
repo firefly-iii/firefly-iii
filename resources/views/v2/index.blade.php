@@ -9,8 +9,8 @@
         <div class="container-fluid">
             @include('partials.dashboard.boxes')
             <!-- row with account data -->
-            <div x-data="accounts">
-                <div class="row">
+            <div>
+                <div class="row" x-data="accounts">
                     <div class="col-xl-8 col-lg-12 col-sm-12 col-xs-12">
                         <div class="row mb-2">
                             <div class="col">
@@ -44,7 +44,7 @@
 
                             </div>
                         </div>
-                        <div class="row mb-2">
+                        <div class="row mb-2" x-data="budgets">
                             <div class="col">
                                 <div class="card">
                                     <div class="card-header">
@@ -78,7 +78,7 @@
                     <div class="col-xl-4 col-lg-12 col-sm-12 col-xs-12">
                         <div class="row">
                             <template x-for="account in accountList">
-                                <div class="col-12 mb-2">
+                                <div class="col-12 mb-2" x-model="account">
                                     <div class="card">
                                         <div class="card-header">
                                             <h3 class="card-title">
@@ -140,6 +140,8 @@
 
                 </div>
             </div>
+            <!-- row with budget chart -->
+
         </div>
 
     </div>

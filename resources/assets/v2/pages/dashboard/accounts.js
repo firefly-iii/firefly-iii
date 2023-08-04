@@ -57,7 +57,8 @@ export default () => ({
                 legend: {show: false},
                 chart: {
                     height: 400,
-                    toolbar: {tools: {zoom: false, download: false, pan: false}}, type: 'line'
+                    toolbar: {tools: {zoom: false, download: false, pan: false}},
+                    type: 'line'
                 }, series: [],
                 settings: [],
                 xaxis: {
@@ -137,16 +138,11 @@ export default () => ({
                     let accountId = values[0][i];
                     // grab account info for box:
                     (new Get).get(accountId, new Date(window.store.get('end'))).then((response) => {
-                        let current = response.data.data;
-                        this.accountList[i] = {
-                            name: current.attributes.name,
-                            id: current.id,
-                            balance: formatMoney(current.attributes.current_balance, current.attributes.currency_code),
-                            groups: [],
-                        };
+                        let parent = response.data.data;
 
                         // get groups for account:
-                        (new Get).transactions(current.id, 1).then((response) => {
+                        (new Get).transactions(parent.id, 1).then((response) => {
+                            let groups = [];
                             for (let ii = 0; ii < response.data.data.length; ii++) {
                                 if (ii >= max) {
                                     break;
@@ -165,17 +161,19 @@ export default () => ({
                                         amount: formatMoney(currentTransaction.amount, currentTransaction.currency_code),
                                     });
                                 }
-                                this.accountList[i].groups.push(group);
+                                groups.push(group);
                             }
-                            // will become false after the FIRST account is loaded.
-                            this.loadingAccounts = false;
+                            this.accountList[i] = {
+                                name: parent.attributes.name,
+                                id: parent.id,
+                                balance: formatMoney(parent.attributes.current_balance, parent.attributes.currency_code),
+                                groups: groups,
+                            };
                         });
-                    }).then(() => {
-                        // console.log(this.accountList);
                     });
                 }
             }
-
+            this.loadingAccounts = false;
         });
     },
 
