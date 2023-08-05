@@ -72,32 +72,7 @@
                 </li>
                 <!-- end date range drop down -->
                 <!-- user menu -->
-
-                <!--begin::Notifications Dropdown Menu-->
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                        <i class="fa-solid fa-user"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                        <span class="dropdown-item dropdown-header">{{ auth()->user()->email }}</span>
-                        <div class="dropdown-divider"></div>
-                        <a href="{{ route('profile.index') }}" class="dropdown-item">
-                            <em class="fa-regular fa-user me-2"></em>
-                            {{ __('firefly.profile') }}
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="{{ route('preferences.index') }}" class="dropdown-item">
-                            <i class="fa-solid fa-user-gear me-2"></i>
-                            {{ __('firefly.preferences') }}
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fa-solid fa-money-bill-transfer me-2"></i>
-                            TODO {{ __('firefly.administrations_index_menu') }}
-                        </a>
-                    </div>
-                </li>
-                <!-- end user menu -->
+                @include('partials.layout.topbar')
             </ul>
             <!--end::End Navbar Links-->
         </div>

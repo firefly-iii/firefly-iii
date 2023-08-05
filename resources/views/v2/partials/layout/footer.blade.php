@@ -1,7 +1,7 @@
 <footer class="app-footer">
     <!--begin::To the end-->
     <div class="float-end d-none d-sm-inline">
-        v<a href="{{ route('debug') }}">{{ $FF_VERSION }}</a>
+        <a href="{{ route('debug') }}">v{{ $FF_VERSION }}</a>
     </div>
     <!--end::To the end-->
     <!--begin::Copyright-->

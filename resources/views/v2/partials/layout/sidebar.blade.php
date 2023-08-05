@@ -193,30 +193,6 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fa-solid fa-sliders"></i>
-                        <p>
-                            {{ __('firefly.options') }}
-                            <i class="nav-arrow fa-solid fa-chevron-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('currencies.index') }}" class="nav-link">
-                                <i class="nav-icon fa-solid fa-euro-sign"></i>
-                                <p>{{ __('firefly.currencies') }}</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.index') }}" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>{{ __('firefly.system_settings') }}</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="nav-item">
                     <a href="{{ route('logout') }}" class="nav-link logout-link">
                         <i class="nav-icon fa-solid fa-arrow-right-from-bracket"></i>
                         <p>TODO {{ __('firefly.logout') }}</p>

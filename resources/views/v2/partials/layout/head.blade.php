@@ -19,7 +19,6 @@
             'use strict'
             // todo store just happens to store in localStorage but if not, this would break.
             const getStoredTheme = () => JSON.parse(localStorage.getItem('darkMode'))
-            const setStoredTheme = theme => localStorage.setItem('darkMode', theme)
 
             const getPreferredTheme = () => {
                 const storedTheme = getStoredTheme()
@@ -71,18 +70,6 @@
     <link href="v2/css/fonts.css" rel="stylesheet">
     <!--end::Fonts-->
 
-    <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    {{--
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.1.0/styles/overlayscrollbars.min.css"
-          integrity="sha256-LWLZPJ7X1jJLI5OG5695qDemW1qQ7lNdbTfQ64ylbUY=" crossorigin="anonymous">
-    --}}
-    <!--end::Third Party Plugin(OverlayScrollbars)-->
-    <!--begin::Third Party Plugin(Bootstrap Icons)-->
-    {{--
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css"
-          integrity="sha256-BicZsQAhkGHIoR//IB2amPN5SrRb3fHB8tFsnqRAwnk=" crossorigin="anonymous">
-    --}}
-    <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="v2/css/adminlte.css">
     <!--end::Required Plugin(AdminLTE)-->
