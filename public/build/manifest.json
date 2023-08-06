@@ -1,35 +1,35 @@
 {
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
-    "file": "assets/fa-brands-400-20c4a58b.ttf",
+    "file": "assets/fa-brands-400-003f1154.ttf",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2": {
-    "file": "assets/fa-brands-400-74833209.woff2",
+    "file": "assets/fa-brands-400-faae6fc0.woff2",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf": {
-    "file": "assets/fa-regular-400-528d022d.ttf",
+    "file": "assets/fa-regular-400-7d81a1a7.ttf",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2": {
-    "file": "assets/fa-regular-400-8e7e5ea1.woff2",
+    "file": "assets/fa-regular-400-9169d8be.woff2",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf": {
-    "file": "assets/fa-solid-900-67a65763.ttf",
+    "file": "assets/fa-solid-900-cea79b34.ttf",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2": {
-    "file": "assets/fa-solid-900-7152a693.woff2",
+    "file": "assets/fa-solid-900-886c8611.woff2",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2"
   },
   "resources/assets/v2/dashboard.js": {
-    "file": "assets/dashboard-157793a8.js",
+    "file": "assets/dashboard-3896887c.js",
     "isEntry": true,
     "src": "resources/assets/v2/dashboard.js"
   },
   "resources/assets/v2/sass/app.scss": {
-    "file": "assets/app-40e01f65.css",
+    "file": "assets/app-28a195fd.css",
     "isEntry": true,
     "src": "resources/assets/v2/sass/app.scss"
   }

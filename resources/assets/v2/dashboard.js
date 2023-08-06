@@ -23,11 +23,13 @@ import dates from './pages/shared/dates.js';
 import boxes from './pages/dashboard/boxes.js';
 import accounts from './pages/dashboard/accounts.js';
 import budgets from './pages/dashboard/budgets.js';
+import categories from './pages/dashboard/categories.js';
 
-const comps = {dates, boxes, accounts, budgets};
+const comps = {dates, boxes, accounts, budgets, categories};
 
 function loadPage(comps) {
     Object.keys(comps).forEach(comp => {
+        console.log(`Loading ${comp}`);
         let data = comps[comp]();
         Alpine.data(comp, () => data);
     });
@@ -36,11 +38,11 @@ function loadPage(comps) {
 
 // wait for load until bootstrapped event is received.
 document.addEventListener('firefly-iii-bootstrapped', () => {
-    console.log('Loaded through event listener.');
+    //console.log('Loaded through event listener.');
     loadPage(comps);
 });
 // or is bootstrapped before event is triggered.
 if (window.bootstrapped) {
-    console.log('Loaded through window variable.');
+    //console.log('Loaded through window variable.');
     loadPage(comps);
 }
