@@ -54,11 +54,11 @@ trait CleansChartData
             if (array_key_exists('native_id', $array)) {
                 $array['native_id'] = (string)$array['native_id'];
             }
-            if (!array_key_exists('end', $array)) {
-                throw new FireflyException(sprintf('Data-set "%s" is missing the "end"-variable.', $index));
-            }
             if (!array_key_exists('start', $array)) {
                 throw new FireflyException(sprintf('Data-set "%s" is missing the "start"-variable.', $index));
+            }
+            if (!array_key_exists('end', $array)) {
+                throw new FireflyException(sprintf('Data-set "%s" is missing the "end"-variable.', $index));
             }
             if (!array_key_exists('period', $array)) {
                 throw new FireflyException(sprintf('Data-set "%s" is missing the "period"-variable.', $index));
