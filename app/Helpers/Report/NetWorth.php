@@ -27,9 +27,12 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
@@ -41,10 +44,98 @@ use JsonException;
  */
 class NetWorth implements NetWorthInterface
 {
-    private AccountRepositoryInterface $accountRepository;
+    private AccountRepositoryInterface      $accountRepository;
+    private AdminAccountRepositoryInterface $adminAccountRepository;
 
     private CurrencyRepositoryInterface $currencyRepos;
     private User                        $user;
+    private UserGroup                   $userGroup;
+
+    /**
+     * @param Collection $accounts
+     * @param Carbon     $date
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    public function byAccounts(Collection $accounts, Carbon $date): array
+    {
+        // start in the past, end in the future? use $date
+        $ids   = implode(',', $accounts->pluck('id')->toArray());
+        $cache = new CacheProperties();
+        $cache->addProperty($date);
+        $cache->addProperty('net-worth-by-accounts');
+        $cache->addProperty($ids);
+        if ($cache->has()) {
+            //return $cache->get();
+        }
+        app('log')->debug(sprintf('Now in byAccounts("%s", "%s")', $ids, $date->format('Y-m-d')));
+
+        $default   = app('amount')->getDefaultCurrency();
+        $converter = new ExchangeRateConverter();
+
+        // default "native" currency has everything twice, for consistency.
+        $netWorth = [
+            'native' => [
+                'balance'                 => '0',
+                'native_balance'          => '0',
+                'currency_id'             => (int)$default->id,
+                'currency_code'           => $default->code,
+                'currency_name'           => $default->name,
+                'currency_symbol'         => $default->symbol,
+                'currency_decimal_places' => (int)$default->decimal_places,
+                'native_id'               => (int)$default->id,
+                'native_code'             => $default->code,
+                'native_name'             => $default->name,
+                'native_symbol'           => $default->symbol,
+                'native_decimal_places'   => (int)$default->decimal_places,
+            ],
+        ];
+        $balances = app('steam')->balancesByAccountsConverted($accounts, $date);
+
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            app('log')->debug(sprintf('Now at account #%d ("%s")', $account->id, $account->name));
+            $currency      = $this->adminAccountRepository->getAccountCurrency($account);
+            $currencyId    = (int)$currency->id;
+            $balance       = '0';
+            $nativeBalance = '0';
+            if (array_key_exists((int)$account->id, $balances)) {
+                $balance       = $balances[(int)$account->id]['balance'] ?? '0';
+                $nativeBalance = $balances[(int)$account->id]['native_balance'] ?? '0';
+            }
+            app('log')->debug(sprintf('Balance is %s, native balance is %s', $balance, $nativeBalance));
+            // always subtract virtual balance
+            $virtualBalance = (string)$account->virtual_balance;
+            if ('' !== $virtualBalance) {
+                $balance              = bcsub($balance, $virtualBalance);
+                $nativeVirtualBalance = $converter->convert($default, $currency, $account->created_at, $virtualBalance);
+                $nativeBalance        = bcsub($nativeBalance, $nativeVirtualBalance);
+            }
+            $netWorth[$currencyId] = $netWorth[$currencyId] ?? [
+                'balance'                 => '0',
+                'native_balance'          => '0',
+                'currency_id'             => $currencyId,
+                'currency_code'           => $currency->code,
+                'currency_name'           => $currency->name,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => (int)$currency->decimal_places,
+                'native_id'               => (int)$default->id,
+                'native_code'             => $default->code,
+                'native_name'             => $default->name,
+                'native_symbol'           => $default->symbol,
+                'native_decimal_places'   => (int)$default->decimal_places,
+            ];
+
+            $netWorth[$currencyId]['balance']        = bcadd($balance, $netWorth[$currencyId]['balance']);
+            $netWorth[$currencyId]['native_balance'] = bcadd($nativeBalance, $netWorth[$currencyId]['native_balance']);
+            $netWorth['native']['balance']           = bcadd($nativeBalance, $netWorth['native']['balance']);
+            $netWorth['native']['native_balance']    = bcadd($nativeBalance, $netWorth['native']['native_balance']);
+        }
+        $cache->store($netWorth);
+
+        return $netWorth;
+    }
 
     /**
      * Returns the user's net worth in an array with the following layout:
@@ -144,6 +235,17 @@ class NetWorth implements NetWorthInterface
 
         $this->currencyRepos = app(CurrencyRepositoryInterface::class);
         $this->currencyRepos->setUser($this->user);
+    }
+
+    /**
+     * @inheritDoc
+     * @throws FireflyException
+     */
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+        $this->userGroup              = $userGroup;
+        $this->adminAccountRepository = app(AdminAccountRepositoryInterface::class);
+        $this->adminAccountRepository->setAdministrationId($userGroup->id);
     }
 
     /**

@@ -30,6 +30,7 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Repositories\Administration\AdministrationTrait;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
 /**
@@ -144,6 +145,25 @@ class AccountRepository implements AccountRepositoryInterface
             $query->orderBy('accounts.active', 'DESC');
             $query->orderBy('accounts.name', 'ASC');
         }
+        return $query->get(['accounts.*']);
+    }
+
+    /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function getActiveAccountsByType(array $types): Collection
+    {
+        $query = $this->userGroup->accounts();
+        if (0 !== count($types)) {
+            $query->accountTypeIn($types);
+        }
+        $query->where('active', true);
+        $query->orderBy('accounts.account_type_id', 'ASC');
+        $query->orderBy('accounts.order', 'ASC');
+        $query->orderBy('accounts.name', 'ASC');
+
         return $query->get(['accounts.*']);
     }
 

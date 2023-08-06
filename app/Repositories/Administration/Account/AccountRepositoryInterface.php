@@ -64,6 +64,13 @@ interface AccountRepositoryInterface
     public function getAccountsByType(array $types, ?array $sort = []): Collection;
 
     /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function getActiveAccountsByType(array $types): Collection;
+
+    /**
      * Return meta value for account. Null if not found.
      *
      * @param Account $account
