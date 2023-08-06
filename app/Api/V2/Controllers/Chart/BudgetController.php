@@ -33,6 +33,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Administration\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Administration\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
+use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -43,6 +44,8 @@ use Illuminate\Support\Collection;
  */
 class BudgetController extends Controller
 {
+    use CleansChartData;
+
     protected OperationsRepositoryInterface $opsRepository;
     private BudgetLimitRepositoryInterface  $blRepository;
     private array                           $currencies = [];
@@ -93,7 +96,7 @@ class BudgetController extends Controller
             // could return multiple arrays, so merge.
             $data = array_merge($data, $this->processBudget($budget, $start, $end));
         }
-        return response()->json($data);
+        return response()->json($this->clean($data));
     }
 
     /**

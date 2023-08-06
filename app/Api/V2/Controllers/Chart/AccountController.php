@@ -56,7 +56,7 @@ class AccountController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
-
+                $this->repository->setAdministrationId(auth()->user()->user_group_id);
                 return $next($request);
             }
         );
@@ -89,10 +89,6 @@ class AccountController extends Controller
         $end->endOfDay();
         /** @var User $user */
         $user = auth()->user();
-
-        // group ID
-        $administrationId = $user->getAdministrationId();
-        $this->repository->setAdministrationId($administrationId);
 
         // user's preferences
         $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT])->pluck('id')->toArray();
@@ -155,4 +151,5 @@ class AccountController extends Controller
 
         return response()->json($this->clean($chartData));
     }
+
 }
