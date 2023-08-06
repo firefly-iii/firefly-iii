@@ -35,6 +35,20 @@ declare(strict_types=1);
 //);
 
 /**
+ * V2 API route for Summary boxes
+ */
+// BASIC
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Summary',
+        'prefix'    => 'v2/summary',
+        'as'        => 'api.v2.summary.',
+    ],
+    static function () {
+        Route::get('basic', ['uses' => 'BasicController@basic', 'as' => 'basic']);
+    }
+);
+/**
  * V2 API route for TransactionList API endpoints
  */
 Route::group(

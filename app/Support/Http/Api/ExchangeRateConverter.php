@@ -38,6 +38,21 @@ class ExchangeRateConverter
      * @param TransactionCurrency $from
      * @param TransactionCurrency $to
      * @param Carbon              $date
+     * @param string              $amount
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public function convert(TransactionCurrency $from, TransactionCurrency $to, Carbon $date, string $amount): string
+    {
+        $rate = $this->getCurrencyRate($from, $to, $date);
+        return bcmul($amount, $rate);
+    }
+
+    /**
+     * @param TransactionCurrency $from
+     * @param TransactionCurrency $to
+     * @param Carbon              $date
      *
      * @return string
      * @throws FireflyException

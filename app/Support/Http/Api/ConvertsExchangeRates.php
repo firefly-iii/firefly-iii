@@ -148,8 +148,13 @@ trait ConvertsExchangeRates
         $cache = new CacheProperties();
         $cache->addProperty($key);
         if ($cache->has()) {
-            return $cache->get();
+            $rate = $cache->get();
+            if ('' === $rate) {
+                return null;
+            }
+            return $rate;
         }
+        app('log')->debug(sprintf('Going to get rate #%d->#%d (%s) from DB.', $from, $to, $date));
 
         /** @var CurrencyExchangeRate $result */
         $result = auth()->user()
@@ -159,12 +164,12 @@ trait ConvertsExchangeRates
                         ->where('date', '<=', $date)
                         ->orderBy('date', 'DESC')
                         ->first();
-        if (null !== $result) {
-            $rate = (string)$result->rate;
-            $cache->store($rate);
-            return $rate;
+        $rate   = (string)$result?->rate;
+        $cache->store($rate);
+        if ('' === $rate) {
+            return null;
         }
-        return null;
+        return $rate;
     }
 
     /**
