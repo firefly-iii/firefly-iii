@@ -209,12 +209,14 @@ export default () => ({
     init() {
         Promise.all([getVariable('viewRange', '1M'), getVariable('autoConversion', false),]).then((values) => {
             this.autoConversion = values[1];
-            // console.log(values[1]);
+            // main dashboard chart:
             this.loadChart();
             this.loadAccounts();
         });
         window.store.observe('end', () => {
             this.chartData = null;
+            this.expenseAccountChart = null;
+            // main dashboard chart:
             this.loadChart();
             this.loadAccounts();
         });

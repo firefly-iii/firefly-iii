@@ -13,31 +13,30 @@
                 <div class="col-xl-8 col-lg-12 col-sm-12 col-xs-12">
                     <div class="row mb-2">
                         <div class="col">
-
                             <div class="card">
                                 <div class="card-header">
                                     <h3 class="card-title"><a href="{{ route('accounts.index',['asset']) }}"
                                                               title="{{ __('firefly.yourAccounts') }}">{{ __('firefly.yourAccounts') }}</a>
                                     </h3>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body p-0">
                                     <div id="account-chart"></div>
-                                    <p class="text-end">
-                                        <template x-if="autoConversion">
-                                            <button type="button" @click="switchAutoConversion"
-                                                    class="btn btn-outline-info btm-sm">
+                                </div>
+                                <div class="card-footer text-end">
+                                    <template x-if="autoConversion">
+                                        <button type="button" @click="switchAutoConversion"
+                                                class="btn btn-outline-info btm-sm">
                                                     <span
                                                         class="fa-solid fa-comments-dollar"></span> {{ __('firefly.disable_auto_convert')  }}
-                                            </button>
-                                        </template>
-                                        <template x-if="!autoConversion">
-                                            <button type="button" @click="switchAutoConversion"
-                                                    class="btn btn-outline-info btm-sm">
+                                        </button>
+                                    </template>
+                                    <template x-if="!autoConversion">
+                                        <button type="button" @click="switchAutoConversion"
+                                                class="btn btn-outline-info btm-sm">
                                                     <span
                                                         class="fa-solid fa-comments-dollar"></span> {{ __('firefly.enable_auto_convert')  }}
-                                            </button>
-                                        </template>
-                                    </p>
+                                        </button>
+                                    </template>
                                 </div>
                             </div>
 
@@ -51,7 +50,7 @@
                                                               title="{{ __('firefly.go_to_budgets') }}">{{ __('firefly.budgetsAndSpending') }}</a>
                                     </h3>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body p-0">
                                     <div id="budget-chart"></div>
                                 </div>
                             </div>
@@ -66,7 +65,7 @@
                                                               title="{{ __('firefly.yourAccounts') }}">{{ __('firefly.categories') }}</a>
                                     </h3>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body p-0">
                                     <div id="category-chart"></div>
                                 </div>
                             </div>
@@ -145,10 +144,12 @@
                 <div class="col">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"><a href="#" title="Something">Expense accounts</a></h3>
+                            <h3 class="card-title"><a href="#"
+                                                      title="{{ route('reports.index') }}">{{ __('firefly.income_and_expense') }}</a>
+                            </h3>
                         </div>
                         <div class="card-body">
-
+                            <div id="sankey-chart"></div>
                         </div>
                     </div>
                 </div>
@@ -177,7 +178,7 @@
                 <div class="col">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"><a href="#" title="Something">Revenue</a></h3>
+                            <h3 class="card-title"><a href="#" title="Something">recurring? rules? tags?</a></h3>
                         </div>
                         <div class="card-body">
 

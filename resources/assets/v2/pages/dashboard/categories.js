@@ -55,7 +55,23 @@ export default () => ({
             xaxis: {
                 categories: [],
             },
-            yaxis: {},
+            yaxis: {
+                labels: {
+                    formatter: function (value, index) {
+                        if (undefined === value) {
+                            return value;
+                        }
+                        if (undefined === index) {
+                            return value;
+                        }
+                        if (typeof index === 'object') {
+                            index = index.dataPointIndex; // this is the "category name + currency" index
+                        }
+                        let currencyCode = window.budgetCurrencies[index] ?? 'EUR';
+                        return formatMoney(value, currencyCode);
+                    }
+                }
+            },
             fill: {
                 opacity: 1
             },
