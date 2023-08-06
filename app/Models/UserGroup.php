@@ -68,6 +68,26 @@ class UserGroup extends Model
     }
 
     /**
+     * Link to bills.
+     *
+     * @return HasMany
+     */
+    public function availableBudgets(): HasMany
+    {
+        return $this->hasMany(AvailableBudget::class);
+    }
+
+    /**
+     * Link to bills.
+     *
+     * @return HasMany
+     */
+    public function bills(): HasMany
+    {
+        return $this->hasMany(Bill::class);
+    }
+
+    /**
      * Link to budgets.
      *
      * @return HasMany

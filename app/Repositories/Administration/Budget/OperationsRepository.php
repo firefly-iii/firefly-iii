@@ -91,6 +91,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             $journalId = (int)$journal['transaction_journal_id'];
             $final     = [
                 'amount'                          => app('steam')->negative($journal['amount']),
+                'currency_id'                     => $journal['currency_id'],
                 'foreign_amount'                  => null,
                 'foreign_currency_id'             => null,
                 'foreign_currency_code'           => null,

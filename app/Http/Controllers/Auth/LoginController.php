@@ -90,7 +90,7 @@ class LoginController extends Controller
         Log::info('User is trying to login.');
 
         $this->validateLogin($request);
-        Log::debug('Login data is valid.');
+        Log::debug('Login data is present.');
 
         /** Copied directly from AuthenticatesUsers, but with logging added: */
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
