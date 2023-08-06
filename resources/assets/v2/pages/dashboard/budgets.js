@@ -20,7 +20,9 @@
 import {getVariable} from "../../store/get-variable.js";
 import Dashboard from "../../api/v2/chart/budget/dashboard.js";
 import ApexCharts from "apexcharts";
+import formatMoney from "../../util/format-money.js";
 
+window.budgetCurrencies = [];
 export default () => ({
     loadingChart: false,
     chart: null,
@@ -31,10 +33,9 @@ export default () => ({
         }
         // load chart data
         this.loadingChart = true;
+        window.budgetCurrencies = [];
         const dashboard = new Dashboard();
         dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
-            console.log(response.data);
-
             let options = {
                 legend: {show: false},
                 series: [{
@@ -76,16 +77,52 @@ export default () => ({
                                 style: {
                                     fontSize: '13px',
                                     fontWeight: 900
+                                },
+                                formatter: function (val, opt) {
+                                    let index = 0;
+                                    if (typeof opt === 'object') {
+                                        index = opt.dataPointIndex; // this is the "category name + currency" index
+                                    }
+                                    let currencyCode = window.budgetCurrencies[index] ?? 'EUR';
+                                    return formatMoney(val, currencyCode);
                                 }
                             }
                         }
                     },
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function (value, index) {
+
+                            if (undefined === value) {
+                                return value;
+                            }
+                            if (undefined === index) {
+                                return value;
+                            }
+                            if (typeof index === 'object') {
+                                index = index.dataPointIndex; // this is the "category name + currency" index
+                            }
+                            let currencyCode = window.budgetCurrencies[index] ?? 'EUR';
+                            return formatMoney(value, currencyCode);
+                        }
+                    }
                 },
                 xaxis: {
                     categories: []
                 },
                 fill: {
                     opacity: 0.8
+                },
+                dataLabels: {
+                    formatter: function (val, opt) {
+                        let index = 0;
+                        if (typeof opt === 'object') {
+                            index = opt.dataPointIndex; // this is the "category name + currency" index
+                        }
+                        let currencyCode = window.budgetCurrencies[index] ?? 'EUR';
+                        return formatMoney(val, currencyCode);
+                    },
                 }
             };
 
@@ -96,8 +133,9 @@ export default () => ({
                     // convert to EUR yes no?
                     let label = current.label + ' (' + current.currency_code + ')';
                     options.xaxis.categories.push(label);
-                    console.log(current);
                     if (this.autoConversion) {
+                        window.budgetCurrencies.push(current.native_code);
+
                         // series 0: spent
                         options.series[0].data.push(parseFloat(current.native_entries.spent) * -1);
                         // series 1: left
@@ -106,6 +144,7 @@ export default () => ({
                         options.series[2].data.push(parseFloat(current.native_entries.overspent));
                     }
                     if (!this.autoConversion) {
+                        window.budgetCurrencies.push(current.currency_code);
                         // series 0: spent
                         options.series[0].data.push(parseFloat(current.entries.spent) * -1);
                         // series 1: left
@@ -132,13 +171,15 @@ export default () => ({
 
     },
     init() {
-        console.log('init budgets');
         Promise.all([getVariable('autoConversion', false),]).then((values) => {
             this.autoConversion = values[0];
-            console.log('here we are, budgets.');
             this.loadChart();
         });
         window.store.observe('end', () => {
+            this.loadChart();
+        });
+        window.store.observe('autoConversion', (newValue) => {
+            this.autoConversion = newValue;
             this.loadChart();
         });
     },

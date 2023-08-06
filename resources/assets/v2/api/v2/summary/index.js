@@ -1,6 +1,6 @@
-/*!
- * app.scss
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * index.js
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,15 +18,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-$color-mode-type: media-query;
 
-// Bootstrap
-//@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+import {api} from "../../../boot/axios.js";
 
-// Font awesome
-//@import "~font-awesome/css/font-awesome";
-$fa-font-path: "@fortawesome/fontawesome-free/webfonts";
-@import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
-@import "@fortawesome/fontawesome-free/scss/solid.scss";
-@import "@fortawesome/fontawesome-free/scss/brands.scss";
-@import "@fortawesome/fontawesome-free/scss/regular.scss";
+export default class Summary {
+    get(start, end, code) {
+        return api.get('/api/v2/summary/basic', {params: {start: start, end: end, code: code}});
+    }
+}

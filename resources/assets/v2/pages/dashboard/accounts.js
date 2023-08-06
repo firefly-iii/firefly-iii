@@ -43,9 +43,12 @@ export default () => ({
         this.loadChart();
     },
     loadChart() {
-        if (this.loading) {
+        console.log('loadChart.');
+        if (true === this.loading) {
+            console.log('loadChart CANCELLED');
             return;
         }
+        console.log('loadChart continues');
         // load chart data
         this.loading = true;
         const dashboard = new Dashboard();
@@ -62,7 +65,8 @@ export default () => ({
                 }, series: [],
                 settings: [],
                 xaxis: {
-                    categories: [], labels: {
+                    categories: [],
+                    labels: {
                         formatter: function (value) {
                             if (undefined === value) {
                                 return '';
@@ -127,15 +131,24 @@ export default () => ({
             this.loading = false;
         });
     }, loadAccounts() {
-        if (this.loadingAccounts) {
+        console.log('loadAccounts');
+        if (true === this.loadingAccounts) {
+            console.log('loadAccounts CANCELLED');
             return;
         }
+        console.log('loadAccounts continues');
         this.loadingAccounts = true;
         const max = 10;
+        let totalAccounts = 0;
+        let count = 0;
+        let accounts = [];
         Promise.all([getVariable('frontpageAccounts'),]).then((values) => {
-            for (let i = 0; i < values[0].length; i++) {
-                if (values[0].hasOwnProperty(i)) {
-                    let accountId = values[0][i];
+            totalAccounts = values[0].length;
+            console.log('total accounts is ' + totalAccounts);
+            for (let i in values[0]) {
+                let account = values[0];
+                if (account.hasOwnProperty(i)) {
+                    let accountId = account[i];
                     // grab account info for box:
                     (new Get).get(accountId, new Date(window.store.get('end'))).then((response) => {
                         let parent = response.data.data;
@@ -163,29 +176,36 @@ export default () => ({
                                 }
                                 groups.push(group);
                             }
-                            this.accountList[i] = {
+                            accounts.push({
                                 name: parent.attributes.name,
                                 id: parent.id,
                                 balance: formatMoney(parent.attributes.current_balance, parent.attributes.currency_code),
                                 groups: groups,
-                            };
+                            });
+                            count++;
+                            if (count === totalAccounts) {
+                                this.accountList = accounts;
+                            }
+                            console.log('Count is now ' + count);
                         });
                     });
                 }
             }
-            this.loadingAccounts = false;
+            //this.loadingAccounts = false;
         });
     },
 
     init() {
-        // console.log('init');
+        console.log('init accounts');
         Promise.all([getVariable('viewRange', '1M'), getVariable('autoConversion', false),]).then((values) => {
+            console.log('from promise');
             this.autoConversion = values[1];
             // console.log(values[1]);
             this.loadChart();
             this.loadAccounts();
         });
         window.store.observe('end', () => {
+            console.log('from observe end');
             this.loadChart();
             this.loadAccounts();
         });

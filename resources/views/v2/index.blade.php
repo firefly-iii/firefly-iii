@@ -90,7 +90,11 @@
                                             </h3>
                                         </div>
                                         <div class="card-body p-0">
-                                            <table class="table table-sm">
+                                            <p class="text-center small" x-show="account.groups.length < 1">
+                                                TODO No transactions
+
+                                            </p>
+                                            <table class="table table-sm" x-show="account.groups.length > 0">
                                                 <tbody>
                                                 <template x-for="group in account.groups">
                                                     <tr>

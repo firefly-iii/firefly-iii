@@ -5,7 +5,7 @@ import laravel from 'laravel-vite-plugin';
 import fs from 'fs';
 
 
-const host = 'firefly.sd.local';
+const host = '127.0.0.1';
 
 export default defineConfig({
     plugins: [
@@ -25,10 +25,10 @@ export default defineConfig({
         allowedHosts: '*.sd.local',
         host: '0.0.0.0',
         hmr: {host},
-        cors: true,
-        https: {
-            key: fs.readFileSync(`/vagrant/tls-certificates/wildcard.sd.local.key`),
-            cert: fs.readFileSync(`/vagrant/tls-certificates/wildcard.sd.local.crt`),
-        },
+        cors: true
+        // https: {
+        //     key: fs.readFileSync(`/Users/sander/Sites/vm/tls-certificates/wildcard.sd.local.key`),
+        //     cert: fs.readFileSync(`/Users/sander/Sites/vm/tls-certificates/wildcard.sd.local.crt`),
+        // },
     },
 });
