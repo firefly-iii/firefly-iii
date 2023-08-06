@@ -35,6 +35,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Administration\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Administration\Budget\AvailableBudgetRepositoryInterface;
@@ -112,17 +113,8 @@ class BasicController extends Controller
         $balanceData  = $this->getBalanceInformation($start, $end);
         $billData     = $this->getBillInformation($start, $end);
         $spentData    = $this->getLeftToSpendInfo($start, $end);
-        //        $netWorthData = $this->getNetWorthInfo($start, $end);
-        $total = array_merge($balanceData, $billData, $spentData, $netWorthData);
-
-        // give new keys
-        //        $return = [];
-        //        foreach ($total as $entry) {
-        //            if (null === $code || ($code === $entry['currency_code'])) {
-        //                $return[$entry['key']] = $entry;
-        //            }
-        //        }
-
+        $netWorthData = $this->getNetWorthInfo($start, $end);
+        $total        = array_merge($balanceData, $billData, $spentData, $netWorthData);
         return response()->json($total);
     }
 
@@ -373,7 +365,7 @@ class BasicController extends Controller
         // native info:
         $nativeLeft   = [
             'key'                     => 'left-to-spend-in-native',
-            'monetary_value'          => '0',
+            'value'                   => '0',
             'currency_id'             => (int)$default->id,
             'currency_code'           => $default->code,
             'currency_symbol'         => $default->symbol,
@@ -381,7 +373,7 @@ class BasicController extends Controller
         ];
         $nativePerDay = [
             'key'                     => 'left-per-day-to-spend-in-native',
-            'monetary_value'          => '0',
+            'value'                   => '0',
             'currency_id'             => (int)$default->id,
             'currency_code'           => $default->code,
             'currency_symbol'         => $default->symbol,
@@ -400,8 +392,7 @@ class BasicController extends Controller
             foreach ($row['budgets'] as $budget) {
                 /** @var array $journal */
                 foreach ($budget['transaction_journals'] as $journal) {
-                    $journalCurrencyId = $journal['currency_id'];
-
+                    $journalCurrencyId       = $journal['currency_id'];
                     $currency                = $currencies[$journalCurrencyId] ?? $this->currencyRepos->find($journalCurrencyId);
                     $currencies[$currencyId] = $currency;
                     $amount                  = bcmul($journal['amount'], '-1');
@@ -436,19 +427,19 @@ class BasicController extends Controller
             // left
             $return[] = [
                 'key'                     => sprintf('left-to-spend-in-%s', $row['currency_code']),
-                'monetary_value'          => $left,
+                'value'                   => $left,
                 'currency_id'             => $row['currency_id'],
                 'currency_code'           => $row['currency_code'],
                 'currency_symbol'         => $row['currency_symbol'],
                 'currency_decimal_places' => $row['currency_decimal_places'],
             ];
             // left (native)
-            $nativeLeft['monetary_value'] = $leftNative;
+            $nativeLeft['value'] = $leftNative;
 
             // left per day:
             $return[] = [
                 'key'                     => sprintf('left-per-day-to-spend-in-%s', $row['currency_code']),
-                'monetary_value'          => $perDay,
+                'value'                   => $perDay,
                 'currency_id'             => $row['currency_id'],
                 'currency_code'           => $row['currency_code'],
                 'currency_symbol'         => $row['currency_symbol'],
@@ -456,7 +447,7 @@ class BasicController extends Controller
             ];
 
             // left per day (native)
-            $nativePerDay['monetary_value'] = $perDayNative;
+            $nativePerDay['value'] = $perDayNative;
         }
         $return[] = $nativeLeft;
         $return[] = $nativePerDay;
@@ -472,9 +463,9 @@ class BasicController extends Controller
      */
     private function getNetWorthInfo(Carbon $start, Carbon $end): array
     {
-        /** @var User $user */
-        $user = auth()->user();
-        $date = today(config('app.timezone'))->startOfDay();
+        /** @var UserGroup $userGroup */
+        $userGroup = auth()->user()->userGroup;
+        $date      = today(config('app.timezone'))->startOfDay();
         // start and end in the future? use $end
         if ($this->notInDateRange($date, $start, $end)) {
             /** @var Carbon $date */
@@ -483,7 +474,7 @@ class BasicController extends Controller
 
         /** @var NetWorthInterface $netWorthHelper */
         $netWorthHelper = app(NetWorthInterface::class);
-        $netWorthHelper->setUser($user);
+        $netWorthHelper->setUserGroup($userGroup);
         $allAccounts = $this->accountRepository->getActiveAccountsByType(
             [AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT]
         );
@@ -497,27 +488,28 @@ class BasicController extends Controller
             }
         );
 
-        $netWorthSet = $netWorthHelper->getNetWorthByCurrency($filtered, $date);
+        $netWorthSet = $netWorthHelper->byAccounts($filtered, $date);
         $return      = [];
-        foreach ($netWorthSet as $data) {
-            /** @var TransactionCurrency $currency */
-            $currency = $data['currency'];
-            $amount   = $data['balance'];
-            if (0 === bccomp($amount, '0')) {
+        // in native amount
+        $return[] = [
+            'key'                     => 'net-worth-in-native',
+            'value'                   => $netWorthSet['native']['balance'],
+            'currency_id'             => $netWorthSet['native']['currency_id'],
+            'currency_code'           => $netWorthSet['native']['currency_code'],
+            'currency_symbol'         => $netWorthSet['native']['currency_symbol'],
+            'currency_decimal_places' => $netWorthSet['native']['currency_decimal_places'],
+        ];
+        foreach ($netWorthSet as $key => $data) {
+            if ('native' === $key) {
                 continue;
             }
-            // return stuff
             $return[] = [
-                'key'                     => sprintf('net-worth-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          => $amount,
-                'currency_id'             => $currency->id,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatAnything($currency, $data['balance'], false),
-                'local_icon'              => 'line-chart',
-                'sub_title'               => '',
+                'key'                     => sprintf('net-worth-in-%s', $data['currency_code']),
+                'value'                   => $data['balance'],
+                'currency_id'             => $data['currency_id'],
+                'currency_code'           => $data['currency_code'],
+                'currency_symbol'         => $data['currency_symbol'],
+                'currency_decimal_places' => $data['currency_decimal_places'],
             ];
         }
 

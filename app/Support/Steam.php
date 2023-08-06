@@ -360,9 +360,9 @@ class Steam
         $cache->addProperty($account->id);
         $cache->addProperty('balance');
         $cache->addProperty($date);
-        $cache->addProperty($native ? $native->id : 0);
+        $cache->addProperty($native->id);
         if ($cache->has()) {
-            return $cache->get();
+            // return $cache->get();
         }
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -370,7 +370,9 @@ class Steam
         if (null === $currency) {
             throw new FireflyException('Cannot get converted account balance: no currency found for account.');
         }
-
+        if ((int)$native->id === (int)$currency->id) {
+            return $this->balance($account, $date);
+        }
         /**
          * selection of transactions
          * 1: all normal transactions. No foreign currency info. In $currency. Need conversion.
@@ -392,7 +394,7 @@ class Steam
                          ->where('transactions.transaction_currency_id', $currency->id)
                          ->whereNull('transactions.foreign_currency_id')
                          ->get(['transaction_journals.date', 'transactions.amount'])->toArray();
-        app('log')->debug(sprintf('%d transactions in set #1', count($new[0])));
+        app('log')->debug(sprintf('%d transaction(s) in set #1', count($new[0])));
         // 2
         $existing[] = $account->transactions()
                               ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
@@ -400,7 +402,7 @@ class Steam
                               ->where('transactions.transaction_currency_id', $native->id)
                               ->whereNull('transactions.foreign_currency_id')
                               ->get(['transactions.amount'])->toArray();
-        app('log')->debug(sprintf('%d transactions in set #2', count($existing[0])));
+        app('log')->debug(sprintf('%d transaction(s) in set #2', count($existing[0])));
         // 3
         $new[] = $account->transactions()
                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
@@ -464,8 +466,9 @@ class Steam
             //app('log')->debug(sprintf('Balance from new set #%d is %f', $index, $balance));
         }
 
-        // add virtual balance
+        // add virtual balance (also needs conversion)
         $virtual = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
+        $virtual = $converter->convert($currency, $native, $account->created_at, $virtual);
         $balance = bcadd($balance, $virtual);
 
         $cache->store($balance);
@@ -499,6 +502,45 @@ class Steam
         /** @var Account $account */
         foreach ($accounts as $account) {
             $result[$account->id] = $this->balance($account, $date);
+        }
+
+        $cache->store($result);
+
+        return $result;
+    }
+
+    /**
+     * This method always ignores the virtual balance.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $date
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    public function balancesByAccountsConverted(Collection $accounts, Carbon $date): array
+    {
+        $ids = $accounts->pluck('id')->toArray();
+        // cache this property.
+        $cache = new CacheProperties();
+        $cache->addProperty($ids);
+        $cache->addProperty('balances-converted');
+        $cache->addProperty($date);
+        if ($cache->has()) {
+            // return $cache->get();
+        }
+
+
+        // need to do this per account.
+        $result = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $default = app('amount')->getDefaultCurrencyByUser($account->user);
+            $result[(int)$account->id]
+                     = [
+                'balance'        => $this->balance($account, $date),
+                'native_balance' => $this->balanceConverted($account, $date, $default),
+            ];
         }
 
         $cache->store($result);
