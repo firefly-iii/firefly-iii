@@ -51,7 +51,9 @@
                                     </h3>
                                 </div>
                                 <div class="card-body p-0">
-                                    <div id="budget-chart"></div>
+                                    <div>
+                                        <canvas id="budget-chart"></canvas>
+                                    </div>
                                 </div>
                             </div>
 

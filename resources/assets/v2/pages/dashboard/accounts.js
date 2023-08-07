@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import ApexCharts from "apexcharts";
+//import ApexCharts from "apexcharts";
 import {getVariable} from "../../store/get-variable.js";
 import {setVariable} from "../../store/set-variable.js";
 import Dashboard from "../../api/v2/chart/account/dashboard.js";
@@ -142,8 +142,8 @@ export default () => ({
             this.chart.updateOptions(this.chartOptions);
         }
         if (null === this.chart) {
-            this.chart = new ApexCharts(document.querySelector("#account-chart"), this.chartOptions);
-            this.chart.render();
+            //this.chart = new ApexCharts(document.querySelector("#account-chart"), this.chartOptions);
+            //this.chart.render();
         }
     },
     loadAccounts() {
@@ -211,13 +211,13 @@ export default () => ({
             this.autoConversion = values[1];
             // main dashboard chart:
             this.loadChart();
-            this.loadAccounts();
+            // this.loadAccounts();
         });
         window.store.observe('end', () => {
             this.chartData = null;
             this.expenseAccountChart = null;
             // main dashboard chart:
-            this.loadChart();
+            // this.loadChart();
             this.loadAccounts();
         });
     },

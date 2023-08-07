@@ -19,7 +19,7 @@
  */
 import {getVariable} from "../../store/get-variable.js";
 import Dashboard from "../../api/v2/chart/category/dashboard.js";
-import ApexCharts from "apexcharts";
+//import ApexCharts from "apexcharts";
 import formatMoney from "../../util/format-money.js";
 
 window.categoryCurrencies = [];
@@ -203,16 +203,16 @@ export default () => ({
     },
     init() {
         Promise.all([getVariable('autoConversion', false),]).then((values) => {
-            this.autoConversion = values[0];
-            this.loadChart();
+            // this.autoConversion = values[0];
+            // this.loadChart();
         });
         window.store.observe('end', () => {
-            this.chartData = null;
-            this.loadChart();
+            // this.chartData = null;
+            // this.loadChart();
         });
         window.store.observe('autoConversion', (newValue) => {
-            this.autoConversion = newValue;
-            this.loadChart();
+            // this.autoConversion = newValue;
+            // this.loadChart();
         });
     },
 
