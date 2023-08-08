@@ -408,7 +408,7 @@ class BasicController extends Controller
             // either an amount was budgeted or 0 is available.
             $currency                = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
             $currencies[$currencyId] = $currency;
-            $amount                  = $available[$currencyId] ?? '0';
+            $amount                  = $available[$currencyId]['amount'] ?? '0';
             $amountNative            = $converter->convert($default, $currency, $start, $amount);
             $left                    = bcadd($amount, $spent);
             $leftNative              = bcadd($amountNative, $spentNative);
