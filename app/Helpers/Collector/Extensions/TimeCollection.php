@@ -676,6 +676,23 @@ trait TimeCollection
     }
 
     /**
+     * Set the end time of the results to return.
+     *
+     * @param Carbon $end
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setEnd(Carbon $end): GroupCollectorInterface
+    {
+        // always got to end of day / start of day for ranges.
+        $endStr = $end->format('Y-m-d 23:59:59');
+
+        $this->query->where('transaction_journals.date', '<=', $endStr);
+
+        return $this;
+    }
+
+    /**
      * @param Carbon $date
      * @param string $field
      *
@@ -818,6 +835,22 @@ trait TimeCollection
 
         $this->query->where('transaction_journals.date', '>=', $startStr);
         $this->query->where('transaction_journals.date', '<=', $endStr);
+
+        return $this;
+    }
+
+    /**
+     * Set the start time of the results to return.
+     *
+     * @param Carbon $start
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setStart(Carbon $start): GroupCollectorInterface
+    {
+        $startStr = $start->format('Y-m-d 00:00:00');
+
+        $this->query->where('transaction_journals.date', '>=', $startStr);
 
         return $this;
     }
