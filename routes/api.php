@@ -58,7 +58,8 @@ Route::group(
         'as'        => 'api.v2.',
     ],
     static function () {
-        Route::get('accounts/{account}/transactions', ['uses' => 'AccountController@listTransactions', 'as' => 'accounts.transactions']);
+        Route::get('transactions', ['uses' => 'TransactionController@list', 'as' => 'transactions.list']);
+        Route::get('accounts/{userGroupAccount}/transactions', ['uses' => 'AccountController@list', 'as' => 'accounts.transactions']);
     }
 );
 

@@ -1,8 +1,7 @@
 <?php
-
 /*
- * AccountController.php
- * Copyright (c) 2022 james@firefly-iii.org
+ * TransactionController.php
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,36 +19,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace FireflyIII\Api\V2\Controllers\Transaction\List;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Transaction\ListRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Models\Account;
-use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\V2\TransactionGroupTransformer;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 /**
- * Class AccountController
+ * Class TransactionController
  */
-class AccountController extends Controller
+class TransactionController extends Controller
 {
-    use TransactionFilter;
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/accounts/listTransactionByAccount
-     *
      * @param ListRequest $request
-     * @param Account     $account
      *
      * @return JsonResponse
      */
-    public function list(ListRequest $request, Account $account): JsonResponse
+    public function list(ListRequest $request): JsonResponse
     {
         // collect transactions:
         $limit = $request->getLimit();
@@ -63,7 +52,7 @@ class AccountController extends Controller
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))
+        $collector->setUserGroup(auth()->user()->userGroup)
                   ->withAPIInformation()
                   ->setLimit($this->pageSize)
                   ->setPage($page)
@@ -81,7 +70,7 @@ class AccountController extends Controller
         $paginator = $collector->getPaginatedGroups();
         $paginator->setPath(
             sprintf('%s?%s',
-                    route('api.v2.accounts.transactions', [$account->id]),
+                    route('api.v2.transactions.list'),
                     $request->buildParams())
         );
 
@@ -89,4 +78,6 @@ class AccountController extends Controller
             ->json($this->jsonApiList('transactions', $paginator, new TransactionGroupTransformer()))
             ->header('Content-Type', self::CONTENT_TYPE);
     }
+
+
 }

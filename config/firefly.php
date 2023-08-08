@@ -60,6 +60,7 @@ use FireflyIII\Support\Binder\EitherConfigKey;
 use FireflyIII\Support\Binder\JournalList;
 use FireflyIII\Support\Binder\TagList;
 use FireflyIII\Support\Binder\TagOrId;
+use FireflyIII\Support\Binder\UserGroupAccount;
 use FireflyIII\TransactionRules\Actions\AddTag;
 use FireflyIII\TransactionRules\Actions\AppendDescription;
 use FireflyIII\TransactionRules\Actions\AppendDescriptionToNotes;
@@ -475,6 +476,9 @@ return [
         'tagOrId'          => TagOrId::class,
         'dynamicConfigKey' => DynamicConfigKey::class,
         'eitherConfigKey'  => EitherConfigKey::class,
+
+        // V2 API endpoints:
+        'userGroupAccount' => UserGroupAccount::class,
 
 
     ],

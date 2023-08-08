@@ -1079,6 +1079,15 @@ interface GroupCollectorInterface
     public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
+     * Set the end time of the results to return.
+     *
+     * @param Carbon $end
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setEnd(Carbon $end): GroupCollectorInterface;
+
+    /**
      * @param bool $expandGroupSearch
      */
     public function setExpandGroupSearch(bool $expandGroupSearch);
@@ -1261,6 +1270,15 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setSourceAccounts(Collection $accounts): GroupCollectorInterface;
+
+    /**
+     * Set the start time of the results to return.
+     *
+     * @param Carbon $start
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setStart(Carbon $start): GroupCollectorInterface;
 
     /**
      * Limit results to a specific tag.
