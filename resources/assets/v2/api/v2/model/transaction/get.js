@@ -29,6 +29,6 @@ export default class Get {
      * @returns {Promise<AxiosResponse<any>>}
      */
     get(params) {
-        return api.get('/api/v1/transactions', {params: params});
+        return api.get('/api/v2/transactions', {params: params});
     }
 }
