@@ -60,7 +60,7 @@ trait RuleManagement
                         ]
                     )->render();
                 } catch (Throwable $e) {
-                    Log::debug(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
+                    Log::error(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
                     Log::error($e->getTraceAsString());
                     throw new FireflyException('Could not render', 0, $e);
                 }
