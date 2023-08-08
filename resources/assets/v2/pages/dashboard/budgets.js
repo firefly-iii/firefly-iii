@@ -22,60 +22,51 @@ import Dashboard from "../../api/v2/chart/budget/dashboard.js";
 // todo optimize
 import Chart from 'chart.js/auto';
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
+import formatMoney from "../../util/format-money.js";
 
-window.budgetCurrencies = [];
+let currencies = [];
+let chart = null;
+let chartData = null;
+
 export default () => ({
     loading: false,
-    chart: null,
     autoConversion: false,
-    chartData: null,
-    chartOptions: null,
     loadChart() {
         if (true === this.loading) {
             return;
         }
         this.loading = true;
-        if (null === this.chartData) {
-            this.getFreshData();
-        }
-        if (null !== this.chartData) {
-            this.generateOptions(this.chartData);
-            this.drawChart();
+
+        if (null !== chartData) {
+            this.drawChart(this.generateOptions(chartData));
             this.loading = false;
+            return;
         }
+        this.getFreshData();
     },
-    drawChart() {
-        if (null !== this.chart) {
-            // chart already in place, refresh:
-            console.log('refresh');
-            this.chart.data = this.chartOptions.data;
-            //this.chart.updateOptions(this.chartOptions);
+    drawChart(options) {
+        if (null !== chart) {
+            chart.data.datasets = options.data.datasets;
+            chart.update();
+            return;
         }
-        if (null === this.chart) {
-            //this.chart = new ApexCharts(document.querySelector("#budget-chart"), this.chartOptions);
-            this.chart = new Chart(document.querySelector("#budget-chart"), this.chartOptions);
-            //this.chart.render();
-        }
+        chart = new Chart(document.querySelector("#budget-chart"), options);
     },
     getFreshData() {
         const dashboard = new Dashboard();
         dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
-            this.chartData = response.data;
-            this.generateOptions(this.chartData);
-            this.drawChart();
+            chartData = response.data; // save chart data for later.
+            this.drawChart(this.generateOptions(response.data));
             this.loading = false;
         });
     },
     generateOptions(data) {
-        window.budgetCurrencies = [];
+        currencies = [];
         let options = getDefaultChartSettings('column');
         options.options.locale = window.store.get('locale').replace('_', '-');
         options.options.plugins = {
             tooltip: {
                 callbacks: {
-                    // tooltip: function (context) {
-                    //     //console.log(context);
-                    // },
                     title: function (context) {
                         return context.label;
                     },
@@ -85,12 +76,7 @@ export default () => ({
                         if (label) {
                             label += ': ';
                         }
-                        //console.log('label');
-                        //console.log(context.label + ' X');
-                        //return context.label + ' X';
-                        // console.log(context);
-                        return label + ' ' + context.parsed.x;
-                        // return label + ' ' + formatMoney(context.parsed.y, window.budgetCurrencies[context.parsed.x] ?? 'EUR');
+                        return label + ' ' + formatMoney(context.parsed.y, currencies[context.parsed.x] ?? 'EUR');
                     }
                 }
             }
@@ -126,7 +112,7 @@ export default () => ({
                 let label = current.label + ' (' + current.currency_code + ')';
                 options.data.labels.push(label);
                 if (this.autoConversion) {
-                    window.budgetCurrencies.push(current.native_code);
+                    currencies.push(current.native_code);
                     // series 0: spent
                     options.data.datasets[0].data.push(parseFloat(current.native_entries.spent) * -1);
                     // series 1: left
@@ -135,7 +121,7 @@ export default () => ({
                     options.data.datasets[2].data.push(parseFloat(current.native_entries.overspent));
                 }
                 if (!this.autoConversion) {
-                    window.budgetCurrencies.push(current.currency_code);
+                    currencies.push(current.currency_code);
                     // series 0: spent
                     options.data.datasets[0].data.push(parseFloat(current.entries.spent) * -1);
                     // series 1: left
@@ -143,147 +129,30 @@ export default () => ({
                     // series 2: overspent
                     options.data.datasets[2].data.push(parseFloat(current.entries.overspent));
                 }
-                // console.log('Currencies');
-                // console.log(window.budgetCurrencies);
-                //
             }
         }
-
-        // options = {
-        //     legend: {show: false},
-        //     series: [{
-        //         name: 'Spent',
-        //         data: []
-        //     }, {
-        //         name: 'Left',
-        //         data: []
-        //     }, {
-        //         name: 'Overspent',
-        //         data: []
-        //     }],
-        //     chart: {
-        //         type: 'bar',
-        //         height: 400,
-        //         stacked: true,
-        //         toolbar: {tools: {zoom: false, download: false, pan: false}},
-        //         zoom: {
-        //             enabled: true
-        //         }
-        //     },
-        //     responsive: [{
-        //         breakpoint: 480,
-        //         options: {
-        //             legend: {
-        //                 position: 'bottom',
-        //                 offsetX: -10,
-        //                 offsetY: 0
-        //             }
-        //         }
-        //     }],
-        //     plotOptions: {
-        //         bar: {
-        //             horizontal: false,
-        //             borderRadius: 10,
-        //             dataLabels: {
-        //                 total: {
-        //                     enabled: true,
-        //                     // style: {
-        //                     //     fontSize: '13px',
-        //                     //     fontWeight: 900
-        //                     // },
-        //                     formatter: function (val, opt) {
-        //                         let index = 0;
-        //                         if (typeof opt === 'object') {
-        //                             index = opt.dataPointIndex; // this is the "category name + currency" index
-        //                         }
-        //                         let currencyCode = window.budgetCurrencies[index] ?? 'EUR';
-        //                         return formatMoney(val, currencyCode);
-        //                     }
-        //                 }
-        //             }
-        //         },
-        //     },
-        //     yaxis: {
-        //         labels: {
-        //             formatter: function (value, index) {
-        //                 if (undefined === value) {
-        //                     return value;
-        //                 }
-        //                 if (undefined === index) {
-        //                     return value;
-        //                 }
-        //                 if (typeof index === 'object') {
-        //                     index = index.dataPointIndex; // this is the "category name + currency" index
-        //                 }
-        //                 let currencyCode = window.budgetCurrencies[index] ?? 'EUR';
-        //                 return formatMoney(value, currencyCode);
-        //             }
-        //         }
-        //     },
-        //     xaxis: {
-        //         categories: []
-        //     },
-        //     fill: {
-        //         opacity: 0.8
-        //     },
-        //     dataLabels: {
-        //         formatter: function (val, opt) {
-        //             let index = 0;
-        //             if (typeof opt === 'object') {
-        //                 index = opt.dataPointIndex; // this is the "category name + currency" index
-        //             }
-        //             let currencyCode = window.budgetCurrencies[index] ?? 'EUR';
-        //             return formatMoney(val, currencyCode);
-        //         },
-        //     }
-        // };
-
-
-        // for (const i in data) {
-        //     if (data.hasOwnProperty(i)) {
-        //         let current = data[i];
-        //         // convert to EUR yes no?
-        //         let label = current.label + ' (' + current.currency_code + ')';
-        //         options.xaxis.categories.push(label);
-        //         if (this.autoConversion) {
-        //             window.budgetCurrencies.push(current.native_code);
-        //
-        //             // series 0: spent
-        //             options.series[0].data.push(parseFloat(current.native_entries.spent) * -1);
-        //             // series 1: left
-        //             options.series[1].data.push(parseFloat(current.native_entries.left));
-        //             // series 2: overspent
-        //             options.series[2].data.push(parseFloat(current.native_entries.overspent));
-        //         }
-        //         if (!this.autoConversion) {
-        //             window.budgetCurrencies.push(current.currency_code);
-        //             // series 0: spent
-        //             options.series[0].data.push(parseFloat(current.entries.spent) * -1);
-        //             // series 1: left
-        //             options.series[1].data.push(parseFloat(current.entries.left));
-        //             // series 2: overspent
-        //             options.series[2].data.push(parseFloat(current.entries.overspent));
-        //         }
-        //
-        //     }
-        // }
-        this.chartOptions = options;
+        return options;
     },
 
 
     init() {
         Promise.all([getVariable('autoConversion', false),]).then((values) => {
             this.autoConversion = values[0];
-            this.loadChart();
+            if (false === this.loading) {
+                this.loadChart();
+            }
         });
-        // todo the charts don't need to reload from server if the autoConversion value changes.
         window.store.observe('end', () => {
-            this.chartData = null;
-            this.loadChart();
+            if (false === this.loading) {
+                this.chartData = null;
+                this.loadChart();
+            }
         });
         window.store.observe('autoConversion', (newValue) => {
             this.autoConversion = newValue;
-            this.loadChart();
+            if (false === this.loading) {
+                this.loadChart();
+            }
         });
     },
 

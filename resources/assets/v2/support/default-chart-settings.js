@@ -19,10 +19,21 @@
  */
 
 function getDefaultChartSettings(type) {
+    if ('sankey' === type) {
+        return {
+            type: 'sankey',
+            data: {
+                datasets: [],
+            }
+        }
+    }
     if ('column' === type) {
         return {
             type: 'bar',
-            data: {},
+            data: {
+                labels: [],
+                datasets: [],
+            },
             options: {
                 scales: {
                     y: {

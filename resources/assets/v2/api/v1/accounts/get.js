@@ -19,6 +19,7 @@
  */
 
 import {api} from "../../../boot/axios";
+import format from "date-fns/format";
 
 export default class Get {
 
@@ -29,7 +30,7 @@ export default class Get {
      * @returns {Promise<AxiosResponse<any>>}
      */
     get(identifier, date) {
-        let params = {date: date};
+        let params = {date: format(date, 'y-MM-d').slice(0, 10)};
         if (!date) {
             return api.get('/api/v1/accounts/' + identifier);
         }

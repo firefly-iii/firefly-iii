@@ -33,7 +33,6 @@ const Basic = () => {
      *
      */
     const init = () => {
-        console.log('Basic store init')
         this.loadVariable('viewRange')
         this.loadVariable('darkMode')
         this.loadVariable('language')
@@ -89,7 +88,6 @@ const Basic = () => {
     const triggerReady = () => {
         this.count++;
         if (this.count === this.readyCount) {
-            console.log('Basic store is ready!')
             // trigger event:
             const event = new Event("BasicStoreReady");
             document.dispatchEvent(event);

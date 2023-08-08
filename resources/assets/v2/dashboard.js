@@ -24,12 +24,13 @@ import boxes from './pages/dashboard/boxes.js';
 import accounts from './pages/dashboard/accounts.js';
 import budgets from './pages/dashboard/budgets.js';
 import categories from './pages/dashboard/categories.js';
+import sankey from './pages/dashboard/sankey.js';
 
-const comps = {dates, boxes, accounts, budgets, categories};
+const comps = {dates, boxes, accounts, budgets, categories, sankey};
 
 function loadPage(comps) {
     Object.keys(comps).forEach(comp => {
-        console.log(`Loading ${comp}`);
+        console.log(`Loading page component "${comp}"`);
         let data = comps[comp]();
         Alpine.data(comp, () => data);
     });

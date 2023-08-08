@@ -8,6 +8,7 @@
         <!--begin::Container-->
         <div class="container-fluid">
             @include('partials.dashboard.boxes')
+
             <!-- row with account data -->
             <div class="row mb-2" x-data="accounts">
                 <div class="col-xl-8 col-lg-12 col-sm-12 col-xs-12">
@@ -20,7 +21,7 @@
                                     </h3>
                                 </div>
                                 <div class="card-body p-0">
-                                    <div id="account-chart"></div>
+                                    <canvas id="account-chart"></canvas>
                                 </div>
                                 <div class="card-footer text-end">
                                     <template x-if="autoConversion">
@@ -68,7 +69,7 @@
                                     </h3>
                                 </div>
                                 <div class="card-body p-0">
-                                    <div id="category-chart"></div>
+                                    <canvas id="category-chart"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -150,8 +151,8 @@
                                                       title="{{ route('reports.index') }}">{{ __('firefly.income_and_expense') }}</a>
                             </h3>
                         </div>
-                        <div class="card-body">
-                            <div id="sankey-chart"></div>
+                        <div class="card-body" x-data="sankey">
+                            <canvas id="sankey-chart"></canvas>
                         </div>
                     </div>
                 </div>

@@ -21,79 +21,22 @@ import {getVariable} from "../../store/get-variable.js";
 import Dashboard from "../../api/v2/chart/category/dashboard.js";
 //import ApexCharts from "apexcharts";
 import formatMoney from "../../util/format-money.js";
+import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
+import Chart from "chart.js/auto";
 
-window.categoryCurrencies = [];
+let currencies = [];
+
+let chart = null;
+let chartData = null;
+
 export default () => ({
     loading: false,
-    chart: null,
     autoConversion: false,
-    chartData: null,
-    chartOptions: null,
     generateOptions(data) {
-        window.categoryCurrencies = [];
-        let options = {
-            series: [],
-            chart: {
-                type: 'bar',
-                height: 350
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    columnWidth: '55%',
-                    endingShape: 'rounded'
-                },
-            },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-            },
-            xaxis: {
-                categories: [],
-            },
-            yaxis: {
-                labels: {
-                    formatter: function (value, index) {
-                        if (undefined === value) {
-                            return value;
-                        }
-                        if (undefined === index) {
-                            return value;
-                        }
-                        if (typeof index === 'object') {
-                            index = index.dataPointIndex; // this is the "category name + currency" index
-                        }
-                        let currencyCode = window.budgetCurrencies[index] ?? 'EUR';
-                        return formatMoney(value, currencyCode);
-                    }
-                }
-            },
-            fill: {
-                opacity: 1
-            },
-            tooltip: {
-                y: {
-                    formatter: function (value, index) {
-                        if (undefined === value) {
-                            return value;
-                        }
-                        if (undefined === index) {
-                            return value;
-                        }
-                        if (typeof index === 'object') {
-                            index = index.seriesIndex; // this is the currency index.
-                        }
-                        let currencyCode = window.categoryCurrencies[index] ?? 'EUR';
-                        return formatMoney(value, currencyCode);
-                    }
-                }
-            }
-        };
-        // first, collect all currencies and use them as series.
+        currencies = [];
+        let options = getDefaultChartSettings('column');
+
+        // first, create "series" per currency.
         let series = {};
         for (const i in data) {
             if (data.hasOwnProperty(i)) {
@@ -109,11 +52,12 @@ export default () => ({
                         name: code,
                         data: {},
                     };
-                    window.categoryCurrencies.push(code);
+                    currencies.push(code);
                 }
             }
         }
-        // loop data again to add amounts.
+
+        // loop data again to add amounts to each series.
         for (const i in data) {
             if (data.hasOwnProperty(i)) {
                 let current = data[i];
@@ -147,42 +91,40 @@ export default () => ({
                     }
                 }
                 // add label to x-axis, not unimportant.
-                if (!options.xaxis.categories.includes(current.label)) {
-                    options.xaxis.categories.push(current.label);
+                if (!options.data.labels.includes(current.label)) {
+                    options.data.labels.push(current.label);
                 }
             }
         }
-        // loop the series and create Apex-compatible data sets.
+        // loop the series and create ChartJS-compatible data sets.
         for (const i in series) {
-            let current = {
-                name: i,
+            let dataset = {
+                label: i,
                 data: [],
             }
             for (const ii in series[i].data) {
-                current.data.push(series[i].data[ii]);
+                dataset.data.push(series[i].data[ii]);
             }
-            options.series.push(current);
+            options.data.datasets.push(dataset);
         }
-        this.chartOptions = options;
+
+        return options;
     },
-    drawChart() {
-        if (null !== this.chart) {
-            // chart already in place, refresh:
-            this.chart.updateOptions(this.chartOptions);
+    drawChart(options) {
+        if (null !== chart) {
+            chart.data.datasets = options.data.datasets;
+            chart.update();
+            return;
         }
-        if (null === this.chart) {
-            this.chart = new ApexCharts(document.querySelector("#category-chart"), this.chartOptions);
-            this.chart.render();
-        }
-        this.loading = false;
+        chart = new Chart(document.querySelector("#category-chart"), options);
 
     },
     getFreshData() {
         const dashboard = new Dashboard();
         dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
-            this.chartData = response.data;
-            this.generateOptions(this.chartData);
-            this.drawChart();
+            chartData = response.data; // save chart data for later.
+            this.drawChart(this.generateOptions(response.data));
+            this.loading = false;
         });
     },
 
@@ -191,28 +133,26 @@ export default () => ({
             return;
         }
         this.loading = true;
-        if (null === this.chartData) {
-            this.getFreshData();
-        }
-        if (null !== this.chartData) {
-            this.generateOptions(this.chartData);
-            this.drawChart();
-        }
 
-        this.loading = false;
+        if (null !== chartData) {
+            this.drawChart(this.generateOptions(chartData));
+            this.loading = false;
+            return;
+        }
+        this.getFreshData();
     },
     init() {
         Promise.all([getVariable('autoConversion', false),]).then((values) => {
-            // this.autoConversion = values[0];
-            // this.loadChart();
+            this.autoConversion = values[0];
+            this.loadChart();
         });
         window.store.observe('end', () => {
-            // this.chartData = null;
-            // this.loadChart();
+            this.chartData = null;
+            this.loadChart();
         });
         window.store.observe('autoConversion', (newValue) => {
-            // this.autoConversion = newValue;
-            // this.loadChart();
+            this.autoConversion = newValue;
+            this.loadChart();
         });
     },
 
