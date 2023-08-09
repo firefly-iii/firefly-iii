@@ -33,9 +33,20 @@ use Illuminate\Support\Collection;
 interface BillRepositoryInterface
 {
     /**
+     * TODO duplicate of other repos
+     * Add correct order to bills.
+     */
+    public function correctOrder(): void;
+
+    /**
      * @return Collection
      */
     public function getActiveBills(): Collection;
+
+    /**
+     * @return Collection
+     */
+    public function getBills(): Collection;
 
     /**
      * Between start and end, tells you on which date(s) the bill is expected to hit.

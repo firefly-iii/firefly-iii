@@ -40,6 +40,32 @@ class BillRepository implements BillRepositoryInterface
     use AdministrationTrait;
 
     /**
+     * Correct order of piggies in case of issues.
+     */
+    public function correctOrder(): void
+    {
+        $set     = $this->userGroup->bills()->orderBy('order', 'ASC')->get();
+        $current = 1;
+        foreach ($set as $bill) {
+            if ((int)$bill->order !== $current) {
+                $bill->order = $current;
+                $bill->save();
+            }
+            $current++;
+        }
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getBills(): Collection
+    {
+        return $this->userGroup->bills()
+                               ->orderBy('bills.name', 'ASC')
+                               ->get(['bills.*']);
+    }
+
+    /**
      * @inheritDoc
      */
     public function sumPaidInRange(Carbon $start, Carbon $end): array
@@ -108,7 +134,6 @@ class BillRepository implements BillRepositoryInterface
                                ->orderBy('bills.name', 'ASC')
                                ->get(['bills.*']);
     }
-
 
     /**
      * @inheritDoc

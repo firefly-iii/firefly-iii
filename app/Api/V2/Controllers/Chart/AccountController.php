@@ -71,6 +71,8 @@ class AccountController extends Controller
      * If a transaction has foreign currency = native currency, the foreign amount will be used, no conversion
      * will take place.
      *
+     * TODO validate and set administration_id from request
+     *
      * @param DateRequest $request
      *
      * @return JsonResponse
@@ -80,15 +82,11 @@ class AccountController extends Controller
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
-        // parameters for chart:
-        $dates = $request->getAll();
         /** @var Carbon $start */
-        $start = $dates['start'];
+        $start = $this->parameters->get('start');
         /** @var Carbon $end */
-        $end = $dates['end'];
+        $end = $this->parameters->get('end');
         $end->endOfDay();
-        /** @var User $user */
-        $user = auth()->user();
 
         // user's preferences
         $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT])->pluck('id')->toArray();

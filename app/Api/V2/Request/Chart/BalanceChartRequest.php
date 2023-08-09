@@ -41,8 +41,6 @@ class BalanceChartRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'start'    => $this->getCarbonDate('start'),
-            'end'      => $this->getCarbonDate('end'),
             'accounts' => $this->getAccountList(),
             'period'   => $this->string('period'),
         ];

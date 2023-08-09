@@ -69,6 +69,9 @@ class BalanceController extends Controller
      * If the transaction being processed is already in native currency OR if the
      * foreign amount is in the native currency, the amount will not be converted.
      *
+     * TODO validate and set administration_id
+     * TODO collector set group, not user
+     *
      * @param BalanceChartRequest $request
      *
      * @return JsonResponse
@@ -78,9 +81,9 @@ class BalanceController extends Controller
     {
         $params = $request->getAll();
         /** @var Carbon $start */
-        $start = $params['start'];
+        $start = $this->parameters->get('start');
         /** @var Carbon $end */
-        $end = $params['end'];
+        $end = $this->parameters->get('end');
         $end->endOfDay();
         /** @var Collection $accounts */
         $accounts       = $params['accounts'];

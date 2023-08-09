@@ -61,6 +61,7 @@ class CategoryController extends Controller
 
     /**
      * TODO may be worth to move to a handler but the data is simple enough.
+     * TODO see autoComplete/account controller
      *
      * @param DateRequest $request
      *
@@ -69,11 +70,10 @@ class CategoryController extends Controller
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
-        $params = $request->getAll();
         /** @var Carbon $start */
-        $start = $params['start'];
+        $start = $this->parameters->get('start');
         /** @var Carbon $end */
-        $end        = $params['end'];
+        $end        = $this->parameters->get('end');
         $accounts   = $this->accountRepos->getAccountsByType([AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::ASSET, AccountType::DEFAULT]);
         $default    = app('amount')->getDefaultCurrency();
         $converter  = new ExchangeRateConverter();
