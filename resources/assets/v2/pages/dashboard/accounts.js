@@ -24,7 +24,8 @@ import {setVariable} from "../../store/set-variable.js";
 import Dashboard from "../../api/v2/chart/account/dashboard.js";
 import formatMoney from "../../util/format-money.js";
 import Get from "../../api/v1/accounts/get.js";
-import Chart from "chart.js/auto";
+//import Chart from "chart.js/auto";
+import {Chart, LineController, LineElement, PointElement, CategoryScale, LinearScale} from "chart.js";
 
 // this is very ugly, but I have no better ideas at the moment to save the currency info
 // for each series.

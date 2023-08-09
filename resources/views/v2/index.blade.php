@@ -161,10 +161,10 @@
                 <div class="col">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"><a href="#" title="Something">Bills</a></h3>
+                            <h3 class="card-title"><a href="#" title="Something">Subscriptions</a></h3>
                         </div>
-                        <div class="card-body">
-
+                        <div class="card-body" x-data="subscriptions">
+                            <canvas id="subscriptions-chart"></canvas>
                         </div>
                     </div>
                 </div>

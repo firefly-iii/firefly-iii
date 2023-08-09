@@ -1,5 +1,5 @@
 /*
- * default-chart-settings.js
+ * get.js
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,40 +18,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-function getDefaultChartSettings(type) {
-    if ('sankey' === type) {
-        return {
-            type: 'sankey',
-            data: {
-                datasets: [],
-            }
-        }
-    }
-    if ('pie' === type) {
-        return {
-            type: 'pie',
-            data: {
-                datasets: [],
-            }
-        }
-    }
-    if ('column' === type) {
-        return {
-            type: 'bar',
-            data: {
-                labels: [],
-                datasets: [],
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            },
-        };
-    }
-    return [];
-}
 
-export {getDefaultChartSettings};
+import {api} from "../../../../boot/axios";
+
+export default class Get {
+
+    /**
+     *
+     * @param params
+     * @returns {Promise<AxiosResponse<any>>}
+     */
+    get(params) {
+        return api.get('/api/v2/subscriptions', {params: params});
+    }
+
+    paid(params) {
+        return api.get('/api/v2/subscriptions/sum/paid', {params: params});
+    }
+
+    unpaid(params) {
+        return api.get('/api/v2/subscriptions/sum/unpaid', {params: params});
+    }
+}
