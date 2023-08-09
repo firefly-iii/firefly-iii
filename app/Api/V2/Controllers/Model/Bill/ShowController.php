@@ -1,8 +1,7 @@
 <?php
-
 /*
- * ListController.php
- * Copyright (c) 2022 james@firefly-iii.org
+ * ShowController.php
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,57 +19,54 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace FireflyIII\Api\V2\Controllers\Model\Budget;
+namespace FireflyIII\Api\V2\Controllers\Model\Bill;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Transformers\V2\BudgetTransformer;
+use FireflyIII\Repositories\Administration\Bill\BillRepositoryInterface;
+use FireflyIII\Transformers\V2\BillTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
- * Class ListController
+ * Class ShowController
  */
-class ListController extends Controller
+class ShowController extends Controller
 {
-    private BudgetRepositoryInterface $repository;
+    private BillRepositoryInterface $repository;
 
     public function __construct()
     {
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(BudgetRepositoryInterface::class);
-
+                $this->repository = app(BillRepositoryInterface::class);
+                $this->repository->setAdministrationId(auth()->user()->user_group_id);
                 return $next($request);
             }
         );
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/budgets/listBudgets
-     *
      * @param Request $request
+     *
+     * TODO see autocomplete/accountcontroller for list.
      *
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
-        echo 'this needs move to Administration';
-        exit;
-        $collection = $this->repository->getActiveBudgets();
-        $total      = $collection->count();
-        $collection->slice($this->pageSize * $this->parameters->get('page'), $this->pageSize);
-
-        $paginator   = new LengthAwarePaginator($collection, $total, $this->pageSize, $this->parameters->get('page'));
-        $transformer = new BudgetTransformer();
+        $this->repository->correctOrder();
+        $bills       = $this->repository->getBills();
+        $pageSize    = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $count       = $bills->count();
+        $bills       = $bills->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator   = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
+        $transformer = new BillTransformer();
+        $transformer->setParameters($this->parameters); // give params to transformer
 
         return response()
-            ->api($this->jsonApiList('budgets', $paginator, $transformer))
+            ->json($this->jsonApiList('subscriptions', $paginator, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

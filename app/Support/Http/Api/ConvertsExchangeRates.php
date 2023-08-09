@@ -42,6 +42,7 @@ trait ConvertsExchangeRates
      * @param array $set
      *
      * @return array
+     * @deprecated
      */
     public function cerChartSet(array $set): array
     {
@@ -80,6 +81,7 @@ trait ConvertsExchangeRates
 
     /**
      * @return void
+     * @deprecated
      */
     private function getPreference(): void
     {
@@ -90,6 +92,7 @@ trait ConvertsExchangeRates
      * @param int $currencyId
      *
      * @return TransactionCurrency
+     * @deprecated
      */
     private function getCurrency(int $currencyId): TransactionCurrency
     {
@@ -107,6 +110,8 @@ trait ConvertsExchangeRates
      *
      * @return string
      * @throws FireflyException
+     *
+     * @deprecated
      */
     private function getRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
     {
@@ -140,6 +145,8 @@ trait ConvertsExchangeRates
      * @param string $date
      *
      * @return string|null
+     *
+     * @deprecated
      */
     private function getFromDB(int $from, int $to, string $date): ?string
     {
@@ -178,6 +185,8 @@ trait ConvertsExchangeRates
      *
      * @return string
      * @throws FireflyException
+     *
+     * @deprecated
      */
     private function getEuroRate(TransactionCurrency $currency, Carbon $date): string
     {
@@ -212,6 +221,8 @@ trait ConvertsExchangeRates
     /**
      * @return int
      * @throws FireflyException
+     *
+     * @deprecated
      */
     private function getEuroId(): int
     {
@@ -293,6 +304,8 @@ trait ConvertsExchangeRates
      * @param Carbon|null         $date
      *
      * @return string
+     *
+     * @deprecated
      */
     private function convertAmount(string $amount, TransactionCurrency $from, TransactionCurrency $to, ?Carbon $date = null): string
     {
