@@ -26,8 +26,9 @@ import budgets from './pages/dashboard/budgets.js';
 import categories from './pages/dashboard/categories.js';
 import sankey from './pages/dashboard/sankey.js';
 import subscriptions from './pages/dashboard/subscriptions.js';
+import piggies from './pages/dashboard/piggies.js';
 
-const comps = {dates, boxes, accounts, budgets, categories, sankey, subscriptions};
+const comps = {dates, boxes, accounts, budgets, categories, sankey, subscriptions, piggies};
 
 function loadPage(comps) {
     Object.keys(comps).forEach(comp => {
