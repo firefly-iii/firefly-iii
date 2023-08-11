@@ -36,12 +36,16 @@ class ChangesForV474 extends Migration
      *
      * @return void
      */
-    public function down(): void {}
+    public function down(): void
+    {
+    }
 
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up(): void {}
+    public function up(): void
+    {
+    }
 }

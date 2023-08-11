@@ -242,7 +242,7 @@ class Bill extends Model
     protected function amountMax(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string)$value,
+            get: fn ($value) => (string)$value,
         );
     }
 
@@ -254,7 +254,7 @@ class Bill extends Model
     protected function amountMin(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => (string)$value,
+            get: fn ($value) => (string)$value,
         );
     }
 }

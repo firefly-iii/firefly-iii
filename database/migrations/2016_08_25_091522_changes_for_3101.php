@@ -33,11 +33,15 @@ class ChangesFor3101 extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void {}
+    public function down(): void
+    {
+    }
 
     /**
      * Run the migrations.
      *
      */
-    public function up(): void {}
+    public function up(): void
+    {
+    }
 }
