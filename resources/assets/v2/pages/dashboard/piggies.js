@@ -38,7 +38,7 @@ export default () => ({
         this.downloadPiggyBanks(params);
     },
     downloadPiggyBanks(params) {
-        console.log('Downloading page ' + params.page + '...');
+        // console.log('Downloading page ' + params.page + '...');
         const getter = new Get();
         getter.get(params).then((response) => {
             apiData = [...apiData, ...response.data.data];
@@ -89,7 +89,7 @@ export default () => ({
             }
         }
         this.piggies = Object.values(dataSet);
-        console.log(this.piggies);
+        // console.log(this.piggies);
     },
 
     loadPiggyBanks() {

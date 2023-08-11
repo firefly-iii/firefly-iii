@@ -85,14 +85,17 @@
                                             <a :href="'{{ route('accounts.show','') }}/' + account.id"
                                                x-text="account.name"></a>
 
-                                            <span class="small text-muted">(<span
-                                                    x-text="account.balance"></span>)</span>
+                                            <span class="small text-muted">(<template x-if="autoConversion">
+                                                                    <span x-text="account.native_balance"></span><br>
+                                                                </template>
+                                                                <template x-if="!autoConversion">
+                                                                    <span x-text="account.balance"></span><br>
+                                                                </template>)</span>
                                         </h3>
                                     </div>
                                     <div class="card-body p-0">
                                         <p class="text-center small" x-show="account.groups.length < 1">
-                                            TODO No transactions
-
+                                            {{ __('firefly.no_transactions_period') }}
                                         </p>
                                         <table class="table table-sm" x-show="account.groups.length > 0">
                                             <tbody>
@@ -127,7 +130,12 @@
                                                         </template>
                                                         <template x-for="transaction in group.transactions">
                                                             <span>
-                                                                <span x-text="transaction.amount"></span><br>
+                                                                <template x-if="autoConversion">
+                                                                    <span x-text="transaction.native_amount"></span><br>
+                                                                </template>
+                                                                <template x-if="!autoConversion">
+                                                                    <span x-text="transaction.amount"></span><br>
+                                                                </template>
                                                             </span>
                                                         </template>
                                                     </td>
@@ -168,15 +176,30 @@
                         </div>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title"><a href="#" title="Something">Spaarpotjes</a></h3>
-                        </div>
-                        <div class="card-body">
+                <div class="col" x-data="piggies">
 
+                    <template x-for="group in piggies">
+                        <div class="card mb-2">
+                            <div class="card-header">
+                                <h3 class="card-title"><a href="#" title="Something">Spaarpotjes (<span
+                                            x-text="group.title"></span>)</a></h3>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <template x-for="piggy in group.piggies">
+                                    <li class="list-group-item">
+                                        <strong x-text="piggy.name"></strong>
+                                        <div class="progress" role="progressbar" aria-label="Info example"
+                                             :aria-valuenow="piggy.percentage" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar bg-info text-dark"
+                                                 :style="'width: ' + piggy.percentage +'%'">
+                                                <span x-text="piggy.percentage + '%'"></span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </template>
+                            </ul>
                         </div>
-                    </div>
+                    </template>
                 </div>
                 <div class="col">
                     <div class="card">
@@ -184,7 +207,9 @@
                             <h3 class="card-title"><a href="#" title="Something">recurring? rules? tags?</a></h3>
                         </div>
                         <div class="card-body">
-
+                            <p>
+                                TODO
+                            </p>
                         </div>
                     </div>
                 </div>

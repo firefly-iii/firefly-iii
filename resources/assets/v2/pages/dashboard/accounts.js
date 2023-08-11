@@ -23,16 +23,15 @@ import {getVariable} from "../../store/get-variable.js";
 import {setVariable} from "../../store/set-variable.js";
 import Dashboard from "../../api/v2/chart/account/dashboard.js";
 import formatMoney from "../../util/format-money.js";
-import Get from "../../api/v1/accounts/get.js";
+import Get from "../../api/v2/model/account/get.js";
 //import Chart from "chart.js/auto";
-import {Chart, LineController, LineElement, PointElement, CategoryScale, LinearScale} from "chart.js";
+import {Chart} from "chart.js";
 
 // this is very ugly, but I have no better ideas at the moment to save the currency info
 // for each series.
 let currencies = [];
-let chart = null;
-let chartData = null;
-
+let chart      = null;
+let chartData  = null;
 export default () => ({
     loading: false,
     loadingAccounts: false,
@@ -51,7 +50,7 @@ export default () => ({
         });
     },
     generateOptions(data) {
-        currencies = [];
+        currencies  = [];
         let options = {
             type: 'line',
             data: {
@@ -62,8 +61,8 @@ export default () => ({
 
         for (let i = 0; i < data.length; i++) {
             if (data.hasOwnProperty(i)) {
-                let current = data[i];
-                let dataset = {};
+                let current    = data[i];
+                let dataset    = {};
                 let collection = [];
 
                 // if index = 0, push all keys as labels:
@@ -116,14 +115,22 @@ export default () => ({
         chart = new Chart(document.querySelector("#account-chart"), options);
     },
     loadAccounts() {
+        console.log('loadAccounts');
         if (true === this.loadingAccounts) {
+            console.log('loadAccounts CANCELLED');
             return;
         }
         this.loadingAccounts = true;
-        const max = 10;
+        if (this.accountList.length > 0) {
+            console.log('NO need to load account data');
+            this.loadingAccounts = false;
+            return;
+        }
+        console.log('loadAccounts continue!');
+        const max         = 10;
         let totalAccounts = 0;
-        let count = 0;
-        let accounts = [];
+        let count         = 0;
+        let accounts      = [];
         Promise.all([getVariable('frontpageAccounts'),]).then((values) => {
             totalAccounts = values[0].length;
             for (let i in values[0]) {
@@ -142,27 +149,31 @@ export default () => ({
                                     break;
                                 }
                                 let current = response.data.data[ii];
-                                let group = {
+                                let group   = {
                                     title: null === current.attributes.group_title ? '' : current.attributes.group_title,
                                     id: current.id,
                                     transactions: [],
                                 };
                                 for (let iii = 0; iii < current.attributes.transactions.length; iii++) {
                                     let currentTransaction = current.attributes.transactions[iii];
+                                    //console.log(currentTransaction);
                                     group.transactions.push({
-                                        description: currentTransaction.description,
-                                        id: current.id,
-                                        amount: formatMoney(currentTransaction.amount, currentTransaction.currency_code),
-                                    });
+                                                                description: currentTransaction.description,
+                                                                id: current.id,
+                                                                amount: formatMoney(currentTransaction.amount, currentTransaction.currency_code),
+                                                                native_amount: formatMoney(currentTransaction.native_amount, currentTransaction.native_code),
+                                                            });
                                 }
                                 groups.push(group);
                             }
+                            console.log(parent);
                             accounts.push({
-                                name: parent.attributes.name,
-                                id: parent.id,
-                                balance: formatMoney(parent.attributes.current_balance, parent.attributes.currency_code),
-                                groups: groups,
-                            });
+                                              name: parent.attributes.name,
+                                              id: parent.id,
+                                              balance: formatMoney(parent.attributes.current_balance, parent.attributes.currency_code),
+                                              native_balance: formatMoney(parent.attributes.native_current_balance, parent.attributes.native_code),
+                                              groups: groups,
+                                          });
                             count++;
                             if (count === totalAccounts) {
                                 this.accountList = accounts;
@@ -183,8 +194,13 @@ export default () => ({
             this.loadAccounts();
         });
         window.store.observe('end', () => {
-            chartData = null;
+            chartData        = null;
+            this.accountList = [];
             // main dashboard chart:
+            this.loadChart();
+            this.loadAccounts();
+        });
+        window.store.observe('autoConversion', () => {
             this.loadChart();
             this.loadAccounts();
         });

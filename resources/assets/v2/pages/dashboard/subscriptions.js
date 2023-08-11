@@ -70,8 +70,8 @@ export default () => ({
         });
     },
     generateOptions(data) {
-        let options = getDefaultChartSettings('pie');
-        console.log(data);
+        let options           = getDefaultChartSettings('pie');
+        // console.log(data);
         options.data.labels   = ['TODO paid', 'TODO unpaid'];
         options.data.datasets = [];
         let collection        = {};
@@ -102,7 +102,7 @@ export default () => ({
                         unpaid: 0,
                     };
                 }
-                console.log(current);
+                // console.log(current);
                 // in case of paid, add to "paid":
                 collection[currencyCode].unpaid += parseFloat(amount);
             }
