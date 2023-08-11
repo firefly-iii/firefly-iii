@@ -904,10 +904,14 @@ return [
     'rule_trigger_internal_reference_is'                  => 'Internal reference is ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Transaction journal ID is..',
     'rule_trigger_journal_id'                             => 'Transaction journal ID is ":trigger_value"',
-    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
-    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
-    'rule_trigger_any_external_url_choice'                => 'Transaction has an external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_id'                        => 'Transaction has an (any) external ID',
+    'rule_trigger_any_external_id_choice'                 => 'Transaction has an (any) external ID',
     'rule_trigger_no_external_url_choice'                 => 'Transaction has no external URL',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_no_external_id_choice'                  => 'Transaction has no external ID',
+    'rule_trigger_no_external_id'                         => 'Transaction has no external ID',
     'rule_trigger_id_choice'                              => 'Transaction ID is..',
     'rule_trigger_id'                                     => 'Transaction ID is ":trigger_value"',
     'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT is..',
@@ -1178,6 +1182,7 @@ return [
     // Ignore this comment
 
     // actions
+    // set, clear, add, remove, append/prepend
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
     'rule_action_delete_transaction'                      => 'DELETE transaction(!)',
     'rule_action_set_category'                            => 'Set category to ":action_value"',
@@ -1215,6 +1220,8 @@ return [
     'rule_action_set_notes_choice'                        => 'Set notes to ..',
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Link to bill ":action_value"',
+    'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
+    'rule_action_switch_accounts'                         => 'Switch source and destination ',
     'rule_action_set_notes'                               => 'Set notes to ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Convert the transaction to a deposit',
     'rule_action_convert_deposit'                         => 'Convert the transaction to a deposit from ":action_value"',
@@ -2603,6 +2610,7 @@ return [
     'ale_action_clear_tag'               => 'Cleared tag',
     'ale_action_clear_all_tags'          => 'Cleared all tags',
     'ale_action_set_bill'                => 'Linked to bill',
+    'ale_action_switch_accounts'         => 'Switched source and destination account',
     'ale_action_set_budget'              => 'Set budget',
     'ale_action_set_category'            => 'Set category',
     'ale_action_set_source'              => 'Set source account',
