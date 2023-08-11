@@ -1,27 +1,5 @@
 <?php
 
-/*
- * 2022_08_21_104626_add_user_groups.php
- * Copyright (c) 2022 james@firefly-iii.org
- *
- * This file is part of Firefly III (https://github.com/firefly-iii).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
-declare(strict_types=1);
-
 use Doctrine\DBAL\Schema\Exception\ColumnDoesNotExist;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\QueryException;
@@ -31,21 +9,21 @@ use Illuminate\Support\Facades\Schema;
 /**
  *
  */
-return new class () extends Migration {
+return new class extends Migration {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up(): void
     {
         try {
             Schema::table(
-                'currency_exchange_rates',
+                'object_groups',
                 function (Blueprint $table) {
-                    if (!Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
+                    if (!Schema::hasColumn('object_groups', 'user_group_id')) {
                         $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
-                        $table->foreign('user_group_id', 'cer_to_ugi')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
+                        $table->foreign('user_group_id', sprintf('%s_to_ugi', 'object_groups'))->references('id')->on('user_groups')->onDelete(
+                            'set null'
+                        )->onUpdate('cascade');
                     }
                 }
             );
@@ -57,19 +35,17 @@ return new class () extends Migration {
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {
         try {
             Schema::table(
-                'currency_exchange_rates',
+                'object_groups',
                 function (Blueprint $table) {
                     if ('sqlite' !== config('database.default')) {
-                        $table->dropForeign('cer_to_ugi');
+                        $table->dropForeign(sprintf('%s_to_ugi', 'object_groups'));
                     }
-                    if (Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
+                    if (Schema::hasColumn('object_groups', 'user_group_id')) {
                         $table->dropColumn('user_group_id');
                     }
                 }

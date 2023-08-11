@@ -89,8 +89,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'account_types', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'account_types', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -117,8 +117,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'transaction_currencies', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'transaction_currencies', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -143,8 +143,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'transaction_types', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'transaction_types', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -172,8 +172,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'jobs', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'jobs', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -195,8 +195,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'password_resets', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'password_resets', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -219,8 +219,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'permissions', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'permissions', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -243,8 +243,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'roles', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'roles', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -269,8 +269,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'permission_role', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'permission_role', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -294,8 +294,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'sessions', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'sessions', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -318,8 +318,8 @@ class CreateSupportTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'configuration', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'configuration', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }

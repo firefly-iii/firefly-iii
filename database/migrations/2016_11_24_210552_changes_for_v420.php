@@ -46,8 +46,8 @@ class ChangesForV420 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
     }
@@ -67,8 +67,8 @@ class ChangesForV420 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
     }

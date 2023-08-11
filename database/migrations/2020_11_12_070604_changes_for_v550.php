@@ -61,8 +61,8 @@ class ChangesForV550 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "jobs": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "jobs": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
 
@@ -79,8 +79,8 @@ class ChangesForV550 extends Migration
                     }
                 );
             } catch (QueryException | ColumnDoesNotExist $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
 
@@ -98,8 +98,8 @@ class ChangesForV550 extends Migration
                     }
                 );
             } catch (QueryException | ColumnDoesNotExist $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
         if (Schema::hasColumn('budget_limits', 'generated')) {
@@ -111,8 +111,8 @@ class ChangesForV550 extends Migration
                     }
                 );
             } catch (QueryException | ColumnDoesNotExist $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
 
@@ -147,8 +147,8 @@ class ChangesForV550 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "jobs": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "jobs": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
         // drop failed jobs table.
@@ -170,8 +170,8 @@ class ChangesForV550 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "failed_jobs": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "failed_jobs": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
 
@@ -188,8 +188,8 @@ class ChangesForV550 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
 
@@ -209,8 +209,8 @@ class ChangesForV550 extends Migration
                 }
             );
         } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+            app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
         }
 
         // new webhooks table
@@ -235,8 +235,8 @@ class ChangesForV550 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "webhooks": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "webhooks": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
 
@@ -260,8 +260,8 @@ class ChangesForV550 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "webhook_messages": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "webhook_messages": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
 
@@ -283,8 +283,8 @@ class ChangesForV550 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "webhook_attempts": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "webhook_attempts": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
     }

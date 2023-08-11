@@ -111,8 +111,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'accounts', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'accounts', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -130,8 +130,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'account_meta', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'account_meta', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -158,8 +158,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'piggy_banks', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'piggy_banks', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -178,8 +178,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'piggy_bank_repetitions', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'piggy_bank_repetitions', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -211,8 +211,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'attachments', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'attachments', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -245,8 +245,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'bills', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'bills', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -271,8 +271,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'budgets', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'budgets', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
         if (!Schema::hasTable('budget_limits')) {
@@ -291,8 +291,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'budget_limits', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'budget_limits', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
         if (!Schema::hasTable('limit_repetitions')) {
@@ -310,8 +310,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'limit_repetitions', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'limit_repetitions', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -338,8 +338,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'categories', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'categories', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -361,8 +361,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'preferences', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'preferences', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -387,8 +387,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'role_user', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'role_user', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -414,8 +414,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'rule_groups', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'rule_groups', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
         if (!Schema::hasTable('rules')) {
@@ -442,8 +442,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'rules', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'rules', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
         if (!Schema::hasTable('rule_actions')) {
@@ -467,8 +467,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'rule_actions', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'rule_actions', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
         if (!Schema::hasTable('rule_triggers')) {
@@ -492,8 +492,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'rule_triggers', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'rule_triggers', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -526,8 +526,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'tags', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'tags', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }
@@ -565,8 +565,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'transaction_journals', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'transaction_journals', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -585,8 +585,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'journal_meta', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'journal_meta', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -606,8 +606,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'tag_transaction_journal', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'tag_transaction_journal', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -624,8 +624,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'budget_transaction_journal', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'budget_transaction_journal', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -642,8 +642,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'category_transaction_journal', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'category_transaction_journal', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -664,8 +664,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'piggy_bank_events', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'piggy_bank_events', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -687,8 +687,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'transactions', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'transactions', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -706,8 +706,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'budget_transaction', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'budget_transaction', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
 
@@ -725,8 +725,8 @@ class CreateMainTables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'category_transaction', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'category_transaction', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }

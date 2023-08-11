@@ -81,8 +81,8 @@ class ChangesForV475 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "recurrences": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "recurrences": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
         if (!Schema::hasTable('recurrences_transactions')) {
@@ -111,8 +111,8 @@ class ChangesForV475 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "recurrences_transactions": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "recurrences_transactions": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
 
@@ -134,8 +134,8 @@ class ChangesForV475 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "recurrences_repetitions": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "recurrences_repetitions": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
 
@@ -156,8 +156,8 @@ class ChangesForV475 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "recurrences_meta": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "recurrences_meta": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
 
@@ -178,8 +178,8 @@ class ChangesForV475 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "rt_meta": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "rt_meta": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
     }
