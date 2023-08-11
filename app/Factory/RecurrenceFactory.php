@@ -107,6 +107,7 @@ class RecurrenceFactory
         $recurrence = new Recurrence(
             [
                 'user_id'             => $this->user->id,
+                'user_group_id'       => $this->user->user_group_id,
                 'transaction_type_id' => $type->id,
                 'title'               => $title,
                 'description'         => $description,

@@ -86,6 +86,7 @@ use FireflyIII\TransactionRules\Actions\SetDescription;
 use FireflyIII\TransactionRules\Actions\SetDestinationAccount;
 use FireflyIII\TransactionRules\Actions\SetNotes;
 use FireflyIII\TransactionRules\Actions\SetSourceAccount;
+use FireflyIII\TransactionRules\Actions\SwitchAccounts;
 use FireflyIII\TransactionRules\Actions\UpdatePiggybank;
 use FireflyIII\User;
 
@@ -111,7 +112,7 @@ return [
     ],
     'version'                      => '6.0.20',
     'api_version'                  => '2.0.5',
-    'db_version'                   => 19,
+    'db_version'                   => 20,
 
     // generic settings
     'maxUploadSize'                => 1073741824, // 1 GB
@@ -503,6 +504,7 @@ return [
         'convert_withdrawal'      => ConvertToWithdrawal::class,
         'convert_deposit'         => ConvertToDeposit::class,
         'convert_transfer'        => ConvertToTransfer::class,
+        'switch_accounts'         => SwitchAccounts::class,
         'update_piggy'            => UpdatePiggybank::class,
         'delete_transaction'      => DeleteTransaction::class,
         'append_descr_to_notes'   => AppendDescriptionToNotes::class,

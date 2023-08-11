@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Bắt đầu',
     'end_date'                    => 'Kết thúc',
     'enddate'                     => 'Ngày kết thúc',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Bắt đầu phạm vi',
     'end'                         => 'Kết thúc phạm vi',
     'delete_account'              => 'Xóa tài khoản ":name"',

@@ -162,7 +162,7 @@ function onAddNewAction() {
     "use strict";
     console.log('Now in onAddNewAction()');
 
-    var selectQuery = 'select[name^="actions["][name$="][type]"]';
+    var selectQuery  = 'select[name^="actions["][name$="][type]"]';
     var selectResult = $(selectQuery);
 
     console.log('Select query is "' + selectQuery + '" and the result length is ' + selectResult.length);
@@ -190,7 +190,7 @@ function onAddNewTrigger() {
     "use strict";
     console.log('Now in onAddNewTrigger()');
 
-    var selectQuery = 'select[name^="triggers["][name$="][type]"]';
+    var selectQuery  = 'select[name^="triggers["][name$="][type]"]';
     var selectResult = $(selectQuery);
 
     console.log('Select query is "' + selectQuery + '" and the result length is ' + selectResult.length);
@@ -217,9 +217,9 @@ function onAddNewTrigger() {
 function updateActionInput(selectList) {
     console.log('Now in updateActionInput() for a select list, currently with value "' + selectList.val() + '".');
     // the actual row this select list is in:
-    var parent = selectList.parent().parent();
+    var parent      = selectList.parent().parent();
     // the text input we're looking for:
-    var inputQuery = 'input[name^="actions["][name$="][value]"]';
+    var inputQuery  = 'input[name^="actions["][name$="][value]"]';
     var inputResult = parent.find(inputQuery);
 
     console.log('Searching for children in this row with query "' + inputQuery + '" resulted in ' + inputResult.length + ' results.');
@@ -234,6 +234,7 @@ function updateActionInput(selectList) {
         case 'clear_budget':
         case 'append_descr_to_notes':
         case 'append_notes_to_descr':
+        case 'switch_accounts':
         case 'move_descr_to_notes':
         case 'move_notes_to_descr':
         case 'clear_notes':
@@ -296,9 +297,9 @@ function updateActionInput(selectList) {
 function updateTriggerInput(selectList) {
     console.log('Now in updateTriggerInput() for a select list, currently with value "' + selectList.val() + '".');
     // the actual row this select list is in:
-    var parent = selectList.parent().parent();
+    var parent      = selectList.parent().parent();
     // the text input we're looking for:
-    var inputQuery = 'input[name^="triggers["][name$="][value]"]';
+    var inputQuery  = 'input[name^="triggers["][name$="][value]"]';
     var inputResult = parent.find(inputQuery);
 
     console.log('Searching for children in this row with query "' + inputQuery + '" resulted in ' + inputResult.length + ' results.');
@@ -391,50 +392,50 @@ function createAutoComplete(input, URL) {
     input.typeahead('destroy');
 
     // append URL:
-    var lastChar = URL[URL.length - 1];
+    var lastChar      = URL[URL.length - 1];
     var urlParamSplit = '?';
     if ('&' === lastChar) {
         urlParamSplit = '';
     }
     var source = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {
-            url: URL + urlParamSplit + 'uid=' + uid,
-            filter: function (list) {
-                return $.map(list, function (item) {
-                    if (item.hasOwnProperty('active') && item.active === true) {
-                        return {name: item.name};
-                    }
-                    if (item.hasOwnProperty('active') && item.active === false) {
-                        return;
-                    }
-                    if (item.hasOwnProperty('active')) {
-                        console.log(item.active);
-                    }
-                    return {name: item.name};
-                });
-            }
-        },
-        remote: {
-            url: URL + urlParamSplit + 'query=%QUERY&uid=' + uid,
-            wildcard: '%QUERY',
-            filter: function (list) {
-                return $.map(list, function (item) {
-                    if (item.hasOwnProperty('active') && item.active === true) {
-                        return {name: item.name};
-                    }
-                    if (item.hasOwnProperty('active') && item.active === false) {
-                        return;
-                    }
-                    if (item.hasOwnProperty('active')) {
-                        console.log(item.active);
-                    }
-                    return {name: item.name};
-                });
-            }
-        }
-    });
+                                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                    prefetch: {
+                                        url: URL + urlParamSplit + 'uid=' + uid,
+                                        filter: function (list) {
+                                            return $.map(list, function (item) {
+                                                if (item.hasOwnProperty('active') && item.active === true) {
+                                                    return {name: item.name};
+                                                }
+                                                if (item.hasOwnProperty('active') && item.active === false) {
+                                                    return;
+                                                }
+                                                if (item.hasOwnProperty('active')) {
+                                                    console.log(item.active);
+                                                }
+                                                return {name: item.name};
+                                            });
+                                        }
+                                    },
+                                    remote: {
+                                        url: URL + urlParamSplit + 'query=%QUERY&uid=' + uid,
+                                        wildcard: '%QUERY',
+                                        filter: function (list) {
+                                            return $.map(list, function (item) {
+                                                if (item.hasOwnProperty('active') && item.active === true) {
+                                                    return {name: item.name};
+                                                }
+                                                if (item.hasOwnProperty('active') && item.active === false) {
+                                                    return;
+                                                }
+                                                if (item.hasOwnProperty('active')) {
+                                                    console.log(item.active);
+                                                }
+                                                return {name: item.name};
+                                            });
+                                        }
+                                    }
+                                });
     source.initialize();
     input.typeahead({hint: true, highlight: true,}, {source: source, displayKey: 'name', autoSelect: false});
 }

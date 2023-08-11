@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Αρχή του εύρους',
     'end_date'                    => 'Τέλος του εύρους',
     'enddate'                     => 'Ημερομηνία λήξης',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Αρχή του εύρους',
     'end'                         => 'Τέλος του εύρους',
     'delete_account'              => 'Διαγραφή λογαριασμού ":name"',

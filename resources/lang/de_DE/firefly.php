@@ -864,12 +864,12 @@ return [
     'rule_trigger_transaction_type'                       => 'Buchung ist vom Typ ":trigger_value"',
     'rule_trigger_category_is_choice'                     => 'Kategorie ist..',
     'rule_trigger_category_is'                            => 'Kategorie ist ":trigger_value"',
-    'rule_trigger_amount_less_choice'                     => 'Betrag ist geringer als..',
-    'rule_trigger_amount_less'                            => 'Betrag ist kleiner als :trigger_value',
+    'rule_trigger_amount_less_choice'                     => 'Amount is less than or equal to ..',
+    'rule_trigger_amount_less'                            => 'Amount is less than or equal to :trigger_value',
     'rule_trigger_amount_is_choice'                       => 'Betrag ist..',
     'rule_trigger_amount_is'                              => 'Betrag lautet :trigger_value',
-    'rule_trigger_amount_more_choice'                     => 'Betrag ist mehr als..',
-    'rule_trigger_amount_more'                            => 'Betrag ist größer als :trigger_value',
+    'rule_trigger_amount_more_choice'                     => 'Amount is more than or equal to..',
+    'rule_trigger_amount_more'                            => 'Amount is more than or equal to :trigger_value',
     'rule_trigger_description_starts_choice'              => 'Beschreibung beginnt mit..',
     'rule_trigger_description_starts'                     => 'Beschreibung beginnt mit ":trigger_value"',
     'rule_trigger_description_ends_choice'                => 'Beschreibung endet mit..',
@@ -934,10 +934,14 @@ return [
     'rule_trigger_internal_reference_is'                  => 'Interne Referenz ist ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Transaktions-Journal-ID ist..',
     'rule_trigger_journal_id'                             => 'Transaktions-Journal-ID ist „:trigger_value”',
-    'rule_trigger_no_external_url'                        => 'Buchung hat keine externe URL',
-    'rule_trigger_any_external_url'                       => 'Buchung hat eine externe URL',
-    'rule_trigger_any_external_url_choice'                => 'Buchung hat eine externe URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_id'                        => 'Transaction has an (any) external ID',
+    'rule_trigger_any_external_id_choice'                 => 'Transaction has an (any) external ID',
     'rule_trigger_no_external_url_choice'                 => 'Buchung hat keine externe URL',
+    'rule_trigger_no_external_url'                        => 'Buchung hat keine externe URL',
+    'rule_trigger_no_external_id_choice'                  => 'Transaction has no external ID',
+    'rule_trigger_no_external_id'                         => 'Transaction has no external ID',
     'rule_trigger_id_choice'                              => 'Buchungskennung lautet..',
     'rule_trigger_id'                                     => 'Buchungskennung lautet „:trigger_value”',
     'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT ist...',
@@ -1218,6 +1222,7 @@ return [
 
 
     // actions
+    // set, clear, add, remove, append/prepend
     'rule_action_delete_transaction_choice'               => 'Buchung LÖSCHEN(!)',
     'rule_action_delete_transaction'                      => 'Buchung LÖSCHEN(!)',
     'rule_action_set_category'                            => 'Kategorie auf ":action_value" setzen',
@@ -1255,6 +1260,8 @@ return [
     'rule_action_set_notes_choice'                        => 'Setze Notizen auf ..',
     'rule_action_link_to_bill_choice'                     => 'Mit einer Rechnung verknüpfen..',
     'rule_action_link_to_bill'                            => 'Mit Rechnung „:action_value” verknüpfen',
+    'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
+    'rule_action_switch_accounts'                         => 'Switch source and destination ',
     'rule_action_set_notes'                               => 'Notizen auf „:action_value” setzen',
     'rule_action_convert_deposit_choice'                  => 'Buchung in eine Einnahme umwandeln',
     'rule_action_convert_deposit'                         => 'Buchung von ":action_value" in eine Einnahme umwandeln',
@@ -2703,6 +2710,7 @@ return [
     'ale_action_clear_tag'               => 'Schlagwort geleert',
     'ale_action_clear_all_tags'          => 'Alle Schlagwörter geleert',
     'ale_action_set_bill'                => 'Verknüpft mit Rechnung',
+    'ale_action_switch_accounts'         => 'Switched source and destination account',
     'ale_action_set_budget'              => 'Budget festlegen',
     'ale_action_set_category'            => 'Kategorie festlegen',
     'ale_action_set_source'              => 'Quellkonto festlegen',
@@ -2715,8 +2723,8 @@ return [
     'ale_action_add_tag'                 => 'Schlagwort hinzugefügt',
 
     // dashboard
-    'enable_auto_convert'                => 'Enable currency conversion',
-    'disable_auto_convert'               => 'Disable currency conversion',
+    'enable_auto_convert'                => 'Währungsumrechnung aktivieren',
+    'disable_auto_convert'               => 'Währungsumrechnung deaktivieren',
 
 ];
 

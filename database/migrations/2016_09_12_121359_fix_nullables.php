@@ -57,8 +57,8 @@ class FixNullables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_UPDATE_ERROR, 'rule_groups', $e->getMessage()));
-                Log::error(self::COLUMN_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_UPDATE_ERROR, 'rule_groups', $e->getMessage()));
+                app('log')->error(self::COLUMN_ALREADY_EXISTS);
             }
         }
 
@@ -71,8 +71,8 @@ class FixNullables extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_UPDATE_ERROR, 'rules', $e->getMessage()));
-                Log::error(self::COLUMN_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_UPDATE_ERROR, 'rules', $e->getMessage()));
+                app('log')->error(self::COLUMN_ALREADY_EXISTS);
             }
         }
     }

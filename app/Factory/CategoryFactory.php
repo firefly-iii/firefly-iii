@@ -70,8 +70,9 @@ class CategoryFactory
             try {
                 return Category::create(
                     [
-                        'user_id' => $this->user->id,
-                        'name'    => $categoryName,
+                        'user_id'       => $this->user->id,
+                        'user_group_id' => $this->user->user_group_id,
+                        'name'          => $categoryName,
                     ]
                 );
             } catch (QueryException $e) {

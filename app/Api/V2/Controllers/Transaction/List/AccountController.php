@@ -80,9 +80,11 @@ class AccountController extends Controller
 
         $paginator = $collector->getPaginatedGroups();
         $paginator->setPath(
-            sprintf('%s?%s',
-                    route('api.v2.accounts.transactions', [$account->id]),
-                    $request->buildParams())
+            sprintf(
+                '%s?%s',
+                route('api.v2.accounts.transactions', [$account->id]),
+                $request->buildParams()
+            )
         );
 
         return response()

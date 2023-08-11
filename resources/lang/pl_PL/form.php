@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Początek zakresu',
     'end_date'                    => 'Koniec zakresu',
     'enddate'                     => 'Data końcowa',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Początek zakresu',
     'end'                         => 'Koniec zakresu',
     'delete_account'              => 'Usuń konto ":name"',

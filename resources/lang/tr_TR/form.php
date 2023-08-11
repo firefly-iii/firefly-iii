@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Sayfa başlangıcı',
     'end_date'                    => 'Kapsama alanı dışında',
     'enddate'                     => 'End date',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Start of range',
     'end'                         => 'End of range',
     'delete_account'              => '":name" adlı hesabı sil',

@@ -130,6 +130,7 @@ class Bill extends Model
             'match',
             'amount_min',
             'user_id',
+            'user_group_id',
             'amount_max',
             'date',
             'repeat_freq',

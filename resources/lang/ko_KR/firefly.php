@@ -151,7 +151,7 @@ return [
     'destination_account'                  => '대상 계정',
     'destination_account_reconciliation'   => '조정 거래의 대상 계정은 편집할 수 없습니다.',
     'sum_of_expenses_in_budget'            => '":budget" 예산에서 총 지출',
-    'left_in_budget_limit'                 => '예산 책정에 따라 지출',
+    'left_in_budget_limit'                 => '예산 책정에 따른 남은 지출',
     'current_period'                       => '현재 기간',
     'show_the_current_period_and_overview' => '현재 기간 및 걔요 표시',
     'pref_languages_locale'                => '영어 외의 언어가 제대로 동작하려면 운영 체제에 올바른 로케일 정보가 있어야 합니다. 그렇지 않은 경우 통화 데이터, 날짜 및 금액의 형식이 잘못 지정될 수 있습니다.',
@@ -864,12 +864,12 @@ return [
     'rule_trigger_transaction_type'                       => '거래는 ":trigger_value" 유형입니다',
     'rule_trigger_category_is_choice'                     => '카테고리는 ..',
     'rule_trigger_category_is'                            => '카테고리는 ":trigger_value"입니다',
-    'rule_trigger_amount_less_choice'                     => '금액이 ... 미만입니다',
-    'rule_trigger_amount_less'                            => '금액이 :trigger_value 미만입니다.',
+    'rule_trigger_amount_less_choice'                     => 'Amount is less than or equal to ..',
+    'rule_trigger_amount_less'                            => 'Amount is less than or equal to :trigger_value',
     'rule_trigger_amount_is_choice'                       => '금액은..',
     'rule_trigger_amount_is'                              => '금액은 :trigger_value입니다',
-    'rule_trigger_amount_more_choice'                     => '금액이 ... 이상입니다',
-    'rule_trigger_amount_more'                            => '금액이 :trigger_value 이상입니다',
+    'rule_trigger_amount_more_choice'                     => 'Amount is more than or equal to..',
+    'rule_trigger_amount_more'                            => 'Amount is more than or equal to :trigger_value',
     'rule_trigger_description_starts_choice'              => '설명이 ..로 시작합니다',
     'rule_trigger_description_starts'                     => '설명이 ":trigger_value"로 시작합니다',
     'rule_trigger_description_ends_choice'                => '설명이 ..로 끝납니다',
@@ -934,10 +934,14 @@ return [
     'rule_trigger_internal_reference_is'                  => '내부 참조는 ":trigger_value"임',
     'rule_trigger_journal_id_choice'                      => '거래 저널 ID는..',
     'rule_trigger_journal_id'                             => '거래 저널 ID는 ":trigger_value"임',
-    'rule_trigger_no_external_url'                        => '거래에 외부 URL이 없습니다',
-    'rule_trigger_any_external_url'                       => '거래에 외부 URL이 없습니다',
-    'rule_trigger_any_external_url_choice'                => '거래에 외부 URL이 없습니다',
+    'rule_trigger_any_external_url'                       => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_id'                        => 'Transaction has an (any) external ID',
+    'rule_trigger_any_external_id_choice'                 => 'Transaction has an (any) external ID',
     'rule_trigger_no_external_url_choice'                 => '거래에 외부 URL이 없습니다',
+    'rule_trigger_no_external_url'                        => '거래에 외부 URL이 없습니다',
+    'rule_trigger_no_external_id_choice'                  => 'Transaction has no external ID',
+    'rule_trigger_no_external_id'                         => 'Transaction has no external ID',
     'rule_trigger_id_choice'                              => '거래 ID는..',
     'rule_trigger_id'                                     => '거래 ID는 ":trigger_value"임',
     'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT는..',
@@ -1218,6 +1222,7 @@ return [
 
 
     // actions
+    // set, clear, add, remove, append/prepend
     'rule_action_delete_transaction_choice'               => '거래 삭제(!)',
     'rule_action_delete_transaction'                      => '거래 삭제(!)',
     'rule_action_set_category'                            => '카테고리를 ":action_value"로 설정',
@@ -1255,6 +1260,8 @@ return [
     'rule_action_set_notes_choice'                        => '노트를 ..로 설정',
     'rule_action_link_to_bill_choice'                     => '청구서 링크 ..',
     'rule_action_link_to_bill'                            => '청구서 링크 ":action_value"',
+    'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
+    'rule_action_switch_accounts'                         => 'Switch source and destination ',
     'rule_action_set_notes'                               => '노트를 ":action_value"로 설정',
     'rule_action_convert_deposit_choice'                  => '거래를 입금으로 전환',
     'rule_action_convert_deposit'                         => '":action_value"에서 거래를 입금으로 전환합니다',
@@ -2280,7 +2287,7 @@ return [
     'left_to_spend'                             => '남은 지출',
     'earned'                                    => '수입',
     'overspent'                                 => '초과 지출',
-    'left'                                      => '왼쪽',
+    'left'                                      => '남음',
     'max-amount'                                => '최대 금액',
     'min-amount'                                => '최소 금액',
     'journal-amount'                            => '현재 청구서 항목',
@@ -2703,6 +2710,7 @@ return [
     'ale_action_clear_tag'               => '삭제된 태그',
     'ale_action_clear_all_tags'          => '모든 태그 지우기',
     'ale_action_set_bill'                => '청구서에 연결됨',
+    'ale_action_switch_accounts'         => 'Switched source and destination account',
     'ale_action_set_budget'              => '예산 설정',
     'ale_action_set_category'            => '카테고리 설정',
     'ale_action_set_source'              => '소스 계정 설정',
@@ -2715,8 +2723,8 @@ return [
     'ale_action_add_tag'                 => '태그 추가',
 
     // dashboard
-    'enable_auto_convert'                => 'Enable currency conversion',
-    'disable_auto_convert'               => 'Disable currency conversion',
+    'enable_auto_convert'                => '통화 변환 활성화',
+    'disable_auto_convert'               => '통화 변환 비활성화',
 
 ];
 

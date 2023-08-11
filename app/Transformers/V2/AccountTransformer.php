@@ -37,10 +37,11 @@ use Illuminate\Support\Collection;
  */
 class AccountTransformer extends AbstractTransformer
 {
-    private array                $accountMeta;
-    private array                $balances;
-    private array                $currencies;
-    private ?TransactionCurrency $currency;
+    private array               $accountMeta;
+    private array               $balances;
+    private array               $convertedBalances;
+    private array               $currencies;
+    private TransactionCurrency $default;
 
     /**
      * @inheritDoc
@@ -48,12 +49,12 @@ class AccountTransformer extends AbstractTransformer
      */
     public function collectMetaData(Collection $objects): void
     {
-        $this->currency    = null;
-        $this->currencies  = [];
-        $this->accountMeta = [];
-        $this->balances    = app('steam')->balancesByAccounts($objects, $this->getDate());
-        $repository        = app(CurrencyRepositoryInterface::class);
-        $this->currency    = app('amount')->getDefaultCurrency();
+        $this->currencies        = [];
+        $this->accountMeta       = [];
+        $this->balances          = app('steam')->balancesByAccounts($objects, $this->getDate());
+        $this->convertedBalances = app('steam')->balancesByAccountsConverted($objects, $this->getDate());
+        $repository              = app(CurrencyRepositoryInterface::class);
+        $this->default           = app('amount')->getDefaultCurrency();
 
         // get currencies:
         $accountIds  = $objects->pluck('id')->toArray();
@@ -100,10 +101,13 @@ class AccountTransformer extends AbstractTransformer
         $id = (int)$account->id;
 
         // no currency? use default
-        $currency = $this->currency;
+        $currency = $this->default;
         if (0 !== (int)$this->accountMeta[$id]['currency_id']) {
             $currency = $this->currencies[(int)$this->accountMeta[$id]['currency_id']];
         }
+        // amounts and calculation.
+        $balance       = $this->balances[$id] ?? null;
+        $nativeBalance = $this->convertedBalances[$id]['native_balance'] ?? null;
 
         return [
             'id'                      => (string)$account->id,
@@ -112,19 +116,30 @@ class AccountTransformer extends AbstractTransformer
             'active'                  => $account->active,
             //'order'                   => $order,
             'name'                    => $account->name,
+            'iban'                    => '' === $account->iban ? null : $account->iban,
             //            'type'                    => strtolower($accountType),
             //            'account_role'            => $accountRole,
-            'currency_id'             => $currency->id,
+            'currency_id'             => (string)$currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => $currency->decimal_places,
-            'current_balance'         => $this->balances[$id] ?? null,
-            'current_balance_date'    => $this->getDate(),
+            'currency_decimal_places' => (int)$currency->decimal_places,
+
+            'native_id'              => (string)$this->default->id,
+            'native_code'            => $this->default->code,
+            'native_symbol'          => $this->default->symbol,
+            'native_decimal_places'  => (int)$this->default->decimal_places,
+
+            // balance:
+            'current_balance'        => $balance,
+            'native_current_balance' => $nativeBalance,
+            'current_balance_date'   => $this->getDate(),
+
+            // more meta
+
             //            'notes'                   => $this->repository->getNoteText($account),
             //            'monthly_payment_date'    => $monthlyPaymentDate,
             //            'credit_card_type'        => $creditCardType,
             //            'account_number'          => $this->repository->getMetaValue($account, 'account_number'),
-            'iban'                    => '' === $account->iban ? null : $account->iban,
             //            'bic'                     => $this->repository->getMetaValue($account, 'BIC'),
             //            'virtual_balance'         => number_format((float) $account->virtual_balance, $decimalPlaces, '.', ''),
             //            'opening_balance'         => $openingBalance,
@@ -138,7 +153,7 @@ class AccountTransformer extends AbstractTransformer
             //            'longitude'               => $longitude,
             //            'latitude'                => $latitude,
             //            'zoom_level'              => $zoomLevel,
-            'links'                   => [
+            'links'                  => [
                 [
                     'rel' => 'self',
                     'uri' => '/accounts/' . $account->id,

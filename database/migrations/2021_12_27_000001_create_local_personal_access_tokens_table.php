@@ -61,8 +61,8 @@ class CreateLocalPersonalAccessTokensTable extends Migration
                     $table->timestamps();
                 });
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "personal_access_tokens": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "personal_access_tokens": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
     }

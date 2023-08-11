@@ -864,12 +864,12 @@ return [
     'rule_trigger_transaction_type'                       => 'La transacción es de tipo ":trigger_value"',
     'rule_trigger_category_is_choice'                     => 'Categoría es..',
     'rule_trigger_category_is'                            => 'Categoría es ":trigger_value"',
-    'rule_trigger_amount_less_choice'                     => 'Cantidad es menos de..',
-    'rule_trigger_amount_less'                            => 'La cantidad es menor que :trigger_value',
+    'rule_trigger_amount_less_choice'                     => 'Amount is less than or equal to ..',
+    'rule_trigger_amount_less'                            => 'Amount is less than or equal to :trigger_value',
     'rule_trigger_amount_is_choice'                       => 'Cantidad es..',
     'rule_trigger_amount_is'                              => 'Cantidad es :trigger_value',
-    'rule_trigger_amount_more_choice'                     => 'Cantidad es mas de..',
-    'rule_trigger_amount_more'                            => 'Cantidad es más de :trigger_value',
+    'rule_trigger_amount_more_choice'                     => 'Amount is more than or equal to..',
+    'rule_trigger_amount_more'                            => 'Amount is more than or equal to :trigger_value',
     'rule_trigger_description_starts_choice'              => 'Descripción comienza con..',
     'rule_trigger_description_starts'                     => 'La descripción comienza con ":trigger_value"',
     'rule_trigger_description_ends_choice'                => 'Descripción termina con..',
@@ -934,10 +934,14 @@ return [
     'rule_trigger_internal_reference_is'                  => 'La referencia interna es ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'El ID del diario de transacciones es..',
     'rule_trigger_journal_id'                             => 'El ID del diario de transacciones es ":trigger_value"',
-    'rule_trigger_no_external_url'                        => 'La transacción no tiene URL externa',
-    'rule_trigger_any_external_url'                       => 'La transacción tiene una URL externa',
-    'rule_trigger_any_external_url_choice'                => 'La transacción tiene una URL externa',
+    'rule_trigger_any_external_url'                       => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_id'                        => 'Transaction has an (any) external ID',
+    'rule_trigger_any_external_id_choice'                 => 'Transaction has an (any) external ID',
     'rule_trigger_no_external_url_choice'                 => 'La transacción no tiene URL externa',
+    'rule_trigger_no_external_url'                        => 'La transacción no tiene URL externa',
+    'rule_trigger_no_external_id_choice'                  => 'Transaction has no external ID',
+    'rule_trigger_no_external_id'                         => 'Transaction has no external ID',
     'rule_trigger_id_choice'                              => 'La ID de la transacción es..',
     'rule_trigger_id'                                     => 'La ID de la transacción es ":trigger_value"',
     'rule_trigger_sepa_ct_is_choice'                      => 'El SEPA CT es..',
@@ -1218,6 +1222,7 @@ return [
 
 
     // actions
+    // set, clear, add, remove, append/prepend
     'rule_action_delete_transaction_choice'               => 'ELIMINAR transacción(!)',
     'rule_action_delete_transaction'                      => 'ELIMINAR transacción(!)',
     'rule_action_set_category'                            => 'Establecer categoría en ":action_value"',
@@ -1255,6 +1260,8 @@ return [
     'rule_action_set_notes_choice'                        => 'Establecer nota ..',
     'rule_action_link_to_bill_choice'                     => 'Enlazar a una factura ..',
     'rule_action_link_to_bill'                            => 'Enlace a una factura ":action_value"',
+    'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
+    'rule_action_switch_accounts'                         => 'Switch source and destination ',
     'rule_action_set_notes'                               => 'Establecer notas para:action_value',
     'rule_action_convert_deposit_choice'                  => 'Convertir transacción en un ingreso',
     'rule_action_convert_deposit'                         => 'Convertir transacción en un ingreso de ":action_value"',
@@ -2703,6 +2710,7 @@ return [
     'ale_action_clear_tag'               => 'Etiqueta limpiada',
     'ale_action_clear_all_tags'          => 'Limpiar todas las etiquetas',
     'ale_action_set_bill'                => 'Vinculado a la factura',
+    'ale_action_switch_accounts'         => 'Switched source and destination account',
     'ale_action_set_budget'              => 'Establecer presupuesto',
     'ale_action_set_category'            => 'Establecer categoría',
     'ale_action_set_source'              => 'Establecer cuenta de origen',
@@ -2715,8 +2723,8 @@ return [
     'ale_action_add_tag'                 => 'Etiqueta añadida',
 
     // dashboard
-    'enable_auto_convert'                => 'Enable currency conversion',
-    'disable_auto_convert'               => 'Disable currency conversion',
+    'enable_auto_convert'                => 'Habilitar conversión de moneda',
+    'disable_auto_convert'               => 'Deshabilitar conversión de moneda',
 
 ];
 

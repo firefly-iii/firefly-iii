@@ -47,11 +47,11 @@ class ExchangeRateSeeder extends Seeder
             app('log')->debug('Will not seed exchange rates yet.');
             return;
         }
-        $users = User::get();
-        $date = config('cer.date');
-        $rates = config('cer.rates');
+        $users  = User::get();
+        $date   = config('cer.date');
+        $rates  = config('cer.rates');
         $usable = [];
-        $euro = $this->getCurrency('EUR');
+        $euro   = $this->getCurrency('EUR');
         if (null === $euro) {
             return;
         }
@@ -88,28 +88,28 @@ class ExchangeRateSeeder extends Seeder
     }
 
     /**
-     * @param User $user
+     * @param User                $user
      * @param TransactionCurrency $from
      * @param TransactionCurrency $to
-     * @param string $date
+     * @param string              $date
      *
      * @return bool
      */
     private function hasRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date): bool
     {
         return $user->currencyExchangeRates()
-                ->where('from_currency_id', $from->id)
-                ->where('to_currency_id', $to->id)
-                ->where('date', $date)
-                ->count() > 0;
+                    ->where('from_currency_id', $from->id)
+                    ->where('to_currency_id', $to->id)
+                    ->where('date', $date)
+                    ->count() > 0;
     }
 
     /**
-     * @param User $user
+     * @param User                $user
      * @param TransactionCurrency $from
      * @param TransactionCurrency $to
-     * @param string $date
-     * @param float $rate
+     * @param string              $date
+     * @param float               $rate
      *
      * @return void
      */
@@ -117,12 +117,12 @@ class ExchangeRateSeeder extends Seeder
     {
         CurrencyExchangeRate::create(
             [
-                'user_id' => $user->id,
-                'user_group_id' => $user->user_group_id ?? null,
+                'user_id'          => $user->id,
+                'user_group_id'    => $user->user_group_id ?? null,
                 'from_currency_id' => $from->id,
-                'to_currency_id' => $to->id,
-                'date' => $date,
-                'rate' => $rate,
+                'to_currency_id'   => $to->id,
+                'date'             => $date,
+                'rate'             => $rate,
             ]
         );
     }

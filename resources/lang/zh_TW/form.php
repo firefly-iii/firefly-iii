@@ -147,6 +147,7 @@ return [
     'start_date'                  => '範圍起點',
     'end_date'                    => '範圍終點',
     'enddate'                     => 'End date',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Start of range',
     'end'                         => 'End of range',
     'delete_account'              => '刪除帳戶 ":name"',

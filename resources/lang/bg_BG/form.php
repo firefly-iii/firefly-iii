@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Начало на обхвата',
     'end_date'                    => 'Край на обхвата',
     'enddate'                     => 'End date',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Начало на обхвата',
     'end'                         => 'Край на обхвата',
     'delete_account'              => 'Изтрий сметка ":name"',

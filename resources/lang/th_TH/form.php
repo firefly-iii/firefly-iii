@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Start of range',
     'end_date'                    => 'End of range',
     'enddate'                     => 'End date',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Start of range',
     'end'                         => 'End of range',
     'delete_account'              => 'Delete account ":name"',

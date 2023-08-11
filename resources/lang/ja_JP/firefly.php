@@ -90,7 +90,7 @@ return [
     'new_asset_account'                    => '新しい資産口座',
     'new_expense_account'                  => '新しい支出口座',
     'new_revenue_account'                  => '新しい収入口座',
-    'new_liabilities_account'              => '新しい借金',
+    'new_liabilities_account'              => '新しい債務',
     'new_budget'                           => '新しい予算',
     'new_bill'                             => '新しい請求',
     'block_account_logout'                 => 'あなたはログアウトしました。ブロックされたアカウントはこのサイトを使うことが出来ません。有効なメールアドレスで登録しましたか？',
@@ -864,12 +864,12 @@ return [
     'rule_trigger_transaction_type'                       => '取引種別が「:trigger_value」',
     'rule_trigger_category_is_choice'                     => 'カテゴリが…',
     'rule_trigger_category_is'                            => 'カテゴリが「:trigger_value」',
-    'rule_trigger_amount_less_choice'                     => '金額が…より小さい',
-    'rule_trigger_amount_less'                            => '金額が:trigger_valueより小さい',
+    'rule_trigger_amount_less_choice'                     => 'Amount is less than or equal to ..',
+    'rule_trigger_amount_less'                            => 'Amount is less than or equal to :trigger_value',
     'rule_trigger_amount_is_choice'                       => '金額が…',
     'rule_trigger_amount_is'                              => '金額が「:trigger_value」',
-    'rule_trigger_amount_more_choice'                     => '金額が…より大きい',
-    'rule_trigger_amount_more'                            => '金額が:trigger_valueより大きい',
+    'rule_trigger_amount_more_choice'                     => 'Amount is more than or equal to..',
+    'rule_trigger_amount_more'                            => 'Amount is more than or equal to :trigger_value',
     'rule_trigger_description_starts_choice'              => '説明が…で始まる',
     'rule_trigger_description_starts'                     => '説明が「:trigger_value」で始まる',
     'rule_trigger_description_ends_choice'                => '説明が…で終わる',
@@ -934,10 +934,14 @@ return [
     'rule_trigger_internal_reference_is'                  => '内部参照が「:trigger_value」',
     'rule_trigger_journal_id_choice'                      => '取引IDが…',
     'rule_trigger_journal_id'                             => '取引IDが「:trigger_value」',
-    'rule_trigger_no_external_url'                        => '外部 URL がない取引',
-    'rule_trigger_any_external_url'                       => '外部 URL がある取引',
-    'rule_trigger_any_external_url_choice'                => '取引に外部 URL がある',
+    'rule_trigger_any_external_url'                       => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_id'                        => 'Transaction has an (any) external ID',
+    'rule_trigger_any_external_id_choice'                 => 'Transaction has an (any) external ID',
     'rule_trigger_no_external_url_choice'                 => '取引に外部 URL がない',
+    'rule_trigger_no_external_url'                        => '外部 URL がない取引',
+    'rule_trigger_no_external_id_choice'                  => 'Transaction has no external ID',
+    'rule_trigger_no_external_id'                         => 'Transaction has no external ID',
     'rule_trigger_id_choice'                              => '取引IDが…',
     'rule_trigger_id'                                     => '取引IDが「:trigger_value」',
     'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CTが...',
@@ -1218,6 +1222,7 @@ return [
 
 
     // actions
+    // set, clear, add, remove, append/prepend
     'rule_action_delete_transaction_choice'               => '取引を削除 (!)',
     'rule_action_delete_transaction'                      => '取引を削除 (!)',
     'rule_action_set_category'                            => 'カテゴリを「:action_value」に設定',
@@ -1255,6 +1260,8 @@ return [
     'rule_action_set_notes_choice'                        => '備考に...を設定',
     'rule_action_link_to_bill_choice'                     => '請求...にリンク',
     'rule_action_link_to_bill'                            => '請求「:action_value」にリンク',
+    'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
+    'rule_action_switch_accounts'                         => 'Switch source and destination ',
     'rule_action_set_notes'                               => '備考に「:action_value」を設定',
     'rule_action_convert_deposit_choice'                  => '取引を入金に変換',
     'rule_action_convert_deposit'                         => '取引を「:action_value」からの入金に変換する',
@@ -2132,7 +2139,7 @@ return [
     'debt_start_date'                           => '借金の開始日',
     'debt_start_amount'                         => '借金の開始金額',
     'debt_start_amount_help'                    => 'この値は負の値に設定すべきです。詳細については、ヘルプページ (右上？アイコン) をご覧ください。',
-    'interest_period_help'                      => 'この項目は表面的であり、計算はされません。 銀行はとてもずるいので、Firefly III は正しく理解できません。',
+    'interest_period_help'                      => 'この項目は表面的であり計算はされません。 銀行はとてもずるいので、Firefly III は正しく理解できません。',
     'store_new_liabilities_account'             => '債務を保存',
     'edit_liabilities_account'                  => '貯金箱「:name」を編集',
     'financial_control'                         => '財務管理',
@@ -2703,6 +2710,7 @@ return [
     'ale_action_clear_tag'               => '削除されたタグ',
     'ale_action_clear_all_tags'          => '削除されたすべてのタグ',
     'ale_action_set_bill'                => '請求にリンクされました',
+    'ale_action_switch_accounts'         => 'Switched source and destination account',
     'ale_action_set_budget'              => '予算を設定する',
     'ale_action_set_category'            => 'カテゴリを設定する',
     'ale_action_set_source'              => '引き出し口座を設定',
@@ -2715,8 +2723,8 @@ return [
     'ale_action_add_tag'                 => '追加したタグ',
 
     // dashboard
-    'enable_auto_convert'                => 'Enable currency conversion',
-    'disable_auto_convert'               => 'Disable currency conversion',
+    'enable_auto_convert'                => '通貨の変換を有効にする',
+    'disable_auto_convert'               => '通貨の変換を無効にする',
 
 ];
 

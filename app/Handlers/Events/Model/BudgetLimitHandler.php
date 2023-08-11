@@ -131,6 +131,7 @@ class BudgetLimitHandler
                     $availableBudget = new AvailableBudget(
                         [
                             'user_id'                 => $budgetLimit->budget->user->id,
+                            'user_group_id'           => $budgetLimit->budget->user->user_group_id,
                             'transaction_currency_id' => $budgetLimit->transaction_currency_id,
                             'start_date'              => $current,
                             'end_date'                => $currentEnd,
