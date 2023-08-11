@@ -43,9 +43,9 @@ use JsonException;
  */
 class PiggyBankTransformer extends AbstractTransformer
 {
-//    private AccountRepositoryInterface   $accountRepos;
-//    private CurrencyRepositoryInterface  $currencyRepos;
-//    private PiggyBankRepositoryInterface $piggyRepos;
+    //    private AccountRepositoryInterface   $accountRepos;
+    //    private CurrencyRepositoryInterface  $currencyRepos;
+    //    private PiggyBankRepositoryInterface $piggyRepos;
     private array                 $accounts;
     private ExchangeRateConverter $converter;
     private array                 $currencies;
@@ -66,9 +66,9 @@ class PiggyBankTransformer extends AbstractTransformer
         $this->groups      = [];
         $this->currencies  = [];
         $this->repetitions = [];
-//        $this->
-//        $this->currencyRepos = app(CurrencyRepositoryInterface::class);
-//        $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
+        //        $this->
+        //        $this->currencyRepos = app(CurrencyRepositoryInterface::class);
+        //        $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
     }
 
     /**
@@ -146,31 +146,31 @@ class PiggyBankTransformer extends AbstractTransformer
      */
     public function transform(PiggyBank $piggyBank): array
     {
-//        $account = $piggyBank->account;
-//        $this->accountRepos->setUser($account->user);
-//        $this->currencyRepos->setUser($account->user);
-//        $this->piggyRepos->setUser($account->user);
+        //        $account = $piggyBank->account;
+        //        $this->accountRepos->setUser($account->user);
+        //        $this->currencyRepos->setUser($account->user);
+        //        $this->piggyRepos->setUser($account->user);
 
         // get currency from account, or use default.
-//        $currency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
+        //        $currency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
 
         // note
-//        $notes = $this->piggyRepos->getNoteText($piggyBank);
-//        $notes = '' === $notes ? null : $notes;
+        //        $notes = $this->piggyRepos->getNoteText($piggyBank);
+        //        $notes = '' === $notes ? null : $notes;
 
-//        $objectGroupId    = null;
-//        $objectGroupOrder = null;
-//        $objectGroupTitle = null;
-//        /** @var ObjectGroup $objectGroup */
-//        $objectGroup = $piggyBank->objectGroups->first();
-//        if (null !== $objectGroup) {
-//            $objectGroupId    = (int)$objectGroup->id;
-//            $objectGroupOrder = (int)$objectGroup->order;
-//            $objectGroupTitle = $objectGroup->title;
-//        }
+        //        $objectGroupId    = null;
+        //        $objectGroupOrder = null;
+        //        $objectGroupTitle = null;
+        //        /** @var ObjectGroup $objectGroup */
+        //        $objectGroup = $piggyBank->objectGroups->first();
+        //        if (null !== $objectGroup) {
+        //            $objectGroupId    = (int)$objectGroup->id;
+        //            $objectGroupOrder = (int)$objectGroup->order;
+        //            $objectGroupTitle = $objectGroup->title;
+        //        }
 
         // get currently saved amount:
-//        $currentAmount = app('steam')->bcround($this->piggyRepos->getCurrentAmount($piggyBank), $currency->decimal_places);
+        //        $currentAmount = app('steam')->bcround($this->piggyRepos->getCurrentAmount($piggyBank), $currency->decimal_places);
 
         $percentage          = null;
         $leftToSave          = null;
