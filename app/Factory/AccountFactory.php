@@ -92,6 +92,7 @@ class AccountFactory
             $return = $this->create(
                 [
                     'user_id'           => $this->user->id,
+                    'user_group_id'     => $this->user->user_group_id,
                     'name'              => $accountName,
                     'account_type_id'   => $type->id,
                     'account_type_name' => null,
@@ -199,6 +200,7 @@ class AccountFactory
         $active         = array_key_exists('active', $data) ? $data['active'] : true;
         $databaseData   = [
             'user_id'         => $this->user->id,
+            'user_group_id'   => $this->user->user_group_id,
             'account_type_id' => $type->id,
             'name'            => $data['name'],
             'order'           => 25000,

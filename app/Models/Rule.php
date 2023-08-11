@@ -165,4 +165,12 @@ class Rule extends Model
     {
         $this->attributes['description'] = e($value);
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function userGroup(): BelongsTo
+    {
+        return $this->belongsTo(UserGroup::class);
+    }
 }

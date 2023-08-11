@@ -77,7 +77,7 @@ class ObjectGroup extends Model
             'user_id'    => 'integer',
             'deleted_at' => 'datetime',
         ];
-    protected $fillable = ['title', 'order', 'user_id'];
+    protected $fillable = ['title', 'order', 'user_id', 'user_group_id'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

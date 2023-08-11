@@ -280,7 +280,8 @@ class RuleRepository implements RuleRepositoryInterface
 
         // start by creating a new rule:
         $rule = new Rule();
-        $rule->user()->associate($this->user->id);
+        $rule->user()->associate($this->user);
+        $rule->userGroup()->associate($this->user->userGroup);
 
         $rule->rule_group_id   = $ruleGroup->id;
         $rule->order           = 31337;

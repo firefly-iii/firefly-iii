@@ -131,6 +131,7 @@ class BudgetLimitHandler
                     $availableBudget = new AvailableBudget(
                         [
                             'user_id'                 => $budgetLimit->budget->user->id,
+                            'user_group_id'           => $budgetLimit->budget->user->user_group_id,
                             'transaction_currency_id' => $budgetLimit->transaction_currency_id,
                             'start_date'              => $current,
                             'end_date'                => $currentEnd,
@@ -180,8 +181,8 @@ class BudgetLimitHandler
             );
             // overlap in days:
             $limitPeriod = Period::make(
-                $budgetLimit->start_date,
-                $budgetLimit->end_date,
+                            $budgetLimit->start_date,
+                            $budgetLimit->end_date,
                 precision : Precision::DAY(),
                 boundaries: Boundaries::EXCLUDE_NONE()
             );
@@ -223,8 +224,8 @@ class BudgetLimitHandler
             return '0';
         }
         $limitPeriod = Period::make(
-            $budgetLimit->start_date,
-            $budgetLimit->end_date,
+                        $budgetLimit->start_date,
+                        $budgetLimit->end_date,
             precision : Precision::DAY(),
             boundaries: Boundaries::EXCLUDE_NONE()
         );

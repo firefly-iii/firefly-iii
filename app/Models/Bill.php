@@ -130,6 +130,7 @@ class Bill extends Model
             'match',
             'amount_min',
             'user_id',
+            'user_group_id',
             'amount_max',
             'date',
             'repeat_freq',
@@ -241,7 +242,7 @@ class Bill extends Model
     protected function amountMax(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: fn($value) => (string)$value,
         );
     }
 
@@ -253,7 +254,7 @@ class Bill extends Model
     protected function amountMin(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: fn($value) => (string)$value,
         );
     }
 }

@@ -85,7 +85,7 @@ class AvailableBudget extends Model
             'transaction_currency_id' => 'int',
         ];
     /** @var array Fields that can be filled */
-    protected $fillable = ['user_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date'];
+    protected $fillable = ['user_id', 'user_group_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -132,7 +132,7 @@ class AvailableBudget extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: fn($value) => (string)$value,
         );
     }
 }

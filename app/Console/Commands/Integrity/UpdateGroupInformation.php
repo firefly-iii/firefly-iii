@@ -32,6 +32,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\CurrencyExchangeRate;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
@@ -93,6 +94,7 @@ class UpdateGroupInformation extends Command
             Bill::class,
             Budget::class,
             Category::class,
+            ObjectGroup::class,
             CurrencyExchangeRate::class,
             Recurrence::class,
             RuleGroup::class,

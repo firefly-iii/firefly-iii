@@ -125,9 +125,9 @@ class Account extends Model
             'encrypted'  => 'boolean',
         ];
     /** @var array Fields that can be filled */
-    protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
+    protected $fillable = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
     /** @var array Hidden from view */
-    protected $hidden             = ['encrypted'];
+    protected    $hidden             = ['encrypted'];
     private bool $joinedAccountTypes = false;
 
     /**
@@ -291,7 +291,7 @@ class Account extends Model
     protected function virtualBalance(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: fn($value) => (string)$value,
         );
     }
 }
