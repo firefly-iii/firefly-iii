@@ -21,11 +21,11 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V2\Controllers\Model\Bill;
+namespace FireflyIII\Api\V2\Controllers\Model\PiggyBank;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Repositories\Administration\Bill\BillRepositoryInterface;
-use FireflyIII\Transformers\V2\BillTransformer;
+use FireflyIII\Repositories\Administration\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Transformers\V2\PiggyBankTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -35,14 +35,14 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class ShowController extends Controller
 {
-    private BillRepositoryInterface $repository;
+    private PiggyBankRepositoryInterface $repository;
 
     public function __construct()
     {
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->repository = app(BillRepositoryInterface::class);
+                $this->repository = app(PiggyBankRepositoryInterface::class);
                 $this->repository->setAdministrationId(auth()->user()->user_group_id);
                 return $next($request);
             }
@@ -58,17 +58,16 @@ class ShowController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $this->repository->correctOrder();
-        $bills       = $this->repository->getBills();
+        $piggies     = $this->repository->getPiggyBanks();
         $pageSize    = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $count       = $bills->count();
-        $bills       = $bills->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator   = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
-        $transformer = new BillTransformer();
+        $count       = $piggies->count();
+        $piggies     = $piggies->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator   = new LengthAwarePaginator($piggies, $count, $pageSize, $this->parameters->get('page'));
+        $transformer = new PiggyBankTransformer();
         $transformer->setParameters($this->parameters); // give params to transformer
 
         return response()
-            ->json($this->jsonApiList('subscriptions', $paginator, $transformer))
+            ->json($this->jsonApiList('piggy-banks', $paginator, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

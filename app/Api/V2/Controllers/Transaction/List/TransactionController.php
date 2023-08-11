@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * TransactionController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -32,7 +34,6 @@ use Illuminate\Http\JsonResponse;
  */
 class TransactionController extends Controller
 {
-
     /**
      * @param ListRequest $request
      *
@@ -69,9 +70,11 @@ class TransactionController extends Controller
 
         $paginator = $collector->getPaginatedGroups();
         $paginator->setPath(
-            sprintf('%s?%s',
-                    route('api.v2.transactions.list'),
-                    $request->buildParams())
+            sprintf(
+                '%s?%s',
+                route('api.v2.transactions.list'),
+                $request->buildParams()
+            )
         );
 
         return response()

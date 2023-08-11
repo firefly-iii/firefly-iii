@@ -138,6 +138,21 @@ Route::group(
         Route::get('sum/unpaid', ['uses' => 'SumController@unpaid', 'as' => 'sum.unpaid']);
     }
 );
+
+/**
+ * V2 API route for piggy banks.
+ */
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\PiggyBank',
+        'prefix'    => 'v2/piggy-banks',
+        'as'        => 'api.v2.piggy-banks.',
+    ],
+    static function () {
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+    }
+);
+
 /**
  * V2 API route for budgets and budget limits:
  */

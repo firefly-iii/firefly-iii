@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Carbon;
 
 /**
@@ -104,6 +105,16 @@ class UserGroup extends Model
     public function groupMemberships(): HasMany
     {
         return $this->hasMany(GroupMembership::class);
+    }
+
+    /**
+     * Link to piggy banks.
+     *
+     * @return HasManyThrough
+     */
+    public function piggyBanks(): HasManyThrough
+    {
+        return $this->hasManyThrough(PiggyBank::class, Account::class);
     }
 
     /**
