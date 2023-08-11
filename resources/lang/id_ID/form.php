@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Mulai dari jangkauan',
     'end_date'                    => 'Akhir rentang',
     'enddate'                     => 'Tanggal selesai',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Awal rentang',
     'end'                         => 'Akhir rentang',
     'delete_account'              => 'Delete account ":name"',

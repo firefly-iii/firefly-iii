@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Início do intervalo',
     'end_date'                    => 'Fim do intervalo',
     'enddate'                     => 'Data do término',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Início do intervalo',
     'end'                         => 'Fim do intervalo',
     'delete_account'              => 'Apagar conta ":name"',

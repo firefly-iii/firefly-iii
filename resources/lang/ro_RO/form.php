@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Start de interval',
     'end_date'                    => 'Șfârșit de interval',
     'enddate'                     => 'Data de sfârșit',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Începutul intervalului',
     'end'                         => 'Sfârșit de interval',
     'delete_account'              => 'Șterge cont ":name"',

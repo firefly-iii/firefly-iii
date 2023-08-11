@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Початок діапазону',
     'end_date'                    => 'Кінець діапазону',
     'enddate'                     => 'End date',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Початок діапазону',
     'end'                         => 'Кінець діапазону',
     'delete_account'              => 'Видалити акаунт ":name"',

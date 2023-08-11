@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Startgrense',
     'end_date'                    => 'Sluttgrense',
     'enddate'                     => 'Sluttdato',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Start område',
     'end'                         => 'Slutt område',
     'delete_account'              => 'Slett konto ":name"',

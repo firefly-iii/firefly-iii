@@ -147,6 +147,7 @@ return [
     'start_date'                  => '期間の開始',
     'end_date'                    => '期間の終了',
     'enddate'                     => '終了日',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => '期間の開始',
     'end'                         => '期間の終了',
     'delete_account'              => '口座「:name」を削除',

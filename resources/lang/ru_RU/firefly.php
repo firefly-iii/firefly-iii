@@ -864,12 +864,12 @@ return [
     'rule_trigger_transaction_type'                       => 'Тип транзакции = ":trigger_value"',
     'rule_trigger_category_is_choice'                     => 'Категория =',
     'rule_trigger_category_is'                            => 'Категория = ":trigger_value"',
-    'rule_trigger_amount_less_choice'                     => 'Сумма меньше, чем...',
-    'rule_trigger_amount_less'                            => 'Сумма меньше, чем ":trigger_value"',
+    'rule_trigger_amount_less_choice'                     => 'Amount is less than or equal to ..',
+    'rule_trigger_amount_less'                            => 'Amount is less than or equal to :trigger_value',
     'rule_trigger_amount_is_choice'                       => 'Сумма..',
     'rule_trigger_amount_is'                              => 'Сумма :trigger_value',
-    'rule_trigger_amount_more_choice'                     => 'Сумма больше, чем...',
-    'rule_trigger_amount_more'                            => 'Сумма больше, чем ":trigger_value"',
+    'rule_trigger_amount_more_choice'                     => 'Amount is more than or equal to..',
+    'rule_trigger_amount_more'                            => 'Amount is more than or equal to :trigger_value',
     'rule_trigger_description_starts_choice'              => 'Описание начинается с...',
     'rule_trigger_description_starts'                     => 'Описание начинается с ":trigger_value"',
     'rule_trigger_description_ends_choice'                => 'Описание заканчивается на...',
@@ -934,10 +934,14 @@ return [
     'rule_trigger_internal_reference_is'                  => 'Внутренняя ссылка - ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'ID журнала транзакций..',
     'rule_trigger_journal_id'                             => 'ID журнала транзакций ":trigger_value"',
-    'rule_trigger_no_external_url'                        => 'У транзакции нет внешнего URL',
-    'rule_trigger_any_external_url'                       => 'Транзакция имеет внешний URL',
-    'rule_trigger_any_external_url_choice'                => 'Транзакция имеет внешний URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_id'                        => 'Transaction has an (any) external ID',
+    'rule_trigger_any_external_id_choice'                 => 'Transaction has an (any) external ID',
     'rule_trigger_no_external_url_choice'                 => 'У транзакции нет внешнего URL',
+    'rule_trigger_no_external_url'                        => 'У транзакции нет внешнего URL',
+    'rule_trigger_no_external_id_choice'                  => 'Transaction has no external ID',
+    'rule_trigger_no_external_id'                         => 'Transaction has no external ID',
     'rule_trigger_id_choice'                              => 'ID транзакции..',
     'rule_trigger_id'                                     => 'ID транзакции ":trigger_value"',
     'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT is..',
@@ -1218,6 +1222,7 @@ return [
 
 
     // actions
+    // set, clear, add, remove, append/prepend
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
     'rule_action_delete_transaction'                      => 'DELETE transaction(!)',
     'rule_action_set_category'                            => 'Назначить категорию ":action_value"',
@@ -1255,6 +1260,8 @@ return [
     'rule_action_set_notes_choice'                        => 'Set notes to ..',
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Ссылка на счёт к оплате ":action_value"',
+    'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
+    'rule_action_switch_accounts'                         => 'Switch source and destination ',
     'rule_action_set_notes'                               => 'Назначить примечания ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Преобразовать транзакцию в доход',
     'rule_action_convert_deposit'                         => 'Преобразовать транзакцию в доход с помощью ":action_value"',
@@ -2703,6 +2710,7 @@ return [
     'ale_action_clear_tag'               => 'Cleared tag',
     'ale_action_clear_all_tags'          => 'Cleared all tags',
     'ale_action_set_bill'                => 'Linked to bill',
+    'ale_action_switch_accounts'         => 'Switched source and destination account',
     'ale_action_set_budget'              => 'Set budget',
     'ale_action_set_category'            => 'Set category',
     'ale_action_set_source'              => 'Set source account',
@@ -2715,8 +2723,8 @@ return [
     'ale_action_add_tag'                 => 'Добавленный тег',
 
     // dashboard
-    'enable_auto_convert'                => 'Enable currency conversion',
-    'disable_auto_convert'               => 'Disable currency conversion',
+    'enable_auto_convert'                => 'Включить конвертацию валюты',
+    'disable_auto_convert'               => 'Отключить конвертацию валюты',
 
 ];
 
