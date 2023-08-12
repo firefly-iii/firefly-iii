@@ -534,7 +534,7 @@ class TransactionJournalFactory
     {
         $description = '' === $description ? '(empty description)' : $description;
 
-        return substr($description, 0, 255);
+        return substr($description, 0, 1024);
     }
 
     /**
