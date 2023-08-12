@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V2\Controllers;
 
 use FireflyIII\Api\V2\Request\Generic\SingleDateRequest;
 use FireflyIII\Helpers\Report\NetWorthInterface;
-use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -34,8 +33,6 @@ use Illuminate\Http\JsonResponse;
  */
 class NetWorthController extends Controller
 {
-    use ConvertsExchangeRates;
-
     private NetWorthInterface $netWorth;
 
     /**
@@ -64,6 +61,7 @@ class NetWorthController extends Controller
      */
     public function get(SingleDateRequest $request): JsonResponse
     {
+        die('deprecated use of thing.');
         $date      = $request->getDate();
         $result    = $this->netWorth->sumNetWorthByCurrency($date);
         $converted = $this->cerSum($result);

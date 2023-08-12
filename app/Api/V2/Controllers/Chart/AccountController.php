@@ -33,7 +33,6 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\CleansChartData;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

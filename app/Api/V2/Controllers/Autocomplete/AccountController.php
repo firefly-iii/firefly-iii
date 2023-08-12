@@ -33,7 +33,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Http\JsonResponse;
-use JsonException;
 
 /**
  * Class AccountController
