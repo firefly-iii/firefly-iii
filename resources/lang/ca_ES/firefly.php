@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Enllaçar a una factura ..',
     'rule_action_link_to_bill'                            => 'Enllaçar a la factura ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Establir notes a ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Convertir la transacció a un dipòsit',
     'rule_action_convert_deposit'                         => 'Convertir la transacció a un dipòsit de ":action_value"',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Administració financera',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Purgar dades de Firefly III',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Comptes d\'actius',
     'undefined_accounts'                        => 'Comptes',
     'asset_accounts_inactive'                   => 'Comptes d\'actius (inactius)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Comptes de despeses',
     'expense_accounts_inactive'                 => 'Comptes de despeses (inactius)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Comptes d\'ingressos',
     'revenue_accounts_inactive'                 => 'Comptes d\'ingressos (inactius)',
     'cash_accounts'                             => 'Comptes d\'efectiu',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => 'Categories',
     'edit_category'                             => 'Editar la categoria ":name"',
     'no_category'                               => '(cap categoria)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Categoria',
     'delete_category'                           => 'Eliminar categoria ":name"',
     'deleted_category'                          => 'S\'ha eliminat la categoria ":name"',
@@ -2079,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Cerca...',
     'version'                                   => 'Versió',
     'dashboard'                                 => 'Panell de control',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Pressupost disponible ({currency})',
     'currencies'                                => 'Monedes',
     'activity'                                  => 'Activitat (exercici)',
@@ -2387,6 +2397,7 @@ return [
     'invite_user'                              => 'Convida l\'usuari',
     'user_is_invited'                          => 'El correu electrònic ":address" s\'ha convidat a Firefly III',
     'administration'                           => 'Administració',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'El code d\'invitació ja s\'ha gastat',
     'user_administration'                      => 'Administració d\'usuaris',
     'list_all_users'                           => 'Tots els usuaris',
@@ -2526,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(no agrupades)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Anem a crear un compte d\'actius!',

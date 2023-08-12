@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => '关联至账单…',
     'rule_action_link_to_bill'                            => '关联至账单“:action_value”',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => '设定备注至“:action_value”',
     'rule_action_convert_deposit_choice'                  => '转换交易为收入',
     'rule_action_convert_deposit'                         => '转换交易为来自“:action_value”的收入',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Financial administration',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => '从 Frefly III 清除数据',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => '资产账户',
     'undefined_accounts'                        => '账户',
     'asset_accounts_inactive'                   => '资产账户 (已停用)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => '支出账户',
     'expense_accounts_inactive'                 => '支出账户 (已停用)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => '收入账户',
     'revenue_accounts_inactive'                 => '收入账户 (已停用)',
     'cash_accounts'                             => '现金账户',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => '分类',
     'edit_category'                             => '编辑分类 “:name”',
     'no_category'                               => '(没有分类)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => '分类',
     'delete_category'                           => '删除分类 “:name”',
     'deleted_category'                          => '已删除分类 “:name”',
@@ -2079,6 +2083,12 @@ return [
     'searchPlaceholder'                         => '搜索…',
     'version'                                   => '版本',
     'dashboard'                                 => '仪表盘',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => '可用预算 ({currency})',
     'currencies'                                => '货币',
     'activity'                                  => '活动',
@@ -2387,6 +2397,7 @@ return [
     'invite_user'                              => 'Invite user',
     'user_is_invited'                          => 'Email address ":address" was invited to Firefly III',
     'administration'                           => '管理',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Invite code has been used',
     'user_administration'                      => '用户管理',
     'list_all_users'                           => '所有用户',
@@ -2526,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(未分组)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => '创建一个资产账户！',

@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Liên kết đến một hóa đơn ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Đặt ghi chú cho ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Chuyển đổi giao dịch thành tiền gửi',
     'rule_action_convert_deposit'                         => 'Chuyển đổi giao dịch thành tiền gửi từ ":action_value"',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Financial administration',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => 'tài khoản',
     'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'tài khoản (không hoạt động)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Tài khoản chi phí',
     'expense_accounts_inactive'                 => 'Tài khoản chi tiêu (không hoạt động)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Tài khoản doanh thu',
     'revenue_accounts_inactive'                 => 'Revenue accounts (inactive)',
     'cash_accounts'                             => 'Tài khoản tiền mặt',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => 'Danh mục',
     'edit_category'                             => 'Sửa danh mục ":name"',
     'no_category'                               => '(không danh mục)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Danh mục',
     'delete_category'                           => 'Xóa danh mục ":name"',
     'deleted_category'                          => 'Đã xóa danh mục ":name"',
@@ -2079,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Tìm kiếm...',
     'version'                                   => 'Phiên bản',
     'dashboard'                                 => 'Bảng điều khiển',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Ngân sách có sẵn ({currency})',
     'currencies'                                => 'Tiền tệ',
     'activity'                                  => 'Hoạt động',
@@ -2387,6 +2397,7 @@ return [
     'invite_user'                              => 'Invite user',
     'user_is_invited'                          => 'Email address ":address" was invited to Firefly III',
     'administration'                           => 'Quản trị',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Invite code has been used',
     'user_administration'                      => 'Quản lý người dùng',
     'list_all_users'                           => 'Tất cả người dùng',
@@ -2526,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(chưa nhóm)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Hãy tạo một tài khoản!',

@@ -68,8 +68,8 @@ class TransactionController extends Controller
             $collector->setEnd($end);
         }
 
-//        $collector->dumpQuery();
-//        exit;
+        //        $collector->dumpQuery();
+        //        exit;
 
         $paginator = $collector->getPaginatedGroups();
         $paginator->setPath(

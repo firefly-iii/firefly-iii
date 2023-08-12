@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Yhdistä laskuun ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Aseta muistiinpano tapahtumalle ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Muuta tapahtuma talletukseksi',
     'rule_action_convert_deposit'                         => 'Muuta ":action_value" talletukseksi',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Financial administration',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Käyttötilit',
     'undefined_accounts'                        => 'Tilit',
     'asset_accounts_inactive'                   => 'Käyttötilit (ei käytössä)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Kulutustilit',
     'expense_accounts_inactive'                 => 'Kulutustilit (ei käytössä)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Tuottotilit',
     'revenue_accounts_inactive'                 => 'Tuottotilit (ei käytössä)',
     'cash_accounts'                             => 'Käteistilit',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => 'Kategoriat',
     'edit_category'                             => 'Muokkaa kategoriaa ":name"',
     'no_category'                               => '(ei kategoriaa)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Kategoria',
     'delete_category'                           => 'Poista kategoria ":name"',
     'deleted_category'                          => 'Poistettiin kategoria ":name"',
@@ -2079,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Hae ...',
     'version'                                   => 'Versio',
     'dashboard'                                 => 'Etusivu',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Budjetista jäljellä ({currency})',
     'currencies'                                => 'Valuutat',
     'activity'                                  => 'Toiminta',
@@ -2387,6 +2397,7 @@ return [
     'invite_user'                              => 'Invite user',
     'user_is_invited'                          => 'Email address ":address" was invited to Firefly III',
     'administration'                           => 'Ylläpito',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Invite code has been used',
     'user_administration'                      => 'Käyttäjähallinta',
     'list_all_users'                           => 'Kaikki käyttäjät',
@@ -2526,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(ryhmittelemättömät)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Luodaan käyttötili!',

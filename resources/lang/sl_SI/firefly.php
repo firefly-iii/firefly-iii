@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Poveži s trajnikom ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Nastavi opombe na ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Pretvori transakcijo v polog',
     'rule_action_convert_deposit'                         => 'Pretvori transakcijo v polog iz ":action_value"',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Financial administration',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => 'premoženjski računi',
     'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Računi sredstev (neaktivno)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Računi stroškov',
     'expense_accounts_inactive'                 => 'Expense accounts (inactive)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Račun prihodkov',
     'revenue_accounts_inactive'                 => 'Revenue accounts (inactive)',
     'cash_accounts'                             => 'Gotovinski računi',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => 'Kategorije',
     'edit_category'                             => 'Uredi kategorijo ":name"',
     'no_category'                               => '(brez kategorije)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Kategorija',
     'delete_category'                           => 'Izbriši kategorijo ":name"',
     'deleted_category'                          => 'Kategorija ":name" izbrisana',
@@ -2079,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Iskanje...',
     'version'                                   => 'Različica',
     'dashboard'                                 => 'Nadzorna plošča',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Razpoložljiv proračun ({currency})',
     'currencies'                                => 'Valute',
     'activity'                                  => 'Dejavnost',
@@ -2387,6 +2397,7 @@ return [
     'invite_user'                              => 'Povabi uporabnika',
     'user_is_invited'                          => 'Email address ":address" was invited to Firefly III',
     'administration'                           => 'Administracija',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Invite code has been used',
     'user_administration'                      => 'Upravljanje uporabnikov',
     'list_all_users'                           => 'Vse uporabnike',
@@ -2526,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Ustvarite premoženjski račun!',

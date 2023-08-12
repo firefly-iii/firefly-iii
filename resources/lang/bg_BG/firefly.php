@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Свържи към сметка ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Задай бележките на ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Преобразувайте транзакцията в депозит',
     'rule_action_convert_deposit'                         => 'Преобразувайте транзакцията в депозит в ":action_value"',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Financial administration',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Сметки за активи',
     'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Сметки за активи (деактивирани)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Сметки за разходи',
     'expense_accounts_inactive'                 => 'Сметки за разходи (деактивирани)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Сметки за приходи',
     'revenue_accounts_inactive'                 => 'Сметки за приходи (деактивирани)',
     'cash_accounts'                             => 'Касови сметки',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => 'Категории',
     'edit_category'                             => 'Обнови категория ":name"',
     'no_category'                               => '(без категория)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Категория',
     'delete_category'                           => 'Изтрий категория ":name"',
     'deleted_category'                          => 'Категория ":name" бе изтрита',
@@ -2079,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Търсене...',
     'version'                                   => 'Версия',
     'dashboard'                                 => 'Основно табло',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Наличен бюджет ({currency})',
     'currencies'                                => 'Валути',
     'activity'                                  => 'Дейност',
@@ -2387,6 +2397,7 @@ return [
     'invite_user'                              => 'Invite user',
     'user_is_invited'                          => 'Email address ":address" was invited to Firefly III',
     'administration'                           => 'Управление',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Invite code has been used',
     'user_administration'                      => 'Управление на потребители',
     'list_all_users'                           => 'Всички потребители',
@@ -2526,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(без група)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Нека да създадем сметка за активи!',

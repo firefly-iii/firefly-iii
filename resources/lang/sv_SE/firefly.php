@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Länka till nota ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Sätt anteckningar till ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Konvertera transaktionen till en insättning',
     'rule_action_convert_deposit'                         => 'Konvertera transaktionen till en insättning från ":action_value"',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Financial administration',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Tillgångskonton',
     'undefined_accounts'                        => 'Konton',
     'asset_accounts_inactive'                   => 'Tillgångskonton (inaktiva)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Kostnadskonto',
     'expense_accounts_inactive'                 => 'Utgiftskonton (inaktiva)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Intäktskonton',
     'revenue_accounts_inactive'                 => 'Intäktskonton (inaktiv)',
     'cash_accounts'                             => 'Kontantkonton',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => 'Kategorier',
     'edit_category'                             => 'Redigera kategori ":name"',
     'no_category'                               => '(utan kategori)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Kategori',
     'delete_category'                           => 'Ta bort kategori ":name"',
     'deleted_category'                          => 'Kategori ":name" togs bort',
@@ -2080,6 +2084,12 @@ return [
     'searchPlaceholder'                         => 'Sök...',
     'version'                                   => 'Version',
     'dashboard'                                 => 'Kontrollpanel',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Tillgänglig budget ({currency})',
     'currencies'                                => 'Valutor',
     'activity'                                  => 'Aktivitet',
@@ -2388,6 +2398,7 @@ return [
     'invite_user'                              => 'Invite user',
     'user_is_invited'                          => 'Email address ":address" was invited to Firefly III',
     'administration'                           => 'Administration',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Invite code has been used',
     'user_administration'                      => 'Användaradministration',
     'list_all_users'                           => 'Alla användare',
@@ -2527,6 +2538,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(ogrupperad)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Låt oss skapa ett tillgångskonto!',

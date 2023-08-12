@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Σύνδεση στο πάγιο έξοδο ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Ορισμός σημειώσεων σε ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Μετατροπή της συναλλαγής σε μία κατάθεση',
     'rule_action_convert_deposit'                         => 'Μετατροπή της συναλλαγής σε μία κατάθεση από ":action_value"',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Οικονομική διαχείριση',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Εκκαθάριση δεδομένων από το Firefly III',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Κεφάλαια',
     'undefined_accounts'                        => 'Λογαριασμοί',
     'asset_accounts_inactive'                   => 'Λογαριασμοί κεφαλαίου (ανενεργοί)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Δαπάνες',
     'expense_accounts_inactive'                 => 'Λογαριασμοί δαπανών (ανενεργοί)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Έσοδα',
     'revenue_accounts_inactive'                 => 'Λογαριασμοί εσόδων (ανενεργοί)',
     'cash_accounts'                             => 'Μετρητά',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => 'Κατηγορίες',
     'edit_category'                             => 'Επεξεργασία κατηγορίας: ":name"',
     'no_category'                               => '(χωρίς κατηγορία)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Κατηγορία',
     'delete_category'                           => 'Διαγραφή κατηγορίας":name"',
     'deleted_category'                          => 'Διεγράφη η κατηγορία ":name"',
@@ -2079,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Αναζήτηση...',
     'version'                                   => 'Έκδοση',
     'dashboard'                                 => 'Επισκόπηση',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Διαθέσιμος προϋπολογισμός ({currency})',
     'currencies'                                => 'Νομίσματα',
     'activity'                                  => 'Δραστηριότητα',
@@ -2387,6 +2397,7 @@ return [
     'invite_user'                              => 'Πρόσκληση χρήστη',
     'user_is_invited'                          => 'Η διεύθυνση ηλεκτρονικού ταχυδρομείου ":address" έλαβε πρόσκληση για εγγραφή στο Firefly III',
     'administration'                           => 'Διαχείριση',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Ο κωδικός πρόσκλησης έχει χρησιμοποιηθεί',
     'user_administration'                      => 'Διαχείριση χρηστών',
     'list_all_users'                           => 'Όλοι οι χρήστες',
@@ -2526,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(χωρίς ομάδα)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Ας δημιουργήσουμε ένα λογαριασμό κεφαλαίου!',

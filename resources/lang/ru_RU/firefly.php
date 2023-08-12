@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Ссылка на счёт к оплате ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Назначить примечания ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Преобразовать транзакцию в доход',
     'rule_action_convert_deposit'                         => 'Преобразовать транзакцию в доход с помощью ":action_value"',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Управление финансами',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Уничтожить данные из Firefly III',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Основные счета',
     'undefined_accounts'                        => 'Учётные записи',
     'asset_accounts_inactive'                   => 'Основной счёт (неактивный)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Счета расходов',
     'expense_accounts_inactive'                 => 'Счёт расходов (неактивный)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Счета доходов',
     'revenue_accounts_inactive'                 => 'Счёт доходов (неактивный)',
     'cash_accounts'                             => 'Наличные деньги',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => 'Категории',
     'edit_category'                             => 'Изменить категорию ":name"',
     'no_category'                               => '(без категории)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Категория',
     'delete_category'                           => 'Удалить категорию ":name"',
     'deleted_category'                          => 'Удалить категорию ":name"',
@@ -2079,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Поиск...',
     'version'                                   => 'Версия',
     'dashboard'                                 => 'Сводка',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Доступный бюджет ({currency})',
     'currencies'                                => 'Валюты',
     'activity'                                  => 'Активность',
@@ -2387,6 +2397,7 @@ return [
     'invite_user'                              => 'Invite user',
     'user_is_invited'                          => 'Email address ":address" was invited to Firefly III',
     'administration'                           => 'Администрирование',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Код приглашения уже был использован',
     'user_administration'                      => 'Управление пользователями',
     'list_all_users'                           => 'Список пользователей',
@@ -2526,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(без группировки)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Давайте создадим счёт расхода!',

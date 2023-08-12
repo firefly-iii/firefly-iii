@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Powiąż z rachunkiem ..',
     'rule_action_link_to_bill'                            => 'Powiąż z rachunkiem ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Ustaw notatki na ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Konwertuj transakcję na wpłatę',
     'rule_action_convert_deposit'                         => 'Konwertuj transakcję na wpłatę od ":action_value"',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Zarządzanie finansami',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Wyczyść dane z Firefly III',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Konta aktywów',
     'undefined_accounts'                        => 'Konta',
     'asset_accounts_inactive'                   => 'Konta aktywów (nieaktywne)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Konta wydatków',
     'expense_accounts_inactive'                 => 'Konto wydatków (nieaktywne)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Konta przychodów',
     'revenue_accounts_inactive'                 => 'Konta przychodów (nieaktywne)',
     'cash_accounts'                             => 'Konta gotówkowe',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => 'Kategorie',
     'edit_category'                             => 'Edytuj kategorię ":name"',
     'no_category'                               => '(bez kategorii)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Kategoria',
     'delete_category'                           => 'Usuń kategorię ":name"',
     'deleted_category'                          => 'Usunięto kategorię ":name"',
@@ -2079,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Szukaj...',
     'version'                                   => 'Wersja',
     'dashboard'                                 => 'Kokpit',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Dostępne budżety ({currency})',
     'currencies'                                => 'Waluty',
     'activity'                                  => 'Aktywność',
@@ -2387,6 +2397,7 @@ return [
     'invite_user'                              => 'Zaproś użytkownika',
     'user_is_invited'                          => 'Adres email ":address" został zaproszony do Firefly III',
     'administration'                           => 'Administracja',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Kod zaproszenia został już użyty',
     'user_administration'                      => 'Administracja użytkownikami',
     'list_all_users'                           => 'Wszyscy użytkownicy',
@@ -2526,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(bez grupy)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Stwórzmy konto aktywów!',

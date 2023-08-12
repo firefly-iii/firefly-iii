@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Link to bill ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Tetapkan catatan ke ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Convert the transaction to a deposit',
     'rule_action_convert_deposit'                         => 'Convert the transaction to a deposit from ":action_value"',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Financial administration',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Akun aset',
     'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Asset accounts (inactive)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Rekening pengeluaran',
     'expense_accounts_inactive'                 => 'Expense accounts (inactive)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Akun pendapatan',
     'revenue_accounts_inactive'                 => 'Revenue accounts (inactive)',
     'cash_accounts'                             => 'Akun kas',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => 'Kategori',
     'edit_category'                             => 'Edit kategori ":name"',
     'no_category'                               => '(tidak ada kategori)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Kategori',
     'delete_category'                           => 'Hapus kategori ":name"',
     'deleted_category'                          => 'Kategori yang dihapus ":name"',
@@ -2079,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Pencarian...',
     'version'                                   => 'Versi',
     'dashboard'                                 => 'Dasbor',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Available budget ({currency})',
     'currencies'                                => 'Mata uang',
     'activity'                                  => 'Activity',
@@ -2387,6 +2397,7 @@ return [
     'invite_user'                              => 'Invite user',
     'user_is_invited'                          => 'Email address ":address" was invited to Firefly III',
     'administration'                           => 'Administrasi',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Invite code has been used',
     'user_administration'                      => 'Administrasi pengguna',
     'list_all_users'                           => 'Semua pengguna',
@@ -2526,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Mari buat akun aset!',

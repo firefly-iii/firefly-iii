@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Link til regning ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Sæt noter til ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Konverter transaktionen til et indskud',
     'rule_action_convert_deposit'                         => 'Konverter transaktionen til et indskud fra ":action_value"',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Financial administration',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Aktivkonti',
     'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Aktivkonti (inaktiv)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Udgiftskonti',
     'expense_accounts_inactive'                 => 'Udgiftskonti (inaktiv)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Indtægtskonti',
     'revenue_accounts_inactive'                 => 'Indtægtskonti (inaktive)',
     'cash_accounts'                             => 'Kontant konti',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => 'Kategorier',
     'edit_category'                             => 'Rediger kategori ":name"',
     'no_category'                               => '(ingen kategori)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Kategori',
     'delete_category'                           => 'Slet kategori ":name"',
     'deleted_category'                          => 'Kategori ":name" er blevet slettet',
@@ -2079,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Search...',
     'version'                                   => 'Version',
     'dashboard'                                 => 'Dashboard',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Available budget ({currency})',
     'currencies'                                => 'Currencies',
     'activity'                                  => 'Aktivitet',
@@ -2387,6 +2397,7 @@ return [
     'invite_user'                              => 'Invite user',
     'user_is_invited'                          => 'Email address ":address" was invited to Firefly III',
     'administration'                           => 'Administration',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Invite code has been used',
     'user_administration'                      => 'User administration',
     'list_all_users'                           => 'All users',
@@ -2526,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Let\'s create an asset account!',

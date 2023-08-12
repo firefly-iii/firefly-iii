@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => '連結至帳單 ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => '設定註釋至 ":action_value"',
     'rule_action_convert_deposit_choice'                  => '轉換交易為存款',
     'rule_action_convert_deposit'                         => '轉換交易至來自 ":action_value" 的存款',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Financial administration',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => '資產帳戶',
     'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Asset accounts (inactive)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => '支出帳戶',
     'expense_accounts_inactive'                 => 'Expense accounts (inactive)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => '收入帳戶',
     'revenue_accounts_inactive'                 => 'Revenue accounts (inactive)',
     'cash_accounts'                             => '現金帳戶',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => '分類',
     'edit_category'                             => '編輯分類 “:name”',
     'no_category'                               => '(沒有分類)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => '分類',
     'delete_category'                           => '刪除分類 “:name”',
     'deleted_category'                          => '已刪除分類 “:name”',
@@ -2079,6 +2083,12 @@ return [
     'searchPlaceholder'                         => '搜尋…',
     'version'                                   => '版本',
     'dashboard'                                 => '監控面板',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => '可用預算 ({currency})',
     'currencies'                                => '貨幣',
     'activity'                                  => '活動',
@@ -2387,6 +2397,7 @@ return [
     'invite_user'                              => 'Invite user',
     'user_is_invited'                          => 'Email address ":address" was invited to Firefly III',
     'administration'                           => '管理',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Invite code has been used',
     'user_administration'                      => '使用者管理',
     'list_all_users'                           => '所有使用者',
@@ -2526,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => '建立新資產帳戶',

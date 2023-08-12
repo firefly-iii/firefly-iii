@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => '청구서 링크 ..',
     'rule_action_link_to_bill'                            => '청구서 링크 ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => '노트를 ":action_value"로 설정',
     'rule_action_convert_deposit_choice'                  => '거래를 입금으로 전환',
     'rule_action_convert_deposit'                         => '":action_value"에서 거래를 입금으로 전환합니다',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => '재정 관리',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Firefly III에서 데이터 제거',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => '자산 계정',
     'undefined_accounts'                        => '계정',
     'asset_accounts_inactive'                   => '자산 계정 (비활성)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => '지출 계정',
     'expense_accounts_inactive'                 => '지출 계정 (비활성)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => '수익 계정',
     'revenue_accounts_inactive'                 => '수익 계정 (비활성)',
     'cash_accounts'                             => '현금 계정',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => '카테고리',
     'edit_category'                             => '":name" 카테고리 수정',
     'no_category'                               => '(카테고리 없음)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => '카테고리',
     'delete_category'                           => '":name" 카테고리 삭제',
     'deleted_category'                          => '":name" 카테고리 삭제됨',
@@ -2079,6 +2083,12 @@ return [
     'searchPlaceholder'                         => '검색...',
     'version'                                   => '버전',
     'dashboard'                                 => '대시보드',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => '사용 가능한 예산 ({currency})',
     'currencies'                                => '통화',
     'activity'                                  => '활동',
@@ -2387,6 +2397,7 @@ return [
     'invite_user'                              => '사용자 초대',
     'user_is_invited'                          => '":address" 이메일 주소가 Firefly III에 초대되었습니다',
     'administration'                           => '관리',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => '초대 코드가 사용되었습니다',
     'user_administration'                      => '사용자 관리',
     'list_all_users'                           => '모든 사용자',
@@ -2526,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(그룹화 해제)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => '자산 계정을 만들어 봅시다!',

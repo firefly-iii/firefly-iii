@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.20 - 2023-08-13
+
+### Fixed
+
+- [Issue 7787](https://github.com/firefly-iii/firefly-iii/issues/7787) Possible issue when deleting multiple tags from a transaction.
+- [Issue 7792](https://github.com/firefly-iii/firefly-iii/issues/7792) Search for tags was broken in rules
+- [Issue 7803](https://github.com/firefly-iii/firefly-iii/issues/7803) @zqye fixed an issue where the cron job would fire when not necessary.
+- [Issue 7771](https://github.com/firefly-iii/firefly-iii/issues/7771) Unclear use of language in rule trigger
+- [Issue 7818](https://github.com/firefly-iii/firefly-iii/issues/7818) Amount was negative instead of positive.
+- [Issue 7810](https://github.com/firefly-iii/firefly-iii/issues/7810) Bad math
+- Asset accounts will correctly show transaction groups
+
+### API
+
+- Lots of new, undocumented v2 API endpoints.
+- [Issue 7845](https://github.com/firefly-iii/firefly-iii/issues/7845) Could not reconcile over API
+
 ## 6.0.19 - 2023-07-29
 
 ### Fixed

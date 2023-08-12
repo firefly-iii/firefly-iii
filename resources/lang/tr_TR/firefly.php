@@ -1262,7 +1262,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Fatura linki ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Notları ":action_value" olarak ayarla',
     'rule_action_convert_deposit_choice'                  => 'İşlemi mevduata dönüştür',
     'rule_action_convert_deposit'                         => 'İşlemi ":action_value" mevduatına dönüştür',
@@ -1404,6 +1404,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Financial administration',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
@@ -1823,8 +1824,10 @@ return [
     'asset_accounts'                            => 'Varlık hesapları',
     'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Asset accounts (inactive)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Gider hesapları',
     'expense_accounts_inactive'                 => 'Expense accounts (inactive)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Gelir hesapları',
     'revenue_accounts_inactive'                 => 'Revenue accounts (inactive)',
     'cash_accounts'                             => 'Nakit Hesabı',
@@ -1913,6 +1916,7 @@ return [
     'categories'                                => 'Kategoriler',
     'edit_category'                             => '":name" kategorisini düzenle',
     'no_category'                               => '(Kategori yok)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Kategori',
     'delete_category'                           => '":name" kategorisini sil',
     'deleted_category'                          => '  kategorisi silindi',
@@ -2080,6 +2084,12 @@ return [
     'searchPlaceholder'                         => 'Aranıyor...',
     'version'                                   => 'Versiyon',
     'dashboard'                                 => 'Gösterge paneli',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Available budget ({currency})',
     'currencies'                                => 'Kurlar',
     'activity'                                  => 'Activity',
@@ -2388,6 +2398,7 @@ return [
     'invite_user'                              => 'Invite user',
     'user_is_invited'                          => 'Email address ":address" was invited to Firefly III',
     'administration'                           => 'Yönetim',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Invite code has been used',
     'user_administration'                      => 'Kullanıcı Yönetimi',
     'list_all_users'                           => 'Tüm kullanıcılar',
@@ -2527,6 +2538,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(ungrouped)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Bir varlık hesabı oluşturalım!',

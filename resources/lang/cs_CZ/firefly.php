@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Link to bill ":action_value"',
     'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination ',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Nastavit poznámky na „:action_value“',
     'rule_action_convert_deposit_choice'                  => 'Přeměnit tuto transakci na vklad',
     'rule_action_convert_deposit'                         => 'Přeměnit tuto transakci z vkladu na „:action_value“',
@@ -1403,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Financial administration',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
@@ -1822,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Účty aktiv',
     'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'Asset accounts (inactive)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Výdajové účty',
     'expense_accounts_inactive'                 => 'Výdajové účty (neaktivní)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Příjmové účty',
     'revenue_accounts_inactive'                 => 'Příjmové účty (neaktivní)',
     'cash_accounts'                             => 'Hotovostní účty',
@@ -1912,6 +1915,7 @@ return [
     'categories'                                => 'Kategorie',
     'edit_category'                             => 'Upravit kategorii „:name“',
     'no_category'                               => '(žádná kategorie)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Kategorie',
     'delete_category'                           => 'Smazat kategorii „:name“',
     'deleted_category'                          => 'Kategorie „:name“ smazána',
@@ -2079,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Hledat…',
     'version'                                   => 'Verze',
     'dashboard'                                 => 'Přehled',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Rozpočet k dispozici ({currency})',
     'currencies'                                => 'Měny',
     'activity'                                  => 'Aktivita',
@@ -2387,6 +2397,7 @@ return [
     'invite_user'                              => 'Invite user',
     'user_is_invited'                          => 'Email address ":address" was invited to Firefly III',
     'administration'                           => 'Správa',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Invite code has been used',
     'user_administration'                      => 'Správa uživatelů',
     'list_all_users'                           => 'Všichni uživatelé',
@@ -2526,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(neseskupeno)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Vytvořme účet aktiv!',
