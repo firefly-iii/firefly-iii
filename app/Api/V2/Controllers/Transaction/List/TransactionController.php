@@ -59,14 +59,17 @@ class TransactionController extends Controller
                   ->setPage($page)
                   ->setTypes($request->getTransactionTypes());
 
-        $start = $request->getStartDate();
-        $end   = $request->getEndDate();
+        $start = $this->parameters->get('start');
+        $end   = $this->parameters->get('end');
         if (null !== $start) {
             $collector->setStart($start);
         }
         if (null !== $end) {
-            $collector->setEnd($start);
+            $collector->setEnd($end);
         }
+
+//        $collector->dumpQuery();
+//        exit;
 
         $paginator = $collector->getPaginatedGroups();
         $paginator->setPath(

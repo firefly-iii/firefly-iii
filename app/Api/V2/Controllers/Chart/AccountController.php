@@ -100,7 +100,6 @@ class AccountController extends Controller
             $frontPage->data = $defaultSet;
             $frontPage->save();
         }
-
         /** @var Account $account */
         foreach ($accounts as $account) {
             $currency = $this->repository->getAccountCurrency($account);

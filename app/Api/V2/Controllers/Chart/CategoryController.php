@@ -85,7 +85,7 @@ class CategoryController extends Controller
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withAccountInformation();
         $collector->setXorAccounts($accounts)->withCategoryInformation();
-        $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::RECONCILIATION]);
+        $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::RECONCILIATION]);
         $journals = $collector->getExtractedJournals();
 
         /** @var array $journal */
