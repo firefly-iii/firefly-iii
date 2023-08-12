@@ -88,7 +88,7 @@ class Webhook extends Model
             'response' => 'integer',
             'delivery' => 'integer',
         ];
-    protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'url', 'title', 'secret'];
+    protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'user_group_id', 'url', 'title', 'secret'];
 
     /**
      * @return array

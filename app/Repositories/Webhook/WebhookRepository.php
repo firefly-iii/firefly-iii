@@ -121,14 +121,15 @@ class WebhookRepository implements WebhookRepositoryInterface
     {
         $secret   = Str::random(24);
         $fullData = [
-            'user_id'  => $this->user->id,
-            'active'   => $data['active'] ?? false,
-            'title'    => $data['title'] ?? null,
-            'trigger'  => $data['trigger'],
-            'response' => $data['response'],
-            'delivery' => $data['delivery'],
-            'secret'   => $secret,
-            'url'      => $data['url'],
+            'user_id'       => $this->user->id,
+            'user_group_id' => $this->user->user_group_id,
+            'active'        => $data['active'] ?? false,
+            'title'         => $data['title'] ?? null,
+            'trigger'       => $data['trigger'],
+            'response'      => $data['response'],
+            'delivery'      => $data['delivery'],
+            'secret'        => $secret,
+            'url'           => $data['url'],
         ];
 
         return Webhook::create($fullData);

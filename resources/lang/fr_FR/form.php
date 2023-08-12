@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Début de l\'étendue',
     'end_date'                    => 'Fin de l\'étendue',
     'enddate'                     => 'Date de fin',
+    'move_rules_before_delete'    => 'Groupe de règles',
     'start'                       => 'Début de l\'étendue',
     'end'                         => 'Fin de l\'étendue',
     'delete_account'              => 'Supprimer le compte ":name"',

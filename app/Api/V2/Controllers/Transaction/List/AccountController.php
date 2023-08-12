@@ -49,19 +49,17 @@ class AccountController extends Controller
      *
      * @return JsonResponse
      */
-    public function listTransactions(ListRequest $request, Account $account): JsonResponse
+    public function list(ListRequest $request, Account $account): JsonResponse
     {
         // collect transactions:
-        $type  = $request->get('type') ?? 'default';
-        $limit = (int)$request->get('limit');
-        $page  = (int)$request->get('page');
+        $limit = $request->getLimit();
+        $page  = $request->getPage();
         $page  = max($page, 1);
 
         if ($limit > 0 && $limit <= $this->pageSize) {
             $this->pageSize = $limit;
         }
 
-        $types = $this->mapTransactionTypes($type);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -69,15 +67,25 @@ class AccountController extends Controller
                   ->withAPIInformation()
                   ->setLimit($this->pageSize)
                   ->setPage($page)
-                  ->setTypes($types);
+                  ->setTypes($request->getTransactionTypes());
 
-        // TODO date filter
-        //if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-        //    $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
-        //}
+        $start = $request->getStartDate();
+        $end   = $request->getEndDate();
+        if (null !== $start) {
+            $collector->setStart($start);
+        }
+        if (null !== $end) {
+            $collector->setEnd($start);
+        }
 
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v2.accounts.transactions', [$account->id])); // TODO  . $this->buildParams()
+        $paginator->setPath(
+            sprintf(
+                '%s?%s',
+                route('api.v2.accounts.transactions', [$account->id]),
+                $request->buildParams()
+            )
+        );
 
         return response()
             ->json($this->jsonApiList('transactions', $paginator, new TransactionGroupTransformer()))

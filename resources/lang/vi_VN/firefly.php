@@ -864,12 +864,12 @@ return [
     'rule_trigger_transaction_type'                       => 'Giao dịch thuộc loại ":trigger_value"',
     'rule_trigger_category_is_choice'                     => 'Danh mục là..',
     'rule_trigger_category_is'                            => 'Danh mục là ":trigger_value"',
-    'rule_trigger_amount_less_choice'                     => 'Số tiền ít hơn..',
-    'rule_trigger_amount_less'                            => 'Số tiền ít hơn :trigger_value',
+    'rule_trigger_amount_less_choice'                     => 'Amount is less than or equal to ..',
+    'rule_trigger_amount_less'                            => 'Amount is less than or equal to :trigger_value',
     'rule_trigger_amount_is_choice'                       => 'Amount is..',
     'rule_trigger_amount_is'                              => 'Amount is :trigger_value',
-    'rule_trigger_amount_more_choice'                     => 'Số tiền nhiều hơn..',
-    'rule_trigger_amount_more'                            => 'Số tiền nhiều hơn :trigger_value',
+    'rule_trigger_amount_more_choice'                     => 'Amount is more than or equal to..',
+    'rule_trigger_amount_more'                            => 'Amount is more than or equal to :trigger_value',
     'rule_trigger_description_starts_choice'              => 'Mô tả bắt đầu bằng..',
     'rule_trigger_description_starts'                     => 'Mô tả bắt đầu bằng ":trigger_value"',
     'rule_trigger_description_ends_choice'                => 'Mô tả kết thúc bằng..',
@@ -934,10 +934,14 @@ return [
     'rule_trigger_internal_reference_is'                  => 'Internal reference is ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Transaction journal ID is..',
     'rule_trigger_journal_id'                             => 'Transaction journal ID is ":trigger_value"',
-    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
-    'rule_trigger_any_external_url'                       => 'Transaction has an external URL',
-    'rule_trigger_any_external_url_choice'                => 'Transaction has an external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_id'                        => 'Transaction has an (any) external ID',
+    'rule_trigger_any_external_id_choice'                 => 'Transaction has an (any) external ID',
     'rule_trigger_no_external_url_choice'                 => 'Transaction has no external URL',
+    'rule_trigger_no_external_url'                        => 'Transaction has no external URL',
+    'rule_trigger_no_external_id_choice'                  => 'Transaction has no external ID',
+    'rule_trigger_no_external_id'                         => 'Transaction has no external ID',
     'rule_trigger_id_choice'                              => 'Transaction ID is..',
     'rule_trigger_id'                                     => 'Transaction ID is ":trigger_value"',
     'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT is..',
@@ -1218,6 +1222,7 @@ return [
 
 
     // actions
+    // set, clear, add, remove, append/prepend
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
     'rule_action_delete_transaction'                      => 'DELETE transaction(!)',
     'rule_action_set_category'                            => 'Đặt danh mục thành ":action_value"',
@@ -1255,6 +1260,8 @@ return [
     'rule_action_set_notes_choice'                        => 'Set notes to ..',
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Liên kết đến một hóa đơn ":action_value"',
+    'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Đặt ghi chú cho ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Chuyển đổi giao dịch thành tiền gửi',
     'rule_action_convert_deposit'                         => 'Chuyển đổi giao dịch thành tiền gửi từ ":action_value"',
@@ -1396,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Financial administration',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
@@ -1815,8 +1823,10 @@ return [
     'asset_accounts'                            => 'tài khoản',
     'undefined_accounts'                        => 'Accounts',
     'asset_accounts_inactive'                   => 'tài khoản (không hoạt động)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Tài khoản chi phí',
     'expense_accounts_inactive'                 => 'Tài khoản chi tiêu (không hoạt động)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Tài khoản doanh thu',
     'revenue_accounts_inactive'                 => 'Revenue accounts (inactive)',
     'cash_accounts'                             => 'Tài khoản tiền mặt',
@@ -1905,6 +1915,7 @@ return [
     'categories'                                => 'Danh mục',
     'edit_category'                             => 'Sửa danh mục ":name"',
     'no_category'                               => '(không danh mục)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Danh mục',
     'delete_category'                           => 'Xóa danh mục ":name"',
     'deleted_category'                          => 'Đã xóa danh mục ":name"',
@@ -2072,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Tìm kiếm...',
     'version'                                   => 'Phiên bản',
     'dashboard'                                 => 'Bảng điều khiển',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Ngân sách có sẵn ({currency})',
     'currencies'                                => 'Tiền tệ',
     'activity'                                  => 'Hoạt động',
@@ -2380,6 +2397,7 @@ return [
     'invite_user'                              => 'Invite user',
     'user_is_invited'                          => 'Email address ":address" was invited to Firefly III',
     'administration'                           => 'Quản trị',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Invite code has been used',
     'user_administration'                      => 'Quản lý người dùng',
     'list_all_users'                           => 'Tất cả người dùng',
@@ -2519,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(chưa nhóm)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Hãy tạo một tài khoản!',
@@ -2703,6 +2722,7 @@ return [
     'ale_action_clear_tag'               => 'Cleared tag',
     'ale_action_clear_all_tags'          => 'Cleared all tags',
     'ale_action_set_bill'                => 'Linked to bill',
+    'ale_action_switch_accounts'         => 'Switched source and destination account',
     'ale_action_set_budget'              => 'Set budget',
     'ale_action_set_category'            => 'Set category',
     'ale_action_set_source'              => 'Set source account',

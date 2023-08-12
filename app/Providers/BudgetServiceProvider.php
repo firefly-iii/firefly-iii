@@ -25,14 +25,20 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Repositories\Budget\AvailableBudgetRepository;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
+use FireflyIII\Repositories\Administration\Budget\AvailableBudgetRepository as AdminAbRepository;
+use FireflyIII\Repositories\Administration\Budget\AvailableBudgetRepositoryInterface as AdminAbRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepository;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepository;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Administration\Budget\BudgetRepository as AdminBudgetRepository;
+use FireflyIII\Repositories\Administration\Budget\BudgetRepositoryInterface as AdminBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\NoBudgetRepository;
 use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepository;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
+use FireflyIII\Repositories\Administration\Budget\OperationsRepository as AdminOperationsRepository;
+use FireflyIII\Repositories\Administration\Budget\OperationsRepositoryInterface as AdminOperationsRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -54,7 +60,6 @@ class BudgetServiceProvider extends ServiceProvider
     public function register(): void
     {
         // reference to auth is not understood by phpstan.
-
         $this->app->bind(
             BudgetRepositoryInterface::class,
             static function (Application $app) {
@@ -62,6 +67,20 @@ class BudgetServiceProvider extends ServiceProvider
                 $repository = app(BudgetRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        $this->app->bind(
+            AdminBudgetRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var AdminBudgetRepositoryInterface $repository */
+                $repository = app(AdminBudgetRepository::class);
+                if ($app->auth->check()) { // @phpstan-ignore-line
+                    $repository->setUser(auth()->user());
+                    $repository->setAdministrationId(auth()->user()->user_group_id);
                 }
 
                 return $repository;
@@ -76,6 +95,21 @@ class BudgetServiceProvider extends ServiceProvider
                 $repository = app(AvailableBudgetRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        // available budget repos
+        $this->app->bind(
+            AdminAbRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var AdminAbRepositoryInterface $repository */
+                $repository = app(AdminAbRepository::class);
+                if ($app->auth->check()) { // @phpstan-ignore-line
+                    $repository->setUser(auth()->user());
+                    $repository->setAdministrationId(auth()->user()->user_group_id);
                 }
 
                 return $repository;
@@ -118,6 +152,19 @@ class BudgetServiceProvider extends ServiceProvider
                 $repository = app(OperationsRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+        $this->app->bind(
+            AdminOperationsRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var AdminOperationsRepositoryInterface $repository */
+                $repository = app(AdminOperationsRepository::class);
+                if ($app->auth->check()) { // @phpstan-ignore-line
+                    $repository->setUser(auth()->user());
+                    $repository->setAdministrationId(auth()->user()->user_group_id);
                 }
 
                 return $repository;

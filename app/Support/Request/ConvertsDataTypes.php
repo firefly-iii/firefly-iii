@@ -26,6 +26,8 @@ namespace FireflyIII\Support\Request;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
+use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -151,6 +153,38 @@ trait ConvertsDataTypes
             return '';
         }
         return trim($string);
+    }
+
+    /**
+     * TODO duplicate, see SelectTransactionsRequest
+     *
+     * Validate list of accounts. This one is for V2 endpoints, so it searches for groups, not users.
+     *
+     * @return Collection
+     */
+    public function getAccountList(): Collection
+    {
+        // fixed
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        // set administration ID
+        // group ID
+        $administrationId = auth()->user()->getAdministrationId();
+        $repository->setAdministrationId($administrationId);
+
+        $set        = $this->get('accounts');
+        $collection = new Collection();
+        if (is_array($set)) {
+            foreach ($set as $accountId) {
+                $account = $repository->find((int)$accountId);
+                if (null !== $account) {
+                    $collection->push($account);
+                }
+            }
+        }
+
+        return $collection;
     }
 
     /**
@@ -342,7 +376,7 @@ trait ConvertsDataTypes
     {
         $result = null;
         try {
-            $result = $this->get($field) ? new Carbon($this->get($field)) : null;
+            $result = $this->get($field) ? new Carbon($this->get($field), config('app.timezone')) : null;
         } catch (InvalidFormatException $e) {
             // @ignoreException
         }

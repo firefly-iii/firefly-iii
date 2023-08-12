@@ -1,0 +1,27 @@
+{
+    "ja_JP": {
+        "config": {
+            "html_language": "ja"
+        },
+        "firefly": {
+            "spent": "\u652f\u51fa",
+            "left": "\u6b8b\u308a",
+            "paid": "\u652f\u6255\u3044\u6e08\u307f",
+            "unpaid": "\u672a\u6255\u3044",
+            "default_group_title_name_plain": "\u30b0\u30eb\u30fc\u30d7\u89e3\u9664",
+            "overspent": "\u4f7f\u3044\u3059\u304e",
+            "money_flowing_in": "\u5165",
+            "money_flowing_out": "\u51fa",
+            "category": "\u30ab\u30c6\u30b4\u30ea",
+            "unknown_category_plain": "\u30ab\u30c6\u30b4\u30ea\u306a\u3057",
+            "all_money": "\u3059\u3079\u3066\u306e\u304a\u91d1",
+            "unknown_source_plain": "\u4e0d\u660e\u306a\u5f15\u304d\u51fa\u3057\u53e3\u5ea7",
+            "unknown_dest_plain": "\u4e0d\u660e\u306a\u9810\u3051\u5165\u308c\u53e3\u5ea7",
+            "unknown_any_plain": "\u4e0d\u660e\u306a\u53e3\u5ea7",
+            "unknown_budget_plain": "\u4e88\u7b97\u306a\u3057",
+            "expense_account": "\u652f\u51fa\u53e3\u5ea7",
+            "revenue_account": "\u53ce\u5165\u53e3\u5ea7",
+            "budget": "\u4e88\u7b97"
+        }
+    }
+}

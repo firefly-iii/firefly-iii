@@ -36,6 +36,8 @@ abstract class AbstractTransformer extends TransformerAbstract
     protected ParameterBag $parameters;
 
     /**
+     * This method is called exactly ONCE from FireflyIII\Api\V2\Controllers\Controller::jsonApiList
+     *
      * @param Collection $objects
      *
      * @return void

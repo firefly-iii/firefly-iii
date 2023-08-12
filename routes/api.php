@@ -35,6 +35,20 @@ declare(strict_types=1);
 //);
 
 /**
+ * V2 API route for Summary boxes
+ */
+// BASIC
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Summary',
+        'prefix'    => 'v2/summary',
+        'as'        => 'api.v2.summary.',
+    ],
+    static function () {
+        Route::get('basic', ['uses' => 'BasicController@basic', 'as' => 'basic']);
+    }
+);
+/**
  * V2 API route for TransactionList API endpoints
  */
 Route::group(
@@ -44,7 +58,8 @@ Route::group(
         'as'        => 'api.v2.',
     ],
     static function () {
-        Route::get('accounts/{account}/transactions', ['uses' => 'AccountController@listTransactions', 'as' => 'accounts.transactions']);
+        Route::get('transactions', ['uses' => 'TransactionController@list', 'as' => 'transactions.list']);
+        Route::get('accounts/{userGroupAccount}/transactions', ['uses' => 'AccountController@list', 'as' => 'accounts.transactions']);
     }
 );
 
@@ -87,7 +102,10 @@ Route::group(
         'as'        => 'api.v1.chart.',
     ],
     static function () {
-        Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'dashboard']);
+        Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'account.dashboard']);
+        Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
+        Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
+        Route::get('balance/balance', ['uses' => 'BalanceController@balance', 'as' => 'balance.balance']);
     }
 );
 
@@ -106,19 +124,35 @@ Route::group(
 );
 
 /**
- * V2 API route for bills.
+ * V2 API route for subscriptions.
  */
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Bill',
-        'prefix'    => 'v2/bills',
-        'as'        => 'api.v2.bills.',
+        'prefix'    => 'v2/subscriptions',
+        'as'        => 'api.v2.subscriptions.',
     ],
     static function () {
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::get('sum/paid', ['uses' => 'SumController@paid', 'as' => 'sum.paid']);
         Route::get('sum/unpaid', ['uses' => 'SumController@unpaid', 'as' => 'sum.unpaid']);
     }
 );
+
+/**
+ * V2 API route for piggy banks.
+ */
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\PiggyBank',
+        'prefix'    => 'v2/piggy-banks',
+        'as'        => 'api.v2.piggy-banks.',
+    ],
+    static function () {
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+    }
+);
+
 /**
  * V2 API route for budgets and budget limits:
  */

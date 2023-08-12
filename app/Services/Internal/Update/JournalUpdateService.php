@@ -143,9 +143,8 @@ class JournalUpdateService
         Log::debug(sprintf('Now in %s', __METHOD__));
         Log::debug(sprintf('Now in JournalUpdateService for journal #%d.', $this->transactionJournal->id));
 
-        if ($this->removeReconciliation()) {
-            $this->data['reconciled'] = false;
-        }
+
+        $this->data['reconciled'] = array_key_exists('reconciled', $this->data) ? $this->data['reconciled'] : false;
 
         // can we update account data using the new type?
         if ($this->hasValidAccounts()) {
@@ -180,21 +179,6 @@ class JournalUpdateService
         app('preferences')->mark();
 
         $this->transactionJournal->refresh();
-    }
-
-    /**
-     * @return bool
-     */
-    private function removeReconciliation(): bool
-    {
-        if (count($this->data) > 1) {
-            return true;
-        }
-        if (1 === count($this->data) && true === array_key_exists('transaction_journal_id', $this->data)) {
-            return true;
-        }
-
-        return false;
     }
 
     /**

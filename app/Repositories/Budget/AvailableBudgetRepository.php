@@ -249,6 +249,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         return AvailableBudget::create(
             [
                 'user_id'                 => $this->user->id,
+                'user_group_id'           => $this->user->user_group_id,
                 'transaction_currency_id' => $data['currency_id'],
                 'amount'                  => $data['amount'],
                 'start_date'              => $start,

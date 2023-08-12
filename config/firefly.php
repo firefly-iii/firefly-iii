@@ -60,6 +60,7 @@ use FireflyIII\Support\Binder\EitherConfigKey;
 use FireflyIII\Support\Binder\JournalList;
 use FireflyIII\Support\Binder\TagList;
 use FireflyIII\Support\Binder\TagOrId;
+use FireflyIII\Support\Binder\UserGroupAccount;
 use FireflyIII\TransactionRules\Actions\AddTag;
 use FireflyIII\TransactionRules\Actions\AppendDescription;
 use FireflyIII\TransactionRules\Actions\AppendDescriptionToNotes;
@@ -85,6 +86,7 @@ use FireflyIII\TransactionRules\Actions\SetDescription;
 use FireflyIII\TransactionRules\Actions\SetDestinationAccount;
 use FireflyIII\TransactionRules\Actions\SetNotes;
 use FireflyIII\TransactionRules\Actions\SetSourceAccount;
+use FireflyIII\TransactionRules\Actions\SwitchAccounts;
 use FireflyIII\TransactionRules\Actions\UpdatePiggybank;
 use FireflyIII\User;
 
@@ -108,9 +110,9 @@ return [
         'handle_debts' => true,
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.0.19',
-    'api_version'                  => '2.0.4',
-    'db_version'                   => 19,
+    'version'                      => '6.0.20',
+    'api_version'                  => '2.0.6',
+    'db_version'                   => 20,
 
     // generic settings
     'maxUploadSize'                => 1073741824, // 1 GB
@@ -476,6 +478,9 @@ return [
         'dynamicConfigKey' => DynamicConfigKey::class,
         'eitherConfigKey'  => EitherConfigKey::class,
 
+        // V2 API endpoints:
+        'userGroupAccount' => UserGroupAccount::class,
+
 
     ],
     'rule-actions'         => [
@@ -499,6 +504,7 @@ return [
         'convert_withdrawal'      => ConvertToWithdrawal::class,
         'convert_deposit'         => ConvertToDeposit::class,
         'convert_transfer'        => ConvertToTransfer::class,
+        'switch_accounts'         => SwitchAccounts::class,
         'update_piggy'            => UpdatePiggybank::class,
         'delete_transaction'      => DeleteTransaction::class,
         'append_descr_to_notes'   => AppendDescriptionToNotes::class,

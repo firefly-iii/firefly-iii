@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Začátek rozsahu',
     'end_date'                    => 'Konec rozsahu',
     'enddate'                     => 'Datum ukončení',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Začátek rozsahu',
     'end'                         => 'Konec rozsahu',
     'delete_account'              => 'Smazat účet „:name“',

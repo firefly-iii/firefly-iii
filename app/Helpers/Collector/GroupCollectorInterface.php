@@ -30,6 +30,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -1078,6 +1079,15 @@ interface GroupCollectorInterface
     public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
+     * Set the end time of the results to return.
+     *
+     * @param Carbon $end
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setEnd(Carbon $end): GroupCollectorInterface;
+
+    /**
      * @param bool $expandGroupSearch
      */
     public function setExpandGroupSearch(bool $expandGroupSearch);
@@ -1262,6 +1272,15 @@ interface GroupCollectorInterface
     public function setSourceAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
+     * Set the start time of the results to return.
+     *
+     * @param Carbon $start
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setStart(Carbon $start): GroupCollectorInterface;
+
+    /**
      * Limit results to a specific tag.
      *
      * @param Tag $tag
@@ -1314,6 +1333,15 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setUser(User $user): GroupCollectorInterface;
+
+    /**
+     * Set the user group object and start the query.
+     *
+     * @param UserGroup $userGroup
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setUserGroup(UserGroup $userGroup): GroupCollectorInterface;
 
     /**
      * Only when does not have these tags

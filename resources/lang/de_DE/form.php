@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Anfang des Bereichs',
     'end_date'                    => 'Ende des Bereichs',
     'enddate'                     => 'Endet am',
+    'move_rules_before_delete'    => 'Regelgruppe',
     'start'                       => 'Anfang des Bereichs',
     'end'                         => 'Ende des Bereichs',
     'delete_account'              => 'Konto „:name” löschen',

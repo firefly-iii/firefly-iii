@@ -864,12 +864,12 @@ return [
     'rule_trigger_transaction_type'                       => 'Transaksjonen er av typen ":trigger_value"',
     'rule_trigger_category_is_choice'                     => 'Kategori er..',
     'rule_trigger_category_is'                            => 'Kategori er ":trigger_value"',
-    'rule_trigger_amount_less_choice'                     => 'Beløpet er mindre enn..',
-    'rule_trigger_amount_less'                            => 'Beløpet er mindre enn :trigger_value',
+    'rule_trigger_amount_less_choice'                     => 'Amount is less than or equal to ..',
+    'rule_trigger_amount_less'                            => 'Amount is less than or equal to :trigger_value',
     'rule_trigger_amount_is_choice'                       => 'Beløpet er..',
     'rule_trigger_amount_is'                              => 'Beløpet er :trigger_value',
-    'rule_trigger_amount_more_choice'                     => 'Beløpet er meir enn..',
-    'rule_trigger_amount_more'                            => 'Beløpet er meir enn :trigger_value',
+    'rule_trigger_amount_more_choice'                     => 'Amount is more than or equal to..',
+    'rule_trigger_amount_more'                            => 'Amount is more than or equal to :trigger_value',
     'rule_trigger_description_starts_choice'              => 'Beskrivinga byrjar med..',
     'rule_trigger_description_starts'                     => 'Beskrivinga byrjar med ":trigger_value"',
     'rule_trigger_description_ends_choice'                => 'Beskrivinga sluttar med..',
@@ -934,10 +934,14 @@ return [
     'rule_trigger_internal_reference_is'                  => 'Ekstern referanse er ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Transaksjonens journal ID er..',
     'rule_trigger_journal_id'                             => 'Transaksjonens journal ID er ":trigger_value"',
-    'rule_trigger_no_external_url'                        => 'Transaksjonen har ingen ekstern URL',
-    'rule_trigger_any_external_url'                       => 'Transaksjonen har ein ekstern URL',
-    'rule_trigger_any_external_url_choice'                => 'Transaksjonen har ein ekstern URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_id'                        => 'Transaction has an (any) external ID',
+    'rule_trigger_any_external_id_choice'                 => 'Transaction has an (any) external ID',
     'rule_trigger_no_external_url_choice'                 => 'Transaksjonen har ingen ekstern URL',
+    'rule_trigger_no_external_url'                        => 'Transaksjonen har ingen ekstern URL',
+    'rule_trigger_no_external_id_choice'                  => 'Transaction has no external ID',
+    'rule_trigger_no_external_id'                         => 'Transaction has no external ID',
     'rule_trigger_id_choice'                              => 'Transaksjons-ID er',
     'rule_trigger_id'                                     => 'Transaksjons ID er ":trigger_value"',
     'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT er..',
@@ -1218,6 +1222,7 @@ return [
 
 
     // actions
+    // set, clear, add, remove, append/prepend
     'rule_action_delete_transaction_choice'               => 'SLETT transaksjon(!)',
     'rule_action_delete_transaction'                      => 'SLETT transaksjon(!)',
     'rule_action_set_category'                            => 'Sett kategori til ":action_value"',
@@ -1255,6 +1260,8 @@ return [
     'rule_action_set_notes_choice'                        => 'Sett notat til ..',
     'rule_action_link_to_bill_choice'                     => 'Koble til ein rekning ..',
     'rule_action_link_to_bill'                            => 'Link til rekning ":action_value"',
+    'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Sett notat til ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Konverter transaksjonen til eit innskot',
     'rule_action_convert_deposit'                         => 'Konverter transaksjonen til eit innskot frå ":action_value"',
@@ -1396,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Økonomisk administrasjon',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Fjern data frå Firefly III',
@@ -1815,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Aktivakontoar',
     'undefined_accounts'                        => 'Kontoar',
     'asset_accounts_inactive'                   => 'Aktivakontoar (inaktive)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Utgiftskontoar',
     'expense_accounts_inactive'                 => 'Utgiftskontoar (inaktive)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Inntektskontoar',
     'revenue_accounts_inactive'                 => 'Inntektskontoar (inaktive)',
     'cash_accounts'                             => 'Kontantkontoar',
@@ -1905,6 +1915,7 @@ return [
     'categories'                                => 'Kategorier',
     'edit_category'                             => 'Rediger kategori ":name"',
     'no_category'                               => '(ingen kategori)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Kategori',
     'delete_category'                           => 'Slett kategori ":name"',
     'deleted_category'                          => 'Sletta kategori ":name"',
@@ -2072,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Søk...',
     'version'                                   => 'Versjon',
     'dashboard'                                 => 'Startskjerm',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Tilgjengelige budsjett ({currency})',
     'currencies'                                => 'Valutaer',
     'activity'                                  => 'Aktivitet',
@@ -2380,6 +2397,7 @@ return [
     'invite_user'                              => 'Inviter brukar',
     'user_is_invited'                          => 'E-postadressa «:address» vart invitert til Firefly III',
     'administration'                           => 'Administrasjon',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Invitasjonskoden er allereie brukt',
     'user_administration'                      => 'Brukaradministrasjon',
     'list_all_users'                           => 'Alle brukarar',
@@ -2519,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(ikkje gruppert)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'La oss oppretta ein aktivakonto!',
@@ -2703,6 +2722,7 @@ return [
     'ale_action_clear_tag'               => 'Fjerna tagg',
     'ale_action_clear_all_tags'          => 'Fjerna alle tagger',
     'ale_action_set_bill'                => 'Kopla til rekning',
+    'ale_action_switch_accounts'         => 'Switched source and destination account',
     'ale_action_set_budget'              => 'Sett budsjett',
     'ale_action_set_category'            => 'Sett kategori',
     'ale_action_set_source'              => 'Sett kjeldekonto',

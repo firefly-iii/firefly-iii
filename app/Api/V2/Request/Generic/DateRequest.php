@@ -47,7 +47,7 @@ class DateRequest extends FormRequest
     {
         return [
             'start' => $this->getCarbonDate('start'),
-            'end'   => $this->getCarbonDate('end'),
+            'end'   => $this->getCarbonDate('end')->endOfDay(),
         ];
     }
 

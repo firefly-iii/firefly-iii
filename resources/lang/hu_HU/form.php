@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Tartomány kezdete',
     'end_date'                    => 'Tartomány vége',
     'enddate'                     => 'End date',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Tartomány kezdete',
     'end'                         => 'Tartomány vége',
     'delete_account'              => '":name" bankszámla törlése',

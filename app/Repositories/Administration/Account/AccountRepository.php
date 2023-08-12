@@ -30,6 +30,7 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Repositories\Administration\AdministrationTrait;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
 /**
@@ -38,82 +39,6 @@ use Illuminate\Support\Collection;
 class AccountRepository implements AccountRepositoryInterface
 {
     use AdministrationTrait;
-
-
-    /**
-     * @inheritDoc
-     */
-    public function searchAccount(string $query, array $types, int $limit): Collection
-    {
-        // search by group, not by user
-        $dbQuery = $this->userGroup->accounts()
-            ->where('active', true)
-            ->orderBy('accounts.order', 'ASC')
-            ->orderBy('accounts.account_type_id', 'ASC')
-            ->orderBy('accounts.name', 'ASC')
-            ->with(['accountType']);
-        if ('' !== $query) {
-            // split query on spaces just in case:
-            $parts = explode(' ', $query);
-            foreach ($parts as $part) {
-                $search = sprintf('%%%s%%', $part);
-                $dbQuery->where('name', 'LIKE', $search);
-            }
-        }
-        if (0 !== count($types)) {
-            $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
-            $dbQuery->whereIn('account_types.type', $types);
-        }
-
-        return $dbQuery->take($limit)->get(['accounts.*']);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAccountsByType(array $types, ?array $sort = []): Collection
-    {
-        $res = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
-        $query = $this->userGroup->accounts();
-        if (0 !== count($types)) {
-            $query->accountTypeIn($types);
-        }
-
-        // add sort parameters. At this point they're filtered to allowed fields to sort by:
-        if (0 !== count($sort)) {
-            foreach ($sort as $param) {
-                $query->orderBy($param[0], $param[1]);
-            }
-        }
-
-        if (0 === count($sort)) {
-            if (0 !== count($res)) {
-                $query->orderBy('accounts.order', 'ASC');
-            }
-            $query->orderBy('accounts.active', 'DESC');
-            $query->orderBy('accounts.name', 'ASC');
-        }
-        return $query->get(['accounts.*']);
-    }
-
-    /**
-     * @param array $accountIds
-     *
-     * @return Collection
-     */
-    public function getAccountsById(array $accountIds): Collection
-    {
-        $query = $this->userGroup->accounts();
-
-        if (0 !== count($accountIds)) {
-            $query->whereIn('accounts.id', $accountIds);
-        }
-        $query->orderBy('accounts.order', 'ASC');
-        $query->orderBy('accounts.active', 'DESC');
-        $query->orderBy('accounts.name', 'ASC');
-
-        return $query->get(['accounts.*']);
-    }
 
     /**
      * @param Account $account
@@ -141,7 +66,7 @@ class AccountRepository implements AccountRepositoryInterface
      * Return meta value for account. Null if not found.
      *
      * @param Account $account
-     * @param string $field
+     * @param string  $field
      *
      * @return null|string
      */
@@ -160,5 +85,113 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param int $accountId
+     *
+     * @return Account|null
+     */
+    public function find(int $accountId): ?Account
+    {
+        $account = $this->user->accounts()->find($accountId);
+        if (null === $account) {
+            $account = $this->userGroup->accounts()->find($accountId);
+        }
+        return $account;
+    }
+
+    /**
+     * @param array $accountIds
+     *
+     * @return Collection
+     */
+    public function getAccountsById(array $accountIds): Collection
+    {
+        $query = $this->userGroup->accounts();
+
+        if (0 !== count($accountIds)) {
+            $query->whereIn('accounts.id', $accountIds);
+        }
+        $query->orderBy('accounts.order', 'ASC');
+        $query->orderBy('accounts.active', 'DESC');
+        $query->orderBy('accounts.name', 'ASC');
+
+        return $query->get(['accounts.*']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAccountsByType(array $types, ?array $sort = []): Collection
+    {
+        $res   = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
+        $query = $this->userGroup->accounts();
+        if (0 !== count($types)) {
+            $query->accountTypeIn($types);
+        }
+
+        // add sort parameters. At this point they're filtered to allowed fields to sort by:
+        if (0 !== count($sort)) {
+            foreach ($sort as $param) {
+                $query->orderBy($param[0], $param[1]);
+            }
+        }
+
+        if (0 === count($sort)) {
+            if (0 !== count($res)) {
+                $query->orderBy('accounts.order', 'ASC');
+            }
+            $query->orderBy('accounts.active', 'DESC');
+            $query->orderBy('accounts.name', 'ASC');
+        }
+        return $query->get(['accounts.*']);
+    }
+
+    /**
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function getActiveAccountsByType(array $types): Collection
+    {
+        $query = $this->userGroup->accounts();
+        if (0 !== count($types)) {
+            $query->accountTypeIn($types);
+        }
+        $query->where('active', true);
+        $query->orderBy('accounts.account_type_id', 'ASC');
+        $query->orderBy('accounts.order', 'ASC');
+        $query->orderBy('accounts.name', 'ASC');
+
+        return $query->get(['accounts.*']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function searchAccount(string $query, array $types, int $limit): Collection
+    {
+        // search by group, not by user
+        $dbQuery = $this->userGroup->accounts()
+                                   ->where('active', true)
+                                   ->orderBy('accounts.order', 'ASC')
+                                   ->orderBy('accounts.account_type_id', 'ASC')
+                                   ->orderBy('accounts.name', 'ASC')
+                                   ->with(['accountType']);
+        if ('' !== $query) {
+            // split query on spaces just in case:
+            $parts = explode(' ', $query);
+            foreach ($parts as $part) {
+                $search = sprintf('%%%s%%', $part);
+                $dbQuery->where('name', 'LIKE', $search);
+            }
+        }
+        if (0 !== count($types)) {
+            $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $dbQuery->whereIn('account_types.type', $types);
+        }
+
+        return $dbQuery->take($limit)->get(['accounts.*']);
     }
 }

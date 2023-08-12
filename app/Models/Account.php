@@ -125,7 +125,7 @@ class Account extends Model
             'encrypted'  => 'boolean',
         ];
     /** @var array Fields that can be filled */
-    protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
+    protected $fillable = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
     /** @var array Hidden from view */
     protected $hidden             = ['encrypted'];
     private bool $joinedAccountTypes = false;

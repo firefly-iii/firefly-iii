@@ -52,21 +52,21 @@ class ChangesForV480 extends Migration
                             try {
                                 $table->dropForeign('transaction_journals_transaction_group_id_foreign');
                             } catch (QueryException $e) {
-                                Log::error(sprintf('Could not drop foreign ID: %s', $e->getMessage()));
-                                Log::error('If the foreign ID does not exist (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                                app('log')->error(sprintf('Could not drop foreign ID: %s', $e->getMessage()));
+                                app('log')->error('If the foreign ID does not exist (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
                             }
                         }
                         try {
                             $table->dropColumn('transaction_group_id');
                         } catch (QueryException | ColumnDoesNotExist $e) {
-                            Log::error(sprintf('Could not drop column: %s', $e->getMessage()));
-                            Log::error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
+                            app('log')->error(sprintf('Could not drop column: %s', $e->getMessage()));
+                            app('log')->error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
                         }
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
 
@@ -79,14 +79,14 @@ class ChangesForV480 extends Migration
                         try {
                             $table->dropColumn('stop_processing');
                         } catch (QueryException | ColumnDoesNotExist $e) {
-                            Log::error(sprintf('Could not drop column: %s', $e->getMessage()));
-                            Log::error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
+                            app('log')->error(sprintf('Could not drop column: %s', $e->getMessage()));
+                            app('log')->error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
                         }
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
 
@@ -99,14 +99,14 @@ class ChangesForV480 extends Migration
                         try {
                             $table->dropColumn('mfa_secret');
                         } catch (QueryException | ColumnDoesNotExist $e) {
-                            Log::error(sprintf('Could not drop column: %s', $e->getMessage()));
-                            Log::error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
+                            app('log')->error(sprintf('Could not drop column: %s', $e->getMessage()));
+                            app('log')->error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
                         }
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
     }
@@ -134,16 +134,16 @@ class ChangesForV480 extends Migration
                         try {
                             $table->foreign('transaction_group_id')->references('id')->on('transaction_groups')->onDelete('cascade');
                         } catch (QueryException $e) {
-                            Log::error(sprintf('Could not create foreign index: %s', $e->getMessage()));
-                            Log::error(
+                            app('log')->error(sprintf('Could not create foreign index: %s', $e->getMessage()));
+                            app('log')->error(
                                 'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.'
                             );
                         }
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
 
@@ -157,8 +157,8 @@ class ChangesForV480 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
 
@@ -172,8 +172,8 @@ class ChangesForV480 extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
     }

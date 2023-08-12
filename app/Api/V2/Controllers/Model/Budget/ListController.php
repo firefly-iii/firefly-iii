@@ -60,6 +60,8 @@ class ListController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        echo 'this needs move to Administration';
+        exit;
         $collection = $this->repository->getActiveBudgets();
         $total      = $collection->count();
         $collection->slice($this->pageSize * $this->parameters->get('page'), $this->pageSize);

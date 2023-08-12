@@ -1,0 +1,44 @@
+{
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
+    "file": "assets/fa-brands-400-003f1154.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf",
+    "integrity": "sha384-4EQH+PmKesDrfu4je7V8FqFBmki3WyM5kRanRrc8h0mBNO4t1nDOTN6DIxfmm4pE"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2": {
+    "file": "assets/fa-brands-400-faae6fc0.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2",
+    "integrity": "sha384-nWRwAM374M2/Kes6S6O2dGHU0rqnWmg0z0XxZiW15DCy3XRY0/oTfALEnWzGDaRL"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf": {
+    "file": "assets/fa-regular-400-7d81a1a7.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf",
+    "integrity": "sha384-YdQktu6FPOgaFQYYBvOWlPWMbMusTav1NsefBpQssPEe9CLJ8tgsV71lV23spHCc"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2": {
+    "file": "assets/fa-regular-400-9169d8be.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2",
+    "integrity": "sha384-d4XYctR/QCX2hwpVKFf2jRVpNbX/lvW/SBtmseI5R0DqUkh6IIgJL6gqOQcVG9AI"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf": {
+    "file": "assets/fa-solid-900-cea79b34.ttf",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf",
+    "integrity": "sha384-5v9qe32KjexA3nf6mGKT6kA39om1v84xVOd9s2bGSEislD6ovRaHRIMnd2GOlI+L"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2": {
+    "file": "assets/fa-solid-900-886c8611.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2",
+    "integrity": "sha384-B73JAwYNSgI4rwb14zwxigHgAkg1Ms+j6+9sJoDpiL11+VW5RjQCLfIh0RVoi0h6"
+  },
+  "resources/assets/v2/dashboard.js": {
+    "file": "assets/dashboard-40253f13.js",
+    "isEntry": true,
+    "src": "resources/assets/v2/dashboard.js",
+    "integrity": "sha384-1RIolAXZYnMCA5uLiXCI3XixY7vu6YBK+4MQFqBCqDG25k4J1U6A2WCyjRxUA1Ws"
+  },
+  "resources/assets/v2/sass/app.scss": {
+    "file": "assets/app-28a195fd.css",
+    "isEntry": true,
+    "src": "resources/assets/v2/sass/app.scss",
+    "integrity": "sha384-E/ojpHNuLxPbdew8iDiIKVYDJU4S+J/CFOSq9N57hch8mzgzLk4J4YCAyuCdj//E"
+  }
+}

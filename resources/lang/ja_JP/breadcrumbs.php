@@ -47,7 +47,7 @@ return [
     'title_transfers'  => '送金',
     'edit_currency'    => '通貨「:name」を編集する',
     'delete_currency'  => '通貨「:name」を削除する',
-    'newPiggyBank'     => '貯金箱を作成',
+    'newPiggyBank'     => '新しい貯金箱を作成',
     'edit_piggyBank'   => '貯金箱 ":name" を編集する',
     'preferences'      => '設定',
     'profile'          => 'プロフィール',

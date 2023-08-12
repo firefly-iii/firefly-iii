@@ -864,12 +864,12 @@ return [
     'rule_trigger_transaction_type'                       => 'Transaktion är av typen ":trigger_value"',
     'rule_trigger_category_is_choice'                     => 'Kategori är..',
     'rule_trigger_category_is'                            => 'Kategori är ":trigger_value"',
-    'rule_trigger_amount_less_choice'                     => 'Beloppet är mindre än..',
-    'rule_trigger_amount_less'                            => 'Beloppet är mindre än :trigger_value',
+    'rule_trigger_amount_less_choice'                     => 'Amount is less than or equal to ..',
+    'rule_trigger_amount_less'                            => 'Amount is less than or equal to :trigger_value',
     'rule_trigger_amount_is_choice'                       => 'Amount is..',
     'rule_trigger_amount_is'                              => 'Amount is :trigger_value',
-    'rule_trigger_amount_more_choice'                     => 'Belopp är mer än..',
-    'rule_trigger_amount_more'                            => 'Belopp är mer än :trigger_value',
+    'rule_trigger_amount_more_choice'                     => 'Amount is more than or equal to..',
+    'rule_trigger_amount_more'                            => 'Amount is more than or equal to :trigger_value',
     'rule_trigger_description_starts_choice'              => 'Beskrivning börjar med..',
     'rule_trigger_description_starts'                     => 'Beskrivning börjar med ":trigger_value"',
     'rule_trigger_description_ends_choice'                => 'Beskrivning slutar med..',
@@ -934,10 +934,14 @@ return [
     'rule_trigger_internal_reference_is'                  => 'Internal reference is ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Transaktionsjournal-ID är..',
     'rule_trigger_journal_id'                             => 'Transaktionsjournal-ID är ":trigger_value"',
-    'rule_trigger_no_external_url'                        => 'Transaktionen saknar extern URL',
-    'rule_trigger_any_external_url'                       => 'Transaktionen har en extern URL',
-    'rule_trigger_any_external_url_choice'                => 'Transaktionen har en extern URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_id'                        => 'Transaction has an (any) external ID',
+    'rule_trigger_any_external_id_choice'                 => 'Transaction has an (any) external ID',
     'rule_trigger_no_external_url_choice'                 => 'Transaktionen saknar extern URL',
+    'rule_trigger_no_external_url'                        => 'Transaktionen saknar extern URL',
+    'rule_trigger_no_external_id_choice'                  => 'Transaction has no external ID',
+    'rule_trigger_no_external_id'                         => 'Transaction has no external ID',
     'rule_trigger_id_choice'                              => 'Transaktions-ID är..',
     'rule_trigger_id'                                     => 'Transaktions-ID är ":trigger_value"',
     'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT is..',
@@ -1218,6 +1222,7 @@ return [
 
 
     // actions
+    // set, clear, add, remove, append/prepend
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
     'rule_action_delete_transaction'                      => 'DELETE transaction(!)',
     'rule_action_set_category'                            => 'Sätt kategori till ":action_value"',
@@ -1255,6 +1260,8 @@ return [
     'rule_action_set_notes_choice'                        => 'Set notes to ..',
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Länka till nota ":action_value"',
+    'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Sätt anteckningar till ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Konvertera transaktionen till en insättning',
     'rule_action_convert_deposit'                         => 'Konvertera transaktionen till en insättning från ":action_value"',
@@ -1396,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Financial administration',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Purge data from Firefly III',
@@ -1815,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Tillgångskonton',
     'undefined_accounts'                        => 'Konton',
     'asset_accounts_inactive'                   => 'Tillgångskonton (inaktiva)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Kostnadskonto',
     'expense_accounts_inactive'                 => 'Utgiftskonton (inaktiva)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Intäktskonton',
     'revenue_accounts_inactive'                 => 'Intäktskonton (inaktiv)',
     'cash_accounts'                             => 'Kontantkonton',
@@ -1905,6 +1915,7 @@ return [
     'categories'                                => 'Kategorier',
     'edit_category'                             => 'Redigera kategori ":name"',
     'no_category'                               => '(utan kategori)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Kategori',
     'delete_category'                           => 'Ta bort kategori ":name"',
     'deleted_category'                          => 'Kategori ":name" togs bort',
@@ -2073,6 +2084,12 @@ return [
     'searchPlaceholder'                         => 'Sök...',
     'version'                                   => 'Version',
     'dashboard'                                 => 'Kontrollpanel',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Tillgänglig budget ({currency})',
     'currencies'                                => 'Valutor',
     'activity'                                  => 'Aktivitet',
@@ -2381,6 +2398,7 @@ return [
     'invite_user'                              => 'Invite user',
     'user_is_invited'                          => 'Email address ":address" was invited to Firefly III',
     'administration'                           => 'Administration',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Invite code has been used',
     'user_administration'                      => 'Användaradministration',
     'list_all_users'                           => 'Alla användare',
@@ -2520,6 +2538,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(ogrupperad)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Låt oss skapa ett tillgångskonto!',
@@ -2704,6 +2723,7 @@ return [
     'ale_action_clear_tag'               => 'Cleared tag',
     'ale_action_clear_all_tags'          => 'Cleared all tags',
     'ale_action_set_bill'                => 'Linked to bill',
+    'ale_action_switch_accounts'         => 'Switched source and destination account',
     'ale_action_set_budget'              => 'Set budget',
     'ale_action_set_category'            => 'Set category',
     'ale_action_set_source'              => 'Set source account',

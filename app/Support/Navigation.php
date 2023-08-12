@@ -516,6 +516,25 @@ class Navigation
     }
 
     /**
+     * Same as preferredCarbonFormat but by string
+     *
+     * @param string $period
+     *
+     * @return string
+     */
+    public function preferredCarbonFormatByPeriod(string $period): string
+    {
+        return match ($period) {
+            default    => 'Y-m-d',
+            //'1D'    => 'Y-m-d',
+            '1W'       => '\WW,Y',
+            '1M'       => 'Y-m',
+            '3M', '6M' => '\QQ,Y',
+            '1Y'       => 'Y',
+        };
+    }
+
+    /**
      * If the date difference between start and end is less than a month, method returns trans(config.month_and_day).
      * If the difference is less than a year, method returns "config.month". If the date difference is larger, method
      * returns "config.year".

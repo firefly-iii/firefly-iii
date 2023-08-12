@@ -58,7 +58,7 @@ class CronController extends Controller
         $return                           = [];
         $return['recurring_transactions'] = $this->runRecurring($config['force'], $config['date']);
         $return['auto_budgets']           = $this->runAutoBudget($config['force'], $config['date']);
-        if (true === config('cer.enabled')) {
+        if (true === config('cer.download_enabled')) {
             $return['exchange_rates'] = $this->exchangeRatesCronJob($config['force'], $config['date']);
         }
         $return['bill_warnings'] = $this->billWarningCronJob($config['force'], $config['date']);

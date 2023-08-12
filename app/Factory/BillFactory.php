@@ -67,6 +67,7 @@ class BillFactory
                     'match'                   => 'MIGRATED_TO_RULES',
                     'amount_min'              => $data['amount_min'],
                     'user_id'                 => $this->user->id,
+                    'user_group_id'           => $this->user->user_group_id,
                     'transaction_currency_id' => $currency->id,
                     'amount_max'              => $data['amount_max'],
                     'date'                    => $data['date'],

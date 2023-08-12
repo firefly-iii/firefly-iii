@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
@@ -34,6 +35,21 @@ use Illuminate\Support\Collection;
  */
 interface NetWorthInterface
 {
+    /**
+     * Collect net worth based on the given set of accounts.
+     *
+     * Returns X arrays with the net worth in each given currency, and the net worth in
+     * of that amount in the native currency.
+     *
+     * Includes extra array with the total(!) net worth in the native currency.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $date
+     *
+     * @return array
+     */
+    public function byAccounts(Collection $accounts, Carbon $date): array;
+
     /**
      * TODO unsure why this is deprecated.
      *
@@ -59,6 +75,11 @@ interface NetWorthInterface
      * @param User|Authenticatable|null $user
      */
     public function setUser(User | Authenticatable | null $user): void;
+
+    /**
+     * @param UserGroup $userGroup
+     */
+    public function setUserGroup(UserGroup $userGroup): void;
 
     /**
      * TODO move to repository

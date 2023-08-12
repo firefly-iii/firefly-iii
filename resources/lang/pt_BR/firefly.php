@@ -864,12 +864,12 @@ return [
     'rule_trigger_transaction_type'                       => 'Transação é do tipo ":trigger_value"',
     'rule_trigger_category_is_choice'                     => 'A categoria é..',
     'rule_trigger_category_is'                            => 'A categoria é ":trigger_value"',
-    'rule_trigger_amount_less_choice'                     => 'Quantia é inferior a..',
-    'rule_trigger_amount_less'                            => 'Quantia é inferior :trigger_value',
+    'rule_trigger_amount_less_choice'                     => 'Amount is less than or equal to ..',
+    'rule_trigger_amount_less'                            => 'Amount is less than or equal to :trigger_value',
     'rule_trigger_amount_is_choice'                       => 'Quantia é..',
     'rule_trigger_amount_is'                              => 'Quantia é :trigger_value',
-    'rule_trigger_amount_more_choice'                     => 'Quantia é mais do que..',
-    'rule_trigger_amount_more'                            => 'Quantia é mais de :trigger_value',
+    'rule_trigger_amount_more_choice'                     => 'Amount is more than or equal to..',
+    'rule_trigger_amount_more'                            => 'Amount is more than or equal to :trigger_value',
     'rule_trigger_description_starts_choice'              => 'Descrição começa com..',
     'rule_trigger_description_starts'                     => 'Descrição começa com ":trigger_value"',
     'rule_trigger_description_ends_choice'                => 'Descrição termina com..',
@@ -934,10 +934,14 @@ return [
     'rule_trigger_internal_reference_is'                  => 'Referência interna é ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'ID do livro de transação é..',
     'rule_trigger_journal_id'                             => 'ID do livro de transação é ":trigger_value"',
-    'rule_trigger_no_external_url'                        => 'A transação não tem URL externa',
-    'rule_trigger_any_external_url'                       => 'A transação tem uma URL externa',
-    'rule_trigger_any_external_url_choice'                => 'A transação tem um link externo',
+    'rule_trigger_any_external_url'                       => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_id'                        => 'Transaction has an (any) external ID',
+    'rule_trigger_any_external_id_choice'                 => 'Transaction has an (any) external ID',
     'rule_trigger_no_external_url_choice'                 => 'A transação não tem um link externo',
+    'rule_trigger_no_external_url'                        => 'A transação não tem URL externa',
+    'rule_trigger_no_external_id_choice'                  => 'Transaction has no external ID',
+    'rule_trigger_no_external_id'                         => 'Transaction has no external ID',
     'rule_trigger_id_choice'                              => 'O identificador da transação é..',
     'rule_trigger_id'                                     => 'O identificador da transação é ":trigger_value"',
     'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT é..',
@@ -1218,6 +1222,7 @@ return [
 
 
     // actions
+    // set, clear, add, remove, append/prepend
     'rule_action_delete_transaction_choice'               => 'EXCLUIR transação(!)',
     'rule_action_delete_transaction'                      => 'EXCLUIR transação(!)',
     'rule_action_set_category'                            => 'Definir categoria para ":action_value"',
@@ -1255,6 +1260,8 @@ return [
     'rule_action_set_notes_choice'                        => 'Defina notas para..',
     'rule_action_link_to_bill_choice'                     => 'Vincular a uma fatura ..',
     'rule_action_link_to_bill'                            => 'Vincular à fatura ":action_value"',
+    'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Defina notas para ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Converter esta transferência em entrada',
     'rule_action_convert_deposit'                         => 'Converter a transação em uma entrada de ":action_value"',
@@ -1396,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Administração financeira',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Excluir dados do Firefly III',
@@ -1815,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Contas de ativo',
     'undefined_accounts'                        => 'Contas',
     'asset_accounts_inactive'                   => 'Contas de ativos (inativas)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Contas de despesas',
     'expense_accounts_inactive'                 => 'Contas de despesas (inativas)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Contas de receitas',
     'revenue_accounts_inactive'                 => 'Contas de receita (inativas)',
     'cash_accounts'                             => 'Contas Correntes',
@@ -1905,6 +1915,7 @@ return [
     'categories'                                => 'Categorias',
     'edit_category'                             => 'Editar categoria ":name"',
     'no_category'                               => '(sem categoria)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Categoria',
     'delete_category'                           => 'Excluir categoria ":name"',
     'deleted_category'                          => 'Categoria ":name" excluída',
@@ -2072,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Pesquisar...',
     'version'                                   => 'Versão',
     'dashboard'                                 => 'Painel de Controle',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Orçamento disponível ({currency})',
     'currencies'                                => 'Moedas',
     'activity'                                  => 'Atividade',
@@ -2380,6 +2397,7 @@ return [
     'invite_user'                              => 'Convidar usuário',
     'user_is_invited'                          => 'O e-mail ":address" foi convidado para Firefly III',
     'administration'                           => 'Administração',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'O código de convite foi utilizado',
     'user_administration'                      => 'Administração de usuários',
     'list_all_users'                           => 'Todos os usuários',
@@ -2519,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(não agrupado)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Vamos criar uma conta de ativos!',
@@ -2703,6 +2722,7 @@ return [
     'ale_action_clear_tag'               => 'Etiquetas apagadas',
     'ale_action_clear_all_tags'          => 'Todas as etiquetas foram apagadas',
     'ale_action_set_bill'                => 'Ligado à fatura',
+    'ale_action_switch_accounts'         => 'Switched source and destination account',
     'ale_action_set_budget'              => 'Definir orçamento',
     'ale_action_set_category'            => 'Definir categoria',
     'ale_action_set_source'              => 'Definir conta de origem',

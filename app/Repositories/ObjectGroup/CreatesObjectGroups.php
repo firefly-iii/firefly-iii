@@ -53,9 +53,10 @@ trait CreatesObjectGroups
         if (!$this->hasObjectGroup($title)) {
             return ObjectGroup::create(
                 [
-                    'user_id' => $this->user->id,
-                    'title'   => $title,
-                    'order'   => $maxOrder + 1,
+                    'user_id'       => $this->user->id,
+                    'user_group_id' => $this->user->user_group_id,
+                    'title'         => $title,
+                    'order'         => $maxOrder + 1,
                 ]
             );
         }

@@ -27,11 +27,12 @@ namespace FireflyIII\Api\V2\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
-use FireflyIII\User;
+use FireflyIII\Support\Http\Api\CleansChartData;
 use Illuminate\Http\JsonResponse;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -41,7 +42,7 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class AccountController extends Controller
 {
-    use ConvertsExchangeRates;
+    use CleansChartData;
 
     private AccountRepositoryInterface $repository;
 
@@ -54,7 +55,7 @@ class AccountController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
-
+                $this->repository->setAdministrationId(auth()->user()->user_group_id);
                 return $next($request);
             }
         );
@@ -66,39 +67,38 @@ class AccountController extends Controller
      *
      * The native currency is the preferred currency on the page /currencies.
      *
+     * If a transaction has foreign currency = native currency, the foreign amount will be used, no conversion
+     * will take place.
+     *
+     * TODO validate and set administration_id from request
+     *
      * @param DateRequest $request
      *
      * @return JsonResponse
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @throws FireflyException
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
-        // parameters for chart:
-        $dates = $request->getAll();
         /** @var Carbon $start */
-        $start = $dates['start'];
+        $start = $this->parameters->get('start');
         /** @var Carbon $end */
-        $end = $dates['end'];
-        /** @var User $user */
-        $user = auth()->user();
-
-        // group ID
-        $administrationId = $user->getAdministrationId();
-        $this->repository->setAdministrationId($administrationId);
+        $end = $this->parameters->get('end');
+        $end->endOfDay();
 
         // user's preferences
         $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT])->pluck('id')->toArray();
         $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
-        $default    = app('amount')->getDefaultCurrency();
-        $accounts   = $this->repository->getAccountsById($frontPage->data);
-        $chartData  = [];
+        /** @var TransactionCurrency $default */
+        $default   = app('amount')->getDefaultCurrency();
+        $accounts  = $this->repository->getAccountsById($frontPage->data);
+        $chartData = [];
 
         if (!(is_array($frontPage->data) && count($frontPage->data) > 0)) {
             $frontPage->data = $defaultSet;
             $frontPage->save();
         }
-
         /** @var Account $account */
         foreach ($accounts as $account) {
             $currency = $this->repository->getAccountCurrency($account);
@@ -113,15 +113,16 @@ class AccountController extends Controller
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
 
-                // the default currency of the user (may be the same!)
-                'native_id'               => $default->id,
+                // the default currency of the user (could be the same!)
+                'native_id'               => (int)$default->id,
                 'native_code'             => $default->code,
                 'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => $default->decimal_places,
-                'start_date'              => $start->toAtomString(),
-                'end_date'                => $end->toAtomString(),
+                'native_decimal_places'   => (int)$default->decimal_places,
+                'start'                   => $start->toAtomString(),
+                'end'                     => $end->toAtomString(),
+                'period'                  => '1D',
                 'entries'                 => [],
-                'converted_entries'       => [],
+                'native_entries'          => [],
             ];
             $currentStart   = clone $start;
             $range          = app('steam')->balanceInRange($account, $start, clone $end, $currency);
@@ -138,13 +139,13 @@ class AccountController extends Controller
                 $previousConverted = $balanceConverted;
 
                 $currentStart->addDay();
-                $currentSet['entries'][$label]           = $balance;
-                $currentSet['converted_entries'][$label] = $balanceConverted;
+                $currentSet['entries'][$label]        = $balance;
+                $currentSet['native_entries'][$label] = $balanceConverted;
             }
-            $currentSet  = $this->cerChartSet($currentSet);
             $chartData[] = $currentSet;
         }
 
-        return response()->json($chartData);
+        return response()->json($this->clean($chartData));
     }
+
 }

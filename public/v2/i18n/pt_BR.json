@@ -1,0 +1,27 @@
+{
+    "pt_BR": {
+        "config": {
+            "html_language": "pt-br"
+        },
+        "firefly": {
+            "spent": "Gasto",
+            "left": "Restante",
+            "paid": "Pago",
+            "unpaid": "N\u00e3o pago",
+            "default_group_title_name_plain": "ungrouped",
+            "overspent": "Gasto excedido",
+            "money_flowing_in": "Entrada",
+            "money_flowing_out": "Sa\u00edda",
+            "category": "Categoria",
+            "unknown_category_plain": "No category",
+            "all_money": "All your money",
+            "unknown_source_plain": "Unknown source account",
+            "unknown_dest_plain": "Unknown destination account",
+            "unknown_any_plain": "Unknown account",
+            "unknown_budget_plain": "No budget",
+            "expense_account": "Expense account",
+            "revenue_account": "Revenue account",
+            "budget": "Or\u00e7amento"
+        }
+    }
+}

@@ -42,6 +42,7 @@ class UserGroups extends Migration
             'budgets',
             'categories',
             'recurrences',
+            'object_groups',
             'rule_groups',
             'rules',
             'tags',
@@ -74,8 +75,8 @@ class UserGroups extends Migration
                         }
                     );
                 } catch (QueryException | ColumnDoesNotExist $e) {
-                    Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                    Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                    app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                    app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
                 }
             }
         }
@@ -94,8 +95,8 @@ class UserGroups extends Migration
                     }
                 );
             } catch (QueryException | ColumnDoesNotExist $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
 
@@ -129,8 +130,8 @@ class UserGroups extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "user_groups": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "user_groups": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
         if (!Schema::hasTable('user_roles')) {
@@ -147,8 +148,8 @@ class UserGroups extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "user_roles": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "user_roles": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
         if (!Schema::hasTable('group_memberships')) {
@@ -170,8 +171,8 @@ class UserGroups extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not create table "group_memberships": %s', $e->getMessage()));
-                Log::error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(sprintf('Could not create table "group_memberships": %s', $e->getMessage()));
+                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
         try {
@@ -187,10 +188,10 @@ class UserGroups extends Migration
                 }
             );
         } catch (QueryException $e) {
-            Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-            Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+            app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+            app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
         }
-        // ADD columns from tables
+        // ADD columns to tables
         /** @var string $tableName */
         foreach ($this->tables as $tableName) {
             try {
@@ -206,8 +207,8 @@ class UserGroups extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf('Could not execute query: %s', $e->getMessage()));
-                Log::error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+                app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+                app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
         }
     }

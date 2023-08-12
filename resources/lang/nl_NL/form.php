@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Start van bereik',
     'end_date'                    => 'Einde van bereik',
     'enddate'                     => 'Einddatum',
+    'move_rules_before_delete'    => 'Regelgroep',
     'start'                       => 'Start van bereik',
     'end'                         => 'Einde van bereik',
     'delete_account'              => 'Verwijder rekening ":name"',

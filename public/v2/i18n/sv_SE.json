@@ -1,0 +1,27 @@
+{
+    "sv_SE": {
+        "config": {
+            "html_language": "sv"
+        },
+        "firefly": {
+            "spent": "Spenderat",
+            "left": "\u00c5terst\u00e5r",
+            "paid": "Betald",
+            "unpaid": "Obetald",
+            "default_group_title_name_plain": "ungrouped",
+            "overspent": "\u00d6veranstr\u00e4ngd",
+            "money_flowing_in": "In",
+            "money_flowing_out": "Ut",
+            "category": "Kategori",
+            "unknown_category_plain": "No category",
+            "all_money": "All your money",
+            "unknown_source_plain": "Unknown source account",
+            "unknown_dest_plain": "Unknown destination account",
+            "unknown_any_plain": "Unknown account",
+            "unknown_budget_plain": "No budget",
+            "expense_account": "Expense account",
+            "revenue_account": "Revenue account",
+            "budget": "Budget"
+        }
+    }
+}

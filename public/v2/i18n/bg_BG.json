@@ -1,0 +1,27 @@
+{
+    "bg_BG": {
+        "config": {
+            "html_language": "bg"
+        },
+        "firefly": {
+            "spent": "\u041f\u043e\u0445\u0430\u0440\u0447\u0435\u043d\u0438",
+            "left": "\u041e\u0441\u0442\u0430\u043d\u0430\u043b\u0438",
+            "paid": "\u041f\u043b\u0430\u0442\u0435\u043d\u0438",
+            "unpaid": "\u041d\u0435\u043f\u043b\u0430\u0442\u0435\u043d\u0438",
+            "default_group_title_name_plain": "ungrouped",
+            "overspent": "\u041f\u0440\u0435\u0440\u0430\u0437\u0445\u043e\u0434",
+            "money_flowing_in": "\u0412\u0445\u043e\u0434\u044f\u0449\u0438",
+            "money_flowing_out": "\u0418\u0437\u0445\u043e\u0434\u044f\u0449\u0438",
+            "category": "\u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u044f",
+            "unknown_category_plain": "No category",
+            "all_money": "All your money",
+            "unknown_source_plain": "Unknown source account",
+            "unknown_dest_plain": "Unknown destination account",
+            "unknown_any_plain": "Unknown account",
+            "unknown_budget_plain": "No budget",
+            "expense_account": "Expense account",
+            "revenue_account": "Revenue account",
+            "budget": "\u0411\u044e\u0434\u0436\u0435\u0442"
+        }
+    }
+}

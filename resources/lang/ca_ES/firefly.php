@@ -864,12 +864,12 @@ return [
     'rule_trigger_transaction_type'                       => 'La transacció és del tipus ":trigger_value"',
     'rule_trigger_category_is_choice'                     => 'La categoria és..',
     'rule_trigger_category_is'                            => 'La categoria és ":trigger_value"',
-    'rule_trigger_amount_less_choice'                     => 'La quantitat és inferior a..',
-    'rule_trigger_amount_less'                            => 'La quantitat és inferior a :trigger_value',
+    'rule_trigger_amount_less_choice'                     => 'Amount is less than or equal to ..',
+    'rule_trigger_amount_less'                            => 'Amount is less than or equal to :trigger_value',
     'rule_trigger_amount_is_choice'                       => 'La quantitat és..',
     'rule_trigger_amount_is'                              => 'La quantitat és :trigger_value',
-    'rule_trigger_amount_more_choice'                     => 'La quantitat és superior a..',
-    'rule_trigger_amount_more'                            => 'La quantitat és superior a :trigger_value',
+    'rule_trigger_amount_more_choice'                     => 'Amount is more than or equal to..',
+    'rule_trigger_amount_more'                            => 'Amount is more than or equal to :trigger_value',
     'rule_trigger_description_starts_choice'              => 'La descripció comença per..',
     'rule_trigger_description_starts'                     => 'La descripció comença per ":trigger_value"',
     'rule_trigger_description_ends_choice'                => 'La descripció acaba amb..',
@@ -934,10 +934,14 @@ return [
     'rule_trigger_internal_reference_is'                  => 'La referència interna és ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'L\'ID del llibre de transaccions és..',
     'rule_trigger_journal_id'                             => 'L\'ID del llibre de transaccions és ":trigger_value"',
-    'rule_trigger_no_external_url'                        => 'La transacció no té URL extern',
-    'rule_trigger_any_external_url'                       => 'La transacció té URL extern',
-    'rule_trigger_any_external_url_choice'                => 'La transacció té URL extern',
+    'rule_trigger_any_external_url'                       => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_id'                        => 'Transaction has an (any) external ID',
+    'rule_trigger_any_external_id_choice'                 => 'Transaction has an (any) external ID',
     'rule_trigger_no_external_url_choice'                 => 'La transacció no té URL extern',
+    'rule_trigger_no_external_url'                        => 'La transacció no té URL extern',
+    'rule_trigger_no_external_id_choice'                  => 'Transaction has no external ID',
+    'rule_trigger_no_external_id'                         => 'Transaction has no external ID',
     'rule_trigger_id_choice'                              => 'L\'ID de la transacció és..',
     'rule_trigger_id'                                     => 'L\'ID de la transacció és ":trigger_value"',
     'rule_trigger_sepa_ct_is_choice'                      => 'El SEPA CT és..',
@@ -1218,6 +1222,7 @@ return [
 
 
     // actions
+    // set, clear, add, remove, append/prepend
     'rule_action_delete_transaction_choice'               => 'ELIMINAR transacció(!)',
     'rule_action_delete_transaction'                      => 'ELIMINAR transacció(!)',
     'rule_action_set_category'                            => 'Estableix categoria a ":action_value"',
@@ -1255,6 +1260,8 @@ return [
     'rule_action_set_notes_choice'                        => 'Establir les notes a ..',
     'rule_action_link_to_bill_choice'                     => 'Enllaçar a una factura ..',
     'rule_action_link_to_bill'                            => 'Enllaçar a la factura ":action_value"',
+    'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Establir notes a ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Convertir la transacció a un dipòsit',
     'rule_action_convert_deposit'                         => 'Convertir la transacció a un dipòsit de ":action_value"',
@@ -1396,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Administració financera',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Purgar dades de Firefly III',
@@ -1815,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Comptes d\'actius',
     'undefined_accounts'                        => 'Comptes',
     'asset_accounts_inactive'                   => 'Comptes d\'actius (inactius)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Comptes de despeses',
     'expense_accounts_inactive'                 => 'Comptes de despeses (inactius)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Comptes d\'ingressos',
     'revenue_accounts_inactive'                 => 'Comptes d\'ingressos (inactius)',
     'cash_accounts'                             => 'Comptes d\'efectiu',
@@ -1905,6 +1915,7 @@ return [
     'categories'                                => 'Categories',
     'edit_category'                             => 'Editar la categoria ":name"',
     'no_category'                               => '(cap categoria)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Categoria',
     'delete_category'                           => 'Eliminar categoria ":name"',
     'deleted_category'                          => 'S\'ha eliminat la categoria ":name"',
@@ -2072,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Cerca...',
     'version'                                   => 'Versió',
     'dashboard'                                 => 'Panell de control',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Pressupost disponible ({currency})',
     'currencies'                                => 'Monedes',
     'activity'                                  => 'Activitat (exercici)',
@@ -2380,6 +2397,7 @@ return [
     'invite_user'                              => 'Convida l\'usuari',
     'user_is_invited'                          => 'El correu electrònic ":address" s\'ha convidat a Firefly III',
     'administration'                           => 'Administració',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'El code d\'invitació ja s\'ha gastat',
     'user_administration'                      => 'Administració d\'usuaris',
     'list_all_users'                           => 'Tots els usuaris',
@@ -2519,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(no agrupades)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Anem a crear un compte d\'actius!',
@@ -2703,6 +2722,7 @@ return [
     'ale_action_clear_tag'               => 'Etiqueta buidada',
     'ale_action_clear_all_tags'          => 'Buidades totes les etiquetes',
     'ale_action_set_bill'                => 'Enllaçat a la factura',
+    'ale_action_switch_accounts'         => 'Switched source and destination account',
     'ale_action_set_budget'              => 'Establir pressupost',
     'ale_action_set_category'            => 'Establir categoria',
     'ale_action_set_source'              => 'Establir compte d\'origen',
@@ -2715,8 +2735,8 @@ return [
     'ale_action_add_tag'                 => 'Etiqueta afegida',
 
     // dashboard
-    'enable_auto_convert'                => 'Enable currency conversion',
-    'disable_auto_convert'               => 'Disable currency conversion',
+    'enable_auto_convert'                => 'Habilita la conversió de moneda',
+    'disable_auto_convert'               => 'Deshabilita la conversió de moneda',
 
 ];
 

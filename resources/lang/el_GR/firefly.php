@@ -864,12 +864,12 @@ return [
     'rule_trigger_transaction_type'                       => 'Η συναλλαγή είναι τύπου ":trigger_value"',
     'rule_trigger_category_is_choice'                     => 'Η κατηγορία είναι..',
     'rule_trigger_category_is'                            => 'Η κατηγορία είναι ":trigger_value"',
-    'rule_trigger_amount_less_choice'                     => 'Το ποσό είναι μικρότερο από..',
-    'rule_trigger_amount_less'                            => 'Το ποσό είναι μικρότερο από :trigger_value',
+    'rule_trigger_amount_less_choice'                     => 'Amount is less than or equal to ..',
+    'rule_trigger_amount_less'                            => 'Amount is less than or equal to :trigger_value',
     'rule_trigger_amount_is_choice'                       => 'Amount is..',
     'rule_trigger_amount_is'                              => 'Amount is :trigger_value',
-    'rule_trigger_amount_more_choice'                     => 'Το ποσό είναι μεγαλύτερο από..',
-    'rule_trigger_amount_more'                            => 'Το ποσό είναι μεγαλύτερο από :trigger_value',
+    'rule_trigger_amount_more_choice'                     => 'Amount is more than or equal to..',
+    'rule_trigger_amount_more'                            => 'Amount is more than or equal to :trigger_value',
     'rule_trigger_description_starts_choice'              => 'Η περιγραφή αρχίζει με..',
     'rule_trigger_description_starts'                     => 'Η περιγραφή αρχίζει με ":trigger_value"',
     'rule_trigger_description_ends_choice'                => 'Η περιγραφή τελειώνει με..',
@@ -934,10 +934,14 @@ return [
     'rule_trigger_internal_reference_is'                  => 'Internal reference is ":trigger_value"',
     'rule_trigger_journal_id_choice'                      => 'Το ημερολογιακό ID της συναλλαγής είναι..',
     'rule_trigger_journal_id'                             => 'Το ημερολογιακό ID της συναλλαγής είναι ":trigger_value"',
-    'rule_trigger_no_external_url'                        => 'Η συναλλαγή δεν έχει εξωτερικό URL',
-    'rule_trigger_any_external_url'                       => 'Η συναλλαγή έχει ένα εξωτερικό URL',
-    'rule_trigger_any_external_url_choice'                => 'Transaction has an external URL',
+    'rule_trigger_any_external_url'                       => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_url_choice'                => 'Transaction has an (any) external URL',
+    'rule_trigger_any_external_id'                        => 'Transaction has an (any) external ID',
+    'rule_trigger_any_external_id_choice'                 => 'Transaction has an (any) external ID',
     'rule_trigger_no_external_url_choice'                 => 'Transaction has no external URL',
+    'rule_trigger_no_external_url'                        => 'Η συναλλαγή δεν έχει εξωτερικό URL',
+    'rule_trigger_no_external_id_choice'                  => 'Transaction has no external ID',
+    'rule_trigger_no_external_id'                         => 'Transaction has no external ID',
     'rule_trigger_id_choice'                              => 'Transaction ID is..',
     'rule_trigger_id'                                     => 'Transaction ID is ":trigger_value"',
     'rule_trigger_sepa_ct_is_choice'                      => 'SEPA CT is..',
@@ -1218,6 +1222,7 @@ return [
 
 
     // actions
+    // set, clear, add, remove, append/prepend
     'rule_action_delete_transaction_choice'               => 'DELETE transaction(!)',
     'rule_action_delete_transaction'                      => 'DELETE transaction(!)',
     'rule_action_set_category'                            => 'Ορίστε την κατηγορία σε ":action_value"',
@@ -1255,6 +1260,8 @@ return [
     'rule_action_set_notes_choice'                        => 'Set notes to ..',
     'rule_action_link_to_bill_choice'                     => 'Link to a bill ..',
     'rule_action_link_to_bill'                            => 'Σύνδεση στο πάγιο έξοδο ":action_value"',
+    'rule_action_switch_accounts_choice'                  => 'Switch source and destination accounts (transfers only!)',
+    'rule_action_switch_accounts'                         => 'Switch source and destination',
     'rule_action_set_notes'                               => 'Ορισμός σημειώσεων σε ":action_value"',
     'rule_action_convert_deposit_choice'                  => 'Μετατροπή της συναλλαγής σε μία κατάθεση',
     'rule_action_convert_deposit'                         => 'Μετατροπή της συναλλαγής σε μία κατάθεση από ":action_value"',
@@ -1396,6 +1403,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Οικονομική διαχείριση',
+    'administrations_index_menu'                => 'Financial administration(s)',
 
     // profile:
     'purge_data_title'                          => 'Εκκαθάριση δεδομένων από το Firefly III',
@@ -1815,8 +1823,10 @@ return [
     'asset_accounts'                            => 'Κεφάλαια',
     'undefined_accounts'                        => 'Λογαριασμοί',
     'asset_accounts_inactive'                   => 'Λογαριασμοί κεφαλαίου (ανενεργοί)',
+    'expense_account'                           => 'Expense account',
     'expense_accounts'                          => 'Δαπάνες',
     'expense_accounts_inactive'                 => 'Λογαριασμοί δαπανών (ανενεργοί)',
+    'revenue_account'                           => 'Revenue account',
     'revenue_accounts'                          => 'Έσοδα',
     'revenue_accounts_inactive'                 => 'Λογαριασμοί εσόδων (ανενεργοί)',
     'cash_accounts'                             => 'Μετρητά',
@@ -1905,6 +1915,7 @@ return [
     'categories'                                => 'Κατηγορίες',
     'edit_category'                             => 'Επεξεργασία κατηγορίας: ":name"',
     'no_category'                               => '(χωρίς κατηγορία)',
+    'unknown_category_plain'                    => 'No category',
     'category'                                  => 'Κατηγορία',
     'delete_category'                           => 'Διαγραφή κατηγορίας":name"',
     'deleted_category'                          => 'Διεγράφη η κατηγορία ":name"',
@@ -2072,6 +2083,12 @@ return [
     'searchPlaceholder'                         => 'Αναζήτηση...',
     'version'                                   => 'Έκδοση',
     'dashboard'                                 => 'Επισκόπηση',
+    'income_and_expense'                        => 'Income and expense',
+    'all_money'                                 => 'All your money',
+    'unknown_source_plain'                      => 'Unknown source account',
+    'unknown_dest_plain'                        => 'Unknown destination account',
+    'unknown_any_plain'                         => 'Unknown account',
+    'unknown_budget_plain'                      => 'No budget',
     'available_budget'                          => 'Διαθέσιμος προϋπολογισμός ({currency})',
     'currencies'                                => 'Νομίσματα',
     'activity'                                  => 'Δραστηριότητα',
@@ -2380,6 +2397,7 @@ return [
     'invite_user'                              => 'Πρόσκληση χρήστη',
     'user_is_invited'                          => 'Η διεύθυνση ηλεκτρονικού ταχυδρομείου ":address" έλαβε πρόσκληση για εγγραφή στο Firefly III',
     'administration'                           => 'Διαχείριση',
+    'system_settings'                          => 'System settings',
     'code_already_used'                        => 'Ο κωδικός πρόσκλησης έχει χρησιμοποιηθεί',
     'user_administration'                      => 'Διαχείριση χρηστών',
     'list_all_users'                           => 'Όλοι οι χρήστες',
@@ -2519,6 +2537,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(χωρίς ομάδα)',
+    'default_group_title_name_plain'        => 'ungrouped',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Ας δημιουργήσουμε ένα λογαριασμό κεφαλαίου!',
@@ -2703,6 +2722,7 @@ return [
     'ale_action_clear_tag'               => 'Αφαίρεση ετικέτας',
     'ale_action_clear_all_tags'          => 'Αφαίρεση όλων των ετικετών',
     'ale_action_set_bill'                => 'Σύνδεση με πάγιο έξοδο',
+    'ale_action_switch_accounts'         => 'Switched source and destination account',
     'ale_action_set_budget'              => 'Ορισμός προϋπολογισμού',
     'ale_action_set_category'            => 'Ορισμός κατηγορίας',
     'ale_action_set_source'              => 'Ορισμός λογαριασμού προέλευσης',

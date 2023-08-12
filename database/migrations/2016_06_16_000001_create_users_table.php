@@ -65,8 +65,8 @@ class CreateUsersTable extends Migration
                     }
                 );
             } catch (QueryException $e) {
-                Log::error(sprintf(self::TABLE_ERROR, 'users', $e->getMessage()));
-                Log::error(self::TABLE_ALREADY_EXISTS);
+                app('log')->error(sprintf(self::TABLE_ERROR, 'users', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
     }

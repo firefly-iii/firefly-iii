@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Valikoiman alku',
     'end_date'                    => 'Valikoiman loppu',
     'enddate'                     => 'Loppupäivä',
+    'move_rules_before_delete'    => 'Rule group',
     'start'                       => 'Valikoiman alku',
     'end'                         => 'Valikoiman loppu',
     'delete_account'              => 'Poista tili ":name"',

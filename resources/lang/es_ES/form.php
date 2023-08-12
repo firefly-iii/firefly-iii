@@ -147,6 +147,7 @@ return [
     'start_date'                  => 'Inicio del rango',
     'end_date'                    => 'Final del rango',
     'enddate'                     => 'Fecha fin',
+    'move_rules_before_delete'    => 'Grupo de reglas',
     'start'                       => 'Inicio del rango',
     'end'                         => 'Final del rango',
     'delete_account'              => 'Borrar cuenta ":name"',
