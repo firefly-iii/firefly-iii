@@ -1,0 +1,27 @@
+{
+    "pl_PL": {
+        "config": {
+            "html_language": "pl"
+        },
+        "firefly": {
+            "spent": "Wydano",
+            "left": "Pozosta\u0142o",
+            "paid": "Zap\u0142acone",
+            "unpaid": "Niezap\u0142acone",
+            "default_group_title_name_plain": "ungrouped",
+            "overspent": "Przep\u0142acono",
+            "money_flowing_in": "Przychodz\u0105ce",
+            "money_flowing_out": "Wychodz\u0105ce",
+            "category": "Kategoria",
+            "unknown_category_plain": "No category",
+            "all_money": "All your money",
+            "unknown_source_plain": "Unknown source account",
+            "unknown_dest_plain": "Unknown destination account",
+            "unknown_any_plain": "Unknown account",
+            "unknown_budget_plain": "No budget",
+            "expense_account": "Expense account",
+            "revenue_account": "Revenue account",
+            "budget": "Bud\u017cet"
+        }
+    }
+}

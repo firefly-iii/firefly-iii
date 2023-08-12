@@ -134,5 +134,4 @@ class CategoryController extends Controller
         return response()->json($this->clean($return));
     }
 
-
 }

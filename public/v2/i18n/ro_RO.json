@@ -1,0 +1,27 @@
+{
+    "ro_RO": {
+        "config": {
+            "html_language": "ro"
+        },
+        "firefly": {
+            "spent": "Cheltuit",
+            "left": "R\u0103mas",
+            "paid": "Pl\u0103tit",
+            "unpaid": "Nepl\u0103tit",
+            "default_group_title_name_plain": "ungrouped",
+            "overspent": "Dep\u0103\u0219ire de buget",
+            "money_flowing_in": "\u00cen",
+            "money_flowing_out": "Afar\u0103",
+            "category": "Categorie",
+            "unknown_category_plain": "No category",
+            "all_money": "All your money",
+            "unknown_source_plain": "Unknown source account",
+            "unknown_dest_plain": "Unknown destination account",
+            "unknown_any_plain": "Unknown account",
+            "unknown_budget_plain": "No budget",
+            "expense_account": "Expense account",
+            "revenue_account": "Revenue account",
+            "budget": "Buget"
+        }
+    }
+}

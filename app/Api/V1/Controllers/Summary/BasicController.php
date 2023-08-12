@@ -322,16 +322,11 @@ class BasicController extends Controller
                 'currency_decimal_places' => $row['currency_decimal_places'],
                 'value_parsed'            => app('amount')->formatFlat($row['currency_symbol'], $row['currency_decimal_places'], $leftToSpend, false),
                 'local_icon'              => 'money',
-                'sub_title'               => (string)trans(
-                    'firefly.box_spend_per_day',
-                    [
-                        'amount' => app('amount')->formatFlat(
-                            $row['currency_symbol'],
-                            $row['currency_decimal_places'],
-                            $perDay,
-                            false
-                        ),
-                    ]
+                'sub_title'               => app('amount')->formatFlat(
+                    $row['currency_symbol'],
+                    $row['currency_decimal_places'],
+                    $perDay,
+                    false
                 ),
             ];
         }

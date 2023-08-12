@@ -1,0 +1,27 @@
+{
+    "tr_TR": {
+        "config": {
+            "html_language": "tr"
+        },
+        "firefly": {
+            "spent": "Harcanan",
+            "left": "Ayr\u0131ld\u0131",
+            "paid": "\u00d6dendi",
+            "unpaid": "\u00d6denmedi",
+            "default_group_title_name_plain": "ungrouped",
+            "overspent": "Fazladan",
+            "money_flowing_in": "\u0130\u00e7eri",
+            "money_flowing_out": "D\u0131\u015far\u0131",
+            "category": "Kategori",
+            "unknown_category_plain": "No category",
+            "all_money": "All your money",
+            "unknown_source_plain": "Unknown source account",
+            "unknown_dest_plain": "Unknown destination account",
+            "unknown_any_plain": "Unknown account",
+            "unknown_budget_plain": "No budget",
+            "expense_account": "Expense account",
+            "revenue_account": "Revenue account",
+            "budget": "B\u00fct\u00e7e"
+        }
+    }
+}

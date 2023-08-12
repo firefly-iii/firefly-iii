@@ -1,0 +1,27 @@
+{
+    "fi_FI": {
+        "config": {
+            "html_language": "fi"
+        },
+        "firefly": {
+            "spent": "K\u00e4ytetty",
+            "left": "J\u00e4ljell\u00e4",
+            "paid": "Maksettu",
+            "unpaid": "Maksamatta",
+            "default_group_title_name_plain": "ungrouped",
+            "overspent": "Varojen ylitys",
+            "money_flowing_in": "Sis\u00e4\u00e4n",
+            "money_flowing_out": "Ulos",
+            "category": "Kategoria",
+            "unknown_category_plain": "No category",
+            "all_money": "All your money",
+            "unknown_source_plain": "Unknown source account",
+            "unknown_dest_plain": "Unknown destination account",
+            "unknown_any_plain": "Unknown account",
+            "unknown_budget_plain": "No budget",
+            "expense_account": "Expense account",
+            "revenue_account": "Revenue account",
+            "budget": "Budjetti"
+        }
+    }
+}
