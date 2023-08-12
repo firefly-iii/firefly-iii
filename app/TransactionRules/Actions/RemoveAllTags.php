@@ -55,6 +55,7 @@ class RemoveAllTags implements ActionInterface
         $count = DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->count();
         if (0 === $count) {
             Log::debug(sprintf('RuleAction RemoveAllTags, journal #%d has no tags.', $journal['transaction_journal_id']));
+            // TODO introduce error
             return false;
         }
         Log::debug(sprintf('RuleAction RemoveAllTags removed all tags from journal %d.', $journal['transaction_journal_id']));

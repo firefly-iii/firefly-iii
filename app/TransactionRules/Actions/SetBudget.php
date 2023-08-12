@@ -65,7 +65,7 @@ class SetBudget implements ActionInterface
                     $search
                 )
             );
-
+            // TODO introduce error
             return false;
         }
 
@@ -78,7 +78,7 @@ class SetBudget implements ActionInterface
                     $journal['transaction_type_type']
                 )
             );
-
+            // TODO introduce error
             return false;
         }
 

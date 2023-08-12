@@ -70,7 +70,7 @@ class UpdatePiggybank implements ActionInterface
             Log::info(
                 sprintf('No piggy bank named "%s", cant execute action #%d of rule #%d', $this->action->action_value, $this->action->id, $this->action->rule_id)
             );
-
+            // TODO introduce error
             return false;
         }
 
@@ -130,7 +130,7 @@ class UpdatePiggybank implements ActionInterface
                 $destination->account_id
             )
         );
-
+        // TODO introduce error
         return false;
     }
 

@@ -63,16 +63,19 @@ class MoveNotesToDescription implements ActionInterface
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
+            // TODO introduce error
             return false;
         }
         $note = $object->notes()->first();
         if (null === $note) {
             // nothing to move, return null
+            // TODO introduce error
             return false;
         }
         if ('' === $note->text) {
             // nothing to move, return null
             $note->delete();
+            // TODO introduce error
             return false;
         }
         $before              = $object->description;

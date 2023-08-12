@@ -57,7 +57,7 @@ class SetCategory implements ActionInterface
         $search = $this->action->action_value;
         if (null === $user) {
             Log::error(sprintf('Journal has no valid user ID so action SetCategory("%s") cannot be applied', $search), $journal);
-
+            // TODO introduce error
             return false;
         }
 
@@ -73,7 +73,7 @@ class SetCategory implements ActionInterface
                     $search
                 )
             );
-
+            // TODO introduce error
             return false;
         }
 

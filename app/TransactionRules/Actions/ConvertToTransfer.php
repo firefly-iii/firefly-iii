@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -62,11 +63,13 @@ class ConvertToTransfer implements ActionInterface
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('Cannot find journal #%d, cannot convert to transfer.', $journal['transaction_journal_id']));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_not_found')));
             return false;
         }
         $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
             Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to transfer.', $journal['transaction_group_id']));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
             return false;
         }
 
@@ -77,6 +80,7 @@ class ConvertToTransfer implements ActionInterface
             Log::error(
                 sprintf('Journal #%d is already a transfer so cannot be converted (rule #%d).', $object->id, $this->action->rule_id)
             );
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.is_already_transfer')));
 
             return false;
         }
@@ -107,6 +111,7 @@ class ConvertToTransfer implements ActionInterface
                     $this->action->rule_id
                 )
             );
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_valid_opposing', ['name' => $this->action->action_value])));
 
             return false;
         }
@@ -118,6 +123,7 @@ class ConvertToTransfer implements ActionInterface
             } catch (FireflyException $e) {
                 Log::debug('Could not convert withdrawal to transfer.');
                 Log::error($e->getMessage());
+                event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
             }
             event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::WITHDRAWAL, TransactionType::TRANSFER));
@@ -130,12 +136,13 @@ class ConvertToTransfer implements ActionInterface
             } catch (FireflyException $e) {
                 Log::debug('Could not convert deposit to transfer.');
                 Log::error($e->getMessage());
+                event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
             }
             event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionType::TRANSFER));
             return $res;
         }
-
+        // TODO introduce error
         return false;
     }
 
@@ -166,6 +173,7 @@ class ConvertToTransfer implements ActionInterface
         $journal = TransactionJournal::find($journalId);
         if (null === $journal) {
             Log::error(sprintf('Journal #%d does not exist. Cannot convert to transfer.', $journalId));
+            // TODO introduce error
             return '';
         }
         return (string)$journal->transactions()->where('amount', '>', 0)->first()?->account?->accountType?->type;
@@ -192,6 +200,7 @@ class ConvertToTransfer implements ActionInterface
                     [$journal->id, $opposing->name, $this->action->rule_id]
                 )
             );
+            // TODO introduce error
 
             return false;
         }
@@ -250,6 +259,7 @@ class ConvertToTransfer implements ActionInterface
                     [$journal->id, $opposing->name, $this->action->rule_id]
                 )
             );
+            // TODO introduce error
 
             return false;
         }

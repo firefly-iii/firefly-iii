@@ -32,6 +32,7 @@ use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\Model\BudgetLimit\Created;
 use FireflyIII\Events\Model\BudgetLimit\Deleted;
 use FireflyIII\Events\Model\BudgetLimit\Updated;
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
@@ -168,6 +169,11 @@ class EventServiceProvider extends ServiceProvider
             ],
             Deleted::class                      => [
                 'FireflyIII\Handlers\Events\Model\BudgetLimitHandler@deleted',
+            ],
+
+            // rule actions
+            RuleActionFailedOnArray::class      => [
+                'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailed',
             ],
 
         ];

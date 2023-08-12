@@ -59,18 +59,20 @@ class SwitchAccounts implements ActionInterface
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('Cannot find journal #%d, cannot switch accounts.', $journal['transaction_journal_id']));
+            // TODO introduce error
             return false;
         }
         $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
             Log::error(sprintf('Group #%d has more than one transaction in it, cannot switch accounts.', $journal['transaction_group_id']));
+            // TODO introduce error
             return false;
         }
 
         $type = $object->transactionType->type;
         if (TransactionType::TRANSFER !== $type) {
             Log::error(sprintf('Journal #%d is NOT a transfer (rule #%d), cannot switch accounts.', $journal['transaction_journal_id'], $this->action->rule_id));
-
+            // TODO introduce error
             return false;
         }
 
@@ -80,7 +82,7 @@ class SwitchAccounts implements ActionInterface
         $destTransaction = $object->transactions()->where('amount', '>', 0)->first();
         if (null === $sourceTransaction || null === $destTransaction) {
             Log::error(sprintf('Journal #%d has no source or destination transaction (rule #%d), cannot switch accounts.', $journal['transaction_journal_id'], $this->action->rule_id));
-
+            // TODO introduce error
             return false;
         }
         $sourceAccountId               = (int)$sourceTransaction->account_id;

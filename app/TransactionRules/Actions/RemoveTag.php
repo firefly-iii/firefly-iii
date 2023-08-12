@@ -61,6 +61,7 @@ class RemoveTag implements ActionInterface
             Log::debug(
                 sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag exists.', $name, $journal['transaction_journal_id'])
             );
+            // TODO introduce error
             return false;
         }
         $count = DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->where('tag_id', $tag->id)->count();
@@ -68,6 +69,7 @@ class RemoveTag implements ActionInterface
             Log::debug(
                 sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag is linked.', $name, $journal['transaction_journal_id'])
             );
+            // TODO introduce error
             return false;
         }
 

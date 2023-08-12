@@ -73,6 +73,7 @@ class LinkToBill implements ActionInterface
                         $billName
                     )
                 );
+                // TODO introduce error
                 return false;
             }
 
@@ -97,7 +98,7 @@ class LinkToBill implements ActionInterface
                 $billName
             )
         );
-
+        // TODO introduce error
         return false;
     }
 }

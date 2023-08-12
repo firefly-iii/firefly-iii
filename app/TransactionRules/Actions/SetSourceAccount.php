@@ -64,7 +64,7 @@ class SetSourceAccount implements ActionInterface
         $this->repository = app(AccountRepositoryInterface::class);
         if (null === $object) {
             Log::error('Could not find journal.');
-
+            // TODO introduce error
             return false;
         }
         $type = $object->transactionType->type;
@@ -76,7 +76,7 @@ class SetSourceAccount implements ActionInterface
             Log::error(
                 sprintf('Cant change source account of journal #%d because no asset account with name "%s" exists.', $object->id, $this->action->action_value)
             );
-
+            // TODO introduce error
             return false;
         }
 
@@ -85,13 +85,13 @@ class SetSourceAccount implements ActionInterface
         $destination = $object->transactions()->where('amount', '>', 0)->first();
         if (null === $destination) {
             Log::error('Could not find destination transaction.');
-
+            // TODO introduce error
             return false;
         }
         // account must not be deleted (in the meantime):
         if (null === $destination->account) {
             Log::error('Could not find destination transaction account.');
-
+            // TODO introduce error
             return false;
         }
         if (null !== $newAccount && (int)$newAccount->id === (int)$destination->account_id) {
@@ -102,7 +102,7 @@ class SetSourceAccount implements ActionInterface
                     $destination->account_id
                 )
             );
-
+            // TODO introduce error
             return false;
         }
 

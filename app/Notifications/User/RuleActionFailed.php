@@ -1,7 +1,7 @@
 <?php
 
 /*
- * VersionCheckResult.php
+ * NewAccessToken.php
  * Copyright (c) 2022 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,32 +22,41 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Notifications\Admin;
+namespace FireflyIII\Notifications\User;
 
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
 /**
- * Class VersionCheckResult
- *
+ * Class RuleActionFailed
  */
-class VersionCheckResult extends Notification
+class RuleActionFailed extends Notification
 {
     use Queueable;
 
+    private string $groupLink;
+    private string $groupTitle;
     private string $message;
+    private string $ruleLink;
+    private string $ruleTitle;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(string $message)
+    public function __construct(array $params)
     {
-        $this->message = $message;
+        [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink] = $params;
+        $this->message    = $mainMessage;
+        $this->groupTitle = $groupTitle;
+        $this->groupLink  = $groupLink;
+        $this->ruleTitle  = $ruleTitle;
+        $this->ruleLink   = $ruleLink;
+
+
     }
 
     /**
@@ -65,20 +74,6 @@ class VersionCheckResult extends Notification
     }
 
     /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     *
-     * @return MailMessage
-     */
-    public function toMail($notifiable)
-    {
-        return (new MailMessage())
-            ->markdown('emails.new-version', ['message' => $this->message])
-            ->subject((string)trans('email.new_version_email_subject'));
-    }
-
-    /**
      * Get the Slack representation of the notification.
      *
      * @param mixed $notifiable
@@ -87,10 +82,16 @@ class VersionCheckResult extends Notification
      */
     public function toSlack($notifiable)
     {
-        return (new SlackMessage())->content($this->message)
-                                   ->attachment(function ($attachment) {
-                                       $attachment->title('Firefly III @ GitHub', 'https://github.com/firefly-iii/firefly-iii/releases');
-                                   });
+        $groupTitle = $this->groupTitle;
+        $groupLink  = $this->groupLink;
+        $ruleTitle  = $this->ruleTitle;
+        $ruleLink   = $this->ruleLink;
+
+        return (new SlackMessage())->content($this->message)->attachment(function ($attachment) use ($groupTitle, $groupLink) {
+            $attachment->title((string)trans('rules.inspect_transaction', ['title' => $groupTitle]), $groupLink);
+        })->attachment(function ($attachment) use ($ruleTitle, $ruleLink) {
+            $attachment->title((string)trans('rules.inspect_rule', ['title' => $ruleTitle]), $ruleLink);
+        });
     }
 
     /**
@@ -106,8 +107,10 @@ class VersionCheckResult extends Notification
         $user     = auth()->user();
         $slackUrl = null === $user ? '' : (string)app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
         if (str_starts_with($slackUrl, 'https://hooks.slack.com/services/')) {
-            return ['mail', 'slack'];
+            app('log')->debug('Will send ruleActionFailed through Slack!');
+            return ['slack'];
         }
-        return ['mail'];
+        app('log')->debug('Will NOT send ruleActionFailed through Slack');
+        return [];
     }
 }

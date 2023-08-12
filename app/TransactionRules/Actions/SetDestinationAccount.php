@@ -65,7 +65,7 @@ class SetDestinationAccount implements ActionInterface
 
         if (null === $object) {
             Log::error('Could not find journal.');
-
+            // TODO introduce error
             return false;
         }
         $type = $object->transactionType->type;
@@ -81,7 +81,7 @@ class SetDestinationAccount implements ActionInterface
                     $this->action->action_value
                 )
             );
-
+            // TODO introduce error
             return false;
         }
 
@@ -90,13 +90,13 @@ class SetDestinationAccount implements ActionInterface
         $source = $object->transactions()->where('amount', '<', 0)->first();
         if (null === $source) {
             Log::error('Could not find source transaction.');
-
+            // TODO introduce error
             return false;
         }
         // account must not be deleted (in the meantime):
         if (null === $source->account) {
             Log::error('Could not find source transaction account.');
-
+            // TODO introduce error
             return false;
         }
         if (null !== $newAccount && (int)$newAccount->id === (int)$source->account_id) {
@@ -107,7 +107,7 @@ class SetDestinationAccount implements ActionInterface
                     $source->account_id
                 )
             );
-
+            // TODO introduce error
             return false;
         }
 

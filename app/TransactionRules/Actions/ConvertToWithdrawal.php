@@ -65,18 +65,20 @@ class ConvertToWithdrawal implements ActionInterface
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('Cannot find journal #%d, cannot convert to withdrawal.', $journal['transaction_journal_id']));
+            // TODO introduce error
             return false;
         }
         $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
             Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to withdrawal.', $journal['transaction_group_id']));
+            // TODO introduce error
             return false;
         }
 
         $type = $object->transactionType->type;
         if (TransactionType::WITHDRAWAL === $type) {
             Log::error(sprintf('Journal #%d is already a withdrawal (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
-
+            // TODO introduce error
             return false;
         }
 
@@ -87,6 +89,7 @@ class ConvertToWithdrawal implements ActionInterface
             } catch (JsonException | FireflyException $e) {
                 Log::debug('Could not convert transfer to deposit.');
                 Log::error($e->getMessage());
+                // TODO introduce error
                 return false;
             }
             event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionType::WITHDRAWAL));
@@ -101,13 +104,14 @@ class ConvertToWithdrawal implements ActionInterface
             } catch (JsonException | FireflyException $e) {
                 Log::debug('Could not convert transfer to deposit.');
                 Log::error($e->getMessage());
+                // TODO introduce error
                 return false;
             }
             event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::TRANSFER, TransactionType::WITHDRAWAL));
 
             return $res;
         }
-
+        // TODO introduce error
         return false;
     }
 
