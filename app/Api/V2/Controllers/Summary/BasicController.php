@@ -101,9 +101,8 @@ class BasicController extends Controller
     public function basic(DateRequest $request): JsonResponse
     {
         // parameters for boxes:
-        $dates = $request->getAll();
-        $start = $dates['start'];
-        $end   = $dates['end'];
+        $start = $this->parameters->get('start');
+        $end   = $this->parameters->get('end');
 
         // balance information:
         $balanceData  = [];
@@ -147,7 +146,8 @@ class BasicController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes([TransactionType::DEPOSIT]);
+            ->setTypes([TransactionType::DEPOSIT])
+            ->setRange($start, $end);
 
         $set = $collector->getExtractedJournals();
         /** @var array $transactionJournal */
@@ -184,7 +184,8 @@ class BasicController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes([TransactionType::WITHDRAWAL]);
+            ->setTypes([TransactionType::WITHDRAWAL])
+            ->setRange($start, $end);
         $set = $collector->getExtractedJournals();
 
         /** @var array $transactionJournal */
