@@ -20,7 +20,7 @@
                                                               title="{{ __('firefly.yourAccounts') }}">{{ __('firefly.yourAccounts') }}</a>
                                     </h3>
                                 </div>
-                                <div class="card-body p-0">
+                                <div class="card-body p-0" style="position: relative;height:400px;">
                                     <canvas id="account-chart"></canvas>
                                 </div>
                                 <div class="card-footer text-end">
@@ -51,10 +51,8 @@
                                                               title="{{ __('firefly.go_to_budgets') }}">{{ __('firefly.budgetsAndSpending') }}</a>
                                     </h3>
                                 </div>
-                                <div class="card-body p-0">
-                                    <div>
-                                        <canvas id="budget-chart"></canvas>
-                                    </div>
+                                <div class="card-body p-0" style="position: relative;height:350px;">
+                                    <canvas id="budget-chart"></canvas>
                                 </div>
                             </div>
 
@@ -68,7 +66,7 @@
                                                               title="{{ __('firefly.yourAccounts') }}">{{ __('firefly.categories') }}</a>
                                     </h3>
                                 </div>
-                                <div class="card-body p-0">
+                                <div class="card-body p-0" style="position: relative;height:350px;">
                                     <canvas id="category-chart"></canvas>
                                 </div>
                             </div>
@@ -77,6 +75,11 @@
                 </div>
                 <div class="col-xl-4 col-lg-12 col-sm-12 col-xs-12">
                     <div class="row">
+                        <template x-if="loadingAccounts">
+                            <p class="text-center">
+                                <em class="fa-solid fa-spinner fa-spin"></em>
+                            </p>
+                        </template>
                         <template x-for="account in accountList">
                             <div class="col-12 mb-2" x-model="account">
                                 <div class="card">

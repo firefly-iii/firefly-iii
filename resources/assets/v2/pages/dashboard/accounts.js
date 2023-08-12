@@ -18,20 +18,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-//import ApexCharts from "apexcharts";
 import {getVariable} from "../../store/get-variable.js";
 import {setVariable} from "../../store/set-variable.js";
 import Dashboard from "../../api/v2/chart/account/dashboard.js";
 import formatMoney from "../../util/format-money.js";
 import Get from "../../api/v2/model/account/get.js";
-//import Chart from "chart.js/auto";
-import {Chart} from "chart.js";
+import {Chart} from 'chart.js';
+import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 
 // this is very ugly, but I have no better ideas at the moment to save the currency info
 // for each series.
 let currencies = [];
-let chart      = null;
-let chartData  = null;
+let chart = null;
+let chartData = null;
+let afterPromises = false;
 export default () => ({
     loading: false,
     loadingAccounts: false,
@@ -47,22 +47,18 @@ export default () => ({
         dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
             this.chartData = response.data;
             this.drawChart(this.generateOptions(this.chartData));
+            this.loading = false;
         });
     },
     generateOptions(data) {
-        currencies  = [];
-        let options = {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: []
-            },
-        };
+        currencies = [];
+        let options = getDefaultChartSettings('line');
 
         for (let i = 0; i < data.length; i++) {
             if (data.hasOwnProperty(i)) {
-                let current    = data[i];
-                let dataset    = {};
+                let yAxis = 'y';
+                let current = data[i];
+                let dataset = {};
                 let collection = [];
 
                 // if index = 0, push all keys as labels:
@@ -74,22 +70,43 @@ export default () => ({
                 // use the "native" currency code and use the "native_entries" as array
                 if (this.autoConversion) {
                     currencies.push(current.native_code);
+                    dataset.currency_code = current.native_code;
                     collection = Object.values(current.native_entries);
+                    yAxis = 'y' + current.native_code;
                 }
                 if (!this.autoConversion) {
+                    yAxis = 'y' + current.currency_code;
+                    dataset.currency_code = current.currency_code;
                     currencies.push(current.currency_code);
                     collection = Object.values(current.entries);
                 }
+                dataset.yAxisID = yAxis;
                 dataset.data = collection;
 
-                for (const [ii, value] of Object.entries(collection)) {
-                    //entry.push({x: format(new Date(ii), 'yyyy-MM-dd'), y: parseFloat(value)});
-                }
+                // add data set to the correct Y Axis:
+
                 options.data.datasets.push(dataset);
-                //options.series.push({name: current.label, data: entry});
             }
         }
+        // for each entry in currencies, add a new y-axis:
+        for (let currency in currencies) {
+            if (currencies.hasOwnProperty(currency)) {
+                let code = 'y' + currencies[currency];
+                if (!options.options.scales.hasOwnProperty(code)) {
+                    options.options.scales[code] = {
+                        id: currency,
+                        type: 'linear',
+                        position: 1 === parseInt(currency) ? 'right' : 'left',
+                        ticks: {
+                            callback: function (value, index, values) {
+                                return formatMoney(value, currencies[currency]);
+                            }
+                        }
+                    };
 
+                }
+            }
+        }
         return options;
     },
     loadChart() {
@@ -108,31 +125,33 @@ export default () => ({
     drawChart(options) {
         if (null !== chart) {
             // chart already in place, refresh:
-            chart.data.datasets = options.data.datasets;
+            chart.options = options.options;
+            chart.data = options.data;
             chart.update();
             return;
         }
         chart = new Chart(document.querySelector("#account-chart"), options);
     },
     loadAccounts() {
-        console.log('loadAccounts');
+        // console.log('loadAccounts');
         if (true === this.loadingAccounts) {
-            console.log('loadAccounts CANCELLED');
+            // console.log('loadAccounts CANCELLED');
             return;
         }
         this.loadingAccounts = true;
         if (this.accountList.length > 0) {
-            console.log('NO need to load account data');
+            // console.log('NO need to load account data');
             this.loadingAccounts = false;
             return;
         }
-        console.log('loadAccounts continue!');
-        const max         = 10;
+        // console.log('loadAccounts continue!');
+        const max = 10;
         let totalAccounts = 0;
-        let count         = 0;
-        let accounts      = [];
+        let count = 0;
+        let accounts = [];
         Promise.all([getVariable('frontpageAccounts'),]).then((values) => {
             totalAccounts = values[0].length;
+            //console.log(values[0]);
             for (let i in values[0]) {
                 let account = values[0];
                 if (account.hasOwnProperty(i)) {
@@ -149,7 +168,7 @@ export default () => ({
                                     break;
                                 }
                                 let current = response.data.data[ii];
-                                let group   = {
+                                let group = {
                                     title: null === current.attributes.group_title ? '' : current.attributes.group_title,
                                     id: current.id,
                                     transactions: [],
@@ -158,25 +177,26 @@ export default () => ({
                                     let currentTransaction = current.attributes.transactions[iii];
                                     //console.log(currentTransaction);
                                     group.transactions.push({
-                                                                description: currentTransaction.description,
-                                                                id: current.id,
-                                                                amount: formatMoney(currentTransaction.amount, currentTransaction.currency_code),
-                                                                native_amount: formatMoney(currentTransaction.native_amount, currentTransaction.native_code),
-                                                            });
+                                        description: currentTransaction.description,
+                                        id: current.id,
+                                        amount: formatMoney(currentTransaction.amount, currentTransaction.currency_code),
+                                        native_amount: formatMoney(currentTransaction.native_amount, currentTransaction.native_code),
+                                    });
                                 }
                                 groups.push(group);
                             }
-                            console.log(parent);
+                            // console.log(parent);
                             accounts.push({
-                                              name: parent.attributes.name,
-                                              id: parent.id,
-                                              balance: formatMoney(parent.attributes.current_balance, parent.attributes.currency_code),
-                                              native_balance: formatMoney(parent.attributes.native_current_balance, parent.attributes.native_code),
-                                              groups: groups,
-                                          });
+                                name: parent.attributes.name,
+                                id: parent.id,
+                                balance: formatMoney(parent.attributes.current_balance, parent.attributes.currency_code),
+                                native_balance: formatMoney(parent.attributes.native_current_balance, parent.attributes.native_code),
+                                groups: groups,
+                            });
                             count++;
                             if (count === totalAccounts) {
                                 this.accountList = accounts;
+                                this.loadingAccounts = false;
                             }
                         });
                     });
@@ -187,20 +207,31 @@ export default () => ({
     },
 
     init() {
+        // console.log('accounts init');
         Promise.all([getVariable('viewRange', '1M'), getVariable('autoConversion', false),]).then((values) => {
+            //console.log('accounts after promises');
             this.autoConversion = values[1];
+            afterPromises = true;
             // main dashboard chart:
             this.loadChart();
             this.loadAccounts();
         });
         window.store.observe('end', () => {
-            chartData        = null;
+            if (!afterPromises) {
+                return;
+            }
+            // console.log('accounts observe end');
+            chartData = null;
             this.accountList = [];
             // main dashboard chart:
             this.loadChart();
             this.loadAccounts();
         });
         window.store.observe('autoConversion', () => {
+            if (!afterPromises) {
+                return;
+            }
+            // console.log('accounts observe autoconversion');
             this.loadChart();
             this.loadAccounts();
         });

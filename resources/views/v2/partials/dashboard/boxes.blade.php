@@ -12,10 +12,16 @@
                         </span>
                     </template>
                 </h3>
-
-                <p>
-                    <a href="{{ route('reports.report.default', ['allAssetAccounts',$start->format('Ymd'),$end->format('Ymd')]) }}">{{ __('firefly.in_out_period') }}</a>
-                </p>
+                <template x-if="loading">
+                    <p>
+                        <em class="fa-solid fa-spinner fa-spin"></em>
+                    </p>
+                </template>
+                <template x-if="!loading">
+                    <p>
+                        <a href="{{ route('reports.report.default', ['allAssetAccounts',$start->format('Ymd'),$end->format('Ymd')]) }}">{{ __('firefly.in_out_period') }}</a>
+                    </p>
+                </template>
             </div>
             <span class="small-box-icon">
                 <i class="fa-solid fa-scale-balanced"></i>
@@ -46,7 +52,14 @@
                     </template>
                 </h3>
 
-                <p><a href="{{ route('bills.index') }}">{{ __('firefly.bills_to_pay') }}</a></p>
+                <template x-if="loading">
+                    <p>
+                        <em class="fa-solid fa-spinner fa-spin"></em>
+                    </p>
+                </template>
+                <template x-if="!loading">
+                    <p><a href="{{ route('bills.index') }}">{{ __('firefly.bills_to_pay') }}</a></p>
+                </template>
             </div>
             <span class="small-box-icon">
                 <em class="fa-regular fa-calendar"></em>
@@ -77,7 +90,14 @@
                     </template>
                 </h3>
 
-                <p><a href="{{ route('budgets.index') }}">{{ __('firefly.left_to_spend') }}</a></p>
+                <template x-if="loading">
+                    <p>
+                        <em class="fa-solid fa-spinner fa-spin"></em>
+                    </p>
+                </template>
+                <template x-if="!loading">
+                    <p><a href="{{ route('budgets.index') }}">{{ __('firefly.left_to_spend') }}</a></p>
+                </template>
             </div>
             <span class="small-box-icon">
                 <em class="fa-solid fa-money-check-dollar"></em>
@@ -108,9 +128,16 @@
                     </template>
                 </h3>
 
-                <p>
-                    <a href="{{ route('reports.report.default', ['allAssetAccounts','currentYearStart','currentYearEnd']) }}">{{ __('firefly.net_worth') }}</a>
-                </p>
+                <template x-if="loading">
+                    <p>
+                        <em class="fa-solid fa-spinner fa-spin"></em>
+                    </p>
+                </template>
+                <template x-if="!loading">
+                    <p>
+                        <a href="{{ route('reports.report.default', ['allAssetAccounts','currentYearStart','currentYearEnd']) }}">{{ __('firefly.net_worth') }}</a>
+                    </p>
+                </template>
             </div>
             <span class="small-box-icon">
                 <i class="fa-solid fa-chart-line"></i>

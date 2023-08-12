@@ -35,7 +35,9 @@ Promise.all([
     }
 
     // save local in window.__ something
-    window.__localeId__ = values[3];
+    window.__localeId__ = values[2];
+    store.set('language', values[3]);
+    store.set('locale', values[3]);
 
     const event = new Event('firefly-iii-bootstrapped');
     document.dispatchEvent(event);

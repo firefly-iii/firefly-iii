@@ -19,15 +19,13 @@
  */
 import {getVariable} from "../../store/get-variable.js";
 import Dashboard from "../../api/v2/chart/category/dashboard.js";
-//import ApexCharts from "apexcharts";
-import formatMoney from "../../util/format-money.js";
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
-import Chart from "chart.js/auto";
+import {Chart} from "chart.js";
 
 let currencies = [];
-
 let chart = null;
 let chartData = null;
+let afterPromises = false;
 
 export default () => ({
     loading: false,
@@ -142,15 +140,23 @@ export default () => ({
         this.getFreshData();
     },
     init() {
+        // console.log('categories init');
         Promise.all([getVariable('autoConversion', false),]).then((values) => {
             this.autoConversion = values[0];
+            afterPromises = true;
             this.loadChart();
         });
         window.store.observe('end', () => {
+            if (!afterPromises) {
+                return;
+            }
             this.chartData = null;
             this.loadChart();
         });
         window.store.observe('autoConversion', (newValue) => {
+            if (!afterPromises) {
+                return;
+            }
             this.autoConversion = newValue;
             this.loadChart();
         });

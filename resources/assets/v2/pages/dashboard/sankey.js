@@ -20,14 +20,15 @@
 import {getVariable} from "../../store/get-variable.js";
 import Get from "../../api/v2/model/transaction/get.js";
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
-import Chart from "chart.js/auto";
+import {Chart} from 'chart.js';
 import {Flow, SankeyController} from 'chartjs-chart-sankey';
 
-Chart.register(SankeyController, Flow);
+Chart.register({SankeyController, Flow});
+
 
 let currencies = [];
-
-let chart        = null;
+let afterPromises = false;
+let chart = null;
 let transactions = [];
 
 // little helper
@@ -107,17 +108,17 @@ export default () => ({
 
         // variables collected for the sankey chart:
         let amounts = {};
-        let bigBox  = 'TODO All money';
-        let labels  = {};
+        let bigBox = 'TODO All money';
+        let labels = {};
         for (let i in transactions) {
             if (transactions.hasOwnProperty(i)) {
                 let group = transactions[i];
                 for (let ii in group.attributes.transactions) {
                     if (group.attributes.transactions.hasOwnProperty(ii)) {
                         // properties of the transaction, used in the generation of the chart:
-                        let transaction  = group.attributes.transactions[ii];
+                        let transaction = group.attributes.transactions[ii];
                         let currencyCode = this.autoConversion ? transaction.native_code : transaction.currency_code;
-                        let amount       = this.autoConversion ? parseFloat(transaction.native_amount) : parseFloat(transaction.amount);
+                        let amount = this.autoConversion ? parseFloat(transaction.native_amount) : parseFloat(transaction.amount);
                         let flowKey;
 
                         /*
@@ -127,11 +128,11 @@ export default () => ({
                          */
                         if ('deposit' === transaction.type) {
                             // nr 1
-                            let category           = getObjectName('category', transaction.category_name, 'in', currencyCode);
-                            let revenueAccount     = getObjectName('account', transaction.source_name, 'in', currencyCode);
-                            labels[category]       = getLabelName('category', transaction.category_name, currencyCode);
+                            let category = getObjectName('category', transaction.category_name, 'in', currencyCode);
+                            let revenueAccount = getObjectName('account', transaction.source_name, 'in', currencyCode);
+                            labels[category] = getLabelName('category', transaction.category_name, currencyCode);
                             labels[revenueAccount] = getLabelName('account', transaction.source_name, currencyCode);
-                            flowKey                = revenueAccount + '-' + category + '-' + currencyCode;
+                            flowKey = revenueAccount + '-' + category + '-' + currencyCode;
                             if (!amounts.hasOwnProperty(flowKey)) {
                                 amounts[flowKey] = {
                                     from: revenueAccount,
@@ -160,9 +161,9 @@ export default () => ({
                          */
                         if ('withdrawal' === transaction.type) {
                             // 1.
-                            let budget     = getObjectName('budget', transaction.budget_name, 'out', currencyCode);
+                            let budget = getObjectName('budget', transaction.budget_name, 'out', currencyCode);
                             labels[budget] = getLabelName('budget', transaction.budget_name, currencyCode);
-                            flowKey        = bigBox + '-' + budget + '-' + currencyCode;
+                            flowKey = bigBox + '-' + budget + '-' + currencyCode;
 
                             if (!amounts.hasOwnProperty(flowKey)) {
                                 amounts[flowKey] = {
@@ -175,9 +176,9 @@ export default () => ({
 
 
                             // 2.
-                            let category     = getObjectName('category', transaction.category_name, 'out', currencyCode);
+                            let category = getObjectName('category', transaction.category_name, 'out', currencyCode);
                             labels[category] = getLabelName('category', transaction.category_name, currencyCode);
-                            flowKey          = budget + '-' + category + '-' + currencyCode;
+                            flowKey = budget + '-' + category + '-' + currencyCode;
 
                             if (!amounts.hasOwnProperty(flowKey)) {
                                 amounts[flowKey] = {
@@ -189,9 +190,9 @@ export default () => ({
                             amounts[flowKey].amount += amount;
 
                             // 3.
-                            let expenseAccount     = getObjectName('account', transaction.destination_name, 'out', currencyCode);
+                            let expenseAccount = getObjectName('account', transaction.destination_name, 'out', currencyCode);
                             labels[expenseAccount] = getLabelName('account', transaction.destination_name, currencyCode);
-                            flowKey                = category + '-' + expenseAccount + '-' + currencyCode;
+                            flowKey = category + '-' + expenseAccount + '-' + currencyCode;
 
                             if (!amounts.hasOwnProperty(flowKey)) {
                                 amounts[flowKey] = {
@@ -208,32 +209,32 @@ export default () => ({
         }
 
         let dataSet =
-                // sankey chart has one data set.
-                {
-                    label: 'My sankey',
-                    data: [],
-                    //colorFrom: (c) => getColor(c.dataset.data[c.dataIndex].from),
-                    //colorTo: (c) => getColor(c.dataset.data[c.dataIndex].to),
-                    colorMode: 'gradient', // or 'from' or 'to'
-                    labels: labels,
-                    /* optional labels */
-                    // labels: {
-                    //     a: 'Label A',
-                    //     b: 'Label B',
-                    //     c: 'Label C',
-                    //     d: 'Label D'
-                    // },
-                    /* optional priority */
-                    // priority: {
-                    //     b: 1,
-                    //     d: 0
-                    // },
-                    /* optional column overrides */
-                    // column: {
-                    //     d: 1
-                    // },
-                    size: 'max', // or 'min' if flow overlap is preferred
-                };
+            // sankey chart has one data set.
+            {
+                label: 'My sankey',
+                data: [],
+                //colorFrom: (c) => getColor(c.dataset.data[c.dataIndex].from),
+                //colorTo: (c) => getColor(c.dataset.data[c.dataIndex].to),
+                colorMode: 'gradient', // or 'from' or 'to'
+                labels: labels,
+                /* optional labels */
+                // labels: {
+                //     a: 'Label A',
+                //     b: 'Label B',
+                //     c: 'Label C',
+                //     d: 'Label D'
+                // },
+                /* optional priority */
+                // priority: {
+                //     b: 1,
+                //     d: 0
+                // },
+                /* optional column overrides */
+                // column: {
+                //     d: 1
+                // },
+                size: 'max', // or 'min' if flow overlap is preferred
+            };
         for (let i in amounts) {
             if (amounts.hasOwnProperty(i)) {
                 let amount = amounts[i];
@@ -297,22 +298,29 @@ export default () => ({
         this.getFreshData();
     },
     init() {
+        // console.log('sankey init');
         transactions = [];
         Promise.all([getVariable('autoConversion', false), getVariable('sankeyGrouping', 'account')]).then((values) => {
+            // console.log('sankey after promises');
+            afterPromises = true;
             this.autoConversion = values[0];
             this.sankeyGrouping = values[1];
             this.loadChart();
         });
         window.store.observe('end', () => {
+            if (!afterPromises) {
+                return;
+            }
+            // console.log('sankey observe end');
             this.transactions = [];
             this.loadChart();
         });
         window.store.observe('autoConversion', (newValue) => {
+            if (!afterPromises) {
+                return;
+            }
+            // console.log('sankey observe autoConversion');
             this.autoConversion = newValue;
-            this.loadChart();
-        });
-        window.store.observe('sankeyGrouping', (newValue) => {
-            this.sankeyGrouping = newValue;
             this.loadChart();
         });
     },

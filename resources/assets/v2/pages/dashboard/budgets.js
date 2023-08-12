@@ -19,14 +19,26 @@
  */
 import {getVariable} from "../../store/get-variable.js";
 import Dashboard from "../../api/v2/chart/budget/dashboard.js";
-// todo optimize
-import Chart from 'chart.js/auto';
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import formatMoney from "../../util/format-money.js";
+import {Chart} from 'chart.js';
+import {I18n} from "i18n-js";
 
 let currencies = [];
 let chart = null;
 let chartData = null;
+let afterPromises = false;
+
+let language;
+let i18n; // for translating items in the chart.
+
+async function loadTranslations(i18n, locale) {
+    const response = await fetch(`./v2/i18n/${locale}.json`);
+    const translations = await response.json();
+
+    i18n.store(translations);
+}
+
 
 export default () => ({
     loading: false,
@@ -136,19 +148,37 @@ export default () => ({
 
 
     init() {
-        Promise.all([getVariable('autoConversion', false),]).then((values) => {
+        // console.log('budgets init');
+        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en-US')]).then((values) => {
+
+            i18n = new I18n();
+            loadTranslations(i18n, values[1]);
+            // load translations.
+            //i18n = require('../../lang/' + values[1] + '.js').default;
+            //import lang from '../../lang/' + values[1] + '.js';
+            //language = values[1];
+
             this.autoConversion = values[0];
+            afterPromises = true;
             if (false === this.loading) {
                 this.loadChart();
             }
         });
         window.store.observe('end', () => {
+            if (!afterPromises) {
+                return;
+            }
+            // console.log('boxes observe end');
             if (false === this.loading) {
                 this.chartData = null;
                 this.loadChart();
             }
         });
         window.store.observe('autoConversion', (newValue) => {
+            if (!afterPromises) {
+                return;
+            }
+            // console.log('boxes observe autoConversion');
             this.autoConversion = newValue;
             if (false === this.loading) {
                 this.loadChart();

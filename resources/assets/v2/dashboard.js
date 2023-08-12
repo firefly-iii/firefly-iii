@@ -28,7 +28,54 @@ import sankey from './pages/dashboard/sankey.js';
 import subscriptions from './pages/dashboard/subscriptions.js';
 import piggies from './pages/dashboard/piggies.js';
 
-const comps = {dates, boxes, accounts, budgets, categories, sankey, subscriptions, piggies};
+
+import {
+    Chart,
+    LineController,
+    LineElement,
+    PieController,
+    BarController,
+    BarElement,
+    TimeScale,
+    ArcElement,
+    LinearScale,
+    Legend,
+    Filler,
+    Colors,
+    CategoryScale,
+    PointElement,
+    Tooltip
+} from "chart.js";
+import 'chartjs-adapter-date-fns';
+
+// register things
+Chart.register({
+    LineController,
+    LineElement,
+    ArcElement,
+    BarController,
+    TimeScale,
+    PieController,
+    BarElement,
+    Filler,
+    Colors,
+    LinearScale,
+    CategoryScale,
+    PointElement,
+    Tooltip,
+    Legend
+});
+
+const comps = {
+    dates,
+    boxes,
+    accounts,
+    budgets,
+    categories,
+    sankey,
+    subscriptions,
+    piggies
+};
 
 function loadPage(comps) {
     Object.keys(comps).forEach(comp => {

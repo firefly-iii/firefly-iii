@@ -18,6 +18,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import formatMoney from "../util/format-money.js";
+
 function getDefaultChartSettings(type) {
     if ('sankey' === type) {
         return {
@@ -43,6 +45,7 @@ function getDefaultChartSettings(type) {
                 datasets: [],
             },
             options: {
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true
@@ -51,7 +54,40 @@ function getDefaultChartSettings(type) {
             },
         };
     }
-    return [];
+    if ('line' === type) {
+        return {
+            options: {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                console.log(tooltipItem);
+                                let currency = tooltipItem.dataset.currency_code;
+                                return formatMoney(tooltipItem.raw, currency);
+                            },
+                        },
+                    },
+                },
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        // The axis for this scale is determined from the first letter of the id as `'x'`
+                        // It is recommended to specify `position` and / or `axis` explicitly.
+                        type: 'time',
+                        time: {
+                            tooltipFormat: 'PP',
+                        }
+                    },
+                },
+            },
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: []
+            },
+        };
+    }
+    return {};
 }
 
 export {getDefaultChartSettings};

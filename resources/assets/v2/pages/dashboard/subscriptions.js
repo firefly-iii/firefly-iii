@@ -19,14 +19,13 @@
  */
 import {getVariable} from "../../store/get-variable.js";
 import Get from "../../api/v2/model/subscription/get.js";
-import Chart from 'chart.js/auto';
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
-import formatMoney from "../../util/format-money.js";
 import {format} from "date-fns";
+import {Chart} from 'chart.js';
 
-let currencies = [];
-let chart      = null;
-let chartData  = null;
+let chart = null;
+let chartData = null;
+let afterPromises = false;
 
 export default () => ({
     loading: false,
@@ -54,7 +53,7 @@ export default () => ({
     },
     getFreshData() {
         const getter = new Get();
-        let params   = {
+        let params = {
             start: format(new Date(window.store.get('start')), 'y-MM-dd'),
             end: format(new Date(window.store.get('end')), 'y-MM-dd')
         };
@@ -63,23 +62,23 @@ export default () => ({
             let paidData = response.data;
             getter.unpaid(params).then((response) => {
                 let unpaidData = response.data;
-                let chartData  = {paid: paidData, unpaid: unpaidData};
+                let chartData = {paid: paidData, unpaid: unpaidData};
                 this.drawChart(this.generateOptions(chartData));
                 this.loading = false;
             });
         });
     },
     generateOptions(data) {
-        let options           = getDefaultChartSettings('pie');
+        let options = getDefaultChartSettings('pie');
         // console.log(data);
-        options.data.labels   = ['TODO paid', 'TODO unpaid'];
+        options.data.labels = ['TODO paid', 'TODO unpaid'];
         options.data.datasets = [];
-        let collection        = {};
+        let collection = {};
         for (let i in data.paid) {
             if (data.paid.hasOwnProperty(i)) {
-                let current      = data.paid[i];
+                let current = data.paid[i];
                 let currencyCode = this.autoConversion ? current.native_code : current.currency_code;
-                let amount       = this.autoConversion ? current.native_sum : current.sum;
+                let amount = this.autoConversion ? current.native_sum : current.sum;
                 if (!collection.hasOwnProperty(currencyCode)) {
                     collection[currencyCode] = {
                         paid: 0,
@@ -93,9 +92,9 @@ export default () => ({
         // unpaid
         for (let i in data.unpaid) {
             if (data.unpaid.hasOwnProperty(i)) {
-                let current      = data.unpaid[i];
+                let current = data.unpaid[i];
                 let currencyCode = this.autoConversion ? current.native_code : current.currency_code;
-                let amount       = this.autoConversion ? current.native_sum : current.sum;
+                let amount = this.autoConversion ? current.native_sum : current.sum;
                 if (!collection.hasOwnProperty(currencyCode)) {
                     collection[currencyCode] = {
                         paid: 0,
@@ -129,19 +128,30 @@ export default () => ({
 
 
     init() {
+        // console.log('subscriptions init');
         Promise.all([getVariable('autoConversion', false),]).then((values) => {
+            // console.log('subscriptions after promises');
             this.autoConversion = values[0];
+            afterPromises = true;
             if (false === this.loading) {
                 this.loadChart();
             }
         });
         window.store.observe('end', () => {
+            if (!afterPromises) {
+                return;
+            }
+            // console.log('subscriptions observe end');
             if (false === this.loading) {
                 this.chartData = null;
                 this.loadChart();
             }
         });
         window.store.observe('autoConversion', (newValue) => {
+            if (!afterPromises) {
+                return;
+            }
+            // console.log('subscriptions observe autoConversion');
             this.autoConversion = newValue;
             if (false === this.loading) {
                 this.loadChart();

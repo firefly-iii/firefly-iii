@@ -19,10 +19,10 @@
  */
 import {getVariable} from "../../store/get-variable.js";
 import Get from "../../api/v2/model/piggy-bank/get.js";
-
-let currencies = [];
+import {Chart} from 'chart.js';
 
 let apiData = {};
+let afterPromises = false;
 
 export default () => ({
     loading: false,
@@ -106,16 +106,27 @@ export default () => ({
         this.getFreshData();
     },
     init() {
+        // console.log('piggies init');
         apiData = [];
         Promise.all([getVariable('autoConversion', false)]).then((values) => {
+            // console.log('piggies after promises');
+            afterPromises = true;
             this.autoConversion = values[0];
             this.loadPiggyBanks();
         });
         window.store.observe('end', () => {
+            if (!afterPromises) {
+                return;
+            }
+            // console.log('piggies observe end');
             apiData = [];
             this.loadPiggyBanks();
         });
         window.store.observe('autoConversion', (newValue) => {
+            if (!afterPromises) {
+                return;
+            }
+            // console.log('piggies observe autoConversion');
             this.autoConversion = newValue;
             this.loadPiggyBanks();
         });

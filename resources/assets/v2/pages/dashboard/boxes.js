@@ -23,6 +23,7 @@ import {format} from "date-fns";
 import {getVariable} from "../../store/get-variable.js";
 import formatMoney from "../../util/format-money.js";
 
+let afterPromises = false;
 
 export default () => ({
     balanceBox: {amounts: [], subtitles: []},
@@ -173,35 +174,43 @@ export default () => ({
                 this.balanceBox.subtitles.push(subtitles[i]);
             }
         }
+        this.loading = false;
     },
     loadBoxes() {
-
         if (true === this.loading) {
             return;
         }
         this.loading = true;
         if (null === this.boxData) {
             this.getFreshData();
+            return;
         }
-        if (null !== this.boxData) {
-            this.generateOptions(this.boxData);
-            //this.drawChart();
-        }
-
+        this.generateOptions(this.boxData);
         this.loading = false;
     },
 
     // Getter
     init() {
+        // console.log('boxes init');
         Promise.all([getVariable('viewRange'), getVariable('autoConversion', false)]).then((values) => {
+            // console.log('boxes after promises');
+            afterPromises = true;
             this.autoConversion = values[1];
             this.loadBoxes();
         });
         window.store.observe('end', () => {
+            if (!afterPromises) {
+                return;
+            }
+            // console.log('boxes observe end');
             this.boxData = null;
             this.loadBoxes();
         });
         window.store.observe('autoConversion', (newValue) => {
+            if (!afterPromises) {
+                return;
+            }
+            // console.log('boxes observe autoConversion');
             this.autoConversion = newValue;
             this.loadBoxes();
         });
