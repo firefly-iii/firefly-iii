@@ -1,9 +1,6 @@
 import {defineConfig} from 'vite';
 import laravel from 'laravel-vite-plugin';
-
-
-import fs from 'fs';
-
+import manifestSRI from 'vite-plugin-manifest-sri';
 
 const host = '127.0.0.1';
 
@@ -15,8 +12,8 @@ export default defineConfig({
                 'resources/assets/v2/dashboard.js',
             ],
             refresh: true,
-
         }),
+        manifestSRI(),
     ],
 
 
