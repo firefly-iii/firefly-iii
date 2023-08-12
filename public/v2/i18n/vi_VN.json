@@ -1,0 +1,27 @@
+{
+    "vi_VN": {
+        "config": {
+            "html_language": "vi"
+        },
+        "firefly": {
+            "spent": "\u0110\u00e3 chi",
+            "left": "C\u00f2n l\u1ea1i",
+            "paid": "\u0110\u00e3 thanh to\u00e1n",
+            "unpaid": "Ch\u01b0a thanh to\u00e1n",
+            "default_group_title_name_plain": "ungrouped",
+            "overspent": "Qu\u00e1 h\u1ea1n",
+            "money_flowing_in": "V\u00e0o",
+            "money_flowing_out": "Ra",
+            "category": "Danh m\u1ee5c",
+            "unknown_category_plain": "No category",
+            "all_money": "All your money",
+            "unknown_source_plain": "Unknown source account",
+            "unknown_dest_plain": "Unknown destination account",
+            "unknown_any_plain": "Unknown account",
+            "unknown_budget_plain": "No budget",
+            "expense_account": "Expense account",
+            "revenue_account": "Revenue account",
+            "budget": "Ng\u00e2n s\u00e1ch"
+        }
+    }
+}

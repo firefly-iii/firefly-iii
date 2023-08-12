@@ -26,7 +26,7 @@ function getDefaultChartSettings(type) {
             type: 'sankey',
             data: {
                 datasets: [],
-            }
+            },
         }
     }
     if ('pie' === type) {
@@ -45,12 +45,19 @@ function getDefaultChartSettings(type) {
                 datasets: [],
             },
             options: {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                // console.log(tooltipItem);
+                                let currency = tooltipItem.dataset.currency_code;
+                                return formatMoney(tooltipItem.raw, currency);
+                            },
+                        },
+                    },
+                },
                 maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+                scales: {}
             },
         };
     }
@@ -61,7 +68,7 @@ function getDefaultChartSettings(type) {
                     tooltip: {
                         callbacks: {
                             label: function (tooltipItem) {
-                                console.log(tooltipItem);
+                                // console.log(tooltipItem);
                                 let currency = tooltipItem.dataset.currency_code;
                                 return formatMoney(tooltipItem.raw, currency);
                             },

@@ -1,0 +1,27 @@
+{
+    "el_GR": {
+        "config": {
+            "html_language": "el"
+        },
+        "firefly": {
+            "spent": "\u0394\u03b1\u03c0\u03b1\u03bd\u03ae\u03b8\u03b7\u03ba\u03b1\u03bd",
+            "left": "\u0391\u03c0\u03bf\u03bc\u03ad\u03bd\u03bf\u03c5\u03bd",
+            "paid": "\u03a0\u03bb\u03b7\u03c1\u03c9\u03bc\u03ad\u03bd\u03bf",
+            "unpaid": "\u0391\u03c0\u03bb\u03ae\u03c1\u03c9\u03c4\u03bf",
+            "default_group_title_name_plain": "ungrouped",
+            "overspent": "\u03a5\u03c0\u03ad\u03c1\u03b2\u03b1\u03c3\u03b7 \u03c0\u03c1\u03bf\u03cb\u03c0\u03bf\u03bb\u03bf\u03b3\u03b9\u03c3\u03bc\u03ce\u03bd",
+            "money_flowing_in": "\u0395\u03b9\u03c3\u03c1\u03bf\u03ad\u03c2",
+            "money_flowing_out": "\u0395\u03ba\u03c1\u03bf\u03ad\u03c2",
+            "category": "\u039a\u03b1\u03c4\u03b7\u03b3\u03bf\u03c1\u03af\u03b1",
+            "unknown_category_plain": "No category",
+            "all_money": "All your money",
+            "unknown_source_plain": "Unknown source account",
+            "unknown_dest_plain": "Unknown destination account",
+            "unknown_any_plain": "Unknown account",
+            "unknown_budget_plain": "No budget",
+            "expense_account": "Expense account",
+            "revenue_account": "Revenue account",
+            "budget": "\u03a0\u03c1\u03bf\u03cb\u03c0\u03bf\u03bb\u03bf\u03b3\u03b9\u03c3\u03bc\u03cc\u03c2"
+        }
+    }
+}

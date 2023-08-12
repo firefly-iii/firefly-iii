@@ -21,6 +21,7 @@ import {getVariable} from "../../store/get-variable.js";
 import Dashboard from "../../api/v2/chart/category/dashboard.js";
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import {Chart} from "chart.js";
+import formatMoney from "../../util/format-money.js";
 
 let currencies = [];
 let chart = null;
@@ -48,6 +49,7 @@ export default () => ({
                 if (!series.hasOwnProperty(code)) {
                     series[code] = {
                         name: code,
+                        yAxisID: '',
                         data: {},
                     };
                     currencies.push(code);
@@ -58,6 +60,7 @@ export default () => ({
         // loop data again to add amounts to each series.
         for (const i in data) {
             if (data.hasOwnProperty(i)) {
+                let yAxis = 'y';
                 let current = data[i];
                 let code = current.currency_code;
                 if (this.autoConversion) {
@@ -71,8 +74,10 @@ export default () => ({
                         if (code === ii) {
                             // this series' currency matches this column's currency.
                             amount = parseFloat(current.amount);
+                            yAxis = 'y' + current.currency_code;
                             if (this.autoConversion) {
                                 amount = parseFloat(current.native_amount);
+                                yAxis = 'y' + current.native_code;
                             }
                         }
                         if (series[ii].data.hasOwnProperty(current.label)) {
@@ -95,22 +100,39 @@ export default () => ({
             }
         }
         // loop the series and create ChartJS-compatible data sets.
+        let count = 0;
         for (const i in series) {
+            let yAxisID = 'y' + i;
             let dataset = {
                 label: i,
+                currency_code: i,
+                yAxisID: yAxisID,
                 data: [],
             }
             for (const ii in series[i].data) {
                 dataset.data.push(series[i].data[ii]);
             }
             options.data.datasets.push(dataset);
+            if (!options.options.scales.hasOwnProperty(yAxisID)) {
+                options.options.scales[yAxisID] = {
+                    beginAtZero: true,
+                    type: 'linear',
+                    position: 1 === count ? 'right' : 'left',
+                    ticks: {
+                        callback: function (value, index, values) {
+                            return formatMoney(value, i);
+                        }
+                    }
+                };
+                count++;
+            }
         }
-
         return options;
     },
     drawChart(options) {
         if (null !== chart) {
-            chart.data.datasets = options.data.datasets;
+            chart.options = options.options;
+            chart.data = options.data;
             chart.update();
             return;
         }

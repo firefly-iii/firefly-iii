@@ -19,10 +19,12 @@
  */
 import {getVariable} from "../../store/get-variable.js";
 import Get from "../../api/v2/model/piggy-bank/get.js";
-import {Chart} from 'chart.js';
+import {I18n} from "i18n-js";
+import {loadTranslations} from "../../support/load-translations.js";
 
 let apiData = {};
 let afterPromises = false;
+let i18n;
 
 export default () => ({
     loading: false,
@@ -62,7 +64,7 @@ export default () => ({
                 if (0 === current.attributes.percentage) {
                     continue;
                 }
-                let groupName = current.object_group_title ?? '(TODO ungrouped)';
+                let groupName = current.object_group_title ?? i18n.t('firefly.default_group_title_name_plain');
                 if (!dataSet.hasOwnProperty(groupName)) {
                     dataSet[groupName] = {
                         id: current.object_group_id ?? 0,
@@ -108,7 +110,12 @@ export default () => ({
     init() {
         // console.log('piggies init');
         apiData = [];
-        Promise.all([getVariable('autoConversion', false)]).then((values) => {
+        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en-US')]).then((values) => {
+
+            i18n = new I18n();
+            i18n.locale = values[1];
+            loadTranslations(i18n, values[1]);
+
             // console.log('piggies after promises');
             afterPromises = true;
             this.autoConversion = values[0];

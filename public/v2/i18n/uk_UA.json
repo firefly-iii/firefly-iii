@@ -1,0 +1,27 @@
+{
+    "uk_UA": {
+        "config": {
+            "html_language": "uk"
+        },
+        "firefly": {
+            "spent": "Spent",
+            "left": "Left",
+            "paid": "Paid",
+            "unpaid": "Unpaid",
+            "default_group_title_name_plain": "ungrouped",
+            "overspent": "Overspent",
+            "money_flowing_in": "In",
+            "money_flowing_out": "Out",
+            "category": "Category",
+            "unknown_category_plain": "No category",
+            "all_money": "All your money",
+            "unknown_source_plain": "Unknown source account",
+            "unknown_dest_plain": "Unknown destination account",
+            "unknown_any_plain": "Unknown account",
+            "unknown_budget_plain": "No budget",
+            "expense_account": "Expense account",
+            "revenue_account": "Revenue account",
+            "budget": "Budget"
+        }
+    }
+}

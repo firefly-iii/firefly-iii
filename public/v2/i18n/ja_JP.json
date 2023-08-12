@@ -1,0 +1,27 @@
+{
+    "ja_JP": {
+        "config": {
+            "html_language": "ja"
+        },
+        "firefly": {
+            "spent": "\u652f\u51fa",
+            "left": "\u6b8b\u308a",
+            "paid": "\u652f\u6255\u3044\u6e08\u307f",
+            "unpaid": "\u672a\u6255\u3044",
+            "default_group_title_name_plain": "ungrouped",
+            "overspent": "\u4f7f\u3044\u3059\u304e",
+            "money_flowing_in": "\u5165",
+            "money_flowing_out": "\u51fa",
+            "category": "\u30ab\u30c6\u30b4\u30ea",
+            "unknown_category_plain": "No category",
+            "all_money": "All your money",
+            "unknown_source_plain": "Unknown source account",
+            "unknown_dest_plain": "Unknown destination account",
+            "unknown_any_plain": "Unknown account",
+            "unknown_budget_plain": "No budget",
+            "expense_account": "Expense account",
+            "revenue_account": "Revenue account",
+            "budget": "\u4e88\u7b97"
+        }
+    }
+}

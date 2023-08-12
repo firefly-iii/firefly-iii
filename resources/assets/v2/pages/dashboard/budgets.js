@@ -23,21 +23,14 @@ import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import formatMoney from "../../util/format-money.js";
 import {Chart} from 'chart.js';
 import {I18n} from "i18n-js";
+import {loadTranslations} from "../../support/load-translations.js";
 
 let currencies = [];
 let chart = null;
 let chartData = null;
 let afterPromises = false;
 
-let language;
 let i18n; // for translating items in the chart.
-
-async function loadTranslations(i18n, locale) {
-    const response = await fetch(`./v2/i18n/${locale}.json`);
-    const translations = await response.json();
-
-    i18n.store(translations);
-}
 
 
 export default () => ({
@@ -93,24 +86,23 @@ export default () => ({
                 }
             }
         };
-
         options.data = {
             labels: [],
             datasets: [
                 {
-                    label: 'TODO spent',
+                    label: i18n.t('firefly.spent'),
                     data: [],
                     borderWidth: 1,
                     stack: 1
                 },
                 {
-                    label: 'TODO left',
+                    label: i18n.t('firefly.left'),
                     data: [],
                     borderWidth: 1,
                     stack: 1
                 },
                 {
-                    label: 'TODO overspent',
+                    label: i18n.t('firefly.overspent'),
                     data: [],
                     borderWidth: 1,
                     stack: 1
@@ -143,6 +135,19 @@ export default () => ({
                 }
             }
         }
+        // the currency format callback for the Y axis is AlWAYS based on whatever the first currency is.
+
+        // start
+        options.options.scales = {
+            y: {
+                ticks: {
+                    callback: function (context) {
+                        return formatMoney(context, currencies[0]);
+                    }
+                }
+            }
+        };
+        // end
         return options;
     },
 
@@ -152,11 +157,8 @@ export default () => ({
         Promise.all([getVariable('autoConversion', false), getVariable('language', 'en-US')]).then((values) => {
 
             i18n = new I18n();
+            i18n.locale = values[1];
             loadTranslations(i18n, values[1]);
-            // load translations.
-            //i18n = require('../../lang/' + values[1] + '.js').default;
-            //import lang from '../../lang/' + values[1] + '.js';
-            //language = values[1];
 
             this.autoConversion = values[0];
             afterPromises = true;

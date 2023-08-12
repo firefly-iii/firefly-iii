@@ -22,50 +22,96 @@ import Get from "../../api/v2/model/transaction/get.js";
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import {Chart} from 'chart.js';
 import {Flow, SankeyController} from 'chartjs-chart-sankey';
+import {loadTranslations} from "../../support/load-translations.js";
+import {I18n} from "i18n-js";
 
 Chart.register({SankeyController, Flow});
 
-
+let i18n;
 let currencies = [];
 let afterPromises = false;
 let chart = null;
 let transactions = [];
+let translations = {
+    category: null,
+    unknown_category: null,
+    in: null,
+    out: null,
+    // TODO
+    unknown_source: null,
+    unknown_dest: null,
+    unknown_account: null,
+    expense_account: null,
+    revenue_account: null,
+    budget: null,
+    unknown_budget: null,
+    all_money: null,
+};
+
+const colors = {
+    a: 'red',
+    b: 'green',
+    c: 'blue',
+    d: 'gray'
+};
+
+const getColor = function (key) {
+    if (key.includes(translations.revenue_account)) {
+        return 'forestgreen';
+    }
+    if (key.includes('(' + translations.in + ',')) {
+        return 'green';
+    }
+
+    if (key.includes(translations.budget) || key.includes(translations.unknown_budget)) {
+        return 'Orchid';
+    }
+    if (key.includes('(' + translations.out + ',')) {
+        return 'MediumOrchid';
+    }
+
+    if (key.includes(translations.all_money)) {
+        return 'blue';
+    }
+    return 'red';
+}
 
 // little helper
 function getObjectName(type, name, direction, code) {
+
     // category 4x
     if ('category' === type && null !== name && 'in' === direction) {
-        return 'Category "' + name + '" (in ' + code + ')';
+        return translations.category + ' "' + name + '" (' + translations.in + ', ' + code + ')';
     }
     if ('category' === type && null === name && 'in' === direction) {
-        return 'Unknown category (in ' + code + ')';
+        return translations.unknown_category + ' (' + translations.in + ', ' + code + ')';
     }
     if ('category' === type && null !== name && 'out' === direction) {
-        return 'Category "' + name + '" (out ' + code + ')';
+        return translations.category + ' "' + name + '" (' + translations.out + ', ' + code + ')';
     }
     if ('category' === type && null === name && 'out' === direction) {
-        return 'Unknown category (out ' + code + ')';
+        return translations.unknown_category + ' (' + translations.out + ', ' + code + ')';
     }
     // account 4x
     if ('account' === type && null === name && 'in' === direction) {
-        return 'Unknown source account ' + code + '';
+        return translations.unknown_source + ' (' + code + ')';
     }
     if ('account' === type && null !== name && 'in' === direction) {
-        return name + ' (in ' + code + ')';
+        return translations.revenue_account + '"' + name + '" (' + code + ')';
     }
     if ('account' === type && null === name && 'out' === direction) {
-        return 'Unknown destination account ' + code + '';
+        return translations.unknown_dest + ' (' + code + ')';
     }
     if ('account' === type && null !== name && 'out' === direction) {
-        return name + ' (out ' + code + ')';
+        return translations.expense_account + ' "' + name + '" (' + code + ')';
     }
 
     // budget 2x
-    if ('budget' === type && null !== name && 'out' === direction) {
-        return 'Budget "' + name + '" (out ' + code + ')';
+    if ('budget' === type && null !== name) {
+        return translations.budget + ' "' + name + '" (' + code + ')';
     }
-    if ('budget' === type && null === name && 'out' === direction) {
-        return 'Unknown budget (' + code + ')';
+    if ('budget' === type && null === name) {
+        return translations.unknown_budget + ' (' + code + ')';
     }
     console.error('Cannot handle: type:"' + type + '", dir: "' + direction + '"');
 }
@@ -73,14 +119,14 @@ function getObjectName(type, name, direction, code) {
 function getLabelName(type, name, code) {
     // category
     if ('category' === type && null !== name) {
-        return 'Category "' + name + '" (' + code + ')';
+        return translations.category + ' "' + name + '" (' + code + ')';
     }
     if ('category' === type && null === name) {
-        return 'Unknown category (' + code + ')';
+        return translations.unknown_category + ' (' + code + ')';
     }
     // account
     if ('account' === type && null === name) {
-        return 'Unknown account (' + code + ')';
+        return translations.unknown_account + ' (' + code + ')';
     }
     if ('account' === type && null !== name) {
         return name + ' (' + code + ')';
@@ -88,19 +134,19 @@ function getLabelName(type, name, code) {
 
     // budget 2x
     if ('budget' === type && null !== name) {
-        return 'Budget "' + name + '" (' + code + ')';
+        return translations.budget + ' "' + name + '" (' + code + ')';
     }
     if ('budget' === type && null === name) {
-        return 'Unknown budget (' + code + ')';
+        return translations.unknown_budget + ' (' + code + ')';
     }
     console.error('Cannot handle: type:"' + type + '"');
 }
 
+
 export default () => ({
     loading: false,
     autoConversion: false,
-    sankeyGrouping: 'account',
-    generateOptions(data) {
+    generateOptions() {
         let options = getDefaultChartSettings('sankey');
 
         // reset currencies
@@ -108,7 +154,6 @@ export default () => ({
 
         // variables collected for the sankey chart:
         let amounts = {};
-        let bigBox = 'TODO All money';
         let labels = {};
         for (let i in transactions) {
             if (transactions.hasOwnProperty(i)) {
@@ -143,11 +188,11 @@ export default () => ({
                             amounts[flowKey].amount += amount;
 
                             // nr 2
-                            flowKey = category + '-' + bigBox + '-' + currencyCode;
+                            flowKey = category + '-' + translations.all_money + '-' + currencyCode;
                             if (!amounts.hasOwnProperty(flowKey)) {
                                 amounts[flowKey] = {
                                     from: category,
-                                    to: bigBox,
+                                    to: translations.all_money + ' (' + currencyCode + ')',
                                     amount: 0
                                 };
                             }
@@ -163,11 +208,11 @@ export default () => ({
                             // 1.
                             let budget = getObjectName('budget', transaction.budget_name, 'out', currencyCode);
                             labels[budget] = getLabelName('budget', transaction.budget_name, currencyCode);
-                            flowKey = bigBox + '-' + budget + '-' + currencyCode;
+                            flowKey = translations.all_money + '-' + budget + '-' + currencyCode;
 
                             if (!amounts.hasOwnProperty(flowKey)) {
                                 amounts[flowKey] = {
-                                    from: bigBox,
+                                    from: translations.all_money + ' (' + currencyCode + ')',
                                     to: budget,
                                     amount: 0
                                 };
@@ -213,27 +258,11 @@ export default () => ({
             {
                 label: 'My sankey',
                 data: [],
-                //colorFrom: (c) => getColor(c.dataset.data[c.dataIndex].from),
-                //colorTo: (c) => getColor(c.dataset.data[c.dataIndex].to),
+                colorFrom: (c) => getColor(c.dataset.data[c.dataIndex].from),
+                colorTo: (c) => getColor(c.dataset.data[c.dataIndex].to),
                 colorMode: 'gradient', // or 'from' or 'to'
                 labels: labels,
-                /* optional labels */
-                // labels: {
-                //     a: 'Label A',
-                //     b: 'Label B',
-                //     c: 'Label C',
-                //     d: 'Label D'
-                // },
-                /* optional priority */
-                // priority: {
-                //     b: 1,
-                //     d: 0
-                // },
-                /* optional column overrides */
-                // column: {
-                //     d: 1
-                // },
-                size: 'max', // or 'min' if flow overlap is preferred
+                size: 'min', // or 'min' if flow overlap is preferred
             };
         for (let i in amounts) {
             if (amounts.hasOwnProperty(i)) {
@@ -300,11 +329,30 @@ export default () => ({
     init() {
         // console.log('sankey init');
         transactions = [];
-        Promise.all([getVariable('autoConversion', false), getVariable('sankeyGrouping', 'account')]).then((values) => {
+        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en-US')]).then((values) => {
+
+            i18n = new I18n();
+            i18n.locale = values[1];
+            loadTranslations(i18n, values[1]).then(() => {
+                // some translations:
+                translations.all_money = i18n.t('firefly.all_money');
+                translations.category = i18n.t('firefly.category');
+                translations.in = i18n.t('firefly.money_flowing_in');
+                translations.out = i18n.t('firefly.money_flowing_out');
+                translations.unknown_category = i18n.t('firefly.unknown_category_plain');
+                translations.unknown_source = i18n.t('firefly.unknown_source_plain');
+                translations.unknown_dest = i18n.t('firefly.unknown_dest_plain');
+                translations.unknown_account = i18n.t('firefly.unknown_any_plain');
+                translations.unknown_budget = i18n.t('firefly.unknown_budget_plain');
+                translations.expense_account = i18n.t('firefly.expense_account');
+                translations.revenue_account = i18n.t('firefly.revenue_account');
+                translations.budget = i18n.t('firefly.budget');
+            });
+
+
             // console.log('sankey after promises');
             afterPromises = true;
             this.autoConversion = values[0];
-            this.sankeyGrouping = values[1];
             this.loadChart();
         });
         window.store.observe('end', () => {
