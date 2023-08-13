@@ -101,8 +101,7 @@
                             @endif</h3>
                     </div>
                     <div class="col-sm-6">
-                        <!-- find me -->
-                        {{ Breadcrumbs::render('home') }}
+                        {{ Breadcrumbs::render() }}
                     </div>
                 </div>
                 <!--end::Row-->

@@ -63,7 +63,7 @@
                             <div class="card">
                                 <div class="card-header">
                                     <h3 class="card-title"><a href="{{ route('categories.index') }}"
-                                                              title="{{ __('firefly.yourAccounts') }}">{{ __('firefly.categories') }}</a>
+                                                              title="{{ __('firefly.go_to_categories') }}">{{ __('firefly.categories') }}</a>
                                     </h3>
                                 </div>
                                 <div class="card-body p-0" style="position: relative;height:350px;">
@@ -85,7 +85,7 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <h3 class="card-title">
-                                            <a :href="'{{ route('accounts.show','') }}/' + account.id"
+                                            <a :href="'{{ route('accounts.show', '') }}/' + account.id"
                                                x-text="account.name"></a>
 
                                             <span class="small text-muted">(<template x-if="autoConversion">
@@ -158,8 +158,9 @@
                 <div class="col">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"><a href="#"
-                                                      title="{{ route('reports.index') }}">{{ __('firefly.income_and_expense') }}</a>
+                            <h3 class="card-title"><a href="{{ route('reports.index') }}"
+                                                      title="{{ __('firefly.income_and_expense') }}"
+                                >{{ __('firefly.income_and_expense') }}</a>
                             </h3>
                         </div>
                         <div class="card-body" x-data="sankey">
@@ -172,7 +173,9 @@
                 <div class="col">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"><a href="#" title="Something">Subscriptions</a></h3>
+                            <h3 class="card-title"><a href="{{ route('subscriptions.index') }}"
+                                                      title="{{ __('firefly.go_to_subscriptions') }}">{{ __('firefly.subscriptions')  }}</a>
+                            </h3>
                         </div>
                         <div class="card-body" x-data="subscriptions">
                             <canvas id="subscriptions-chart"></canvas>
@@ -184,7 +187,9 @@
                     <template x-for="group in piggies">
                         <div class="card mb-2">
                             <div class="card-header">
-                                <h3 class="card-title"><a href="#" title="Something">Spaarpotjes (<span
+                                <h3 class="card-title"><a href="{{ route('piggy-banks.index')  }}"
+                                                          title="{{ __('firefly.go_to_piggies')  }}">{{ __('firefly.piggy_banks') }}
+                                        (<span
                                             x-text="group.title"></span>)</a></h3>
                             </div>
                             <ul class="list-group list-group-flush">

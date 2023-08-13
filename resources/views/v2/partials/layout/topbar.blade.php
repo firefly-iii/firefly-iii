@@ -44,57 +44,61 @@
     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
         <!-- withdrawal, deposit, transfer -->
         <a href="{{ route('transactions.create', ['withdrawal']) }}" class="dropdown-item">
-            <em class="fa-regular fa-plus me-2"></em>
-            {{ __('firefly.create_new_transaction') }}
+            <em class="fa-solid fa-arrow-left fa-fw me-2"></em>
+            {{ __('firefly.create_new_withdrawal') }}
         </a>
-        <a href="{{ route('transactions.create', ['withdrawal']) }}" class="dropdown-item">
-            <em class="fa-regular fa-plus me-2"></em>
-            TODO {{ __('firefly.create_new_transaction') }}
+        <a href="{{ route('transactions.create', ['deposit']) }}" class="dropdown-item">
+            <em class="fa-solid fa-arrow-right fa-fw me-2"></em>
+            {{ __('firefly.create_new_deposit') }}
         </a>
-        <a href="{{ route('transactions.create', ['withdrawal']) }}" class="dropdown-item">
-            <em class="fa-regular fa-plus me-2"></em>
-            TODO {{ __('firefly.create_new_transaction') }}
+        <a href="{{ route('transactions.create', ['transfer']) }}" class="dropdown-item">
+            <em class="fa-solid fa-arrows-rotate fa-fw me-2"></em>
+            {{ __('firefly.create_new_transfer') }}
         </a>
         <div class="dropdown-divider"></div>
 
         <!-- asset, liability -->
-        <a href="{{ route('transactions.create', ['withdrawal']) }}" class="dropdown-item">
-            <em class="fa-regular fa-plus me-2"></em>
-            TODO {{ __('firefly.create_new_transaction') }}
+        <a href="{{ route('accounts.create', ['asset']) }}" class="dropdown-item">
+            <em class="fa-solid fa-money-bills fa-fw me-2"></em>
+            {{ __('firefly.create_new_asset') }}
         </a>
-        <a href="{{ route('transactions.create', ['withdrawal']) }}" class="dropdown-item">
-            <em class="fa-regular fa-plus me-2"></em>
-            TODO {{ __('firefly.create_new_transaction') }}
+        <a href="{{ route('accounts.create', ['liabilities']) }}" class="dropdown-item">
+            <em class="fa-solid fa-landmark fa-fw me-2"></em>
+            {{ __('firefly.create_new_liabilities') }}
         </a>
         <div class="dropdown-divider"></div>
 
         <!-- budget, category, piggy -->
-        <a href="{{ route('transactions.create', ['withdrawal']) }}" class="dropdown-item">
-            <em class="fa-regular fa-plus me-2"></em>
-            TODO {{ __('firefly.create_new_transaction') }}
+        <a href="{{ route('budgets.create') }}" class="dropdown-item">
+            <em class="fa-solid fa-pie-chart fa-fw me-2"></em>
+            {{ __('firefly.create_new_budget') }}
         </a>
-        <a href="{{ route('transactions.create', ['withdrawal']) }}" class="dropdown-item">
-            <em class="fa-regular fa-plus me-2"></em>
-            TODO {{ __('firefly.create_new_transaction') }}
+        <a href="{{ route('categories.create') }}" class="dropdown-item">
+            <em class="fa-regular fa-bookmark fa-fw me-2"></em>
+            {{ __('firefly.create_new_category') }}
         </a>
-        <a href="{{ route('transactions.create', ['withdrawal']) }}" class="dropdown-item">
-            <em class="fa-regular fa-plus me-2"></em>
-            TODO {{ __('firefly.create_new_transaction') }}
+        <a href="{{ route('piggy-banks.create') }}" class="dropdown-item">
+            <em class="fa-solid fa-piggy-bank fa-fw me-2"></em>
+            {{ __('firefly.create_new_piggy_bank') }}
         </a>
         <div class="dropdown-divider"></div>
 
         <!-- contract, rule, recurring -->
-        <a href="{{ route('transactions.create', ['withdrawal']) }}" class="dropdown-item">
-            <em class="fa-regular fa-plus me-2"></em>
-            TODO {{ __('firefly.create_new_transaction') }}
+        <a href="{{ route('subscriptions.create') }}" class="dropdown-item">
+            <em class="fa-regular fa-calendar fa-fw me-2"></em>
+            {{ __('firefly.create_new_subscription') }}
         </a>
-        <a href="{{ route('transactions.create', ['withdrawal']) }}" class="dropdown-item">
-            <em class="fa-regular fa-plus me-2"></em>
-            TODO {{ __('firefly.create_new_transaction') }}
+        <a href="{{ route('rules.create') }}" class="dropdown-item">
+            <em class="fa-solid fa-shuffle fa-fw me-2"></em>
+            {{ __('firefly.create_new_rule') }}
         </a>
-        <a href="{{ route('transactions.create', ['withdrawal']) }}" class="dropdown-item">
-            <em class="fa-regular fa-plus me-2"></em>
-            TODO {{ __('firefly.create_new_transaction') }}
+        <a href="{{ route('recurring.create') }}" class="dropdown-item">
+            <em class="fa-solid fa-repeat fa-fw me-2"></em>
+            {{ __('firefly.create_new_recurrence') }}
+        </a>
+        <a href="{{ route('webhooks.create') }}" class="dropdown-item">
+            <em class="fa-solid fa-bolt-lightning fa-fw me-2"></em>
+            {{ __('firefly.create_new_webhook') }}
         </a>
     </div>
 </li>

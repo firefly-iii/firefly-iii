@@ -37,14 +37,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('bills.index') }}" class="nav-link">
+                    <a href="{{ route('subscriptions.index') }}" class="nav-link">
                         <i class="nav-icon fa-regular fa-calendar"></i>
-                        <p>{{ __('firefly.bills')  }}</p>
+                        <p>{{ __('firefly.subscriptions')  }}</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('piggy-banks.index') }}" class="nav-link">
-                        <em class="nav-icon fa-solid fa-bullseye"></em>
+                        <em class="nav-icon fa-solid fa-piggy-bank"></em>
                         <p>{{ __('firefly.piggy_banks')  }}</p>
                     </a>
                 </li>
@@ -95,19 +95,19 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('rules.index') }}" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon fa-solid fa-shuffle"></i>
                                 <p>{{ __('firefly.rules') }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('recurring.index') }}" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon fa-solid fa-repeat"></i>
                                 <p>{{ __('firefly.recurrences') }}</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('webhooks.index') }}" class="nav-link">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon fa-solid fa-bolt-lightning"></i>
                                 <p>{{ __('firefly.webhooks') }}</p>
                             </a>
                         </li>
