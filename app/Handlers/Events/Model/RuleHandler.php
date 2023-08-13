@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events\Model;
 
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Notifications\User\RuleActionFailed;
 use Illuminate\Support\Facades\Notification;
 
@@ -37,7 +38,7 @@ class RuleHandler
      *
      * @return void
      */
-    public function ruleActionFailed(RuleActionFailedOnArray $event): void
+    public function ruleActionFailedOnArray(RuleActionFailedOnArray $event): void
     {
         app('log')->debug('Now in ruleActionFailed');
         $ruleAction = $event->ruleAction;
@@ -49,6 +50,31 @@ class RuleHandler
         $mainMessage = trans('rules.main_message', ['rule' => $rule->title, 'action' => $ruleAction->action_type, 'group' => $journal['transaction_group_id'], 'error' => $error]);
         $groupTitle  = $journal['description'] ?? '';
         $groupLink   = route('transactions.show', [$journal['transaction_group_id']]);
+        $ruleTitle   = $rule->title;
+        $ruleLink    = route('rules.edit', [$rule->id]);
+        $params      = [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink];
+
+
+        Notification::send($user, new RuleActionFailed($params));
+    }
+
+    /**
+     * @param RuleActionFailedOnObject $event
+     *
+     * @return void
+     */
+    public function ruleActionFailedOnObject(RuleActionFailedOnObject $event): void
+    {
+        app('log')->debug('Now in ruleActionFailed');
+        $ruleAction = $event->ruleAction;
+        $rule       = $ruleAction->rule;
+        $journal    = $event->journal;
+        $error      = $event->error;
+        $user       = $ruleAction->rule->user;
+
+        $mainMessage = trans('rules.main_message', ['rule' => $rule->title, 'action' => $ruleAction->action_type, 'group' => $journal->transaction_group_id, 'error' => $error]);
+        $groupTitle  = $journal->description ?? '';
+        $groupLink   = route('transactions.show', [$journal->transaction_group_id]);
         $ruleTitle   = $rule->title;
         $ruleLink    = route('rules.edit', [$rule->id]);
         $params      = [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink];

@@ -33,6 +33,7 @@ use FireflyIII\Events\Model\BudgetLimit\Created;
 use FireflyIII\Events\Model\BudgetLimit\Deleted;
 use FireflyIII\Events\Model\BudgetLimit\Updated;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
@@ -173,7 +174,10 @@ class EventServiceProvider extends ServiceProvider
 
             // rule actions
             RuleActionFailedOnArray::class      => [
-                'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailed',
+                'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailedOnArray',
+            ],
+            RuleActionFailedOnObject::class     => [
+                'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailedOnObject',
             ],
 
         ];

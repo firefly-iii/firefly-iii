@@ -115,7 +115,7 @@ class ConvertToDeposit implements ActionInterface
 
             return $res;
         }
-        // TODO introduce error
+        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.unsupported_transaction_type_deposit', ['type' => $type])));
         return false;
     }
 

@@ -25,6 +25,7 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -84,12 +85,15 @@ class ConvertToTransfer implements ActionInterface
 
             return false;
         }
+        if (TransactionType::DEPOSIT !== $type && TransactionType::WITHDRAWAL !== $type) {
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.unsupported_transaction_type_transfer', ['type' => $type])));
+            return false;
+        }
 
         // find the asset account in the action value.
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($user);
-        $opposing     = null;
         $expectedType = null;
         if (TransactionType::WITHDRAWAL === $type) {
             $expectedType = $this->getSourceType($journalId);
@@ -126,7 +130,9 @@ class ConvertToTransfer implements ActionInterface
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
             }
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::WITHDRAWAL, TransactionType::TRANSFER));
+            if (false !== $res) {
+                event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::WITHDRAWAL, TransactionType::TRANSFER));
+            }
             return $res;
         }
         if (TransactionType::DEPOSIT === $type) {
@@ -139,10 +145,12 @@ class ConvertToTransfer implements ActionInterface
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
             }
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionType::TRANSFER));
+            if (false !== $res) {
+                event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionType::TRANSFER));
+            }
             return $res;
         }
-        // TODO introduce error
+        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.unsupported_transaction_type_transfer', ['type' => $type])));
         return false;
     }
 
@@ -173,7 +181,6 @@ class ConvertToTransfer implements ActionInterface
         $journal = TransactionJournal::find($journalId);
         if (null === $journal) {
             Log::error(sprintf('Journal #%d does not exist. Cannot convert to transfer.', $journalId));
-            // TODO introduce error
             return '';
         }
         return (string)$journal->transactions()->where('amount', '>', 0)->first()?->account?->accountType?->type;
@@ -200,7 +207,7 @@ class ConvertToTransfer implements ActionInterface
                     [$journal->id, $opposing->name, $this->action->rule_id]
                 )
             );
-            // TODO introduce error
+            event(new RuleActionFailedOnObject($this->action, $journal, trans('rules.already_has_source_asset', ['name' => $opposing->name])));
 
             return false;
         }
@@ -259,7 +266,7 @@ class ConvertToTransfer implements ActionInterface
                     [$journal->id, $opposing->name, $this->action->rule_id]
                 )
             );
-            // TODO introduce error
+            event(new RuleActionFailedOnObject($this->action, $journal, trans('rules.already_has_destination_asset', ['name' => $opposing->name])));
 
             return false;
         }

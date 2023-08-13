@@ -82,7 +82,7 @@ class AppendNotesToDescription implements ActionInterface
 
             return true;
         }
-        // TODO introduce error
+        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.new_notes_empty')));
         return false;
     }
 

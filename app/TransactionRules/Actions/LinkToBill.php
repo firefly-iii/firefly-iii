@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -73,7 +74,7 @@ class LinkToBill implements ActionInterface
                         $billName
                     )
                 );
-                // TODO introduce error
+                event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_linked_to_subscription', ['name' => $billName])));
                 return false;
             }
 
@@ -98,7 +99,7 @@ class LinkToBill implements ActionInterface
                 $billName
             )
         );
-        // TODO introduce error
+        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_subscription', ['name' => $billName])));
         return false;
     }
 }
