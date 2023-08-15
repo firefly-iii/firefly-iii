@@ -201,6 +201,23 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
+     * Returns all available budget objects.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     *
+     */
+    public function getAvailableBudgetsByExactDate(Carbon $start, Carbon $end): Collection
+    {
+        return $this->user->availableBudgets()
+                          ->where('start_date', '=', $start->format('Y-m-d'))
+                          ->where('end_date', '=', $end->format('Y-m-d'))
+                          ->get();
+    }
+
+    /**
      * @inheritDoc
      */
     public function getByCurrencyDate(Carbon $start, Carbon $end, TransactionCurrency $currency): ?AvailableBudget

@@ -82,7 +82,7 @@ class BoxController extends Controller
 
         $currency = app('amount')->getDefaultCurrency();
         app('log')->debug(sprintf('Default currency is %s', $currency->code));
-        $availableBudgets = $abRepository->getAvailableBudgetsByDate($start, $end);
+        $availableBudgets = $abRepository->getAvailableBudgetsByExactDate($start, $end);
         app('log')->debug(sprintf('Found %d available budget(s)', $availableBudgets->count()));
         $availableBudgets = $availableBudgets->filter(
             static function (AvailableBudget $availableBudget) use ($currency) {
