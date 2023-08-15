@@ -60,6 +60,7 @@ class BoxController extends Controller
         $opsRepository = app(OperationsRepositoryInterface::class);
         /** @var AvailableBudgetRepositoryInterface $abRepository */
         $abRepository = app(AvailableBudgetRepositoryInterface::class);
+        $abRepository->cleanup();
         /** @var Carbon $start */
         $start = session('start', today(config('app.timezone'))->startOfMonth());
         /** @var Carbon $end */
@@ -86,6 +87,11 @@ class BoxController extends Controller
         $availableBudgets = $availableBudgets->filter(
             static function (AvailableBudget $availableBudget) use ($currency) {
                 if ($availableBudget->transaction_currency_id === $currency->id) {
+                    app('log')->debug(sprintf('Will include AB #%d: from %s-%s amount %s',
+                                              $availableBudget->id,
+                                              $availableBudget->start_date->format('Y-m-d'),
+                                              $availableBudget->end_date->format('Y-m-d'),
+                                              $availableBudget->amount));
                     return $availableBudget;
                 }
 

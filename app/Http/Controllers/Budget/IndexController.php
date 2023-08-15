@@ -101,6 +101,7 @@ class IndexController extends Controller
      */
     public function index(Request $request, Carbon $start = null, Carbon $end = null)
     {
+        $this->abRepository->cleanup();
         Log::debug(sprintf('Start of IndexController::index("%s", "%s")', $start?->format('Y-m-d'), $end?->format('Y-m-d')));
 
         // collect some basic vars:
@@ -137,7 +138,7 @@ class IndexController extends Controller
 
         // get budgeted for default currency:
         if (0 === count($availableBudgets)) {
-            $budgeted = $this->blRepository->budgeted($start, $end, $defaultCurrency, );
+            $budgeted = $this->blRepository->budgeted($start, $end, $defaultCurrency,);
             $spentArr = $this->opsRepository->sumExpenses($start, $end, null, null, $defaultCurrency);
             $spent    = $spentArr[$defaultCurrency->id]['sum'] ?? '0';
             unset($spentArr);
@@ -196,7 +197,7 @@ class IndexController extends Controller
             $array['spent'] = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
 
             // budgeted in period:
-            $budgeted           = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency, );
+            $budgeted           = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency,);
             $array['budgeted']  = $budgeted;
             $availableBudgets[] = $array;
             unset($spentArr);
@@ -337,6 +338,7 @@ class IndexController extends Controller
      */
     public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
     {
+        $this->abRepository->cleanup();
         $budgetIds = $request->get('budgetIds');
 
         foreach ($budgetIds as $index => $budgetId) {
