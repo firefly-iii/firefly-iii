@@ -26,6 +26,7 @@ namespace FireflyIII\Handlers\Events\Model;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Notifications\User\RuleActionFailed;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Notification;
 
 /**
@@ -40,12 +41,16 @@ class RuleHandler
      */
     public function ruleActionFailedOnArray(RuleActionFailedOnArray $event): void
     {
-        app('log')->debug('Now in ruleActionFailed');
         $ruleAction = $event->ruleAction;
         $rule       = $ruleAction->rule;
-        $journal    = $event->journal;
-        $error      = $event->error;
-        $user       = $ruleAction->rule->user;
+        $preference = Preferences::getForUser($rule->user, 'notification_rule_action_failures', true)->data;
+        if (false === $preference) {
+            return;
+        }
+        app('log')->debug('Now in ruleActionFailedOnArray');
+        $journal = $event->journal;
+        $error   = $event->error;
+        $user    = $ruleAction->rule->user;
 
         $mainMessage = trans('rules.main_message', ['rule' => $rule->title, 'action' => $ruleAction->action_type, 'group' => $journal['transaction_group_id'], 'error' => $error]);
         $groupTitle  = $journal['description'] ?? '';
@@ -65,12 +70,16 @@ class RuleHandler
      */
     public function ruleActionFailedOnObject(RuleActionFailedOnObject $event): void
     {
-        app('log')->debug('Now in ruleActionFailed');
         $ruleAction = $event->ruleAction;
         $rule       = $ruleAction->rule;
-        $journal    = $event->journal;
-        $error      = $event->error;
-        $user       = $ruleAction->rule->user;
+        $preference = Preferences::getForUser($rule->user, 'notification_rule_action_failures', true)->data;
+        if (false === $preference) {
+            return;
+        }
+        app('log')->debug('Now in ruleActionFailedOnObject');
+        $journal = $event->journal;
+        $error   = $event->error;
+        $user    = $ruleAction->rule->user;
 
         $mainMessage = trans('rules.main_message', ['rule' => $rule->title, 'action' => $ruleAction->action_type, 'group' => $journal->transaction_group_id, 'error' => $error]);
         $groupTitle  = $journal->description ?? '';

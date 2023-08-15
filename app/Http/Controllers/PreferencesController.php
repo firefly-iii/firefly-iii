@@ -28,6 +28,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Notifications\UrlValidator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -207,7 +208,7 @@ class PreferencesController extends Controller
         // slack URL:
         if (!auth()->user()->hasRole('demo')) {
             $url = (string)$request->get('slackUrl');
-            if (str_starts_with($url, 'https://hooks.slack.com/services/')) {
+            if (UrlValidator::isValidWebhookURL($url)) {
                 app('preferences')->set('slack_webhook_url', $url);
             }
             if ('' === $url) {

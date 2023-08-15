@@ -29,6 +29,7 @@ import axios from 'axios';
 import store from "store";
 import observePlugin from 'store/plugins/observe';
 import Alpine from "alpinejs";
+import * as bootstrap from 'bootstrap'
 
 store.addPlugin(observePlugin);
 window.store = store;

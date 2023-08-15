@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications\User;
 
+use FireflyIII\Support\Notifications\UrlValidator;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -42,9 +43,7 @@ class NewAccessToken extends Notification
      *
      * @return void
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Get the array representation of the notification.
@@ -96,9 +95,9 @@ class NewAccessToken extends Notification
     public function via($notifiable)
     {
         /** @var User|null $user */
-        $user = auth()->user();
+        $user     = auth()->user();
         $slackUrl = null === $user ? '' : (string)app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (str_starts_with($slackUrl, 'https://hooks.slack.com/services/')) {
+        if (UrlValidator::isValidWebhookURL($slackUrl)) {
             return ['mail', 'slack'];
         }
         return ['mail'];
