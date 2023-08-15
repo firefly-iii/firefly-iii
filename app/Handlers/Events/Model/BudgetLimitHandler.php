@@ -166,7 +166,7 @@ class BudgetLimitHandler
                 $availableBudget->end_date->format('Y-m-d')
             )
         );
-        // have to recalc everything just in case.
+        // have to recalculate everything just in case.
         $set = $repository->getAllBudgetLimitsByCurrency($availableBudget->transactionCurrency, $availableBudget->start_date, $availableBudget->end_date);
         Log::debug(sprintf('Found %d interesting budget limit(s).', $set->count()));
         /** @var BudgetLimit $budgetLimit */
@@ -181,20 +181,23 @@ class BudgetLimitHandler
             );
             // overlap in days:
             $limitPeriod = Period::make(
-                $budgetLimit->start_date,
-                $budgetLimit->end_date,
+                            $budgetLimit->start_date,
+                            $budgetLimit->end_date,
                 precision : Precision::DAY(),
                 boundaries: Boundaries::EXCLUDE_NONE()
             );
-            // if both equal eachother, amount from this BL must be added to the AB
+            // if both equal each other, amount from this BL must be added to the AB
             if ($limitPeriod->equals($abPeriod)) {
+                app('log')->debug('This budget limit is equal to the available budget period.');
                 $newAmount = bcadd($newAmount, $budgetLimit->amount);
             }
-            // if budget limit period inside AB period, can be added in full.
+            // if budget limit period is inside AB period, it can be added in full.
             if (!$limitPeriod->equals($abPeriod) && $abPeriod->contains($limitPeriod)) {
+                app('log')->debug('This budget limit is smaller than the available budget period.');
                 $newAmount = bcadd($newAmount, $budgetLimit->amount);
             }
-            if (!$limitPeriod->equals($abPeriod) && $abPeriod->overlapsWith($limitPeriod)) {
+            if (!$limitPeriod->equals($abPeriod) && !$abPeriod->contains($limitPeriod) && $abPeriod->overlapsWith($limitPeriod)) {
+                app('log')->debug('This budget limit is something else entirely!');
                 $overlap = $abPeriod->overlap($limitPeriod);
                 if (null !== $overlap) {
                     $length    = $overlap->length();
@@ -209,7 +212,7 @@ class BudgetLimitHandler
             return;
         }
         Log::debug(sprintf('Concluded new amount for this AB must be %s', $newAmount));
-        $availableBudget->amount = $newAmount;
+        $availableBudget->amount = app('steam')->bcround($newAmount, $availableBudget->transactionCurrency->decimal_places);
         $availableBudget->save();
     }
 
@@ -224,8 +227,8 @@ class BudgetLimitHandler
             return '0';
         }
         $limitPeriod = Period::make(
-            $budgetLimit->start_date,
-            $budgetLimit->end_date,
+                        $budgetLimit->start_date,
+                        $budgetLimit->end_date,
             precision : Precision::DAY(),
             boundaries: Boundaries::EXCLUDE_NONE()
         );
