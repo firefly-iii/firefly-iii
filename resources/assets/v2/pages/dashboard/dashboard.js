@@ -18,15 +18,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import './bootstrap.js';
-import dates from './pages/shared/dates.js';
-import boxes from './pages/dashboard/boxes.js';
-import accounts from './pages/dashboard/accounts.js';
-import budgets from './pages/dashboard/budgets.js';
-import categories from './pages/dashboard/categories.js';
-import sankey from './pages/dashboard/sankey.js';
-import subscriptions from './pages/dashboard/subscriptions.js';
-import piggies from './pages/dashboard/piggies.js';
+import '../../boot/bootstrap.js';
+import dates from '../../pages/shared/dates.js';
+import boxes from './boxes.js';
+import accounts from './accounts.js';
+import budgets from './budgets.js';
+import categories from './categories.js';
+import sankey from './sankey.js';
+import subscriptions from './subscriptions.js';
+import piggies from './piggies.js';
 
 
 import {

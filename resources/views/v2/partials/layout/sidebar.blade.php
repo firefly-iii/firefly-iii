@@ -22,7 +22,7 @@
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
                 data-accordion="false">
                 <li class="nav-item menu-open">
-                    <a href="#" class="nav-link active">
+                    <a href="{{ route('index') }}" class="nav-link active">
                         <em class="nav-icon fa-solid fa-gauge-high"></em>
                         <p>
                             {{ __('firefly.dashboard')  }}

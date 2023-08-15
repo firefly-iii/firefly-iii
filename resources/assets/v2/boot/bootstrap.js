@@ -1,3 +1,23 @@
+/*
+ * bootstrap.js
+ * Copyright (c) 2023 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
@@ -9,15 +29,13 @@ import axios from 'axios';
 import store from "store";
 import observePlugin from 'store/plugins/observe';
 import Alpine from "alpinejs";
-import * as bootstrap from 'bootstrap'
 
-// add plugin to store and put in window
 store.addPlugin(observePlugin);
 window.store = store;
 
 // import even more
-import {getVariable} from "./store/get-variable.js";
-import {getViewRange} from "./support/get-viewrange.js";
+import {getVariable} from "../store/get-variable.js";
+import {getViewRange} from "../support/get-viewrange.js";
 
 // wait for 3 promises, because we need those later on.
 window.bootstrapped = false;

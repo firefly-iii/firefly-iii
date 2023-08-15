@@ -1,6 +1,6 @@
 @extends('layout.v2')
 @section('vite')
-    @vite(['resources/assets/v2/sass/app.scss', 'resources/assets/v2/dashboard.js'])
+    @vite(['resources/assets/v2/sass/app.scss', 'resources/assets/v2/pages/dashboard/dashboard.js'])
 @endsection
 @section('content')
 
