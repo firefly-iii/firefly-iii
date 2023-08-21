@@ -111,7 +111,7 @@
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "2.*",
-    "ergebnis/phpstan-rules": "^2.0",
+    "ergebnis/phpstan-rules": "^2.1",
     "fakerphp/faker": "1.*",
     "filp/whoops": "2.*",
     "mockery/mockery": "1.*",
