@@ -302,7 +302,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null === $string) {
             return null;
         }
-        Log::debug(sprintf('Now in date("%s")', $string));
+//        Log::debug(sprintf('Now in date("%s")', $string));
         if (10 === strlen($string)) {
             return Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
         }

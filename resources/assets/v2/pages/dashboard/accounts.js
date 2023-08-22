@@ -53,7 +53,6 @@ export default () => ({
             let options = window.store.get(CHART_CACHE_KEY);
             this.drawChart(options);
             this.loading = false;
-            console.log('Chart from cache');
         }
         if (!cacheValid || typeof cachedData === 'undefined') {
             const dashboard = new Dashboard();
@@ -64,7 +63,6 @@ export default () => ({
                 window.store.set(CHART_CACHE_KEY, options);
                 this.drawChart(options);
                 this.loading = false;
-                console.log('Chart FRESH');
             });
         }
 
