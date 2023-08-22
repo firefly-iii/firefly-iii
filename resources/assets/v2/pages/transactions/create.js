@@ -21,16 +21,66 @@
 import '../../boot/bootstrap.js';
 import dates from '../../pages/shared/dates.js';
 import {createEmptySplit} from "./shared/create-empty-split.js";
+import {parseFromEntries} from "./shared/parse-from-entries.js";
 import formatMoney from "../../util/format-money.js";
+//import Autocomplete from "bootstrap5-autocomplete";
+import Post from "../../api/v2/model/transaction/post.js";
 
 let transactions = function () {
     return {
         count: 0,
         totalAmount: 0,
         entries: [],
+
+        // error and success messages:
+        showError: false,
+        showSuccess: false,
+
         init() {
-            this.entries.push(createEmptySplit());
+            const opts = {
+                onSelectItem: console.log,
+            };
+            let src = [];
+            for (let i = 0; i < 50; i++) {
+                src.push({
+                    title: "Option " + i,
+                    id: "opt" + i,
+                    data: {
+                        key: i,
+                    },
+                });
+            }
+
+            // for each thing, make autocomplete?
+
+
+            this.addSplit();
             console.log('Ik ben init hoera');
+
+            // let element = document.getElementById('source_0');
+            // new Autocomplete(element, {
+            //     items: src,
+            //     valueField: "id",
+            //     labelField: "title",
+            //     highlightTyped: true,
+            //     onSelectItem: console.log,
+            // });
+        },
+        submitTransaction() {
+            let transactions = parseFromEntries(this.entries);
+            let submission = {
+                group_title: null,
+                fire_webhooks: false,
+                apply_rules: false,
+                transactions: transactions
+            };
+            let poster = new Post();
+            console.log(submission);
+            poster.post(submission).then((response) => {
+                console.log(response);
+            }).catch((error) => {
+                console.error(error);
+            });
         },
         addSplit() {
             this.entries.push(createEmptySplit());

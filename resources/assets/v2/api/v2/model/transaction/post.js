@@ -1,5 +1,5 @@
 /*
- * create-empty-split.js
+ * post.js
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,24 +18,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import {api} from "../../../../boot/axios";
 
-import format from "date-fns/format";
-
-function getAccount() {
-    return {
-        id: '',
-        name: '',
-    };
-}
-
-export function createEmptySplit() {
-    let now = new Date();
-    let formatted = format(now, 'yyyy-MM-dd HH:mm');
-    return {
-        description: 'OK then',
-        amount: '',
-        source_account: getAccount(),
-        destination_account: getAccount(),
-        date: formatted
-    };
+export default class Post {
+    post(submission) {
+        let url = '/api/v2/transactions';
+        return api.post(url, submission);
+    }
 }

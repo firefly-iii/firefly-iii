@@ -154,6 +154,20 @@ Route::group(
 );
 
 /**
+ * V2 API route for transactions
+ */
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Transaction',
+        'prefix'    => 'v2/transactions',
+        'as'        => 'api.v2.transactions.',
+    ],
+    static function () {
+        Route::post('', ['uses' => 'StoreController@post', 'as' => 'store']);
+    }
+);
+
+/**
  * V2 API route for budgets and budget limits:
  */
 Route::group(

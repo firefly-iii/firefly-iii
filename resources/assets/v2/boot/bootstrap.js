@@ -29,39 +29,53 @@ import axios from 'axios';
 import store from "store";
 import observePlugin from 'store/plugins/observe';
 import Alpine from "alpinejs";
-import * as bootstrap from 'bootstrap'
+import * as bootstrap from 'bootstrap';
+import {getFreshVariable} from "../store/get-fresh-variable.js";
 
 store.addPlugin(observePlugin);
-window.store = store;
+
 
 // import even more
 import {getVariable} from "../store/get-variable.js";
 import {getViewRange} from "../support/get-viewrange.js";
 
-// wait for 3 promises, because we need those later on.
 window.bootstrapped = false;
-Promise.all([
-    getVariable('viewRange'),
-    getVariable('darkMode'),
-    getVariable('locale'),
-    getVariable('language'),
-]).then((values) => {
-    if (!store.get('start') || !store.get('end')) {
-        // calculate new start and end, and store them.
-        const range = getViewRange(values[0], new Date);
-        store.set('start', range.start);
-        store.set('end', range.end);
-    }
+window.store = store;
 
-    // save local in window.__ something
-    window.__localeId__ = values[2];
-    store.set('language', values[3]);
-    store.set('locale', values[3]);
 
-    const event = new Event('firefly-iii-bootstrapped');
-    document.dispatchEvent(event);
-    window.bootstrapped = true;
+// always grab the preference "marker" from Firefly III.
+getFreshVariable('lastActivity').then((serverValue) => {
+    const localValue = store.get('lastActivity');
+    store.set('cacheValid', localValue === serverValue);
+    store.set('lastActivity', serverValue);
+    console.log('Server value: ' + serverValue);
+    console.log('Local value:  ' + localValue);
+    console.log('Cache valid:  ' + (localValue === serverValue));
+}).then(() => {
+    Promise.all([
+        getVariable('viewRange'),
+        getVariable('darkMode'),
+        getVariable('locale'),
+        getVariable('language'),
+    ]).then((values) => {
+        if (!store.get('start') || !store.get('end')) {
+            // calculate new start and end, and store them.
+            const range = getViewRange(values[0], new Date);
+            store.set('start', range.start);
+            store.set('end', range.end);
+        }
+
+        // save local in window.__ something
+        window.__localeId__ = values[2];
+        store.set('language', values[3]);
+        store.set('locale', values[3]);
+
+        const event = new Event('firefly-iii-bootstrapped');
+        document.dispatchEvent(event);
+        window.bootstrapped = true;
+    });
 });
+// wait for 3 promises, because we need those later on.
 
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

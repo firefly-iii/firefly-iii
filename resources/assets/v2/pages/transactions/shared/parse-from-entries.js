@@ -1,5 +1,5 @@
 /*
- * create-empty-split.js
+ * parse-from-entries.js
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,24 +18,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ *
+ * @param entries
+ */
+export function parseFromEntries(entries) {
+    let returnArray = [];
+    for (let i in entries) {
+        if (entries.hasOwnProperty(i)) {
+            const entry = entries[i];
+            let current = {};
 
-import format from "date-fns/format";
+            // fields for transaction
+            current.description = entry.description;
+            current.source_name = entry.source_account.name;
+            current.destination_name = entry.destination_account.name;
+            current.amount = entry.amount;
+            current.date = entry.date;
 
-function getAccount() {
-    return {
-        id: '',
-        name: '',
-    };
-}
+            // TODO transaction type is hard coded:
+            current.type = 'withdrawal';
 
-export function createEmptySplit() {
-    let now = new Date();
-    let formatted = format(now, 'yyyy-MM-dd HH:mm');
-    return {
-        description: 'OK then',
-        amount: '',
-        source_account: getAccount(),
-        destination_account: getAccount(),
-        date: formatted
-    };
+
+            returnArray.push(current);
+        }
+    }
+    return returnArray;
 }

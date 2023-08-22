@@ -871,7 +871,7 @@ class GroupCollector implements GroupCollectorInterface
     public function setLimit(int $limit): GroupCollectorInterface
     {
         $this->limit = $limit;
-        app('log')->debug(sprintf('GroupCollector: The limit is now %d', $limit));
+        //app('log')->debug(sprintf('GroupCollector: The limit is now %d', $limit));
 
         return $this;
     }
@@ -976,7 +976,7 @@ class GroupCollector implements GroupCollectorInterface
     {
         $page       = 0 === $page ? 1 : $page;
         $this->page = $page;
-        app('log')->debug(sprintf('GroupCollector: page is now %d', $page));
+        //app('log')->debug(sprintf('GroupCollector: page is now %d', $page));
 
         return $this;
     }

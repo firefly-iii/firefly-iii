@@ -88,12 +88,9 @@
                                             <a :href="'{{ route('accounts.show', '') }}/' + account.id"
                                                x-text="account.name"></a>
 
-                                            <span class="small text-muted">(<template x-if="autoConversion">
-                                                                    <span x-text="account.native_balance"></span><br>
-                                                                </template>
-                                                                <template x-if="!autoConversion">
-                                                                    <span x-text="account.balance"></span><br>
-                                                                </template>)</span>
+                                            <span class="small">
+                                                @include('partials.elements.amount', ['autoConversion' => true,'amount' => 'account.balance','native' => 'account.native_balance'])
+                                            </span>
                                         </h3>
                                     </div>
                                     <div class="card-body p-0">
@@ -106,7 +103,9 @@
                                                 <tr>
                                                     <td>
                                                         <template x-if="group.title">
-                                                            <span><a
+                                                            <span>
+                                                                TODO ICON
+                                                                <a
                                                                     :href="'{{route('transactions.show', '') }}/' + group.id"
                                                                     x-text="group.title"></a><br/></span>
                                                         </template>
@@ -119,7 +118,22 @@
                                                                     </span>
                                                                 </template>
                                                                 <template x-if="!group.title">
-                                                                    <span><a
+                                                                    <span>
+                                                                        <!-- withdrawal -->
+                                                                        <template
+                                                                            x-if="transaction.type == 'withdrawal'">
+                                                                            <span
+                                                                                class="text-muted fa-solid fa-arrow-left fa-fw"></span>
+                                                                        </template>
+                                                                        <template x-if="transaction.type == 'deposit'">
+                                                                            <span
+                                                                                class="text-muted fa-solid fa-arrow-right fa-fw"></span>
+                                                                        </template>
+                                                                        <template x-if="transaction.type == 'transfer'">
+                                                                            <span
+                                                                                class="text-muted fa-solid fa-arrows-rotate fa-fw"></span>
+                                                                        </template>
+                                                                        <a
                                                                             :href="'{{route('transactions.show', '') }}/' + group.id"
                                                                             x-text="transaction.description"></a><br>
                                                                     </span>
@@ -133,12 +147,7 @@
                                                         </template>
                                                         <template x-for="transaction in group.transactions">
                                                             <span>
-                                                                <template x-if="autoConversion">
-                                                                    <span x-text="transaction.native_amount"></span><br>
-                                                                </template>
-                                                                <template x-if="!autoConversion">
-                                                                    <span x-text="transaction.amount"></span><br>
-                                                                </template>
+                                                               @include('partials.elements.amount', ['autoConversion' => true,'amount' => 'transaction.amount','native' => 'transaction.native_amount'])
                                                             </span>
                                                         </template>
                                                     </td>

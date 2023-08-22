@@ -1,5 +1,6 @@
+<?php
 /*
- * create-empty-split.js
+ * StoreController.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,24 +19,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+namespace FireflyIII\Api\V2\Controllers\Model\Transaction;
 
-import format from "date-fns/format";
+use FireflyIII\Api\V2\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 
-function getAccount() {
-    return {
-        id: '',
-        name: '',
-    };
-}
+/**
+ * Class StoreController
+ */
+class StoreController extends Controller
+{
+    /**
+     * @return JsonResponse
+     */
+    public function post(): JsonResponse
+    {
 
-export function createEmptySplit() {
-    let now = new Date();
-    let formatted = format(now, 'yyyy-MM-dd HH:mm');
-    return {
-        description: 'OK then',
-        amount: '',
-        source_account: getAccount(),
-        destination_account: getAccount(),
-        date: formatted
-    };
+        return response()->json([]);
+
+    }
+
+
 }

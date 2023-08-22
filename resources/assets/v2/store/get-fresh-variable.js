@@ -1,5 +1,5 @@
 /*
- * create-empty-split.js
+ * get-variable.js
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,24 +18,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import Get from "../api/v1/preferences/index.js";
+import Post from "../api/v1/preferences/post.js";
 
-import format from "date-fns/format";
-
-function getAccount() {
-    return {
-        id: '',
-        name: '',
-    };
+export function getFreshVariable(name, defaultValue = null) {
+    let getter = (new Get);
+    return getter.getByName(name).then((response) => {
+        // console.log('Get from API');
+        return Promise.resolve(parseResponse(name, response));
+    }).catch(() => {
+        // preference does not exist (yet).
+        // POST it and then return it anyway.
+        let poster = (new Post);
+        poster.post(name, defaultValue).then((response) => {
+            return Promise.resolve(parseResponse(name, response));
+        });
+    });
 }
 
-export function createEmptySplit() {
-    let now = new Date();
-    let formatted = format(now, 'yyyy-MM-dd HH:mm');
-    return {
-        description: 'OK then',
-        amount: '',
-        source_account: getAccount(),
-        destination_account: getAccount(),
-        date: formatted
-    };
+function parseResponse(name, response) {
+    return response.data.data.attributes.data;
 }
+

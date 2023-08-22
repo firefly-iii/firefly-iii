@@ -33,6 +33,8 @@ let chart = null;
 let chartData = null;
 let afterPromises = false;
 
+const CHART_CACHE_KEY = 'dashboard-accounts-chart';
+const ACCOUNTS_CACHE_KEY = 'dashboard-accounts-data';
 export default () => ({
     loading: false,
     loadingAccounts: false,
@@ -44,12 +46,28 @@ export default () => ({
         setVariable('autoConversion', this.autoConversion);
     },
     getFreshData() {
-        const dashboard = new Dashboard();
-        dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
-            this.chartData = response.data;
-            this.drawChart(this.generateOptions(this.chartData));
+        const cacheValid = window.store.get('cacheValid');
+        let cachedData = window.store.get(CHART_CACHE_KEY);
+
+        if (cacheValid && typeof cachedData !== 'undefined') {
+            let options = window.store.get(CHART_CACHE_KEY);
+            this.drawChart(options);
             this.loading = false;
-        });
+            console.log('Chart from cache');
+        }
+        if (!cacheValid || typeof cachedData === 'undefined') {
+            const dashboard = new Dashboard();
+            dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
+                this.chartData = response.data;
+                // cache generated options:
+                let options = this.generateOptions(this.chartData);
+                window.store.set(CHART_CACHE_KEY, options);
+                this.drawChart(options);
+                this.loading = false;
+                console.log('Chart FRESH');
+            });
+        }
+
     },
     generateOptions(data) {
         currencies = [];
@@ -145,6 +163,15 @@ export default () => ({
             this.loadingAccounts = false;
             return;
         }
+        const cacheValid = window.store.get('cacheValid');
+        let cachedData = window.store.get(ACCOUNTS_CACHE_KEY);
+
+        if (cacheValid && typeof cachedData !== 'undefined') {
+            this.accountList = cachedData;
+            this.loadingAccounts = false;
+            return;
+        }
+
         // console.log('loadAccounts continue!');
         const max = 10;
         let totalAccounts = 0;
@@ -180,7 +207,10 @@ export default () => ({
                                     group.transactions.push({
                                         description: currentTransaction.description,
                                         id: current.id,
+                                        type: currentTransaction.type,
+                                        amount_raw: parseFloat(currentTransaction.amount),
                                         amount: formatMoney(currentTransaction.amount, currentTransaction.currency_code),
+                                        native_amount_raw: parseFloat(currentTransaction.native_amount),
                                         native_amount: formatMoney(currentTransaction.native_amount, currentTransaction.native_code),
                                     });
                                 }
@@ -190,7 +220,9 @@ export default () => ({
                             accounts.push({
                                 name: parent.attributes.name,
                                 id: parent.id,
+                                balance_raw: parseFloat(parent.attributes.current_balance),
                                 balance: formatMoney(parent.attributes.current_balance, parent.attributes.currency_code),
+                                native_balance_raw: parseFloat(parent.attributes.native_current_balance),
                                 native_balance: formatMoney(parent.attributes.native_current_balance, parent.attributes.native_code),
                                 groups: groups,
                             });
@@ -198,6 +230,7 @@ export default () => ({
                             if (count === totalAccounts) {
                                 this.accountList = accounts;
                                 this.loadingAccounts = false;
+                                window.store.set(ACCOUNTS_CACHE_KEY, accounts);
                             }
                         });
                     });
