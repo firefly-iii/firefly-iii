@@ -150,6 +150,9 @@ function getBaseUrl() {
     if (bases.length > 0) {
         baseHref = bases[0].href;
     }
+    if (null !== baseHref && '/' === baseHref.slice(-1)) {
+        baseHref = baseHref.slice(0, -1);
+    }
     console.log('baseHref for mass edit is "' + baseHref + '".');
     return baseHref;
 }
