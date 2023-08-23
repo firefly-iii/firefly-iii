@@ -164,7 +164,7 @@
     </li>
 
     <li class="{{ activeRoutePartial('reports') }}" id="report-menu">
-        <a href="{{ route('reports.index') }}">
+        <a href="{{ route('reports.index', null, false) }}"> {# relative route! #}
             <em class="fa fa-bar-chart fa-fw"></em>
             <span>{{ 'reports'|_ }}</span>
         </a>
