@@ -103,6 +103,7 @@ trait TransactionValidation
      */
     protected function validateSingleAccount(Validator $validator, int $index, string $transactionType, array $transaction): void
     {
+        app('log')->debug(sprintf('Now in validateSingleAccount(%d)', $index));
         /** @var AccountValidator $accountValidator */
         $accountValidator = app(AccountValidator::class);
 
@@ -203,7 +204,8 @@ trait TransactionValidation
         array            $transaction,
         string           $transactionType,
         int              $index
-    ): void {
+    ): void
+    {
         Log::debug('Now in sanityCheckForeignCurrency()');
         if (0 !== $validator->errors()->count()) {
             Log::debug('Already have errors, return');
@@ -784,8 +786,8 @@ trait TransactionValidation
     private function compareAccountData(string $type, array $comparison): bool
     {
         return match ($type) {
-            default => $this->compareAccountDataWithdrawal($comparison),
-            'deposit' => $this->compareAccountDataDeposit($comparison),
+            default    => $this->compareAccountDataWithdrawal($comparison),
+            'deposit'  => $this->compareAccountDataDeposit($comparison),
             'transfer' => $this->compareAccountDataTransfer($comparison),
         };
     }
