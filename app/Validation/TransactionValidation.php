@@ -204,8 +204,7 @@ trait TransactionValidation
         array            $transaction,
         string           $transactionType,
         int              $index
-    ): void
-    {
+    ): void {
         Log::debug('Now in sanityCheckForeignCurrency()');
         if (0 !== $validator->errors()->count()) {
             Log::debug('Already have errors, return');

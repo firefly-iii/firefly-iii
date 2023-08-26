@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * UrlValidator.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -26,7 +28,6 @@ namespace FireflyIII\Support\Notifications;
  */
 class UrlValidator
 {
-
     /**
      * @param string $url
      *
