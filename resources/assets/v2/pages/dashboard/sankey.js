@@ -27,6 +27,7 @@ import {I18n} from "i18n-js";
 
 Chart.register({SankeyController, Flow});
 
+const CACHE_KEY = 'dashboard-sankey-data';
 let i18n;
 let currencies = [];
 let afterPromises = false;
@@ -256,7 +257,7 @@ export default () => ({
         let dataSet =
             // sankey chart has one data set.
             {
-                label: 'My sankey',
+                label: 'Firefly III dashboard sankey chart',
                 data: [],
                 colorFrom: (c) => getColor(c.dataset.data[c.dataIndex].from),
                 colorTo: (c) => getColor(c.dataset.data[c.dataIndex].to),
@@ -284,6 +285,17 @@ export default () => ({
 
     },
     getFreshData() {
+        const cacheValid = window.store.get('cacheValid');
+        let cachedData = window.store.get(CACHE_KEY);
+
+        if (cacheValid && typeof cachedData !== 'undefined') {
+            transactions = cachedData;
+            this.drawChart(this.generateOptions());
+            this.loading = false;
+            return;
+        }
+
+
         let params = {
             start: window.store.get('start').slice(0, 10),
             end: window.store.get('end').slice(0, 10),
@@ -305,9 +317,7 @@ export default () => ({
                 this.downloadTransactions(params);
                 return;
             }
-            // continue to next step.
-            //console.log('Final page!');
-            //console.log(transactions);
+            window.store.set(CACHE_KEY, transactions);
             this.drawChart(this.generateOptions());
             this.loading = false;
         });
@@ -347,13 +357,13 @@ export default () => ({
                 translations.expense_account = i18n.t('firefly.expense_account');
                 translations.revenue_account = i18n.t('firefly.revenue_account');
                 translations.budget = i18n.t('firefly.budget');
+
+                // console.log('sankey after promises');
+                afterPromises = true;
+                this.autoConversion = values[0];
+                this.loadChart();
             });
 
-
-            // console.log('sankey after promises');
-            afterPromises = true;
-            this.autoConversion = values[0];
-            this.loadChart();
         });
         window.store.observe('end', () => {
             if (!afterPromises) {

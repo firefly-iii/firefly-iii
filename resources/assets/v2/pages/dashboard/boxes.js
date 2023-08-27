@@ -24,7 +24,7 @@ import {getVariable} from "../../store/get-variable.js";
 import formatMoney from "../../util/format-money.js";
 
 let afterPromises = false;
-
+const CACHE_KEY = 'dashboard-boxes-data';
 export default () => ({
     balanceBox: {amounts: [], subtitles: []},
     billBox: {paid: [], unpaid: []},
@@ -35,6 +35,16 @@ export default () => ({
     boxData: null,
     boxOptions: null,
     getFreshData() {
+        const cacheValid = window.store.get('cacheValid');
+        let cachedData = window.store.get(CACHE_KEY);
+
+        if (cacheValid && typeof cachedData !== 'undefined') {
+            this.boxData = cachedData;
+            this.generateOptions(this.boxData);
+
+            return;
+        }
+
         // get stuff
         let getter = new Summary();
         let start = new Date(window.store.get('start'));
@@ -42,6 +52,7 @@ export default () => ({
 
         getter.get(format(start, 'yyyy-MM-dd'), format(end, 'yyyy-MM-dd'), null).then((response) => {
             this.boxData = response.data;
+            window.store.set(CACHE_KEY, response.data);
             this.generateOptions(this.boxData);
             //this.drawChart();
         });

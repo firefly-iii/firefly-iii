@@ -32,7 +32,7 @@ let afterPromises = false;
 
 let i18n; // for translating items in the chart.
 
-
+const CACHE_KEY = 'dashboard-budgets-chart';
 export default () => ({
     loading: false,
     autoConversion: false,
@@ -58,10 +58,21 @@ export default () => ({
         chart = new Chart(document.querySelector("#budget-chart"), options);
     },
     getFreshData() {
+        const cacheValid = window.store.get('cacheValid');
+        let cachedData = window.store.get(CACHE_KEY);
+
+        if (cacheValid && typeof cachedData !== 'undefined') {
+            chartData = cachedData; // save chart data for later.
+            this.drawChart(this.generateOptions(chartData));
+            this.loading = false;
+            return;
+        }
+
         const dashboard = new Dashboard();
         dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
             chartData = response.data; // save chart data for later.
-            this.drawChart(this.generateOptions(response.data));
+            this.drawChart(this.generateOptions(chartData));
+            window.store.set(CACHE_KEY, chartData);
             this.loading = false;
         });
     },
@@ -93,19 +104,19 @@ export default () => ({
                     label: i18n.t('firefly.spent'),
                     data: [],
                     borderWidth: 1,
-                    stack: 1
+                    stack: 1,
                 },
                 {
                     label: i18n.t('firefly.left'),
                     data: [],
                     borderWidth: 1,
-                    stack: 1
+                    stack: 1,
                 },
                 {
                     label: i18n.t('firefly.overspent'),
                     data: [],
                     borderWidth: 1,
-                    stack: 1
+                    stack: 1,
                 }
             ]
         };
@@ -158,13 +169,13 @@ export default () => ({
 
             i18n = new I18n();
             i18n.locale = values[1];
-            loadTranslations(i18n, values[1]);
-
-            this.autoConversion = values[0];
-            afterPromises = true;
-            if (false === this.loading) {
-                this.loadChart();
-            }
+            loadTranslations(i18n, values[1]).then(() => {
+                this.autoConversion = values[0];
+                afterPromises = true;
+                if (false === this.loading) {
+                    this.loadChart();
+                }
+            });
         });
         window.store.observe('end', () => {
             if (!afterPromises) {
@@ -172,7 +183,7 @@ export default () => ({
             }
             // console.log('boxes observe end');
             if (false === this.loading) {
-                this.chartData = null;
+                chartData = null;
                 this.loadChart();
             }
         });

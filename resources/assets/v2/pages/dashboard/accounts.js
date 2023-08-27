@@ -53,18 +53,17 @@ export default () => ({
             let options = window.store.get(CHART_CACHE_KEY);
             this.drawChart(options);
             this.loading = false;
+            return;
         }
-        if (!cacheValid || typeof cachedData === 'undefined') {
-            const dashboard = new Dashboard();
-            dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
-                this.chartData = response.data;
-                // cache generated options:
-                let options = this.generateOptions(this.chartData);
-                window.store.set(CHART_CACHE_KEY, options);
-                this.drawChart(options);
-                this.loading = false;
-            });
-        }
+        const dashboard = new Dashboard();
+        dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
+            this.chartData = response.data;
+            // cache generated options:
+            let options = this.generateOptions(this.chartData);
+            window.store.set(CHART_CACHE_KEY, options);
+            this.drawChart(options);
+            this.loading = false;
+        });
 
     },
     generateOptions(data) {
@@ -150,14 +149,11 @@ export default () => ({
         chart = new Chart(document.querySelector("#account-chart"), options);
     },
     loadAccounts() {
-        // console.log('loadAccounts');
         if (true === this.loadingAccounts) {
-            // console.log('loadAccounts CANCELLED');
             return;
         }
         this.loadingAccounts = true;
         if (this.accountList.length > 0) {
-            // console.log('NO need to load account data');
             this.loadingAccounts = false;
             return;
         }
@@ -217,6 +213,7 @@ export default () => ({
                             // console.log(parent);
                             accounts.push({
                                 name: parent.attributes.name,
+                                order: parent.attributes.order,
                                 id: parent.id,
                                 balance_raw: parseFloat(parent.attributes.current_balance),
                                 balance: formatMoney(parent.attributes.current_balance, parent.attributes.currency_code),
@@ -224,8 +221,11 @@ export default () => ({
                                 native_balance: formatMoney(parent.attributes.native_current_balance, parent.attributes.native_code),
                                 groups: groups,
                             });
+                            console.log(parent.attributes);
                             count++;
                             if (count === totalAccounts) {
+                                accounts.sort((a, b) => a.order - b.order); // b - a for reverse sort
+
                                 this.accountList = accounts;
                                 this.loadingAccounts = false;
                                 window.store.set(ACCOUNTS_CACHE_KEY, accounts);

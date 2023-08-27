@@ -28,6 +28,8 @@ let chart = null;
 let chartData = null;
 let afterPromises = false;
 
+const CACHE_KEY = 'dashboard-categories-chart';
+
 export default () => ({
     loading: false,
     autoConversion: false,
@@ -140,10 +142,21 @@ export default () => ({
 
     },
     getFreshData() {
+        const cacheValid = window.store.get('cacheValid');
+        let cachedData = window.store.get(CACHE_KEY);
+
+        if (cacheValid && typeof cachedData !== 'undefined') {
+            chartData = cachedData; // save chart data for later.
+            this.drawChart(this.generateOptions(chartData));
+            this.loading = false;
+            return;
+        }
+
         const dashboard = new Dashboard();
         dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
             chartData = response.data; // save chart data for later.
             this.drawChart(this.generateOptions(response.data));
+            window.store.set(CACHE_KEY, chartData);
             this.loading = false;
         });
     },

@@ -25,6 +25,7 @@ import {loadTranslations} from "../../support/load-translations.js";
 let apiData = {};
 let afterPromises = false;
 let i18n;
+const CACHE_KEY = 'dashboard-piggies-data';
 
 export default () => ({
     loading: false,
@@ -32,6 +33,16 @@ export default () => ({
     sankeyGrouping: 'account',
     piggies: [],
     getFreshData() {
+        const cacheValid = window.store.get('cacheValid');
+        let cachedData = window.store.get(CACHE_KEY);
+
+        if (cacheValid && typeof cachedData !== 'undefined') {
+            apiData = cachedData;
+            this.parsePiggies();
+            this.loading = false;
+            return;
+        }
+
         let params = {
             start: window.store.get('start').slice(0, 10),
             end: window.store.get('end').slice(0, 10),
@@ -49,6 +60,7 @@ export default () => ({
                 this.downloadPiggyBanks(params);
                 return;
             }
+            window.store.set(CACHE_KEY, apiData);
             this.parsePiggies();
             this.loading = false;
         });
@@ -114,12 +126,14 @@ export default () => ({
 
             i18n = new I18n();
             i18n.locale = values[1];
-            loadTranslations(i18n, values[1]);
+            loadTranslations(i18n, values[1]).then(() => {
+                // console.log('piggies after promises');
+                afterPromises = true;
+                this.autoConversion = values[0];
+                this.loadPiggyBanks();
+            });
 
-            // console.log('piggies after promises');
-            afterPromises = true;
-            this.autoConversion = values[0];
-            this.loadPiggyBanks();
+
         });
         window.store.observe('end', () => {
             if (!afterPromises) {
