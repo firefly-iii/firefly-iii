@@ -23,71 +23,86 @@
 
 import {Color} from '@kurkle/color';
 
-// base colors for most things
-let red = new Color('#dc3545'); // same as bootstrap danger
-let green = new Color('#198754'); // same as bootstrap success.
-let blue = new Color('#0d6efd'); // bootstrap blue.
-
 // four other colors:
-let orange = new Color('#fd7e14'); // bootstrap orange.
 
+// base colors for most things (BORDER)
+let blue = new Color('#36a2eb');
+let red = new Color('#ff6384');
+let green = new Color('#4bc0c0');
+
+// four other colors
+let orange = new Color('#ff9f40');
+let purple = new Color('#9966ff');
+let yellow = new Color('#ffcd56');
+let grey = new Color('#c9cbcf');
 
 let index = 0;
 
 // or cycle through X colors:
 
 if ('light' === window.theme) {
-    red.lighten(0.3).clearer(0.3);
-    green.lighten(0.3).clearer(0.3);
-    blue.lighten(0.3).clearer(0.3);
-    orange.lighten(0.3).clearer(0.3);
+    // red.lighten(0.3).clearer(0.3);
+    // green.lighten(0.3).clearer(0.3);
+    // blue.lighten(0.3).clearer(0.3);
+    // orange.lighten(0.3).clearer(0.3);
+}
+if ('dark' === window.theme) {
+    red.darken(0.3).desaturate(0.3);
+    green.darken(0.3).desaturate(0.3);
+    blue.darken(0.3).desaturate(0.3);
+    orange.darken(0.3).desaturate(0.3);
+
 }
 
-
-let allColors = [red, green, blue, orange];
+let allColors = [red, orange, blue, green, purple, yellow, grey, green];
 
 function getColors(type, field) {
-    index++;
     let colors = {
         borderColor: red.rgbString(),
         backgroundColor: red.rgbString(),
     };
-    let border;
+    let background;
     switch (type) {
         default:
-            let currentIndex = (Math.ceil(index / 2) % allColors.length) - 1;
-            border = new Color(allColors[currentIndex].rgbString());
-            border.darken(0.4);
+            let correctedIndex = Math.floor(index / 2);
+            let currentIndex = correctedIndex % allColors.length;
+            //console.log('index:' + index + ', correctedIndex:' + correctedIndex + ', currentIndex:' + currentIndex);
+            background = new Color(allColors[currentIndex].rgbString());
+            background.lighten(0.38);
+
             colors = {
-                borderColor: border.rgbString(),
-                backgroundColor: allColors[currentIndex].rgbString(),
+                borderColor: allColors[currentIndex].hexString(),
+                backgroundColor: background.hexString(),
             };
             break;
         case 'spent':
-            border = new Color(blue.rgbString());
-            border.darken(0.4);
+            background = new Color(blue.rgbString());
+            background.lighten(0.38);
+            //console.log('#9ad0f5 vs ' + background.hexString());
             colors = {
-                borderColor: border.rgbString(),
-                backgroundColor: blue.rgbString(),
+                borderColor: blue.rgbString(),
+                backgroundColor: background.rgbString(),
             };
             break;
         case 'left':
-            border = new Color(green.rgbString());
-            border.darken(0.4);
+            background = new Color(green.rgbString());
+            background.lighten(0.38);
             colors = {
-                borderColor: border.rgbString(),
-                backgroundColor: green.rgbString(),
+                borderColor: green.rgbString(),
+                backgroundColor: background.rgbString(),
             };
             break;
         case 'overspent':
-            border = new Color(red.rgbString());
-            border.darken(0.4);
+            background = new Color(red.rgbString());
+            background.lighten(0.22);
+            console.log('#ffb1c1 vs ' + background.hexString());
             colors = {
-                borderColor: border.rgbString(),
-                backgroundColor: red.rgbString(),
+                borderColor: red.rgbString(),
+                backgroundColor: background.rgbString(),
             };
             break;
     }
+    index++;
 
     if ('border' === field) {
         return colors.borderColor;

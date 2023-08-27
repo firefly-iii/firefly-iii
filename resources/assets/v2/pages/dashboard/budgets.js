@@ -24,6 +24,7 @@ import formatMoney from "../../util/format-money.js";
 import {Chart} from 'chart.js';
 import {I18n} from "i18n-js";
 import {loadTranslations} from "../../support/load-translations.js";
+import {getColors} from "../../support/get-colors.js";
 
 let currencies = [];
 let chart = null;
@@ -105,18 +106,24 @@ export default () => ({
                     data: [],
                     borderWidth: 1,
                     stack: 1,
+                    backgroundColor: getColors('spent', 'background'),
+                    borderColor: getColors('spent', 'border'),
                 },
                 {
                     label: i18n.t('firefly.left'),
                     data: [],
                     borderWidth: 1,
                     stack: 1,
+                    backgroundColor: getColors('left', 'background'),
+                    borderColor: getColors('left', 'border'),
                 },
                 {
                     label: i18n.t('firefly.overspent'),
                     data: [],
                     borderWidth: 1,
                     stack: 1,
+                    backgroundColor: getColors('overspent', 'background'),
+                    borderColor: getColors('overspent', 'border'),
                 }
             ]
         };

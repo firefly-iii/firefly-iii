@@ -25,6 +25,7 @@ import formatMoney from "../../util/format-money.js";
 import Get from "../../api/v2/model/account/get.js";
 import {Chart} from 'chart.js';
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
+import {getColors} from "../../support/get-colors.js";
 
 // this is very ugly, but I have no better ideas at the moment to save the currency info
 // for each series.
@@ -50,8 +51,7 @@ export default () => ({
         let cachedData = window.store.get(CHART_CACHE_KEY);
 
         if (cacheValid && typeof cachedData !== 'undefined') {
-            let options = window.store.get(CHART_CACHE_KEY);
-            this.drawChart(options);
+            this.drawChart(this.generateOptions(cachedData));
             this.loading = false;
             return;
         }
@@ -59,9 +59,8 @@ export default () => ({
         dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
             this.chartData = response.data;
             // cache generated options:
-            let options = this.generateOptions(this.chartData);
-            window.store.set(CHART_CACHE_KEY, options);
-            this.drawChart(options);
+            window.store.set(CHART_CACHE_KEY, response.data);
+            this.drawChart(this.generateOptions(this.chartData));
             this.loading = false;
         });
 
@@ -98,6 +97,10 @@ export default () => ({
                 }
                 dataset.yAxisID = yAxis;
                 dataset.data = collection;
+
+                // add colors:
+                //dataset.backgroundColor = getColors(null, 'background');
+                //dataset.borderColor = getColors(null, 'background');
 
                 // add data set to the correct Y Axis:
 

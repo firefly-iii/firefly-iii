@@ -22,6 +22,7 @@ import Dashboard from "../../api/v2/chart/category/dashboard.js";
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import {Chart} from "chart.js";
 import formatMoney from "../../util/format-money.js";
+import {getColors} from "../../support/get-colors.js";
 
 let currencies = [];
 let chart = null;
@@ -104,12 +105,15 @@ export default () => ({
         // loop the series and create ChartJS-compatible data sets.
         let count = 0;
         for (const i in series) {
+            console.log('series');
             let yAxisID = 'y' + i;
             let dataset = {
                 label: i,
                 currency_code: i,
                 yAxisID: yAxisID,
                 data: [],
+                // backgroundColor: getColors(null, 'background'),
+                // borderColor: getColors(null, 'border'),
             }
             for (const ii in series[i].data) {
                 dataset.data.push(series[i].data[ii]);

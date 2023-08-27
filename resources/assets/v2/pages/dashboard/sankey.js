@@ -33,6 +33,7 @@ let currencies = [];
 let afterPromises = false;
 let chart = null;
 let transactions = [];
+let autoConversion = false;
 let translations = {
     category: null,
     unknown_category: null,
@@ -82,37 +83,37 @@ function getObjectName(type, name, direction, code) {
 
     // category 4x
     if ('category' === type && null !== name && 'in' === direction) {
-        return translations.category + ' "' + name + '" (' + translations.in + ', ' + code + ')';
+        return translations.category + ' "' + name + '" (' + translations.in + (autoConversion ? ', ' + code + ')' : ')');
     }
     if ('category' === type && null === name && 'in' === direction) {
-        return translations.unknown_category + ' (' + translations.in + ', ' + code + ')';
+        return translations.unknown_category + ' (' + translations.in + (autoConversion ? ', ' + code + ')' : ')');
     }
     if ('category' === type && null !== name && 'out' === direction) {
-        return translations.category + ' "' + name + '" (' + translations.out + ', ' + code + ')';
+        return translations.category + ' "' + name + '" (' + translations.out + (autoConversion ? ', ' + code + ')' : ')');
     }
     if ('category' === type && null === name && 'out' === direction) {
-        return translations.unknown_category + ' (' + translations.out + ', ' + code + ')';
+        return translations.unknown_category + ' (' + translations.out + (autoConversion ? ', ' + code + ')' : ')');
     }
     // account 4x
     if ('account' === type && null === name && 'in' === direction) {
-        return translations.unknown_source + ' (' + code + ')';
+        return translations.unknown_source + (autoConversion ? ' (' + code + ')' : '');
     }
     if ('account' === type && null !== name && 'in' === direction) {
-        return translations.revenue_account + '"' + name + '" (' + code + ')';
+        return translations.revenue_account + '"' + name + '"' + (autoConversion ? ' (' + code + ')' : '');
     }
     if ('account' === type && null === name && 'out' === direction) {
-        return translations.unknown_dest + ' (' + code + ')';
+        return translations.unknown_dest + (autoConversion ? ' (' + code + ')' : '');
     }
     if ('account' === type && null !== name && 'out' === direction) {
-        return translations.expense_account + ' "' + name + '" (' + code + ')';
+        return translations.expense_account + ' "' + name + '"' + (autoConversion ? ' (' + code + ')' : '');
     }
 
     // budget 2x
     if ('budget' === type && null !== name) {
-        return translations.budget + ' "' + name + '" (' + code + ')';
+        return translations.budget + ' "' + name + '"' + (autoConversion ? ' (' + code + ')' : '');
     }
     if ('budget' === type && null === name) {
-        return translations.unknown_budget + ' (' + code + ')';
+        return translations.unknown_budget + (autoConversion ? ' (' + code + ')' : '');
     }
     console.error('Cannot handle: type:"' + type + '", dir: "' + direction + '"');
 }
@@ -120,25 +121,25 @@ function getObjectName(type, name, direction, code) {
 function getLabelName(type, name, code) {
     // category
     if ('category' === type && null !== name) {
-        return translations.category + ' "' + name + '" (' + code + ')';
+        return translations.category + ' "' + name + '"' + (autoConversion ? ' (' + code + ')' : '');
     }
     if ('category' === type && null === name) {
-        return translations.unknown_category + ' (' + code + ')';
+        return translations.unknown_category + (autoConversion ? ' (' + code + ')' : '');
     }
     // account
     if ('account' === type && null === name) {
-        return translations.unknown_account + ' (' + code + ')';
+        return translations.unknown_account + (autoConversion ? ' (' + code + ')' : '');
     }
     if ('account' === type && null !== name) {
-        return name + ' (' + code + ')';
+        return name + (autoConversion ? ' (' + code + ')' : '');
     }
 
     // budget 2x
     if ('budget' === type && null !== name) {
-        return translations.budget + ' "' + name + '" (' + code + ')';
+        return translations.budget + ' "' + name + '"' + (autoConversion ? ' (' + code + ')' : '');
     }
     if ('budget' === type && null === name) {
-        return translations.unknown_budget + ' (' + code + ')';
+        return translations.unknown_budget + (autoConversion ? ' (' + code + ')' : '');
     }
     console.error('Cannot handle: type:"' + type + '"');
 }
@@ -193,7 +194,7 @@ export default () => ({
                             if (!amounts.hasOwnProperty(flowKey)) {
                                 amounts[flowKey] = {
                                     from: category,
-                                    to: translations.all_money + ' (' + currencyCode + ')',
+                                    to: translations.all_money + (this.autoConversion ? ' (' + currencyCode + ')' : ''),
                                     amount: 0
                                 };
                             }
@@ -340,7 +341,8 @@ export default () => ({
         // console.log('sankey init');
         transactions = [];
         Promise.all([getVariable('autoConversion', false), getVariable('language', 'en-US')]).then((values) => {
-
+            this.autoConversion = values[0];
+            autoConversion = values[0];
             i18n = new I18n();
             i18n.locale = values[1];
             loadTranslations(i18n, values[1]).then(() => {
@@ -360,7 +362,6 @@ export default () => ({
 
                 // console.log('sankey after promises');
                 afterPromises = true;
-                this.autoConversion = values[0];
                 this.loadChart();
             });
 
