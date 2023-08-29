@@ -42,7 +42,7 @@ class BalanceChartRequest extends FormRequest
     {
         return [
             'accounts' => $this->getAccountList(),
-            'period'   => $this->string('period'),
+            'period'   => $this->convertString('period'),
         ];
     }
 
