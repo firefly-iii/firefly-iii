@@ -95,7 +95,7 @@ function getColors(type, field) {
         case 'overspent':
             background = new Color(red.rgbString());
             background.lighten(0.22);
-            console.log('#ffb1c1 vs ' + background.hexString());
+            // console.log('#ffb1c1 vs ' + background.hexString());
             colors = {
                 borderColor: red.rgbString(),
                 backgroundColor: background.rgbString(),

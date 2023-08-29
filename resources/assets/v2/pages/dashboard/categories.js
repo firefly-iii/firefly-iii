@@ -105,7 +105,7 @@ export default () => ({
         // loop the series and create ChartJS-compatible data sets.
         let count = 0;
         for (const i in series) {
-            console.log('series');
+            // console.log('series');
             let yAxisID = 'y' + i;
             let dataset = {
                 label: i,

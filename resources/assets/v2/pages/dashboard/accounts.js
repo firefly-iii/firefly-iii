@@ -224,7 +224,7 @@ export default () => ({
                                 native_balance: formatMoney(parent.attributes.native_current_balance, parent.attributes.native_code),
                                 groups: groups,
                             });
-                            console.log(parent.attributes);
+                            // console.log(parent.attributes);
                             count++;
                             if (count === totalAccounts) {
                                 accounts.sort((a, b) => a.order - b.order); // b - a for reverse sort

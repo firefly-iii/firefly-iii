@@ -30,10 +30,10 @@
     "integrity": "sha384-B73JAwYNSgI4rwb14zwxigHgAkg1Ms+j6+9sJoDpiL11+VW5RjQCLfIh0RVoi0h6"
   },
   "resources/assets/v2/pages/dashboard/dashboard.js": {
-    "file": "assets/dashboard-767a50a1.js",
+    "file": "assets/dashboard-3bf5d492.js",
     "isEntry": true,
     "src": "resources/assets/v2/pages/dashboard/dashboard.js",
-    "integrity": "sha384-IHFHBTu2Ag0GEIYzgrhY5c1H/PQHLghtTMCJBvV4HjiQHVJ+Al1FSRX3Ro92N3NT"
+    "integrity": "sha384-VbU3St9S+FpNVXcyT3HOrAFKugS69Q2RP7bTQfzoGWwlKhO23L7kJhx513OQ9smw"
   },
   "resources/assets/v2/sass/app.scss": {
     "file": "assets/app-28a195fd.css",
