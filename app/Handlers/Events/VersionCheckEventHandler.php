@@ -57,7 +57,7 @@ class VersionCheckEventHandler
         $permission = app('fireflyconfig')->get('permission_update_check', -1);
         $value      = (int)$permission->data;
         if (1 !== $value) {
-            Log::info('Update check is not enabled.');
+            Log::debug('Update check is not enabled.');
             $this->warnToCheckForUpdates($event);
 
             return;
@@ -103,7 +103,7 @@ class VersionCheckEventHandler
         $repository = app(UserRepositoryInterface::class);
         $user       = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
-            Log::debug('User is not admin, done.');
+            Log::notice('User is not admin, done.');
 
             return;
         }

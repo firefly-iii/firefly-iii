@@ -24,6 +24,15 @@ declare(strict_types=1);
 use FireflyIII\Support\Logging\AuditLogger;
 use Monolog\Handler\SyslogUdpHandler;
 
+// to correctly redirect audit channel messages the
+// options for the audit stack are set here, but can be overruled
+// from an environment variable:
+$auditChannels = ['audit_daily', 'audit_stdout'];
+$option        = envNonEmpty('AUDIT_LOG_CHANNEL', '');
+if ('' !== (string)$option) {
+    $auditChannels = [$option];
+}
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -53,14 +62,14 @@ return [
     */
 
     'channels' => [
-        // default channels for 'stack' and audit logs:
+        // default channels for 'stack' and 'audit' logs are stdout and daily logs.
         'stack'        => [
             'driver'   => 'stack',
             'channels' => ['daily', 'stdout'],
         ],
         'audit'        => [
             'driver'   => 'stack',
-            'channels' => ['audit_daily', 'audit_stdout'],
+            'channels' => $auditChannels,
         ],
         'papertrail'   => [
             'driver'       => 'monolog',
