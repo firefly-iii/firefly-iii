@@ -218,6 +218,7 @@ class AccountFactory
         }
         // create account!
         $account = Account::create($databaseData);
+        Log::channel('audit')->info(sprintf('Account #%d ("%s") has been created.', $account->id, $account->name));
 
         // update meta data:
         $data = $this->cleanMetaDataArray($account, $data);

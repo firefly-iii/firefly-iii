@@ -222,19 +222,18 @@ class ReportFormRequest extends FormRequest
         }
         if (!is_array($set)) {
             Log::error(sprintf('Set is not an array! "%s"', $set));
+            return $collection;
         }
-        if (is_array($set)) {
-            foreach ($set as $tagTag) {
-                Log::debug(sprintf('Now searching for "%s"', $tagTag));
-                $tag = $repository->findByTag($tagTag);
-                if (null !== $tag) {
-                    $collection->push($tag);
-                    continue;
-                }
-                $tag = $repository->find((int)$tagTag);
-                if (null !== $tag) {
-                    $collection->push($tag);
-                }
+        foreach ($set as $tagTag) {
+            Log::debug(sprintf('Now searching for "%s"', $tagTag));
+            $tag = $repository->findByTag($tagTag);
+            if (null !== $tag) {
+                $collection->push($tag);
+                continue;
+            }
+            $tag = $repository->find((int)$tagTag);
+            if (null !== $tag) {
+                $collection->push($tag);
             }
         }
 
