@@ -158,6 +158,7 @@ class ReportFormRequest extends FormRequest
                 } catch (Exception $e) { // intentional generic exception
                     $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
                     Log::error($error);
+                    Log::error($e->getTraceAsString());
                     throw new FireflyException($error, 0, $e);
                 }
                 return $date;
@@ -192,6 +193,7 @@ class ReportFormRequest extends FormRequest
                 } catch (Exception $e) { // intentional generic exception
                     $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
                     Log::error($error);
+                    Log::error($e->getTraceAsString());
                     throw new FireflyException($error, 0, $e);
                 }
                 return $date;

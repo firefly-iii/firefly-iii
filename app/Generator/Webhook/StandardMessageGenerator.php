@@ -174,6 +174,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                     Log::error(
                         sprintf('The transformer could not include the requested transaction group for webhook #%d: %s', $webhook->id, $e->getMessage())
                     );
+                    Log::error($e->getTraceAsString());
 
                     return;
                 }

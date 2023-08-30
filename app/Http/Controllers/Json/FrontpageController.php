@@ -75,6 +75,7 @@ class FrontpageController extends Controller
                 $html = view('json.piggy-banks', compact('info'))->render();
             } catch (Throwable $e) {
                 Log::error(sprintf('Cannot render json.piggy-banks: %s', $e->getMessage()));
+                Log::error($e->getTraceAsString());
                 $html = 'Could not render view.';
                 throw new FireflyException($html, 0, $e);
             }
