@@ -103,7 +103,7 @@ class VersionCheckEventHandler
         $repository = app(UserRepositoryInterface::class);
         $user       = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
-            Log::notice('User is not admin, done.');
+            Log::debug('User is not admin, done.');
 
             return;
         }
