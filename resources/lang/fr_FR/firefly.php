@@ -1395,6 +1395,7 @@ return [
     'pref_notification_new_access_token'        => 'Alerte à la création d\'un nouveau jeton d\'accès API',
     'pref_notification_transaction_creation'    => 'Alerte à la création automatique d\'une opération',
     'pref_notification_user_login'              => 'Alerte à la connexion depuis un nouvel emplacement',
+    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
     'pref_notifications'                        => 'Notifications',
     'pref_notifications_help'                   => 'Sélectionnez les notifications que vous souhaitez recevoir. Certaines notifications peuvent contenir des informations financières sensibles.',
     'slack_webhook_url'                         => 'Webhook URL de Slack',
@@ -1624,6 +1625,8 @@ return [
     'create_new_revenue'                        => 'Créer nouveau compte de recettes',
     'create_new_piggy_bank'                     => 'Créer une nouvelle tirelire',
     'create_new_bill'                           => 'Créer une nouvelle facture',
+    'create_new_subscription'                   => 'Create new subscription',
+    'create_new_rule'                           => 'Create new rule',
 
     // currencies:
     'create_currency'                           => 'Créer une nouvelle devise',
@@ -1782,6 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Se répète tous les {skip} semestres',
     'bill_repeats_yearly_skip'                  => 'Se répète tous les {skip} ans',
     'subscriptions'                             => 'Abonnements',
+    'go_to_subscriptions'                       => 'Go to your subscriptions',
     'forever'                                   => 'Pour toujours',
     'extension_date_is'                         => 'La date de l\'extension est {date}',
 
@@ -1823,10 +1827,10 @@ return [
     'asset_accounts'                            => 'Comptes d’actif',
     'undefined_accounts'                        => 'Comptes',
     'asset_accounts_inactive'                   => 'Comptes d\'actifs (inactif)',
-    'expense_account'                           => 'Expense account',
+    'expense_account'                           => 'Compte de dépenses',
     'expense_accounts'                          => 'Comptes de dépenses',
     'expense_accounts_inactive'                 => 'Comptes de dépenses (inactif)',
-    'revenue_account'                           => 'Revenue account',
+    'revenue_account'                           => 'Compte de recettes',
     'revenue_accounts'                          => 'Comptes de recettes',
     'revenue_accounts_inactive'                 => 'Comptes de recette (inactifs)',
     'cash_accounts'                             => 'Comptes de trésorerie',
@@ -1915,7 +1919,7 @@ return [
     'categories'                                => 'Catégories',
     'edit_category'                             => 'Modifier la catégorie ":name"',
     'no_category'                               => '(aucune catégorie)',
-    'unknown_category_plain'                    => 'No category',
+    'unknown_category_plain'                    => 'Sans catégorie',
     'category'                                  => 'Catégorie',
     'delete_category'                           => 'Supprimer la catégorie ":name"',
     'deleted_category'                          => 'Catégorie ":name" supprimée',
@@ -2083,12 +2087,12 @@ return [
     'searchPlaceholder'                         => 'Rechercher...',
     'version'                                   => 'Version',
     'dashboard'                                 => 'Tableau de bord',
-    'income_and_expense'                        => 'Income and expense',
-    'all_money'                                 => 'All your money',
-    'unknown_source_plain'                      => 'Unknown source account',
-    'unknown_dest_plain'                        => 'Unknown destination account',
-    'unknown_any_plain'                         => 'Unknown account',
-    'unknown_budget_plain'                      => 'No budget',
+    'income_and_expense'                        => 'Revenus et dépenses',
+    'all_money'                                 => 'Tout votre argent',
+    'unknown_source_plain'                      => 'Compte source inconnu',
+    'unknown_dest_plain'                        => 'Compte de destination inconnu',
+    'unknown_any_plain'                         => 'Compte inconnu',
+    'unknown_budget_plain'                      => 'Pas de budget',
     'available_budget'                          => 'Budget disponible ({currency})',
     'currencies'                                => 'Devises',
     'activity'                                  => 'Activité',
@@ -2368,6 +2372,7 @@ return [
     'created_tag'               => 'Tag ":tag" a été créé !',
 
     'transaction_journal_information'          => 'Informations sur l\'opération',
+    'transaction_journal_amount'               => 'Amount information',
     'transaction_journal_meta'                 => 'Méta informations',
     'transaction_journal_more'                 => 'Plus d\'informations',
     'basic_journal_information'                => 'Informations de base sur l\'opération',
@@ -2537,7 +2542,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(Sans groupement)',
-    'default_group_title_name_plain'        => 'ungrouped',
+    'default_group_title_name_plain'        => 'non groupé',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Nous allons créer un compte d’actif !',

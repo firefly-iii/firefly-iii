@@ -147,7 +147,7 @@ return [
     'start_date'                  => '범위의 시작',
     'end_date'                    => '범위의 끝',
     'enddate'                     => '종료 날짜',
-    'move_rules_before_delete'    => 'Rule group',
+    'move_rules_before_delete'    => '규칙 그룹',
     'start'                       => '범위의 시작',
     'end'                         => '범위의 끝',
     'delete_account'              => '":name" 계정 삭제',

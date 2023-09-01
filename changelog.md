@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.21 - 2023-09-02
+
+### Added
+
+- Rules will now report failures if a Slack/Discord notification channel is configured
+- Notifications can be sent to Discord
+- Beta layout `v2`, activate with `FIRELY_III_LAYOUT=v2`
+
+### Changed
+
+- Audit log settings are changed, refer to the `.env.example`-file.
+- Many URLs are new rendered as relative URLs.
+
+### Fixed
+
+- [Issue 7853](https://github.com/firefly-iii/firefly-iii/issues/7853) Left to spend on main page shows incorrect value
+- [Issue 7883](https://github.com/firefly-iii/firefly-iii/issues/7883) Missing translation
+- [Issue 7910](https://github.com/firefly-iii/firefly-iii/issues/7910) Type format error
+- Home page respects account order
+- JS errors for users using Firefly III in a subdir.
+
+### API
+
+- Bumped to v2.0.6 but only so the docs match again.
+
 ## 6.0.20 - 2023-08-13
 
 ### Fixed

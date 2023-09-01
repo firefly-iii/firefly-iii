@@ -1395,6 +1395,7 @@ return [
     'pref_notification_new_access_token'        => '创建新 API 访问令牌时提醒',
     'pref_notification_transaction_creation'    => '自动创建交易时提醒',
     'pref_notification_user_login'              => '当您从一个新位置登录时提醒',
+    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
     'pref_notifications'                        => '通知',
     'pref_notifications_help'                   => '设置您想要接收的通知。一些通知可能包含敏感的财务信息。',
     'slack_webhook_url'                         => 'Slack Webhook 地址',
@@ -1624,6 +1625,8 @@ return [
     'create_new_revenue'                        => '创建新收入账户',
     'create_new_piggy_bank'                     => '创建新存钱罐',
     'create_new_bill'                           => '创建新账单',
+    'create_new_subscription'                   => 'Create new subscription',
+    'create_new_rule'                           => 'Create new rule',
 
     // currencies:
     'create_currency'                           => '创建新货币',
@@ -1782,6 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Repeats every {skip} half years',
     'bill_repeats_yearly_skip'                  => 'Repeats every {skip} years',
     'subscriptions'                             => 'Subscriptions',
+    'go_to_subscriptions'                       => 'Go to your subscriptions',
     'forever'                                   => 'Forever',
     'extension_date_is'                         => 'Extension date is {date}',
 
@@ -2368,6 +2372,7 @@ return [
     'created_tag'               => '标签 “:tag” 已被建立！',
 
     'transaction_journal_information'          => '交易信息',
+    'transaction_journal_amount'               => 'Amount information',
     'transaction_journal_meta'                 => '元信息',
     'transaction_journal_more'                 => '更多信息',
     'basic_journal_information'                => '基础交易信息',

@@ -1395,6 +1395,7 @@ return [
     'pref_notification_new_access_token'        => 'Оповещения о создании нового токена для доступа к API',
     'pref_notification_transaction_creation'    => 'Предупреждения об автоматически созданных транзакциях',
     'pref_notification_user_login'              => 'Оповещение при входе в аккаунт из нового места',
+    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
     'pref_notifications'                        => 'Уведомления',
     'pref_notifications_help'                   => 'Укажите, какие из перечисленных уведомлений вы хотели бы получать. Некоторые уведомления могут содержать конфиденциальную финансовую информацию.',
     'slack_webhook_url'                         => 'Slack Webhook URL',
@@ -1624,6 +1625,8 @@ return [
     'create_new_revenue'                        => 'Создать новый счёт дохода',
     'create_new_piggy_bank'                     => 'Создать новую копилку',
     'create_new_bill'                           => 'Создать новый счёт к оплате',
+    'create_new_subscription'                   => 'Create new subscription',
+    'create_new_rule'                           => 'Create new rule',
 
     // currencies:
     'create_currency'                           => 'Создать новую валюту',
@@ -1782,6 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Repeats every {skip} half years',
     'bill_repeats_yearly_skip'                  => 'Repeats every {skip} years',
     'subscriptions'                             => 'Подписки',
+    'go_to_subscriptions'                       => 'Go to your subscriptions',
     'forever'                                   => 'Всегда',
     'extension_date_is'                         => 'Extension date is {date}',
 
@@ -2368,6 +2372,7 @@ return [
     'created_tag'               => 'Метка ":tag" была создана!',
 
     'transaction_journal_information'          => 'Информация о транзакции',
+    'transaction_journal_amount'               => 'Amount information',
     'transaction_journal_meta'                 => 'Дополнительная информация',
     'transaction_journal_more'                 => 'Дополнительная информация',
     'basic_journal_information'                => 'Основная информация о транзакции',

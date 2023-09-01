@@ -147,7 +147,7 @@ return [
     'start_date'                  => 'Inici del rang',
     'end_date'                    => 'Fi del rang',
     'enddate'                     => 'Data de fi',
-    'move_rules_before_delete'    => 'Rule group',
+    'move_rules_before_delete'    => 'Grup de normes',
     'start'                       => 'Inici del rang',
     'end'                         => 'Fi del rang',
     'delete_account'              => 'Eliminar compte ":name"',

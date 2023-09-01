@@ -95,7 +95,7 @@ return [
     'notes'                   => '備考',
     'from'                    => 'から',
     'piggy_bank'              => '貯金箱',
-    'to'                      => '受け取り',
+    'to'                      => '預け入れ先',
     'budget'                  => '予算',
     'category'                => 'カテゴリ',
     'bill'                    => '請求',

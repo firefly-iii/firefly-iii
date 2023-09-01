@@ -1395,6 +1395,7 @@ return [
     'pref_notification_new_access_token'        => 'Varsle når et nytt API tilgangstoken er opprettet',
     'pref_notification_transaction_creation'    => 'Varsle når en transaksjon opprettes automatisk',
     'pref_notification_user_login'              => 'Varsle når du logger inn fra et nytt sted',
+    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
     'pref_notifications'                        => 'Varslinger',
     'pref_notifications_help'                   => 'Angi om dette er varsler du ønsker å få. Noen meldinger kan inneholde sensitiv økonomisk informasjon.',
     'slack_webhook_url'                         => 'Slack Webhook URL',
@@ -1624,6 +1625,8 @@ return [
     'create_new_revenue'                        => 'Opprett ny inntektskonto',
     'create_new_piggy_bank'                     => 'Opprett ny sparegris',
     'create_new_bill'                           => 'Opprett ny regning',
+    'create_new_subscription'                   => 'Create new subscription',
+    'create_new_rule'                           => 'Create new rule',
 
     // currencies:
     'create_currency'                           => 'Opprett en ny valuta',
@@ -1782,6 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Gjentas hvert {skip} halvår',
     'bill_repeats_yearly_skip'                  => 'Gjentas hvert {skip} år',
     'subscriptions'                             => 'Abonnementer',
+    'go_to_subscriptions'                       => 'Go to your subscriptions',
     'forever'                                   => 'For alltid',
     'extension_date_is'                         => 'Forlengelsesdato er {date}',
 
@@ -2368,6 +2372,7 @@ return [
     'created_tag'               => 'Tag ":tag" er opprettet!',
 
     'transaction_journal_information'          => 'Transaksjonsinformasjon',
+    'transaction_journal_amount'               => 'Amount information',
     'transaction_journal_meta'                 => 'Metainformasjon',
     'transaction_journal_more'                 => 'Mer informasjon',
     'basic_journal_information'                => 'Grunnleggende transaksjonsinformasjon',

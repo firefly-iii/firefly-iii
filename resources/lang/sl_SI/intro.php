@@ -46,9 +46,9 @@ return [
 
     // transactions
     'transactions_create_basic_info'        => 'Vnesite osnovne podatke o transakciji. Vir, destinacija, datum in opis.',
-    'transactions_create_amount_info'       => 'Enter the amount of the transaction. If necessary the fields will auto-update for foreign amount info.',
-    'transactions_create_optional_info'     => 'All of these fields are optional. Adding meta-data here will make your transactions better organised.',
-    'transactions_create_split'             => 'If you want to split a transaction, add more splits with this button',
+    'transactions_create_amount_info'       => 'Vnesite znesek transakcije. Po potrebi se bodo polja samodejno posodobila za podatke o znesku v tujini.',
+    'transactions_create_optional_info'     => 'Vsa ta polja so neobvezna. Če sem dodate metapodatke, bodo vaše transakcije bolje organizirane.',
+    'transactions_create_split'             => 'Če želite razdeliti transakcijo, dodajte več delitev s tem gumbom',
 
     // create account:
     'accounts_create_iban'                  => 'Svojim računom dodeli veljaven IBAN. To lahko zelo olajša uvoz podatkov v prihodnosti.',
@@ -85,16 +85,16 @@ return [
     'reports_index_extra-options-box'       => 'Glede na izbrano poročilo lahko tukaj izbereš dodatne filtre in možnosti. Opazuj polje, ko spreminjaš vrste poročil.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'This report will give you a quick and comprehensive overview of your finances. If you wish to see anything else, please don\'t hestitate to contact me!',
-    'reports_report_audit_intro'            => 'This report will give you detailed insights in your asset accounts.',
-    'reports_report_audit_optionsBox'       => 'Use these check boxes to show or hide the columns you are interested in.',
+    'reports_report_default_intro'          => 'To poročilo vam bo dalo hiter in celovit pregled vaših financ. Če želite videti še kaj drugega, me prosim kontaktirajte!',
+    'reports_report_audit_intro'            => 'To poročilo vam bo dalo podrobne vpoglede v vaše račune sredstev.',
+    'reports_report_audit_optionsBox'       => 'S temi potrditvenimi polji prikažete ali skrijete stolpce, ki vas zanimajo.',
 
-    'reports_report_category_intro'                  => 'This report will give you insight in one or multiple categories.',
-    'reports_report_category_pieCharts'              => 'These charts will give you insight in expenses and income per category or per account.',
-    'reports_report_category_incomeAndExpensesChart' => 'This chart shows your expenses and income per category.',
+    'reports_report_category_intro'                  => 'To poročilo vam bo dalo vpogled v eno ali več kategorij.',
+    'reports_report_category_pieCharts'              => 'Ti grafikoni vam bodo dali vpogled v odhodke in prihodke glede na kategorijo ali račun.',
+    'reports_report_category_incomeAndExpensesChart' => 'Ta grafikon prikazuje vaše stroške in prihodke po kategorijah.',
 
-    'reports_report_tag_intro'                  => 'This report will give you insight in one or multiple tags.',
-    'reports_report_tag_pieCharts'              => 'These charts will give you insight in expenses and income per tag, account, category or budget.',
+    'reports_report_tag_intro'                  => 'To poročilo vam bo dalo vpogled v eno ali več oznak.',
+    'reports_report_tag_pieCharts'              => 'Ti grafikoni vam bodo dali vpogled v stroške in prihodke na oznako, račun, kategorijo ali proračun.',
     'reports_report_tag_incomeAndExpensesChart' => 'This chart shows your expenses and income per tag.',
 
     'reports_report_budget_intro'                             => 'This report will give you insight in one or multiple budgets.',

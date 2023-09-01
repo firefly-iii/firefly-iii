@@ -66,7 +66,7 @@ return [
     'matchingAmount'        => '금액',
     'destination'           => '대상',
     'source'                => '소스',
-    'next_expected_match'   => '다음 예상 매치',
+    'next_expected_match'   => '다음 예상 지불일',
     'automatch'             => '자동 매칭?',
 
 /*
@@ -106,7 +106,7 @@ return [
     'completed'               => '완료',
     'iban'                    => 'IBAN',
     'account_number'          => '계좌 번호',
-    'paid_current_period'     => '이 기간동안 지불됨',
+    'paid_current_period'     => '지불일',
     'email'                   => '이메일',
     'registered_at'           => '등록일',
     'is_blocked'              => '차단됨',
