@@ -61,6 +61,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|TransactionGroup withoutTrashed()
  * @property int|null                             $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereUserGroupId($value)
+ * @property-read \FireflyIII\Models\UserGroup|null $userGroup
  * @mixin Eloquent
  */
 class TransactionGroup extends Model

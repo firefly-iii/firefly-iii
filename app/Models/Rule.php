@@ -76,6 +76,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Rule withoutTrashed()
  * @property int|null                     $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserGroupId($value)
+ * @property-read \FireflyIII\Models\UserGroup|null $userGroup
  * @mixin Eloquent
  */
 class Rule extends Model

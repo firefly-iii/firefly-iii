@@ -1395,7 +1395,7 @@ return [
     'pref_notification_new_access_token'        => 'Alerte à la création d\'un nouveau jeton d\'accès API',
     'pref_notification_transaction_creation'    => 'Alerte à la création automatique d\'une opération',
     'pref_notification_user_login'              => 'Alerte à la connexion depuis un nouvel emplacement',
-    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
+    'pref_notification_rule_action_failures'    => 'Alerte lorsque les actions des règles ne s\'exécutent pas (Slack ou Discord uniquement)',
     'pref_notifications'                        => 'Notifications',
     'pref_notifications_help'                   => 'Sélectionnez les notifications que vous souhaitez recevoir. Certaines notifications peuvent contenir des informations financières sensibles.',
     'slack_webhook_url'                         => 'Webhook URL de Slack',
@@ -1625,8 +1625,8 @@ return [
     'create_new_revenue'                        => 'Créer nouveau compte de recettes',
     'create_new_piggy_bank'                     => 'Créer une nouvelle tirelire',
     'create_new_bill'                           => 'Créer une nouvelle facture',
-    'create_new_subscription'                   => 'Create new subscription',
-    'create_new_rule'                           => 'Create new rule',
+    'create_new_subscription'                   => 'Créer un nouvel abonnement',
+    'create_new_rule'                           => 'Créer une nouvelle règle',
 
     // currencies:
     'create_currency'                           => 'Créer une nouvelle devise',
@@ -1785,7 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Se répète tous les {skip} semestres',
     'bill_repeats_yearly_skip'                  => 'Se répète tous les {skip} ans',
     'subscriptions'                             => 'Abonnements',
-    'go_to_subscriptions'                       => 'Go to your subscriptions',
+    'go_to_subscriptions'                       => 'Accédez à vos abonnements',
     'forever'                                   => 'Pour toujours',
     'extension_date_is'                         => 'La date de l\'extension est {date}',
 
@@ -2372,7 +2372,7 @@ return [
     'created_tag'               => 'Tag ":tag" a été créé !',
 
     'transaction_journal_information'          => 'Informations sur l\'opération',
-    'transaction_journal_amount'               => 'Amount information',
+    'transaction_journal_amount'               => 'Informations sur les montants',
     'transaction_journal_meta'                 => 'Méta informations',
     'transaction_journal_more'                 => 'Plus d\'informations',
     'basic_journal_information'                => 'Informations de base sur l\'opération',

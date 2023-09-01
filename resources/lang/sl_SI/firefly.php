@@ -1395,7 +1395,7 @@ return [
     'pref_notification_new_access_token'        => 'Alert when a new API access token is created',
     'pref_notification_transaction_creation'    => 'Alert when a transaction is created automatically',
     'pref_notification_user_login'              => 'Alert when you login from a new location',
-    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
+    'pref_notification_rule_action_failures'    => 'Opozorilo, ko se dejanja pravila ne izvedejo (samo Slack ali Discord)',
     'pref_notifications'                        => 'Obvestila',
     'pref_notifications_help'                   => 'Indicate if these are notifications you would like to get. Some notifications may contain sensitive financial information.',
     'slack_webhook_url'                         => 'Slack Webhook URL',
@@ -1625,8 +1625,8 @@ return [
     'create_new_revenue'                        => 'Ustvari nov račun prihodkov',
     'create_new_piggy_bank'                     => 'Ustvari nov hranilnik',
     'create_new_bill'                           => 'Ustvari nov trajnik',
-    'create_new_subscription'                   => 'Create new subscription',
-    'create_new_rule'                           => 'Create new rule',
+    'create_new_subscription'                   => 'Ustvarite novo naročnino',
+    'create_new_rule'                           => 'Ustvari novo pravilo',
 
     // currencies:
     'create_currency'                           => 'Ustvarite valuto',
@@ -1785,7 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Repeats every {skip} half years',
     'bill_repeats_yearly_skip'                  => 'Repeats every {skip} years',
     'subscriptions'                             => 'Naročnine',
-    'go_to_subscriptions'                       => 'Go to your subscriptions',
+    'go_to_subscriptions'                       => 'Pojdite na svoje naročnine',
     'forever'                                   => 'Forever',
     'extension_date_is'                         => 'Extension date is {date}',
 
