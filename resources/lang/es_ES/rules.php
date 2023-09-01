@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 
 return [
-    'main_message'                                => 'Action ":action", present in rule ":rule", could not be applied to transaction #:group: :error',
-    'find_or_create_tag_failed'                   => 'Could not find or create tag ":tag"',
-    'tag_already_added'                           => 'Tag ":tag" is already linked to this transaction',
-    'inspect_transaction'                         => 'Inspect transaction ":title" @ Firefly III',
-    'inspect_rule'                                => 'Inspect rule ":title" @ Firefly III',
-    'journal_other_user'                          => 'This transaction doesn\'t belong to the user',
+    'main_message'                                => 'Acción ":action", presente en la regla ":rule", no se pudo aplicar a la transacción #:group: :error',
+    'find_or_create_tag_failed'                   => 'No se pudo encontrar o crear la etiqueta ":tag"',
+    'tag_already_added'                           => 'La etiqueta ":tag" ya está vinculada a esta transacción',
+    'inspect_transaction'                         => 'Inspeccionar transacción ":title" @ Firefly III',
+    'inspect_rule'                                => 'Inspeccionar regla ":title" @ Firefly III',
+    'journal_other_user'                          => 'Esta transacción no pertenece al usuario',
     'no_such_journal'                             => 'This transaction doesn\'t exist',
     'journal_already_no_budget'                   => 'This transaction has no budget, so it cannot be removed',
     'journal_already_no_category'                 => 'This transaction had no category, so it cannot be removed',

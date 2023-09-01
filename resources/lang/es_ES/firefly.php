@@ -1395,7 +1395,7 @@ return [
     'pref_notification_new_access_token'        => 'Alerta cuando se crea un nuevo token de acceso API',
     'pref_notification_transaction_creation'    => 'Alerta cuando una transacción se crea automáticamente',
     'pref_notification_user_login'              => 'Alertar cuando se inicie sesión desde una nueva ubicación',
-    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
+    'pref_notification_rule_action_failures'    => 'Alerta cuando las acciones de regla fallan al ejecutar (Slack o Discord solamente)',
     'pref_notifications'                        => 'Notificaciones',
     'pref_notifications_help'                   => 'Indique si desea recibir estas notificaciones. Algunas notificaciones pueden contener información financiera sensible.',
     'slack_webhook_url'                         => 'URL del Webhook de Slack',
@@ -1625,8 +1625,8 @@ return [
     'create_new_revenue'                        => 'Crear nueva cuenta de ingresos',
     'create_new_piggy_bank'                     => 'Crear nueva hucha',
     'create_new_bill'                           => 'Crear nueva factura',
-    'create_new_subscription'                   => 'Create new subscription',
-    'create_new_rule'                           => 'Create new rule',
+    'create_new_subscription'                   => 'Crear nueva suscripción',
+    'create_new_rule'                           => 'Crear nueva regla',
 
     // currencies:
     'create_currency'                           => 'Crear nueva moneda',
@@ -1785,7 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Repetir cada {skip} medios años',
     'bill_repeats_yearly_skip'                  => 'Repetir cada {skip} años',
     'subscriptions'                             => 'Suscripciones',
-    'go_to_subscriptions'                       => 'Go to your subscriptions',
+    'go_to_subscriptions'                       => 'Ir a tus suscripciones',
     'forever'                                   => 'Siempre',
     'extension_date_is'                         => 'Fecha de extensión es {date}',
 
@@ -2372,7 +2372,7 @@ return [
     'created_tag'               => 'Etiqueta ":tag" ha sido creado!',
 
     'transaction_journal_information'          => 'Información de transacción',
-    'transaction_journal_amount'               => 'Amount information',
+    'transaction_journal_amount'               => 'Información de cantidad',
     'transaction_journal_meta'                 => 'Información Meta',
     'transaction_journal_more'                 => 'Más información',
     'basic_journal_information'                => 'Información básica de transacción',

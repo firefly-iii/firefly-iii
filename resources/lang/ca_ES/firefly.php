@@ -1395,7 +1395,7 @@ return [
     'pref_notification_new_access_token'        => 'Avisar quan es creï un nou identificador d\'accés API',
     'pref_notification_transaction_creation'    => 'Avisar quan una transacció es creï automàticament',
     'pref_notification_user_login'              => 'Avisar quan s\'iniciï sessió des d\'una nova ubicació',
-    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
+    'pref_notification_rule_action_failures'    => 'Alerta quan les accions de la regla no es poden executar (només Slack i Discord)',
     'pref_notifications'                        => 'Notificacions',
     'pref_notifications_help'                   => 'Indica si aquestes són notificacions que vols rebre. Algunes notificacions podrien contenir informació financera sensible.',
     'slack_webhook_url'                         => 'Webhook URL de Slack',
@@ -1625,8 +1625,8 @@ return [
     'create_new_revenue'                        => 'Crear un nou compte de beneficis',
     'create_new_piggy_bank'                     => 'Crea una guardiola nova',
     'create_new_bill'                           => 'Crear una nova factura',
-    'create_new_subscription'                   => 'Create new subscription',
-    'create_new_rule'                           => 'Create new rule',
+    'create_new_subscription'                   => 'Crea una nova subscripció',
+    'create_new_rule'                           => 'Crea una nova regla',
 
     // currencies:
     'create_currency'                           => 'Crear una nova moneda',
@@ -1785,7 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Es repeteix cada {skip} mitjos anys',
     'bill_repeats_yearly_skip'                  => 'Es repeteix cada {skip} anys',
     'subscriptions'                             => 'Subscripcions',
-    'go_to_subscriptions'                       => 'Go to your subscriptions',
+    'go_to_subscriptions'                       => 'Ves a les teves subscripcions',
     'forever'                                   => 'Per a sempre',
     'extension_date_is'                         => 'La data d\'extensió és {date}',
 
@@ -2372,7 +2372,7 @@ return [
     'created_tag'               => 'L\'etiqueta ":tag" ha sigut creada!',
 
     'transaction_journal_information'          => 'Informació de la transacció',
-    'transaction_journal_amount'               => 'Amount information',
+    'transaction_journal_amount'               => 'Informació de la quantitat',
     'transaction_journal_meta'                 => 'Metainformació',
     'transaction_journal_more'                 => 'Més informació',
     'basic_journal_information'                => 'Informació de transacció bàsica',

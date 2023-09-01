@@ -52,6 +52,16 @@ use Illuminate\Support\Carbon;
  * @method static Builder|UserGroup whereUpdatedAt($value)
  * @property-read Collection<int, Account>     $accounts
  * @property-read int|null                     $accounts_count
+ * @property-read Collection<int, \FireflyIII\Models\AvailableBudget> $availableBudgets
+ * @property-read int|null $available_budgets_count
+ * @property-read Collection<int, \FireflyIII\Models\Bill> $bills
+ * @property-read int|null $bills_count
+ * @property-read Collection<int, \FireflyIII\Models\Budget> $budgets
+ * @property-read int|null $budgets_count
+ * @property-read Collection<int, \FireflyIII\Models\PiggyBank> $piggyBanks
+ * @property-read int|null $piggy_banks_count
+ * @property-read Collection<int, \FireflyIII\Models\TransactionJournal> $transactionJournals
+ * @property-read int|null $transaction_journals_count
  * @mixin Eloquent
  */
 class UserGroup extends Model
