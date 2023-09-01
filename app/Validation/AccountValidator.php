@@ -293,6 +293,7 @@ class AccountValidator
             $first = $this->accountRepository->findByName($accountName, $validTypes);
             if (null !== $first) {
                 app('log')->debug(sprintf('Name: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
+                return $first;
             }
         }
         app('log')->debug('Found nothing!');
