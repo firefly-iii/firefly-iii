@@ -105,10 +105,6 @@ class BasicController extends Controller
         $end   = $this->parameters->get('end');
 
         // balance information:
-        $balanceData  = [];
-        $billData     = [];
-        $spentData    = [];
-        $netWorthData = [];
         $balanceData  = $this->getBalanceInformation($start, $end);
         $billData     = $this->getBillInformation($start, $end);
         $spentData    = $this->getLeftToSpendInfo($start, $end);
@@ -127,9 +123,15 @@ class BasicController extends Controller
     private function getBalanceInformation(Carbon $start, Carbon $end): array
     {
         // prep some arrays:
-        $incomes    = [];
-        $expenses   = [];
-        $sums       = [];
+        $incomes    = [
+            'native' => '0',
+        ];
+        $expenses   = [
+            'native' => '0',
+        ];
+        $sums       = [
+            'native' => '0',
+        ];
         $return     = [];
         $currencies = [];
         $converter  = new ExchangeRateConverter();
