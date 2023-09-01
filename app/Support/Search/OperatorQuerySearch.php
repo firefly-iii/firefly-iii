@@ -1004,151 +1004,151 @@ class OperatorQuerySearch implements SearchInterface
                 //
             case '-date_on':
             case 'date_on':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setExactDateParams($range, $prohibited);
                 return false;
             case 'date_before':
             case '-date_after':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setDateBeforeParams($range);
                 return false;
             case 'date_after':
             case '-date_before':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setDateAfterParams($range);
                 return false;
 
             case 'interest_date_on':
             case '-interest_date_on':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setExactMetaDateParams('interest_date', $range, $prohibited);
                 return false;
             case 'interest_date_before':
             case '-interest_date_after':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setMetaDateBeforeParams('interest_date', $range);
                 return false;
             case 'interest_date_after':
             case '-interest_date_before':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setMetaDateAfterParams('interest_date', $range);
                 return false;
 
             case 'book_date_on':
             case '-book_date_on':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setExactMetaDateParams('book_date', $range, $prohibited);
                 return false;
             case 'book_date_before':
             case '-book_date_after':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setMetaDateBeforeParams('book_date', $range);
                 return false;
             case 'book_date_after':
             case '-book_date_before':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setMetaDateAfterParams('book_date', $range);
                 return false;
 
             case 'process_date_on':
             case '-process_date_on':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setExactMetaDateParams('process_date', $range, $prohibited);
                 return false;
             case 'process_date_before':
             case '-process_date_after':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setMetaDateBeforeParams('process_date', $range);
                 return false;
             case 'process_date_after':
             case '-process_date_before':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setMetaDateAfterParams('process_date', $range);
                 return false;
 
             case 'due_date_on':
             case '-due_date_on':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setExactMetaDateParams('due_date', $range, $prohibited);
                 return false;
             case 'due_date_before':
             case '-due_date_after':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setMetaDateBeforeParams('due_date', $range);
                 return false;
             case 'due_date_after':
             case '-due_date_before':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setMetaDateAfterParams('due_date', $range);
                 return false;
 
             case 'payment_date_on':
             case '-payment_date_on':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setExactMetaDateParams('payment_date', $range, $prohibited);
                 return false;
             case 'payment_date_before':
             case '-payment_date_after':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setMetaDateBeforeParams('payment_date', $range);
                 return false;
             case 'payment_date_after':
             case '-payment_date_before':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setMetaDateAfterParams('payment_date', $range);
                 return false;
 
             case 'invoice_date_on':
             case '-invoice_date_on':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setExactMetaDateParams('invoice_date', $range, $prohibited);
                 return false;
             case 'invoice_date_before':
             case '-invoice_date_after':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setMetaDateBeforeParams('invoice_date', $range);
                 return false;
             case 'invoice_date_after':
             case '-invoice_date_before':
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setMetaDateAfterParams('invoice_date', $range);
                 return false;
 
             case 'created_at_on':
             case '-created_at_on':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setExactObjectDateParams('created_at', $range, $prohibited);
                 return false;
             case 'created_at_before':
             case '-created_at_after':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setObjectDateBeforeParams('created_at', $range);
                 return false;
             case 'created_at_after':
             case '-created_at_before':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setObjectDateAfterParams('created_at', $range);
                 return false;
 
             case 'updated_at_on':
             case '-updated_at_on':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setExactObjectDateParams('updated_at', $range, $prohibited);
                 return false;
             case 'updated_at_before':
             case '-updated_at_after':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setObjectDateBeforeParams('updated_at', $range);
                 return false;
             case 'updated_at_after':
             case '-updated_at_before':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $range = $this->parseDateRange($value);
+                $range = $this->parseDateRange($operator, $value);
                 $this->setObjectDateAfterParams('updated_at', $range);
                 return false;
                 //
@@ -1550,13 +1550,22 @@ class OperatorQuerySearch implements SearchInterface
      * @return array
      * @throws FireflyException
      */
-    private function parseDateRange(string $value): array
+    private function parseDateRange(string $type, string $value): array
     {
         $parser = new ParseDateString();
         if ($parser->isDateRange($value)) {
             return $parser->parseRange($value);
         }
-        $parsedDate = $parser->parseDate($value);
+        try {
+            $parsedDate = $parser->parseDate($value);
+        } catch (FireflyException $e) {
+            Log::debug(sprintf('Could not parse date "%s", will return empty array.', $value));
+            $this->invalidOperators[] = [
+                'type'  => $type,
+                'value' => (string)$value,
+            ];
+            return [];
+        }
 
         return [
             'exact' => $parsedDate,

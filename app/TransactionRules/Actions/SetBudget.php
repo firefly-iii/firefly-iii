@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -65,7 +66,7 @@ class SetBudget implements ActionInterface
                     $search
                 )
             );
-
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_budget', ['name' => $search])));
             return false;
         }
 
@@ -78,7 +79,7 @@ class SetBudget implements ActionInterface
                     $journal['transaction_type_type']
                 )
             );
-
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_set_budget', ['type' => $journal['transaction_type_type'], 'name' => $search])));
             return false;
         }
 

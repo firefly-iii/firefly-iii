@@ -55,10 +55,12 @@ class BoxController extends Controller
      */
     public function available(): JsonResponse
     {
+        app('log')->debug('Now in available()');
         /** @var OperationsRepositoryInterface $opsRepository */
         $opsRepository = app(OperationsRepositoryInterface::class);
         /** @var AvailableBudgetRepositoryInterface $abRepository */
         $abRepository = app(AvailableBudgetRepositoryInterface::class);
+        $abRepository->cleanup();
         /** @var Carbon $start */
         $start = session('start', today(config('app.timezone'))->startOfMonth());
         /** @var Carbon $end */
@@ -73,40 +75,57 @@ class BoxController extends Controller
         $cache->addProperty($today);
         $cache->addProperty('box-available');
         if ($cache->has()) {
-            return response()->json($cache->get());
+            //return response()->json($cache->get());
         }
         $leftPerDayAmount  = '0';
         $leftToSpendAmount = '0';
 
-        $currency         = app('amount')->getDefaultCurrency();
-        $availableBudgets = $abRepository->getAvailableBudgetsByDate($start, $end);
+        $currency = app('amount')->getDefaultCurrency();
+        app('log')->debug(sprintf('Default currency is %s', $currency->code));
+        $availableBudgets = $abRepository->getAvailableBudgetsByExactDate($start, $end);
+        app('log')->debug(sprintf('Found %d available budget(s)', $availableBudgets->count()));
         $availableBudgets = $availableBudgets->filter(
             static function (AvailableBudget $availableBudget) use ($currency) {
                 if ($availableBudget->transaction_currency_id === $currency->id) {
+                    app('log')->debug(sprintf(
+                        'Will include AB #%d: from %s-%s amount %s',
+                        $availableBudget->id,
+                        $availableBudget->start_date->format('Y-m-d'),
+                        $availableBudget->end_date->format('Y-m-d'),
+                        $availableBudget->amount
+                    ));
                     return $availableBudget;
                 }
 
                 return null;
             }
         );
+        app('log')->debug(sprintf('Filtered back to %d available budgets', $availableBudgets->count()));
         // spent in this period, in budgets, for default currency.
         // also calculate spent per day.
         $spent       = $opsRepository->sumExpenses($start, $end, null, null, $currency);
         $spentAmount = $spent[(int)$currency->id]['sum'] ?? '0';
+        app('log')->debug(sprintf('Spent for default currency for all budgets in this period: %s', $spentAmount));
 
-        $days        = $today->between($start, $end) ? $today->diffInDays($start) + 1 : $end->diffInDays($start) + 1;
+        $days = $today->between($start, $end) ? $today->diffInDays($start) + 1 : $end->diffInDays($start) + 1;
+        app('log')->debug(sprintf('Number of days left: %d', $days));
         $spentPerDay = bcdiv($spentAmount, (string)$days);
+        app('log')->debug(sprintf('Available to spend per day: %s', $spentPerDay));
         if ($availableBudgets->count() > 0) {
             $display           = 0; // assume user overspent
             $boxTitle          = (string)trans('firefly.overspent');
             $totalAvailableSum = (string)$availableBudgets->sum('amount');
+            app('log')->debug(sprintf('Total available sum is %s', $totalAvailableSum));
             // calculate with available budget.
             $leftToSpendAmount = bcadd($totalAvailableSum, $spentAmount);
+            app('log')->debug(sprintf('So left to spend is %s', $leftToSpendAmount));
             if (1 === bccomp($leftToSpendAmount, '0')) {
+                app('log')->debug(sprintf('Left to spend is positive!'));
                 $boxTitle         = (string)trans('firefly.left_to_spend');
                 $days             = $today->diffInDays($end) + 1;
                 $display          = 1; // not overspent
                 $leftPerDayAmount = bcdiv($leftToSpendAmount, (string)$days);
+                app('log')->debug(sprintf('Left to spend per day is %s', $leftPerDayAmount));
             }
         }
 
@@ -118,9 +137,10 @@ class BoxController extends Controller
             'left_per_day'  => app('amount')->formatAnything($currency, $leftPerDayAmount, false),
             'title'         => $boxTitle,
         ];
+        app('log')->debug('Final output', $return);
 
         $cache->store($return);
-
+        app('log')->debug('Now done with available()');
         return response()->json($return);
     }
 

@@ -102,6 +102,7 @@ abstract class Controller extends BaseController
             } catch (BadRequestException $e) {
                 Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $field));
                 Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
                 $value = null;
             }
             $obj = null;
@@ -130,6 +131,7 @@ abstract class Controller extends BaseController
             } catch (BadRequestException $e) {
                 Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $integer));
                 Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
                 $value = null;
             }
             if (null !== $value) {
@@ -154,6 +156,7 @@ abstract class Controller extends BaseController
         } catch (BadRequestException $e) {
             Log::error('Request field "sort" contains a non-scalar value. Value set to NULL.');
             Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $param = '';
         }
         if ('' === $param) {

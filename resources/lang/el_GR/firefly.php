@@ -1395,6 +1395,7 @@ return [
     'pref_notification_new_access_token'        => 'Ειδοποίηση όταν δημιουργείται ένα νέο διακριτικό πρόσβασης API',
     'pref_notification_transaction_creation'    => 'Ειδοποίηση όταν δημιουργείται αυτόματα μια συναλλαγή',
     'pref_notification_user_login'              => 'Ειδοποίηση όταν συνδέεστε από μια νέα τοποθεσία',
+    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
     'pref_notifications'                        => 'Ειδοποιήσεις',
     'pref_notifications_help'                   => 'Υποδείξτε εάν πρόκειται για ειδοποιήσεις που θέλετε να λαμβάνετε. Ορισμένες ειδοποιήσεις ενδέχεται να περιέχουν ευαίσθητες οικονομικές πληροφορίες.',
     'slack_webhook_url'                         => 'Slack Webhook URL',
@@ -1624,6 +1625,8 @@ return [
     'create_new_revenue'                        => 'Δημιουργία νέου λογαριασμού εσόδων',
     'create_new_piggy_bank'                     => 'Δημιουργία ενός νέου κουμπαρά',
     'create_new_bill'                           => 'Δημιουργία νέου πάγιου έξοδου',
+    'create_new_subscription'                   => 'Create new subscription',
+    'create_new_rule'                           => 'Create new rule',
 
     // currencies:
     'create_currency'                           => 'Δημιουργία νέου νομίσματος',
@@ -1782,6 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Επαναλαμβάνεται κάθε {skip} εξάμηνα',
     'bill_repeats_yearly_skip'                  => 'Επαναλαμβάνεται κάθε {skip} έτη',
     'subscriptions'                             => 'Συνδρομές',
+    'go_to_subscriptions'                       => 'Go to your subscriptions',
     'forever'                                   => 'Για πάντα',
     'extension_date_is'                         => 'Η ημερομηνία παράτασης είναι {date}',
 
@@ -2368,6 +2372,7 @@ return [
     'created_tag'               => 'Η ετικέτα ":tag" δημιουργήθηκε!',
 
     'transaction_journal_information'          => 'Πληροφορίες συναλλαγής',
+    'transaction_journal_amount'               => 'Amount information',
     'transaction_journal_meta'                 => 'Πληροφορίες μεταδεδομένων',
     'transaction_journal_more'                 => 'Περισσότερες πληροφορίες',
     'basic_journal_information'                => 'Βασικές πληροφορίες συναλλαγής',

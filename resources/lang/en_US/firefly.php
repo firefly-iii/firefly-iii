@@ -1355,6 +1355,7 @@ return [
     'pref_notification_new_access_token'        => 'Alert when a new API access token is created',
     'pref_notification_transaction_creation'    => 'Alert when a transaction is created automatically',
     'pref_notification_user_login'              => 'Alert when you login from a new location',
+    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
     'pref_notifications'                        => 'Notifications',
     'pref_notifications_help'                   => 'Indicate if these are notifications you would like to get. Some notifications may contain sensitive financial information.',
     'slack_webhook_url'                         => 'Slack Webhook URL',
@@ -1574,6 +1575,8 @@ return [
     'create_new_revenue'                        => 'Create new revenue account',
     'create_new_piggy_bank'                     => 'Create new piggy bank',
     'create_new_bill'                           => 'Create new bill',
+    'create_new_subscription'                   => 'Create new subscription',
+    'create_new_rule'                           => 'Create new rule',
 
     // currencies:
     'create_currency'                           => 'Create a new currency',
@@ -1732,6 +1735,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Repeats every {skip} half years',
     'bill_repeats_yearly_skip'                  => 'Repeats every {skip} years',
     'subscriptions'                             => 'Subscriptions',
+    'go_to_subscriptions'                       => 'Go to your subscriptions',
     'forever'                                   => 'Forever',
     'extension_date_is'                         => 'Extension date is {date}',
 
@@ -2288,6 +2292,7 @@ return [
     'created_tag'               => 'Tag ":tag" has been created!',
 
     'transaction_journal_information'          => 'Transaction information',
+    'transaction_journal_amount'               => 'Amount information',
     'transaction_journal_meta'                 => 'Meta information',
     'transaction_journal_more'                 => 'More information',
     'basic_journal_information'                => 'Basic transaction information',

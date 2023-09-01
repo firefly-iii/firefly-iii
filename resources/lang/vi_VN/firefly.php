@@ -1395,6 +1395,7 @@ return [
     'pref_notification_new_access_token'        => 'Alert when a new API access token is created',
     'pref_notification_transaction_creation'    => 'Alert when a transaction is created automatically',
     'pref_notification_user_login'              => 'Alert when you login from a new location',
+    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
     'pref_notifications'                        => 'Notifications',
     'pref_notifications_help'                   => 'Indicate if these are notifications you would like to get. Some notifications may contain sensitive financial information.',
     'slack_webhook_url'                         => 'Slack Webhook URL',
@@ -1624,6 +1625,8 @@ return [
     'create_new_revenue'                        => 'Tạo tài khoản doanh thu mới',
     'create_new_piggy_bank'                     => 'Tạo heo đất mới',
     'create_new_bill'                           => 'Tạo hóa đơn mới',
+    'create_new_subscription'                   => 'Create new subscription',
+    'create_new_rule'                           => 'Create new rule',
 
     // currencies:
     'create_currency'                           => 'Tạo một loại tiền tệ mới',
@@ -1782,6 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Repeats every {skip} half years',
     'bill_repeats_yearly_skip'                  => 'Repeats every {skip} years',
     'subscriptions'                             => 'Subscriptions',
+    'go_to_subscriptions'                       => 'Go to your subscriptions',
     'forever'                                   => 'Forever',
     'extension_date_is'                         => 'Extension date is {date}',
 
@@ -2368,6 +2372,7 @@ return [
     'created_tag'               => 'Nhãn ":tag" đã được tạo!',
 
     'transaction_journal_information'          => 'Thông tin giao dịch',
+    'transaction_journal_amount'               => 'Amount information',
     'transaction_journal_meta'                 => 'Thông tin tổng hợp',
     'transaction_journal_more'                 => 'Thêm thông tin',
     'basic_journal_information'                => 'Basic transaction information',

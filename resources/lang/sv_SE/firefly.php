@@ -1395,6 +1395,7 @@ return [
     'pref_notification_new_access_token'        => 'Alert when a new API access token is created',
     'pref_notification_transaction_creation'    => 'Alert when a transaction is created automatically',
     'pref_notification_user_login'              => 'Alert when you login from a new location',
+    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
     'pref_notifications'                        => 'Notifications',
     'pref_notifications_help'                   => 'Indicate if these are notifications you would like to get. Some notifications may contain sensitive financial information.',
     'slack_webhook_url'                         => 'Slack Webhook URL',
@@ -1624,6 +1625,8 @@ return [
     'create_new_revenue'                        => 'Skapa ett nytt intäktskonto',
     'create_new_piggy_bank'                     => 'Skapa en ny spargris',
     'create_new_bill'                           => 'Skapa en ny nota',
+    'create_new_subscription'                   => 'Create new subscription',
+    'create_new_rule'                           => 'Create new rule',
 
     // currencies:
     'create_currency'                           => 'Skapa en ny valuta',
@@ -1782,6 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Upprepas varje {skip} halvår',
     'bill_repeats_yearly_skip'                  => 'Upprepas varje {skip} år',
     'subscriptions'                             => 'Prenumerationer',
+    'go_to_subscriptions'                       => 'Go to your subscriptions',
     'forever'                                   => 'För alltid',
     'extension_date_is'                         => 'Tillägg datum är {date}',
 
@@ -2369,6 +2373,7 @@ return [
     'created_tag'               => 'Etiketten ":tag" har skapats!',
 
     'transaction_journal_information'          => 'Transaktionsinformation',
+    'transaction_journal_amount'               => 'Amount information',
     'transaction_journal_meta'                 => 'Metadata',
     'transaction_journal_more'                 => 'Mer information',
     'basic_journal_information'                => 'Grundläggande transaktionsinformation',

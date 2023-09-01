@@ -34,6 +34,7 @@ use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RuleTrigger;
 use Illuminate\Console\Command;
+use ValueError;
 
 /**
  * Class ReportSkeleton
@@ -247,7 +248,16 @@ class CorrectAmounts extends Command
         /** @var RuleTrigger $item */
         foreach ($set as $item) {
             // basic check:
-            if (-1 === bccomp((string)$item->trigger_value, '0')) {
+            $check = 0;
+            try {
+                $check = bccomp((string)$item->trigger_value, '0');
+            } catch (ValueError $e) {
+                $this->friendlyError(sprintf('Rule #%d contained invalid %s-trigger "%s". The trigger has been removed, and the rule is disabled.', $item->rule_id, $item->trigger_type, $item->trigger_value));
+                $item->rule->active = false;
+                $item->rule->save();
+                $item->forceDelete();
+            }
+            if (-1 === $check) {
                 $fixed++;
                 $item->trigger_value = app('steam')->positive((string)$item->trigger_value);
                 $item->save();

@@ -142,25 +142,43 @@ function updateListButtons() {
     });
 }
 
+function getBaseUrl() {
+    // go to specially crafted URL:
+    var bases = document.getElementsByTagName('base');
+    var baseHref = null;
+
+    if (bases.length > 0) {
+        baseHref = bases[0].href;
+    }
+    if (null !== baseHref && '/' === baseHref.slice(-1)) {
+        baseHref = baseHref.slice(0, -1);
+    }
+    console.log('baseHref for mass edit is "' + baseHref + '".');
+    return baseHref;
+}
+
 /**
  *
  * @returns {boolean}
  */
 function goToMassEdit() {
-    console.log('Mass edit URL is ' + mass_edit_url + '/' + getCheckboxes());
-    window.location.href = mass_edit_url + '/' + getCheckboxes();
+    var baseHref = getBaseUrl();
+    console.log('Mass edit URL is ' + baseHref + mass_edit_url + '/' + getCheckboxes());
+    window.location.href = baseHref + mass_edit_url + '/' + getCheckboxes();
     return false;
 }
 
 function goToBulkEdit() {
-    console.log('Mass edit URL is ' + bulk_edit_url + '/' + getCheckboxes());
-    window.location.href = bulk_edit_url + '/' + getCheckboxes();
+    var baseHref = getBaseUrl();
+    console.log('Bulk edit URL is ' + baseHref + bulk_edit_url + '/' + getCheckboxes());
+    window.location.href = baseHref + bulk_edit_url + '/' + getCheckboxes();
     return false;
 }
 
 function goToMassDelete() {
-    console.log('Mass delete URL is ' + mass_delete_url + '/' + getCheckboxes());
-    window.location.href = mass_delete_url + '/' + getCheckboxes();
+    var baseHref = getBaseUrl();
+    console.log('Mass delete URL is ' + baseHref + mass_delete_url + '/' + getCheckboxes());
+    window.location.href = baseHref + mass_delete_url + '/' + getCheckboxes();
     return false;
 }
 

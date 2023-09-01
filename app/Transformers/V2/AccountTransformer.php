@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -38,6 +39,7 @@ use Illuminate\Support\Collection;
 class AccountTransformer extends AbstractTransformer
 {
     private array               $accountMeta;
+    private array               $accountTypes;
     private array               $balances;
     private array               $convertedBalances;
     private array               $currencies;
@@ -51,6 +53,7 @@ class AccountTransformer extends AbstractTransformer
     {
         $this->currencies        = [];
         $this->accountMeta       = [];
+        $this->accountTypes      = [];
         $this->balances          = app('steam')->balancesByAccounts($objects, $this->getDate());
         $this->convertedBalances = app('steam')->balancesByAccountsConverted($objects, $this->getDate());
         $repository              = app(CurrencyRepositoryInterface::class);
@@ -71,6 +74,15 @@ class AccountTransformer extends AbstractTransformer
         foreach ($meta as $entry) {
             $id                                   = (int)$entry->account_id;
             $this->accountMeta[$id][$entry->name] = $entry->data;
+        }
+        // get account types:
+        // select accounts.id, account_types.type from account_types left join accounts on accounts.account_type_id = account_types.id;
+        $accountTypes = AccountType::leftJoin('accounts', 'accounts.account_type_id', '=', 'account_types.id')
+                                   ->whereIn('accounts.id', $accountIds)
+                                   ->get(['accounts.id', 'account_types.type']);
+        /** @var AccountType $row */
+        foreach ($accountTypes as $row) {
+            $this->accountTypes[(int)$row->id] = (string)config(sprintf('firefly.shortNamesByFullName.%s', $row->type));
         }
     }
 
@@ -96,9 +108,12 @@ class AccountTransformer extends AbstractTransformer
      */
     public function transform(Account $account): array
     {
-        //$fullType    = $account->accountType->type;
-        //$accountType = (string) config(sprintf('firefly.shortNamesByFullName.%s', $fullType));
         $id = (int)$account->id;
+
+        // various meta
+        $accountRole = $this->accountMeta[$id]['account_role'] ?? null;
+        $accountType = $this->accountTypes[$id];
+        $order       = (int)$account->order;
 
         // no currency? use default
         $currency = $this->default;
@@ -109,16 +124,21 @@ class AccountTransformer extends AbstractTransformer
         $balance       = $this->balances[$id] ?? null;
         $nativeBalance = $this->convertedBalances[$id]['native_balance'] ?? null;
 
+        // no order for some accounts:
+        if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'], true)) {
+            $order = null;
+        }
+
         return [
             'id'                      => (string)$account->id,
             'created_at'              => $account->created_at->toAtomString(),
             'updated_at'              => $account->updated_at->toAtomString(),
             'active'                  => $account->active,
-            //'order'                   => $order,
+            'order'                   => $order,
             'name'                    => $account->name,
             'iban'                    => '' === $account->iban ? null : $account->iban,
-            //            'type'                    => strtolower($accountType),
-            //            'account_role'            => $accountRole,
+            'type'                    => strtolower($accountType),
+            'account_role'            => $accountRole,
             'currency_id'             => (string)$currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,

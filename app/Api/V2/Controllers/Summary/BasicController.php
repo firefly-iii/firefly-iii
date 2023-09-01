@@ -105,10 +105,6 @@ class BasicController extends Controller
         $end   = $this->parameters->get('end');
 
         // balance information:
-        $balanceData  = [];
-        $billData     = [];
-        $spentData    = [];
-        $netWorthData = [];
         $balanceData  = $this->getBalanceInformation($start, $end);
         $billData     = $this->getBillInformation($start, $end);
         $spentData    = $this->getLeftToSpendInfo($start, $end);
@@ -127,9 +123,15 @@ class BasicController extends Controller
     private function getBalanceInformation(Carbon $start, Carbon $end): array
     {
         // prep some arrays:
-        $incomes    = [];
-        $expenses   = [];
-        $sums       = [];
+        $incomes    = [
+            'native' => '0',
+        ];
+        $expenses   = [
+            'native' => '0',
+        ];
+        $sums       = [
+            'native' => '0',
+        ];
         $return     = [];
         $currencies = [];
         $converter  = new ExchangeRateConverter();
@@ -354,6 +356,7 @@ class BasicController extends Controller
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
+        app('log')->debug('Now in getLeftToSpendInfo');
         $return     = [];
         $today      = today(config('app.timezone'));
         $available  = $this->abRepository->getAvailableBudgetWithCurrency($start, $end);
@@ -367,7 +370,7 @@ class BasicController extends Controller
         $nativeLeft   = [
             'key'                     => 'left-to-spend-in-native',
             'value'                   => '0',
-            'currency_id'             => (int)$default->id,
+            'currency_id'             => (string)$default->id,
             'currency_code'           => $default->code,
             'currency_symbol'         => $default->symbol,
             'currency_decimal_places' => (int)$default->decimal_places,
@@ -375,7 +378,7 @@ class BasicController extends Controller
         $nativePerDay = [
             'key'                     => 'left-per-day-to-spend-in-native',
             'value'                   => '0',
-            'currency_id'             => (int)$default->id,
+            'currency_id'             => (string)$default->id,
             'currency_code'           => $default->code,
             'currency_symbol'         => $default->symbol,
             'currency_decimal_places' => (int)$default->decimal_places,
@@ -386,17 +389,20 @@ class BasicController extends Controller
          * @var array $row
          */
         foreach ($spent as $currencyId => $row) {
+            app('log')->debug(sprintf('Processing spent array in currency #%d', $currencyId));
+            $currencyId  = (int)$currencyId;
             $spent       = '0';
             $spentNative = '0';
             // get the sum from the array of transactions (double loop but who cares)
             /** @var array $budget */
             foreach ($row['budgets'] as $budget) {
+                app('log')->debug(sprintf('Processing expenses in budget "%s".', $budget['name']));
                 /** @var array $journal */
                 foreach ($budget['transaction_journals'] as $journal) {
                     $journalCurrencyId       = $journal['currency_id'];
                     $currency                = $currencies[$journalCurrencyId] ?? $this->currencyRepos->find($journalCurrencyId);
                     $currencies[$currencyId] = $currency;
-                    $amount                  = bcmul($journal['amount'], '-1');
+                    $amount                  = app('steam')->negative($journal['amount']);
                     $amountNative            = $converter->convert($default, $currency, $start, $amount);
                     if ((int)$journal['foreign_currency_id'] === (int)$default->id) {
                         $amountNative = $journal['foreign_amount'];
@@ -404,15 +410,18 @@ class BasicController extends Controller
                     $spent       = bcadd($spent, $amount);
                     $spentNative = bcadd($spentNative, $amountNative);
                 }
+                app('log')->debug(sprintf('Total spent in budget "%s" is %s', $budget['name'], $spent));
             }
 
             // either an amount was budgeted or 0 is available.
             $currency                = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
             $currencies[$currencyId] = $currency;
             $amount                  = $available[$currencyId]['amount'] ?? '0';
-            $amountNative            = $converter->convert($default, $currency, $start, $amount);
+            $amountNative            = $available[$currencyId]['native_amount'] ?? '0';
             $left                    = bcadd($amount, $spent);
             $leftNative              = bcadd($amountNative, $spentNative);
+            app('log')->debug(sprintf('Available amount is %s', $amount));
+            app('log')->debug(sprintf('Amount left is %s', $left));
 
             // how much left per day?
             $days         = $today->diffInDays($end) + 1;
@@ -429,10 +438,10 @@ class BasicController extends Controller
             $return[] = [
                 'key'                     => sprintf('left-to-spend-in-%s', $row['currency_code']),
                 'value'                   => $left,
-                'currency_id'             => $row['currency_id'],
+                'currency_id'             => (string)$row['currency_id'],
                 'currency_code'           => $row['currency_code'],
                 'currency_symbol'         => $row['currency_symbol'],
-                'currency_decimal_places' => $row['currency_decimal_places'],
+                'currency_decimal_places' => (int)$row['currency_decimal_places'],
             ];
             // left (native)
             $nativeLeft['value'] = $leftNative;
@@ -441,10 +450,10 @@ class BasicController extends Controller
             $return[] = [
                 'key'                     => sprintf('left-per-day-to-spend-in-%s', $row['currency_code']),
                 'value'                   => $perDay,
-                'currency_id'             => $row['currency_id'],
+                'currency_id'             => (string)$row['currency_id'],
                 'currency_code'           => $row['currency_code'],
                 'currency_symbol'         => $row['currency_symbol'],
-                'currency_decimal_places' => $row['currency_decimal_places'],
+                'currency_decimal_places' => (int)$row['currency_decimal_places'],
             ];
 
             // left per day (native)

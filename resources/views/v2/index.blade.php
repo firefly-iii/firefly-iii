@@ -1,6 +1,6 @@
 @extends('layout.v2')
 @section('vite')
-    @vite(['resources/assets/v2/sass/app.scss', 'resources/assets/v2/dashboard.js'])
+    @vite(['resources/assets/v2/sass/app.scss', 'resources/assets/v2/pages/dashboard/dashboard.js'])
 @endsection
 @section('content')
 
@@ -63,7 +63,7 @@
                             <div class="card">
                                 <div class="card-header">
                                     <h3 class="card-title"><a href="{{ route('categories.index') }}"
-                                                              title="{{ __('firefly.yourAccounts') }}">{{ __('firefly.categories') }}</a>
+                                                              title="{{ __('firefly.go_to_categories') }}">{{ __('firefly.categories') }}</a>
                                     </h3>
                                 </div>
                                 <div class="card-body p-0" style="position: relative;height:350px;">
@@ -85,15 +85,12 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <h3 class="card-title">
-                                            <a :href="'{{ route('accounts.show','') }}/' + account.id"
+                                            <a :href="'{{ route('accounts.show', '') }}/' + account.id"
                                                x-text="account.name"></a>
 
-                                            <span class="small text-muted">(<template x-if="autoConversion">
-                                                                    <span x-text="account.native_balance"></span><br>
-                                                                </template>
-                                                                <template x-if="!autoConversion">
-                                                                    <span x-text="account.balance"></span><br>
-                                                                </template>)</span>
+                                            <span class="small">
+                                                @include('partials.elements.amount', ['autoConversion' => true,'amount' => 'account.balance','native' => 'account.native_balance'])
+                                            </span>
                                         </h3>
                                     </div>
                                     <div class="card-body p-0">
@@ -106,7 +103,9 @@
                                                 <tr>
                                                     <td>
                                                         <template x-if="group.title">
-                                                            <span><a
+                                                            <span>
+                                                                TODO ICON
+                                                                <a
                                                                     :href="'{{route('transactions.show', '') }}/' + group.id"
                                                                     x-text="group.title"></a><br/></span>
                                                         </template>
@@ -119,7 +118,22 @@
                                                                     </span>
                                                                 </template>
                                                                 <template x-if="!group.title">
-                                                                    <span><a
+                                                                    <span>
+                                                                        <!-- withdrawal -->
+                                                                        <template
+                                                                            x-if="transaction.type == 'withdrawal'">
+                                                                            <span
+                                                                                class="text-muted fa-solid fa-arrow-left fa-fw"></span>
+                                                                        </template>
+                                                                        <template x-if="transaction.type == 'deposit'">
+                                                                            <span
+                                                                                class="text-muted fa-solid fa-arrow-right fa-fw"></span>
+                                                                        </template>
+                                                                        <template x-if="transaction.type == 'transfer'">
+                                                                            <span
+                                                                                class="text-muted fa-solid fa-arrows-rotate fa-fw"></span>
+                                                                        </template>
+                                                                        <a
                                                                             :href="'{{route('transactions.show', '') }}/' + group.id"
                                                                             x-text="transaction.description"></a><br>
                                                                     </span>
@@ -133,12 +147,7 @@
                                                         </template>
                                                         <template x-for="transaction in group.transactions">
                                                             <span>
-                                                                <template x-if="autoConversion">
-                                                                    <span x-text="transaction.native_amount"></span><br>
-                                                                </template>
-                                                                <template x-if="!autoConversion">
-                                                                    <span x-text="transaction.amount"></span><br>
-                                                                </template>
+                                                               @include('partials.elements.amount', ['autoConversion' => true,'amount' => 'transaction.amount','native' => 'transaction.native_amount'])
                                                             </span>
                                                         </template>
                                                     </td>
@@ -158,8 +167,9 @@
                 <div class="col">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"><a href="#"
-                                                      title="{{ route('reports.index') }}">{{ __('firefly.income_and_expense') }}</a>
+                            <h3 class="card-title"><a href="{{ route('reports.index') }}"
+                                                      title="{{ __('firefly.income_and_expense') }}"
+                                >{{ __('firefly.income_and_expense') }}</a>
                             </h3>
                         </div>
                         <div class="card-body" x-data="sankey">
@@ -172,7 +182,9 @@
                 <div class="col">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"><a href="#" title="Something">Subscriptions</a></h3>
+                            <h3 class="card-title"><a href="{{ route('subscriptions.index') }}"
+                                                      title="{{ __('firefly.go_to_subscriptions') }}">{{ __('firefly.subscriptions')  }}</a>
+                            </h3>
                         </div>
                         <div class="card-body" x-data="subscriptions">
                             <canvas id="subscriptions-chart"></canvas>
@@ -184,7 +196,9 @@
                     <template x-for="group in piggies">
                         <div class="card mb-2">
                             <div class="card-header">
-                                <h3 class="card-title"><a href="#" title="Something">Spaarpotjes (<span
+                                <h3 class="card-title"><a href="{{ route('piggy-banks.index')  }}"
+                                                          title="{{ __('firefly.go_to_piggies')  }}">{{ __('firefly.piggy_banks') }}
+                                        (<span
                                             x-text="group.title"></span>)</a></h3>
                             </div>
                             <ul class="list-group list-group-flush">

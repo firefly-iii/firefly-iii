@@ -157,6 +157,7 @@ class ReconcileController extends Controller
             )->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('View error: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $view = sprintf('Could not render accounts.reconcile.overview: %s', $e->getMessage());
             throw new FireflyException($view, 0, $e);
         }
@@ -258,6 +259,7 @@ class ReconcileController extends Controller
             )->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $html = sprintf('Could not render accounts.reconcile.transactions: %s', $e->getMessage());
             throw new FireflyException($html, 0, $e);
         }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RuleAction;
@@ -61,16 +62,15 @@ class UpdatePiggybank implements ActionInterface
         // refresh the transaction type.
         $user = User::find($journal['user_id']);
         /** @var TransactionJournal $journalObj */
-        $journalObj                       = $user->transactionJournals()->find($journal['transaction_journal_id']);
-        $type                             = TransactionType::find((int)$journalObj->transaction_type_id);
-        $journal['transaction_type_type'] = $type->type;
+        $journalObj = $user->transactionJournals()->find($journal['transaction_journal_id']);
+        $type       = TransactionType::find((int)$journalObj->transaction_type_id);
 
         $piggyBank = $this->findPiggyBank($user);
         if (null === $piggyBank) {
             Log::info(
                 sprintf('No piggy bank named "%s", cant execute action #%d of rule #%d', $this->action->action_value, $this->action->id, $this->action->rule_id)
             );
-
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_piggy', ['name' => $this->action->action_value])));
             return false;
         }
 
@@ -130,7 +130,7 @@ class UpdatePiggybank implements ActionInterface
                 $destination->account_id
             )
         );
-
+        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_link_piggy', ['name' => $this->action->action_value])));
         return false;
     }
 

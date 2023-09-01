@@ -58,7 +58,7 @@ return [
     'apply'                                => '適用',
     'select_date'                          => '日付を選択...',
     'cancel'                               => 'キャンセル',
-    'from'                                 => 'から',
+    'from'                                 => '引き出し元',
     'to'                                   => 'へ',
     'structure'                            => '構成',
     'help_translating'                     => 'このヘルプ文章はまだあなたの言語で利用可能ではありません。<a href="https://crowdin.com/project/firefly-iii-help">翻訳を手伝っていただけますか？</a>',
@@ -745,7 +745,7 @@ return [
     'yearly'                                              => '毎年',
 
     // rules
-    'is_not_rule_trigger'                                 => 'ではない',
+    'is_not_rule_trigger'                                 => '否定',
     'cannot_fire_inactive_rules'                          => '無効なルールは実行できません。',
     'rules'                                               => 'ルール',
     'rule_name'                                           => 'ルールの名前',
@@ -1395,6 +1395,7 @@ return [
     'pref_notification_new_access_token'        => '新しい API アクセストークンが作成されたときに警告する',
     'pref_notification_transaction_creation'    => '取引が自動的に作成されたとき警告する',
     'pref_notification_user_login'              => '新しい場所からログインしたときに警告する',
+    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
     'pref_notifications'                        => '通知',
     'pref_notifications_help'                   => 'これらは受け取る通知であるかどうかを示します。いくつかの通知には機密情報が含まれている場合があります。',
     'slack_webhook_url'                         => 'Slack Webhook URL',
@@ -1624,6 +1625,8 @@ return [
     'create_new_revenue'                        => '新しい収入口座を作成',
     'create_new_piggy_bank'                     => '新規貯金箱の作成',
     'create_new_bill'                           => '新しい請求を作成',
+    'create_new_subscription'                   => 'Create new subscription',
+    'create_new_rule'                           => 'Create new rule',
 
     // currencies:
     'create_currency'                           => '新しい通貨を作成',
@@ -1782,6 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => '{skip} 半期おきの繰り返し',
     'bill_repeats_yearly_skip'                  => '{skip} 年おきの繰り返し',
     'subscriptions'                             => '講読',
+    'go_to_subscriptions'                       => 'Go to your subscriptions',
     'forever'                                   => '無期限',
     'extension_date_is'                         => '延長日は {date} です',
 
@@ -2368,6 +2372,7 @@ return [
     'created_tag'               => 'タグ「:tag」が作成されました！',
 
     'transaction_journal_information'          => '取引情報',
+    'transaction_journal_amount'               => 'Amount information',
     'transaction_journal_meta'                 => 'メタ情報',
     'transaction_journal_more'                 => '詳細情報',
     'basic_journal_information'                => '取引基本情報',

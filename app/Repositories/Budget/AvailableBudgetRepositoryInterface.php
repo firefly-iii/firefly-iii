@@ -36,6 +36,11 @@ use Illuminate\Support\Collection;
 interface AvailableBudgetRepositoryInterface
 {
     /**
+     * @return void
+     */
+    public function cleanup(): void;
+
+    /**
      * Delete all available budgets.
      */
     public function destroyAll(): void;
@@ -110,6 +115,14 @@ interface AvailableBudgetRepositoryInterface
      *
      */
     public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection;
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getAvailableBudgetsByExactDate(Carbon $start, Carbon $end): Collection;
 
     /**
      * Get by transaction currency and date. Should always result in one entry or NULL.

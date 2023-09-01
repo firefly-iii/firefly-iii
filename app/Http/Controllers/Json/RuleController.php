@@ -55,6 +55,7 @@ class RuleController extends Controller
             $view = view('rules.partials.action', compact('actions', 'count'))->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render rules.partials.action: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $view = 'Could not render view.';
             throw new FireflyException($view, 0, $e);
         }
@@ -86,6 +87,7 @@ class RuleController extends Controller
             $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render rules.partials.trigger: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $view = 'Could not render view.';
             throw new FireflyException($view, 0, $e);
         }

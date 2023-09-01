@@ -138,6 +138,9 @@ class HomeController extends Controller
         $accounts = $repository->getAccountsById($frontPage->data);
         $today    = today(config('app.timezone'));
 
+        // sort frontpage accounts by order
+        $accounts = $accounts->sortBy('order');
+
         Log::debug('Frontpage accounts are ', $frontPage->data);
 
         /** @var BillRepositoryInterface $billRepository */

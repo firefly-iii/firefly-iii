@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\RuleAction;
@@ -64,7 +65,7 @@ class SetSourceAccount implements ActionInterface
         $this->repository = app(AccountRepositoryInterface::class);
         if (null === $object) {
             Log::error('Could not find journal.');
-
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_such_journal')));
             return false;
         }
         $type = $object->transactionType->type;
@@ -76,7 +77,7 @@ class SetSourceAccount implements ActionInterface
             Log::error(
                 sprintf('Cant change source account of journal #%d because no asset account with name "%s" exists.', $object->id, $this->action->action_value)
             );
-
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_asset', ['name' => $this->action->action_value])));
             return false;
         }
 
@@ -85,13 +86,13 @@ class SetSourceAccount implements ActionInterface
         $destination = $object->transactions()->where('amount', '>', 0)->first();
         if (null === $destination) {
             Log::error('Could not find destination transaction.');
-
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_destination_transaction')));
             return false;
         }
         // account must not be deleted (in the meantime):
         if (null === $destination->account) {
             Log::error('Could not find destination transaction account.');
-
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_destination_transaction_account')));
             return false;
         }
         if (null !== $newAccount && (int)$newAccount->id === (int)$destination->account_id) {
@@ -102,12 +103,12 @@ class SetSourceAccount implements ActionInterface
                     $destination->account_id
                 )
             );
-
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_has_source', ['name' => $newAccount->name])));
             return false;
         }
 
         // if this is a deposit, the new source account must be a revenue account and may be created:
-        // or its a liability
+        // or it's a liability
         if (TransactionType::DEPOSIT === $type) {
             $newAccount = $this->findDepositSourceAccount();
         }

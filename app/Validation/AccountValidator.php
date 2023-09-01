@@ -265,6 +265,7 @@ class AccountValidator
         if (null !== $accountId && $accountId > 0) {
             $first = $this->accountRepository->find($accountId);
             if ((null !== $first) && in_array($first->accountType->type, $validTypes, true)) {
+                app('log')->debug(sprintf('ID: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
                 return $first;
             }
         }
@@ -273,6 +274,7 @@ class AccountValidator
         if (null !== $accountIban && '' !== (string)$accountIban) {
             $first = $this->accountRepository->findByIbanNull($accountIban, $validTypes);
             if ((null !== $first) && in_array($first->accountType->type, $validTypes, true)) {
+                app('log')->debug(sprintf('Iban: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
                 return $first;
             }
         }
@@ -281,14 +283,19 @@ class AccountValidator
         if (null !== $accountNumber && '' !== (string)$accountNumber) {
             $first = $this->accountRepository->findByAccountNumber($accountNumber, $validTypes);
             if ((null !== $first) && in_array($first->accountType->type, $validTypes, true)) {
+                app('log')->debug(sprintf('Number: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
                 return $first;
             }
         }
 
         // find by name:
         if ('' !== (string)$accountName) {
-            return $this->accountRepository->findByName($accountName, $validTypes);
+            $first = $this->accountRepository->findByName($accountName, $validTypes);
+            if (null !== $first) {
+                app('log')->debug(sprintf('Name: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
+            }
         }
+        app('log')->debug('Found nothing!');
 
         return null;
     }

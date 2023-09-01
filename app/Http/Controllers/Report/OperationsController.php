@@ -85,7 +85,8 @@ class OperationsController extends Controller
         try {
             $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $result = 'Could not render view.';
             throw new FireflyException($result, 0, $e);
         }
@@ -121,7 +122,8 @@ class OperationsController extends Controller
         try {
             $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $result = 'Could not render view.';
             throw new FireflyException($result, 0, $e);
         }
@@ -177,7 +179,8 @@ class OperationsController extends Controller
         try {
             $result = view('reports.partials.operations', compact('sums'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $result = 'Could not render view.';
             throw new FireflyException($result, 0, $e);
         }

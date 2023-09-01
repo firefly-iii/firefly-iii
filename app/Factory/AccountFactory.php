@@ -218,6 +218,7 @@ class AccountFactory
         }
         // create account!
         $account = Account::create($databaseData);
+        Log::channel('audit')->info(sprintf('Account #%d ("%s") has been created.', $account->id, $account->name));
 
         // update meta data:
         $data = $this->cleanMetaDataArray($account, $data);
@@ -228,6 +229,7 @@ class AccountFactory
             $this->storeOpeningBalance($account, $data);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
         }
 
         // create credit liability data (only liabilities)
@@ -235,6 +237,7 @@ class AccountFactory
             $this->storeCreditLiability($account, $data);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
         }
 
         // create notes

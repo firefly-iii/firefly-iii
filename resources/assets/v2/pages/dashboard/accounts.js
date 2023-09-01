@@ -25,6 +25,7 @@ import formatMoney from "../../util/format-money.js";
 import Get from "../../api/v2/model/account/get.js";
 import {Chart} from 'chart.js';
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
+import {getColors} from "../../support/get-colors.js";
 
 // this is very ugly, but I have no better ideas at the moment to save the currency info
 // for each series.
@@ -33,6 +34,8 @@ let chart = null;
 let chartData = null;
 let afterPromises = false;
 
+const CHART_CACHE_KEY = 'dashboard-accounts-chart';
+const ACCOUNTS_CACHE_KEY = 'dashboard-accounts-data';
 export default () => ({
     loading: false,
     loadingAccounts: false,
@@ -44,12 +47,23 @@ export default () => ({
         setVariable('autoConversion', this.autoConversion);
     },
     getFreshData() {
+        const cacheValid = window.store.get('cacheValid');
+        let cachedData = window.store.get(CHART_CACHE_KEY);
+
+        if (cacheValid && typeof cachedData !== 'undefined') {
+            this.drawChart(this.generateOptions(cachedData));
+            this.loading = false;
+            return;
+        }
         const dashboard = new Dashboard();
         dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
             this.chartData = response.data;
+            // cache generated options:
+            window.store.set(CHART_CACHE_KEY, response.data);
             this.drawChart(this.generateOptions(this.chartData));
             this.loading = false;
         });
+
     },
     generateOptions(data) {
         currencies = [];
@@ -83,6 +97,10 @@ export default () => ({
                 }
                 dataset.yAxisID = yAxis;
                 dataset.data = collection;
+
+                // add colors:
+                //dataset.backgroundColor = getColors(null, 'background');
+                //dataset.borderColor = getColors(null, 'background');
 
                 // add data set to the correct Y Axis:
 
@@ -134,17 +152,23 @@ export default () => ({
         chart = new Chart(document.querySelector("#account-chart"), options);
     },
     loadAccounts() {
-        // console.log('loadAccounts');
         if (true === this.loadingAccounts) {
-            // console.log('loadAccounts CANCELLED');
             return;
         }
         this.loadingAccounts = true;
         if (this.accountList.length > 0) {
-            // console.log('NO need to load account data');
             this.loadingAccounts = false;
             return;
         }
+        const cacheValid = window.store.get('cacheValid');
+        let cachedData = window.store.get(ACCOUNTS_CACHE_KEY);
+
+        if (cacheValid && typeof cachedData !== 'undefined') {
+            this.accountList = cachedData;
+            this.loadingAccounts = false;
+            return;
+        }
+
         // console.log('loadAccounts continue!');
         const max = 10;
         let totalAccounts = 0;
@@ -180,7 +204,10 @@ export default () => ({
                                     group.transactions.push({
                                         description: currentTransaction.description,
                                         id: current.id,
+                                        type: currentTransaction.type,
+                                        amount_raw: parseFloat(currentTransaction.amount),
                                         amount: formatMoney(currentTransaction.amount, currentTransaction.currency_code),
+                                        native_amount_raw: parseFloat(currentTransaction.native_amount),
                                         native_amount: formatMoney(currentTransaction.native_amount, currentTransaction.native_code),
                                     });
                                 }
@@ -189,15 +216,22 @@ export default () => ({
                             // console.log(parent);
                             accounts.push({
                                 name: parent.attributes.name,
+                                order: parent.attributes.order,
                                 id: parent.id,
+                                balance_raw: parseFloat(parent.attributes.current_balance),
                                 balance: formatMoney(parent.attributes.current_balance, parent.attributes.currency_code),
+                                native_balance_raw: parseFloat(parent.attributes.native_current_balance),
                                 native_balance: formatMoney(parent.attributes.native_current_balance, parent.attributes.native_code),
                                 groups: groups,
                             });
+                            // console.log(parent.attributes);
                             count++;
                             if (count === totalAccounts) {
+                                accounts.sort((a, b) => a.order - b.order); // b - a for reverse sort
+
                                 this.accountList = accounts;
                                 this.loadingAccounts = false;
+                                window.store.set(ACCOUNTS_CACHE_KEY, accounts);
                             }
                         });
                     });

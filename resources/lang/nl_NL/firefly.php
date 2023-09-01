@@ -1395,6 +1395,7 @@ return [
     'pref_notification_new_access_token'        => 'Melding wanneer een nieuwe API-toegangstoken wordt aangemaakt',
     'pref_notification_transaction_creation'    => 'Melding wanneer een transactie automatisch wordt aangemaakt',
     'pref_notification_user_login'              => 'Melding wanneer u inlogt vanaf een nieuwe locatie',
+    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
     'pref_notifications'                        => 'Meldingen',
     'pref_notifications_help'                   => 'Geef aan of dit meldingen zijn die je zou willen krijgen. Sommige meldingen kunnen gevoelige financiële informatie bevatten.',
     'slack_webhook_url'                         => 'Slack Webhook URL',
@@ -1624,6 +1625,8 @@ return [
     'create_new_revenue'                        => 'Nieuwe debiteur',
     'create_new_piggy_bank'                     => 'Nieuw spaarpotje',
     'create_new_bill'                           => 'Nieuw contract',
+    'create_new_subscription'                   => 'Create new subscription',
+    'create_new_rule'                           => 'Create new rule',
 
     // currencies:
     'create_currency'                           => 'Voeg nieuwe valuta toe',
@@ -1782,6 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Herhaalt elke {skip} halve jaren',
     'bill_repeats_yearly_skip'                  => 'Herhaalt elke {skip} jaar',
     'subscriptions'                             => 'Abonnementen',
+    'go_to_subscriptions'                       => 'Go to your subscriptions',
     'forever'                                   => 'Voor altijd',
     'extension_date_is'                         => 'Verlengdatum is {date}',
 
@@ -2368,6 +2372,7 @@ return [
     'created_tag'               => 'Tag ":tag" opgeslagen!',
 
     'transaction_journal_information'          => 'Transactieinformatie',
+    'transaction_journal_amount'               => 'Amount information',
     'transaction_journal_meta'                 => 'Metainformatie',
     'transaction_journal_more'                 => 'Meer informatie',
     'basic_journal_information'                => 'Standaard transactieinformatie',

@@ -275,6 +275,7 @@ class UserEventHandler
             Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $url));
         } catch (Exception $e) { // intentional generic exception
             Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
         }
     }
@@ -299,6 +300,7 @@ class UserEventHandler
             Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $url));
         } catch (Exception $e) { // intentional generic exception
             Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
         }
     }
@@ -342,6 +344,7 @@ class UserEventHandler
             Mail::to($invitee)->send(new InvitationMail($invitee, $admin, $url));
         } catch (Exception $e) { // intentional generic exception
             Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
         }
     }

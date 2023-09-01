@@ -114,7 +114,11 @@ trait DepositValidation
 
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);
-        if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
+        if (null === $accountId &&
+            null === $accountName &&
+            null === $accountIban &&
+            null === $accountNumber &&
+            false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL return false,
             // because the source of a deposit can't be created.
             // (this never happens).
@@ -122,12 +126,12 @@ trait DepositValidation
             $result            = false;
         }
 
-        // if there is an iban, it can only be in use by a revenue account or we will fail.
+        // if there is an iban, it can only be in use by a revenue account, or we will fail.
         if (null !== $accountIban && '' !== $accountIban) {
             app('log')->debug('Check if there is not already an account with this IBAN');
             $existing = $this->findExistingAccount([AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], ['iban' => $accountIban]);
             if (null !== $existing) {
-                $this->destError = (string)trans('validation.deposit_src_iban_exists');
+                $this->sourceError = (string)trans('validation.deposit_src_iban_exists');
                 return false;
             }
         }

@@ -101,6 +101,7 @@ class IndexController extends Controller
      */
     public function index(Request $request, Carbon $start = null, Carbon $end = null)
     {
+        $this->abRepository->cleanup();
         Log::debug(sprintf('Start of IndexController::index("%s", "%s")', $start?->format('Y-m-d'), $end?->format('Y-m-d')));
 
         // collect some basic vars:
@@ -337,6 +338,7 @@ class IndexController extends Controller
      */
     public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
     {
+        $this->abRepository->cleanup();
         $budgetIds = $request->get('budgetIds');
 
         foreach ($budgetIds as $index => $budgetId) {

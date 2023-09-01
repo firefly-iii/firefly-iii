@@ -110,7 +110,7 @@ return [
         'handle_debts' => true,
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.0.20',
+    'version'                      => '6.0.21',
     'api_version'                  => '2.0.6',
     'db_version'                   => 20,
 
@@ -148,7 +148,7 @@ return [
     'update_minimum_age'           => 7,
 
     // notifications
-    'available_notifications'      => ['bill_reminder', 'new_access_token', 'transaction_creation', 'user_login'],
+    'available_notifications'      => ['bill_reminder', 'new_access_token', 'transaction_creation', 'user_login', 'rule_action_failures'],
     'admin_notifications'          => ['admin_new_reg', 'user_new_reg', 'new_version', 'invite_created', 'invite_redeemed'],
 
     // enabled languages

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -63,16 +64,19 @@ class MoveNotesToDescription implements ActionInterface
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_other_user')));
             return false;
         }
         $note = $object->notes()->first();
         if (null === $note) {
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_notes_to_move')));
             // nothing to move, return null
             return false;
         }
         if ('' === $note->text) {
             // nothing to move, return null
             $note->delete();
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_notes_to_move')));
             return false;
         }
         $before              = $object->description;

@@ -110,7 +110,7 @@ class TransactionFactory
             Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
-            throw new FireflyException('Query exception when creating transaction.', 0, $e);
+            throw new FireflyException(sprintf('Query exception when creating transaction: %s', $e->getMessage()), 0, $e);
         }
         if (null === $result) {
             throw new FireflyException('Transaction is NULL.');

@@ -65,7 +65,8 @@ class AccountController extends Controller
         try {
             $result = view('reports.partials.accounts', compact('accountReport'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.accounts: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render reports.partials.accounts: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $result = 'Could not render view.';
             throw new FireflyException($result, 0, $e);
         }

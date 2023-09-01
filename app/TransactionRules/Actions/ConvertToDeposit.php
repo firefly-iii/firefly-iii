@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
@@ -65,11 +66,13 @@ class ConvertToDeposit implements ActionInterface
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('Cannot find journal #%d, cannot convert to deposit.', $journal['transaction_journal_id']));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_not_found')));
             return false;
         }
         $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
             Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to deposit.', $journal['transaction_group_id']));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
             return false;
         }
 
@@ -77,7 +80,7 @@ class ConvertToDeposit implements ActionInterface
         $type = $object->transactionType->type;
         if (TransactionType::DEPOSIT === $type) {
             Log::error(sprintf('Journal #%d is already a deposit (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
-
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.is_already_deposit')));
             return false;
         }
 
@@ -89,6 +92,7 @@ class ConvertToDeposit implements ActionInterface
             } catch (JsonException | FireflyException $e) {
                 Log::debug('Could not convert withdrawal to deposit.');
                 Log::error($e->getMessage());
+                event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
             }
 
@@ -104,13 +108,14 @@ class ConvertToDeposit implements ActionInterface
             } catch (JsonException | FireflyException $e) {
                 Log::debug('Could not convert transfer to deposit.');
                 Log::error($e->getMessage());
+                event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
             }
             event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::TRANSFER, TransactionType::DEPOSIT));
 
             return $res;
         }
-
+        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.unsupported_transaction_type_deposit', ['type' => $type])));
         return false;
     }
 

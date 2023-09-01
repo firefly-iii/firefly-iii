@@ -45,7 +45,7 @@ class QuarterlyTest extends IntervalTestCase
     public static function provideIntervals(): array
     {
         return [
-            new IntervalProvider(Carbon::now(), Carbon::now()->addMonths(3)),
+            new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(3)),
             new IntervalProvider(Carbon::parse('2019-01-29'), Carbon::parse('2019-04-29')),
             new IntervalProvider(Carbon::parse('2019-01-30'), Carbon::parse('2019-04-30')),
             new IntervalProvider(Carbon::parse('2019-01-31'), Carbon::parse('2019-04-30')),

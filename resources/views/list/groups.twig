@@ -52,7 +52,7 @@
             <tr style="border-top:1px #aaa solid;" class="unsortable">
                 <td colspan="2" style="border-top:1px #aaa solid;">
                     <small><strong>
-                            <a href="{{ route('transactions.show', [group.id]) }}"
+                            <a href="{{ route('transactions.show', [group.id], false) }}"
                                title="{{ group.title }}">{{ group.title }}</a>
                         </strong></small>
                 </td>
@@ -65,7 +65,7 @@
                             {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}{% if loop.index != group.sums|length %},{% endif %}X
                             </span>
                         {% else %}
-                    {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}{% if loop.index != group.sums|length %},{% endif %}
+                            {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}{% if loop.index != group.sums|length %},{% endif %}
                         {% endif %}
                     {% endfor %}
                 </td>
@@ -81,12 +81,12 @@
                                 aria-haspopup="true" aria-expanded="false">
                             {{ 'actions'|_ }} <span class="caret"></span></button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                            <li><a href="{{ route('transactions.edit', [group.id]) }}"><span
-                                            class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
-                            <li><a href="{{ route('transactions.delete', [group.id]) }}"><span
-                                            class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
+                            <li><a href="{{ route('transactions.edit', [group.id], false) }}"><span
+                                        class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
+                            <li><a href="{{ route('transactions.delete', [group.id], false) }}"><span
+                                        class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
                             <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
-                                            class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
+                                        class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
                         </ul>
                     </div>
                 </td>
@@ -98,14 +98,17 @@
             {% if group.transactions|length == loop.index and group.count > 1 %}
                 {% set style="border-bottom:1px #aaa solid;" %}
             {% endif %}
-            <tr data-date="{{ transaction.date.format('Y-m-d') }}" data-count="{{ group.count }}" data-id="{{ group.id }}">
+            <tr data-date="{{ transaction.date.format('Y-m-d') }}" data-count="{{ group.count }}"
+                data-id="{{ group.id }}">
                 <td style=" {{ style|raw }}" class="hidden-xs">
                     {% if transaction.transaction_type_type == 'Withdrawal' %}
-                        <span class="object-handle fa fa-long-arrow-left fa-fw" title="{{ trans('firefly.Withdrawal') }}"></span>
+                        <span class="object-handle fa fa-long-arrow-left fa-fw"
+                              title="{{ trans('firefly.Withdrawal') }}"></span>
                     {% endif %}
 
                     {% if transaction.transaction_type_type == 'Deposit' %}
-                        <span class="object-handle fa fa-long-arrow-right fa-fw" title="{{ trans('firefly.Deposit') }}"></span>
+                        <span class="object-handle fa fa-long-arrow-right fa-fw"
+                              title="{{ trans('firefly.Deposit') }}"></span>
                     {% endif %}
 
                     {% if transaction.transaction_type_type == 'Transfer' %}
@@ -113,13 +116,16 @@
                     {% endif %}
 
                     {% if transaction.transaction_type_type == 'Reconciliation' %}
-                        <span class="object-handle fa-fw fa fa-calculator" title="{{ trans('firefly.reconciliation_transaction') }}"></span>
+                        <span class="object-handle fa-fw fa fa-calculator"
+                              title="{{ trans('firefly.reconciliation_transaction') }}"></span>
                     {% endif %}
                     {% if transaction.transaction_type_type == 'Opening balance' %}
-                        <span class="object-handle fa-fw fa fa-star-o" title="{{ trans('firefly.Opening balance') }}"></span>
+                        <span class="object-handle fa-fw fa fa-star-o"
+                              title="{{ trans('firefly.Opening balance') }}"></span>
                     {% endif %}
                     {% if transaction.transaction_type_type == 'Liability credit' %}
-                        <span class="object-handle fa-fw fa fa-star-o" title="{{ trans('firefly.Liability credit') }}"></span>
+                        <span class="object-handle fa-fw fa fa-star-o"
+                              title="{{ trans('firefly.Liability credit') }}"></span>
                     {% endif %}
 
                 </td>
@@ -131,7 +137,7 @@
                         <span class="fa fa-paperclip"></span>
                     {% endif %}
                     {% if group.count == 1 %}
-                    <a href="{{ route('transactions.show', [group.id]) }}" title="{{ transaction.description }}">
+                    <a href="{{ route('transactions.show', [group.id], false) }}" title="{{ transaction.description }}">
                         {% endif %}
                         {{ transaction.description }}
                         {% if group.count == 1 %}
@@ -145,7 +151,7 @@
                         {% if null != transaction.foreign_amount %}
                             ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         {% endif %}
-                    {# transfer #}
+                        {# transfer #}
                     {% elseif transaction.transaction_type_type == 'Transfer' %}
                         <span class="text-info money-transfer">
                         {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
@@ -153,7 +159,7 @@
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
                             {% endif %}
                             </span>
-                    {# opening balance #}
+                        {# opening balance #}
                     {% elseif transaction.transaction_type_type == 'Opening balance' %}
                         {% if transaction.source_account_type == 'Initial balance account' %}
                             {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
@@ -166,7 +172,7 @@
                                 ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
                         {% endif %}
-                    {# reconciliation #}
+                        {# reconciliation #}
                     {% elseif transaction.transaction_type_type == 'Reconciliation' %}
                         {% if transaction.source_account_type == 'Reconciliation account' %}
                             {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
@@ -179,7 +185,7 @@
                                 ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
                         {% endif %}
-                    {# liability credit #}
+                        {# liability credit #}
                     {% elseif transaction.transaction_type_type == 'Liability credit' %}
                         {% if transaction.source_account_type == 'Liability credit' %}
                             {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
@@ -209,7 +215,7 @@
                     {% if 'Cash account' == transaction.source_account_type %}
                         <span class="text-success">({{ 'cash'|_ }})</span>
                     {% else %}
-                        <a href="{{ route('accounts.show', [transaction.source_account_id|default(1)]) }}"
+                        <a href="{{ route('accounts.show', [transaction.source_account_id|default(1)], false) }}"
                            title="{{ transaction.source_account_iban|default(transaction.source_account_name) }}">{{ transaction.source_account_name }}</a>
                     {% endif %}
                 </td>
@@ -217,14 +223,14 @@
                     {% if 'Cash account' == transaction.destination_account_type %}
                         <span class="text-success">({{ 'cash'|_ }})</span>
                     {% else %}
-                        <a href="{{ route('accounts.show', [transaction.destination_account_id|default(1)]) }}"
+                        <a href="{{ route('accounts.show', [transaction.destination_account_id|default(1)], false) }}"
                            title="{{ transaction.destination_account_iban|default(transaction.destination_account_name) }}">{{ transaction.destination_account_name }}</a>
                     {% endif %}
                 </td>
                 {% if showCategory %}
                     <td style=" {{ style|raw }}" class="hidden-xs">
                         {% if transaction.category_id %}
-                            <a href="{{ route('categories.show', [transaction.category_id]) }}"
+                            <a href="{{ route('categories.show', [transaction.category_id], false) }}"
                                title="{{ transaction.category_name }}">{{ transaction.category_name }}</a>
                         {% endif %}
                     </td>
@@ -232,7 +238,7 @@
                 {% if showBudget %}
                     <td style=" {{ style|raw }}" class="hidden-xs">
                         {% if transaction.budget_id %}
-                            <a href="{{ route('budgets.show', [transaction.budget_id]) }}"
+                            <a href="{{ route('budgets.show', [transaction.budget_id], false) }}"
                                title="{{ transaction.budget_name }}">{{ transaction.budget_name }}</a>
                         {% endif %}
                     </td>
@@ -245,15 +251,15 @@
                                     aria-haspopup="true" aria-expanded="false">
                                 {{ 'actions'|_ }} <span class="caret"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                <li><a href="{{ route('transactions.edit', [group.id]) }}"><span
-                                                class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('transactions.delete', [group.id]) }}"><span
-                                                class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
+                                <li><a href="{{ route('transactions.edit', [group.id], false) }}"><span
+                                            class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('transactions.delete', [group.id], false) }}"><span
+                                            class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
                                 <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
-                                                class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
+                                            class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
                                 <li>
-                                    <a href="{{ route('rules.create-from-journal', [transaction.transaction_journal_id]) }}"><span
-                                                class="fa fa-fw fa-random"></span> {{ 'create_rule_from_transaction'|_ }}
+                                    <a href="{{ route('rules.create-from-journal', [transaction.transaction_journal_id], false) }}"><span
+                                            class="fa fa-fw fa-random"></span> {{ 'create_rule_from_transaction'|_ }}
                                     </a></li>
                             </ul>
                         </div>
@@ -310,5 +316,5 @@
     </tfoot>
 </table>
 <script type="text/javascript" nonce="{{ JS_NONCE }}">
-    var cloneGroupUrl = '{{ route('transactions.clone') }}';
+    var cloneGroupUrl = '{{ route('transactions.clone',null, false) }}';
 </script>

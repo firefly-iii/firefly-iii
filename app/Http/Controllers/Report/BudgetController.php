@@ -195,8 +195,9 @@ class BudgetController extends Controller
         try {
             $result = view('reports.budget.partials.avg-expenses', compact('result'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
+            Log::error($e->getTraceAsString());
             throw new FireflyException($result, 0, $e);
         }
 
@@ -353,7 +354,8 @@ class BudgetController extends Controller
         try {
             $result = view('reports.partials.budget-period', compact('report', 'periods'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $result = 'Could not render view.';
             throw new FireflyException($result, 0, $e);
         }
@@ -406,7 +408,7 @@ class BudgetController extends Controller
         try {
             $result = view('reports.budget.partials.top-expenses', compact('result'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
             throw new FireflyException($result, 0, $e);
         }

@@ -27,6 +27,7 @@ use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Notifications\UrlValidator;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -99,7 +100,7 @@ class HomeController extends Controller
         if ('' === $url) {
             FireflyConfig::delete('slack_webhook_url');
         }
-        if (str_starts_with($url, 'https://hooks.slack.com/services/')) {
+        if (UrlValidator::isValidWebhookURL($url)) {
             FireflyConfig::set('slack_webhook_url', $url);
         }
 

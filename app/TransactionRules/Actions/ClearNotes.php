@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -55,6 +56,7 @@ class ClearNotes implements ActionInterface
         $notes  = $object->notes()->first();
         if (null === $notes) {
             Log::debug(sprintf('RuleAction ClearNotes, journal #%d has no notes.', $journal['transaction_journal_id']));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_already_no_notes')));
             return false;
         }
         $before = $notes->text;

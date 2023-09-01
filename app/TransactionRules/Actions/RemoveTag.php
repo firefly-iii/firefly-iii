@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -61,6 +62,7 @@ class RemoveTag implements ActionInterface
             Log::debug(
                 sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag exists.', $name, $journal['transaction_journal_id'])
             );
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_tag', ['tag' => $name])));
             return false;
         }
         $count = DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal['transaction_journal_id'])->where('tag_id', $tag->id)->count();
@@ -68,6 +70,7 @@ class RemoveTag implements ActionInterface
             Log::debug(
                 sprintf('RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag is linked.', $name, $journal['transaction_journal_id'])
             );
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_unlink_tag', ['tag' => $name])));
             return false;
         }
 

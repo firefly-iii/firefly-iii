@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="color-scheme" content="light dark">
 
-    <script type="text/javascript">
+    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
         /*!
  * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
  * Copyright 2011-2023 The Bootstrap Authors
@@ -32,13 +32,16 @@
             const setTheme = theme => {
                 if (theme === 'browser' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     document.documentElement.setAttribute('data-bs-theme', 'dark')
+                    window.theme = 'dark';
                     return;
                 }
                 if (theme === 'browser' && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                    window.theme = 'light';
                     document.documentElement.setAttribute('data-bs-theme', 'light')
                     return;
                 }
                 document.documentElement.setAttribute('data-bs-theme', theme)
+                window.theme = theme;
             }
 
             setTheme(getPreferredTheme())

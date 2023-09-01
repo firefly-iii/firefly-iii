@@ -25,6 +25,8 @@ import {Chart} from 'chart.js';
 import {I18n} from "i18n-js";
 import {loadTranslations} from "../../support/load-translations.js";
 
+const CACHE_KEY = 'dashboard-subscriptions-data';
+
 let chart = null;
 let chartData = null;
 let afterPromises = false;
@@ -54,6 +56,17 @@ export default () => ({
         chart = new Chart(document.querySelector("#subscriptions-chart"), options);
     },
     getFreshData() {
+
+        const cacheValid = window.store.get('cacheValid');
+        let cachedData = window.store.get(CACHE_KEY);
+
+        if (cacheValid && typeof cachedData !== 'undefined') {
+            this.drawChart(this.generateOptions(cachedData));
+            this.loading = false;
+            return;
+        }
+
+
         const getter = new Get();
         let params = {
             start: format(new Date(window.store.get('start')), 'y-MM-dd'),
@@ -65,6 +78,7 @@ export default () => ({
             getter.unpaid(params).then((response) => {
                 let unpaidData = response.data;
                 let chartData = {paid: paidData, unpaid: unpaidData};
+                window.store.set(CACHE_KEY, chartData);
                 this.drawChart(this.generateOptions(chartData));
                 this.loading = false;
             });
@@ -138,12 +152,13 @@ export default () => ({
 
             i18n = new I18n();
             i18n.locale = values[1];
-            loadTranslations(i18n, values[1]);
+            loadTranslations(i18n, values[1]).then(() => {
+                if (false === this.loading) {
+                    this.loadChart();
+                }
+            });
 
 
-            if (false === this.loading) {
-                this.loadChart();
-            }
         });
         window.store.observe('end', () => {
             if (!afterPromises) {

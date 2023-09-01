@@ -146,7 +146,7 @@ class IndexController extends Controller
     private function getSums(array $bills): array
     {
         $sums  = [];
-        $range = app('navigation')->getViewRange(false);
+        $range = app('navigation')->getViewRange(true);
 
         /** @var array $group */
         foreach ($bills as $groupOrder => $group) {
@@ -177,7 +177,6 @@ class IndexController extends Controller
                 $sums[$groupOrder][$currencyId]['per_period'] = bcadd($sums[$groupOrder][$currencyId]['per_period'], $this->amountPerPeriod($bill, $range));
             }
         }
-
         return $sums;
     }
 

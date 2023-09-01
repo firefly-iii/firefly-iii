@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -56,6 +57,7 @@ class ClearCategory implements ActionInterface
         $category = $object->categories()->first();
         if (null === $category) {
             Log::debug(sprintf('RuleAction ClearCategory, no category in journal #%d.', $journal['transaction_journal_id']));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_already_no_category')));
             return false;
         }
 

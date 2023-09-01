@@ -63,6 +63,7 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
             )->with('start', $this->start)->with('end', $this->end)->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.default.multi-year: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());
             throw new FireflyException($result, 0, $e);
         }

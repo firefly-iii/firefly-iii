@@ -44,7 +44,7 @@ class BimonthlyTest extends IntervalTestCase
     public static function provideIntervals(): array
     {
         return [
-            new IntervalProvider(Carbon::now(), Carbon::now()->addMonths(2)),
+            new IntervalProvider(Carbon::now(), Carbon::now()->addMonthsNoOverflow(2)),
             new IntervalProvider(Carbon::parse('2019-01-29'), Carbon::parse('2019-03-29')),
             new IntervalProvider(Carbon::parse('2018-12-30'), Carbon::parse('2019-02-28')),
             new IntervalProvider(Carbon::parse('2018-12-31'), Carbon::parse('2019-02-28')),

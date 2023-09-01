@@ -29,11 +29,11 @@
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2",
     "integrity": "sha384-B73JAwYNSgI4rwb14zwxigHgAkg1Ms+j6+9sJoDpiL11+VW5RjQCLfIh0RVoi0h6"
   },
-  "resources/assets/v2/dashboard.js": {
-    "file": "assets/dashboard-40253f13.js",
+  "resources/assets/v2/pages/dashboard/dashboard.js": {
+    "file": "assets/dashboard-3bf5d492.js",
     "isEntry": true,
-    "src": "resources/assets/v2/dashboard.js",
-    "integrity": "sha384-1RIolAXZYnMCA5uLiXCI3XixY7vu6YBK+4MQFqBCqDG25k4J1U6A2WCyjRxUA1Ws"
+    "src": "resources/assets/v2/pages/dashboard/dashboard.js",
+    "integrity": "sha384-VbU3St9S+FpNVXcyT3HOrAFKugS69Q2RP7bTQfzoGWwlKhO23L7kJhx513OQ9smw"
   },
   "resources/assets/v2/sass/app.scss": {
     "file": "assets/app-28a195fd.css",

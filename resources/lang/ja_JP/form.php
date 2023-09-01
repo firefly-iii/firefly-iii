@@ -198,7 +198,7 @@ return [
     'permDeleteWarning'           => 'Firefly IIIからの削除は永久的で、元に戻すことはできません。',
     'mass_make_selection'         => 'チェックボックスを外せば、その項目が削除されないようにすることができます。',
     'delete_all_permanently'      => '選択した項目を永久に削除する',
-    'update_all_journals'         => 'これらの取引を更新する',
+    'update_all_journals'         => 'これらの取引を更新',
     'also_delete_transactions'    => 'このアカウントに関連するただ一つの取引も削除されます。|このアカウントに関連する :count 件の取引も削除されます。',
     'also_delete_transactions_js' => '取引はありません|このアカウントに関連するただ一つの取引も削除されます。|このアカウントに関連する {count} 件の取引も削除されます。',
     'also_delete_connections'     => 'このリンクタイプにリンクするただ一つの取引の関連がなくなります。|このリンクタイプにリンクする :count 件の取引の関連がなくなります。',

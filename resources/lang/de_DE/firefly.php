@@ -1261,7 +1261,7 @@ return [
     'rule_action_link_to_bill_choice'                     => 'Mit einer Rechnung verknüpfen..',
     'rule_action_link_to_bill'                            => 'Mit Rechnung „:action_value” verknüpfen',
     'rule_action_switch_accounts_choice'                  => 'Quell- und Zielkonten tauschen (nur Umbuchungen!)',
-    'rule_action_switch_accounts'                         => 'Switch source and destination',
+    'rule_action_switch_accounts'                         => 'Quelle und Ziel tauschen',
     'rule_action_set_notes'                               => 'Notizen auf „:action_value” setzen',
     'rule_action_convert_deposit_choice'                  => 'Buchung in eine Einnahme umwandeln',
     'rule_action_convert_deposit'                         => 'Buchung von ":action_value" in eine Einnahme umwandeln',
@@ -1395,6 +1395,7 @@ return [
     'pref_notification_new_access_token'        => 'Warnen, wenn ein neues API-Zugangs-Token erstellt wird',
     'pref_notification_transaction_creation'    => 'Warnen, wenn eine Buchung automatisch erstellt wird',
     'pref_notification_user_login'              => 'Warnen, wenn Sie sich von einem neuen Standort aus anmelden',
+    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
     'pref_notifications'                        => 'Benachrichtigungen',
     'pref_notifications_help'                   => 'Geben Sie an, ob Sie diese Mitteilungen erhalten möchten. Einige Mitteilungen können sensible Finanzinformationen enthalten.',
     'slack_webhook_url'                         => 'Slack Webhook URL',
@@ -1403,7 +1404,7 @@ return [
 
     // Financial administrations
     'administration_index'                      => 'Finanzverwaltung',
-    'administrations_index_menu'                => 'Financial administration(s)',
+    'administrations_index_menu'                => 'Finanzverwaltung(en)',
 
     // profile:
     'purge_data_title'                          => 'Daten aus Firefly III vernichten',
@@ -1624,6 +1625,8 @@ return [
     'create_new_revenue'                        => 'Neues Einnahmenkonto erstellen',
     'create_new_piggy_bank'                     => 'Ein neues Sparschwein erstellen',
     'create_new_bill'                           => 'Eine neue Rechnung erstellen',
+    'create_new_subscription'                   => 'Create new subscription',
+    'create_new_rule'                           => 'Create new rule',
 
     // currencies:
     'create_currency'                           => 'Eine neue Währung erstellen',
@@ -1782,6 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Wiederholt sich alle {skip} Halbjahre',
     'bill_repeats_yearly_skip'                  => 'Wiederholt sich alle {skip} Jahre',
     'subscriptions'                             => 'Abonnements',
+    'go_to_subscriptions'                       => 'Go to your subscriptions',
     'forever'                                   => 'Dauerhaft',
     'extension_date_is'                         => 'Zeitpunkt der Verlängerung ist {date}',
 
@@ -1823,10 +1827,10 @@ return [
     'asset_accounts'                            => 'Bestandskonten',
     'undefined_accounts'                        => 'Konten',
     'asset_accounts_inactive'                   => 'Bestandskonten (inaktiv)',
-    'expense_account'                           => 'Expense account',
+    'expense_account'                           => 'Ausgabenkonto',
     'expense_accounts'                          => 'Ausgabekonten',
     'expense_accounts_inactive'                 => 'Ausgabekonten (inaktiv)',
-    'revenue_account'                           => 'Revenue account',
+    'revenue_account'                           => 'Einnahmekonto',
     'revenue_accounts'                          => 'Einnahmekonten',
     'revenue_accounts_inactive'                 => 'Einnahmekonten (inaktiv)',
     'cash_accounts'                             => 'Geldbörsen',
@@ -1915,7 +1919,7 @@ return [
     'categories'                                => 'Kategorien',
     'edit_category'                             => 'Kategorie „:name” bearbeiten',
     'no_category'                               => '(keine Kategorie)',
-    'unknown_category_plain'                    => 'No category',
+    'unknown_category_plain'                    => 'Keine Kategorie',
     'category'                                  => 'Kategorie',
     'delete_category'                           => 'Kategorie „:name” löschen',
     'deleted_category'                          => 'Kategorie „:name” gelöscht',
@@ -2083,12 +2087,12 @@ return [
     'searchPlaceholder'                         => 'Suchen...',
     'version'                                   => 'Version',
     'dashboard'                                 => 'Übersicht',
-    'income_and_expense'                        => 'Income and expense',
-    'all_money'                                 => 'All your money',
-    'unknown_source_plain'                      => 'Unknown source account',
-    'unknown_dest_plain'                        => 'Unknown destination account',
-    'unknown_any_plain'                         => 'Unknown account',
-    'unknown_budget_plain'                      => 'No budget',
+    'income_and_expense'                        => 'Einnahmen und Ausgaben',
+    'all_money'                                 => 'All Ihr Geld',
+    'unknown_source_plain'                      => 'Unbekanntes Quellkonto',
+    'unknown_dest_plain'                        => 'Unbekanntes Zielkonto',
+    'unknown_any_plain'                         => 'Unbekanntes Konto',
+    'unknown_budget_plain'                      => 'Kein Budget',
     'available_budget'                          => 'Verfügbares Budget ({currency})',
     'currencies'                                => 'Währungen',
     'activity'                                  => 'Aktivität',
@@ -2368,6 +2372,7 @@ return [
     'created_tag'               => 'Schlagwort „:tag” wurde angelegt!',
 
     'transaction_journal_information'          => 'Transaktionsinformationen',
+    'transaction_journal_amount'               => 'Amount information',
     'transaction_journal_meta'                 => 'Metainformationen',
     'transaction_journal_more'                 => 'Weitere Informationen',
     'basic_journal_information'                => 'Allgemeine Buchungsinformationen',
@@ -2397,7 +2402,7 @@ return [
     'invite_user'                              => 'Nutzer einladen',
     'user_is_invited'                          => 'E-Mail Adresse ":address" wurde zu Firefly III eingeladen',
     'administration'                           => 'Verwaltung',
-    'system_settings'                          => 'System settings',
+    'system_settings'                          => 'Systemeinstellungen',
     'code_already_used'                        => 'Einladungscode wurde bereits verwendet',
     'user_administration'                      => 'Nutzerinformation',
     'list_all_users'                           => 'Alle Benutzer',
@@ -2537,7 +2542,7 @@ return [
 
     // object groups
     'default_group_title_name'              => '(ohne Gruppierung)',
-    'default_group_title_name_plain'        => 'ungrouped',
+    'default_group_title_name_plain'        => 'ungruppiert',
 
     // empty lists? no objects? instructions:
     'no_accounts_title_asset'               => 'Lassen Sie uns jetzt ein Bestandskonto anlegen!',

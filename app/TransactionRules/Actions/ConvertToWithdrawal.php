@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
@@ -65,21 +66,26 @@ class ConvertToWithdrawal implements ActionInterface
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('Cannot find journal #%d, cannot convert to withdrawal.', $journal['transaction_journal_id']));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_not_found')));
             return false;
         }
         $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
             Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to withdrawal.', $journal['transaction_group_id']));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
             return false;
         }
 
         $type = $object->transactionType->type;
         if (TransactionType::WITHDRAWAL === $type) {
             Log::error(sprintf('Journal #%d is already a withdrawal (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
-
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.is_already_withdrawal')));
             return false;
         }
-
+        if (TransactionType::DEPOSIT !== $type && TransactionType::TRANSFER !== $type) {
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.unsupported_transaction_type_withdrawal', ['type' => $type])));
+            return false;
+        }
         if (TransactionType::DEPOSIT === $type) {
             Log::debug('Going to transform a deposit to a withdrawal.');
             try {
@@ -87,6 +93,7 @@ class ConvertToWithdrawal implements ActionInterface
             } catch (JsonException | FireflyException $e) {
                 Log::debug('Could not convert transfer to deposit.');
                 Log::error($e->getMessage());
+                event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
             }
             event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionType::WITHDRAWAL));
@@ -101,13 +108,14 @@ class ConvertToWithdrawal implements ActionInterface
             } catch (JsonException | FireflyException $e) {
                 Log::debug('Could not convert transfer to deposit.');
                 Log::error($e->getMessage());
+                event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
             }
             event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::TRANSFER, TransactionType::WITHDRAWAL));
 
             return $res;
         }
-
+        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.unsupported_transaction_type_withdrawal', ['type' => $type])));
         return false;
     }
 

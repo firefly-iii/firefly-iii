@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use DB;
+use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\RuleAction;
@@ -65,7 +66,7 @@ class SetDestinationAccount implements ActionInterface
 
         if (null === $object) {
             Log::error('Could not find journal.');
-
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_such_journal')));
             return false;
         }
         $type = $object->transactionType->type;
@@ -81,7 +82,7 @@ class SetDestinationAccount implements ActionInterface
                     $this->action->action_value
                 )
             );
-
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_asset', ['name' => $this->action->action_value])));
             return false;
         }
 
@@ -90,13 +91,13 @@ class SetDestinationAccount implements ActionInterface
         $source = $object->transactions()->where('amount', '<', 0)->first();
         if (null === $source) {
             Log::error('Could not find source transaction.');
-
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_source_transaction')));
             return false;
         }
         // account must not be deleted (in the meantime):
         if (null === $source->account) {
             Log::error('Could not find source transaction account.');
-
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_source_transaction_account')));
             return false;
         }
         if (null !== $newAccount && (int)$newAccount->id === (int)$source->account_id) {
@@ -108,6 +109,7 @@ class SetDestinationAccount implements ActionInterface
                 )
             );
 
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_has_destination', ['name' => $newAccount->name])));
             return false;
         }
 

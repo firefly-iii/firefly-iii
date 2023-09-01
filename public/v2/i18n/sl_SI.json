@@ -13,14 +13,14 @@
             "money_flowing_in": "Na",
             "money_flowing_out": "Iz",
             "category": "Kategorija",
-            "unknown_category_plain": "No category",
-            "all_money": "All your money",
-            "unknown_source_plain": "Unknown source account",
-            "unknown_dest_plain": "Unknown destination account",
-            "unknown_any_plain": "Unknown account",
-            "unknown_budget_plain": "No budget",
-            "expense_account": "Expense account",
-            "revenue_account": "Revenue account",
+            "unknown_category_plain": "Brez kategorije",
+            "all_money": "Ves va\u0161 denar",
+            "unknown_source_plain": "Neznan izvorni ra\u010dun",
+            "unknown_dest_plain": "Neznan ciljni ra\u010dun",
+            "unknown_any_plain": "Neznan ra\u010dun",
+            "unknown_budget_plain": "Ni prora\u010duna",
+            "expense_account": "Ra\u010dun stro\u0161kov",
+            "revenue_account": "Ra\u010dun prihodkov",
             "budget": "Prora\u010dun"
         }
     }

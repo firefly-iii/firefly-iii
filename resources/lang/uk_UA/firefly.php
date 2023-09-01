@@ -1395,6 +1395,7 @@ return [
     'pref_notification_new_access_token'        => 'Попереджати, коли створюється новий токен доступу до API',
     'pref_notification_transaction_creation'    => 'Alert when a transaction is created automatically',
     'pref_notification_user_login'              => 'Alert when you login from a new location',
+    'pref_notification_rule_action_failures'    => 'Alert when rule actions fail to execute (Slack or Discord only)',
     'pref_notifications'                        => 'Сповіщення',
     'pref_notifications_help'                   => 'Укажіть, чи хотіли б ви отримувати ці сповіщення. Деякі сповіщення можуть містити конфіденційну фінансову інформацію.',
     'slack_webhook_url'                         => 'URL-адреса Slack Webhook',
@@ -1624,6 +1625,8 @@ return [
     'create_new_revenue'                        => 'Створити нове джерело доходу',
     'create_new_piggy_bank'                     => 'Створити нову скарбничку',
     'create_new_bill'                           => 'Створити новий рахунок',
+    'create_new_subscription'                   => 'Create new subscription',
+    'create_new_rule'                           => 'Create new rule',
 
     // currencies:
     'create_currency'                           => 'Створити нову валюту',
@@ -1782,6 +1785,7 @@ return [
     'bill_repeats_half-year_skip'               => 'Повторюється кожні {skip} півроку',
     'bill_repeats_yearly_skip'                  => 'Повторюється кожні {skip} років',
     'subscriptions'                             => 'Підписки',
+    'go_to_subscriptions'                       => 'Go to your subscriptions',
     'forever'                                   => 'Назавжди',
     'extension_date_is'                         => 'Дата подовження {date}',
 
@@ -2368,6 +2372,7 @@ return [
     'created_tag'               => 'Tag ":tag" has been created!',
 
     'transaction_journal_information'          => 'Transaction information',
+    'transaction_journal_amount'               => 'Amount information',
     'transaction_journal_meta'                 => 'Meta information',
     'transaction_journal_more'                 => 'More information',
     'basic_journal_information'                => 'Basic transaction information',

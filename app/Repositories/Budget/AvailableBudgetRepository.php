@@ -40,6 +40,49 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     private User $user;
 
     /**
+     * @inheritDoc
+     */
+    public function cleanup(): void
+    {
+        $exists           = [];
+        $availableBudgets = $this->user->availableBudgets()->get();
+        /** @var AvailableBudget $availableBudget */
+        foreach ($availableBudgets as $availableBudget) {
+            $start = $availableBudget->start_date->format('Y-m-d');
+            $end   = $availableBudget->end_date->format('Y-m-d');
+            $key   = sprintf('%s-%s-%s', $availableBudget->transaction_currency_id, $start, $end);
+            if (array_key_exists($key, $exists)) {
+                app('log')->debug(sprintf('Found duplicate AB: %s %s, %s-%s. Has been deleted', $availableBudget->transaction_currency_id, $availableBudget->amount, $start, $end));
+                $availableBudget->delete();
+            }
+            $exists[$key] = true;
+        }
+    }
+
+    /**
+     * Return a list of all available budgets (in all currencies) (for the selected period).
+     *
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
+     * @return Collection
+     */
+    public function get(?Carbon $start = null, ?Carbon $end = null): Collection
+    {
+        $query = $this->user->availableBudgets()->with(['transactionCurrency']);
+        if (null !== $start && null !== $end) {
+            $query->where(
+                static function (Builder $q1) use ($start, $end) {
+                    $q1->where('start_date', '=', $start->format('Y-m-d'));
+                    $q1->where('end_date', '=', $end->format('Y-m-d'));
+                }
+            );
+        }
+
+        return $query->get(['available_budgets.*']);
+    }
+
+    /**
      * Delete all available budgets.
      */
     public function destroyAll(): void
@@ -123,29 +166,6 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     }
 
     /**
-     * Return a list of all available budgets (in all currencies) (for the selected period).
-     *
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
-     * @return Collection
-     */
-    public function get(?Carbon $start = null, ?Carbon $end = null): Collection
-    {
-        $query = $this->user->availableBudgets()->with(['transactionCurrency']);
-        if (null !== $start && null !== $end) {
-            $query->where(
-                static function (Builder $q1) use ($start, $end) {
-                    $q1->where('start_date', '=', $start->format('Y-m-d'));
-                    $q1->where('end_date', '=', $end->format('Y-m-d'));
-                }
-            );
-        }
-
-        return $query->get(['available_budgets.*']);
-    }
-
-    /**
      * Returns all available budget objects.
      *
      * @param TransactionCurrency $currency
@@ -178,6 +198,23 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         }
 
         return $query->get();
+    }
+
+    /**
+     * Returns all available budget objects.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     *
+     */
+    public function getAvailableBudgetsByExactDate(Carbon $start, Carbon $end): Collection
+    {
+        return $this->user->availableBudgets()
+                          ->where('start_date', '=', $start->format('Y-m-d'))
+                          ->where('end_date', '=', $end->format('Y-m-d'))
+                          ->get();
     }
 
     /**

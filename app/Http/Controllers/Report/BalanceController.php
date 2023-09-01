@@ -141,7 +141,8 @@ class BalanceController extends Controller
         try {
             $result = view('reports.partials.balance', compact('report'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $result = 'Could not render view.';
             throw new FireflyException($result, 0, $e);
         }

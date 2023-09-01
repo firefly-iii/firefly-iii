@@ -99,6 +99,7 @@ class Controller extends BaseController
             } catch (BadRequestException $e) {
                 Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $field));
                 Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
             }
             if (null !== $date) {
                 try {
