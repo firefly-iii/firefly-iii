@@ -82,7 +82,7 @@ return [
 
 
     'repeat_freq'             => '繰り返し',
-    'description'             => '説明',
+    'description'             => '概要',
     'amount'                  => '金額',
     'date'                    => '日付',
     'interest_date'           => '利息日',
@@ -124,8 +124,8 @@ return [
     'rule_and_groups_count'   => 'ルールとルールグループ数',
     'tags_count'              => 'タグの数',
     'tags'                    => 'タグ',
-    'inward'                  => '内向きの説明',
-    'outward'                 => '外向きの説明',
+    'inward'                  => '内向きの概要',
+    'outward'                 => '外向きの概要',
     'number_of_transactions'  => '取引件数',
     'total_amount'            => '合計金額',
     'sum'                     => '合計',
