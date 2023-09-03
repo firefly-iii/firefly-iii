@@ -45,7 +45,7 @@ return [
     'index_cash_account'                    => 'これらは今までに作られた口座です。現金支出を管理するため現金口座を使うこともできますが、もちろん強制ではありません。',
 
     // transactions
-    'transactions_create_basic_info'        => '引き出し口座、預け入れ口座、日付、説明など、取引の基本情報を入力します。',
+    'transactions_create_basic_info'        => '引き出し口座、預け入れ口座、日付、概要など、取引の基本情報を入力します。',
     'transactions_create_amount_info'       => '取引の金額を入力します。必要に応じて、フィールドは自動的に更新されます。',
     'transactions_create_optional_info'     => 'これらのフィールドはすべて任意です。ここにメタデータを追加すると、取引をより整理できます。',
     'transactions_create_split'             => '取引を分割する場合は、このボタンでさらに分割を追加します',

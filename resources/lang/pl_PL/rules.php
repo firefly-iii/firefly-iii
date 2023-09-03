@@ -62,8 +62,8 @@ return [
     'cannot_find_destination_transaction_account' => 'Firefly III can\'t find the destination transaction account',
     'cannot_find_piggy'                           => 'Firefly III can\'t find a piggy bank named ":name"',
     'no_link_piggy'                               => 'This transaction\'s accounts are not linked to the piggy bank, so no action will be taken',
-    'cannot_unlink_tag'                           => 'Tag ":tag" isn\'t linked to this transaction',
-    'cannot_find_budget'                          => 'Firefly III can\'t find budget ":name"',
-    'cannot_find_category'                        => 'Firefly III can\'t find category ":name"',
-    'cannot_set_budget'                           => 'Firefly III can\'t set budget ":name" to a transaction of type ":type"',
+    'cannot_unlink_tag'                           => 'Tag ":tag" nie jest powiązany z tą transakcją',
+    'cannot_find_budget'                          => 'Firefly III nie może znaleźć budżetu ":name"',
+    'cannot_find_category'                        => 'Firefly III nie może znaleźć kategorii ":name"',
+    'cannot_set_budget'                           => 'Firefly III nie może ustawić budżetu ":name" dla transakcji typu ":type"',
 ];

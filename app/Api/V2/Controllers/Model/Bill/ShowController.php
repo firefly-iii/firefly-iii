@@ -24,7 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Model\Bill;
 
 use FireflyIII\Api\V2\Controllers\Controller;
+use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Administration\Bill\BillRepositoryInterface;
+use FireflyIII\Transformers\V2\AccountTransformer;
 use FireflyIII\Transformers\V2\BillTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -69,6 +71,19 @@ class ShowController extends Controller
 
         return response()
             ->json($this->jsonApiList('subscriptions', $paginator, $transformer))
+            ->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    /**
+     * TODO this endpoint is not documented
+     */
+    public function show(Request $request, Bill $bill): JsonResponse
+    {
+        $transformer = new BillTransformer();
+        $transformer->setParameters($this->parameters);
+
+        return response()
+            ->api($this->jsonApiObject('subscriptions', $bill, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

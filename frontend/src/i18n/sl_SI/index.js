@@ -152,7 +152,7 @@ export default {
         "rule_action_remove_tag_choice": "Odstrani oznako ...",
         "rule_action_remove_all_tags_choice": "Odstrani vse oznake",
         "rule_action_set_description_choice": "Nastavi opis na ...",
-        "rule_action_update_piggy_choice": "Add \/ remove transaction amount in piggy bank ..",
+        "rule_action_update_piggy_choice": "Dodaj\/odstrani znesek transakcije v hranilniku ...",
         "rule_action_append_description_choice": "Za opis dodaj ...",
         "rule_action_prepend_description_choice": "Pred opis dodaj ...",
         "rule_action_set_source_account_choice": "Nastavi izvorni ra\u010dun na ...",

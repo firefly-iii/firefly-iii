@@ -159,7 +159,7 @@
                                 </div>
                             </div>
 
-                            {# bar to visualise spending in budget .#}
+                            {# bar to visualise spending in budget . #}
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="progress spent_bar" data-id="{{ budget.id }}" data-budgeted="{{ budget.budgeted }}"
@@ -223,7 +223,7 @@
                                         {% if 1 == budget.budgeted|length %}
                                             {% for budgetLimit in budget.budgeted %}
                                                 <a href="{{ route('budgets.show.limit', [budget.id, budgetLimit.id]) }}" data-id="{{ budget.id }}">{{ budget.name }}</a>
-                                                {% endfor %}
+                                            {% endfor %}
                                         {% endif %}
 
                                         {% if budget.budgeted|length > 1 %}
@@ -233,15 +233,15 @@
                                         {% endif %}
 
                                         {% if budget.auto_budget %}
-                                        {% if 1 == budget.auto_budget.auto_budget_type %}
-                                            <span class="fa fa-fw fa-calendar-check-o" title="{{ 'auto_budget_reset_icon'|_ }}"></span>
-                                        {% endif %}
-                                        {% if 2 == budget.auto_budget.auto_budget_type %}
-                                            <span class="fa fa-fw fa-calendar-plus-o" title="{{ 'auto_budget_rollover_icon'|_ }}"></span>
-                                        {% endif %}
-                                        {% if 3 == budget.auto_budget.auto_budget_type %}
-                                            <span class="fa fa-fw fa-calendar-plus-o" title="{{ 'auto_budget_adjusted_icon'|_ }}"></span>
-                                        {% endif %}
+                                            {% if 1 == budget.auto_budget.auto_budget_type %}
+                                                <span class="fa fa-fw fa-calendar-check-o" title="{{ 'auto_budget_reset_icon'|_ }}"></span>
+                                            {% endif %}
+                                            {% if 2 == budget.auto_budget.auto_budget_type %}
+                                                <span class="fa fa-fw fa-calendar-plus-o" title="{{ 'auto_budget_rollover_icon'|_ }}"></span>
+                                            {% endif %}
+                                            {% if 3 == budget.auto_budget.auto_budget_type %}
+                                                <span class="fa fa-fw fa-calendar-plus-o" title="{{ 'auto_budget_adjusted_icon'|_ }}"></span>
+                                            {% endif %}
                                         {% endif %}
                                         {% if budget.attachments.count() > 0 %}
                                             <span class="fa fa-paperclip"></span>
@@ -253,11 +253,11 @@
                                                 <div class="input-group-addon">{{ defaultCurrency.symbol }}</div>
                                                 <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
                                                 <input class="form-control budget_amount" data-original="0" data-id="{{ budget.id }}"
-                                                    data-currency="{{ defaultCurrency.id }}" data-limit="0" value="0" autocomplete="off" min="0" name="amount"
-                                                    type="number">
+                                                       data-currency="{{ defaultCurrency.id }}" data-limit="0" value="0" autocomplete="off" min="0" name="amount"
+                                                       type="number">
                                             </div>
                                             <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
-                                                style="display:none;"></span>
+                                                  style="display:none;"></span>
                                         {% endif %}
                                         {% if budget.budgeted|length > 0 %}
                                             {% for budgetLimit in budget.budgeted %}
@@ -270,9 +270,9 @@
                                                 <div class="input-group bl_entry" data-budget-limit-id="{{ budgetLimit.id }}">
                                                     <div class="input-group-addon">{{ budgetLimit.currency_symbol }}</div>
                                                     <input class="form-control budget_amount" data-original="{{ budgetLimit.amount }}"
-                                                        data-id="{{ budget.id }}" data-limit="{{ budgetLimit.id }}" value="{{ budgetLimit.amount }}"
-                                                        autocomplete="off"
-                                                        min="0" name="amount" type="number">
+                                                           data-id="{{ budget.id }}" data-limit="{{ budgetLimit.id }}" value="{{ budgetLimit.amount }}"
+                                                           autocomplete="off"
+                                                           min="0" name="amount" type="number">
                                                     <div class="input-group-btn">
                                                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                                                                 aria-expanded="false"><span class="caret"></span></button>
@@ -284,7 +284,7 @@
                                                     </div>
                                                 </div>
                                                 <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
-                                                    style="display:none;"></span>
+                                                      style="display:none;"></span>
                                             {% endfor %}
                                         {% endif %}
                                         {% if budget.budgeted|length < currencies.count() %}
@@ -305,14 +305,18 @@
                                             {% endif %}
                                         {% endfor %}
                                     </td>
+                                    {# this cell displays the amount left in the budget, per budget limit. #}
                                     <td class="left" data-id="{{ budget.id }}" style="text-align: right;">
                                         {% for spentInfo in budget.spent %}
                                             {% set countLimit = 0 %}
                                             {% for budgetLimit in budget.budgeted %}
+                                                {# now looping a single budget limit. #}
                                                 {% if spentInfo.currency_id == budgetLimit.currency_id and budgetLimit.in_range %}
+                                                    {# the code below is used for budget limits INSIDE the current view range. #}
                                                     {% set countLimit = countLimit + 1 %}
                                                     <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
-                                                        data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
+                                                          data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
+                                                        {# the amount left is automatically calculated. #}
                                                         {{ formatAmountBySymbol(spentInfo.spent + budgetLimit.amount, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
                                                         {% if spentInfo.spent + budgetLimit.amount > 0 %}
                                                             ({{ formatAmountBySymbol((spentInfo.spent + budgetLimit.amount) / activeDaysLeft, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
@@ -324,8 +328,9 @@
                                                 {% endif %}
                                             {% endfor %}
                                             {% if countLimit == 0 %}
+                                                {# this code is used for budget limits OUTSIDE the current view range. #}
                                                 <span class="left_span" data-id="{{ budget.id }}" data-currency="{{ spentInfo.currency_id }}" data-limit="0"
-                                                    class="amount_left" data-value="{{ spentInfo.spent }}">
+                                                      class="amount_left" data-value="{{ spentInfo.spent }}">
                                                     {{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
                                                 </span>
                                                 <br/>
@@ -333,14 +338,14 @@
                                         {% endfor %}
                                         {% for budgetLimit in budget.budgeted %}
                                             {% if null == budget.spent[budgetLimit.currency_id] %}
-                                            <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
-                                                data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
+                                                <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
+                                                      data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
                                                 {{ formatAmountBySymbol(budgetLimit.amount, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}
-                                                {% if budgetLimit.in_range %}
-                                                    ({{ formatAmountBySymbol(budgetLimit.amount / activeDaysLeft, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
-                                                {% endif %}
+                                                    {% if budgetLimit.in_range %}
+                                                        ({{ formatAmountBySymbol(budgetLimit.amount / activeDaysLeft, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+                                                    {% endif %}
                                             </span>
-                                            <br/>
+                                                <br/>
                                             {% endif %}
                                         {% endfor %}
                                     </td>
@@ -433,7 +438,7 @@
 {% endblock %}
 
 {% block styles %}
-    <link href="v1/css/bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet"  media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all" nonce="{{ JS_NONCE }}">
 {% endblock %}
 
 {% block scripts %}

@@ -61,7 +61,6 @@ class ExchangeRateSeeder extends Seeder
             if (null !== $foreign) {
                 // save rate in array:
                 $usable[] = [$foreign, $rate];
-                app('log')->debug(sprintf('Have default exchange rate from %s to %s.', $euro->code, $foreign->code));
             }
         }
         unset($rates, $foreign, $rate);

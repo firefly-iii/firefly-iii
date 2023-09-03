@@ -73,7 +73,7 @@ return [
     'require_foreign_currency'       => 'このフィールドには数字が必要です',
     'require_foreign_dest'           => 'この項目の値は預け入れ口座の通貨と一致する必要があります。',
     'require_foreign_src'            => 'この項目の値は、引き出し口座の通貨と一致する必要があります。',
-    'equal_description'              => '取引の説明はグローバルな説明と同じであってはいけません。',
+    'equal_description'              => '取引の概要は包括的な概要と同じであってはいけません。',
     'file_invalid_mime'              => '「:mime」タイプのファイル ":name" は新しいアップロードとして受け付けられません。',
     'file_too_large'                 => 'ファイル ":name"は大きすぎます。',
     'belongs_to_user'                => ':attribute の数値が不明です。',
@@ -196,7 +196,7 @@ return [
     'invalid_account_info'        => 'アカウント情報が正しくありません。',
     'attributes'                  => [
         'email'                   => 'メールアドレス',
-        'description'             => '説明',
+        'description'             => '概要',
         'amount'                  => '金額',
         'transactions.*.amount'   => '取引金額',
         'name'                    => '名称',

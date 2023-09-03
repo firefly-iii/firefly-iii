@@ -1,0 +1,157 @@
+<table>
+    <thead>
+    <tr>
+        <th colspan="2">System information</th>
+    </tr>
+    <tr>
+        <th>Item</th>
+        <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    {# Firefly III version #}
+    <tr>
+        <td>Firefly III</td>
+        <td>v{{ FF_VERSION }} / v{{ config('firefly.api_version') }} / {{ system.db_version }}
+            (exp. {{ config('firefly.db_version') }})
+        </td>
+    </tr>
+    {# PHP version + settings #}
+    <tr>
+        <td>PHP version</td>
+        <td>{{ system.php_version|escape }} / {{ system.interface }} / {{ system.php_os }}</td>
+    </tr>
+    <tr>
+        <td>BCscale</td>
+        <td>{{ system.bcscale }}</td>
+    </tr>
+    <tr>
+        <td>Error reporting</td>
+        <td>Display: {{ system.display_errors }}, reporting: {{ system.error_reporting }}</td>
+    </tr>
+    <tr>
+        <td>Max upload</td>
+        <td>{{ system.upload_size }} ({{ system.upload_size|filesize }})</td>
+    </tr>
+    <tr>
+        <td>Database drivers</td>
+        <td>
+            {% for driver in system.all_drivers %}{% if system.current_driver == driver %}<strong>*{{ driver }}*</strong>{% else %}{{ driver }}{% endif %}, {% endfor %}
+        </td>
+    </tr>
+    {# Docker information #}
+    {% if docker.is_docker %}
+        <tr>
+            <td>
+                Docker build
+            </td>
+            <td>
+                <span>#</span>{{ docker.build }}, base <span>#</span>{{ docker.base_build }}
+            </td>
+        </tr>
+    {% endif %}
+    </tbody>
+</table>
+<table>
+    <thead>
+    <tr>
+        <th colspan="2">Firefly III information</th>
+    </tr>
+    <tr>
+        <th>Item</th>
+        <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Timezone</td>
+        <td>{{ app.tz }} + [BrowserTZ]</td>
+    </tr>
+    <tr>
+        <td>App environment</td>
+        <td>{{ config('app.env') }}, debug: {{ app.debug }}</td>
+    </tr>
+    <tr>
+        <td>Logging</td>
+        <td>{{ config('logging.level') }}, {{ app.log_channel }} / {{ app.audit_log_channel }}</td>
+    </tr>
+    <tr>
+        <td>Cache driver</td>
+        <td>{{ config('cache.default') }}</td>
+    </tr>
+    <tr>
+        <td>Default language and locale</td>
+        <td>{{ app.default_language }} + {{ app.default_locale }}</td>
+    </tr>
+    <tr>
+        <td>Trusted proxies</td>
+        <td>{{ config('firefly.trusted_proxies')|escape }}</td>
+    </tr>
+    <tr>
+        <td>Login provider & user guard</td>
+        <td>{{ config('auth.providers.users.driver') }} / {{ config('auth.defaults.guard') }}</td>
+    </tr>
+    <tr>
+        <td>Login headers</td>
+        <td>{{ app.remote_header }} + {{ app.remote_mail_header }}</td>
+    </tr>
+    <tr>
+        <td>Stateful domains</td>
+        <td>{{ app.stateful_domains }}</td>
+    </tr>
+    </tbody>
+</table>
+
+<table>
+    <thead>
+    <tr>
+        <th colspan="2">User-specific information</th>
+    </tr>
+    <tr>
+        <th>Item</th>
+        <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>User</td>
+        <td><span>#</span>{{ user.user_id }} of {{ user.user_count }}</td>
+    </tr>
+    <tr>
+        <td>User flags</td>
+        <td>{{ user.user_flags }}</td>
+    </tr>
+    <tr>
+        <td>Session start</td>
+        <td>{{ session('start') }}</td>
+    </tr>
+    <tr>
+        <td>Session end</td>
+        <td>{{ session('end') }}</td>
+    </tr>
+    <tr>
+        <td>View range</td>
+        <td>{{ user.view_range }}</td>
+    </tr>
+    <tr>
+        <td>User language</td>
+        <td>{{ user.language }}</td>
+    </tr>
+    <tr>
+        <td>User locale</td>
+        <td>{{ user.locale }}</td>
+    </tr>
+    <tr>
+        <td>Locale(s) supported</td>
+        <td>
+            {% for key, attempt in user.locale_attempts %}
+                {{ key }}: {% if attempt %}:white_check_mark:{% else %}:x:{% endif %}<br>
+            {% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <td>User agent</td>
+        <td>{{ user.user_agent }}</td>
+    </tr>
+    </tbody>
+</table>
