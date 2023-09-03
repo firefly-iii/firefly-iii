@@ -61,6 +61,7 @@ use FireflyIII\Support\Binder\JournalList;
 use FireflyIII\Support\Binder\TagList;
 use FireflyIII\Support\Binder\TagOrId;
 use FireflyIII\Support\Binder\UserGroupAccount;
+use FireflyIII\Support\Binder\UserGroupBill;
 use FireflyIII\TransactionRules\Actions\AddTag;
 use FireflyIII\TransactionRules\Actions\AppendDescription;
 use FireflyIII\TransactionRules\Actions\AppendDescriptionToNotes;
@@ -110,7 +111,7 @@ return [
         'handle_debts' => true,
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.0.22',
+    'version'                      => '6.0.23',
     'api_version'                  => '2.0.7',
     'db_version'                   => 20,
 
@@ -480,6 +481,7 @@ return [
 
         // V2 API endpoints:
         'userGroupAccount' => UserGroupAccount::class,
+        'userGroupBill'    => UserGroupBill::class,
 
 
     ],

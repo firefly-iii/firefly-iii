@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.23 - 2023-09-04
+
+### Changed
+
+- New debug information tables are in HTML
+
+### Fixed
+
+- Remove extra slashes from paths, breaking CSS
+
 ## 6.0.22 - 2023-09-02
 
 ### API
@@ -15,7 +25,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Rules will now report failures if a Slack/Discord notification channel is configured
 - Notifications can be sent to Discord
-- Beta layout `v2`, activate with `FIRELY_III_LAYOUT=v2`
+- Beta layout `v2`, activate with `FIREFLY_III_LAYOUT=v2`
 
 ### Changed
 

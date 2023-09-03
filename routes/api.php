@@ -134,6 +134,7 @@ Route::group(
     ],
     static function () {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::get('{userGroupBill}', ['uses' => 'ShowController@show', 'as' => 'show']);
         Route::get('sum/paid', ['uses' => 'SumController@paid', 'as' => 'sum.paid']);
         Route::get('sum/unpaid', ['uses' => 'SumController@unpaid', 'as' => 'sum.unpaid']);
     }

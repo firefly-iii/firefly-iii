@@ -28,9 +28,11 @@ use Carbon\CarbonInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\ObjectGroup;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Log;
@@ -40,6 +42,7 @@ use Log;
  */
 class BillTransformer extends AbstractTransformer
 {
+    private ExchangeRateConverter   $converter;
     private array                   $currencies;
     private TransactionCurrency     $default;
     private array                   $groups;
@@ -102,21 +105,71 @@ class BillTransformer extends AbstractTransformer
             ];
 
         }
-        $this->default = app('amount')->getDefaultCurrency();
-
+        $this->default   = app('amount')->getDefaultCurrency();
+        $this->converter = new ExchangeRateConverter();
         // grab all paid dates:
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $journals = TransactionJournal::whereIn('bill_id', $bills)
-                                          ->where('date', '>=', $this->parameters->get('start'))
-                                          ->where('date', '<=', $this->parameters->get('end'))
-                                          ->get(['transaction_journals.id', 'transaction_journals.transaction_group_id', 'transaction_journals.date', 'transaction_journals.bill_id']);
+            $journals   = TransactionJournal::whereIn('bill_id', $bills)
+                                            ->where('date', '>=', $this->parameters->get('start'))
+                                            ->where('date', '<=', $this->parameters->get('end'))
+                                            ->get(['transaction_journals.id', 'transaction_journals.transaction_group_id', 'transaction_journals.date', 'transaction_journals.bill_id']);
+            $journalIds = $journals->pluck('id')->toArray();
+
+            // grab transactions for amount:
+            $set = Transaction::whereIn('transaction_journal_id', $journalIds)
+                              ->where('transactions.amount', '<', 0)
+                              ->get(['transactions.id', 'transactions.transaction_journal_id', 'transactions.amount', 'transactions.foreign_amount', 'transactions.transaction_currency_id', 'transactions.foreign_currency_id']);
+            // convert to array for easy finding:
+            $transactions = [];
+            /** @var Transaction $transaction */
+            foreach ($set as $transaction) {
+                $journalId                = (int)$transaction->transaction_journal_id;
+                $transactions[$journalId] = $transaction->toArray();
+            }
             /** @var TransactionJournal $journal */
             foreach ($journals as $journal) {
-                $billId                     = (int)$journal->bill_id;
+                $transaction             = $transactions[(int)$journal->id] ?? [];
+                $billId                  = (int)$journal->bill_id;
+                $currencyId              = (int)$transaction['transaction_currency_id'] ?? 0;
+                $currencies[$currencyId] = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
+
+                // foreign currency
+                $foreignCurrencyId     = null;
+                $foreignCurrencyCode   = null;
+                $foreignCurrencyName   = null;
+                $foreignCurrencySymbol = null;
+                $foreignCurrencyDp     = null;
+                if (null !== $transaction['foreign_currency_id']) {
+                    $foreignCurrencyId              = (int)$transaction['foreign_currency_id'];
+                    $currencies[$foreignCurrencyId] = $currencies[$foreignCurrencyId] ?? TransactionCurrency::find($foreignCurrencyId);
+                    $foreignCurrencyCode            = $currencies[$foreignCurrencyId]->code;
+                    $foreignCurrencyName            = $currencies[$foreignCurrencyId]->name;
+                    $foreignCurrencySymbol          = $currencies[$foreignCurrencyId]->symbol;
+                    $foreignCurrencyDp              = (int)$currencies[$foreignCurrencyId]->decimal_places;
+                }
+
                 $this->paidDates[$billId][] = [
-                    'transaction_group_id'   => (string)$journal->id,
-                    'transaction_journal_id' => (string)$journal->transaction_group_id,
-                    'date'                   => $journal->date->toAtomString(),
+                    'transaction_group_id'            => (string)$journal->id,
+                    'transaction_journal_id'          => (string)$journal->transaction_group_id,
+                    'date'                            => $journal->date->toAtomString(),
+                    'currency_id'                     => (int)$currencies[$currencyId]->id,
+                    'currency_code'                   => $currencies[$currencyId]->code,
+                    'currency_name'                   => $currencies[$currencyId]->name,
+                    'currency_symbol'                 => $currencies[$currencyId]->symbol,
+                    'currency_decimal_places'         => (int)$currencies[$currencyId]->decimal_places,
+                    'native_id'                       => (int)$currencies[$currencyId]->id,
+                    'native_code'                     => $currencies[$currencyId]->code,
+                    'native_symbol'                   => $currencies[$currencyId]->symbol,
+                    'native_decimal_places'           => (int)$currencies[$currencyId]->decimal_places,
+                    'foreign_currency_id'             => $foreignCurrencyId,
+                    'foreign_currency_code'           => $foreignCurrencyCode,
+                    'foreign_currency_name'           => $foreignCurrencyName,
+                    'foreign_currency_symbol'         => $foreignCurrencySymbol,
+                    'foreign_currency_decimal_places' => $foreignCurrencyDp,
+                    'amount'                          => $transaction['amount'],
+                    'foreign_amount'                  => $transaction['foreign_amount'],
+                    'native_amount'                   => $this->converter->convert($currencies[$currencyId], $this->default, $journal->date, $transaction['amount']),
+                    'foreign_native_amount'           => null === $transaction['foreign_amount'] ? null : $this->converter->convert($currencies[$foreignCurrencyId], $this->default, $journal->date, $transaction['foreign_amount']),
                 ];
             }
         }
@@ -131,11 +184,19 @@ class BillTransformer extends AbstractTransformer
      */
     public function transform(Bill $bill): array
     {
-        $paidData              = $this->paidDates[(int)$bill->id] ?? [];
-        $nextExpectedMatch     = $this->nextExpectedMatch($bill, $this->paidDates[(int)$bill->id] ?? []);
-        $payDates              = $this->payDates($bill);
-        $currency              = $this->currencies[(int)$bill->transaction_currency_id];
-        $group                 = $this->groups[(int)$bill->id] ?? null;
+        $paidData          = $this->paidDates[(int)$bill->id] ?? [];
+        $nextExpectedMatch = $this->nextExpectedMatch($bill, $this->paidDates[(int)$bill->id] ?? []);
+        $payDates          = $this->payDates($bill);
+        $currency          = $this->currencies[(int)$bill->transaction_currency_id];
+        $group             = $this->groups[(int)$bill->id] ?? null;
+
+        // date for currency conversion
+        /** @var Carbon|null $startParam */
+        $startParam = $this->parameters->get('start');
+        /** @var Carbon|null $start */
+        $date = null === $startParam ? today() : clone $startParam;
+
+
         $nextExpectedMatchDiff = $this->getNextExpectedMatchDiff($nextExpectedMatch, $payDates);
         return [
             'id'                       => (int)$bill->id,
@@ -144,10 +205,18 @@ class BillTransformer extends AbstractTransformer
             'name'                     => $bill->name,
             'amount_min'               => app('steam')->bcround($bill->amount_min, $currency->decimal_places),
             'amount_max'               => app('steam')->bcround($bill->amount_max, $currency->decimal_places),
+            'native_amount_min'        => $this->converter->convert($currency, $this->default, $date, $bill->amount_min),
+            'native_amount_max'        => $this->converter->convert($currency, $this->default, $date, $bill->amount_max),
             'currency_id'              => (string)$bill->transaction_currency_id,
             'currency_code'            => $currency->code,
+            'currency_name'            => $currency->name,
             'currency_symbol'          => $currency->symbol,
             'currency_decimal_places'  => (int)$currency->decimal_places,
+            'native_id'                => $this->default->id,
+            'native_code'              => $this->default->code,
+            'native_name'              => $this->default->name,
+            'native_symbol'            => $this->default->symbol,
+            'native_decimal_places'    => (int)$this->default->decimal_places,
             'date'                     => $bill->date->toAtomString(),
             'end_date'                 => $bill->end_date?->toAtomString(),
             'extension_date'           => $bill->extension_date?->toAtomString(),
@@ -185,8 +254,11 @@ class BillTransformer extends AbstractTransformer
         // 2023-07-1 sub one day from the start date to fix a possible bug (see #7704)
         // 2023-07-18 this particular date is used to search for the last paid date.
         // 2023-07-18 the cloned $searchDate is used to grab the correct transactions.
-        /** @var Carbon $start */
-        $start = clone $this->parameters->get('start');
+
+        /** @var Carbon|null $startParam */
+        $startParam = $this->parameters->get('start');
+        /** @var Carbon|null $start */
+        $start = null === $startParam ? today() : clone $startParam;
         $start->subDay();
 
         $lastPaidDate = $this->lastPaidDate($dates, $start);
