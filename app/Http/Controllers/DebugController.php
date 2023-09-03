@@ -123,6 +123,7 @@ class DebugController extends Controller
     public function index(Request $request)
     {
         $table = $this->generateTable();
+        $table = str_replace(["\n", "\t", '  '], '', $table);
         $now   = now(config('app.timezone'))->format('Y-m-d H:i:s');
 
         // get latest log file:
