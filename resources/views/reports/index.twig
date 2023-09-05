@@ -38,15 +38,15 @@
 
                             <div class="col-sm-9" id="inputAccountsSelect">
                                 <select id="inputAccounts" name="accounts[]" multiple class="form-control">
-                                    {% for role, accountList in groupedAccounts  %}
+                                    {% for role, accountList in groupedAccounts %}
                                         <optgroup label="{{ role }}">
-                                    {% for account in accountList %}
-                                        <option
-                                                value="{{ account.id }}"
-                                                label="{{ account.name }}{% if accountGetMetaField(account, 'accountRole') == 'sharedAsset' %} ({{ 'shared'|_|lower }}){% endif %}">
-                                            {{ account.name }}{% if accountGetMetaField(account, 'accountRole') == 'sharedAsset' %} ({{ 'shared'|_|lower }}){% endif %}
-                                        </option>
-                                    {% endfor %}
+                                            {% for account in accountList %}
+                                                <option
+                                                    value="{{ account.id }}"
+                                                    label="{{ account.name }}{% if accountGetMetaField(account, 'accountRole') == 'sharedAsset' %} ({{ 'shared'|_|lower }}){% endif %}">
+                                                    {{ account.name }}{% if accountGetMetaField(account, 'accountRole') == 'sharedAsset' %} ({{ 'shared'|_|lower }}){% endif %}
+                                                </option>
+                                            {% endfor %}
                                         </optgroup>
                                     {% endfor %}
                                 </select>
@@ -186,7 +186,7 @@
         var selectAllText = "{{ trans('firefly.multi_select_select_all')|escape('js') }}";
         var nonSelectedText = "{{ trans('firefly.multi_select_no_selection')|escape('js') }}";
         var nSelectedText = "{{ trans('firefly.multi_select_n_selected')|escape('js') }}";
-        var allSelectedText = "{{ trans('firefly.multi_select_all_selected')|escape('js')   }}";
+        var allSelectedText = "{{ trans('firefly.multi_select_all_selected')|escape('js') }}";
         var filterPlaceholder = "{{ trans('firefly.multi_select_filter_placeholder')|escape('js') }}";
     </script>
     <script type="text/javascript" src="v1/js/lib/bootstrap-multiselect.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>

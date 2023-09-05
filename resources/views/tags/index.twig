@@ -31,13 +31,13 @@
                                     <div class="row">
                                         {% for tagInfo in entries %}
                                             <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"
-                                            style="line-height: 1.7em;"
+                                                 style="line-height: 1.7em;"
                                             ><input type="checkbox" name="tags[]" value="{{ tagInfo.id }}"> <a
-                                                        class="label label-success"
-                                                        style="font-weight: normal;font-size:0.9em;"
+                                                    class="label label-success"
+                                                    style="font-weight: normal;font-size:0.9em;"
 
-                                                                                                     title="{{ tagInfo.created_at.isoFormat(monthAndDayFormat) }}"
-                                                                                                     href="{{ route('tags.show',tagInfo.id) }}">{% if tagInfo.location %}<span class="fa fa-fw fa-map-marker"></span>{% endif %}<span class="fa fa-fw fa-tag"></span>{{ tagInfo.tag }}{% if tagInfo.attachments.count() > 0 %}<span class="fa fa-fw fa-paperclip"></span>{% endif %}</a></div>
+                                                    title="{{ tagInfo.created_at.isoFormat(monthAndDayFormat) }}"
+                                                    href="{{ route('tags.show',tagInfo.id) }}">{% if tagInfo.location %}<span class="fa fa-fw fa-map-marker"></span>{% endif %}<span class="fa fa-fw fa-tag"></span>{{ tagInfo.tag }}{% if tagInfo.attachments.count() > 0 %}<span class="fa fa-fw fa-paperclip"></span>{% endif %}</a></div>
 
                                         {% endfor %}
                                     </div>
@@ -45,7 +45,7 @@
                                     <ul class="list-inline">
                                         {% for tagInfo in entries %}
                                             <li>
-                                            <!--&nbsp;-->
+                                                <!--&nbsp;-->
 
                                             </li>
                                         {% endfor %}

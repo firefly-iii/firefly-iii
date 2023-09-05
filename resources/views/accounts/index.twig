@@ -18,7 +18,7 @@
                                 <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><span class="fa fa-ellipsis-v"></span></button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="{{ route('accounts.create', objectType) }}"><span
-                                                    class="fa fa-plus fa-fw"></span> {{ ('make_new_' ~ objectType ~ '_account')|_ }}
+                                                class="fa fa-plus fa-fw"></span> {{ ('make_new_' ~ objectType ~ '_account')|_ }}
                                         </a></li>
                                 </ul>
                             </div>
@@ -37,7 +37,7 @@
                     <div class="box-footer">
                         <p>
                             <a href="{{ route('accounts.create', objectType) }}" class="btn btn-success"><span
-                                        class="fa fa-plus fa-fw"></span> {{ ('make_new_' ~ objectType ~ '_account')|_ }}</a>
+                                    class="fa fa-plus fa-fw"></span> {{ ('make_new_' ~ objectType ~ '_account')|_ }}</a>
                         </p>
                         {% if inactiveCount > 0 %}
                             <p><small>

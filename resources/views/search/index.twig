@@ -48,7 +48,7 @@
                         <p>{{ trans('firefly.invalid_operators_list') }}</p>
                         <ul>
                             {% for operator in invalidOperators %}
-                                <li class="text-danger">{{ operator.type  }}:{{ operator.value }}</li>
+                                <li class="text-danger">{{ operator.type }}:{{ operator.value }}</li>
                             {% endfor %}
                         </ul>
                     {% endif %}
@@ -100,7 +100,7 @@
 
                                 <div class="mass_buttons btn-group btn-group pull-right">
                                     <a href="#" class="btn btn-default mass_select"><span
-                                                class="fa fa-fw fa-check-square-o"></span> {{ 'select_transactions'|_ }}</a>
+                                            class="fa fa-fw fa-check-square-o"></span> {{ 'select_transactions'|_ }}</a>
                                     <a href="#" class="btn btn-default mass_stop_select" style="display:none;"><span class="fa faw-fw fa-square-o"
                                         ></span> {{ 'stop_selection'|_ }}</a>
                                 </div>

@@ -113,11 +113,11 @@
         </div>
     </div>
     {% if limits|length > 0 %}
-    <div class="row">
-        <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
-            <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
+        <div class="row">
+            <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
+                <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
+            </div>
         </div>
-    </div>
     {% endif %}
 
     <div class="row">
@@ -141,62 +141,62 @@
             </div>
         </div>
         {% if limits|length > 0 %}
-        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-            {% for limit in limits %}
-                <div class="box {% if limit.start_date == budgetLimit.start_date %}box-primary box-solid{% endif %}">
-                    <div class="box-header with-border">
-                        <h3 class="box-title"><a
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                {% for limit in limits %}
+                    <div class="box {% if limit.start_date == budgetLimit.start_date %}box-primary box-solid{% endif %}">
+                        <div class="box-header with-border">
+                            <h3 class="box-title"><a
                                     href="{{ route('budgets.show.limit',[budget.id,limit.id]) }}">
-                                {{ limit.start_date.isoFormat(monthAndDayFormat) }} &mdash;
-                                {{ limit.end_date.isoFormat(monthAndDayFormat) }}
-                            </a>
-                        </h3>
-                    </div>
-                    <div class="box-body no-padding">
-                        <table class="table table-hover">
-                            <tr>
-                                <td style="width:33%;">{{ 'amount'|_ }}</td>
-                                <td>
-                                    {{ formatAmountBySymbol(limit.amount, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="width:33%;">{{ 'spent'|_ }}</td>
-                                <td>
-                                    {{ formatAmountBySymbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
-                                </td>
-                            </tr>
-                            {% if limit.spent > 0 %}
+                                    {{ limit.start_date.isoFormat(monthAndDayFormat) }} &mdash;
+                                    {{ limit.end_date.isoFormat(monthAndDayFormat) }}
+                                </a>
+                            </h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <table class="table table-hover">
                                 <tr>
-                                    <td colspan="2">
-                                        {% set overspent = limit.amount + limit.spent < 0 %}
-
-                                        {% if overspent %}
-                                            {% set pct = (limit.spent != 0 ? (limit.amount / (limit.spent*-1))*100 : 0) %} {# must have -1 here #}
-                                            <div class="progress progress-striped">
-                                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ pct|round }}"
-                                                     aria-valuemin="0"
-                                                     aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
-                                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ (100-pct)|round }}"
-                                                     aria-valuemin="0" aria-valuemax="100" style="width: {{ (100-pct)|round }}%;"></div>
-                                            </div>
-                                        {% else %}
-                                            {% set pct = (limit.amount != 0 ? (((limit.spent*-1) / limit.amount)*100) : 0) %} {# must have -1 here #}
-                                            <div class="progress progress-striped">
-                                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ pct|round }}"
-                                                     aria-valuemin="0"
-                                                     aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
-                                            </div>
-                                        {% endif %}
+                                    <td style="width:33%;">{{ 'amount'|_ }}</td>
+                                    <td>
+                                        {{ formatAmountBySymbol(limit.amount, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
                                     </td>
                                 </tr>
-                            {% endif %}
-                        </table>
+                                <tr>
+                                    <td style="width:33%;">{{ 'spent'|_ }}</td>
+                                    <td>
+                                        {{ formatAmountBySymbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
+                                    </td>
+                                </tr>
+                                {% if limit.spent > 0 %}
+                                    <tr>
+                                        <td colspan="2">
+                                            {% set overspent = limit.amount + limit.spent < 0 %}
+
+                                            {% if overspent %}
+                                                {% set pct = (limit.spent != 0 ? (limit.amount / (limit.spent*-1))*100 : 0) %} {# must have -1 here #}
+                                                <div class="progress progress-striped">
+                                                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ pct|round }}"
+                                                         aria-valuemin="0"
+                                                         aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
+                                                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ (100-pct)|round }}"
+                                                         aria-valuemin="0" aria-valuemax="100" style="width: {{ (100-pct)|round }}%;"></div>
+                                                </div>
+                                            {% else %}
+                                                {% set pct = (limit.amount != 0 ? (((limit.spent*-1) / limit.amount)*100) : 0) %} {# must have -1 here #}
+                                                <div class="progress progress-striped">
+                                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ pct|round }}"
+                                                         aria-valuemin="0"
+                                                         aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </table>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
-            <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
-        </div>
+                {% endfor %}
+                <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
+            </div>
         {% endif %}
     </div>
 
@@ -206,17 +206,17 @@
         var budgetID = {{ budget.id }};
         var budgetLimitID = 0;
         {% if budgetLimit.id %}
-            budgetLimitID = {{ budgetLimit.id }};
-            var budgetChartUrl = '{{ route('chart.budget.budget-limit', [budget.id, budgetLimit.id] ) }}';
-            var currencySymbol = '{{ budgetLimit.transactionCurrency.symbol }}';
-            var expenseCategoryUrl = '{{ route('chart.budget.expense-category', [budget.id, budgetLimit.id]) }}';
-            var expenseAssetUrl = '{{ route('chart.budget.expense-asset', [budget.id, budgetLimit.id]) }}';
-            var expenseExpenseUrl = '{{ route('chart.budget.expense-expense', [budget.id, budgetLimit.id]) }}';
+        budgetLimitID = {{ budgetLimit.id }};
+        var budgetChartUrl = '{{ route('chart.budget.budget-limit', [budget.id, budgetLimit.id] ) }}';
+        var currencySymbol = '{{ budgetLimit.transactionCurrency.symbol }}';
+        var expenseCategoryUrl = '{{ route('chart.budget.expense-category', [budget.id, budgetLimit.id]) }}';
+        var expenseAssetUrl = '{{ route('chart.budget.expense-asset', [budget.id, budgetLimit.id]) }}';
+        var expenseExpenseUrl = '{{ route('chart.budget.expense-expense', [budget.id, budgetLimit.id]) }}';
         {% else %}
-            var budgetChartUrl = '{{ route('chart.budget.budget', [budget.id] ) }}';
-            var expenseCategoryUrl = '{{ route('chart.budget.expense-category', [budget.id]) }}';
-            var expenseAssetUrl = '{{ route('chart.budget.expense-asset', [budget.id]) }}';
-            var expenseExpenseUrl = '{{ route('chart.budget.expense-expense', [budget.id]) }}';
+        var budgetChartUrl = '{{ route('chart.budget.budget', [budget.id] ) }}';
+        var expenseCategoryUrl = '{{ route('chart.budget.expense-category', [budget.id]) }}';
+        var expenseAssetUrl = '{{ route('chart.budget.expense-asset', [budget.id]) }}';
+        var expenseExpenseUrl = '{{ route('chart.budget.expense-expense', [budget.id]) }}';
         {% endif %}
     </script>
 
