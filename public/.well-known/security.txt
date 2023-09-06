@@ -1,10 +1,20 @@
-# Please report security issues related to Firefly III
-# to me ASAP via the email address below.
+# Please report security issues related to Firefly III to me ASAP, via the email address below.
+# Feel free to encrypt your message using GPG altough it's a pain let's be honest
 #
-# Do not contact me for random vulnerabilities on other people's websites.
-# Firefly III and releated tools only please.
+# Please do not contact me for random vulnerabilities on other people's websites.
+#
+# If it's not related to Firefly III I will not be able to help you.
+#
+# This file is not signed. Please find a signed version at the following URL:
+# https://www.firefly-iii.org/.well-known/security.txt
+#
 
 Contact: mailto:james@firefly-iii.org
+Expires: 2023-12-31T23:00:00.000Z
 Encryption: https://keybase.io/jc5/pgp_keys.asc?fingerprint=02f4046c4b236e0609571612b49a324b7ead6d80
-Acknowledgements: https://github.com/firefly-iii/firefly-iii
-Signature: https://firefly-iii.org/.well-known/security.txt.sig
+Preferred-Languages: en, nl
+Policy: https://docs.firefly-iii.org/firefly-iii/support/
+
+#
+# Thank you for your time!
+#
