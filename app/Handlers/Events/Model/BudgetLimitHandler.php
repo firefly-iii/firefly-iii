@@ -95,7 +95,7 @@ class BudgetLimitHandler
         $start = app('navigation')->startOfPeriod($budgetLimit->start_date, $viewRange);
         $end   = app('navigation')->startOfPeriod($budgetLimit->end_date, $viewRange);
         $end   = app('navigation')->endOfPeriod($end, $viewRange);
-        
+
         // limit period in total is:
         $limitPeriod = Period::make($start, $end, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
         app('log')->debug(sprintf('Limit period is from %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
@@ -184,8 +184,8 @@ class BudgetLimitHandler
             );
             // overlap in days:
             $limitPeriod = Period::make(
-                            $budgetLimit->start_date,
-                            $budgetLimit->end_date,
+                $budgetLimit->start_date,
+                $budgetLimit->end_date,
                 precision : Precision::DAY(),
                 boundaries: Boundaries::EXCLUDE_NONE()
             );
@@ -230,8 +230,8 @@ class BudgetLimitHandler
             return '0';
         }
         $limitPeriod = Period::make(
-                        $budgetLimit->start_date,
-                        $budgetLimit->end_date,
+            $budgetLimit->start_date,
+            $budgetLimit->end_date,
             precision : Precision::DAY(),
             boundaries: Boundaries::EXCLUDE_NONE()
         );

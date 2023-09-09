@@ -128,11 +128,11 @@ class BudgetController extends Controller
         foreach ($rows as $row) {
             $current  = [
                 'label'                   => $budget->name,
-                'currency_id'             => $row['currency_id'],
+                'currency_id'             => (string)$row['currency_id'],
                 'currency_code'           => $row['currency_code'],
                 'currency_name'           => $row['currency_name'],
                 'currency_decimal_places' => $row['currency_decimal_places'],
-                'native_id'               => $row['native_id'],
+                'native_id'               => (string)$row['native_id'],
                 'native_code'             => $row['native_code'],
                 'native_name'             => $row['native_name'],
                 'native_decimal_places'   => $row['native_decimal_places'],
@@ -199,12 +199,12 @@ class BudgetController extends Controller
         foreach ($array as $currencyId => $block) {
             $this->currencies[$currencyId] = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
             $return[$currencyId]           = $return[$currencyId] ?? [
-                'currency_id'             => $currencyId,
+                'currency_id'             => (string)$currencyId,
                 'currency_code'           => $block['currency_code'],
                 'currency_name'           => $block['currency_name'],
                 'currency_symbol'         => $block['currency_symbol'],
                 'currency_decimal_places' => (int)$block['currency_decimal_places'],
-                'native_id'               => (int)$this->currency->id,
+                'native_id'               => (string)$this->currency->id,
                 'native_code'             => $this->currency->code,
                 'native_name'             => $this->currency->name,
                 'native_symbol'           => $this->currency->symbol,
