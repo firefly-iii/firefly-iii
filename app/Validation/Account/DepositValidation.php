@@ -126,10 +126,10 @@ trait DepositValidation
             $result            = false;
         }
 
-        // if there is an iban, it can only be in use by a revenue account, or we will fail.
+        // if there is an iban, it can only be in use by a valid source type, or we will fail.
         if (null !== $accountIban && '' !== $accountIban) {
             app('log')->debug('Check if there is not already an account with this IBAN');
-            $existing = $this->findExistingAccount([AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], ['iban' => $accountIban]);
+            $existing = $this->findExistingAccount($validTypes, ['iban' => $accountIban], true);
             if (null !== $existing) {
                 $this->sourceError = (string)trans('validation.deposit_src_iban_exists');
                 return false;
