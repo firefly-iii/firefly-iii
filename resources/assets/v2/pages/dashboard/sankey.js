@@ -214,7 +214,7 @@ export default () => ({
 
                             if (!amounts.hasOwnProperty(flowKey)) {
                                 amounts[flowKey] = {
-                                    from: translations.all_money + ' (' + currencyCode + ')',
+                                    from: translations.all_money + (this.autoConversion ? ' (' + currencyCode + ')' : ''),
                                     to: budget,
                                     amount: 0
                                 };
