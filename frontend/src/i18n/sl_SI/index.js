@@ -50,8 +50,8 @@ export default {
         "transactions": "Transakcije",
         "title_expenses": "Stro\u0161ki",
         "title_withdrawal": "Stro\u0161ki",
-        "title_revenue": "Dohodki prihodki",
-        "title_deposit": "Dohodki\/prihodki",
+        "title_revenue": "Dohodki \/ prihodki",
+        "title_deposit": "Dohodki \/ prihodki",
         "title_transfer": "Prenosi",
         "title_transfers": "Prenosi",
         "asset_accounts": "Premo\u017eenjski ra\u010duni",
@@ -72,7 +72,7 @@ export default {
         "newTransfer": "Nov prenos",
         "submission_options": "Submission options",
         "apply_rules_checkbox": "Uporabi pravila",
-        "fire_webhooks_checkbox": "Fire webhooks",
+        "fire_webhooks_checkbox": "Spro\u017ei Webhooke",
         "newDeposit": "Nov polog",
         "newWithdrawal": "Nov stro\u0161ek",
         "bills_paid": "Pla\u010dani trajniki",
@@ -222,7 +222,7 @@ export default {
         "pref_last30": "Zadnjih 30 dni",
         "pref_last7": "Zadnjih 7 dni",
         "pref_YTD": "Leto do datuma",
-        "pref_QTD": "Quarter to date",
-        "pref_MTD": "Month to date"
+        "pref_QTD": "\u010cetrtletje do danes",
+        "pref_MTD": "Mesec do datuma"
     }
 }

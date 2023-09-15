@@ -55,9 +55,9 @@
                                 <td class="hidden-xs" data-value="{{ user.id }}">
                                     <div class="btn-group btn-group-xs">
                                         <a class="btn btn-default" href="{{ route('admin.users.edit',user.id) }}"><span
-                                                    class="fa fa-pencil"></span></a>
+                                                class="fa fa-pencil"></span></a>
                                         <a class="btn btn-danger" href="{{ route('admin.users.delete',user.id) }}"><span
-                                                    class="fa fa-trash"></span></a>
+                                                class="fa fa-trash"></span></a>
                                     </div>
                                 </td>
                                 <td class="hidden-xs" data-value="{{ user.id }}">#{{ user.id }}</td>
@@ -138,7 +138,7 @@
                                     <td class="hidden-xs" data-value="{{ user.id }}">
                                         <div class="btn-group btn-group-xs">
                                             <a class="btn btn-danger delete-invite" href="{{ route('admin.users.delete-invite', invitee.id) }}"><span
-                                                        class="fa fa-trash"></span></a>
+                                                    class="fa fa-trash"></span></a>
                                         </div>
                                     </td>
                                     <td>
@@ -153,7 +153,7 @@
                                         {{ invitee.expires.format('H:i') }}
                                     </td>
                                     <td>
-                                        {{  invitee.user.email }}
+                                        {{ invitee.user.email }}
                                     </td>
                                     <td>
                                         {% if invitee.redeemed %}

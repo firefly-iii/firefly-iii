@@ -50,6 +50,8 @@ return [
     'already_has_destination'                     => 'Cette opération a déjà «:name» comme compte de destination',
     'already_has_source'                          => 'Cette opération a déjà ":name" comme compte source',
     'already_linked_to_subscription'              => 'L\'opération est déjà liée à l\'abonnement ":name"',
+    'already_linked_to_category'                  => 'The transaction is already linked to category ":name"',
+    'already_linked_to_budget'                    => 'The transaction is already linked to budget ":name"',
     'cannot_find_subscription'                    => 'Firefly III ne trouve pas l\'abonnement ":name"',
     'no_notes_to_move'                            => 'L\'opération n\'a pas de notes à déplacer dans le champ description',
     'no_tags_to_remove'                           => 'L\'opération n\'a pas de tags à supprimer',

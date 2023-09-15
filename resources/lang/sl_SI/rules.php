@@ -50,6 +50,8 @@ return [
     'already_has_destination'                     => 'Ta transakcija že ima ":name" kot ciljni račun',
     'already_has_source'                          => 'Ta transakcija že ima ":name" kot izvorni račun',
     'already_linked_to_subscription'              => 'Transakcija je že povezana z naročnino ":name"',
+    'already_linked_to_category'                  => 'The transaction is already linked to category ":name"',
+    'already_linked_to_budget'                    => 'The transaction is already linked to budget ":name"',
     'cannot_find_subscription'                    => 'Firefly III ne najde naročnine ":name"',
     'no_notes_to_move'                            => 'Transakcija nima nobenih opomb, ki bi jih bilo treba premakniti v polje opisa',
     'no_tags_to_remove'                           => 'Transakcija nima oznak za odstranitev',

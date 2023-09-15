@@ -250,12 +250,14 @@ class AccountValidator
     /**
      * @param array $validTypes
      * @param array $data
+     * @param bool  $inverse
      *
      * @return Account|null
      */
-    protected function findExistingAccount(array $validTypes, array $data): ?Account
+    protected function findExistingAccount(array $validTypes, array $data, bool $inverse = false): ?Account
     {
         Log::debug('Now in findExistingAccount', $data);
+        app('log')->debug('The search will be reversed!');
         $accountId     = array_key_exists('id', $data) ? $data['id'] : null;
         $accountIban   = array_key_exists('iban', $data) ? $data['iban'] : null;
         $accountNumber = array_key_exists('number', $data) ? $data['number'] : null;
@@ -264,7 +266,9 @@ class AccountValidator
         // find by ID
         if (null !== $accountId && $accountId > 0) {
             $first = $this->accountRepository->find($accountId);
-            if ((null !== $first) && in_array($first->accountType->type, $validTypes, true)) {
+            $check = in_array($first->accountType->type, $validTypes, true);
+            $check = $inverse ? !$check : $check; // reverse the validation check if necessary.
+            if ((null !== $first) && $check) {
                 app('log')->debug(sprintf('ID: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
                 return $first;
             }
@@ -273,7 +277,9 @@ class AccountValidator
         // find by iban
         if (null !== $accountIban && '' !== (string)$accountIban) {
             $first = $this->accountRepository->findByIbanNull($accountIban, $validTypes);
-            if ((null !== $first) && in_array($first->accountType->type, $validTypes, true)) {
+            $check = in_array($first->accountType->type, $validTypes, true);
+            $check = $inverse ? !$check : $check; // reverse the validation check if necessary.
+            if ((null !== $first) && $check) {
                 app('log')->debug(sprintf('Iban: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
                 return $first;
             }
@@ -282,7 +288,9 @@ class AccountValidator
         // find by number
         if (null !== $accountNumber && '' !== (string)$accountNumber) {
             $first = $this->accountRepository->findByAccountNumber($accountNumber, $validTypes);
-            if ((null !== $first) && in_array($first->accountType->type, $validTypes, true)) {
+            $check = in_array($first->accountType->type, $validTypes, true);
+            $check = $inverse ? !$check : $check; // reverse the validation check if necessary.
+            if ((null !== $first) && $check) {
                 app('log')->debug(sprintf('Number: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
                 return $first;
             }

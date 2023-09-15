@@ -37,18 +37,18 @@
                             <td><a href="{{ route('accounts.show', piggyBank.account_id) }}">{{ piggyBank.account.name }}</a></td>
                         </tr>
                         {% if piggy.object_group_title %}
-                        <tr>
-                            <td style="width:40%;">{{ 'object_group'|_ }}</td>
-                            <td>{{ piggy.object_group_title }}</a></td>
-                        </tr>
+                            <tr>
+                                <td style="width:40%;">{{ 'object_group'|_ }}</td>
+                                <td>{{ piggy.object_group_title }}</a></td>
+                            </tr>
                         {% endif %}
                         {% if null != piggy.target_amount %}
-                        <tr>
-                            <td>{{ 'target_amount'|_ }}</td>
-                            <td>
-                                {{ formatAmountBySymbol(piggy.target_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>{{ 'target_amount'|_ }}</td>
+                                <td>
+                                    {{ formatAmountBySymbol(piggy.target_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
+                                </td>
+                            </tr>
                         {% endif %}
                         <tr>
                             <td>{{ 'saved_so_far'|_ }}</td>
@@ -57,12 +57,12 @@
                             </td>
                         </tr>
                         {% if null != piggy.left_to_save %}
-                        <tr>
-                            <td>{{ 'left_to_save'|_ }}</td>
-                            <td>
-                                {{ formatAmountBySymbol(piggy.left_to_save, piggy.currency_symbol, piggy.currency_decimal_places) }}
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>{{ 'left_to_save'|_ }}</td>
+                                <td>
+                                    {{ formatAmountBySymbol(piggy.left_to_save, piggy.currency_symbol, piggy.currency_decimal_places) }}
+                                </td>
+                            </tr>
                         {% endif %}
                         <tr>
                             <td>{{ 'start_date'|_ }}</td>

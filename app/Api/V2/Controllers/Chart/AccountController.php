@@ -114,7 +114,7 @@ class AccountController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
 
                 // the default currency of the user (could be the same!)
-                'native_id'               => (int)$default->id,
+                'native_id'               => (string)$default->id,
                 'native_code'             => $default->code,
                 'native_symbol'           => $default->symbol,
                 'native_decimal_places'   => (int)$default->decimal_places,

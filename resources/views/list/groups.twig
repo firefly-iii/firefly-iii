@@ -52,7 +52,7 @@
             <tr style="border-top:1px #aaa solid;" class="unsortable">
                 <td colspan="2" style="border-top:1px #aaa solid;">
                     <small><strong>
-                            <a href="{{ route('transactions.show', [group.id], false) }}"
+                            <a href="{{ route('transactions.show', [group.id]) }}"
                                title="{{ group.title }}">{{ group.title }}</a>
                         </strong></small>
                 </td>
@@ -81,9 +81,9 @@
                                 aria-haspopup="true" aria-expanded="false">
                             {{ 'actions'|_ }} <span class="caret"></span></button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                            <li><a href="{{ route('transactions.edit', [group.id], false) }}"><span
+                            <li><a href="{{ route('transactions.edit', [group.id]) }}"><span
                                         class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
-                            <li><a href="{{ route('transactions.delete', [group.id], false) }}"><span
+                            <li><a href="{{ route('transactions.delete', [group.id]) }}"><span
                                         class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
                             <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
                                         class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
@@ -137,7 +137,7 @@
                         <span class="fa fa-paperclip"></span>
                     {% endif %}
                     {% if group.count == 1 %}
-                    <a href="{{ route('transactions.show', [group.id], false) }}" title="{{ transaction.description }}">
+                    <a href="{{ route('transactions.show', [group.id]) }}" title="{{ transaction.description }}">
                         {% endif %}
                         {{ transaction.description }}
                         {% if group.count == 1 %}
@@ -215,7 +215,7 @@
                     {% if 'Cash account' == transaction.source_account_type %}
                         <span class="text-success">({{ 'cash'|_ }})</span>
                     {% else %}
-                        <a href="{{ route('accounts.show', [transaction.source_account_id|default(1)], false) }}"
+                        <a href="{{ route('accounts.show', [transaction.source_account_id|default(1)]) }}"
                            title="{{ transaction.source_account_iban|default(transaction.source_account_name) }}">{{ transaction.source_account_name }}</a>
                     {% endif %}
                 </td>
@@ -223,14 +223,14 @@
                     {% if 'Cash account' == transaction.destination_account_type %}
                         <span class="text-success">({{ 'cash'|_ }})</span>
                     {% else %}
-                        <a href="{{ route('accounts.show', [transaction.destination_account_id|default(1)], false) }}"
+                        <a href="{{ route('accounts.show', [transaction.destination_account_id|default(1)]) }}"
                            title="{{ transaction.destination_account_iban|default(transaction.destination_account_name) }}">{{ transaction.destination_account_name }}</a>
                     {% endif %}
                 </td>
                 {% if showCategory %}
                     <td style=" {{ style|raw }}" class="hidden-xs">
                         {% if transaction.category_id %}
-                            <a href="{{ route('categories.show', [transaction.category_id], false) }}"
+                            <a href="{{ route('categories.show', [transaction.category_id]) }}"
                                title="{{ transaction.category_name }}">{{ transaction.category_name }}</a>
                         {% endif %}
                     </td>
@@ -238,7 +238,7 @@
                 {% if showBudget %}
                     <td style=" {{ style|raw }}" class="hidden-xs">
                         {% if transaction.budget_id %}
-                            <a href="{{ route('budgets.show', [transaction.budget_id], false) }}"
+                            <a href="{{ route('budgets.show', [transaction.budget_id]) }}"
                                title="{{ transaction.budget_name }}">{{ transaction.budget_name }}</a>
                         {% endif %}
                     </td>
@@ -251,14 +251,14 @@
                                     aria-haspopup="true" aria-expanded="false">
                                 {{ 'actions'|_ }} <span class="caret"></span></button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                <li><a href="{{ route('transactions.edit', [group.id], false) }}"><span
+                                <li><a href="{{ route('transactions.edit', [group.id]) }}"><span
                                             class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('transactions.delete', [group.id], false) }}"><span
+                                <li><a href="{{ route('transactions.delete', [group.id]) }}"><span
                                             class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
                                 <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
                                             class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
                                 <li>
-                                    <a href="{{ route('rules.create-from-journal', [transaction.transaction_journal_id], false) }}"><span
+                                    <a href="{{ route('rules.create-from-journal', [transaction.transaction_journal_id]) }}"><span
                                             class="fa fa-fw fa-random"></span> {{ 'create_rule_from_transaction'|_ }}
                                     </a></li>
                             </ul>
@@ -316,5 +316,5 @@
     </tfoot>
 </table>
 <script type="text/javascript" nonce="{{ JS_NONCE }}">
-    var cloneGroupUrl = '{{ route('transactions.clone',null, false) }}';
+    var cloneGroupUrl = '{{ route('transactions.clone') }}';
 </script>

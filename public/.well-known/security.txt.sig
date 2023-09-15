@@ -1,24 +1,3 @@
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
-
-# Please report security issues related to Firefly III to me ASAP, via the email address below.
-# Feel free to encrypt your message using GPG altough it's a pain let's be honest
-#
-# There are some ground rules, please keep them in mind:
-#
-# 1. Your security report must be related to Firefly III or the associated tools
-# 2. There is no bug bounty program
-# 3. Don't report denial of service attacks on the login form
-#
-
-Contact: mailto:james@firefly-iii.org
-Expires: 2024-12-31T23:00:00.000Z
-Preferred-Languages: en, nl
-Policy: https://docs.firefly-iii.org/firefly-iii/support/
-
-#
-# Thank you for your time!
-#
 -----BEGIN PGP SIGNATURE-----
 
 iQJKBAABCAA0FiEEAvQEbEsjbgYJVxYStJoyS36tbYAFAmUEl4MWHGphbWVzQGZp

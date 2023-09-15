@@ -220,7 +220,7 @@ class BasicController extends Controller
         $return[] = [
             'key'                     => 'balance-in-native',
             'value'                   => $sums['native'],
-            'currency_id'             => $default->id,
+            'currency_id'             => (string)$default->id,
             'currency_code'           => $default->code,
             'currency_symbol'         => $default->symbol,
             'currency_decimal_places' => $default->decimal_places,
@@ -228,7 +228,7 @@ class BasicController extends Controller
         $return[] = [
             'key'                     => 'spent-in-native',
             'value'                   => $expenses['native'],
-            'currency_id'             => $default->id,
+            'currency_id'             => (string)$default->id,
             'currency_code'           => $default->code,
             'currency_symbol'         => $default->symbol,
             'currency_decimal_places' => $default->decimal_places,
@@ -236,7 +236,7 @@ class BasicController extends Controller
         $return[] = [
             'key'                     => 'earned-in-native',
             'value'                   => $incomes['native'],
-            'currency_id'             => $default->id,
+            'currency_id'             => (string)$default->id,
             'currency_code'           => $default->code,
             'currency_symbol'         => $default->symbol,
             'currency_decimal_places' => $default->decimal_places,
@@ -255,7 +255,7 @@ class BasicController extends Controller
             $return[] = [
                 'key'                     => sprintf('balance-in-%s', $currency->code),
                 'value'                   => $sums[$currencyId] ?? '0',
-                'currency_id'             => $currency->id,
+                'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
@@ -263,7 +263,7 @@ class BasicController extends Controller
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
                 'value'                   => $expenses[$currencyId] ?? '0',
-                'currency_id'             => $currency->id,
+                'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
@@ -271,7 +271,7 @@ class BasicController extends Controller
             $return[] = [
                 'key'                     => sprintf('earned-in-%s', $currency->code),
                 'value'                   => $incomes[$currencyId] ?? '0',
-                'currency_id'             => $currency->id,
+                'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
@@ -305,7 +305,7 @@ class BasicController extends Controller
             $return[]     = [
                 'key'                     => sprintf('bills-paid-in-%s', $info['currency_code']),
                 'value'                   => $amount,
-                'currency_id'             => $info['currency_id'],
+                'currency_id'             => (string)$info['currency_id'],
                 'currency_code'           => $info['currency_code'],
                 'currency_symbol'         => $info['currency_symbol'],
                 'currency_decimal_places' => $info['currency_decimal_places'],
@@ -313,7 +313,7 @@ class BasicController extends Controller
             $return[]     = [
                 'key'                     => 'bills-paid-in-native',
                 'value'                   => $nativeAmount,
-                'currency_id'             => $info['native_id'],
+                'currency_id'             => (string)$info['native_id'],
                 'currency_code'           => $info['native_code'],
                 'currency_symbol'         => $info['native_symbol'],
                 'currency_decimal_places' => $info['native_decimal_places'],
@@ -329,7 +329,7 @@ class BasicController extends Controller
             $return[]     = [
                 'key'                     => sprintf('bills-unpaid-in-%s', $info['currency_code']),
                 'value'                   => $amount,
-                'currency_id'             => $info['currency_id'],
+                'currency_id'             => (string)$info['currency_id'],
                 'currency_code'           => $info['currency_code'],
                 'currency_symbol'         => $info['currency_symbol'],
                 'currency_decimal_places' => $info['currency_decimal_places'],
@@ -337,7 +337,7 @@ class BasicController extends Controller
             $return[]     = [
                 'key'                     => 'bills-unpaid-in-native',
                 'value'                   => $nativeAmount,
-                'currency_id'             => $info['native_id'],
+                'currency_id'             => (string)$info['native_id'],
                 'currency_code'           => $info['native_code'],
                 'currency_symbol'         => $info['native_symbol'],
                 'currency_decimal_places' => $info['native_decimal_places'],
@@ -504,7 +504,7 @@ class BasicController extends Controller
         $return[] = [
             'key'                     => 'net-worth-in-native',
             'value'                   => $netWorthSet['native']['balance'],
-            'currency_id'             => $netWorthSet['native']['currency_id'],
+            'currency_id'             => (string)$netWorthSet['native']['currency_id'],
             'currency_code'           => $netWorthSet['native']['currency_code'],
             'currency_symbol'         => $netWorthSet['native']['currency_symbol'],
             'currency_decimal_places' => $netWorthSet['native']['currency_decimal_places'],
@@ -516,7 +516,7 @@ class BasicController extends Controller
             $return[] = [
                 'key'                     => sprintf('net-worth-in-%s', $data['currency_code']),
                 'value'                   => $data['balance'],
-                'currency_id'             => $data['currency_id'],
+                'currency_id'             => (string)$data['currency_id'],
                 'currency_code'           => $data['currency_code'],
                 'currency_symbol'         => $data['currency_symbol'],
                 'currency_decimal_places' => $data['currency_decimal_places'],

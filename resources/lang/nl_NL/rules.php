@@ -50,6 +50,8 @@ return [
     'already_has_destination'                     => 'Deze transactie heeft ":name" al als doelrekening',
     'already_has_source'                          => 'Deze transactie heeft ":name" al als bronrekening',
     'already_linked_to_subscription'              => 'De transactie is al gekoppeld aan abonnement ":name"',
+    'already_linked_to_category'                  => 'The transaction is already linked to category ":name"',
+    'already_linked_to_budget'                    => 'The transaction is already linked to budget ":name"',
     'cannot_find_subscription'                    => 'Firefly III kan geen abonnement met naam ":name" vinden',
     'no_notes_to_move'                            => 'De transactie heeft geen notities om te verplaatsen naar het omschrijvingsveld',
     'no_tags_to_remove'                           => 'De transactie heeft geen tags om te verwijderen',

@@ -27,9 +27,9 @@
                             <tr>
                                 <td>
                                     <div class="btn-group btn-group-xs">
-                                        <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger delete-link"  data-id="{{ link.id }}"><span class="fa fa-trash"></span></a>
+                                        <a href="{{ route('transactions.link.delete', [link.id]) }}" class="btn btn-danger delete-link" data-id="{{ link.id }}"><span class="fa fa-trash"></span></a>
                                         <a href="#" class="btn btn-default switch-link" data-id="{{ link.id }}"><span
-                                                    class="fa fa-fw fa-arrows-h"></span></a>
+                                                class="fa fa-fw fa-arrows-h"></span></a>
                                     </div>
                                 </td>
                                 <td data-value="{{ link.source.description }}">
@@ -61,6 +61,7 @@
     <script nonce="{{ JS_NONCE }}">
         $('.switch-link').on('click', switchLink);
         var switchLinkUrl = '{{ route('transactions.link.switch') }}';
+
         function switchLink(e) {
             e.preventDefault();
             var obj = $(e.currentTarget);

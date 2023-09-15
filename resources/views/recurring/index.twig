@@ -50,9 +50,9 @@
                                     <td class="hidden-sm hidden-xs">
                                         <div class="btn-group btn-group-xs edit_tr_buttons">
                                             <a class="btn btn-default btn-xs" title="{{ 'edit'|_ }}" href="{{ route('recurring.edit',rt.id) }}"><span
-                                                        class="fa fa-fw fa-pencil"></span></a><a class="btn btn-danger btn-xs" title="{{ 'delete'|_ }}"
-                                                                                              href="{{ route('recurring.delete',rt.id) }}"><span
-                                                        class="fa fa-fw fa-trash-o"></span></a>
+                                                    class="fa fa-fw fa-pencil"></span></a><a class="btn btn-danger btn-xs" title="{{ 'delete'|_ }}"
+                                                                                             href="{{ route('recurring.delete',rt.id) }}"><span
+                                                    class="fa fa-fw fa-trash-o"></span></a>
                                         </div>
                                     </td>
                                     <td data-value="{{ rt.title }}">
@@ -73,7 +73,7 @@
                                         <ol>
                                             {% for rtt in rt.transactions %}
                                                 <li>
-                                                    {# normal amount + comma#}
+                                                    {# normal amount + comma #}
                                                     {{ formatAmountBySymbol(rtt['amount'],rtt['currency_symbol'],rtt['currency_decimal_places']) }}{% if rtt['foreign_amount'] == null %},{% endif %}
 
                                                     {# foreign amount + comma #}
@@ -89,7 +89,7 @@
                                     </td>
                                     <td>
                                         {% if null != rt.repeat_until and today > rt.repeat_until %}
-                                        <span class="text-danger">
+                                            <span class="text-danger">
                                             {{ trans('firefly.repeat_until_in_past', {date: rt.repeat_until.isoFormat(monthAndDayFormat) }) }}
                                         </span>
                                         {% endif %}
@@ -131,7 +131,7 @@
                                             {% for rep in rt.repetitions %}
                                                 {% for occ in rep.occurrences %}
                                                     {% if loop.index0 < 2 %}
-                                                    <li>{{ occ.isoFormat(monthAndDayFormat) }}</li>
+                                                        <li>{{ occ.isoFormat(monthAndDayFormat) }}</li>
                                                     {% endif %}
                                                 {% endfor %}
                                             {% endfor %}

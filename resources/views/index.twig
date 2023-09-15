@@ -10,14 +10,14 @@
             {# ACCOUNTS #}
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><a href="{{ route('accounts.index',['asset'], false) }}"
+                    <h3 class="box-title"><a href="{{ route('accounts.index',['asset']) }}"
                                              title="{{ 'yourAccounts'|_ }}">{{ 'yourAccounts'|_ }}</a></h3>
                 </div>
                 <div class="box-body">
                     <canvas id="accounts-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('accounts.index',['asset'], false) }}" class="btn btn-default button-sm"><span
+                    <a href="{{ route('accounts.index',['asset']) }}" class="btn btn-default button-sm"><span
                             class="fa fa-money"></span> {{ 'go_to_asset_accounts'|_ }}</a>
                 </div>
             </div>
@@ -25,7 +25,7 @@
             {# BUDGETS #}
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><a href="{{ route('budgets.index',null, false) }}"
+                    <h3 class="box-title"><a href="{{ route('budgets.index') }}"
                                              title="{{ 'budgetsAndSpending'|_ }}">{{ 'budgetsAndSpending'|_ }}</a></h3>
                 </div>
                 <div class="box-body">
@@ -49,7 +49,7 @@
                     <canvas id="categories-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('categories.index',null, false) }}" class="btn btn-default button-sm">
+                    <a href="{{ route('categories.index') }}" class="btn btn-default button-sm">
                         <span class="fa fa-bookmark"></span>
                         <span>{{ 'go_to_categories'|_ }}</span>
                     </a>
@@ -64,7 +64,7 @@
                     <div class="box">
                         <div class="box-header with-border">
                             <h3 class="box-title"><a
-                                    href="{{ route('accounts.show', [data.account.id], false) }}">{{ data.account.name }}</a>
+                                    href="{{ route('accounts.show', [data.account.id]) }}">{{ data.account.name }}</a>
                             </h3>
                         </div>
 
@@ -92,34 +92,34 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="{{ route('transactions.create', ['withdrawal'], false) }}?source={{ data.account.id }}">{{ 'create_new_withdrawal'|_ }}</a>
+                                        <a href="{{ route('transactions.create', ['withdrawal']) }}?source={{ data.account.id }}">{{ 'create_new_withdrawal'|_ }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('transactions.create', ['deposit'], false) }}?destination={{ data.account.id }}">{{ 'create_new_deposit'|_ }}</a>
+                                        <a href="{{ route('transactions.create', ['deposit']) }}?destination={{ data.account.id }}">{{ 'create_new_deposit'|_ }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('transactions.create', ['transfer'], false) }}?source={{ data.account.id }}">{{ 'create_new_transfer'|_ }}</a>
+                                        <a href="{{ route('transactions.create', ['transfer']) }}?source={{ data.account.id }}">{{ 'create_new_transfer'|_ }}</a>
                                     </li>
                                 </ul>
                             </div>
                             <div class="btn-group">
                                 <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                                    aria-haspopup="true" aria-expanded="false"
-                                   href="{{ route('accounts.show', [data.account.id], false) }}">{{ formatAmountByAccount(data.account, data.account|balance, false) }}
+                                   href="{{ route('accounts.show', [data.account.id]) }}">{{ formatAmountByAccount(data.account, data.account|balance, false) }}
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="{{ route('accounts.show', [data.account.id], false) }}">{{ 'show'|_ }}</a>
+                                        <a href="{{ route('accounts.show', [data.account.id]) }}">{{ 'show'|_ }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('accounts.reconcile', [data.account.id], false) }}">{{ 'reconcile'|_ }}</a>
+                                        <a href="{{ route('accounts.reconcile', [data.account.id]) }}">{{ 'reconcile'|_ }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('accounts.edit', [data.account.id], false) }}">{{ 'edit'|_ }}</a>
+                                        <a href="{{ route('accounts.edit', [data.account.id]) }}">{{ 'edit'|_ }}</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('accounts.delete', [data.account.id], false) }}">{{ 'delete'|_ }}</a>
+                                        <a href="{{ route('accounts.delete', [data.account.id]) }}">{{ 'delete'|_ }}</a>
                                     </li>
                                 </ul>
                             </div>
@@ -132,7 +132,7 @@
                 {# BILLS #}
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><a href="{{ route('bills.index', null, false) }}"
+                        <h3 class="box-title"><a href="{{ route('bills.index') }}"
                                                  title="{{ 'bills'|_ }}">{{ 'bills'|_ }}</a></h3>
 
                     </div>
@@ -142,7 +142,7 @@
                         </div>
                     </div>
                     <div class="box-footer">
-                        <a href="{{ route('bills.index',null, false) }}" class="btn btn-default button-sm"><span
+                        <a href="{{ route('bills.index') }}" class="btn btn-default button-sm"><span
                                 class="fa fa-calendar"></span> {{ 'go_to_bills'|_ }}</a>
                     </div>
                 </div>
@@ -159,7 +159,7 @@
             {# EXPENSE ACCOUNTS #}
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><a href="{{ route('accounts.index',['expense'], false) }}"
+                    <h3 class="box-title"><a href="{{ route('accounts.index',['expense']) }}"
                                              title="{{ 'expense_accounts'|_ }}">{{ 'expense_accounts'|_ }}</a>
                     </h3>
                 </div>
@@ -168,14 +168,14 @@
                             width="100%"></canvas>
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('accounts.index', ['expense'], false) }}" class="btn btn-default button-sm"><span
+                    <a href="{{ route('accounts.index', ['expense']) }}" class="btn btn-default button-sm"><span
                             class="fa fa-shopping-cart"></span> {{ 'go_to_expense_accounts'|_ }}</a>
                 </div>
             </div>
             {# OPTIONAL REVENUE ACCOUNTS #}
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><a href="{{ route('accounts.index',['revenue'], false) }}"
+                    <h3 class="box-title"><a href="{{ route('accounts.index',['revenue']) }}"
                                              title="{{ 'revenue_accounts'|_ }}">{{ 'revenue_accounts'|_ }}</a></h3>
 
                 </div>
@@ -184,7 +184,7 @@
                             width="100%"></canvas>
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('accounts.index', ['revenue'], false) }}" class="btn btn-default button-sm"><span
+                    <a href="{{ route('accounts.index', ['revenue']) }}" class="btn btn-default button-sm"><span
                             class="fa fa-download"></span> {{ 'go_to_revenue_accounts'|_ }}</a>
                 </div>
             </div>
@@ -200,9 +200,9 @@
             lineTextColor = '#bec5cb';
         }
         var billCount = {{ billCount }};
-        var accountFrontpageUrl = '{{ route('chart.account.frontpage', null, false) }}';
-        var accountRevenueUrl = '{{ route('chart.account.revenue', null, false) }}';
-        var accountExpenseUrl = '{{ route('chart.account.expense',null, false) }}';
+        var accountFrontpageUrl = '{{ route('chart.account.frontpage') }}';
+        var accountRevenueUrl = '{{ route('chart.account.revenue') }}';
+        var accountExpenseUrl = '{{ route('chart.account.expense') }}';
         var piggyInfoUrl = '{{ route('json.fp.piggy-banks') }}';
         var drawVerticalLine = '';
         {# render vertical line with text "today"  #}

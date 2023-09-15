@@ -81,13 +81,13 @@
                                                 transaction.source_type == 'Debt' or
                                                 transaction.source_type == 'Mortgage' %}
                                                 <input
-                                                        autocomplete="off"
-                                                        placeholder="Source account"
-                                                        name="source_name[{{ transaction.transaction_journal_id }}]"
-                                                        type="text"
-                                                        value="{% if transaction.destination_type != "Cash account" %}{{ preFilled.source_name[transaction.transaction_journal_id]|default(transaction.destination_name) }}{% endif %}"
-                                                        class="form-control tt-input input-revenue"
-                                                        spellcheck="false" dir="auto">
+                                                    autocomplete="off"
+                                                    placeholder="Source account"
+                                                    name="source_name[{{ transaction.transaction_journal_id }}]"
+                                                    type="text"
+                                                    value="{% if transaction.destination_type != "Cash account" %}{{ preFilled.source_name[transaction.transaction_journal_id]|default(transaction.destination_name) }}{% endif %}"
+                                                    class="form-control tt-input input-revenue"
+                                                    spellcheck="false" dir="auto">
                                             {% endif %}
                                         {% endif %}
 
@@ -153,13 +153,13 @@
                                                 transaction.source_type == 'Debt' or
                                                 transaction.source_type == 'Mortgage' %}
                                                 <input
-                                                        autocomplete="off"
-                                                        placeholder="Source account"
-                                                        name="source_name[{{ transaction.transaction_journal_id }}]"
-                                                        type="text"
-                                                        value="{% if transaction.destination_type != "Cash account" %}{{ transaction.source_name }}{% endif %}"
-                                                        class="form-control tt-input"
-                                                        spellcheck="false" dir="auto">
+                                                    autocomplete="off"
+                                                    placeholder="Source account"
+                                                    name="source_name[{{ transaction.transaction_journal_id }}]"
+                                                    type="text"
+                                                    value="{% if transaction.destination_type != "Cash account" %}{{ transaction.source_name }}{% endif %}"
+                                                    class="form-control tt-input"
+                                                    spellcheck="false" dir="auto">
                                             {% endif %}
 
                                         {% endif %}
@@ -206,13 +206,13 @@
                                                 {# if new source is Liability, destination must be expense account. #}
 
                                                 <input
-                                                        autocomplete="off"
-                                                        placeholder="Destination account"
-                                                        name="destination_name[{{ transaction.transaction_journal_id }}]"
-                                                        type="text"
-                                                        value="{% if transaction.source_type != "Cash account" %}{{ transaction.source_name }}{% endif %}"
-                                                        class="form-control tt-input"
-                                                        spellcheck="false" dir="auto">
+                                                    autocomplete="off"
+                                                    placeholder="Destination account"
+                                                    name="destination_name[{{ transaction.transaction_journal_id }}]"
+                                                    type="text"
+                                                    value="{% if transaction.source_type != "Cash account" %}{{ transaction.source_name }}{% endif %}"
+                                                    class="form-control tt-input"
+                                                    spellcheck="false" dir="auto">
                                             {% endif %}
                                         {% endif %}
 
@@ -237,13 +237,13 @@
                                                 transaction.source_type == 'Debt' or
                                                 transaction.source_type == 'Mortgage' %}
                                                 <input
-                                                        autocomplete="off"
-                                                        placeholder="Destination account"
-                                                        name="destination_name[{{ transaction.transaction_journal_id }}]"
-                                                        type="text"
-                                                        value="{% if transaction.source_type != "Cash account" %}{{ transaction.destination_name }}{% endif %}"
-                                                        class="form-control tt-input"
-                                                        spellcheck="false" dir="auto">
+                                                    autocomplete="off"
+                                                    placeholder="Destination account"
+                                                    name="destination_name[{{ transaction.transaction_journal_id }}]"
+                                                    type="text"
+                                                    value="{% if transaction.source_type != "Cash account" %}{{ transaction.destination_name }}{% endif %}"
+                                                    class="form-control tt-input"
+                                                    spellcheck="false" dir="auto">
                                             {% endif %}
                                         {% endif %}
 

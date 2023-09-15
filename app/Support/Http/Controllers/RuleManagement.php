@@ -54,7 +54,7 @@ trait RuleManagement
                         'rules.partials.action',
                         [
                             'oldAction'  => $oldAction['type'],
-                            'oldValue'   => $oldAction['value'],
+                            'oldValue'   => $oldAction['value'] ?? '',
                             'oldChecked' => 1 === (int)($oldAction['stop_processing'] ?? '0'),
                             'count'      => $index + 1,
                         ]

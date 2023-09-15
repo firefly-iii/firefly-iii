@@ -103,12 +103,12 @@ class CategoryController extends Controller
             // create arrays
             $return[$key] = $return[$key] ?? [
                 'label'                   => $categoryName,
-                'currency_id'             => (int)$currency->id,
+                'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,
                 'currency_name'           => $currency->name,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => (int)$currency->decimal_places,
-                'native_id'               => (int)$default->id,
+                'native_id'               => (string)$default->id,
                 'native_code'             => $default->code,
                 'native_name'             => $default->name,
                 'native_symbol'           => $default->symbol,

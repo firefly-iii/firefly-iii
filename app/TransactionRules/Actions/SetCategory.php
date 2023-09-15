@@ -87,12 +87,22 @@ class SetCategory implements ActionInterface
             )
         );
 
+        // find previous category
+        /** @var TransactionJournal $object */
+        $object          = $user->transactionJournals()->find($journal['transaction_journal_id']);
+        $oldCategory     = $object->categories()->first();
+        $oldCategoryName = $oldCategory?->name;
+        if ((int)$oldCategory?->id === (int)$category->id) {
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_linked_to_category', ['name' => $category->name])));
+            return false;
+        }
+
         DB::table('category_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
         DB::table('category_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'category_id' => $category->id]);
 
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        event(new TriggeredAuditLog($this->action->rule, $object, 'set_category', null, $category->name));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'set_category', $oldCategoryName, $category->name));
 
         return true;
     }

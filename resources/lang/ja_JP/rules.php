@@ -50,6 +50,8 @@ return [
     'already_has_destination'                     => 'この取引はすでに宛先の口座は「:name」です',
     'already_has_source'                          => 'この取引はすでに元となる口座は「:name」です',
     'already_linked_to_subscription'              => 'この取引はすでにサブスクリプション「:name」にリンクされています',
+    'already_linked_to_category'                  => 'The transaction is already linked to category ":name"',
+    'already_linked_to_budget'                    => 'The transaction is already linked to budget ":name"',
     'cannot_find_subscription'                    => 'Firefly IIIはサブスクリプション「":name"」を見つけられませんでした',
     'no_notes_to_move'                            => '取引には概要に設定できるメモがありません',
     'no_tags_to_remove'                           => '取引には削除できるタグがありません',
