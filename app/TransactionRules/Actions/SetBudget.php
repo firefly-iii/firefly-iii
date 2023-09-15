@@ -83,6 +83,17 @@ class SetBudget implements ActionInterface
             return false;
         }
 
+        // find previous budget
+        /** @var TransactionJournal $object */
+        $object        = $user->transactionJournals()->find($journal['transaction_journal_id']);
+        $oldBudget     = $object->budgets()->first();
+        $oldBudgetName = $oldBudget?->name;
+        if ((int)$oldBudget?->id === (int)$budget->id) {
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_linked_to_budget', ['name' => $budget->name])));
+            return false;
+        }
+
+
         Log::debug(
             sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal['transaction_journal_id'], $budget->id, $budget->name)
         );
@@ -92,7 +103,7 @@ class SetBudget implements ActionInterface
 
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        event(new TriggeredAuditLog($this->action->rule, $object, 'set_budget', null, $budget->name));
+        event(new TriggeredAuditLog($this->action->rule, $object, 'set_budget', $oldBudgetName, $budget->name));
 
         return true;
     }
