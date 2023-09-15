@@ -320,7 +320,7 @@ return [
     'update_newer_version_alert'           => 'Du køyrer :your_version, som er nyare enn den nyaste versjonen, :new_version.',
     'update_check_error'                   => 'Det oppstod ein feil under søk etter oppdatering: :error',
     'unknown_error'                        => 'Ukjent feil. Beklager det.',
-    'just_new_release'                     => 'Ein ny versjon er tilgjengelig! Versjon :version vart utgitt :date. Denne utgjevinga er heilt ny. Vent gjerne nokon dager slik at den nye utgaven er stabil.',
+    'just_new_release'                     => 'Ein ny versjon er tilgjengeleg! Versjon :version vart tilgjengeleg :date. Denne utgjevinga er heilt ny. Vent gjerne nokre dagar for å sikra at den nye utgåva er stabil.',
     'disabled_but_check'                   => 'Du har deaktivert oppdateringssjekk. Ikke glem å oppdatera sjølv av og til. Tusen takk!',
     'admin_update_channel_title'           => 'Oppdater kanal',
     'admin_update_channel_explain'         => 'Firefly III har tre oppdaterings "kanaler" som bestemmer kor mykje du ønskar å ligga foran med tanke på funksjoner, forbetringar og feil. Bruk beta-kanalen dersom du er eventyrlysten og "alfa" når du liker å leve farlig.',

@@ -9,8 +9,8 @@
         "split": "\u0420\u043e\u0437\u0434\u0456\u043b\u0438\u0442\u0438",
         "single_split": "\u0420\u043e\u0437\u0434\u0456\u043b\u0438\u0442\u0438",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",
-        "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> has been stored.",
-        "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") has been updated.",
+        "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">\u0412\u0435\u0431\u0445\u0443\u043a #{ID} (\"{title}\")<\/a> \u0431\u0443\u0432 \u0437\u0431\u0435\u0440\u0435\u0436\u0435\u043d\u0438\u0439.",
+        "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">\u0412\u0435\u0431\u0445\u0443\u043a #{ID}<\/a> (\"{title}\") \u0431\u0443\u0432 \u043e\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0439.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> has been stored.",
         "transaction_journal_information": "Transaction information",
@@ -112,7 +112,7 @@
         "webhook_delivery_form_help": "\u0423 \u044f\u043a\u043e\u043c\u0443 \u0444\u043e\u0440\u043c\u0430\u0442\u0456 \u0432\u0435\u0431-\u0445\u0443\u043a \u043c\u0430\u0454 \u043d\u0430\u0434\u0430\u0432\u0430\u0442\u0438 \u0434\u0430\u043d\u0456.",
         "webhook_active_form_help": "\u0412\u0435\u0431-\u0445\u0443\u043a \u043c\u0430\u0454 \u0431\u0443\u0442\u0438 \u0430\u043a\u0442\u0438\u0432\u043d\u0438\u043c, \u0456\u043d\u0430\u043a\u0448\u0435 \u0439\u043e\u0433\u043e \u043d\u0435 \u0431\u0443\u0434\u0435 \u0432\u0438\u043a\u043b\u0438\u043a\u0430\u043d\u043e.",
         "edit_webhook_js": "\u0420\u0435\u0434\u0430\u0433\u0443\u0432\u0430\u0442\u0438 \u0432\u0435\u0431-\u0445\u0443\u043a \"{title}\"",
-        "webhook_was_triggered": "The webhook was triggered on the indicated transaction. Please wait for results to appear.",
+        "webhook_was_triggered": "\u0412\u0435\u0431\u0445\u0443\u043a \u0431\u0443\u0432 \u0437\u0430\u043f\u0443\u0449\u0435\u043d\u0438\u0439 \u0432 \u0437\u0430\u0437\u043d\u0430\u0447\u0435\u043d\u0456\u0439 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0456\u0457. \u0411\u0443\u0434\u044c \u043b\u0430\u0441\u043a\u0430, \u0437\u0430\u0447\u0435\u043a\u0430\u0439\u0442\u0435 \u043d\u0430 \u043e\u0442\u0440\u0438\u043c\u0430\u043d\u043d\u044f \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u0456\u0432.",
         "view_message": "\u041f\u0435\u0440\u0435\u0433\u043b\u044f\u043d\u0443\u0442\u0438 \u043f\u043e\u0432\u0456\u0434\u043e\u043c\u043b\u0435\u043d\u043d\u044f",
         "view_attempts": "\u041f\u0435\u0440\u0435\u0433\u043b\u044f\u043d\u0443\u0442\u0438 \u043d\u0435\u0432\u0434\u0430\u043b\u0456 \u0441\u043f\u0440\u043e\u0431\u0438",
         "message_content_title": "\u0412\u043c\u0456\u0441\u0442 \u0432\u0435\u0431-\u0445\u0443\u043a \u043f\u043e\u0432\u0456\u0434\u043e\u043c\u043b\u0435\u043d\u043d\u044f",
@@ -127,7 +127,7 @@
         "reset_webhook_secret": "\u0412\u0456\u0434\u043d\u043e\u0432\u0438\u0442\u0438 \u0441\u0456\u043a\u0440\u0435\u0442 \u0432\u0435\u0431-\u0445\u0443\u043a\u0430"
     },
     "form": {
-        "url": "URL",
+        "url": "URL-\u0430\u0434\u0440\u0435\u0441\u0430",
         "active": "\u0410\u043a\u0442\u0438\u0432\u043d\u043e",
         "interest_date": "\u0414\u0430\u0442\u0430 \u043d\u0430\u0440\u0430\u0445\u0443\u0432\u0430\u043d\u043d\u044f \u0432\u0456\u0434\u0441\u043e\u0442\u043a\u0443",
         "title": "\u041d\u0430\u0437\u0432\u0430",

@@ -50,6 +50,8 @@ return [
     'already_has_destination'                     => 'Esta transacción ya tiene ":name" como cuenta de destino',
     'already_has_source'                          => 'Esta transacción ya tiene ":name" como cuenta de origen',
     'already_linked_to_subscription'              => 'La transacción ya está vinculada a la suscripción ":name"',
+    'already_linked_to_category'                  => 'The transaction is already linked to category ":name"',
+    'already_linked_to_budget'                    => 'The transaction is already linked to budget ":name"',
     'cannot_find_subscription'                    => 'Firefly III no puede encontrar la suscripción ":name"',
     'no_notes_to_move'                            => 'La transacción no tiene notas para mover al campo de descripción',
     'no_tags_to_remove'                           => 'La transacción no tiene etiquetas que eliminar',
