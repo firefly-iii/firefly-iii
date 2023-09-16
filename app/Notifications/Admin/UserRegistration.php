@@ -99,9 +99,7 @@ class UserRegistration extends Notification
      */
     public function via($notifiable)
     {
-        /** @var User|null $user */
-        $user     = auth()->user();
-        $slackUrl = null === $user ? '' : (string)app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
+        $slackUrl = app('fireflyconfig')->get('slack_webhook_url', '')->data;
         if (UrlValidator::isValidWebhookURL($slackUrl)) {
             return ['mail', 'slack'];
         }

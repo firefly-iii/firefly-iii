@@ -480,15 +480,16 @@ class User extends Authenticatable
         if ($notification instanceof TestNotification) {
             return app('fireflyconfig')->get('slack_webhook_url', '')->data;
         }
+        if ($notification instanceof UserInvitation) {
+            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
+        }
         if ($notification instanceof UserRegistration) {
             return app('fireflyconfig')->get('slack_webhook_url', '')->data;
         }
         if ($notification instanceof VersionCheckResult) {
             return app('fireflyconfig')->get('slack_webhook_url', '')->data;
         }
-        if ($notification instanceof UserInvitation) {
-            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
-        }
+
         return app('preferences')->getForUser($this, 'slack_webhook_url', '')->data;
     }
 
@@ -598,7 +599,7 @@ class User extends Authenticatable
      */
     public function userGroup(): BelongsTo
     {
-        return $this->belongsTo(UserGroup::class, );
+        return $this->belongsTo(UserGroup::class,);
     }
 
     /**
