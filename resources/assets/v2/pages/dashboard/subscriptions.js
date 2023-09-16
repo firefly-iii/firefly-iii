@@ -25,122 +25,161 @@ import {Chart} from 'chart.js';
 import {I18n} from "i18n-js";
 import {loadTranslations} from "../../support/load-translations.js";
 
-const CACHE_KEY = 'dashboard-subscriptions-data';
-
-let chart = null;
-let chartData = null;
+//const CACHE_KEY = 'dashboard-subscriptions-data';
+const SUBSCRIPTION_CACHE_KEY = 'dashboard-subscriptions-data';
+// let chart = null;
+// let chartData = null;
 let afterPromises = false;
 let i18n; // for translating items in the chart.
+let apiData = [];
+
+/**
+ *
+ */
+function downloadSubscriptions(params) {
+    console.log('Downloading page ' + params.page + '...');
+    const getter = new Get();
+
+    getter.get(params).then((response) => {
+        let data = response.data;
+        let totalPages = parseInt(data.meta.pagination.total_pages);
+        apiData = [...apiData, ...data.data];
+        if (totalPages > params.page) {
+            params.page++;
+            downloadSubscriptions(params);
+        }
+        console.log('Done! ' + apiData.length + ' items downloaded.');
+    });
+}
+
+
 export default () => ({
     loading: false,
     autoConversion: false,
-    loadChart() {
-        if (true === this.loading) {
-            return;
-        }
-        this.loading = true;
-
-        if (null !== chartData) {
-            this.drawChart(this.generateOptions(chartData));
-            this.loading = false;
-            return;
-        }
-        this.getFreshData();
-    },
-    drawChart(options) {
-        if (null !== chart) {
-            chart.data.datasets = options.data.datasets;
-            chart.update();
-            return;
-        }
-        chart = new Chart(document.querySelector("#subscriptions-chart"), options);
-    },
-    getFreshData() {
-
+    startSubscriptions() {
+        console.log('here we are');
         const cacheValid = window.store.get('cacheValid');
-        let cachedData = window.store.get(CACHE_KEY);
+        let cachedData = window.store.get(SUBSCRIPTION_CACHE_KEY);
 
-        if (cacheValid && typeof cachedData !== 'undefined') {
-            this.drawChart(this.generateOptions(cachedData));
-            this.loading = false;
+        if (cacheValid && typeof cachedData !== 'undefined' && false) {
+            console.error('cannot handle yet');
             return;
         }
 
-
-        const getter = new Get();
         let params = {
             start: format(new Date(window.store.get('start')), 'y-MM-dd'),
-            end: format(new Date(window.store.get('end')), 'y-MM-dd')
+            end: format(new Date(window.store.get('end')), 'y-MM-dd'),
+            page: 1
         };
-
-        getter.paid(params).then((response) => {
-            let paidData = response.data;
-            getter.unpaid(params).then((response) => {
-                let unpaidData = response.data;
-                let chartData = {paid: paidData, unpaid: unpaidData};
-                window.store.set(CACHE_KEY, chartData);
-                this.drawChart(this.generateOptions(chartData));
-                this.loading = false;
-            });
-        });
+        downloadSubscriptions(params);
     },
-    generateOptions(data) {
-        let options = getDefaultChartSettings('pie');
-        // console.log(data);
-        options.data.labels = [i18n.t('firefly.paid'), i18n.t('firefly.unpaid')];
-        options.data.datasets = [];
-        let collection = {};
-        for (let i in data.paid) {
-            if (data.paid.hasOwnProperty(i)) {
-                let current = data.paid[i];
-                let currencyCode = this.autoConversion ? current.native_code : current.currency_code;
-                let amount = this.autoConversion ? current.native_sum : current.sum;
-                if (!collection.hasOwnProperty(currencyCode)) {
-                    collection[currencyCode] = {
-                        paid: 0,
-                        unpaid: 0,
-                    };
-                }
-                // in case of paid, add to "paid":
-                collection[currencyCode].paid += (parseFloat(amount) * -1);
-            }
-        }
-        // unpaid
-        for (let i in data.unpaid) {
-            if (data.unpaid.hasOwnProperty(i)) {
-                let current = data.unpaid[i];
-                let currencyCode = this.autoConversion ? current.native_code : current.currency_code;
-                let amount = this.autoConversion ? current.native_sum : current.sum;
-                if (!collection.hasOwnProperty(currencyCode)) {
-                    collection[currencyCode] = {
-                        paid: 0,
-                        unpaid: 0,
-                    };
-                }
-                // console.log(current);
-                // in case of paid, add to "paid":
-                collection[currencyCode].unpaid += parseFloat(amount);
-            }
-        }
-        for (let currencyCode in collection) {
-            if (collection.hasOwnProperty(currencyCode)) {
-                let current = collection[currencyCode];
-                options.data.datasets.push(
-                    {
-                        label: currencyCode,
-                        data: [current.paid, current.unpaid],
-                        backgroundColor: [
-                            'rgb(54, 162, 235)', // green (paid)
-                            'rgb(255, 99, 132)', // red (unpaid_
-                        ],
-                        //hoverOffset: 4
-                    }
-                )
-            }
-        }
 
-        return options;
-    },
+    // loadChart() {
+    //     if (true === this.loading) {
+    //         return;
+    //     }
+    //     this.loading = true;
+    //
+    //     if (null !== chartData) {
+    //         //this.drawChart(this.generateOptions(chartData));
+    //         //this.loading = false;
+    //
+    //     }
+    //     //this.getFreshData();
+    // },
+    // drawChart(options) {
+    //     if (null !== chart) {
+    //         // chart.data.datasets = options.data.datasets;
+    //         // chart.update();
+    //
+    //     }
+    //     // chart = new Chart(document.querySelector("#subscriptions-chart"), options);
+    // },
+    // getFreshData() {
+    //     const cacheValid = window.store.get('cacheValid');
+    //     let cachedData = window.store.get(CACHE_KEY);
+    //
+    //     if (cacheValid && typeof cachedData !== 'undefined') {
+    //         this.drawChart(this.generateOptions(cachedData));
+    //         this.loading = false;
+    //         return;
+    //     }
+    //
+    //
+    //     const getter = new Get();
+    //     let params = {
+    //         start: format(new Date(window.store.get('start')), 'y-MM-dd'),
+    //         end: format(new Date(window.store.get('end')), 'y-MM-dd')
+    //     };
+    //
+    //     getter.paid(params).then((response) => {
+    //         let paidData = response.data;
+    //         getter.unpaid(params).then((response) => {
+    //             let unpaidData = response.data;
+    //             let chartData = {paid: paidData, unpaid: unpaidData};
+    //             window.store.set(CACHE_KEY, chartData);
+    //             this.drawChart(this.generateOptions(chartData));
+    //             this.loading = false;
+    //         });
+    //     });
+    // },
+    // generateOptions(data) {
+    //     let options = getDefaultChartSettings('pie');
+    //     // console.log(data);
+    //     options.data.labels = [i18n.t('firefly.paid'), i18n.t('firefly.unpaid')];
+    //     options.data.datasets = [];
+    //     let collection = {};
+    //     for (let i in data.paid) {
+    //         if (data.paid.hasOwnProperty(i)) {
+    //             let current = data.paid[i];
+    //             let currencyCode = this.autoConversion ? current.native_code : current.currency_code;
+    //             let amount = this.autoConversion ? current.native_sum : current.sum;
+    //             if (!collection.hasOwnProperty(currencyCode)) {
+    //                 collection[currencyCode] = {
+    //                     paid: 0,
+    //                     unpaid: 0,
+    //                 };
+    //             }
+    //             // in case of paid, add to "paid":
+    //             collection[currencyCode].paid += (parseFloat(amount) * -1);
+    //         }
+    //     }
+    //     // unpaid
+    //     for (let i in data.unpaid) {
+    //         if (data.unpaid.hasOwnProperty(i)) {
+    //             let current = data.unpaid[i];
+    //             let currencyCode = this.autoConversion ? current.native_code : current.currency_code;
+    //             let amount = this.autoConversion ? current.native_sum : current.sum;
+    //             if (!collection.hasOwnProperty(currencyCode)) {
+    //                 collection[currencyCode] = {
+    //                     paid: 0,
+    //                     unpaid: 0,
+    //                 };
+    //             }
+    //             // console.log(current);
+    //             // in case of paid, add to "paid":
+    //             collection[currencyCode].unpaid += parseFloat(amount);
+    //         }
+    //     }
+    //     for (let currencyCode in collection) {
+    //         if (collection.hasOwnProperty(currencyCode)) {
+    //             let current = collection[currencyCode];
+    //             options.data.datasets.push(
+    //                 {
+    //                     label: currencyCode,
+    //                     data: [current.paid, current.unpaid],
+    //                     backgroundColor: [
+    //                         'rgb(54, 162, 235)', // green (paid)
+    //                         'rgb(255, 99, 132)', // red (unpaid_
+    //                     ],
+    //                     //hoverOffset: 4
+    //                 }
+    //             )
+    //         }
+    //     }
+    //
+    //     return options;
+    // },
 
 
     init() {
@@ -154,7 +193,7 @@ export default () => ({
             i18n.locale = values[1];
             loadTranslations(i18n, values[1]).then(() => {
                 if (false === this.loading) {
-                    this.loadChart();
+                    this.startSubscriptions();
                 }
             });
 
@@ -166,8 +205,7 @@ export default () => ({
             }
             // console.log('subscriptions observe end');
             if (false === this.loading) {
-                this.chartData = null;
-                this.loadChart();
+                this.startSubscriptions();
             }
         });
         window.store.observe('autoConversion', (newValue) => {
@@ -177,7 +215,7 @@ export default () => ({
             // console.log('subscriptions observe autoConversion');
             this.autoConversion = newValue;
             if (false === this.loading) {
-                this.loadChart();
+                this.startSubscriptions();
             }
         });
     },

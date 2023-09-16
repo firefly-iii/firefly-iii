@@ -179,7 +179,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col" x-data="subscriptions">
+                    {{--
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title"><a href="{{ route('subscriptions.index') }}"
@@ -190,6 +191,21 @@
                             <canvas id="subscriptions-chart"></canvas>
                         </div>
                     </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title"><a href="{{ route('subscriptions.index') }}"
+                                                      title="{{ __('firefly.go_to_subscriptions') }}">{{ __('firefly.subscriptions')  }}
+                                    (TODO group)</a>
+                            </h3>
+                        </div>
+                        <div class="card-body" x-data="subscriptions">
+                            Tabel: per item verwacht in deze periode betaald niet betaald<br>
+                            if betaald dan percentage over / onder.
+
+                        </div>
+                    </div>
+                --}}
+                    
                 </div>
                 <div class="col" x-data="piggies">
 
@@ -217,6 +233,7 @@
                             </ul>
                         </div>
                     </template>
+
                 </div>
                 <div class="col">
                     <div class="card">
