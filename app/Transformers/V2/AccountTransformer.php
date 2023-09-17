@@ -144,15 +144,15 @@ class AccountTransformer extends AbstractTransformer
             'currency_symbol'         => $currency->symbol,
             'currency_decimal_places' => (int)$currency->decimal_places,
 
-            'native_id'              => (string)$this->default->id,
-            'native_code'            => $this->default->code,
-            'native_symbol'          => $this->default->symbol,
-            'native_decimal_places'  => (int)$this->default->decimal_places,
+            'native_currency_id'             => (string)$this->default->id,
+            'native_currency_code'           => $this->default->code,
+            'native_currency_symbol'         => $this->default->symbol,
+            'native_currency_decimal_places' => (int)$this->default->decimal_places,
 
             // balance:
-            'current_balance'        => $balance,
-            'native_current_balance' => $nativeBalance,
-            'current_balance_date'   => $this->getDate(),
+            'current_balance'                => $balance,
+            'native_current_balance'         => $nativeBalance,
+            'current_balance_date'           => $this->getDate(),
 
             // more meta
 
@@ -173,7 +173,7 @@ class AccountTransformer extends AbstractTransformer
             //            'longitude'               => $longitude,
             //            'latitude'                => $latitude,
             //            'zoom_level'              => $zoomLevel,
-            'links'                  => [
+            'links'                          => [
                 [
                     'rel' => 'self',
                     'uri' => '/accounts/' . $account->id,

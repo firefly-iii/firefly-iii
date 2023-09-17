@@ -9,6 +9,8 @@
             "paid": "Zaplaceno",
             "unpaid": "Nezaplaceno",
             "default_group_title_name_plain": "ungrouped",
+            "subscriptions_in_group": "Subscriptions in group \"%{title}\"",
+            "subscr_expected_x_times": "Expect to pay %{amount} %{times} times this period",
             "overspent": "P\u0159ekro\u010deny v\u00fddaje",
             "money_flowing_in": "Vstup",
             "money_flowing_out": "V\u00fdstup",

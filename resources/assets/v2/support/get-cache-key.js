@@ -18,15 +18,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-let loaded = false;
+import {format} from "date-fns";
 
-async function loadTranslations(i18n, locale) {
-    if (false === loaded) {
-        const response = await fetch(`./v2/i18n/${locale}.json`);
-        const translations = await response.json();
-        i18n.store(translations);
-    }
-    //loaded = true;
+async function getCacheKey(string, start, end) {
+    const cacheKey = format(start, 'y-MM-dd') + '_' + format(end, 'y-MM-dd') + '_' + string;
+    console.log('getCacheKey: ' + cacheKey);
+    return cacheKey;
 }
 
-export {loadTranslations};
+export {getCacheKey};

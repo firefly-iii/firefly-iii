@@ -1682,6 +1682,8 @@ return [
 
     // bills:
     'not_expected_period'                       => 'Not expected this period',
+    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
+    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
     'not_or_not_yet'                            => 'Not (yet)',
     'visit_bill'                                => 'Visit bill ":name" at Firefly III',
     'match_between_amounts'                     => 'Bill matches transactions between :low and :high.',

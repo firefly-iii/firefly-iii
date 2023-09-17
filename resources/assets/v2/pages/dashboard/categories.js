@@ -46,7 +46,7 @@ export default () => ({
                 let code = current.currency_code;
                 // only use native code when doing auto conversion.
                 if (this.autoConversion) {
-                    code = current.native_code;
+                    code = current.native_currency_code;
                 }
 
                 if (!series.hasOwnProperty(code)) {
@@ -67,7 +67,7 @@ export default () => ({
                 let current = data[i];
                 let code = current.currency_code;
                 if (this.autoConversion) {
-                    code = current.native_code;
+                    code = current.native_currency_code;
                 }
 
                 // loop series, add 0 if not present or add actual amount.
@@ -80,7 +80,7 @@ export default () => ({
                             yAxis = 'y' + current.currency_code;
                             if (this.autoConversion) {
                                 amount = parseFloat(current.native_amount);
-                                yAxis = 'y' + current.native_code;
+                                yAxis = 'y' + current.native_currency_code;
                             }
                         }
                         if (series[ii].data.hasOwnProperty(current.label)) {

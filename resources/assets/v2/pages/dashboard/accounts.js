@@ -84,10 +84,10 @@ export default () => ({
 
                 // use the "native" currency code and use the "native_entries" as array
                 if (this.autoConversion) {
-                    currencies.push(current.native_code);
-                    dataset.currency_code = current.native_code;
+                    currencies.push(current.native_currency_code);
+                    dataset.currency_code = current.native_currency_code;
                     collection = Object.values(current.native_entries);
-                    yAxis = 'y' + current.native_code;
+                    yAxis = 'y' + current.native_currency_code;
                 }
                 if (!this.autoConversion) {
                     yAxis = 'y' + current.currency_code;
@@ -208,7 +208,7 @@ export default () => ({
                                         amount_raw: parseFloat(currentTransaction.amount),
                                         amount: formatMoney(currentTransaction.amount, currentTransaction.currency_code),
                                         native_amount_raw: parseFloat(currentTransaction.native_amount),
-                                        native_amount: formatMoney(currentTransaction.native_amount, currentTransaction.native_code),
+                                        native_amount: formatMoney(currentTransaction.native_amount, currentTransaction.native_currency_code),
                                     });
                                 }
                                 groups.push(group);
@@ -221,7 +221,7 @@ export default () => ({
                                 balance_raw: parseFloat(parent.attributes.current_balance),
                                 balance: formatMoney(parent.attributes.current_balance, parent.attributes.currency_code),
                                 native_balance_raw: parseFloat(parent.attributes.native_current_balance),
-                                native_balance: formatMoney(parent.attributes.native_current_balance, parent.attributes.native_code),
+                                native_balance: formatMoney(parent.attributes.native_current_balance, parent.attributes.native_currency_code),
                                 groups: groups,
                             });
                             // console.log(parent.attributes);

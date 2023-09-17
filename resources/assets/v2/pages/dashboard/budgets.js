@@ -134,7 +134,7 @@ export default () => ({
                 let label = current.label + ' (' + current.currency_code + ')';
                 options.data.labels.push(label);
                 if (this.autoConversion) {
-                    currencies.push(current.native_code);
+                    currencies.push(current.native_currency_code);
                     // series 0: spent
                     options.data.datasets[0].data.push(parseFloat(current.native_entries.spent) * -1);
                     // series 1: left

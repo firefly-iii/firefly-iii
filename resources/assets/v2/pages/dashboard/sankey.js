@@ -164,7 +164,7 @@ export default () => ({
                     if (group.attributes.transactions.hasOwnProperty(ii)) {
                         // properties of the transaction, used in the generation of the chart:
                         let transaction = group.attributes.transactions[ii];
-                        let currencyCode = this.autoConversion ? transaction.native_code : transaction.currency_code;
+                        let currencyCode = this.autoConversion ? transaction.native_currency_code : transaction.currency_code;
                         let amount = this.autoConversion ? parseFloat(transaction.native_amount) : parseFloat(transaction.amount);
                         let flowKey;
 
@@ -260,8 +260,8 @@ export default () => ({
             {
                 label: 'Firefly III dashboard sankey chart',
                 data: [],
-                colorFrom: (c) => getColor(c.dataset.data[c.dataIndex].from),
-                colorTo: (c) => getColor(c.dataset.data[c.dataIndex].to),
+                colorFrom: (c) => getColor(c.dataset.data[c.dataIndex] ? c.dataset.data[c.dataIndex].from : ''),
+                colorTo: (c) => getColor(c.dataset.data[c.dataIndex] ? c.dataset.data[c.dataIndex].to : ''),
                 colorMode: 'gradient', // or 'from' or 'to'
                 labels: labels,
                 size: 'min', // or 'min' if flow overlap is preferred

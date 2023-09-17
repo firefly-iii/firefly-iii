@@ -9,6 +9,8 @@
             "paid": "\u5df2\u4ed8\u6b3e",
             "unpaid": "\u672a\u4ed8\u6b3e",
             "default_group_title_name_plain": "ungrouped",
+            "subscriptions_in_group": "Subscriptions in group \"%{title}\"",
+            "subscr_expected_x_times": "Expect to pay %{amount} %{times} times this period",
             "overspent": "\u8d85\u652f",
             "money_flowing_in": "\u5728",
             "money_flowing_out": "\u5916",

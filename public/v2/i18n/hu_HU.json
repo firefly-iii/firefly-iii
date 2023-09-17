@@ -9,6 +9,8 @@
             "paid": "Kifizetve",
             "unpaid": "Nincs fizetve",
             "default_group_title_name_plain": "ungrouped",
+            "subscriptions_in_group": "Subscriptions in group \"%{title}\"",
+            "subscr_expected_x_times": "Expect to pay %{amount} %{times} times this period",
             "overspent": "T\u00falk\u00f6lt\u00f6tt",
             "money_flowing_in": "Be",
             "money_flowing_out": "Ki",
