@@ -265,9 +265,10 @@ class AccountValidator
 
         // find by ID
         if (null !== $accountId && $accountId > 0) {
-            $first = $this->accountRepository->find($accountId);
-            $check = in_array($first->accountType->type, $validTypes, true);
-            $check = $inverse ? !$check : $check; // reverse the validation check if necessary.
+            $first       = $this->accountRepository->find($accountId);
+            $accountType = null === $first ? 'invalid' : $first->accountType->type;
+            $check       = in_array($accountType, $validTypes, true);
+            $check       = $inverse ? !$check : $check; // reverse the validation check if necessary.
             if ((null !== $first) && $check) {
                 app('log')->debug(sprintf('ID: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
                 return $first;
@@ -276,9 +277,10 @@ class AccountValidator
 
         // find by iban
         if (null !== $accountIban && '' !== (string)$accountIban) {
-            $first = $this->accountRepository->findByIbanNull($accountIban, $validTypes);
-            $check = in_array($first->accountType->type, $validTypes, true);
-            $check = $inverse ? !$check : $check; // reverse the validation check if necessary.
+            $first       = $this->accountRepository->findByIbanNull($accountIban, $validTypes);
+            $accountType = null === $first ? 'invalid' : $first->accountType->type;
+            $check       = in_array($accountType, $validTypes, true);
+            $check       = $inverse ? !$check : $check; // reverse the validation check if necessary.
             if ((null !== $first) && $check) {
                 app('log')->debug(sprintf('Iban: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
                 return $first;
@@ -287,9 +289,10 @@ class AccountValidator
 
         // find by number
         if (null !== $accountNumber && '' !== (string)$accountNumber) {
-            $first = $this->accountRepository->findByAccountNumber($accountNumber, $validTypes);
-            $check = in_array($first->accountType->type, $validTypes, true);
-            $check = $inverse ? !$check : $check; // reverse the validation check if necessary.
+            $first       = $this->accountRepository->findByAccountNumber($accountNumber, $validTypes);
+            $accountType = null === $first ? 'invalid' : $first->accountType->type;
+            $check       = in_array($accountType, $validTypes, true);
+            $check       = $inverse ? !$check : $check; // reverse the validation check if necessary.
             if ((null !== $first) && $check) {
                 app('log')->debug(sprintf('Number: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
                 return $first;
