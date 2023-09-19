@@ -80,7 +80,7 @@ class ShowController extends Controller
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
             ->setTypes($types);
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
+        if (null !== $this->parameters->get('start') || null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $paginator = $collector->getPaginatedGroups();

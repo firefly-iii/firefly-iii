@@ -819,22 +819,28 @@ trait TimeCollection
     /**
      * Set the start and end time of the results to return.
      *
-     * @param Carbon $start
-     * @param Carbon $end
+     * Can either or both be NULL
+     *
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return GroupCollectorInterface
      */
-    public function setRange(Carbon $start, Carbon $end): GroupCollectorInterface
+    public function setRange(?Carbon $start, ?Carbon $end): GroupCollectorInterface
     {
-        if ($end < $start) {
+        if (null !== $start && null !== $end && $end < $start) {
             [$start, $end] = [$end, $start];
         }
         // always got to end of day / start of day for ranges.
-        $startStr = $start->format('Y-m-d 00:00:00');
-        $endStr   = $end->format('Y-m-d 23:59:59');
+        $startStr = $start?->format('Y-m-d 00:00:00');
+        $endStr   = $end?->format('Y-m-d 23:59:59');
 
-        $this->query->where('transaction_journals.date', '>=', $startStr);
-        $this->query->where('transaction_journals.date', '<=', $endStr);
+        if (null !== $start) {
+            $this->query->where('transaction_journals.date', '>=', $startStr);
+        }
+        if (null !== $end) {
+            $this->query->where('transaction_journals.date', '<=', $endStr);
+        }
 
         return $this;
     }

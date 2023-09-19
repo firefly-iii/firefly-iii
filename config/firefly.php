@@ -112,7 +112,7 @@ return [
         // see cer.php for exchange rates feature flag.
     ],
     'version'                      => '6.0.24',
-    'api_version'                  => '2.0.8',
+    'api_version'                  => '2.0.9',
     'db_version'                   => 20,
 
     // generic settings
