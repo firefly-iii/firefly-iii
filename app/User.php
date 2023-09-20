@@ -406,30 +406,45 @@ class User extends Authenticatable
                                  ->whereIn('user_role_id', $dbRolesIds)
                                  ->where('user_group_id', $userGroup->id)->get();
         if (0 === $groupMemberships->count()) {
-            app('log')->error(sprintf('User #%d "%s" does not have roles %s in user group #%d "%s"',
-                                      $this->id, $this->email,
-                                      join(', ', $roles), $userGroup->id, $userGroup->title));
+            app('log')->error(sprintf(
+                'User #%d "%s" does not have roles %s in user group #%d "%s"',
+                $this->id,
+                $this->email,
+                join(', ', $roles),
+                $userGroup->id,
+                $userGroup->title
+            ));
             return false;
         }
         foreach ($groupMemberships as $membership) {
-            app('log')->debug(sprintf('User #%d "%s" has role "%s" in user group #%d "%s"',
-                                      $this->id, $this->email,
-                                      $membership->userRole->title, $userGroup->id, $userGroup->title));
-            if (in_array($membership->userRole->title, $dbRolesTitles)) {
+            app('log')->debug(sprintf(
+                'User #%d "%s" has role "%s" in user group #%d "%s"',
+                $this->id,
+                $this->email,
+                $membership->userRole->title,
+                $userGroup->id,
+                $userGroup->title
+            ));
+            if (in_array($membership->userRole->title, $dbRolesTitles, true)) {
                 app('log')->debug(sprintf('Return true, found role "%s"', $membership->userRole->title));
                 return true;
             }
         }
-        app('log')->error(sprintf('User #%d "%s" does not have roles %s in user group #%d "%s"',
-                                  $this->id, $this->email,
-                                  join(', ', $roles), $userGroup->id, $userGroup->title));
+        app('log')->error(sprintf(
+            'User #%d "%s" does not have roles %s in user group #%d "%s"',
+            $this->id,
+            $this->email,
+            join(', ', $roles),
+            $userGroup->id,
+            $userGroup->title
+        ));
         return false;
-//        // not necessary, should always return true:
-//        $result = $groupMembership->userRole->title === $role->value;
-//        app('log')->error(sprintf('Does user #%d "%s" have role "%s" in user group #%d "%s"? %s',
-//                                  $this->id, $this->email,
-//                                  $role->value, $userGroup->id, $userGroup->title, var_export($result, true)));
-//        return $result;
+        //        // not necessary, should always return true:
+        //        $result = $groupMembership->userRole->title === $role->value;
+        //        app('log')->error(sprintf('Does user #%d "%s" have role "%s" in user group #%d "%s"? %s',
+        //                                  $this->id, $this->email,
+        //                                  $role->value, $userGroup->id, $userGroup->title, var_export($result, true)));
+        //        return $result;
     }
 
     /**
@@ -666,7 +681,7 @@ class User extends Authenticatable
      */
     public function userGroup(): BelongsTo
     {
-        return $this->belongsTo(UserGroup::class,);
+        return $this->belongsTo(UserGroup::class, );
     }
 
     /**

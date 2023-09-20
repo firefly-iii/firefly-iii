@@ -1,4 +1,6 @@
 <?php
+
+
 /*
  * StoreRequest.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -19,12 +21,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Api\V2\Request\UserGroup;
 
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class StoreRequest
+ */
 class StoreRequest extends FormRequest
 {
     use ChecksLogin;

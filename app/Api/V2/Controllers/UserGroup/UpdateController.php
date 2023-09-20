@@ -1,4 +1,6 @@
 <?php
+
+
 /*
  * UpdateController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -19,13 +21,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Api\V2\Controllers\UserGroup;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 
+/**
+ * Class UpdateController
+ */
 class UpdateController extends Controller
 {
-
     // basic edit van group
     // add user, add rights, remove user, remove rights.
 }

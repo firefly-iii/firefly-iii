@@ -1,4 +1,6 @@
 <?php
+
+
 /*
  * DestroyController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -19,6 +21,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Api\V2\Controllers\UserGroup;
 
 use FireflyIII\Api\V2\Controllers\Controller;
@@ -28,5 +32,4 @@ use FireflyIII\Api\V2\Controllers\Controller;
  */
 class DestroyController extends Controller
 {
-
 }

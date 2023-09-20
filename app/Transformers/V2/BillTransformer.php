@@ -175,7 +175,10 @@ class BillTransformer extends AbstractTransformer
                     'native_amount'                   => $this->converter->convert($currencies[$currencyId], $this->default, $journal->date, $transaction['amount']),
                     'foreign_native_amount'           => '' === (string)$transaction['foreign_amount'] ? null : $this->converter->convert(
                         $currencies[$foreignCurrencyId],
-                        $this->default, $journal->date, $transaction['foreign_amount']),
+                        $this->default,
+                        $journal->date,
+                        $transaction['foreign_amount']
+                    ),
                 ];
             }
         }
