@@ -1731,7 +1731,10 @@ return [
     'remove_budgeted_amount'                    => 'Удалить запланированную в бюджете сумму в :currency',
 
     // bills:
+    'subscription'                              => 'Subscription',
     'not_expected_period'                       => 'Не ожидается в данном периоде',
+    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
+    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
     'not_or_not_yet'                            => 'Нет (пока)',
     'visit_bill'                                => 'Visit bill ":name" at Firefly III',
     'match_between_amounts'                     => 'Сравнение транзакций по счетам к оплате между :low и :high.',
@@ -1768,6 +1771,7 @@ return [
     'bill_edit_rules'                           => 'Firefly III также попытается отредактировать правило, связанное с этим счётом на оплату. Однако, если вы сами отредактировали это правило, Firefly III ничего не изменит.|Firefly III также попытается отредактировать :count правил, связанных с этим счётом на оплату. Однако, если вы сами отредактировали эти правила, Firefly III ничего не изменит.',
     'bill_expected_date'                        => 'Истекает :date',
     'bill_expected_date_js'                     => 'Ожидаемая дата {date}',
+    'expected_amount'                           => '(Expected) amount',
     'bill_paid_on'                              => 'Оплачено {date}',
     'bill_repeats_weekly'                       => 'Повторяет еженедельно',
     'bill_repeats_monthly'                      => 'Повторять ежемесячно',

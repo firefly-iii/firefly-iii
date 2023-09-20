@@ -1731,7 +1731,10 @@ return [
     'remove_budgeted_amount'                    => 'Κατάργηση ποσού προϋπολογισμού σε :currency',
 
     // bills:
+    'subscription'                              => 'Subscription',
     'not_expected_period'                       => 'Δεν αναμένεται αυτή την περίοδο',
+    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
+    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
     'not_or_not_yet'                            => 'Όχι (ακόμη)',
     'visit_bill'                                => 'Visit bill ":name" at Firefly III',
     'match_between_amounts'                     => 'Αντιστοιχίες πάγιου έξοδου προς συναλλαγές μεταξύ :low και :high.',
@@ -1768,6 +1771,7 @@ return [
     'bill_edit_rules'                           => 'Το Firefly III θα προσπαθήσει επίσης να επεξεργαστεί τον κανόνα που σχετίζεται με αυτόν τον λογαριασμό. Εάν όμως έχετε επεξεργαστεί ο ίδιος αυτόν τον κανόνα, το Firefly III δεν θα αλλάξει τίποτα.|Το Firefly III θα προσπαθήσει επίσης να επεξεργαστεί τους :count κανόνες που σχετίζονται με αυτόν τον λογαριασμό. Ωστόσο, εάν έχετε επεξεργαστεί αυτούς τους κανόνες μόνοι σας, το Firefly III δεν θα αλλάξει τίποτα.',
     'bill_expected_date'                        => 'Αναμένεται :date',
     'bill_expected_date_js'                     => 'Αναμένεται {date}',
+    'expected_amount'                           => '(Expected) amount',
     'bill_paid_on'                              => 'Πληρώθηκε στις {date}',
     'bill_repeats_weekly'                       => 'Επαναλαμβάνεται εβδομαδιαίως',
     'bill_repeats_monthly'                      => 'Επαναλαμβάνεται μηνιαίως',

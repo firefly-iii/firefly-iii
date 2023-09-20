@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * rules.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -21,6 +21,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
 
 return [
     'main_message'                                => 'Action ":action", present in rule ":rule", could not be applied to transaction #:group: :error',
@@ -50,8 +51,8 @@ return [
     'already_has_destination'                     => 'This transaction already has ":name" as the destination account',
     'already_has_source'                          => 'This transaction already has ":name" as the source account',
     'already_linked_to_subscription'              => 'The transaction is already linked to subscription ":name"',
-    'already_linked_to_category'                  => 'The transaction is already linked to category ":name"',
-    'already_linked_to_budget'                    => 'The transaction is already linked to budget ":name"',
+    'already_linked_to_category'                  => 'Операція вже пов\'язана з категорією ":name"',
+    'already_linked_to_budget'                    => 'Транзакція вже пов\'язана з бюджетом ":name"',
     'cannot_find_subscription'                    => 'Firefly III can\'t find subscription ":name"',
     'no_notes_to_move'                            => 'The transaction has no notes to move to the description field',
     'no_tags_to_remove'                           => 'The transaction has no tags to remove',

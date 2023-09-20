@@ -1731,7 +1731,10 @@ return [
     'remove_budgeted_amount'                    => 'Odstrániť rozpočtovú sumu v :currency',
 
     // bills:
+    'subscription'                              => 'Subscription',
     'not_expected_period'                       => 'Neočakávané v tomto období',
+    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
+    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
     'not_or_not_yet'                            => '(Ešte) nie',
     'visit_bill'                                => 'Visit bill ":name" at Firefly III',
     'match_between_amounts'                     => 'Účtu zodpovedajú transakcie medzi :low a :high.',
@@ -1768,6 +1771,7 @@ return [
     'bill_edit_rules'                           => 'Firefly III sa pokúsi upraviť aj pravidlo týkajúce sa tohto účtu. Ak ste si však toto pravidlo upravili sami, Firefly III ho nebude meniť.|Firefly III sa pokúsi upraviť aj :count pravidiel súvisiacich s týmto účtom. Ak ste si však tieto pravidlá upravili sami, Firefly III ich nebude meniť.',
     'bill_expected_date'                        => 'Očakávané :date',
     'bill_expected_date_js'                     => 'Expected {date}',
+    'expected_amount'                           => '(Expected) amount',
     'bill_paid_on'                              => 'Uhradené {date}',
     'bill_repeats_weekly'                       => 'Repeats weekly',
     'bill_repeats_monthly'                      => 'Repeats monthly',

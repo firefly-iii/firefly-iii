@@ -23,7 +23,6 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\Api\V2\Controllers\Chart;
 
 use Carbon\Carbon;

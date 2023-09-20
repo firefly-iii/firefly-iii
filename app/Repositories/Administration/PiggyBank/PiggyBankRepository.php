@@ -23,7 +23,6 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\Repositories\Administration\PiggyBank;
 
 use FireflyIII\Support\Repositories\Administration\AdministrationTrait;

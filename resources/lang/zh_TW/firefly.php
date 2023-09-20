@@ -1731,7 +1731,10 @@ return [
     'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
 
     // bills:
+    'subscription'                              => 'Subscription',
     'not_expected_period'                       => 'Not expected this period',
+    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
+    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
     'not_or_not_yet'                            => 'Not (yet)',
     'visit_bill'                                => 'Visit bill ":name" at Firefly III',
     'match_between_amounts'                     => '帳單配合自 :low 至 :high 的交易。',
@@ -1768,6 +1771,7 @@ return [
     'bill_edit_rules'                           => 'Firefly III will attempt to edit the rule related to this bill as well. If you\'ve edited this rule yourself however, Firefly III won\'t change anything.|Firefly III will attempt to edit the :count rules related to this bill as well. If you\'ve edited these rules yourself however, Firefly III won\'t change anything.',
     'bill_expected_date'                        => 'Expected :date',
     'bill_expected_date_js'                     => 'Expected {date}',
+    'expected_amount'                           => '(Expected) amount',
     'bill_paid_on'                              => 'Paid on {date}',
     'bill_repeats_weekly'                       => 'Repeats weekly',
     'bill_repeats_monthly'                      => 'Repeats monthly',

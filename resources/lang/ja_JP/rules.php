@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * rules.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -21,6 +21,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
 
 return [
     'main_message'                                => 'アクション「:action"」はルール「:rule」にありますが、取引 #:group に適用できませんでした: :error',
@@ -50,8 +51,8 @@ return [
     'already_has_destination'                     => 'この取引はすでに宛先の口座は「:name」です',
     'already_has_source'                          => 'この取引はすでに元となる口座は「:name」です',
     'already_linked_to_subscription'              => 'この取引はすでにサブスクリプション「:name」にリンクされています',
-    'already_linked_to_category'                  => 'The transaction is already linked to category ":name"',
-    'already_linked_to_budget'                    => 'The transaction is already linked to budget ":name"',
+    'already_linked_to_category'                  => '取引はすでにカテゴリ「:name」にリンクされています',
+    'already_linked_to_budget'                    => '取引はすでに予算「:name」にリンクされています',
     'cannot_find_subscription'                    => 'Firefly IIIはサブスクリプション「":name"」を見つけられませんでした',
     'no_notes_to_move'                            => '取引には概要に設定できるメモがありません',
     'no_tags_to_remove'                           => '取引には削除できるタグがありません',

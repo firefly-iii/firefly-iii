@@ -1731,7 +1731,10 @@ return [
     'remove_budgeted_amount'                    => 'Xóa số tiền ngân sách trong :currency',
 
     // bills:
+    'subscription'                              => 'Subscription',
     'not_expected_period'                       => 'Không mong đợi ở giai đoạn này',
+    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
+    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
     'not_or_not_yet'                            => 'Không (chưa)',
     'visit_bill'                                => 'Visit bill ":name" at Firefly III',
     'match_between_amounts'                     => 'Hóa đơn khớp với các giao dịch giữa: thấp và: cao.',
@@ -1768,6 +1771,7 @@ return [
     'bill_edit_rules'                           => 'Firefly III cũng sẽ cố gắng chỉnh sửa quy tắc liên quan đến dự luật này. Tuy nhiên, nếu bạn đã tự chỉnh sửa quy tắc này, Firefly III sẽ không thay đổi bất cứ điều gì. | Firefly III cũng sẽ cố gắng chỉnh sửa :count các quy tắc liên quan đến dự luật này. Tuy nhiên, nếu bạn đã tự chỉnh sửa các quy tắc này, Firefly III sẽ không thay đổi bất cứ điều gì.',
     'bill_expected_date'                        => 'Ngày đáo hạn :date',
     'bill_expected_date_js'                     => 'Expected {date}',
+    'expected_amount'                           => '(Expected) amount',
     'bill_paid_on'                              => 'Paid on {date}',
     'bill_repeats_weekly'                       => 'Lặp lại hàng tuần',
     'bill_repeats_monthly'                      => 'Lặp lại hàng tháng',

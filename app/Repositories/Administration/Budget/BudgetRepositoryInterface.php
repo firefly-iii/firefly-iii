@@ -23,7 +23,6 @@
 
 declare(strict_types=1);
 
-
 namespace FireflyIII\Repositories\Administration\Budget;
 
 use Illuminate\Support\Collection;

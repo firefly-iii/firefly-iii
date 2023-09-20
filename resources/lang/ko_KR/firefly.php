@@ -1731,7 +1731,10 @@ return [
     'remove_budgeted_amount'                    => ':currency에서 예산 금액 제거',
 
     // bills:
+    'subscription'                              => 'Subscription',
     'not_expected_period'                       => '이 기간에는 예상되지 않음',
+    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
+    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
     'not_or_not_yet'                            => '아니요 (아직)',
     'visit_bill'                                => 'Firefly III에서 ":name" 청구서 방문하기',
     'match_between_amounts'                     => '청구서는 :low와 :high 사이의 거래를 일치시킵니다.',
@@ -1768,6 +1771,7 @@ return [
     'bill_edit_rules'                           => 'Firefly III가 이 청구서와 관련된 규칙도 수정하려고 시도합니다. 그러나 이 규칙을 직접 수정한 경우 Firefly III는 아무 것도 변경하지 않습니다.| Firefly III는 이 청구서와 관련된 :count개의 규칙도 편집하려고 시도합니다. 그러나 이러한 규칙을 직접 편집한 경우 Firefly III는 아무것도 변경하지 않습니다.',
     'bill_expected_date'                        => ':date 예정',
     'bill_expected_date_js'                     => '{date} 예정',
+    'expected_amount'                           => '(Expected) amount',
     'bill_paid_on'                              => '{date}에 결제',
     'bill_repeats_weekly'                       => '매주 반복',
     'bill_repeats_monthly'                      => '매달 반복',

@@ -1731,7 +1731,10 @@ return [
     'remove_budgeted_amount'                    => 'Poista budjetoitu summa :currency',
 
     // bills:
+    'subscription'                              => 'Subscription',
     'not_expected_period'                       => 'Ei odotettavissa tässä jaksossa',
+    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
+    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
     'not_or_not_yet'                            => 'Ei (vielä)',
     'visit_bill'                                => 'Visit bill ":name" at Firefly III',
     'match_between_amounts'                     => 'Lasku täsmää tapahtumiin välillä :low ja :high.',
@@ -1768,6 +1771,7 @@ return [
     'bill_edit_rules'                           => 'Firefly III yrittää muokata myös tähän laskuun liittyvää sääntöä. Jos kuitenkin olet muokannut tätä sääntöä itse, Firefly III ei muuta mitään. Firefly III yrittää muokata myös tähän laskuun liittyviä :count sääntöä. Jos kuitenkin olet muokannut näitä sääntöjä itse, Firefly III ei muuta mitään.',
     'bill_expected_date'                        => 'Odotettavissa :date',
     'bill_expected_date_js'                     => 'Odotettavissa {date}',
+    'expected_amount'                           => '(Expected) amount',
     'bill_paid_on'                              => 'Maksettu {date}',
     'bill_repeats_weekly'                       => 'Toistuu viikoittain',
     'bill_repeats_monthly'                      => 'Toistuu kuukausittain',
