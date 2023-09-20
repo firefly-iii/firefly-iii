@@ -8,7 +8,7 @@
                     </a>
                 </h3>
             </div>
-            <div class="card-body p-0">
+            <div class="card-body">
                 <div class="row mb-2">
                     <template x-for="pie in group.payment_info">
                         <div :class='group.col_size'>
@@ -22,15 +22,15 @@
                     <table class="table table-striped table-hover">
                         <thead>
                         <tr>
-                            <th>TODO Subscription</th>
-                            <th>(Expected) amount</th>
+                            <th>{{ __('firefly.subscription') }}</th>
+                            <th>{{ __('firefly.expected_amount') }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         <template x-for="bill in group.bills">
                             <tr>
                                 <td>
-                                    <a href="#" :title="bill.name">
+                                    <a :href="'{{ route('subscriptions.show',[''])  }}/' + bill.id" :title="bill.name">
                                         <span x-text="bill.name"></span>
                                     </a>
                                     <template x-if="bill.paid">

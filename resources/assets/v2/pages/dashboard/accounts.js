@@ -201,14 +201,16 @@ export default () => ({
                                 for (let iii = 0; iii < current.attributes.transactions.length; iii++) {
                                     let currentTransaction = current.attributes.transactions[iii];
                                     //console.log(currentTransaction);
+                                    const nativeAmountRaw = 'withdrawal' === currentTransaction.type ? parseFloat(currentTransaction.native_amount) * -1 : parseFloat(currentTransaction.native_amount);
+                                    const amountRaw = 'withdrawal' === currentTransaction.type ? parseFloat(currentTransaction.amount) * -1 : parseFloat(currentTransaction.amount);
                                     group.transactions.push({
                                         description: currentTransaction.description,
                                         id: current.id,
                                         type: currentTransaction.type,
-                                        amount_raw: parseFloat(currentTransaction.amount),
-                                        amount: formatMoney(currentTransaction.amount, currentTransaction.currency_code),
-                                        native_amount_raw: parseFloat(currentTransaction.native_amount),
-                                        native_amount: formatMoney(currentTransaction.native_amount, currentTransaction.native_currency_code),
+                                        amount_raw: amountRaw,
+                                        amount: formatMoney(amountRaw, currentTransaction.currency_code),
+                                        native_amount_raw: nativeAmountRaw,
+                                        native_amount: formatMoney(nativeAmountRaw, currentTransaction.native_currency_code),
                                     });
                                 }
                                 groups.push(group);

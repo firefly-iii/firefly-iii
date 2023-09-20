@@ -13,7 +13,7 @@
                            x-text="account.name"></a>
 
                         <span class="small">
-                                                @include('partials.elements.amount', ['autoConversion' => true,'amount' => 'account.balance','native' => 'account.native_balance'])
+                                                @include('partials.elements.amount', ['autoConversion' => true,'type' => 'null','amount' => 'account.balance','native' => 'account.native_balance'])
                                             </span>
                     </h3>
                 </div>
@@ -71,7 +71,7 @@
                                     </template>
                                     <template x-for="transaction in group.transactions">
                                                             <span>
-                                                               @include('partials.elements.amount', ['autoConversion' => true,'amount' => 'transaction.amount','native' => 'transaction.native_amount'])
+                                                               @include('partials.elements.amount', ['autoConversion' => true,'type' => 'transaction.type','amount' => 'transaction.amount','native' => 'transaction.native_amount'])
                                                             </span>
                                     </template>
                                 </td>

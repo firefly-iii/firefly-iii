@@ -30,6 +30,8 @@ let transactions = function () {
     return {
         count: 0,
         totalAmount: 0,
+        showSuccessMessage: false,
+        showErrorMessage: false,
         entries: [],
 
         // error and success messages:
@@ -37,38 +39,15 @@ let transactions = function () {
         showSuccess: false,
 
         init() {
-            const opts = {
-                onSelectItem: console.log,
-            };
-            let src = [];
-            for (let i = 0; i < 50; i++) {
-                src.push({
-                    title: "Option " + i,
-                    id: "opt" + i,
-                    data: {
-                        key: i,
-                    },
-                });
-            }
-
-            // for each thing, make autocomplete?
-
-
+            console.log('init()');
             this.addSplit();
-            console.log('Ik ben init hoera');
-
-            // let element = document.getElementById('source_0');
-            // new Autocomplete(element, {
-            //     items: src,
-            //     valueField: "id",
-            //     labelField: "title",
-            //     highlightTyped: true,
-            //     onSelectItem: console.log,
-            // });
         },
         submitTransaction() {
+            // todo disable buttons
+
             let transactions = parseFromEntries(this.entries);
             let submission = {
+                // todo process all options
                 group_title: null,
                 fire_webhooks: false,
                 apply_rules: false,
@@ -77,8 +56,15 @@ let transactions = function () {
             let poster = new Post();
             console.log(submission);
             poster.post(submission).then((response) => {
+                // todo create success banner
+                this.showSuccessMessage = true;
+                // todo or redirect to transaction.
+                // todo release form
                 console.log(response);
             }).catch((error) => {
+                this.showErrorMessage = true;
+                // todo create error banner.
+                // todo release form
                 console.error(error);
             });
         },
@@ -90,7 +76,6 @@ let transactions = function () {
             // fall back to index 0
             const triggerFirstTabEl = document.querySelector('#split-0-tab')
             triggerFirstTabEl.click();
-            //bootstrap.Tab.getInstance(triggerFirstTabEl).show() // Select first tab
         },
         formattedTotalAmount() {
             return formatMoney(this.totalAmount, 'EUR');
@@ -108,7 +93,6 @@ function loadPage() {
     });
     Alpine.start();
 }
-
 
 // wait for load until bootstrapped event is received.
 document.addEventListener('firefly-iii-bootstrapped', () => {

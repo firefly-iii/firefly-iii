@@ -203,6 +203,24 @@ Route::group(
 );
 
 /**
+ * V2 API route for user groups (administrations).
+ */
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\UserGroup',
+        'prefix'    => 'v2/user-groups',
+        'as'        => 'api.v2.user-groups.',
+    ],
+    static function () {
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{userGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
+    }
+);
+
+// down here is v1
+
+/**
  * Autocomplete controllers
  */
 Route::group(

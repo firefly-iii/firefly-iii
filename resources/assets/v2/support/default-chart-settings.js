@@ -27,6 +27,7 @@ function getDefaultChartSettings(type) {
             data: {
                 datasets: [],
             },
+            options: {animations: false}
         }
     }
     if ('pie' === type) {
