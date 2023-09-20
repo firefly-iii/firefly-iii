@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\UserGroup;
 
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
@@ -34,6 +35,13 @@ use Illuminate\Support\Collection;
  */
 interface UserGroupRepositoryInterface
 {
+    /**
+     * @param UserGroup $userGroup
+     *
+     * @return void
+     */
+    public function destroy(UserGroup $userGroup): void;
+
     /**
      * @return Collection
      */

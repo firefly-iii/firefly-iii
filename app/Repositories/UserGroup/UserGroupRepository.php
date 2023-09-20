@@ -40,6 +40,61 @@ class UserGroupRepository implements UserGroupRepositoryInterface
     private User $user;
 
     /**
+     * @inheritDoc
+     */
+    public function destroy(UserGroup $userGroup): void
+    {
+        app('log')->debug(sprintf('Going to destroy user group #%d ("%s").', $userGroup->id, $userGroup->title));
+        $memberships = $userGroup->groupMemberships()->get();
+        /** @var GroupMembership $membership */
+        foreach ($memberships as $membership) {
+            /** @var User $user */
+            $user = $membership->user()->first();
+            if (null === $user) {
+                continue;
+            }
+            app('log')->debug(sprintf('Processing membership #%d (user #%d "%s")', $membership->id, $user->id, $user->email));
+            // user has memberships of other groups?
+            $count = $user->groupMemberships()->where('user_group_id', '!=', $userGroup->id)->count();
+            if (0 === $count) {
+                app('log')->debug('User has no other memberships and needs a new administration.');
+                // makeNewAdmin()
+                // assignToUser().
+            }
+            // user has other memberships, select one at random and assign it to the user.
+            if ($count > 0) {
+                // findAndAssign()
+            }
+            // deleteMembership()
+        }
+        // all users are now moved away from user group.
+        // time to DESTROY all objects.
+        // TODO piggy banks linked to accounts were deleting.
+        $userGroup->piggyBanks()->delete();
+        $userGroup->accounts()->delete();
+        $userGroup->availableBudgets()->delete();
+        $userGroup->attachments()->delete();
+        $userGroup->bills()->delete();
+        $userGroup->budgets()->delete();
+        $userGroup->categories()->delete();
+        $userGroup->currencyExchangeRates()->delete();
+        $userGroup->objectGroups()->delete();
+        $userGroup->recurrences()->delete();
+        $userGroup->rules()->delete();
+        $userGroup->ruleGroups()->delete();
+        $userGroup->tags()->delete();
+        $userGroup->transactionJournals()->delete(); // TODO needs delete service probably.
+        $userGroup->transactionGroups()->delete();   // TODO needs delete service probably.
+        $userGroup->webhooks()->delete();
+
+        // user group deletion should also delete everything else.
+        // for all users, if this is the primary user group switch to the first alternative.
+        // if they have no other memberships, create a new user group for them.
+        $userGroup->delete();
+
+    }
+
+    /**
      * Returns all groups the user is member in.
      *
      * @inheritDoc

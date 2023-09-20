@@ -110,6 +110,16 @@ class UserGroup extends Model
     }
 
     /**
+     * Link to attachments.
+     *
+     * @return HasMany
+     */
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(Attachment::class);
+    }
+
+    /**
      * Link to bills.
      *
      * @return HasMany
@@ -140,12 +150,40 @@ class UserGroup extends Model
     }
 
     /**
+     * Link to categories.
+     *
+     * @return HasMany
+     */
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class);
+    }
+
+    /**
+     * Link to exchange rates.
+     *
+     * @return HasMany
+     */
+    public function currencyExchangeRates(): HasMany
+    {
+        return $this->hasMany(CurrencyExchangeRate::class);
+    }
+
+    /**
      *
      * @return HasMany
      */
     public function groupMemberships(): HasMany
     {
         return $this->hasMany(GroupMembership::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function objectGroups(): HasMany
+    {
+        return $this->hasMany(ObjectGroup::class);
     }
 
     /**
@@ -159,6 +197,46 @@ class UserGroup extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function recurrences(): HasMany
+    {
+        return $this->hasMany(Recurrence::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function ruleGroups(): HasMany
+    {
+        return $this->hasMany(RuleGroup::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function rules(): HasMany
+    {
+        return $this->hasMany(Rule::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function tags(): HasMany
+    {
+        return $this->hasMany(Tag::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function transactionGroups(): HasMany
+    {
+        return $this->hasMany(TransactionGroup::class);
+    }
+
+    /**
      * Link to transaction journals.
      *
      * @return HasMany
@@ -166,5 +244,13 @@ class UserGroup extends Model
     public function transactionJournals(): HasMany
     {
         return $this->hasMany(TransactionJournal::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function webhooks(): HasMany
+    {
+        return $this->hasMany(Webhook::class);
     }
 }

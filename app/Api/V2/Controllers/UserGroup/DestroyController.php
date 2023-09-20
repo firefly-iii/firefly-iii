@@ -26,10 +26,52 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\UserGroup;
 
 use FireflyIII\Api\V2\Controllers\Controller;
+use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Models\UserGroup;
+use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
+use FireflyIII\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class DestroyController
  */
 class DestroyController extends Controller
 {
+    private UserGroupRepositoryInterface $repository;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                $this->repository = app(UserGroupRepositoryInterface::class);
+
+                return $next($request);
+            }
+        );
+    }
+
+    /**
+     * @param Request   $request
+     * @param UserGroup $userGroup
+     *
+     * @return JsonResponse
+     */
+    public function destroy(Request $request, UserGroup $userGroup): JsonResponse
+    {
+        /** @var User $user */
+        $user = auth()->user();
+        // need owner role or system owner role to delete user group.
+        $access = $user->hasRoleInGroup($userGroup, UserRoleEnum::OWNER, false, true);
+        if (false === $access) {
+            throw new NotFoundHttpException();
+        }
+        $this->repository->destroy($userGroup);
+        return response()->json([], 204);
+    }
 }

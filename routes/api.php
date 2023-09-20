@@ -83,7 +83,7 @@ Route::group(
  */
 Route::group(
     [
-        'namespace' => 'FireflyIII\Api\V2\Controllers',
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Summary',
         'prefix'    => 'v2/net-worth',
         'as'        => 'api.v2.net-worth.',
     ],
@@ -215,6 +215,7 @@ Route::group(
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{userGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::delete('{userGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
     }
 );
 
