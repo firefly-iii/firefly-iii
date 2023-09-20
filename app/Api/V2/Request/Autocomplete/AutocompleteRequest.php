@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Request\Autocomplete;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\UserRole;
@@ -92,7 +93,7 @@ class AutocompleteRequest extends FormRequest
         $validator->after(
             function (Validator $validator) {
                 // validate if the account can access this administration
-                $this->validateAdministration($validator, [UserRole::CHANGE_TRANSACTIONS]);
+                $this->validateAdministration($validator, [UserRoleEnum::MANAGE_TRANSACTIONS]);
             }
         );
     }

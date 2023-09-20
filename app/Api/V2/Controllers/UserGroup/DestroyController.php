@@ -1,8 +1,7 @@
 <?php
-
 /*
- * UserRoleSeeder.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * DestroyController.php
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,39 +19,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Api\V2\Controllers\UserGroup;
 
-namespace Database\Seeders;
-
-use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Models\UserRole;
-use Illuminate\Database\Seeder;
-use PDOException;
+use FireflyIII\Api\V2\Controllers\Controller;
 
 /**
- * Class UserRoleSeeder
+ * Class DestroyController
  */
-class UserRoleSeeder extends Seeder
+class DestroyController extends Controller
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        $roles = [];
-        foreach (UserRoleEnum::cases() as $role) {
-            $roles[] = $role->value;
-        }
 
-        /** @var string $role */
-        foreach ($roles as $role) {
-            try {
-                UserRole::create(['title' => $role]);
-            } catch (PDOException $e) {
-                // @ignoreException
-            }
-        }
-    }
 }

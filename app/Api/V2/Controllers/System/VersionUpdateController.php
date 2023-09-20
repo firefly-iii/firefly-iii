@@ -1,8 +1,8 @@
 <?php
 
 /*
- * UserRoleSeeder.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * VersionUpdateController.php
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,37 +22,13 @@
 
 declare(strict_types=1);
 
-namespace Database\Seeders;
+namespace FireflyIII\Api\V2\Controllers\System;
 
-use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Models\UserRole;
-use Illuminate\Database\Seeder;
-use PDOException;
+use FireflyIII\Api\V2\Controllers\Controller;
 
 /**
- * Class UserRoleSeeder
+ * Class VersionUpdateController
  */
-class UserRoleSeeder extends Seeder
+class VersionUpdateController extends Controller
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        $roles = [];
-        foreach (UserRoleEnum::cases() as $role) {
-            $roles[] = $role->value;
-        }
-
-        /** @var string $role */
-        foreach ($roles as $role) {
-            try {
-                UserRole::create(['title' => $role]);
-            } catch (PDOException $e) {
-                // @ignoreException
-            }
-        }
-    }
 }

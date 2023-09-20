@@ -1,8 +1,7 @@
 <?php
-
 /*
- * UserRoleSeeder.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * StoreRequest.php
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,39 +19,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Api\V2\Request\UserGroup;
 
-namespace Database\Seeders;
+use FireflyIII\Support\Request\ChecksLogin;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
 
-use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Models\UserRole;
-use Illuminate\Database\Seeder;
-use PDOException;
-
-/**
- * Class UserRoleSeeder
- */
-class UserRoleSeeder extends Seeder
+class StoreRequest extends FormRequest
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        $roles = [];
-        foreach (UserRoleEnum::cases() as $role) {
-            $roles[] = $role->value;
-        }
+    use ChecksLogin;
+    use ConvertsDataTypes;
 
-        /** @var string $role */
-        foreach ($roles as $role) {
-            try {
-                UserRole::create(['title' => $role]);
-            } catch (PDOException $e) {
-                // @ignoreException
-            }
-        }
+    /**
+     * @return array
+     */
+    public function getAll(): array
+    {
+        return [
+            'title' => $this->convertString('title'),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function rules(): array
+    {
+        return [
+            'title' => 'unique:user_groups,title|required|min:2|max:255',
+        ];
     }
 }

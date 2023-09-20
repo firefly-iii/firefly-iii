@@ -46,6 +46,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType as TransactionTypeModel;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
@@ -482,6 +483,7 @@ return [
         // V2 API endpoints:
         'userGroupAccount' => UserGroupAccount::class,
         'userGroupBill'    => UserGroupBill::class,
+        'userGroup'        => UserGroup::class,
 
 
     ],

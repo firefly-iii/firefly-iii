@@ -1,8 +1,7 @@
 <?php
-
 /*
- * VersionUpdateController.php
- * Copyright (c) 2022 james@firefly-iii.org
+ * UserGroupRepositoryInterface.php
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,13 +19,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Repositories\UserGroup;
 
-namespace FireflyIII\Api\V2\Controllers;
+use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Support\Collection;
 
 /**
- * Class VersionUpdateController
+ * Interface UserGroupRepositoryInterface
  */
-class VersionUpdateController extends Controller
+interface UserGroupRepositoryInterface
 {
+    /**
+     * @return Collection
+     */
+    public function get(): Collection;
+
+    /**
+     * @return Collection
+     */
+    public function getAll(): Collection;
+
+    /**
+     * @param User|Authenticatable|null $user
+     *
+     * @return void
+     */
+    public function setUser(User | Authenticatable | null $user): void;
 }

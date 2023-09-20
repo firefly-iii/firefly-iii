@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\UserRole;
@@ -152,7 +153,7 @@ class AccountFormRequest extends FormRequest
         $validator->after(
             function (Validator $validator) {
                 // validate if the account can access this administration
-                $this->validateAdministration($validator, [UserRole::CHANGE_TRANSACTIONS]);
+                $this->validateAdministration($validator, [UserRoleEnum::MANAGE_TRANSACTIONS->value]);
             }
         );
     }

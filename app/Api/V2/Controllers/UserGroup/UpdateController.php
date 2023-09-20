@@ -1,8 +1,6 @@
 <?php
-
-declare(strict_types=1);
 /*
- * StoreController.php
+ * UpdateController.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,29 +19,13 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V2\Controllers\Model\Transaction;
+namespace FireflyIII\Api\V2\Controllers\UserGroup;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
 
-/**
- * Class StoreController
- */
-class StoreController extends Controller
+class UpdateController extends Controller
 {
-    /**
-     * TODO this method is practically the same as the V1 method and borrows as much code as possible.
-     * TODO still it duplicates a lot.
-     * TODO the v1 endpoints will never support separate administrations, this is an important distinction.
-     *
-     * @return JsonResponse
-     */
-    public function post(): JsonResponse
-    {
 
-        return response()->json([]);
-
-    }
-
-
+    // basic edit van group
+    // add user, add rights, remove user, remove rights.
 }

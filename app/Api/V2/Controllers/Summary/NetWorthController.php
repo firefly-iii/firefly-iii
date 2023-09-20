@@ -2,7 +2,7 @@
 
 /*
  * NetWorthController.php
- * Copyright (c) 2022 james@firefly-iii.org
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,8 +22,9 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V2\Controllers;
+namespace FireflyIII\Api\V2\Controllers\Summary;
 
+use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\SingleDateRequest;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use Illuminate\Http\JsonResponse;

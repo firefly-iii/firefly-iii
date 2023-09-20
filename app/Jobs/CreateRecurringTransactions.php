@@ -460,16 +460,18 @@ class CreateRecurringTransactions implements ShouldQueue
         $total        = $this->repository->totalTransactions($recurrence, $repetition);
         $count        = $this->repository->getJournalCount($recurrence) + 1;
         $transactions = $recurrence->recurrenceTransactions()->get();
-        $return       = [];
+        /** @var RecurrenceTransaction $first */
+        $first  = $transactions->first();
+        $return = [];
         /** @var RecurrenceTransaction $transaction */
         foreach ($transactions as $index => $transaction) {
             $single   = [
-                'type'                  => strtolower($recurrence->transactionType->type),
+                'type'                  => null === $first->transactionType ? strtolower($recurrence->transactionType->type) : strtolower($first->transactionType->type),
                 'date'                  => $date,
                 'user'                  => $recurrence->user_id,
                 'currency_id'           => (int)$transaction->transaction_currency_id,
                 'currency_code'         => null,
-                'description'           => $transactions->first()->description,
+                'description'           => $first->description,
                 'amount'                => $transaction->amount,
                 'budget_id'             => $this->repository->getBudget($transaction),
                 'budget_name'           => null,

@@ -26,6 +26,7 @@ namespace FireflyIII;
 
 use Eloquent;
 use Exception;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -48,6 +49,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
+use FireflyIII\Models\UserRole;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Notifications\Admin\TestNotification;
 use FireflyIII\Notifications\Admin\UserInvitation;
@@ -365,6 +367,91 @@ class User extends Authenticatable
         return 'objectguid';
     }
 
+
+    /**
+     * Does the user have role X in group Y?
+     *
+     * If $allowOverride is set to true, then the roles FULL or OWNER will also be checked,
+     * which means that in most cases the user DOES have access, regardless of the original role submitted in $role.
+     *
+     * @param UserGroup    $userGroup
+     * @param UserRoleEnum $role
+     * @param bool         $allowOverride
+     *
+     * @return bool
+     */
+    public function hasRoleInGroup(UserGroup $userGroup, UserRoleEnum $role, bool $allowGroupOverride = false, bool $allowSystemOverride = false): bool
+    {
+        if ($allowSystemOverride && $this->hasRole('owner')) {
+            app('log')->debug(sprintf('hasRoleInGroup: user "#%d %s" is system owner and allowSystemOverride = true, return true', $this->id, $this->email));
+            return true;
+        }
+        $roles = [$role->value];
+        if ($allowGroupOverride) {
+            $roles[] = UserRoleEnum::OWNER->value;
+            $roles[] = UserRoleEnum::FULL->value;
+        }
+        app('log')->debug(sprintf('in hasRoleInGroup(%s)', join(', ', $roles)));
+        /** @var Collection $dbRoles */
+        $dbRoles = UserRole::whereIn('title', $roles)->get();
+        if (0 === $dbRoles->count()) {
+            app('log')->error(sprintf('Could not find role(s): %s. Probably migration mishap.', join(', ', $roles)));
+            return false;
+        }
+        $dbRolesIds    = $dbRoles->pluck('id')->toArray();
+        $dbRolesTitles = $dbRoles->pluck('title')->toArray();
+
+        /** @var Collection $groupMemberships */
+        $groupMemberships = $this->groupMemberships()
+                                 ->whereIn('user_role_id', $dbRolesIds)
+                                 ->where('user_group_id', $userGroup->id)->get();
+        if (0 === $groupMemberships->count()) {
+            app('log')->error(sprintf('User #%d "%s" does not have roles %s in user group #%d "%s"',
+                                      $this->id, $this->email,
+                                      join(', ', $roles), $userGroup->id, $userGroup->title));
+            return false;
+        }
+        foreach ($groupMemberships as $membership) {
+            app('log')->debug(sprintf('User #%d "%s" has role "%s" in user group #%d "%s"',
+                                      $this->id, $this->email,
+                                      $membership->userRole->title, $userGroup->id, $userGroup->title));
+            if (in_array($membership->userRole->title, $dbRolesTitles)) {
+                app('log')->debug(sprintf('Return true, found role "%s"', $membership->userRole->title));
+                return true;
+            }
+        }
+        app('log')->error(sprintf('User #%d "%s" does not have roles %s in user group #%d "%s"',
+                                  $this->id, $this->email,
+                                  join(', ', $roles), $userGroup->id, $userGroup->title));
+        return false;
+//        // not necessary, should always return true:
+//        $result = $groupMembership->userRole->title === $role->value;
+//        app('log')->error(sprintf('Does user #%d "%s" have role "%s" in user group #%d "%s"? %s',
+//                                  $this->id, $this->email,
+//                                  $role->value, $userGroup->id, $userGroup->title, var_export($result, true)));
+//        return $result;
+    }
+
+    /**
+     * @param string $role
+     *
+     * @return bool
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->roles()->where('name', $role)->count() === 1;
+    }
+
+    /**
+     * Link to roles.
+     *
+     * @return BelongsToMany
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
     /**
      *
      * @return HasMany
@@ -446,26 +533,6 @@ class User extends Authenticatable
     }
 
     /**
-     * @param string $role
-     *
-     * @return bool
-     */
-    public function hasRole(string $role): bool
-    {
-        return $this->roles()->where('name', $role)->count() === 1;
-    }
-
-    /**
-     * Link to roles.
-     *
-     * @return BelongsToMany
-     */
-    public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class);
-    }
-
-    /**
      * Route notifications for the Slack channel.
      *
      * @param Notification $notification
@@ -513,6 +580,8 @@ class User extends Authenticatable
         return $this->hasMany(Rule::class);
     }
 
+    // start LDAP related code
+
     /**
      * Send the password reset notification.
      *
@@ -524,8 +593,6 @@ class User extends Authenticatable
 
         event(new RequestedNewPassword($this, $token, $ipAddress));
     }
-
-    // start LDAP related code
 
     /**
      * Set the models LDAP domain.

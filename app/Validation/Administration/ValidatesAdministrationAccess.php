@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\Administration;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\UserRole;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -48,6 +49,7 @@ trait ValidatesAdministrationAccess
      */
     protected function validateAdministration(Validator $validator, array $allowedRoles): void
     {
+        die('deprecated method, must be done through user.');
         Log::debug('Now in validateAdministration()');
         if (!auth()->check()) {
             Log::error('User is not authenticated.');
@@ -74,11 +76,11 @@ trait ValidatesAdministrationAccess
             $validator->errors()->add('administration', (string)trans('validation.no_access_user_group'));
             return;
         }
-        if (in_array(UserRole::OWNER, $array, true)) {
+        if (in_array(UserRoleEnum::OWNER->value, $array, true)) {
             Log::debug('User is owner of this administration.');
             return;
         }
-        if (in_array(UserRole::FULL, $array, true)) {
+        if (in_array(UserRoleEnum::OWNER->value, $array, true)) {
             Log::debug('User has full access to this administration.');
             return;
         }
