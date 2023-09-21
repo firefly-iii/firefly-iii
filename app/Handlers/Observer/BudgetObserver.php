@@ -1,8 +1,6 @@
 <?php
-
-
 /*
- * StoreRequest.php
+ * BudgetObserver.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,41 +19,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Handlers\Observer;
 
-namespace FireflyIII\Api\V2\Request\UserGroup;
-
-use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Support\Request\ChecksLogin;
-use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
+use FireflyIII\Models\Budget;
 
 /**
- * Class StoreRequest
+ * Class BudgetObserver
  */
-class StoreRequest extends FormRequest
+class BudgetObserver
 {
-    protected array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
-    use ChecksLogin;
-    use ConvertsDataTypes;
-
     /**
-     * @return array
+     * @param Budget $budget
+     *
+     * @return void
      */
-    public function getAll(): array
+    public function deleting(Budget $budget): void
     {
-        return [
-            'title' => $this->convertString('title'),
-        ];
+        app('log')->debug('Observe "deleting" of a budget.');
+        foreach ($budget->attachments()->get() as $attachment) {
+            $attachment->delete();
+        }
+
+        $budget->budgetlimits()->delete();
+
+        $budget->notes()->delete();
+        $budget->autoBudgets()->delete();
     }
 
-    /**
-     * @return array
-     */
-    public function rules(): array
-    {
-        return [
-            'title' => 'unique:user_groups,title|required|min:2|max:255',
-        ];
-    }
 }

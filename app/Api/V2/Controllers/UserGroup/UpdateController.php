@@ -26,12 +26,71 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\UserGroup;
 
 use FireflyIII\Api\V2\Controllers\Controller;
+use FireflyIII\Api\V2\Request\UserGroup\UpdateMembershipRequest;
+use FireflyIII\Api\V2\Request\UserGroup\UpdateRequest;
+use FireflyIII\Models\UserGroup;
+use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
+use FireflyIII\Transformers\V2\UserGroupTransformer;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Class UpdateController
  */
 class UpdateController extends Controller
 {
-    // basic edit van group
+    // basic update van group
     // add user, add rights, remove user, remove rights.
+
+    private UserGroupRepositoryInterface $repository;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                $this->repository = app(UserGroupRepositoryInterface::class);
+
+                return $next($request);
+            }
+        );
+    }
+
+    /**
+     * @param UpdateRequest $request
+     * @param UserGroup     $userGroup
+     *
+     * @return JsonResponse
+     */
+    public function update(UpdateRequest $request, UserGroup $userGroup): JsonResponse
+    {
+        $all         = $request->getAll();
+        $userGroup   = $this->repository->update($userGroup, $all);
+        $transformer = new UserGroupTransformer();
+        $transformer->setParameters($this->parameters);
+
+        return response()
+            ->api($this->jsonApiObject('user-groups', $userGroup, $transformer))
+            ->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    /**
+     * @param UpdateMembershipRequest $request
+     * @param UserGroup               $userGroup
+     *
+     * @return JsonResponse
+     */
+    public function updateMembership(UpdateMembershipRequest $request, UserGroup $userGroup): JsonResponse
+    {
+        $all         = $request->getAll();
+        $userGroup   = $this->repository->updateMembership($userGroup, $all);
+        $transformer = new UserGroupTransformer();
+        $transformer->setParameters($this->parameters);
+
+        return response()
+            ->api($this->jsonApiObject('user-groups', $userGroup, $transformer))
+            ->header('Content-Type', self::CONTENT_TYPE);
+    }
 }

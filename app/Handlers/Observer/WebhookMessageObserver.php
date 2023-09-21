@@ -1,8 +1,6 @@
 <?php
-
-
 /*
- * StoreRequest.php
+ * WebhookMessageObserver.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,41 +19,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Handlers\Observer;
 
-namespace FireflyIII\Api\V2\Request\UserGroup;
-
-use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Support\Request\ChecksLogin;
-use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
+use FireflyIII\Models\Webhook;
+use FireflyIII\Models\WebhookMessage;
 
 /**
- * Class StoreRequest
+ * Class WebhookMessageObserver
  */
-class StoreRequest extends FormRequest
+class WebhookMessageObserver
 {
-    protected array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
-    use ChecksLogin;
-    use ConvertsDataTypes;
 
     /**
-     * @return array
+     * @param WebhookMessage $webhookMessage
+     *
+     * @return void
      */
-    public function getAll(): array
+    public function deleting(WebhookMessage $webhookMessage): void
     {
-        return [
-            'title' => $this->convertString('title'),
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function rules(): array
-    {
-        return [
-            'title' => 'unique:user_groups,title|required|min:2|max:255',
-        ];
+        app('log')->debug('Observe "deleting" of a webhook message.');
+        $webhookMessage->webhookAttempts()->delete();
     }
 }

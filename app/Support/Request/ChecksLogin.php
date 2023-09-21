@@ -23,7 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Request;
 
+use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Models\UserGroup;
+use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
+use ValueError;
 
 /**
  * Trait ChecksLogin
@@ -38,7 +42,29 @@ trait ChecksLogin
     public function authorize(): bool
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        // Only allow logged in users
-        return auth()->check();
+        // Only allow logged-in users
+        $check = auth()->check();
+        if (!$check) {
+            return false;
+        }
+        if (!property_exists($this, 'acceptedRoles')) {
+            app('log')->debug('Request class has no acceptedRoles array');
+            return true; // check for false already took place.
+        }
+        /** @var UserGroup $userGroup */
+        $userGroup = $this->route()->parameter('userGroup');
+        if (null === $userGroup) {
+            app('log')->debug('Request class has no userGroup parameter.');
+            return true;
+        }
+        /** @var User $user */
+        $user = auth()->user();
+        /** @var UserRoleEnum $role */
+        foreach ($this->acceptedRoles as $role) {
+            if ($user->hasRoleInGroup($userGroup, $role, true, true)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

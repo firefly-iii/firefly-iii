@@ -1,8 +1,6 @@
 <?php
-
-
 /*
- * StoreRequest.php
+ * RecurrenceObserver.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,41 +19,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Handlers\Observer;
 
-namespace FireflyIII\Api\V2\Request\UserGroup;
-
-use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Support\Request\ChecksLogin;
-use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
+use FireflyIII\Models\Recurrence;
 
 /**
- * Class StoreRequest
+ * Class RecurrenceObserver
  */
-class StoreRequest extends FormRequest
+class RecurrenceObserver
 {
-    protected array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
-    use ChecksLogin;
-    use ConvertsDataTypes;
-
     /**
-     * @return array
+     * @param Recurrence $recurrence
+     *
+     * @return void
      */
-    public function getAll(): array
+    public function deleting(Recurrence $recurrence): void
     {
-        return [
-            'title' => $this->convertString('title'),
-        ];
+        app('log')->debug('Observe "deleting" of a recurrence.');
+        foreach ($recurrence->attachments()->get() as $attachment) {
+            $attachment->delete();
+        }
+
+        $recurrence->recurrenceRepetitions()->delete();
+        $recurrence->recurrenceMeta()->delete();
+        foreach ($recurrence->recurrenceTransactions()->get() as $transaction) {
+            $transaction->delete();
+        }
+        $recurrence->notes()->delete();
+
     }
 
-    /**
-     * @return array
-     */
-    public function rules(): array
-    {
-        return [
-            'title' => 'unique:user_groups,title|required|min:2|max:255',
-        ];
-    }
 }

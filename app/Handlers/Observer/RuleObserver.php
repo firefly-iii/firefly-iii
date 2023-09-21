@@ -1,8 +1,6 @@
 <?php
-
-
 /*
- * StoreRequest.php
+ * RuleObserver.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,41 +19,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Handlers\Observer;
 
-namespace FireflyIII\Api\V2\Request\UserGroup;
-
-use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Support\Request\ChecksLogin;
-use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
+use FireflyIII\Models\Rule;
 
 /**
- * Class StoreRequest
+ * Class RuleObserver
  */
-class StoreRequest extends FormRequest
+class RuleObserver
 {
-    protected array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
-    use ChecksLogin;
-    use ConvertsDataTypes;
-
     /**
-     * @return array
+     * @param Rule $rule
+     *
+     * @return void
      */
-    public function getAll(): array
+    public function deleting(Rule $rule): void
     {
-        return [
-            'title' => $this->convertString('title'),
-        ];
+        app('log')->debug('Observe "deleting" of a rule.');
+        $rule->ruleActions()->delete();
+        $rule->ruleTriggers()->delete();
     }
 
-    /**
-     * @return array
-     */
-    public function rules(): array
-    {
-        return [
-            'title' => 'unique:user_groups,title|required|min:2|max:255',
-        ];
-    }
 }

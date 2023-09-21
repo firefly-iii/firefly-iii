@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Request\UserGroup;
 
 use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -33,7 +34,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class StoreRequest
  */
-class StoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     protected array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
     use ChecksLogin;
@@ -54,8 +55,10 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var UserGroup $userGroup */
+        $userGroup = $this->route()->parameter('userGroup');
         return [
-            'title' => 'unique:user_groups,title|required|min:2|max:255',
+            'title' => sprintf('required|min:2|max:255|unique:user_groups,title,%d', $userGroup->id),
         ];
     }
 }

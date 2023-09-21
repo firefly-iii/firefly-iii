@@ -22,8 +22,9 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Events;
+namespace FireflyIII\Events\Model\PiggyBank;
 
+use FireflyIII\Events\Event;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -31,9 +32,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Class ChangedPiggyBankAmount
+ * Class ChangedAmount
  */
-class ChangedPiggyBankAmount extends Event
+class ChangedAmount extends Event
 {
     use SerializesModels;
 

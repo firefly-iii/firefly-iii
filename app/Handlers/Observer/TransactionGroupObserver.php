@@ -1,8 +1,6 @@
 <?php
-
-
 /*
- * StoreRequest.php
+ * TransactionGroup.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,41 +19,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Handlers\Observer;
 
-namespace FireflyIII\Api\V2\Request\UserGroup;
-
-use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Support\Request\ChecksLogin;
-use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
+use FireflyIII\Models\TransactionGroup;
 
 /**
- * Class StoreRequest
+ * Class TransactionGroup
  */
-class StoreRequest extends FormRequest
+class TransactionGroupObserver
 {
-    protected array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
-    use ChecksLogin;
-    use ConvertsDataTypes;
-
-    /**
-     * @return array
-     */
-    public function getAll(): array
+    public function deleting(TransactionGroup $transactionGroup): void
     {
-        return [
-            'title' => $this->convertString('title'),
-        ];
+        app('log')->debug('Observe "deleting" of a transaction group.');
+        foreach ($transactionGroup->transactionJournals()->get() as $journal) {
+            $journal->delete();
+        }
     }
 
-    /**
-     * @return array
-     */
-    public function rules(): array
-    {
-        return [
-            'title' => 'unique:user_groups,title|required|min:2|max:255',
-        ];
-    }
 }

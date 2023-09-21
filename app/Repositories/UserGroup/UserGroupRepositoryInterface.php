@@ -58,4 +58,27 @@ interface UserGroupRepositoryInterface
      * @return void
      */
     public function setUser(User | Authenticatable | null $user): void;
+
+    /**
+     * @param array $data
+     *
+     * @return UserGroup
+     */
+    public function store(array $data): UserGroup;
+
+    /**
+     * @param UserGroup $userGroup
+     * @param array     $data
+     *
+     * @return UserGroup
+     */
+    public function update(UserGroup $userGroup, array $data): UserGroup;
+
+    /**
+     * @param UserGroup $userGroup
+     * @param array     $data
+     *
+     * @return UserGroup
+     */
+    public function updateMembership(UserGroup $userGroup, array $data): UserGroup;
 }

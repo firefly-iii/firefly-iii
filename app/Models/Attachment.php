@@ -154,7 +154,7 @@ class Attachment extends Model
     }
 
     /**
-     * Get all of the notes.
+     * Get all the notes.
      */
     public function notes(): MorphMany
     {

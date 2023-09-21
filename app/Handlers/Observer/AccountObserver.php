@@ -1,8 +1,6 @@
 <?php
-
-
 /*
- * StoreRequest.php
+ * AccountObserver.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,39 +21,38 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V2\Request\UserGroup;
+namespace FireflyIII\Handlers\Observer;
 
-use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Support\Request\ChecksLogin;
-use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
+use FireflyIII\Models\Account;
 
 /**
- * Class StoreRequest
+ * Class AccountObserver
  */
-class StoreRequest extends FormRequest
+class AccountObserver
 {
-    protected array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
-    use ChecksLogin;
-    use ConvertsDataTypes;
-
     /**
-     * @return array
+     * Also delete related objects.
+     *
+     * @param Account $account
+     *
+     * @return void
      */
-    public function getAll(): array
+    public function deleting(Account $account): void
     {
-        return [
-            'title' => $this->convertString('title'),
-        ];
+        app('log')->debug('Observe "deleting" of an account.');
+        $account->accountMeta()->delete();
+        foreach ($account->piggyBanks()->get() as $piggy) {
+            $piggy->delete();
+        }
+        foreach ($account->attachments()->get() as $attachment) {
+            $attachment->delete();
+        }
+        foreach ($account->transactions()->get() as $transaction) {
+            $transaction->delete();
+        }
+        $account->notes()->delete();
+        $account->locations()->delete();
+
     }
 
-    /**
-     * @return array
-     */
-    public function rules(): array
-    {
-        return [
-            'title' => 'unique:user_groups,title|required|min:2|max:255',
-        ];
-    }
 }

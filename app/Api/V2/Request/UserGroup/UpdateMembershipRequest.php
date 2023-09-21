@@ -33,7 +33,7 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class StoreRequest
  */
-class StoreRequest extends FormRequest
+class UpdateMembershipRequest extends FormRequest
 {
     protected array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
     use ChecksLogin;
@@ -45,7 +45,9 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'title' => $this->convertString('title'),
+            'id'    => $this->convertInteger('id'),
+            'email' => $this->convertString('email'),
+            'roles' => $this->get('roles') ?? [],
         ];
     }
 
@@ -54,8 +56,14 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        $validRoles = [];
+        foreach (UserRoleEnum::cases() as $role) {
+            $validRoles[] = $role->value;
+        }
         return [
-            'title' => 'unique:user_groups,title|required|min:2|max:255',
+            'id'      => 'exists:users,id|required_without:email',
+            'email'   => 'exists:users,email|required_without:id',
+            'roles.*' => 'required|in:' . join(',', $validRoles),
         ];
     }
 }

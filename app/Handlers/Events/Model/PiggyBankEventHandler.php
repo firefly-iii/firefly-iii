@@ -22,9 +22,9 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Handlers\Events;
+namespace FireflyIII\Handlers\Events\Model;
 
-use FireflyIII\Events\ChangedPiggyBankAmount;
+use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
 use FireflyIII\Models\PiggyBankEvent;
 use Illuminate\Support\Facades\Log;
 
@@ -34,11 +34,11 @@ use Illuminate\Support\Facades\Log;
 class PiggyBankEventHandler
 {
     /**
-     * @param ChangedPiggyBankAmount $event
+     * @param ChangedAmount $event
      *
      * @return void
      */
-    public function changePiggyAmount(ChangedPiggyBankAmount $event): void
+    public function changePiggyAmount(ChangedAmount $event): void
     {
         // find journal if group is present.
         $journal = $event->transactionJournal;
