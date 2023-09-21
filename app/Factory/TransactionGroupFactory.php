@@ -81,7 +81,7 @@ class TransactionGroupFactory
 
         $group = new TransactionGroup();
         $group->user()->associate($this->user);
-        $group->userGroup()->associate($this->user->userGroup);
+        $group->userGroup()->associate($data['user_group'] ?? $this->user->userGroup);
         $group->title = $title;
         $group->save();
 

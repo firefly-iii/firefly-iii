@@ -108,7 +108,7 @@ trait WithdrawalValidation
 
         // if there's an ID it must be of the "validTypes".
         if (null !== $accountId && 0 !== $accountId) {
-            $found = $this->accountRepository->find($accountId);
+            $found = $this->getRepository()->find($accountId);
             if (null !== $found) {
                 $type = $found->accountType->type;
                 if (in_array($type, $validTypes, true)) {

@@ -29,7 +29,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
@@ -245,6 +245,7 @@ class NetWorth implements NetWorthInterface
     {
         $this->userGroup              = $userGroup;
         $this->adminAccountRepository = app(AdminAccountRepositoryInterface::class);
+        die('uses old administration ID check, needs to be updated.A');
         $this->adminAccountRepository->setAdministrationId($userGroup->id);
     }
 

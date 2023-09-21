@@ -31,7 +31,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use Illuminate\Http\JsonResponse;
 use Psr\Container\ContainerExceptionInterface;
@@ -55,6 +55,7 @@ class AccountController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
+                die('uses old administration ID check, needs to be updated.2');
                 $this->repository->setAdministrationId(auth()->user()->user_group_id);
                 return $next($request);
             }

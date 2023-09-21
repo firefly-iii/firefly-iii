@@ -23,19 +23,19 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\Administration\Budget;
+namespace FireflyIII\Repositories\UserGroups\Budget;
 
 use Carbon\Carbon;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
-use FireflyIII\Support\Repositories\Administration\AdministrationTrait;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 
 /**
  * Class AvailableBudgetRepository
  */
 class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 {
-    use AdministrationTrait;
+    use UserGroupTrait;
 
     /**
      * @param Carbon $start

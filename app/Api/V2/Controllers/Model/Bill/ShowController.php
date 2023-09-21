@@ -27,7 +27,7 @@ namespace FireflyIII\Api\V2\Controllers\Model\Bill;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Models\Bill;
-use FireflyIII\Repositories\Administration\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Bill\BillRepositoryInterface;
 use FireflyIII\Transformers\V2\AccountTransformer;
 use FireflyIII\Transformers\V2\BillTransformer;
 use Illuminate\Http\JsonResponse;
@@ -46,6 +46,7 @@ class ShowController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                die('uses old administration ID check, needs to be updated.5');
                 $this->repository = app(BillRepositoryInterface::class);
                 $this->repository->setAdministrationId(auth()->user()->user_group_id);
                 return $next($request);

@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\Administration\Account;
+namespace FireflyIII\Repositories\UserGroups\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;

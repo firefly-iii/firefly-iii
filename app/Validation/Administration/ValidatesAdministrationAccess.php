@@ -27,7 +27,6 @@ namespace FireflyIII\Validation\Administration;
 
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\UserRole;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;

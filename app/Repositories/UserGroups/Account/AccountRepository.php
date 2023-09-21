@@ -23,13 +23,13 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\Administration\Account;
+namespace FireflyIII\Repositories\UserGroups\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Support\Repositories\Administration\AdministrationTrait;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
@@ -38,7 +38,7 @@ use Illuminate\Support\Collection;
  */
 class AccountRepository implements AccountRepositoryInterface
 {
-    use AdministrationTrait;
+    use UserGroupTrait;
 
     /**
      * @param Account $account

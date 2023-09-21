@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\Administration\Bill;
+namespace FireflyIII\Repositories\UserGroups\Bill;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
@@ -31,7 +31,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
-use FireflyIII\Support\Repositories\Administration\AdministrationTrait;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 
 /**
@@ -39,7 +39,7 @@ use Illuminate\Support\Collection;
  */
 class BillRepository implements BillRepositoryInterface
 {
-    use AdministrationTrait;
+    use UserGroupTrait;
 
     /**
      * Correct order of piggies in case of issues.

@@ -30,7 +30,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Http\JsonResponse;
 
@@ -79,6 +79,7 @@ class AccountController extends Controller
      */
     public function accounts(AutocompleteRequest $request): JsonResponse
     {
+        die('uses old administration ID check, needs to be updated. 1');
         $data  = $request->getData();
         $types = $data['types'];
         $query = $data['query'];

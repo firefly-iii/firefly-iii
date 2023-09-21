@@ -23,9 +23,9 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\Administration\PiggyBank;
+namespace FireflyIII\Repositories\UserGroups\PiggyBank;
 
-use FireflyIII\Support\Repositories\Administration\AdministrationTrait;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 
 /**
@@ -33,7 +33,7 @@ use Illuminate\Support\Collection;
  */
 class PiggyBankRepository implements PiggyBankRepositoryInterface
 {
-    use AdministrationTrait;
+    use UserGroupTrait;
 
     /**
      * @inheritDoc

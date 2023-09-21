@@ -36,11 +36,11 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\UserGroup;
-use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Administration\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Administration\Budget\AvailableBudgetRepositoryInterface;
-use FireflyIII\Repositories\Administration\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Administration\Budget\OperationsRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Budget\AvailableBudgetRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\User;
@@ -76,6 +76,8 @@ class BasicController extends Controller
                 $this->budgetRepository  = app(BudgetRepositoryInterface::class);
                 $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
                 $this->opsRepository     = app(OperationsRepositoryInterface::class);
+
+                die('uses old administration ID check, needs to be updated.9');
 
                 $this->abRepository->setAdministrationId($user->user_group_id);
                 $this->accountRepository->setAdministrationId($user->user_group_id);

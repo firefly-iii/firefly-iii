@@ -50,6 +50,7 @@ return [
     'invalid_transaction_type'       => 'Invalid transaction type.',
     'invalid_selection'              => 'Your selection is invalid.',
     'belongs_user'                   => 'This value is invalid for this field.',
+    'belongs_user_or_user_group'     => 'This value is invalid for this field.',
     'at_least_one_transaction'       => 'Need at least one transaction.',
     'recurring_transaction_id'       => 'Need at least one transaction.',
     'need_id_to_match'               => 'You need to submit this entry with an ID for the API to be able to match it.',

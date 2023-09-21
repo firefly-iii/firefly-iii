@@ -26,7 +26,7 @@ namespace FireflyIII\Api\V2\Controllers\Model\Bill;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
-use FireflyIII\Repositories\Administration\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Bill\BillRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -63,6 +63,7 @@ class SumController extends Controller
      */
     public function paid(DateRequest $request): JsonResponse
     {
+        die('uses old administration ID check, needs to be updated.6');
         $this->repository->setAdministrationId(auth()->user()->user_group_id);
         $result = $this->repository->sumPaidInRange($this->parameters->get('start'), $this->parameters->get('end'));
 
@@ -82,6 +83,7 @@ class SumController extends Controller
      */
     public function unpaid(DateRequest $request): JsonResponse
     {
+        die('uses old administration ID check, needs to be updated.7');
         $this->repository->setAdministrationId(auth()->user()->user_group_id);
         $result = $this->repository->sumUnpaidInRange($this->parameters->get('start'), $this->parameters->get('end'));
 

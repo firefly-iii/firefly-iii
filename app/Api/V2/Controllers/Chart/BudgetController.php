@@ -32,8 +32,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Administration\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Administration\Budget\OperationsRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
@@ -78,6 +78,7 @@ class BudgetController extends Controller
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
+        die('uses old administration ID check, needs to be updated.3');
         // get user.
         /** @var User $user */
         $user = auth()->user();

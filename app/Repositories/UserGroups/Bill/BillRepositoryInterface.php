@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\Administration\Bill;
+namespace FireflyIII\Repositories\UserGroups\Bill;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;

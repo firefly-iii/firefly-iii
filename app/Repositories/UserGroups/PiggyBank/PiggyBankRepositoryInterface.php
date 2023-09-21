@@ -2,7 +2,7 @@
 
 
 /*
- * OperationsRepositoryInterface.php
+ * PiggyBankRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,27 +23,19 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\Administration\Budget;
+namespace FireflyIII\Repositories\UserGroups\PiggyBank;
 
-use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 /**
- * Interface OperationsRepositoryInterface
+ * Interface PiggyBankRepositoryInterface
  */
-interface OperationsRepositoryInterface
+interface PiggyBankRepositoryInterface
 {
     /**
-     * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
-     * which have the specified budget set to them. It's grouped per currency, with as few details in the array
-     * as possible. Amounts are always negative.
+     * Return all piggy banks.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $budgets
-     *
-     * @return array
+     * @return Collection
      */
-    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
+    public function getPiggyBanks(): Collection;
 }

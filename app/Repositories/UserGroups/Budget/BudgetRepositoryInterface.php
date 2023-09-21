@@ -2,7 +2,7 @@
 
 
 /*
- * BudgetRepository.php
+ * BudgetRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,26 +23,17 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\Administration\Budget;
+namespace FireflyIII\Repositories\UserGroups\Budget;
 
-use FireflyIII\Support\Repositories\Administration\AdministrationTrait;
 use Illuminate\Support\Collection;
 
 /**
- * Class BudgetRepository
+ * Interface BudgetRepositoryInterface
  */
-class BudgetRepository implements BudgetRepositoryInterface
+interface BudgetRepositoryInterface
 {
-    use AdministrationTrait;
-
     /**
-     * @inheritDoc
+     * @return Collection
      */
-    public function getActiveBudgets(): Collection
-    {
-        return $this->userGroup->budgets()->where('active', true)
-                               ->orderBy('order', 'ASC')
-                               ->orderBy('name', 'ASC')
-                               ->get();
-    }
+    public function getActiveBudgets(): Collection;
 }

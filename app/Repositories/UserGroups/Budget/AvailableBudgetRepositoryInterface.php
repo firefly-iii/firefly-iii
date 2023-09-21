@@ -2,7 +2,7 @@
 
 
 /*
- * BudgetRepositoryInterface.php
+ * AvailableBudgetRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,17 +23,21 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\Administration\Budget;
+namespace FireflyIII\Repositories\UserGroups\Budget;
 
-use Illuminate\Support\Collection;
+use Carbon\Carbon;
 
 /**
- * Interface BudgetRepositoryInterface
+ * Interface AvailableBudgetRepositoryInterface
  */
-interface BudgetRepositoryInterface
+interface AvailableBudgetRepositoryInterface
 {
     /**
-     * @return Collection
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
      */
-    public function getActiveBudgets(): Collection;
+    public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
+
 }

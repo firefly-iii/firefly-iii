@@ -2,7 +2,7 @@
 
 
 /*
- * AvailableBudgetRepositoryInterface.php
+ * OperationsRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,21 +23,27 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\Administration\Budget;
+namespace FireflyIII\Repositories\UserGroups\Budget;
 
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 /**
- * Interface AvailableBudgetRepositoryInterface
+ * Interface OperationsRepositoryInterface
  */
-interface AvailableBudgetRepositoryInterface
+interface OperationsRepositoryInterface
 {
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
+     * which have the specified budget set to them. It's grouped per currency, with as few details in the array
+     * as possible. Amounts are always negative.
+     *
+     * @param Carbon          $start
+     * @param Carbon          $end
+     * @param Collection|null $accounts
+     * @param Collection|null $budgets
      *
      * @return array
      */
-    public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
-
+    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
 }

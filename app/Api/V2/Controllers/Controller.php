@@ -171,7 +171,7 @@ class Controller extends BaseController
      *
      * @return array
      */
-    final protected function jsonApiObject(string $key, Model $object, AbstractTransformer $transformer): array
+    final protected function jsonApiObject(string $key, array | Model $object, AbstractTransformer $transformer): array
     {
         // create some objects:
         $manager = new Manager();

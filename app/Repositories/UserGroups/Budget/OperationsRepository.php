@@ -23,13 +23,13 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\Administration\Budget;
+namespace FireflyIII\Repositories\UserGroups\Budget;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Support\Repositories\Administration\AdministrationTrait;
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 
 /**
@@ -37,7 +37,7 @@ use Illuminate\Support\Collection;
  */
 class OperationsRepository implements OperationsRepositoryInterface
 {
-    use AdministrationTrait;
+    use UserGroupTrait;
 
     /**
      * @inheritDoc
@@ -132,6 +132,7 @@ class OperationsRepository implements OperationsRepositoryInterface
     {
         /** @var BudgetRepositoryInterface $repos */
         $repos = app(BudgetRepositoryInterface::class);
+        die('uses old administration ID check, needs to be updated.F');
         $repos->setAdministrationId($this->getAdministrationId());
 
         return $repos->getActiveBudgets();

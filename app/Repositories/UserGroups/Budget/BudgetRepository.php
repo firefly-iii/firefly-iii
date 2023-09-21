@@ -2,7 +2,7 @@
 
 
 /*
- * PiggyBankRepositoryInterface.php
+ * BudgetRepository.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,19 +23,26 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\Administration\PiggyBank;
+namespace FireflyIII\Repositories\UserGroups\Budget;
 
+use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 
 /**
- * Interface PiggyBankRepositoryInterface
+ * Class BudgetRepository
  */
-interface PiggyBankRepositoryInterface
+class BudgetRepository implements BudgetRepositoryInterface
 {
+    use UserGroupTrait;
+
     /**
-     * Return all piggy banks.
-     *
-     * @return Collection
+     * @inheritDoc
      */
-    public function getPiggyBanks(): Collection;
+    public function getActiveBudgets(): Collection
+    {
+        return $this->userGroup->budgets()->where('active', true)
+                               ->orderBy('order', 'ASC')
+                               ->orderBy('name', 'ASC')
+                               ->get();
+    }
 }

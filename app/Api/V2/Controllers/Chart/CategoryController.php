@@ -32,7 +32,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
@@ -53,6 +53,7 @@ class CategoryController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                die('uses old administration ID check, needs to be updated.4');
                 $this->accountRepos  = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
                 $this->accountRepos->setAdministrationId(auth()->user()->user_group_id);
