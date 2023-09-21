@@ -23,21 +23,20 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepository;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Budget\AvailableBudgetRepository as AdminAbRepository;
-use FireflyIII\Repositories\UserGroups\Budget\AvailableBudgetRepositoryInterface as AdminAbRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepository;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepository;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Budget\BudgetRepository as AdminBudgetRepository;
-use FireflyIII\Repositories\UserGroups\Budget\BudgetRepositoryInterface as AdminBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\NoBudgetRepository;
 use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepository;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Budget\AvailableBudgetRepository as AdminAbRepository;
+use FireflyIII\Repositories\UserGroups\Budget\AvailableBudgetRepositoryInterface as AdminAbRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Budget\BudgetRepository as AdminBudgetRepository;
+use FireflyIII\Repositories\UserGroups\Budget\BudgetRepositoryInterface as AdminBudgetRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Budget\OperationsRepository as AdminOperationsRepository;
 use FireflyIII\Repositories\UserGroups\Budget\OperationsRepositoryInterface as AdminOperationsRepositoryInterface;
 use Illuminate\Foundation\Application;
@@ -79,8 +78,6 @@ class BudgetServiceProvider extends ServiceProvider
                 $repository = app(AdminBudgetRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
-                    throw new FireflyException('uses old administration ID check, needs to be updated.C');
-                    $repository->setAdministrationId(auth()->user()->user_group_id);
                 }
 
                 return $repository;
@@ -109,8 +106,6 @@ class BudgetServiceProvider extends ServiceProvider
                 $repository = app(AdminAbRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
-                    throw new FireflyException('uses old administration ID check, needs to be updated.D');
-                    $repository->setAdministrationId(auth()->user()->user_group_id);
                 }
 
                 return $repository;
@@ -165,8 +160,6 @@ class BudgetServiceProvider extends ServiceProvider
                 $repository = app(AdminOperationsRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
-                    throw new FireflyException('uses old administration ID check, needs to be updated.E');
-                    $repository->setAdministrationId(auth()->user()->user_group_id);
                 }
 
                 return $repository;

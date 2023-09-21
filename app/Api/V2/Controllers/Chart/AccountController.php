@@ -33,6 +33,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\CleansChartData;
+use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -43,6 +44,7 @@ use Psr\Container\NotFoundExceptionInterface;
 class AccountController extends Controller
 {
     use CleansChartData;
+    use ValidatesUserGroupTrait;
 
     private AccountRepositoryInterface $repository;
 
@@ -55,8 +57,11 @@ class AccountController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
-                throw new FireflyException('uses old administration ID check, needs to be updated.2');
-                $this->repository->setAdministrationId(auth()->user()->user_group_id);
+                $userGroup        = $this->validateUserGroup($request);
+                if (null !== $userGroup) {
+                    $this->repository->setUserGroup($userGroup);
+                }
+
                 return $next($request);
             }
         );

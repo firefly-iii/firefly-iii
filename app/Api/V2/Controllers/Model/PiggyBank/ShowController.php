@@ -28,6 +28,7 @@ namespace FireflyIII\Api\V2\Controllers\Model\PiggyBank;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\UserGroups\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\V2\PiggyBankTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -38,6 +39,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class ShowController extends Controller
 {
+    use ValidatesUserGroupTrait;
+
     private PiggyBankRepositoryInterface $repository;
 
     public function __construct()
@@ -45,9 +48,13 @@ class ShowController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                throw new FireflyException('uses old administration ID check, needs to be updated.8');
                 $this->repository = app(PiggyBankRepositoryInterface::class);
-                $this->repository->setAdministrationId(auth()->user()->user_group_id);
+
+                $userGroup = $this->validateUserGroup($request);
+                if (null !== $userGroup) {
+                    $this->repository->setUserGroup($userGroup);
+                }
+
                 return $next($request);
             }
         );

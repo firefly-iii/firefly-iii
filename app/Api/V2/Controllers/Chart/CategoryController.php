@@ -36,6 +36,7 @@ use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
+use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -44,6 +45,7 @@ use Illuminate\Http\JsonResponse;
 class CategoryController extends Controller
 {
     use CleansChartData;
+    use ValidatesUserGroupTrait;
 
     private AccountRepositoryInterface  $accountRepos;
     private CurrencyRepositoryInterface $currencyRepos;
@@ -53,10 +55,12 @@ class CategoryController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                throw new FireflyException('uses old administration ID check, needs to be updated.4');
                 $this->accountRepos  = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
-                $this->accountRepos->setAdministrationId(auth()->user()->user_group_id);
+                $userGroup           = $this->validateUserGroup($request);
+                if (null !== $userGroup) {
+                    $this->accountRepos->setUserGroup($userGroup);
+                }
                 return $next($request);
             }
         );
