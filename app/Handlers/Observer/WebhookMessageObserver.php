@@ -1,4 +1,5 @@
 <?php
+
 /*
  * WebhookMessageObserver.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -18,10 +19,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
-use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookMessage;
 
 /**
@@ -29,7 +30,6 @@ use FireflyIII\Models\WebhookMessage;
  */
 class WebhookMessageObserver
 {
-
     /**
      * @param WebhookMessage $webhookMessage
      *

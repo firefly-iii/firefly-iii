@@ -36,9 +36,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UpdateRequest extends FormRequest
 {
-    protected array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
     use ChecksLogin;
     use ConvertsDataTypes;
+    protected array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
 
     /**
      * @return array
