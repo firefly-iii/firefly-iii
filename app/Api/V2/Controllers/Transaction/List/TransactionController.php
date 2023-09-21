@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Transaction\List;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Api\V2\Request\Transaction\ListRequest;
+use FireflyIII\Api\V2\Request\Model\Transaction\ListRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Transformers\V2\TransactionGroupTransformer;
 use Illuminate\Http\JsonResponse;

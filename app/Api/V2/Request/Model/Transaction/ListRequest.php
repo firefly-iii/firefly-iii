@@ -2,7 +2,7 @@
 
 /*
  * ListRequest.php
- * Copyright (c) 2022 james@firefly-iii.org
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Api\V2\Request\Transaction;
+namespace FireflyIII\Api\V2\Request\Model\Transaction;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Http\Api\TransactionFilter;
