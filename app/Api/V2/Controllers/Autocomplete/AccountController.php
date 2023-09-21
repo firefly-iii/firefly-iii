@@ -79,7 +79,7 @@ class AccountController extends Controller
      */
     public function accounts(AutocompleteRequest $request): JsonResponse
     {
-        die('uses old administration ID check, needs to be updated. 1');
+        throw new FireflyException('uses old administration ID check, needs to be updated. 1');
         $data  = $request->getData();
         $types = $data['types'];
         $query = $data['query'];

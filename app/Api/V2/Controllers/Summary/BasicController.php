@@ -77,7 +77,7 @@ class BasicController extends Controller
                 $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
                 $this->opsRepository     = app(OperationsRepositoryInterface::class);
 
-                die('uses old administration ID check, needs to be updated.9');
+                throw new FireflyException('uses old administration ID check, needs to be updated.9');
 
                 $this->abRepository->setAdministrationId($user->user_group_id);
                 $this->accountRepository->setAdministrationId($user->user_group_id);

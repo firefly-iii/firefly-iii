@@ -55,7 +55,7 @@ class AccountController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
-                die('uses old administration ID check, needs to be updated.2');
+                throw new FireflyException('uses old administration ID check, needs to be updated.2');
                 $this->repository->setAdministrationId(auth()->user()->user_group_id);
                 return $next($request);
             }

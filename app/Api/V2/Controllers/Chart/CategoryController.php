@@ -53,7 +53,7 @@ class CategoryController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                die('uses old administration ID check, needs to be updated.4');
+                throw new FireflyException('uses old administration ID check, needs to be updated.4');
                 $this->accountRepos  = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
                 $this->accountRepos->setAdministrationId(auth()->user()->user_group_id);

@@ -78,7 +78,7 @@ class BudgetController extends Controller
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
-        die('uses old administration ID check, needs to be updated.3');
+        throw new FireflyException('uses old administration ID check, needs to be updated.3');
         // get user.
         /** @var User $user */
         $user = auth()->user();

@@ -48,7 +48,7 @@ trait ValidatesAdministrationAccess
      */
     protected function validateAdministration(Validator $validator, array $allowedRoles): void
     {
-        die('deprecated method, must be done through user.');
+        throw new FireflyException('deprecated method, must be done through user.');
         Log::debug('Now in validateAdministration()');
         if (!auth()->check()) {
             Log::error('User is not authenticated.');

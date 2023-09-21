@@ -84,7 +84,7 @@ class TransactionGroup extends Model
         ];
 
     /** @var array Fields that can be filled */
-    protected $fillable = ['user_id', 'title'];
+    protected $fillable = ['user_id', 'user_group_id', 'title'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -117,19 +117,19 @@ class TransactionGroup extends Model
     }
 
     /**
-     * @return HasMany
-     */
-    public function transactionJournals(): HasMany
-    {
-        return $this->hasMany(TransactionJournal::class);
-    }
-
-    /**
      * @return BelongsTo
      */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function transactionJournals(): HasMany
+    {
+        return $this->hasMany(TransactionJournal::class);
     }
 
     /**

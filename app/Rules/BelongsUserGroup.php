@@ -62,11 +62,11 @@ class BelongsUserGroup implements ValidationRule
     {
         $attribute = $this->parseAttribute($attribute);
         if (!auth()->check()) {
-            $fail('validation.belongs_user')->translate();
+            $fail('validation.belongs_user_or_user_group')->translate();
             return;
         }
         $attribute = (string)$attribute;
-        Log::debug(sprintf('Going to validate %s', $attribute));
+        Log::debug(sprintf('Group: Going to validate "%s"', $attribute));
 
         $result = match ($attribute) {
             'piggy_bank_id'               => $this->validatePiggyBankId((int)$value),
@@ -252,7 +252,7 @@ class BelongsUserGroup implements ValidationRule
     private function validateAccountId(int $value): bool
     {
         if (0 === $value) {
-            // its ok to submit 0. other checks will fail.
+            // it's ok to submit 0. other checks will fail.
             return true;
         }
         $count = Account::where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();

@@ -245,7 +245,7 @@ class NetWorth implements NetWorthInterface
     {
         $this->userGroup              = $userGroup;
         $this->adminAccountRepository = app(AdminAccountRepositoryInterface::class);
-        die('uses old administration ID check, needs to be updated.A');
+        throw new FireflyException('uses old administration ID check, needs to be updated.A');
         $this->adminAccountRepository->setAdministrationId($userGroup->id);
     }
 

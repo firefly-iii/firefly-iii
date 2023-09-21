@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepository;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Budget\AvailableBudgetRepository as AdminAbRepository;
@@ -78,7 +79,7 @@ class BudgetServiceProvider extends ServiceProvider
                 $repository = app(AdminBudgetRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
-                    die('uses old administration ID check, needs to be updated.C');
+                    throw new FireflyException('uses old administration ID check, needs to be updated.C');
                     $repository->setAdministrationId(auth()->user()->user_group_id);
                 }
 
@@ -108,7 +109,7 @@ class BudgetServiceProvider extends ServiceProvider
                 $repository = app(AdminAbRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
-                    die('uses old administration ID check, needs to be updated.D');
+                    throw new FireflyException('uses old administration ID check, needs to be updated.D');
                     $repository->setAdministrationId(auth()->user()->user_group_id);
                 }
 
@@ -164,7 +165,7 @@ class BudgetServiceProvider extends ServiceProvider
                 $repository = app(AdminOperationsRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
-                    die('uses old administration ID check, needs to be updated.E');
+                    throw new FireflyException('uses old administration ID check, needs to be updated.E');
                     $repository->setAdministrationId(auth()->user()->user_group_id);
                 }
 

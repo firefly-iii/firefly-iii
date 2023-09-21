@@ -132,7 +132,7 @@ class OperationsRepository implements OperationsRepositoryInterface
     {
         /** @var BudgetRepositoryInterface $repos */
         $repos = app(BudgetRepositoryInterface::class);
-        die('uses old administration ID check, needs to be updated.F');
+        throw new FireflyException('uses old administration ID check, needs to be updated.F');
         $repos->setAdministrationId($this->getAdministrationId());
 
         return $repos->getActiveBudgets();
