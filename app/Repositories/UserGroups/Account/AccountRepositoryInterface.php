@@ -97,4 +97,5 @@ interface AccountRepositoryInterface
      */
     public function searchAccount(string $query, array $types, int $limit): Collection;
 
+
 }
