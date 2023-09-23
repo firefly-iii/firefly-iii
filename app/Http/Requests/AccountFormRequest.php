@@ -37,10 +37,10 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class AccountFormRequest extends FormRequest
 {
-    protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
     use ConvertsDataTypes;
     use AppendsLocationData;
     use ChecksLogin;
+    protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
 
     /**
      * Get all data.

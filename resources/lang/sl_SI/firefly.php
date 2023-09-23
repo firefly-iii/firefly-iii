@@ -1731,7 +1731,7 @@ return [
     'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
 
     // bills:
-    'subscription'                              => 'Subscription',
+    'subscription'                              => 'Naročnina',
     'not_expected_period'                       => 'Not expected this period',
     'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
     'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',

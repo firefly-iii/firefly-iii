@@ -23,7 +23,7 @@ import dates from '../../pages/shared/dates.js';
 import {createEmptySplit} from "./shared/create-empty-split.js";
 import {parseFromEntries} from "./shared/parse-from-entries.js";
 import formatMoney from "../../util/format-money.js";
-//import Autocomplete from "bootstrap5-autocomplete";
+import Autocomplete from "bootstrap5-autocomplete";
 import Post from "../../api/v2/model/transaction/post.js";
 
 let transactions = function () {
@@ -38,9 +38,59 @@ let transactions = function () {
         showError: false,
         showSuccess: false,
 
+        addedSplit() {
+            console.log('addedSplit');
+            const opts = {
+                onSelectItem: console.log,
+            };
+            var src = [];
+            for (let i = 0; i < 50; i++) {
+                src.push({
+                    title: "Option " + i,
+                    id: "opt" + i,
+                    data: {
+                        key: i,
+                    },
+                });
+            }
+
+            Autocomplete.init("input.autocomplete", {
+                items: src,
+                valueField: "id",
+                labelField: "title",
+                highlightTyped: true,
+                onSelectItem: console.log,
+            });
+
+
+            // setTimeout(() => {
+            //     console.log('timed out');
+            //     console.log(document.querySelector('input.autocomplete'));
+
+            // }, 1500);
+
+        },
+
         init() {
             console.log('init()');
             this.addSplit();
+
+            // // We can use regular objects as source and customize label
+            // new Autocomplete(document.getElementById("autocompleteRegularInput"), {
+            //     items: {
+            //         opt_some: "Some",
+            //         opt_value: "Value",
+            //         opt_here: "Here is a very long element that should be truncated",
+            //         opt_dia: "çaça"
+            //     },
+            //     onRenderItem: (item, label) => {
+            //         return label + " (" + item.value + ")";
+            //     },
+            // });
+            // new Autocomplete(document.getElementById("autocompleteDatalist"), opts);
+            //new Autocomplete(document.getElementById("autocompleteRemote"), opts);
+            // new Autocomplete(document.getElementById("autocompleteLiveRemote"), opts);
+
         },
         submitTransaction() {
             // todo disable buttons
@@ -53,14 +103,21 @@ let transactions = function () {
                 apply_rules: false,
                 transactions: transactions
             };
+            if (transactions.length > 1) {
+                // todo improve me
+                submission.group_title = transactions[0].description;
+            }
             let poster = new Post();
             console.log(submission);
             poster.post(submission).then((response) => {
                 // todo create success banner
                 this.showSuccessMessage = true;
-                // todo or redirect to transaction.
                 // todo release form
                 console.log(response);
+
+                // todo or redirect to transaction.
+                window.location = 'transactions/show/' + response.data.data.id + '?transaction_group_id=' + response.data.data.id + '&message=created';
+
             }).catch((error) => {
                 this.showErrorMessage = true;
                 // todo create error banner.

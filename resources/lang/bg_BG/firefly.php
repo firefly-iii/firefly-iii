@@ -1731,10 +1731,10 @@ return [
     'remove_budgeted_amount'                    => 'Премахнете сумата на бюджета в :currency',
 
     // bills:
-    'subscription'                              => 'Subscription',
+    'subscription'                              => 'Suscripción',
     'not_expected_period'                       => 'Не се очаква този период',
-    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
-    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
+    'subscriptions_in_group'                    => 'Suscripciones en el grupo "%{title}"',
+    'subscr_expected_x_times'                   => 'Se debe pagar %{amount} %{times} veces este periodo',
     'not_or_not_yet'                            => '(Все още) не',
     'visit_bill'                                => 'Visit bill ":name" at Firefly III',
     'match_between_amounts'                     => 'Сметката "търси" транзакции между :low и :high.',
@@ -1771,7 +1771,7 @@ return [
     'bill_edit_rules'                           => 'Firefly III ще се опита да редактира и правилото, свързано с тази сметка. Ако сами сте редактирали това правило, Firefly III няма да промени нищо.|Firefly III също ще се опита да редактира и :count правила, свързани с тази сметка. Ако сами сте редактирали тези правила, Firefly III няма да промени нищо.',
     'bill_expected_date'                        => 'Очаквано :date',
     'bill_expected_date_js'                     => 'Expected {date}',
-    'expected_amount'                           => '(Expected) amount',
+    'expected_amount'                           => 'Importe (Previsto)',
     'bill_paid_on'                              => 'Paid on {date}',
     'bill_repeats_weekly'                       => 'Повтаря се седмично',
     'bill_repeats_monthly'                      => 'Повтаря се месечно',

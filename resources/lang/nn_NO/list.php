@@ -56,7 +56,7 @@ return [
     'balanceDiff'           => 'Saldodifferanse',
     'other_meta_data'       => 'Andre meta-data',
     'invited_at'            => 'Invitert',
-    'expires'               => 'Invitasjonen utløper',
+    'expires'               => 'Invitasjonen går ut på dato',
     'invited_by'            => 'Invitert av',
     'invite_link'           => 'Invitasjonslenkje',
     'account_type'          => 'Kontotype',

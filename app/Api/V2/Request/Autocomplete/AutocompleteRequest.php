@@ -36,9 +36,9 @@ use Illuminate\Validation\Validator;
  */
 class AutocompleteRequest extends FormRequest
 {
-    protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
     use ConvertsDataTypes;
     use ChecksLogin;
+    protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
 
     /**
      * @return array

@@ -50,7 +50,6 @@ use Illuminate\Validation\Validator;
  */
 class StoreRequest extends FormRequest
 {
-    protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
     use ChecksLogin;
     use ConvertsDataTypes;
 
@@ -58,6 +57,7 @@ class StoreRequest extends FormRequest
     use GroupValidation;
     use CurrencyValidation;
     use AppendsLocationData;
+    protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
 
     /**
      * Get all data.

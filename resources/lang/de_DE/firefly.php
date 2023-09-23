@@ -1731,10 +1731,10 @@ return [
     'remove_budgeted_amount'                    => 'Budgetbetrag in :currency entfernen',
 
     // bills:
-    'subscription'                              => 'Subscription',
+    'subscription'                              => 'Abonnement',
     'not_expected_period'                       => 'In diesem Zeitraum nicht erwartet',
-    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
-    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
+    'subscriptions_in_group'                    => 'Abonnements in Gruppe "%{title}"',
+    'subscr_expected_x_times'                   => 'Die Zahlung von %{amount} wird in diesem Zeitraum %{times}-mal erwartet',
     'not_or_not_yet'                            => '(Noch) nicht',
     'visit_bill'                                => 'Rechnung ":name" in Firefly III aufrufen',
     'match_between_amounts'                     => 'Rechnung passt zu Transaktionen zwischen :low und :high.',
@@ -1771,7 +1771,7 @@ return [
     'bill_edit_rules'                           => 'Firefly III wird versuchen, auch die mit dieser Rechnung zusammenhängende Regel zu ändern. Wenn Sie diese Regel jedoch selbst bearbeitet haben, wird Firefly III nichts ändern.|Firefly III wird versuchen, die :count mit dieser Rechnung zusammenhängenden Regeln ebenfalls zu bearbeiten. Wenn Sie diese Regeln jedoch selbst bearbeitet haben, wird Firefly III nichts ändern.',
     'bill_expected_date'                        => 'Voraussichtlich :date',
     'bill_expected_date_js'                     => 'Erwartet {date}',
-    'expected_amount'                           => '(Expected) amount',
+    'expected_amount'                           => '(Erwarteter) Betrag',
     'bill_paid_on'                              => 'Bezahlt am {date}',
     'bill_repeats_weekly'                       => 'Wiederholt sich wöchentlich',
     'bill_repeats_monthly'                      => 'Wiederholt sich monatlich',

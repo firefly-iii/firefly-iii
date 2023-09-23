@@ -1731,9 +1731,9 @@ return [
     'remove_budgeted_amount'                    => ':currency で予算を削除する',
 
     // bills:
-    'subscription'                              => 'Subscription',
+    'subscription'                              => 'サブスクリプション',
     'not_expected_period'                       => 'この期間には予定なし',
-    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
+    'subscriptions_in_group'                    => 'グループ「%{title}」のサブスクリプション',
     'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
     'not_or_not_yet'                            => '(まだ) なし',
     'visit_bill'                                => 'Firefly IIIの請求「:name」を開く',
@@ -1771,7 +1771,7 @@ return [
     'bill_edit_rules'                           => 'Firefly III は、この請求に関連するルールの編集を試みます。 ただし、このルールをあなたが編集している場合、Firefly III は何も変更しません。 Firefly III は、この請求に関連する :count 件のルールも編集します。 ただし、これらのルールをあなたが編集している場合、Firefly III は何も変更しません。',
     'bill_expected_date'                        => '予定日 :date',
     'bill_expected_date_js'                     => '予定日 {date}',
-    'expected_amount'                           => '(Expected) amount',
+    'expected_amount'                           => '(予想される) 金額',
     'bill_paid_on'                              => '{date} に支払い済み',
     'bill_repeats_weekly'                       => '毎週の繰り返し',
     'bill_repeats_monthly'                      => '毎月の繰り返し',
