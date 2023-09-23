@@ -12,8 +12,7 @@
     {# Firefly III version #}
     <tr>
         <td>Firefly III</td>
-        <td>v{{ FF_VERSION }} / v{{ config('firefly.api_version') }} / {{ system.db_version }}
-            (exp. {{ config('firefly.db_version') }})
+        <td>v{{ FF_VERSION }} / v{{ config('firefly.api_version') }} / {{ system.db_version }} (exp. {{ config('firefly.db_version') }})
         </td>
     </tr>
     {# PHP version + settings #}
@@ -73,7 +72,7 @@
     </tr>
     <tr>
         <td>Logging</td>
-        <td>{{ config('logging.level') }}, {{ app.log_channel }} / {{ app.audit_log_channel }}</td>
+        <td>{{ config('logging.level') }}, {{ config('logging.default') }} / {{ app.audit_log_channel }}</td>
     </tr>
     <tr>
         <td>Cache driver</td>
