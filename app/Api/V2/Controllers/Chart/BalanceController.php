@@ -71,7 +71,7 @@ class BalanceController extends Controller
      * If the transaction being processed is already in native currency OR if the
      * foreign amount is in the native currency, the amount will not be converted.
      *
-     * TODO validate and set administration_id
+     * TODO validate and set user_group_id
      * TODO collector set group, not user
      *
      * @param BalanceChartRequest $request

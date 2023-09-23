@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
+ * @deprecated
  * Trait ValidatesAdministrationAccess
  */
 trait ValidatesAdministrationAccess
@@ -45,6 +46,7 @@ trait ValidatesAdministrationAccess
      * @return void
      * @throws AuthenticationException
      * @throws FireflyException
+     * @deprecated
      */
     protected function validateAdministration(Validator $validator, array $allowedRoles): void
     {

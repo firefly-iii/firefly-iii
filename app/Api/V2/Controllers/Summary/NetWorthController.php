@@ -26,8 +26,9 @@ namespace FireflyIII\Api\V2\Controllers\Summary;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\SingleDateRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Report\NetWorthInterface;
+use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
+use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -35,6 +36,9 @@ use Illuminate\Http\JsonResponse;
  */
 class NetWorthController extends Controller
 {
+    use ValidatesUserGroupTrait;
+    use ConvertsExchangeRates;
+
     private NetWorthInterface $netWorth;
 
     /**
@@ -46,7 +50,12 @@ class NetWorthController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->netWorth = app(NetWorthInterface::class);
-                $this->netWorth->setUser(auth()->user());
+
+                // new way of user group validation
+                $userGroup = $this->validateUserGroup($request);
+                if (null !== $userGroup) {
+                    $this->netWorth->setUserGroup($userGroup);
+                }
 
                 return $next($request);
             }
@@ -63,7 +72,6 @@ class NetWorthController extends Controller
      */
     public function get(SingleDateRequest $request): JsonResponse
     {
-        throw new FireflyException('deprecated use of thing.');
         $date      = $request->getDate();
         $result    = $this->netWorth->sumNetWorthByCurrency($date);
         $converted = $this->cerSum($result);

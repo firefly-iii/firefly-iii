@@ -42,6 +42,14 @@ interface AccountRepositoryInterface
     public function find(int $accountId): ?Account;
 
     /**
+     * @param string $name
+     * @param array  $types
+     *
+     * @return Account|null
+     */
+    public function findByName(string $name, array $types): ?Account;
+
+    /**
      * @param Account $account
      *
      * @return TransactionCurrency|null

@@ -32,6 +32,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountRepository
@@ -39,6 +40,32 @@ use Illuminate\Support\Collection;
 class AccountRepository implements AccountRepositoryInterface
 {
     use UserGroupTrait;
+
+    /**
+     * @inheritDoc
+     */
+    public function findByName(string $name, array $types): ?Account
+    {
+        $query = $this->userGroup->accounts();
+
+        if (0 !== count($types)) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $query->whereIn('account_types.type', $types);
+        }
+        Log::debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
+
+        $query->where('accounts.name', $name);
+        /** @var Account $account */
+        $account = $query->first(['accounts.*']);
+        if (null === $account) {
+            Log::debug(sprintf('There is no account with name "%s" of types', $name), $types);
+
+            return null;
+        }
+        Log::debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
+
+        return $account;
+    }
 
     /**
      * @param Account $account

@@ -67,9 +67,9 @@ class AccountController extends Controller
      * TODO list of checks
      * 1. use dates from ParameterBag
      * 2. Request validates dates
-     * 3. Request includes user_group_id as administration_id
+     * 3. Request includes user_group_id
      * 4. Endpoint is documented.
-     * 5. Collector uses administration_id
+     * 5. Collector uses user_group_id
      *
      * @param AutocompleteRequest $request
      *

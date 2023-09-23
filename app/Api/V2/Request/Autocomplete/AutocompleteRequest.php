@@ -24,13 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Request\Autocomplete;
 
 use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\UserRole;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\User;
-use FireflyIII\Validation\Administration\ValidatesAdministrationAccess;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -39,13 +36,12 @@ use Illuminate\Validation\Validator;
  */
 class AutocompleteRequest extends FormRequest
 {
+    protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
     use ConvertsDataTypes;
     use ChecksLogin;
-    use ValidatesAdministrationAccess;
 
     /**
      * @return array
-     * @throws FireflyException
      */
     public function getData(): array
     {
@@ -63,11 +59,10 @@ class AutocompleteRequest extends FormRequest
         $user = auth()->user();
 
         return [
-            'types'             => $array,
-            'query'             => $this->convertString('query'),
-            'date'              => $this->getCarbonDate('date'),
-            'limit'             => $limit,
-            'administration_id' => (int)($this->get('administration_id', null) ?? $user->getAdministrationId()),
+            'types' => $array,
+            'query' => $this->convertString('query'),
+            'date'  => $this->getCarbonDate('date'),
+            'limit' => $limit,
         ];
     }
 

@@ -62,8 +62,6 @@ class StoreController extends Controller
 
     /**
      * TODO this method is practically the same as the V1 method and borrows as much code as possible.
-     * TODO still it duplicates a lot.
-     * TODO the v1 endpoints will never support separate administrations, this is an important distinction.
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -74,7 +72,6 @@ class StoreController extends Controller
 
         app('log')->debug('Now in API v2 StoreController::store()');
         $data               = $request->getAll();
-        $data['user']       = auth()->user()->id;
         $userGroup          = $request->getUserGroup();
         $data['user_group'] = $userGroup;
 

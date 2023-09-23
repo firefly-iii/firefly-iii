@@ -76,7 +76,7 @@ class AccountController extends Controller
      * If a transaction has foreign currency = native currency, the foreign amount will be used, no conversion
      * will take place.
      *
-     * TODO validate and set administration_id from request
+     * TODO validate and set user_group_id from request
      *
      * @param DateRequest $request
      *
