@@ -40,16 +40,11 @@ trait UserGroupTrait
     protected UserGroup $userGroup;
 
     /**
-     * @param Authenticatable|User|null $user
-     *
-     * @return void
+     * @return UserGroup
      */
-    public function setUser(Authenticatable | User | null $user): void
+    public function getUserGroup(): UserGroup
     {
-        if (null !== $user) {
-            $this->user      = $user;
-            $this->userGroup = $user->userGroup;
-        }
+        return $this->userGroup;
     }
 
     /**
@@ -65,6 +60,19 @@ trait UserGroupTrait
     }
 
     /**
+     * @param Authenticatable|User|null $user
+     *
+     * @return void
+     */
+    public function setUser(Authenticatable | User | null $user): void
+    {
+        if (null !== $user) {
+            $this->user      = $user;
+            $this->userGroup = $user->userGroup;
+        }
+    }
+
+    /**
      * @param int $userGroupId
      *
      * @throws FireflyException
@@ -77,9 +85,13 @@ trait UserGroupTrait
         if (0 === $memberships) {
             throw new FireflyException(sprintf('User #%d has no access to administration #%d', $this->user->id, $userGroupId));
         }
-        $this->userGroup = UserGroup::find($userGroupId);
-        if (null === $this->userGroup) {
-            throw new FireflyException(sprintf('Unfound administration for user #%d', $this->user->id));
+        /** @var UserGroup|null $userGroup */
+        $userGroup = UserGroup::find($userGroupId);
+        if (null === $userGroup) {
+            throw new FireflyException(sprintf('Cannot find administration for user #%d', $this->user->id));
         }
+        $this->userGroup = $userGroup;
     }
+
+
 }

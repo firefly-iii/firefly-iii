@@ -126,15 +126,13 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * @return Collection
-     * @throws FireflyException
      */
     private function getBudgets(): Collection
     {
-        /** @var BudgetRepositoryInterface $repos */
-        $repos = app(BudgetRepositoryInterface::class);
-        throw new FireflyException('uses old administration ID check, needs to be updated.F');
-        $repos->setAdministrationId($this->getAdministrationId());
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+        $repository->setUserGroup($this->getUserGroup());
 
-        return $repos->getActiveBudgets();
+        return $repository->getActiveBudgets();
     }
 }
