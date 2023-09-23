@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * ShowController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -21,10 +21,14 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Api\V2\Controllers\Model\PiggyBank;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Repositories\Administration\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\UserGroups\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\V2\PiggyBankTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -35,6 +39,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class ShowController extends Controller
 {
+    use ValidatesUserGroupTrait;
+
     private PiggyBankRepositoryInterface $repository;
 
     public function __construct()
@@ -43,7 +49,12 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(PiggyBankRepositoryInterface::class);
-                $this->repository->setAdministrationId(auth()->user()->user_group_id);
+
+                $userGroup = $this->validateUserGroup($request);
+                if (null !== $userGroup) {
+                    $this->repository->setUserGroup($userGroup);
+                }
+
                 return $next($request);
             }
         );

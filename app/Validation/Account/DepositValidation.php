@@ -139,7 +139,7 @@ trait DepositValidation
         // if the user submits an ID, but that ID is not of the correct type,
         // return false.
         if (null !== $accountId) {
-            $search = $this->accountRepository->find($accountId);
+            $search = $this->getRepository()->find($accountId);
             if (null !== $search && !in_array($search->accountType->type, $validTypes, true)) {
                 Log::debug(sprintf('User submitted an ID (#%d), which is a "%s", so this is not a valid source.', $accountId, $search->accountType->type));
                 Log::debug(sprintf('Firefly III accepts ID #%d as valid account data.', $accountId));
@@ -153,7 +153,7 @@ trait DepositValidation
 
         // if user submits an IBAN:
         if (null !== $accountIban) {
-            $search = $this->accountRepository->findByIbanNull($accountIban, $validTypes);
+            $search = $this->getRepository()->findByIbanNull($accountIban, $validTypes);
             if (null !== $search && !in_array($search->accountType->type, $validTypes, true)) {
                 Log::debug(sprintf('User submitted IBAN ("%s"), which is a "%s", so this is not a valid source.', $accountIban, $search->accountType->type));
                 $result = false;
@@ -167,7 +167,7 @@ trait DepositValidation
 
         // if user submits a number:
         if (null !== $accountNumber && '' !== $accountNumber) {
-            $search = $this->accountRepository->findByAccountNumber($accountNumber, $validTypes);
+            $search = $this->getRepository()->findByAccountNumber($accountNumber, $validTypes);
             if (null !== $search && !in_array($search->accountType->type, $validTypes, true)) {
                 Log::debug(
                     sprintf('User submitted number ("%s"), which is a "%s", so this is not a valid source.', $accountNumber, $search->accountType->type)

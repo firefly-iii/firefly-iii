@@ -23,16 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Location;
-use FireflyIII\Models\UserRole;
 use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use FireflyIII\Validation\Administration\ValidatesAdministrationAccess;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Validator;
 
 /**
  * Class AccountFormRequest.
@@ -42,7 +40,7 @@ class AccountFormRequest extends FormRequest
     use ConvertsDataTypes;
     use AppendsLocationData;
     use ChecksLogin;
-    use ValidatesAdministrationAccess;
+    protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
 
     /**
      * Get all data.
@@ -52,7 +50,6 @@ class AccountFormRequest extends FormRequest
     public function getAccountData(): array
     {
         $data = [
-            'administration_id'       => $this->convertInteger('administration_id'),
             'name'                    => $this->convertString('name'),
             'active'                  => $this->boolean('active'),
             'account_type_name'       => $this->convertString('objectType'),
@@ -72,9 +69,6 @@ class AccountFormRequest extends FormRequest
             'include_net_worth'       => '1',
             'liability_direction'     => $this->convertString('liability_direction'),
         ];
-        if (0 === $data['administration_id']) {
-            $data['administration_id'] = auth()->user()->getAdministrationId();
-        }
 
         $data = $this->appendLocationData($data, 'location');
         if (false === $this->boolean('include_net_worth')) {
@@ -109,7 +103,6 @@ class AccountFormRequest extends FormRequest
         $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
         $rules          = [
-            'administration_id'                  => 'min:1|max:16777216|numeric',
             'name'                               => 'required|max:1024|min:1|uniqueAccountForUser',
             'opening_balance'                    => 'numeric|nullable|max:1000000000',
             'opening_balance_date'               => 'date|required_with:opening_balance|nullable',
@@ -138,22 +131,5 @@ class AccountFormRequest extends FormRequest
         }
 
         return $rules;
-    }
-
-    /**
-     * Configure the validator instance with special rules for after the basic validation rules.
-     *
-     * @param Validator $validator
-     *
-     * @return void
-     */
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(
-            function (Validator $validator) {
-                // validate if the account can access this administration
-                $this->validateAdministration($validator, [UserRole::CHANGE_TRANSACTIONS]);
-            }
-        );
     }
 }

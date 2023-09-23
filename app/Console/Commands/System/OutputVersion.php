@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * OutputVersion.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -21,25 +21,29 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Console\Commands\System;
 
 use Illuminate\Console\Command;
 
+/**
+ * Class OutputVersion
+ */
 class OutputVersion extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'firefly-iii:output-version';
-
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Outputs the Firefly III version';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'firefly-iii:output-version';
 
     /**
      * Execute the console command.

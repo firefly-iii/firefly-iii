@@ -29,12 +29,34 @@ namespace FireflyIII\Enums;
  */
 enum UserRoleEnum: string
 {
-    case CHANGE_PIGGY_BANKS  = 'change_piggies';
-    case CHANGE_REPETITIONS  = 'change_reps';
-    case CHANGE_RULES        = 'change_rules';
-    case CHANGE_TRANSACTIONS = 'change_tx';
-    case FULL                = 'full';
-    case OWNER               = 'owner';
-    case READ_ONLY           = 'ro';
-    case VIEW_REPORTS        = 'view_reports';
+    // most basic rights, cannot see other members, can see everything else.
+    case READ_ONLY = 'ro';
+
+    // required to even USE the group properly (in this order)
+    case MANAGE_TRANSACTIONS = 'mng_trx';
+
+    // required to edit, add or change categories/tags/object-groups
+    case MANAGE_META = 'mng_meta';
+
+    // manage other financial objects:
+    case MANAGE_BUDGETS       = 'mng_budgets';
+    case MANAGE_PIGGY_BANKS   = 'mng_piggies';
+    case MANAGE_REPETITIONS   = 'mng_reps';
+    case MANAGE_SUBSCRIPTIONS = 'mng_subscriptions';
+    case MANAGE_RULES         = 'mng_rules';
+    case MANAGE_RECURRING     = 'mng_recurring';
+    case MANAGE_WEBHOOKS      = 'mng_webhooks';
+    case MANAGE_CURRENCIES    = 'mng_currencies';
+
+    // view and generate reports
+    case VIEW_REPORTS = 'view_reports';
+
+    // view memberships. needs FULL to manage them.
+    case VIEW_MEMBERSHIPS = 'view_memberships';
+
+    // everything the creator can, except remove/change original creator and delete group
+    case FULL = 'full';
+
+    // reserved for original creator
+    case OWNER = 'owner';
 }

@@ -1731,7 +1731,10 @@ return [
     'remove_budgeted_amount'                    => 'Remove budgeted amount in :currency',
 
     // bills:
+    'subscription'                              => 'Subscription',
     'not_expected_period'                       => 'Nem várható ebben az időszakban',
+    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
+    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
     'not_or_not_yet'                            => 'Nincs (még)',
     'visit_bill'                                => 'Visit bill ":name" at Firefly III',
     'match_between_amounts'                     => 'Tranzakciókkal egyező számlák :low és :high között.',
@@ -1768,6 +1771,7 @@ return [
     'bill_edit_rules'                           => 'A Firefly III megpróbálja szerkeszteni a a számlához kapcsolódó szabályt is. Ha ön már szerkesztette a szabályt, a Firefly III nem fogja módosítani.|A Firefly III megpróbálja szerkeszteni a a számlához kapcsolódó :count szabályt is. Ha ön már szerkesztette a szabályt, a Firefly III nem fogja módosítani.',
     'bill_expected_date'                        => 'Várható dátum :date',
     'bill_expected_date_js'                     => 'Expected {date}',
+    'expected_amount'                           => '(Expected) amount',
     'bill_paid_on'                              => 'Paid on {date}',
     'bill_repeats_weekly'                       => 'Repeats weekly',
     'bill_repeats_monthly'                      => 'Repeats monthly',

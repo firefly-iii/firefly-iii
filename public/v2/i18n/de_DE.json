@@ -9,6 +9,8 @@
             "paid": "Bezahlt",
             "unpaid": "Unbezahlt",
             "default_group_title_name_plain": "ungruppiert",
+            "subscriptions_in_group": "Abonnements in Gruppe \"%{title}\"",
+            "subscr_expected_x_times": "Die Zahlung von %{amount} wird in diesem Zeitraum %{times}-mal erwartet",
             "overspent": "Zuviel ausgegeben",
             "money_flowing_in": "Eingehend",
             "money_flowing_out": "Ausgehend",

@@ -1731,7 +1731,10 @@ return [
     'remove_budgeted_amount'                    => '移除预算上限 (:currency)',
 
     // bills:
+    'subscription'                              => 'Subscription',
     'not_expected_period'                       => '此周期没有预期支付',
+    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
+    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
     'not_or_not_yet'                            => '尚未',
     'visit_bill'                                => 'Visit bill ":name" at Firefly III',
     'match_between_amounts'                     => '匹配:low至:high交易的账单。',
@@ -1768,6 +1771,7 @@ return [
     'bill_edit_rules'                           => 'Firefly III 将同时尝试编辑关联于该账单的规则。如果您已自行编辑过该规则，Firefly III 将不会修改任何内容。|Firefly III 将同时尝试编辑关联于该账单的:count条规则。如果您已自行编辑过该规则，Firefly III 将不会修改任何内容。',
     'bill_expected_date'                        => '预期为:date',
     'bill_expected_date_js'                     => 'Expected {date}',
+    'expected_amount'                           => '(Expected) amount',
     'bill_paid_on'                              => '支付于 {date}',
     'bill_repeats_weekly'                       => '每周',
     'bill_repeats_monthly'                      => '每月',

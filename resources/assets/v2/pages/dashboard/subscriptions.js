@@ -19,134 +19,422 @@
  */
 import {getVariable} from "../../store/get-variable.js";
 import Get from "../../api/v2/model/subscription/get.js";
-import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import {format} from "date-fns";
-import {Chart} from 'chart.js';
 import {I18n} from "i18n-js";
 import {loadTranslations} from "../../support/load-translations.js";
+import {getCacheKey} from "../../support/get-cache-key.js";
+import {Chart} from "chart.js";
+import formatMoney from "../../util/format-money.js";
 
-const CACHE_KEY = 'dashboard-subscriptions-data';
 
-let chart = null;
-let chartData = null;
+// let chart = null;
+// let chartData = null;
 let afterPromises = false;
 let i18n; // for translating items in the chart.
+let apiData = [];
+const SUBSCRIPTION_CACHE_KEY = 'subscriptions-data-dashboard';
+let subscriptionData = {};
+
+/**
+ *
+ */
+// function downloadSubscriptions(params) {
+//     console.log('Downloading page ' + params.page + '...');
+//     const getter = new Get();
+//
+//     getter.get(params).then((response) => {
+//         let data = response.data;
+//         let totalPages = parseInt(data.meta.pagination.total_pages);
+//         apiData = [...apiData, ...data.data];
+//         if (totalPages > params.page) {
+//             params.page++;
+//             downloadSubscriptions(params);
+//         }
+//         console.log('Done! ' + apiData.length + ' items downloaded.');
+//     });
+// }
+
+
+function downloadSubscriptions(params) {
+    const getter = new Get();
+    return getter.get(params)
+        // first promise: parse the data:
+        .then((response) => {
+            let data = response.data.data;
+            //console.log(data);
+            for (let i in data) {
+                if (data.hasOwnProperty(i)) {
+                    let current = data[i];
+                    //console.log(current);
+                    if (current.attributes.active && current.attributes.pay_dates.length > 0) {
+                        let objectGroupId = null === current.attributes.object_group_id ? 0 : current.attributes.object_group_id;
+                        let objectGroupTitle = null === current.attributes.object_group_title ? i18n.t('firefly.default_group_title_name_plain') : current.attributes.object_group_title;
+                        let objectGroupOrder = null === current.attributes.object_group_order ? 0 : current.attributes.object_group_order;
+                        if (!subscriptionData.hasOwnProperty(objectGroupId)) {
+                            subscriptionData[objectGroupId] = {
+                                id: objectGroupId,
+                                title: objectGroupTitle,
+                                order: objectGroupOrder,
+                                payment_info: {},
+                                bills: [],
+                            };
+                        }
+                        // TODO this conversion needs to be inside some kind of a parsing class.
+                        let bill = {
+                            id: current.id,
+                            name: current.attributes.name,
+                            // amount
+                            amount_min: current.attributes.amount_min,
+                            amount_max: current.attributes.amount_max,
+                            amount: (parseFloat(current.attributes.amount_max) + parseFloat(current.attributes.amount_min)) / 2,
+                            currency_code: current.attributes.currency_code,
+
+                            // native amount
+                            native_amount_min: current.attributes.native_amount_min,
+                            native_amount_max: current.attributes.native_amount_max,
+                            native_amount: (parseFloat(current.attributes.native_amount_max) + parseFloat(current.attributes.native_amount_min)) / 2,
+                            native_currency_code: current.attributes.native_currency_code,
+
+                            // paid transactions:
+                            transactions: [],
+
+                            // unpaid moments
+                            pay_dates: current.attributes.pay_dates,
+                            paid: current.attributes.paid_dates.length > 0,
+                        };
+                        // set variables
+                        bill.expected_amount = params.autoConversion ? formatMoney(bill.native_amount, bill.native_currency_code) :
+                            formatMoney(bill.amount, bill.currency_code);
+                        bill.expected_times = i18n.t('firefly.subscr_expected_x_times', {
+                            times: current.attributes.pay_dates.length,
+                            amount: bill.expected_amount
+                        });
+
+                        // add transactions (simpler version)
+                        for (let iii in current.attributes.paid_dates) {
+                            if (current.attributes.paid_dates.hasOwnProperty(iii)) {
+                                const currentPayment = current.attributes.paid_dates[iii];
+                                let percentage = 100;
+                                // math: -100+(paid/expected)*100
+                                if (params.autoConversion) {
+                                    percentage = Math.round(-100 + ((parseFloat(currentPayment.native_amount) * -1) / parseFloat(bill.native_amount)) * 100);
+                                }
+                                if (!params.autoConversion) {
+                                    percentage = Math.round(-100 + ((parseFloat(currentPayment.amount) * -1) / parseFloat(bill.amount)) * 100);
+                                }
+
+                                let currentTransaction = {
+                                    amount: params.autoConversion ? formatMoney(currentPayment.native_amount, currentPayment.native_currency_code) : formatMoney(currentPayment.amount, currentPayment.currency_code),
+                                    percentage: percentage,
+                                    date: format(new Date(currentPayment.date), 'PP'),
+                                    foreign_amount: null,
+                                };
+                                if (null !== currentPayment.foreign_currency_code) {
+                                    currentTransaction.foreign_amount = params.autoConversion ? currentPayment.foreign_native_amount : currentPayment.foreign_amount;
+                                    currentTransaction.foreign_currency_code = params.autoConversion ? currentPayment.native_currency_code : currentPayment.foreign_currency_code;
+                                }
+
+                                bill.transactions.push(currentTransaction);
+                            }
+                        }
+
+                        subscriptionData[objectGroupId].bills.push(bill);
+                        if (0 === current.attributes.paid_dates.length) {
+                            // bill is unpaid, count the "pay_dates" and multiply with the "amount".
+                            // since bill is unpaid, this can only be in currency amount and native currency amount.
+                            const totalAmount = current.attributes.pay_dates.length * bill.amount;
+                            const totalNativeAmount = current.attributes.pay_dates.length * bill.native_amount;
+                            // for bill's currency
+                            if (!subscriptionData[objectGroupId].payment_info.hasOwnProperty(bill.currency_code)) {
+                                subscriptionData[objectGroupId].payment_info[bill.currency_code] = {
+                                    currency_code: bill.currency_code,
+                                    paid: 0,
+                                    unpaid: 0,
+                                    native_currency_code: bill.native_currency_code,
+                                    native_paid: 0,
+                                    native_unpaid: 0,
+                                };
+                            }
+                            subscriptionData[objectGroupId].payment_info[bill.currency_code].unpaid += totalAmount;
+                            subscriptionData[objectGroupId].payment_info[bill.currency_code].native_unpaid += totalNativeAmount;
+                        }
+
+                        if (current.attributes.paid_dates.length > 0) {
+                            for (let ii in current.attributes.paid_dates) {
+                                if (current.attributes.paid_dates.hasOwnProperty(ii)) {
+                                    // bill is paid!
+                                    // since bill is paid, 3 possible currencies:
+                                    // native, currency, foreign currency.
+                                    // foreign currency amount (converted to native or not) will be ignored.
+                                    let currentJournal = current.attributes.paid_dates[ii];
+                                    // new array for the currency
+                                    if (!subscriptionData[objectGroupId].payment_info.hasOwnProperty(currentJournal.currency_code)) {
+                                        subscriptionData[objectGroupId].payment_info[currentJournal.currency_code] = {
+                                            currency_code: bill.currency_code,
+                                            paid: 0,
+                                            unpaid: 0,
+                                            native_currency_code: bill.native_currency_code,
+                                            native_paid: 0,
+                                            native_unpaid: 0,
+                                        };
+                                    }
+                                    const amount = parseFloat(currentJournal.amount) * -1;
+                                    const nativeAmount = parseFloat(currentJournal.native_amount) * -1;
+                                    subscriptionData[objectGroupId].payment_info[currentJournal.currency_code].paid += amount;
+                                    subscriptionData[objectGroupId].payment_info[currentJournal.currency_code].native_paid += nativeAmount;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // if next page, return the same function + 1 page:
+            if (parseInt(response.data.meta.pagination.total_pages) > params.page) {
+                params.page++;
+                return downloadSubscriptions(params);
+            }
+            // otherwise return resolved promise:
+            return Promise.resolve();
+        });
+
+}
+
+//
+// function refreshSubscriptions() {
+//     console.log('refreshSubscriptions');
+//
+//     const cacheValid = window.store.get('cacheValid');
+//     let cachedData = window.store.get(CACHE_KEY);
+//
+//     // if (cacheValid && typeof cachedData !== 'undefined') {
+//     //     // this.drawChart(this.generateOptions(cachedData));
+//     //     // this.loading = false;
+//     //     // return;
+//     // }
+//
+//     let params = {
+//         start: format(new Date(window.store.get('start')), 'y-MM-dd'),
+//         end: format(new Date(window.store.get('end')), 'y-MM-dd'),
+//         page: 1,
+//     };
+//     downloadSubscriptions(params).then(() => {
+//         console.log('Done with download!');
+//         console.log(subscriptionData);
+//     });
+//
+//
+//     //
+//     // getter.paid(params).then((response) => {
+//     //     let paidData = response.data;
+//     //     getter.unpaid(params).then((response) => {
+//     //         let unpaidData = response.data;
+//     //         let chartData = {paid: paidData, unpaid: unpaidData};
+//     //         window.store.set(CACHE_KEY, chartData);
+//     //         this.drawChart(this.generateOptions(chartData));
+//     //         this.loading = false;
+//     //     });
+//     // });
+// }
+
+
 export default () => ({
     loading: false,
     autoConversion: false,
-    loadChart() {
-        if (true === this.loading) {
-            return;
-        }
+    subscriptions: [],
+    startSubscriptions() {
         this.loading = true;
+        let start = new Date(window.store.get('start'));
+        let end = new Date(window.store.get('end'));
 
-        if (null !== chartData) {
-            this.drawChart(this.generateOptions(chartData));
-            this.loading = false;
-            return;
-        }
-        this.getFreshData();
-    },
-    drawChart(options) {
-        if (null !== chart) {
-            chart.data.datasets = options.data.datasets;
-            chart.update();
-            return;
-        }
-        chart = new Chart(document.querySelector("#subscriptions-chart"), options);
-    },
-    getFreshData() {
-
+        console.log('here we are');
         const cacheValid = window.store.get('cacheValid');
-        let cachedData = window.store.get(CACHE_KEY);
+        let cachedData = window.store.get(getCacheKey(SUBSCRIPTION_CACHE_KEY, start, end));
 
-        if (cacheValid && typeof cachedData !== 'undefined') {
-            this.drawChart(this.generateOptions(cachedData));
-            this.loading = false;
+        if (cacheValid && typeof cachedData !== 'undefined' && false) {
+            console.error('cannot handle yet');
             return;
         }
-
-
-        const getter = new Get();
+        console.log('cache is invalid, must download');
         let params = {
-            start: format(new Date(window.store.get('start')), 'y-MM-dd'),
-            end: format(new Date(window.store.get('end')), 'y-MM-dd')
+            start: format(start, 'y-MM-dd'),
+            end: format(end, 'y-MM-dd'),
+            autoConversion: this.autoConversion,
+            page: 1
         };
+        downloadSubscriptions(params).then(() => {
+            console.log('Done with download!');
+            let set = Object.values(subscriptionData);
+            // convert subscriptionData to usable data (especially for the charts)
+            for (let i in set) {
+                if (set.hasOwnProperty(i)) {
+                    let group = set[i];
+                    const keys = Object.keys(group.payment_info);
+                    // do some parsing here.
+                    group.col_size = 1 === keys.length ? 'col-6 offset-3' : 'col-6';
+                    group.chart_width = 1 === keys.length ? '50%' : '100%';
+                    group.payment_length = keys.length;
 
-        getter.paid(params).then((response) => {
-            let paidData = response.data;
-            getter.unpaid(params).then((response) => {
-                let unpaidData = response.data;
-                let chartData = {paid: paidData, unpaid: unpaidData};
-                window.store.set(CACHE_KEY, chartData);
-                this.drawChart(this.generateOptions(chartData));
-                this.loading = false;
-            });
+                    // then add to array
+                    this.subscriptions.push(group);
+                    //console.log(group);
+                }
+            }
+
+            // then assign to this.subscriptions.
+            this.loading = false;
         });
     },
-    generateOptions(data) {
-        let options = getDefaultChartSettings('pie');
-        // console.log(data);
-        options.data.labels = [i18n.t('firefly.paid'), i18n.t('firefly.unpaid')];
-        options.data.datasets = [];
-        let collection = {};
-        for (let i in data.paid) {
-            if (data.paid.hasOwnProperty(i)) {
-                let current = data.paid[i];
-                let currencyCode = this.autoConversion ? current.native_code : current.currency_code;
-                let amount = this.autoConversion ? current.native_sum : current.sum;
-                if (!collection.hasOwnProperty(currencyCode)) {
-                    collection[currencyCode] = {
-                        paid: 0,
-                        unpaid: 0,
-                    };
-                }
-                // in case of paid, add to "paid":
-                collection[currencyCode].paid += (parseFloat(amount) * -1);
+    drawPieChart(groupId, groupTitle, data) {
+        let id = '#pie_' + groupId + '_' + data.currency_code;
+        //console.log(data);
+        const unpaidAmount = this.autoConversion ? data.native_unpaid : data.unpaid;
+        const paidAmount = this.autoConversion ? data.native_paid : data.paid;
+        const currencyCode = this.autoConversion ? data.native_currency_code : data.currency_code;
+        const chartData = {
+            labels: [
+                i18n.t('firefly.paid'),
+                i18n.t('firefly.unpaid')
+            ],
+            datasets: [{
+                label: i18n.t('firefly.subscriptions_in_group', {title: groupTitle}),
+                data: [paidAmount, unpaidAmount],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                ],
+                hoverOffset: 4
+            }]
+        };
+        const config = {
+            type: 'doughnut',
+            data: chartData,
+            options: {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + formatMoney(tooltipItem.raw, currencyCode);
+                            },
+                        },
+                    },
+                },
             }
-        }
-        // unpaid
-        for (let i in data.unpaid) {
-            if (data.unpaid.hasOwnProperty(i)) {
-                let current = data.unpaid[i];
-                let currencyCode = this.autoConversion ? current.native_code : current.currency_code;
-                let amount = this.autoConversion ? current.native_sum : current.sum;
-                if (!collection.hasOwnProperty(currencyCode)) {
-                    collection[currencyCode] = {
-                        paid: 0,
-                        unpaid: 0,
-                    };
-                }
-                // console.log(current);
-                // in case of paid, add to "paid":
-                collection[currencyCode].unpaid += parseFloat(amount);
-            }
-        }
-        for (let currencyCode in collection) {
-            if (collection.hasOwnProperty(currencyCode)) {
-                let current = collection[currencyCode];
-                options.data.datasets.push(
-                    {
-                        label: currencyCode,
-                        data: [current.paid, current.unpaid],
-                        backgroundColor: [
-                            'rgb(54, 162, 235)', // green (paid)
-                            'rgb(255, 99, 132)', // red (unpaid_
-                        ],
-                        //hoverOffset: 4
-                    }
-                )
-            }
-        }
-
-        return options;
+        };
+        new Chart(document.querySelector(id), config);
     },
+
+    // loadChart() {
+    //     if (true === this.loading) {
+    //         return;
+    //     }
+    //     this.loading = true;
+    //
+    //     if (null !== chartData) {
+    //         //this.drawChart(this.generateOptions(chartData));
+    //         //this.loading = false;
+    //
+    //     }
+    //     //this.getFreshData();
+    // },
+    // drawChart(options) {
+    //     if (null !== chart) {
+    //         // chart.data.datasets = options.data.datasets;
+    //         // chart.update();
+    //
+    //     }
+    //     // chart = new Chart(document.querySelector("#subscriptions-chart"), options);
+    // },
+    // getFreshData() {
+    //     const cacheValid = window.store.get('cacheValid');
+    //     let cachedData = window.store.get(CACHE_KEY);
+    //
+    //     if (cacheValid && typeof cachedData !== 'undefined') {
+    //         this.drawChart(this.generateOptions(cachedData));
+    //         this.loading = false;
+    //         return;
+    //     }
+    //
+    //
+    //     const getter = new Get();
+    //     let params = {
+    //         start: format(new Date(window.store.get('start')), 'y-MM-dd'),
+    //         end: format(new Date(window.store.get('end')), 'y-MM-dd')
+    //     };
+    //
+    //     getter.paid(params).then((response) => {
+    //         let paidData = response.data;
+    //         getter.unpaid(params).then((response) => {
+    //             let unpaidData = response.data;
+    //             let chartData = {paid: paidData, unpaid: unpaidData};
+    //             window.store.set(CACHE_KEY, chartData);
+    //             this.drawChart(this.generateOptions(chartData));
+    //             this.loading = false;
+    //         });
+    //     });
+    // },
+    // generateOptions(data) {
+    //     let options = getDefaultChartSettings('pie');
+    //     // console.log(data);
+    //     options.data.labels = [i18n.t('firefly.paid'), i18n.t('firefly.unpaid')];
+    //     options.data.datasets = [];
+    //     let collection = {};
+    //     for (let i in data.paid) {
+    //         if (data.paid.hasOwnProperty(i)) {
+    //             let current = data.paid[i];
+    //             let currencyCode = this.autoConversion ? current.native_code : current.currency_code;
+    //             let amount = this.autoConversion ? current.native_sum : current.sum;
+    //             if (!collection.hasOwnProperty(currencyCode)) {
+    //                 collection[currencyCode] = {
+    //                     paid: 0,
+    //                     unpaid: 0,
+    //                 };
+    //             }
+    //             // in case of paid, add to "paid":
+    //             collection[currencyCode].paid += (parseFloat(amount) * -1);
+    //         }
+    //     }
+    //     // unpaid
+    //     for (let i in data.unpaid) {
+    //         if (data.unpaid.hasOwnProperty(i)) {
+    //             let current = data.unpaid[i];
+    //             let currencyCode = this.autoConversion ? current.native_code : current.currency_code;
+    //             let amount = this.autoConversion ? current.native_sum : current.sum;
+    //             if (!collection.hasOwnProperty(currencyCode)) {
+    //                 collection[currencyCode] = {
+    //                     paid: 0,
+    //                     unpaid: 0,
+    //                 };
+    //             }
+    //             // console.log(current);
+    //             // in case of paid, add to "paid":
+    //             collection[currencyCode].unpaid += parseFloat(amount);
+    //         }
+    //     }
+    //     for (let currencyCode in collection) {
+    //         if (collection.hasOwnProperty(currencyCode)) {
+    //             let current = collection[currencyCode];
+    //             options.data.datasets.push(
+    //                 {
+    //                     label: currencyCode,
+    //                     data: [current.paid, current.unpaid],
+    //                     backgroundColor: [
+    //                         'rgb(54, 162, 235)', // green (paid)
+    //                         'rgb(255, 99, 132)', // red (unpaid_
+    //                     ],
+    //                     //hoverOffset: 4
+    //                 }
+    //             )
+    //         }
+    //     }
+    //
+    //     return options;
+    // },
 
 
     init() {
-        // console.log('subscriptions init');
+        console.log('subscriptions init');
         Promise.all([getVariable('autoConversion', false), getVariable('language', 'en-US')]).then((values) => {
-            // console.log('subscriptions after promises');
+            console.log('subscriptions after promises');
             this.autoConversion = values[0];
             afterPromises = true;
 
@@ -154,7 +442,7 @@ export default () => ({
             i18n.locale = values[1];
             loadTranslations(i18n, values[1]).then(() => {
                 if (false === this.loading) {
-                    this.loadChart();
+                    this.startSubscriptions();
                 }
             });
 
@@ -164,20 +452,19 @@ export default () => ({
             if (!afterPromises) {
                 return;
             }
-            // console.log('subscriptions observe end');
+            console.log('subscriptions observe end');
             if (false === this.loading) {
-                this.chartData = null;
-                this.loadChart();
+                this.startSubscriptions();
             }
         });
         window.store.observe('autoConversion', (newValue) => {
             if (!afterPromises) {
                 return;
             }
-            // console.log('subscriptions observe autoConversion');
+            console.log('subscriptions observe autoConversion');
             this.autoConversion = newValue;
             if (false === this.loading) {
-                this.loadChart();
+                this.startSubscriptions();
             }
         });
     },

@@ -96,7 +96,7 @@ export default () => ({
                     target_amount: this.autoConversion ? current.attributes.native_target_amount : current.attributes.target_amount,
                     // save per month
                     save_per_month: this.autoConversion ? current.attributes.native_save_per_month : current.attributes.save_per_month,
-                    currency_code: this.autoConversion ? current.attributes.native_code : current.attributes.currency_code,
+                    currency_code: this.autoConversion ? current.attributes.native_currency_code : current.attributes.currency_code,
 
                 };
                 dataSet[groupName].piggies.push(piggy);

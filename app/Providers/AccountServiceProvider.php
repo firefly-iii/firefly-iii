@@ -29,8 +29,8 @@ use FireflyIII\Repositories\Account\AccountTasker;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Account\OperationsRepository;
 use FireflyIII\Repositories\Account\OperationsRepositoryInterface;
-use FireflyIII\Repositories\Administration\Account\AccountRepository as AdminAccountRepository;
-use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Account\AccountRepository as AdminAccountRepository;
+use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -84,7 +84,6 @@ class AccountServiceProvider extends ServiceProvider
                 // phpstan thinks auth does not exist.
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());
-                    $repository->setAdministrationId((int)auth()->user()->user_group_id);
                 }
 
                 return $repository;

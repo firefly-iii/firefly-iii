@@ -26,6 +26,7 @@ namespace FireflyIII\Handlers\Events;
 use Carbon\Carbon;
 use Database\Seeders\ExchangeRateSeeder;
 use Exception;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DetectedNewIPAddress;
@@ -144,7 +145,7 @@ class UserEventHandler
             }
         }
         /** @var UserRole|null $role */
-        $role = UserRole::where('title', UserRole::OWNER)->first();
+        $role = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
         if (null === $role) {
             throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
         }

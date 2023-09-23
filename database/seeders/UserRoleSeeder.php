@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\UserRole;
 use Illuminate\Database\Seeder;
 use PDOException;
@@ -40,18 +41,10 @@ class UserRoleSeeder extends Seeder
      */
     public function run()
     {
-        $roles = [
-            UserRole::READ_ONLY,
-            UserRole::CHANGE_TRANSACTIONS,
-            UserRole::CHANGE_RULES,
-            UserRole::CHANGE_PIGGY_BANKS,
-            UserRole::CHANGE_REPETITIONS,
-            UserRole::VIEW_REPORTS,
-            UserRole::MANAGE_WEBHOOKS,
-            UserRole::MANAGE_CURRENCIES,
-            UserRole::FULL,
-            UserRole::OWNER,
-        ];
+        $roles = [];
+        foreach (UserRoleEnum::cases() as $role) {
+            $roles[] = $role->value;
+        }
 
         /** @var string $role */
         foreach ($roles as $role) {

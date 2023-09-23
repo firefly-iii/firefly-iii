@@ -1731,7 +1731,10 @@ return [
     'remove_budgeted_amount'                    => 'Remover montante orçamentado em :currency',
 
     // bills:
+    'subscription'                              => 'Subscription',
     'not_expected_period'                       => 'Este período não foi previsto',
+    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
+    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
     'not_or_not_yet'                            => 'Não (ainda)',
     'visit_bill'                                => 'Visite o encargo ":name" no Firefly III',
     'match_between_amounts'                     => 'O encargo corresponde à transação entre :low e :high.',
@@ -1768,6 +1771,7 @@ return [
     'bill_edit_rules'                           => 'O Firefly III tentará editar também a regra relacionada com este encargo. Se editou pessoalmente esta regra, o Firefly III não irá mudar nada.|O Firefly III tentará editar também as :count regras relacionadas com este encargo. No entanto, se editou pessoalmente estas regras, o Firefly III não irá mudar nada.',
     'bill_expected_date'                        => 'Esperado :date',
     'bill_expected_date_js'                     => 'Esperado {date}',
+    'expected_amount'                           => '(Expected) amount',
     'bill_paid_on'                              => 'Pago a {date}',
     'bill_repeats_weekly'                       => 'Repete-se semanalmente',
     'bill_repeats_monthly'                      => 'Repete mensalmente',

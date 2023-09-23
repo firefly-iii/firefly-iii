@@ -9,6 +9,8 @@
             "paid": "\uc9c0\ubd88\ub428",
             "unpaid": "\ubbf8\uc9c0\ubd88",
             "default_group_title_name_plain": "\uadf8\ub8f9 \ud574\uc81c\ub428",
+            "subscriptions_in_group": "Subscriptions in group \"%{title}\"",
+            "subscr_expected_x_times": "Expect to pay %{amount} %{times} times this period",
             "overspent": "\ucd08\uacfc \uc9c0\ucd9c",
             "money_flowing_in": "\ub4e4\uc5b4\uc634",
             "money_flowing_out": "\ub098\uac10",

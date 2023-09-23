@@ -23,24 +23,27 @@ import dates from '../../pages/shared/dates.js';
 import {createEmptySplit} from "./shared/create-empty-split.js";
 import {parseFromEntries} from "./shared/parse-from-entries.js";
 import formatMoney from "../../util/format-money.js";
-//import Autocomplete from "bootstrap5-autocomplete";
+import Autocomplete from "bootstrap5-autocomplete";
 import Post from "../../api/v2/model/transaction/post.js";
 
 let transactions = function () {
     return {
         count: 0,
         totalAmount: 0,
+        showSuccessMessage: false,
+        showErrorMessage: false,
         entries: [],
 
         // error and success messages:
         showError: false,
         showSuccess: false,
 
-        init() {
+        addedSplit() {
+            console.log('addedSplit');
             const opts = {
                 onSelectItem: console.log,
             };
-            let src = [];
+            var src = [];
             for (let i = 0; i < 50; i++) {
                 src.push({
                     title: "Option " + i,
@@ -51,34 +54,74 @@ let transactions = function () {
                 });
             }
 
-            // for each thing, make autocomplete?
+            Autocomplete.init("input.autocomplete", {
+                items: src,
+                valueField: "id",
+                labelField: "title",
+                highlightTyped: true,
+                onSelectItem: console.log,
+            });
 
 
+            // setTimeout(() => {
+            //     console.log('timed out');
+            //     console.log(document.querySelector('input.autocomplete'));
+
+            // }, 1500);
+
+        },
+
+        init() {
+            console.log('init()');
             this.addSplit();
-            console.log('Ik ben init hoera');
 
-            // let element = document.getElementById('source_0');
-            // new Autocomplete(element, {
-            //     items: src,
-            //     valueField: "id",
-            //     labelField: "title",
-            //     highlightTyped: true,
-            //     onSelectItem: console.log,
+            // // We can use regular objects as source and customize label
+            // new Autocomplete(document.getElementById("autocompleteRegularInput"), {
+            //     items: {
+            //         opt_some: "Some",
+            //         opt_value: "Value",
+            //         opt_here: "Here is a very long element that should be truncated",
+            //         opt_dia: "çaça"
+            //     },
+            //     onRenderItem: (item, label) => {
+            //         return label + " (" + item.value + ")";
+            //     },
             // });
+            // new Autocomplete(document.getElementById("autocompleteDatalist"), opts);
+            //new Autocomplete(document.getElementById("autocompleteRemote"), opts);
+            // new Autocomplete(document.getElementById("autocompleteLiveRemote"), opts);
+
         },
         submitTransaction() {
+            // todo disable buttons
+
             let transactions = parseFromEntries(this.entries);
             let submission = {
+                // todo process all options
                 group_title: null,
                 fire_webhooks: false,
                 apply_rules: false,
                 transactions: transactions
             };
+            if (transactions.length > 1) {
+                // todo improve me
+                submission.group_title = transactions[0].description;
+            }
             let poster = new Post();
             console.log(submission);
             poster.post(submission).then((response) => {
+                // todo create success banner
+                this.showSuccessMessage = true;
+                // todo release form
                 console.log(response);
+
+                // todo or redirect to transaction.
+                window.location = 'transactions/show/' + response.data.data.id + '?transaction_group_id=' + response.data.data.id + '&message=created';
+
             }).catch((error) => {
+                this.showErrorMessage = true;
+                // todo create error banner.
+                // todo release form
                 console.error(error);
             });
         },
@@ -90,7 +133,6 @@ let transactions = function () {
             // fall back to index 0
             const triggerFirstTabEl = document.querySelector('#split-0-tab')
             triggerFirstTabEl.click();
-            //bootstrap.Tab.getInstance(triggerFirstTabEl).show() // Select first tab
         },
         formattedTotalAmount() {
             return formatMoney(this.totalAmount, 'EUR');
@@ -108,7 +150,6 @@ function loadPage() {
     });
     Alpine.start();
 }
-
 
 // wait for load until bootstrapped event is received.
 document.addEventListener('firefly-iii-bootstrapped', () => {

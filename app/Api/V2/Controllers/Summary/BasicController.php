@@ -36,13 +36,14 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\UserGroup;
-use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Administration\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Administration\Budget\AvailableBudgetRepositoryInterface;
-use FireflyIII\Repositories\Administration\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Administration\Budget\OperationsRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Budget\AvailableBudgetRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
+use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
@@ -51,6 +52,8 @@ use Illuminate\Http\JsonResponse;
  */
 class BasicController extends Controller
 {
+    use ValidatesUserGroupTrait;
+
     private AvailableBudgetRepositoryInterface $abRepository;
     private AccountRepositoryInterface         $accountRepository;
     private BillRepositoryInterface            $billRepository;
@@ -68,8 +71,6 @@ class BasicController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $user */
-                $user                    = auth()->user();
                 $this->abRepository      = app(AvailableBudgetRepositoryInterface::class);
                 $this->accountRepository = app(AccountRepositoryInterface::class);
                 $this->billRepository    = app(BillRepositoryInterface::class);
@@ -77,12 +78,14 @@ class BasicController extends Controller
                 $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
                 $this->opsRepository     = app(OperationsRepositoryInterface::class);
 
-                $this->abRepository->setAdministrationId($user->user_group_id);
-                $this->accountRepository->setAdministrationId($user->user_group_id);
-                $this->billRepository->setAdministrationId($user->user_group_id);
-                $this->budgetRepository->setAdministrationId($user->user_group_id);
-                $this->currencyRepos->setUser($user);
-                $this->opsRepository->setAdministrationId($user->user_group_id);
+                $userGroup = $this->validateUserGroup($request);
+                if (null !== $userGroup) {
+                    $this->abRepository->setUserGroup($userGroup);
+                    $this->accountRepository->setUserGroup($userGroup);
+                    $this->billRepository->setUserGroup($userGroup);
+                    $this->budgetRepository->setUserGroup($userGroup);
+                    $this->opsRepository->setUserGroup($userGroup);
+                }
 
                 return $next($request);
             }

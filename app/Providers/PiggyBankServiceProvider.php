@@ -26,8 +26,8 @@ namespace FireflyIII\Providers;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepository;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 
-use FireflyIII\Repositories\Administration\PiggyBank\PiggyBankRepository as AdminPiggyBankRepository;
-use FireflyIII\Repositories\Administration\PiggyBank\PiggyBankRepositoryInterface as AdminPiggyBankRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\PiggyBank\PiggyBankRepository as AdminPiggyBankRepository;
+use FireflyIII\Repositories\UserGroups\PiggyBank\PiggyBankRepositoryInterface as AdminPiggyBankRepositoryInterface;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;

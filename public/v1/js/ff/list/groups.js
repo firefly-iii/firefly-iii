@@ -163,22 +163,22 @@ function getBaseUrl() {
  */
 function goToMassEdit() {
     var baseHref = getBaseUrl();
-    console.log('Mass edit URL is ' + baseHref + mass_edit_url + '/' + getCheckboxes());
-    window.location.href = baseHref + mass_edit_url + '/' + getCheckboxes();
+    console.log('Mass edit URL is ' + mass_edit_url + '/' + getCheckboxes());
+    window.location.href = mass_edit_url + '/' + getCheckboxes();
     return false;
 }
 
 function goToBulkEdit() {
     var baseHref = getBaseUrl();
-    console.log('Bulk edit URL is ' + baseHref + bulk_edit_url + '/' + getCheckboxes());
-    window.location.href = baseHref + bulk_edit_url + '/' + getCheckboxes();
+    console.log('Bulk edit URL is ' + bulk_edit_url + '/' + getCheckboxes());
+    window.location.href = bulk_edit_url + '/' + getCheckboxes();
     return false;
 }
 
 function goToMassDelete() {
     var baseHref = getBaseUrl();
-    console.log('Mass delete URL is ' + baseHref + mass_delete_url + '/' + getCheckboxes());
-    window.location.href = baseHref + mass_delete_url + '/' + getCheckboxes();
+    console.log('Mass delete URL is ' + mass_delete_url + '/' + getCheckboxes());
+    window.location.href = mass_delete_url + '/' + getCheckboxes();
     return false;
 }
 

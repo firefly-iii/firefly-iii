@@ -25,7 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\PiggyBank;
 
 use Exception;
-use FireflyIII\Events\ChangedPiggyBankAmount;
+use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
+use FireflyIII\Events\Model\PiggyBank\ChangedPiggyBankAmount;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
@@ -80,7 +81,7 @@ trait ModifiesPiggyBanks
         $repetition->save();
 
         Log::debug('addAmount [a]: Trigger change for negative amount.');
-        event(new ChangedPiggyBankAmount($piggyBank, bcmul($amount, '-1'), $journal, null));
+        event(new ChangedAmount($piggyBank, bcmul($amount, '-1'), $journal, null));
 
         return true;
     }
@@ -103,7 +104,7 @@ trait ModifiesPiggyBanks
         $repetition->save();
 
         Log::debug('addAmount [b]: Trigger change for positive amount.');
-        event(new ChangedPiggyBankAmount($piggyBank, $amount, $journal, null));
+        event(new ChangedAmount($piggyBank, $amount, $journal, null));
 
         return true;
     }
@@ -202,11 +203,11 @@ trait ModifiesPiggyBanks
 
         if (-1 === bccomp($difference, '0')) {
             Log::debug('addAmount [c]: Trigger change for negative amount.');
-            event(new ChangedPiggyBankAmount($piggyBank, $difference, null, null));
+            event(new ChangedAmount($piggyBank, $difference, null, null));
         }
         if (1 === bccomp($difference, '0')) {
             Log::debug('addAmount [d]: Trigger change for positive amount.');
-            event(new ChangedPiggyBankAmount($piggyBank, $difference, null, null));
+            event(new ChangedAmount($piggyBank, $difference, null, null));
         }
 
         return $piggyBank;
@@ -386,7 +387,7 @@ trait ModifiesPiggyBanks
             $difference = bcsub($piggyBank->targetamount, $repetition->currentamount);
 
             // an amount will be removed, create "negative" event:
-            event(new ChangedPiggyBankAmount($piggyBank, $difference, null, null));
+            event(new ChangedAmount($piggyBank, $difference, null, null));
 
             $repetition->currentamount = $piggyBank->targetamount;
             $repetition->save();

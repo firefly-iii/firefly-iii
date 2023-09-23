@@ -25,8 +25,8 @@ namespace FireflyIII\Providers;
 
 use FireflyIII\Repositories\Bill\BillRepository;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Administration\Bill\BillRepository as AdminBillRepository;
-use FireflyIII\Repositories\Administration\Bill\BillRepositoryInterface as AdminBillRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Bill\BillRepository as AdminBillRepository;
+use FireflyIII\Repositories\UserGroups\Bill\BillRepositoryInterface as AdminBillRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 

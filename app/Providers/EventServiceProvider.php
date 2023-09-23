@@ -26,12 +26,13 @@ namespace FireflyIII\Providers;
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\AdminRequestedTestMessage;
-use FireflyIII\Events\ChangedPiggyBankAmount;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\Model\BudgetLimit\Created;
 use FireflyIII\Events\Model\BudgetLimit\Deleted;
 use FireflyIII\Events\Model\BudgetLimit\Updated;
+use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
+use FireflyIII\Events\Model\PiggyBank\ChangedPiggyBankAmount;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Events\NewVersionAvailable;
@@ -47,8 +48,38 @@ use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Events\WarnUserAboutBill;
+use FireflyIII\Handlers\Observer\AccountObserver;
+use FireflyIII\Handlers\Observer\AttachmentObserver;
+use FireflyIII\Handlers\Observer\BillObserver;
+use FireflyIII\Handlers\Observer\BudgetObserver;
+use FireflyIII\Handlers\Observer\CategoryObserver;
+use FireflyIII\Handlers\Observer\PiggyBankObserver;
+use FireflyIII\Handlers\Observer\RecurrenceObserver;
+use FireflyIII\Handlers\Observer\RecurrenceTransactionObserver;
+use FireflyIII\Handlers\Observer\RuleGroupObserver;
+use FireflyIII\Handlers\Observer\RuleObserver;
+use FireflyIII\Handlers\Observer\TagObserver;
+use FireflyIII\Handlers\Observer\TransactionGroupObserver;
+use FireflyIII\Handlers\Observer\TransactionJournalObserver;
+use FireflyIII\Handlers\Observer\TransactionObserver;
+use FireflyIII\Handlers\Observer\WebhookMessageObserver;
+use FireflyIII\Handlers\Observer\WebhookObserver;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Attachment;
+use FireflyIII\Models\Bill;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\Recurrence;
+use FireflyIII\Models\RecurrenceTransaction;
+use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\Tag;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Webhook;
+use FireflyIII\Models\WebhookMessage;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Laravel\Passport\Events\AccessTokenCreated;
@@ -158,9 +189,10 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\AuditEventHandler@storeAuditEvent',
             ],
             // piggy bank related events:
-            ChangedPiggyBankAmount::class       => [
-                'FireflyIII\Handlers\Events\PiggyBankEventHandler@changePiggyAmount',
+            ChangedAmount::class                => [
+                'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changePiggyAmount',
             ],
+
             // budget related events: CRUD budget limit
             Created::class                      => [
                 'FireflyIII\Handlers\Events\Model\BudgetLimitHandler@created',
@@ -187,24 +219,30 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        parent::boot();
-        $this->registerCreateEvents();
+        $this->registerObservers();
     }
 
     /**
-     * TODO needs a dedicated (static) method.
+     * @return void
      */
-    protected function registerCreateEvents(): void
+    private function registerObservers(): void
     {
-        PiggyBank::created(
-            static function (PiggyBank $piggyBank) {
-                $repetition = new PiggyBankRepetition();
-                $repetition->piggyBank()->associate($piggyBank);
-                $repetition->startdate     = $piggyBank->startdate;
-                $repetition->targetdate    = $piggyBank->targetdate;
-                $repetition->currentamount = 0;
-                $repetition->save();
-            }
-        );
+        app('log')->debug('Register observers');
+        Attachment::observe(new AttachmentObserver());
+        PiggyBank::observe(new PiggyBankObserver());
+        Account::observe(new AccountObserver());
+        Bill::observe(new BillObserver());
+        Budget::observe(new BudgetObserver());
+        Category::observe(new CategoryObserver());
+        Recurrence::observe(new RecurrenceObserver());
+        RecurrenceTransaction::observe(new RecurrenceTransactionObserver());
+        Rule::observe(new RuleObserver());
+        RuleGroup::observe(new RuleGroupObserver());
+        Tag::observe(new TagObserver());
+        Transaction::observe(new TransactionObserver());
+        TransactionJournal::observe(new TransactionJournalObserver());
+        TransactionGroup::observe(new TransactionGroupObserver());
+        Webhook::observe(new WebhookObserver());
+        WebhookMessage::observe(new WebhookMessageObserver());
     }
 }

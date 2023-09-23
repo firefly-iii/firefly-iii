@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * rules.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -21,11 +21,12 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
 
 return [
     'main_message'                                => 'Aktion ":action", vorhanden in Regel ":rule", konnte nicht auf Transaktion #:group angewendet werden: :error',
     'find_or_create_tag_failed'                   => 'Konnte Schlagwort ":tag" nicht finden oder erstellen',
-    'tag_already_added'                           => 'Schlagwort ":tag" ist bereits mit dieser Buchung verknüpft',
+    'tag_already_added'                           => 'Schlagwort ":tag" ist bereits mit dieser Transaktion verknüpft',
     'inspect_transaction'                         => 'Buchung ":title" untersuchen @ Firefly III',
     'inspect_rule'                                => 'Regel ":title" untersuchen @ Firefly III',
     'journal_other_user'                          => 'Diese Buchung gehört nicht zum Benutzer',
@@ -40,20 +41,20 @@ return [
     'is_already_transfer'                         => 'Diese Buchung ist bereits eine Umbuchung',
     'is_not_transfer'                             => 'Diese Buchung ist keine Überweisung',
     'complex_error'                               => 'Etwas kompliziertes ist schief gelaufen. Bitte die Protokolle von Firefly III überprüfen',
-    'no_valid_opposing'                           => 'Conversion failed because there is no valid account named ":account"',
+    'no_valid_opposing'                           => 'Konvertierung fehlgeschlagen, da kein gültiges Konto mit dem Namen ":account " existiert',
     'new_notes_empty'                             => 'Die zu setzenden Notizen sind leer',
     'unsupported_transaction_type_withdrawal'     => 'Firefly III kann eine ":type" nicht in eine Auszahlung konvertieren',
     'unsupported_transaction_type_deposit'        => 'Firefly III kann ein ":type" nicht in eine Einzahlung umwandeln',
     'unsupported_transaction_type_transfer'       => 'Firefly III kann eine ":type" nicht in eine Überweisung umwandeln',
-    'already_has_source_asset'                    => 'This transaction already has ":name" as the source asset account',
-    'already_has_destination_asset'               => 'This transaction already has ":name" as the destination asset account',
+    'already_has_source_asset'                    => 'Diese Transaktion hat bereits ":name" als Quellkonto',
+    'already_has_destination_asset'               => 'Diese Transaktion hat bereits ":name" als Zielkonto',
     'already_has_destination'                     => 'Diese Transaktion hat bereits ":name" als Zielkonto',
     'already_has_source'                          => 'Diese Transaktion hat bereits ":name" als Quellkonto',
-    'already_linked_to_subscription'              => 'The transaction is already linked to subscription ":name"',
-    'already_linked_to_category'                  => 'The transaction is already linked to category ":name"',
-    'already_linked_to_budget'                    => 'The transaction is already linked to budget ":name"',
-    'cannot_find_subscription'                    => 'Firefly III can\'t find subscription ":name"',
-    'no_notes_to_move'                            => 'The transaction has no notes to move to the description field',
+    'already_linked_to_subscription'              => 'Die Transaktion ist bereits mit dem Abonnement ":name " verknüpft',
+    'already_linked_to_category'                  => 'Die Transaktion ist bereits mit der Kategorie ":name" verknüpft',
+    'already_linked_to_budget'                    => 'Die Transaktion ist bereits mit Budget ":name" verknüpft',
+    'cannot_find_subscription'                    => 'Firefly III kann das Abonnement ":name" nicht finden',
+    'no_notes_to_move'                            => 'Diese Transaktion hat keine Notizen für das Beschreibungsfeld',
     'no_tags_to_remove'                           => 'Die Buchung hat keine Schlagworte zum Entfernen',
     'cannot_find_tag'                             => 'Firefly III kann Schlagwort ":tag" nicht finden',
     'cannot_find_asset'                           => 'Firefly III kann kein Girokonto ":name" finden',

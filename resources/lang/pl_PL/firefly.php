@@ -1731,7 +1731,10 @@ return [
     'remove_budgeted_amount'                    => 'Usuń zabudżetowaną kwotę w :currency',
 
     // bills:
+    'subscription'                              => 'Subscription',
     'not_expected_period'                       => 'Nie oczekiwany w tym okresie',
+    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
+    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
     'not_or_not_yet'                            => 'Nie (jeszcze)',
     'visit_bill'                                => 'Visit bill ":name" at Firefly III',
     'match_between_amounts'                     => 'Rachunek pasuje do transakcji między :low a :high.',
@@ -1768,6 +1771,7 @@ return [
     'bill_edit_rules'                           => 'Firefly III spróbuje edytować regułę związaną z tym rachunkiem. Jeśli jednak reguła była edytowana przez Ciebie, Firefly III nic nie zmieni. Firefly III spróbuje edytować reguły :count również związane z tym rachunkiem. Jeśli jednak reguły były edytowane przez Ciebie, Firefly III nic nie zmieni.',
     'bill_expected_date'                        => 'Oczekiwane :date',
     'bill_expected_date_js'                     => 'Oczekiwane {date}',
+    'expected_amount'                           => '(Expected) amount',
     'bill_paid_on'                              => 'Zapłacone {date}',
     'bill_repeats_weekly'                       => 'Powtarza się co tydzień',
     'bill_repeats_monthly'                      => 'Powtarza się co miesiąc',

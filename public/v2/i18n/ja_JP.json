@@ -9,6 +9,8 @@
             "paid": "\u652f\u6255\u3044\u6e08\u307f",
             "unpaid": "\u672a\u6255\u3044",
             "default_group_title_name_plain": "\u30b0\u30eb\u30fc\u30d7\u89e3\u9664",
+            "subscriptions_in_group": "\u30b0\u30eb\u30fc\u30d7\u300c%{title}\u300d\u306e\u30b5\u30d6\u30b9\u30af\u30ea\u30d7\u30b7\u30e7\u30f3",
+            "subscr_expected_x_times": "Expect to pay %{amount} %{times} times this period",
             "overspent": "\u4f7f\u3044\u3059\u304e",
             "money_flowing_in": "\u5165",
             "money_flowing_out": "\u51fa",

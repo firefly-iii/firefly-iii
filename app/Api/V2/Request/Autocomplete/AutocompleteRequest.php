@@ -23,13 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Request\Autocomplete;
 
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\UserRole;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\User;
-use FireflyIII\Validation\Administration\ValidatesAdministrationAccess;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -40,11 +38,10 @@ class AutocompleteRequest extends FormRequest
 {
     use ConvertsDataTypes;
     use ChecksLogin;
-    use ValidatesAdministrationAccess;
+    protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
 
     /**
      * @return array
-     * @throws FireflyException
      */
     public function getData(): array
     {
@@ -62,11 +59,10 @@ class AutocompleteRequest extends FormRequest
         $user = auth()->user();
 
         return [
-            'types'             => $array,
-            'query'             => $this->convertString('query'),
-            'date'              => $this->getCarbonDate('date'),
-            'limit'             => $limit,
-            'administration_id' => (int)($this->get('administration_id', null) ?? $user->getAdministrationId()),
+            'types' => $array,
+            'query' => $this->convertString('query'),
+            'date'  => $this->getCarbonDate('date'),
+            'limit' => $limit,
         ];
     }
 
@@ -92,7 +88,7 @@ class AutocompleteRequest extends FormRequest
         $validator->after(
             function (Validator $validator) {
                 // validate if the account can access this administration
-                $this->validateAdministration($validator, [UserRole::CHANGE_TRANSACTIONS]);
+                $this->validateAdministration($validator, [UserRoleEnum::MANAGE_TRANSACTIONS]);
             }
         );
     }

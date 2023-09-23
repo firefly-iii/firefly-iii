@@ -115,7 +115,7 @@ trait ConvertsExchangeRates
      */
     public function cerSum(array $entries): array
     {
-        die('do not use me, needs refactor');
+        throw new FireflyException('do not use me, needs refactor');
         if (null === $this->enabled) {
             $this->getPreference();
         }

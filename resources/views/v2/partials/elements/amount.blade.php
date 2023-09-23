@@ -7,9 +7,16 @@
         </span>
     </template>
     <template x-if="{{ $native }}_raw >= 0">
-        <span class="text-success">
-            <span x-text="{{ $native }}"></span>
-        </span>
+        <template x-if="'transfer' === {{ $type }}">
+            <span class="text-primary">
+                <span x-text="{{ $native }}"></span>
+            </span>
+        </template>
+        <template x-if="'transfer' !== {{ $type }}">
+            <span class="text-success">
+                <span x-text="{{ $native }}"></span>
+            </span>
+        </template>
     </template>
         </span>
     </template>
@@ -29,13 +36,20 @@
     </template>
 @else
     <template x-if="{{ $amount }}_raw < 0">
-    <span class="text-danger">
-        <span x-text="{{ $amount }}"></span>
-    </span>
+        <span class="text-danger">
+            <span x-text="{{ $amount }}"></span>
+        </span>
     </template>
     <template x-if="{{ $amount }}_raw >= 0">
-    <span class="text-success">
-        <span x-text="{{ $amount }}"></span>
-    </span>
+        <template x-if="'transfer' === {{ $type }}">
+            <span class="text-primary">
+                <span x-text="{{ $amount }}"></span>
+            </span>
+        </template>
+        <template x-if="'transfer' !== {{ $type }}">
+            <span class="text-success">
+                <span x-text="{{ $amount }}"></span>
+            </span>
+        </template>
     </template>
 @endif

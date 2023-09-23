@@ -30,7 +30,9 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
@@ -42,17 +44,20 @@ trait TransactionValidation
     /**
      * Validates the given account information. Switches on given transaction type.
      *
-     * @param Validator $validator
+     * Inclusion of user and/or group is optional.
+     *
+     * @param Validator      $validator
+     * @param User|null      $user
+     * @param UserGroup|null $userGroup
      */
-    public function validateAccountInformation(Validator $validator): void
+    public function validateAccountInformation(Validator $validator, User $user = null, UserGroup $userGroup = null): void
     {
         if ($validator->errors()->count() > 0) {
             return;
         }
         Log::debug('Now in validateAccountInformation (TransactionValidation) ()');
-        $transactions = $this->getTransactionsArray($validator);
-        $data         = $validator->getData();
-
+        $transactions    = $this->getTransactionsArray($validator);
+        $data            = $validator->getData();
         $transactionType = $data['type'] ?? 'invalid';
 
         Log::debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
@@ -61,6 +66,8 @@ trait TransactionValidation
          * @var array $transaction
          */
         foreach ($transactions as $index => $transaction) {
+            $transaction['user']       = $user;
+            $transaction['user_group'] = $userGroup;
             if (!is_int($index)) {
                 continue;
             }
@@ -106,6 +113,13 @@ trait TransactionValidation
         app('log')->debug(sprintf('Now in validateSingleAccount(%d)', $index));
         /** @var AccountValidator $accountValidator */
         $accountValidator = app(AccountValidator::class);
+
+        if (array_key_exists('user', $transaction) && null !== $transaction['user']) {
+            $accountValidator->setUser($transaction['user']);
+        }
+        if (array_key_exists('user_group', $transaction) && null !== $transaction['user_group']) {
+            $accountValidator->setUserGroup($transaction['user_group']);
+        }
 
         $transactionType = $transaction['type'] ?? $transactionType;
         $accountValidator->setTransactionType($transactionType);

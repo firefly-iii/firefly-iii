@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.25 - 2023-09-24
+
+### Changed
+
+- v2 index has better overview of bills (now called subscriptions)
+
+### Deprecated
+
+- My attempt to build the `v3`-layout is now officially deprecated and removed. To see the new layout (in beta), use `FIREFLY_III_LAYOUT=v2`.
+
+### Fixed
+
+- [Issue 7970](https://github.com/firefly-iii/firefly-iii/issues/7970) Bad redirect for mass edit/delete forms.
+- [Issue 7983](https://github.com/firefly-iii/firefly-iii/issues/7983) Bad math in the calculation of liabilities
+- [Issue 7973](https://github.com/firefly-iii/firefly-iii/issues/7973) Bad account validation broke certain imports
+- [Issue 7981](https://github.com/firefly-iii/firefly-iii/issues/7981) Menu had a bad link, thanks @Maxco10!
+- Slack alerts now use the correct URL
+- Better htaccess files thanks to Softaculous.
+
+### Security
+
+- Change htaccess rules so certain files can't be accessed.
+
+### API
+
+- [Issue 7972](https://github.com/firefly-iii/firefly-iii/issues/7972) The API needed start
+  *and* end parameters for transactions, this is no longer the case.
+- New APIs for user group and rights management. Not yet documented.
+
 ## 6.0.24 - 2023-09-16
 
 ### Fixed

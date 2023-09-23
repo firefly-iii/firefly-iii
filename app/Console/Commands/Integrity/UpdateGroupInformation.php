@@ -126,7 +126,7 @@ class UpdateGroupInformation extends Command
             return;
         }
         if (0 !== $result) {
-            $this->friendlyPositive(sprintf('Moved %d %s objects to the correct group.', $result, str_replace('FireflyIII\\Models\\', '', $className)));
+            $this->friendlyPositive(sprintf('User #%d: Moved %d %s objects to the correct group.', $user->id, $result, str_replace('FireflyIII\\Models\\', '', $className)));
         }
     }
 }

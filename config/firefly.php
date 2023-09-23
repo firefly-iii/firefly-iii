@@ -46,6 +46,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType as TransactionTypeModel;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
@@ -111,8 +112,8 @@ return [
         'handle_debts' => true,
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.0.24',
-    'api_version'                  => '2.0.8',
+    'version'                      => '6.0.25',
+    'api_version'                  => '2.0.9',
     'db_version'                   => 20,
 
     // generic settings
@@ -482,6 +483,7 @@ return [
         // V2 API endpoints:
         'userGroupAccount' => UserGroupAccount::class,
         'userGroupBill'    => UserGroupBill::class,
+        'userGroup'        => UserGroup::class,
 
 
     ],

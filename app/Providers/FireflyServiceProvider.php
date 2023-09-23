@@ -47,6 +47,8 @@ use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Repositories\UserGroup\UserGroupRepository;
+use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\Repositories\Webhook\WebhookRepository;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequest;
@@ -209,6 +211,19 @@ class FireflyServiceProvider extends ServiceProvider
                 }
 
                 return $engine;
+            }
+        );
+
+        $this->app->bind(
+            UserGroupRepositoryInterface::class,
+            static function (Application $app) {
+                /** @var UserGroupRepository $repository */
+                $repository = app(UserGroupRepository::class);
+                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
             }
         );
 

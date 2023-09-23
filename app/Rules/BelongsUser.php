@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
@@ -31,54 +32,28 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
 
 /**
  * Class BelongsUser
  */
-class BelongsUser implements Rule
+class BelongsUser implements ValidationRule
 {
     /**
-     * Create a new rule instance.
-     *
-     * @return void
+     * @inheritDoc
      */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
-     * Get the validation error message.
-     *
-     * @return string
-     */
-    public function message(): string
-    {
-        return (string)trans('validation.belongs_user');
-    }
-
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return bool
-     * @throws FireflyException
-     *
-     */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $attribute = $this->parseAttribute($attribute);
         if (!auth()->check()) {
-            return true;
+            $fail('validation.belongs_user')->translate();
+            return;
         }
         $attribute = (string)$attribute;
         Log::debug(sprintf('Going to validate %s', $attribute));
 
-        return match ($attribute) {
+        $result = match ($attribute) {
             'piggy_bank_id'               => $this->validatePiggyBankId((int)$value),
             'piggy_bank_name'             => $this->validatePiggyBankName($value),
             'bill_id'                     => $this->validateBillId((int)$value),
@@ -88,8 +63,11 @@ class BelongsUser implements Rule
             'category_id'                 => $this->validateCategoryId((int)$value),
             'budget_name'                 => $this->validateBudgetName($value),
             'source_id', 'destination_id' => $this->validateAccountId((int)$value),
-            default                       => throw new FireflyException(sprintf('Rule BelongUser cannot handle "%s"', $attribute)),
+            default                       => throw new FireflyException(sprintf('Rule BelongsUser cannot handle "%s"', $attribute)),
         };
+        if (false === $result) {
+            $fail('validation.belongs_user')->translate();
+        }
     }
 
     /**

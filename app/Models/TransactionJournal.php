@@ -202,6 +202,14 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @return MorphMany
+     */
+    public function auditLogEntries(): MorphMany
+    {
+        return $this->morphMany(AuditLogEntry::class, 'auditable');
+    }
+
+    /**
      * @return BelongsTo
      */
     public function bill(): BelongsTo
@@ -254,7 +262,7 @@ class TransactionJournal extends Model
     }
 
     /**
-     * Get all of the notes.
+     * Get all the notes.
      */
     public function notes(): MorphMany
     {

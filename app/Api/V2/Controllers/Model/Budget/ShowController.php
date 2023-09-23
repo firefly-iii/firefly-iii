@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V2\Controllers\Model\Budget;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Http\JsonResponse;
@@ -60,7 +61,7 @@ class ShowController extends Controller
      */
     public function budgeted(DateRequest $request, Budget $budget): JsonResponse
     {
-        die('deprecated use of thing.');
+        throw new FireflyException('deprecated use of thing.');
         $data      = $request->getAll();
         $result    = $this->repository->budgetedInPeriodForBudget($budget, $data['start'], $data['end']);
         $converted = $this->cerSum(array_values($result));
@@ -75,7 +76,7 @@ class ShowController extends Controller
      */
     public function spent(DateRequest $request, Budget $budget): JsonResponse
     {
-        die('deprecated use of thing.');
+        throw new FireflyException('deprecated use of thing.');
         $data      = $request->getAll();
         $result    = $this->repository->spentInPeriodForBudget($budget, $data['start'], $data['end']);
         $converted = $this->cerSum(array_values($result));

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * ShowController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -21,11 +21,15 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Api\V2\Controllers\Model\Bill;
 
 use FireflyIII\Api\V2\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
-use FireflyIII\Repositories\Administration\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\V2\AccountTransformer;
 use FireflyIII\Transformers\V2\BillTransformer;
 use Illuminate\Http\JsonResponse;
@@ -37,6 +41,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class ShowController extends Controller
 {
+    use ValidatesUserGroupTrait;
+
     private BillRepositoryInterface $repository;
 
     public function __construct()
@@ -45,7 +51,13 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(BillRepositoryInterface::class);
-                $this->repository->setAdministrationId(auth()->user()->user_group_id);
+
+                // new way of user group validation
+                $userGroup = $this->validateUserGroup($request);
+                if (null !== $userGroup) {
+                    $this->repository->setUserGroup($userGroup);
+                }
+
                 return $next($request);
             }
         );

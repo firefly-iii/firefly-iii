@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Integrity;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
@@ -85,7 +86,7 @@ class CreateGroupMemberships extends Command
             $userGroup = UserGroup::create(['title' => $user->email]);
         }
 
-        $userRole = UserRole::where('title', UserRole::OWNER)->first();
+        $userRole = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
 
         if (null === $userRole) {
             throw new FireflyException('Firefly III could not find a user role. Please make sure all migrations have run.');

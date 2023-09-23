@@ -83,7 +83,7 @@ Route::group(
  */
 Route::group(
     [
-        'namespace' => 'FireflyIII\Api\V2\Controllers',
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Summary',
         'prefix'    => 'v2/net-worth',
         'as'        => 'api.v2.net-worth.',
     ],
@@ -201,6 +201,27 @@ Route::group(
         Route::get('preferences/{preference}', ['uses' => 'PreferencesController@get', 'as' => 'preferences.get']);
     }
 );
+
+/**
+ * V2 API route for user groups (administrations).
+ */
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\UserGroup',
+        'prefix'    => 'v2/user-groups',
+        'as'        => 'api.v2.user-groups.',
+    ],
+    static function () {
+        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::get('{userGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        Route::put('{userGroup}/update-membership', ['uses' => 'UpdateController@updateMembership', 'as' => 'updateMembership']);
+        Route::delete('{userGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
+    }
+);
+
+// down here is v1
 
 /**
  * Autocomplete controllers

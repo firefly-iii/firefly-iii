@@ -1,8 +1,8 @@
 <?php
 
-declare(strict_types=1);
+
 /*
- * BudgetController.php
+ * CategoryController.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,6 +21,8 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace FireflyIII\Api\V2\Controllers\Chart;
 
 use Carbon\Carbon;
@@ -30,10 +32,11 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
+use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -42,6 +45,7 @@ use Illuminate\Http\JsonResponse;
 class CategoryController extends Controller
 {
     use CleansChartData;
+    use ValidatesUserGroupTrait;
 
     private AccountRepositoryInterface  $accountRepos;
     private CurrencyRepositoryInterface $currencyRepos;
@@ -53,7 +57,10 @@ class CategoryController extends Controller
             function ($request, $next) {
                 $this->accountRepos  = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
-                $this->accountRepos->setAdministrationId(auth()->user()->user_group_id);
+                $userGroup           = $this->validateUserGroup($request);
+                if (null !== $userGroup) {
+                    $this->accountRepos->setUserGroup($userGroup);
+                }
                 return $next($request);
             }
         );

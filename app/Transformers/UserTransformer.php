@@ -48,15 +48,14 @@ class UserTransformer extends AbstractTransformer
         $this->repository = $this->repository ?? app(UserRepositoryInterface::class);
 
         return [
-            'id'                => (int)$user->id,
-            'administration_id' => (string)$user->getAdministrationId(),
-            'created_at'        => $user->created_at->toAtomString(),
-            'updated_at'        => $user->updated_at->toAtomString(),
-            'email'             => $user->email,
-            'blocked'           => 1 === (int)$user->blocked,
-            'blocked_code'      => '' === $user->blocked_code ? null : $user->blocked_code,
-            'role'              => $this->repository->getRoleByUser($user),
-            'links'             => [
+            'id'           => (int)$user->id,
+            'created_at'   => $user->created_at->toAtomString(),
+            'updated_at'   => $user->updated_at->toAtomString(),
+            'email'        => $user->email,
+            'blocked'      => 1 === (int)$user->blocked,
+            'blocked_code' => '' === $user->blocked_code ? null : $user->blocked_code,
+            'role'         => $this->repository->getRoleByUser($user),
+            'links'        => [
                 [
                     'rel' => 'self',
                     'uri' => '/users/' . $user->id,

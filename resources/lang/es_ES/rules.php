@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * rules.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -21,6 +21,7 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
 
 return [
     'main_message'                                => 'Acción ":action", presente en la regla ":rule", no se pudo aplicar a la transacción #:group: :error',
@@ -50,8 +51,8 @@ return [
     'already_has_destination'                     => 'Esta transacción ya tiene ":name" como cuenta de destino',
     'already_has_source'                          => 'Esta transacción ya tiene ":name" como cuenta de origen',
     'already_linked_to_subscription'              => 'La transacción ya está vinculada a la suscripción ":name"',
-    'already_linked_to_category'                  => 'The transaction is already linked to category ":name"',
-    'already_linked_to_budget'                    => 'The transaction is already linked to budget ":name"',
+    'already_linked_to_category'                  => 'La transacción ya está vinculada a la categoría ":name"',
+    'already_linked_to_budget'                    => 'La transacción ya está vinculada al presupuesto ":name"',
     'cannot_find_subscription'                    => 'Firefly III no puede encontrar la suscripción ":name"',
     'no_notes_to_move'                            => 'La transacción no tiene notas para mover al campo de descripción',
     'no_tags_to_remove'                           => 'La transacción no tiene etiquetas que eliminar',

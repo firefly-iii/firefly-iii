@@ -1731,7 +1731,10 @@ return [
     'remove_budgeted_amount'                    => 'Verwijder gebudgetteerd bedrag in :currency',
 
     // bills:
+    'subscription'                              => 'Abonnement',
     'not_expected_period'                       => 'Niet verwacht deze periode',
+    'subscriptions_in_group'                    => 'Abonnementen in groep "%{title}"',
+    'subscr_expected_x_times'                   => 'Verwacht %{amount} %{times} keer te betalen in deze periode',
     'not_or_not_yet'                            => '(nog) niet',
     'visit_bill'                                => 'Bezoek contract ":name" bij Firefly III',
     'match_between_amounts'                     => 'Contract past bij transacties tussen :low en :high.',
@@ -1768,6 +1771,7 @@ return [
     'bill_edit_rules'                           => 'Firefly III gaat proberen de gerelateerde regel ook aan te passen. Als je deze zelf al hebt gewijzigd echter, zal dit niet gebeuren.|Firefly III gaat proberen de :count gerelateerde regels ook aan te passen. Als je deze zelf al hebt gewijzigd echter, zal dit niet gebeuren.',
     'bill_expected_date'                        => 'Verwacht :date',
     'bill_expected_date_js'                     => 'Verwacht op {date}',
+    'expected_amount'                           => '(Verwacht) bedrag',
     'bill_paid_on'                              => 'Betaald op {date}',
     'bill_repeats_weekly'                       => 'Herhaalt wekelijks',
     'bill_repeats_monthly'                      => 'Herhaalt maandelijks',

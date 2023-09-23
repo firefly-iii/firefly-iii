@@ -1732,7 +1732,10 @@ return [
     'remove_budgeted_amount'                    => 'Bütçelenmiş tutarı kaldır :currency',
 
     // bills:
+    'subscription'                              => 'Subscription',
     'not_expected_period'                       => 'Bu süre beklenmiyor',
+    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
+    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
     'not_or_not_yet'                            => '(Henüz)',
     'visit_bill'                                => 'Visit bill ":name" at Firefly III',
     'match_between_amounts'                     => 'Fatura arasındaki işlemlerle eşleşir :low ve :high.',
@@ -1769,6 +1772,7 @@ return [
     'bill_edit_rules'                           => 'Firefly III, bu tasarıyla ilgili kuralı da düzenlemeye çalışacaktır. Ancak, bu kuralı kendiniz düzenlediyseniz, Firefly III hiçbir şeyi değiştirmez.|Firefly III, bu tasarıyla ilgili :count kurallarını da düzenlemeye çalışacaktır. Ancak, bu kuralları kendiniz düzenlediyseniz, Firefly III hiçbir şeyi değiştirmez.',
     'bill_expected_date'                        => 'Beklenen :date',
     'bill_expected_date_js'                     => 'Beklenen {date}',
+    'expected_amount'                           => '(Expected) amount',
     'bill_paid_on'                              => 'Ödeme Tarihi {date}',
     'bill_repeats_weekly'                       => 'Haftalık tekrarlar',
     'bill_repeats_monthly'                      => 'Aylık tekrarlar',

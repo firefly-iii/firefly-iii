@@ -31,8 +31,9 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Administration\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\CleansChartData;
+use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -43,6 +44,7 @@ use Psr\Container\NotFoundExceptionInterface;
 class AccountController extends Controller
 {
     use CleansChartData;
+    use ValidatesUserGroupTrait;
 
     private AccountRepositoryInterface $repository;
 
@@ -55,7 +57,11 @@ class AccountController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
-                $this->repository->setAdministrationId(auth()->user()->user_group_id);
+                $userGroup        = $this->validateUserGroup($request);
+                if (null !== $userGroup) {
+                    $this->repository->setUserGroup($userGroup);
+                }
+
                 return $next($request);
             }
         );
@@ -70,7 +76,7 @@ class AccountController extends Controller
      * If a transaction has foreign currency = native currency, the foreign amount will be used, no conversion
      * will take place.
      *
-     * TODO validate and set administration_id from request
+     * TODO validate and set user_group_id from request
      *
      * @param DateRequest $request
      *
