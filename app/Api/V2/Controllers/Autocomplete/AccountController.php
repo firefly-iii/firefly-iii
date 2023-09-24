@@ -32,6 +32,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
+use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -40,6 +41,7 @@ use Illuminate\Http\JsonResponse;
 class AccountController extends Controller
 {
     use AccountFilter;
+    use ValidatesUserGroupTrait;
 
     private AdminAccountRepositoryInterface $adminRepository;
     private array                           $balanceTypes;
@@ -55,6 +57,11 @@ class AccountController extends Controller
             function ($request, $next) {
                 $this->repository      = app(AccountRepositoryInterface::class);
                 $this->adminRepository = app(AdminAccountRepositoryInterface::class);
+
+                $userGroup = $this->validateUserGroup($request);
+                if (null !== $userGroup) {
+                    $this->adminRepository->setUserGroup($userGroup);
+                }
 
                 return $next($request);
             }
@@ -79,12 +86,10 @@ class AccountController extends Controller
      */
     public function accounts(AutocompleteRequest $request): JsonResponse
     {
-        throw new FireflyException('uses old administration ID check, needs to be updated. 1');
         $data  = $request->getData();
         $types = $data['types'];
         $query = $data['query'];
         $date  = $this->parameters->get('date') ?? today(config('app.timezone'));
-        $this->adminRepository->setAdministrationId($data['administration_id']);
 
         $return          = [];
         $result          = $this->adminRepository->searchAccount((string)$query, $types, $data['limit']);
