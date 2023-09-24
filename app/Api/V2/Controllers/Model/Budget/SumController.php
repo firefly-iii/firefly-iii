@@ -28,6 +28,7 @@ use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -35,6 +36,8 @@ use Illuminate\Http\JsonResponse;
  */
 class SumController extends Controller
 {
+    use ConvertsExchangeRates;
+
     private BudgetRepositoryInterface $repository;
 
     /**
@@ -62,7 +65,6 @@ class SumController extends Controller
      */
     public function budgeted(DateRequest $request): JsonResponse
     {
-        throw new FireflyException('deprecated use of thing.');
         $data      = $request->getAll();
         $result    = $this->repository->budgetedInPeriod($data['start'], $data['end']);
         $converted = $this->cerSum(array_values($result));
@@ -80,7 +82,6 @@ class SumController extends Controller
      */
     public function spent(DateRequest $request): JsonResponse
     {
-        throw new FireflyException('deprecated use of thing.');
         $data      = $request->getAll();
         $result    = $this->repository->spentInPeriod($data['start'], $data['end']);
         $converted = $this->cerSum(array_values($result));

@@ -26,7 +26,6 @@ namespace FireflyIII\Support\Request;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -165,15 +164,18 @@ trait ConvertsDataTypes
      */
     public function getAccountList(): Collection
     {
-        // fixed
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
 
+        if (method_exists($this, 'validateUserGroup')) {
+            $userGroup = $this->validateUserGroup($this);
+            if (null !== $userGroup) {
+                $repository->setUserGroup($userGroup);
+            }
+        }
+
         // set administration ID
         // group ID
-        $administrationId = auth()->user()->getAdministrationId();
-        throw new FireflyException('uses old administration ID check, needs to be updated.G');
-        $repository->setAdministrationId($administrationId);
 
         $set        = $this->get('accounts');
         $collection = new Collection();

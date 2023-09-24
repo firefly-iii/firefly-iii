@@ -232,7 +232,6 @@ class DebugController extends Controller
         return [
             'tz'                 => env('TZ'),
             'debug'              => var_export(config('app.debug'), true),
-            'log_channel'        => env('LOG_CHANNEL'),
             'audit_log_channel'  => envNonEmpty('AUDIT_LOG_CHANNEL', '(empty)'),
             'default_language'   => (string)config('firefly.default_language'),
             'default_locale'     => (string)config('firefly.default_locale'),

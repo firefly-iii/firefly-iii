@@ -39,7 +39,7 @@ return [
     'greeting'                                => 'Hei der,',
     'closing'                                 => 'Biip Boop,',
     'signature'                               => 'Firefly III epost roboten',
-    'footer_ps'                               => 'PS: Denne meldingen vart sendt fordi ein forespørsel frå IP :ipAddress utløste den.',
+    'footer_ps'                               => 'PS: Denne meldinga vart utløyst av eit spørsmål frå IP-adressa :ipAddress.',
 
     // admin test
     'admin_test_subject'                      => 'Ei testmelding frå Firefly III-installasjonen din',
@@ -69,16 +69,16 @@ return [
     'login_from_new_ip'                       => 'Ny pålogging på Firefly III',
     'slack_login_from_new_ip'                 => 'Ny Firefly III innlogging frå IP :ip (:host)',
     'new_ip_body'                             => 'Firefly III oppdaget ein ny pålogging på kontoen frå ein ukjent IP-adresse. Om du aldri har logget inn frå IP-adressa under, eller det har vært meir enn eit halvt år sida, vil Firefly III advare deg.',
-    'new_ip_warning'                          => 'Om du gjenkjenner denne IP-adressa eller påloggingen, kan du ignorere denne meldingen. Om du ikkje har logget inn, så har du ikkje peiling på kva dette gjelder, bekreft passordsikkerhet, endra det, og logg ut alle økter. For å gjøre dette, gå til profilsida. Selvsagt har du 2FA aktivert allereie, ikkje sant? Vær trygg!',
+    'new_ip_warning'                          => 'Om du gjenkjenner denne IP-adressa eller påloggingen, kan du ignorere denne meldinga. Om du ikkje har logget inn, så har du ikkje peiling på kva dette gjelder, bekreft passordsikkerhet, endra det, og logg ut alle økter. For å gjera dette, gå til profilsida. Selvsagt har du 2FA aktivert allereie, ikkje sant? Vær trygg!',
     'ip_address'                              => 'IP-adresse',
     'host_name'                               => 'Vert',
     'date_time'                               => 'Dato + klokkeslett',
 
     // access token created
     'access_token_created_subject'            => 'Ein ny tilgangstoken vart opprettet',
-    'access_token_created_body'               => 'Noen (forhåpentligvis du) har nettopp oppretta ein ny Firefly III API Access Token for brukarkontoen din.',
+    'access_token_created_body'               => 'Nokon (forhåpentligvis du) har akkurat oppretta ein ny Firefly III API Access Token for brukarkontoen din.',
     'access_token_created_explanation'        => 'Med denne token, kan dei få tilgang til **alle** av dine finansielle poster gjennom Firefly III API.',
-    'access_token_created_revoke'             => 'Om dette ikkje var deg, vennligst fjern dette tokenet så snart som mogleg på :url',
+    'access_token_created_revoke'             => 'Om det her ikkje var deg, ver venleg å fjern dette tokenet så snart som mogleg på :url',
 
     // registered
     'registered_subject'                      => 'Velkomen til Firefly III!',
@@ -87,8 +87,6 @@ return [
     'registered_welcome'                      => 'Velkomen til [Firefly III](:address). Din registrering er fullført, og denne e-posten er her for å bekrefte det. Kanon!',
     'registered_pw'                           => 'Om du har glemt passordet ditt allereie, kan du tilbakestille det ved å bruka [passord reset tool](:address/password/reset).',
     'registered_help'                         => 'Det er eit hjelp-ikon i hjørnet øvst til høgre på kvar side. Om du trenger hjelp, kan du klikka på den!',
-    'registered_doc_html'                     => 'Om du ikkje har allereie, vennligst les [grand theory](https://docs.firefly-iii.org/about-firefly-ii/personal-finances).',
-    'registered_doc_text'                     => 'Om du ikkje har gjort allereie, vennligst òg les veiledningen for første bruk og den fullstendige beskrivinga.',
     'registered_closing'                      => 'Kos deg!',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Tilbakestill passord:',
@@ -107,29 +105,29 @@ return [
 
 
     // new version
-    'new_version_email_subject'               => 'Ein ny Firefly III versjon er tilgjengelig',
+    'new_version_email_subject'               => 'Ein ny Firefly III versjon er tilgjengeleg',
 
     // email change
     'email_change_subject'                    => 'Din Firefly III e-postadresse er endra',
-    'email_change_body_to_new'                => 'Du eller nokon med tilgang til din Firefly III konto har endra e-postadressa din. Om du ikkje forventet denne meldingen, kan du sjå bort frå og sletta den.',
-    'email_change_body_to_old'                => 'Du eller nokon med tilgang til din Firefly III konto har endra e-postadressa din. Om du ikkje forventet dette, så må du **må** følge "angre"-koblingen nedenfor for å beskytte kontoen din!',
-    'email_change_ignore'                     => 'Om du initierte denne endringen, kan du trygt ignorere denne meldingen.',
+    'email_change_body_to_new'                => 'Du eller nokon med tilgang til din Firefly III konto har endra e-postadressa din. Om du ikkje forventet denne meldinga, kan du sjå bort frå og sletta den.',
+    'email_change_body_to_old'                => 'Du eller nokon med tilgang til din Firefly III konto har endra e-postadressa din. Om du ikkje forventet dette, så må du **må** følge "angre"-koblingen nedanfor for å beskytta kontoen din!',
+    'email_change_ignore'                     => 'Om du utførte denne endringen, kan du trygt ignorere denne meldinga.',
     'email_change_old'                        => 'Den gamle e-postadressa var: :email',
     'email_change_old_strong'                 => 'Den gamle e-postadressa var: **:email',
     'email_change_new'                        => 'Den nye e-postadressa er: :email',
     'email_change_new_strong'                 => 'Den nye e-postadressa er: **:email',
-    'email_change_instructions'               => 'Du kan ikkje bruka Firefly III før du bekrefter denne endringen. Følg linken nedenfor for å gjøre det.',
+    'email_change_instructions'               => 'Du kan ikkje bruka Firefly III før du bekreftar denne endringa. Følg linken nedanfor for å gjere det.',
     'email_change_undo_link'                  => 'For å angre endringen, følg denne linken:',
 
     // OAuth token created
     'oauth_created_subject'                   => 'Ein ny OAuth-klient er opprettet',
-    'oauth_created_body'                      => 'Noen (forhåpentligvis du) har nettopp oppretta ein ny Firefly III API OAuth Client for din brukarkonto. Den er merket ":name" og har tilbakeringing URL `:url`.',
+    'oauth_created_body'                      => 'Nokon (forhåpentligvis du) har nettopp oppretta ein ny Firefly III API OAuth Client for din brukarkonto. Den er markert «:name» og har tilbakekall URL `:url`.',
     'oauth_created_explanation'               => 'Med denne kunden, får dei tilgang til **alle** av dine finansielle poster gjennom Firefly III API.',
-    'oauth_created_undo'                      => 'Om dette ikkje var deg, vennligst sletta denne klienten så snart som mogleg ved `:url',
+    'oauth_created_undo'                      => 'Om dette ikkje var deg, ver venleg å slett denne klienten så snart som mogleg ved `:url`',
 
     // reset password
-    'reset_pw_subject'                        => 'Din forespørsel om tilbakestilling av passord',
-    'reset_pw_instructions'                   => 'Noen prøvde å tilbakestille passordet ditt. Om det var deg, vennligst følg linken nedenfor for å fullføre.',
+    'reset_pw_subject'                        => 'Spørsmålet ditt om tilbakestilling av passord',
+    'reset_pw_instructions'                   => 'Nokon forsøkte å tilbakestilla passordet ditt. Om det var deg, ver venleg å følg koplinga nedanfor for å fullføre.',
     'reset_pw_warning'                        => '**VER VENLEG** og bekreft at lenkja faktisk peikar mot Firefly III slik du forventer!',
 
     // error
@@ -143,7 +141,7 @@ return [
     'error_ip'                                => 'IP-adressa relatert til denne feilen er: :ip',
     'error_url'                               => 'URL er: :url',
     'error_user_agent'                        => 'Brukaragent: :userAgent',
-    'error_stacktrace'                        => 'Hele informasjonen er under. Om du trur dette er ein feil i Firefly III, kan du videresende denne meldingen til <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-ii. rg</a>. Dette kan hjelpa med å rette opp feilen du nettopp har funnet.',
+    'error_stacktrace'                        => 'Hele informasjonen er under. Om du trur dette er ein feil i Firefly III, kan du videresende denne meldinga til <a href="mailto:james@firefly-iii.org?subject=BUG!">james@firefly-ii. rg</a>. Dette kan hjelpa med å rette opp feilen du nettopp har funne.',
     'error_github_html'                       => 'Om du føretrekk, kan du òg åpne eit nytt problem på <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a>.',
     'error_github_text'                       => 'Om du føretrekk, kan du òg åpne eit nytt problem på https://github.com/firefly-ii/firefly-ii/issues.',
     'error_stacktrace_below'                  => 'Hele informasjonen er:',
@@ -174,7 +172,7 @@ return [
     'bill_warning_extension_date'             => 'Rekninga din **":name"** vil verta forlenget eller annullert :date. Dette er om **:diff dager**.',
     'bill_warning_end_date_zero'              => 'Rekninga din **":name"** avsluttes :date. Dette er **I DAG!**',
     'bill_warning_extension_date_zero'        => 'Rekninga din **":name"** skal forlenges eller annulleres :date. Dette er **I DAG!**',
-    'bill_warning_please_action'              => 'Vennligst gjer dei rette tiltaka.',
+    'bill_warning_please_action'              => 'Ver venleg å gjer dei rette tiltaka.',
 
 ];
 /*

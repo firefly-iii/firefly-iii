@@ -87,8 +87,6 @@ return [
     'registered_welcome'                      => 'Ласкаво просимо до [Firefly III](:address). Цей лист підтверджує, що ваша реєстрація була успішною. Ура!',
     'registered_pw'                           => 'Якщо ви забули пароль, то відновіть його за допомогою [засобу скидання пароля](:address/password/reset).',
     'registered_help'                         => 'У правому верхньому куті кожної сторінки є іконка довідки. Якщо вам потрібна допомога, натисніть на неї!',
-    'registered_doc_html'                     => 'Якщо ви ще цього не зробили, будь ласка, прочитайте [основну теорію](https://docs.firefly-ii/personal-finances).',
-    'registered_doc_text'                     => 'Якщо ви ще цього не зробили, будь ласка, прочитайте також перший посібник і повний опис.',
     'registered_closing'                      => 'Насолоджуйтесь!',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Зміна пароля:',

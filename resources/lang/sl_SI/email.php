@@ -87,8 +87,6 @@ return [
     'registered_welcome'                      => 'Dobrodošli v [Firefly III](:address). Vaša registracija je bila opravljena in to e-poštno sporočilo jo potrjuje. Juhu!',
     'registered_pw'                           => 'Če ste geslo že pozabili, ga ponastavite z uporabo [orodja za ponastavitev gesla](:address/password/reset).',
     'registered_help'                         => 'V zgornjem desnem kotu vsake strani je ikona pomoči. Če potrebujete pomoč, jo kliknite!',
-    'registered_doc_html'                     => 'Če še niste, preberite [veliko teorijo] (https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
-    'registered_doc_text'                     => 'Če tega še niste storili, preberite tudi navodila za prvo uporabo in celoten opis.',
     'registered_closing'                      => 'Uživajte!',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Ponastavitev gesla:',

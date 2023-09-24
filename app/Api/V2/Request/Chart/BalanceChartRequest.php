@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V2\Request\Chart;
 
+use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -37,6 +38,7 @@ class BalanceChartRequest extends FormRequest
 {
     use ConvertsDataTypes;
     use ChecksLogin;
+    use ValidatesUserGroupTrait;
 
     /**
      * Get all data from the request.

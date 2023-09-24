@@ -36,14 +36,14 @@ declare(strict_types=1);
 
 return [
     '404_header'              => 'Firefly III kan ikkje finna denne sida.',
-    '404_page_does_not_exist' => 'Sida du ba om, eksisterar ikkje. Sjekk at du ikkje har skrevet feil URL. Kanskje du har ein skrivefeil?',
+    '404_page_does_not_exist' => 'Sida du ba om eksisterar ikkje. Sjekk at du ikkje har skrevet feil URL. Kanskje du har ein skriveleif?',
     '404_send_error'          => 'Om du vart omdirigert til denne sida automatisk, da må me beklage. Det er nevnt i denne feilen i loggfilene og eg vil vera takknemlig om du vil sende den til meg.',
     '404_github_link'         => 'Om du er sikker på at denne sida skal eksistere, åpne ein sak på <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
     'whoops'                  => 'Oisann',
-    'fatal_error'             => 'Det oppstod ein alvorlig feil. Vennligst sjekk loggfilene i "lagring/logg" eller bruk "docker logger -f [container]" for å sjå kva som skjer.',
+    'fatal_error'             => 'Det oppstod ein alvorlig feil. Ver venleg å sjekk loggfilene i "lagring/logg" eller bruk "docker logger -f [container]" for å sjå kva som skjer.',
     'maintenance_mode'        => 'Firefly III er i vedlikeholdsmodus.',
     'be_right_back'           => 'Er straks tilbake!',
-    'check_back'              => 'Firefly III er nede for nødvendig vedlikehold. Vennligst sjekk tilbake om ein stund.',
+    'check_back'              => 'Firefly III er stogga for nødvendig vedlikehald. Ver venleg å kom tilbake om ei stund.',
     'error_occurred'          => 'Oisann! ein feil har oppstått.',
     'db_error_occurred'       => 'Oisann! Ein databasefeil har oppstått.',
     'error_not_recoverable'   => 'Dessverre vart ikkje denne feilen fikset :(. Firefly III ødelagt. Feilen er:',
@@ -69,12 +69,12 @@ return [
     'github_help'         => 'Få hjelp på GitHub',
     'github_instructions' => 'Du er meir enn velkomen til å åpne eit nytt problem <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">på GitHub</a></strong>.',
     'use_search'          => 'Bruk søket!',
-    'include_info'        => 'Inkluder informasjonen <a href=":link">fra denne feilsøkingssida</a>.',
+    'include_info'        => 'Inkluder informasjonen <a href=":link">frå denne feilsøkingssida</a>.',
     'tell_more'           => 'Fortel oss meir enn det står Oisann!"',
     'include_logs'        => 'Inkluder feillogger (sjå ovenfor).',
     'what_did_you_do'     => 'Fortell oss kva du gjorde.',
-    'offline_header'      => 'Du er sannsynligvis frakoblet',
-    'offline_unreachable' => 'Firefly III er ikkje tilgjengelig. Enheten er frakoblet eller serveren fungerar ikkje.',
+    'offline_header'      => 'Du er sannsynligvis fråkopla',
+    'offline_unreachable' => 'Firefly III er ikkje tilgjengeleg. Eininga di er fråkopla eller serveren fungerar ikkje.',
     'offline_github'      => 'Om du er sikker på at både enheten og serveren er online, åpne ein sak på <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 
 ];

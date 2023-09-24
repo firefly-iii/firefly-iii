@@ -87,8 +87,6 @@ return [
     'registered_welcome'                      => 'Bienvenue sur [Firefly III](:address). Votre inscription a été faite, et cet e-mail est là pour la confirmer. Yeah !',
     'registered_pw'                           => 'Si vous avez déjà oublié votre mot de passe, veuillez le réinitialiser en utilisant [l\'outil de réinitialisation du mot de passe](:address/password/reset).',
     'registered_help'                         => 'Il y a une icône d\'aide en haut à droite de chaque page. Si vous avez besoin d\'aide, cliquez dessus !',
-    'registered_doc_html'                     => 'Si vous ne l\'avez pas déjà fait, veuillez lire la [documentation](https://docs.firefly-iiii.org/about-firefly-ii/personal-finances).',
-    'registered_doc_text'                     => 'Si vous ne l\'avez pas déjà fait, veuillez lire le guide de première utilisation.',
     'registered_closing'                      => 'À bientôt !',
     'registered_firefly_iii_link'             => 'Firefly III :',
     'registered_pw_reset_link'                => 'Réinitialisation du mot de passe :',

@@ -87,8 +87,6 @@ return [
     'registered_welcome'                      => 'Welcome to [Firefly III](:address). Your registration has made it, and this email is here to confirm it. Yay!',
     'registered_pw'                           => 'If you have forgotten your password already, please reset it using [the password reset tool](:address/password/reset).',
     'registered_help'                         => 'Có một biểu tượng trợ giúp ở góc trên bên phải của mỗi trang. Nếu bạn cần giúp đỡ, bấm vào nó!',
-    'registered_doc_html'                     => 'If you haven\'t already, please read the [grand theory](https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
-    'registered_doc_text'                     => 'If you haven\'t already, please also read the first use guide and the full description.',
     'registered_closing'                      => 'Hãy tận hưởng!',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Thiết lập lại mật khẩu đăng nhập:',
