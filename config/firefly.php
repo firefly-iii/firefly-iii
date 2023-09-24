@@ -112,7 +112,7 @@ return [
         'handle_debts' => true,
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.0.25',
+    'version'                      => '6.0.26',
     'api_version'                  => '2.0.9',
     'db_version'                   => 20,
 

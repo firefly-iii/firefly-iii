@@ -1731,10 +1731,10 @@ return [
     'remove_budgeted_amount'                    => 'S\'ha eliminat la quantitat pressupostada en :currency',
 
     // bills:
-    'subscription'                              => 'Subscription',
+    'subscription'                              => 'Subscripció',
     'not_expected_period'                       => 'No s\'espera aquest periode',
-    'subscriptions_in_group'                    => 'Subscriptions in group "%{title}"',
-    'subscr_expected_x_times'                   => 'Expect to pay %{amount} %{times} times this period',
+    'subscriptions_in_group'                    => 'Subscripcions al grup "%{title}"',
+    'subscr_expected_x_times'                   => 'S\'espera que pagues %{amount} %{times} vegades aquest període',
     'not_or_not_yet'                            => 'No (encara)',
     'visit_bill'                                => 'Visita la factura ":name" en Firefly III',
     'match_between_amounts'                     => 'La factura coincideix amb les transaccions entre :low i :high.',
@@ -1771,7 +1771,7 @@ return [
     'bill_edit_rules'                           => 'Firefly III intentarà editar la norma relacionada amb aquesta factura. Tot i això, si has editat aquesta norma pel teu compte, Firefly III no canviarà res.|Firefly III intentarà editar les :count normes relacionades amb aquesta factura. Tot i això, si les has editat pel teu compte, Firefly III no canviarà res.',
     'bill_expected_date'                        => 'S\'espera :date',
     'bill_expected_date_js'                     => 'S\'espera {date}',
-    'expected_amount'                           => '(Expected) amount',
+    'expected_amount'                           => 'Quantitat (esperada)',
     'bill_paid_on'                              => 'Pagat el {date}',
     'bill_repeats_weekly'                       => 'Es repeteix setmanalment',
     'bill_repeats_monthly'                      => 'Es repeteix mensualment',

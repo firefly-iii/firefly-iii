@@ -87,8 +87,6 @@ return [
     'registered_welcome'                      => '[Firefly III](:address) へようこそ。このメールにて登録が完了したことをお知らせします。やった！',
     'registered_pw'                           => 'パスワードを忘れた場合は、[パスワードリセットツール](:address/password/reset)を使用してリセットしてください。',
     'registered_help'                         => '各ページの右上にヘルプアイコンがあります。ヘルプが必要な場合は、クリックしてください。',
-    'registered_doc_html'                     => 'まだ読んでいない場合、[基本的な考え](https://docs.firefly-iii.org/about-firefly-iii/personal-finances)を読んでください。',
-    'registered_doc_text'                     => 'まだ読んでいない場合は、はじめての使用ガイドと詳細説明も読んでください。',
     'registered_closing'                      => 'では！',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'パスワードのリセット:',

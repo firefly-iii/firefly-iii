@@ -87,8 +87,6 @@ return [
     'registered_welcome'                      => '欢迎来到 [Firefly III](:address)。收到这封电子邮件即确认您的注册已经完成。耶！',
     'registered_pw'                           => '如果您忘记了您的密码，请使用 [密码重置工具] (:address/password/reset) 重置密码。',
     'registered_help'                         => '每个页面右上角都有一个帮助图标。如果您需要帮助，请点击它！',
-    'registered_doc_html'                     => '如果您尚未阅读过，请阅读一下[设计理念](https://docs.firefly-iii.org/about-firefly-iii/personal-finances)。',
-    'registered_doc_text'                     => '我们推荐您阅读新用户使用指南和完整说明。',
     'registered_closing'                      => '祝您使用愉快！',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => '密码已重置',

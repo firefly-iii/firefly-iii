@@ -87,8 +87,6 @@ return [
     'registered_welcome'                      => 'Velkommen til [Firefly III](:address). Din registrering er fullført, og denne e-posten er her for å bekrefte det. Kanon!',
     'registered_pw'                           => 'Hvis du har glemt passordet ditt allerede, kan du tilbakestille det ved å bruke [passord reset tool](:address/password/reset).',
     'registered_help'                         => 'Det er et hjelp-ikon i hjørnet øverst til høyre på hver side. Hvis du trenger hjelp, kan du klikke på den!',
-    'registered_doc_html'                     => 'Hvis du ikke har allerede, vennligst les [grand theory](https://docs.firefly-iii.org/about-firefly-ii/personal-finances).',
-    'registered_doc_text'                     => 'Hvis du ikke har gjort allerede, vennligst også les veiledningen for første bruk og den fullstendige beskrivelsen.',
     'registered_closing'                      => 'Kos deg!',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Tilbakestill passord:',

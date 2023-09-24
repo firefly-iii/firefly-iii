@@ -37,5 +37,5 @@ declare(strict_types=1);
 
 return [
     'failed'   => 'Me kunne ikkje finna nokon konto som har dei oppgitte detaljene.',
-    'throttle' => 'For mange innloggingsforsøk. Vennligst prøv igjen om :seconds sekunder.',
+    'throttle' => 'For mange innloggingsforsøk. Ver venleg å prøv att om :seconds sekunder.',
 ];

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.26 - 2023-09-24
+
+### Fixed
+
+- [Issue 7986](https://github.com/firefly-iii/firefly-iii/issues/7986), [issue 7992](https://github.com/firefly-iii/firefly-iii/issues/7992) Fix exception when calling specific end points
+- [Issue 7990](https://github.com/firefly-iii/firefly-iii/issues/7990) Remove unused translations
+
 ## 6.0.25 - 2023-09-24
 
 ### Changed

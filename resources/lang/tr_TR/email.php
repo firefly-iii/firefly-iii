@@ -87,8 +87,6 @@ return [
     'registered_welcome'                      => '[Firefly III] \'e hoş geldiniz(:address). Kaydınız yapıldı ve bu e-posta onaylamak için burada. Yay!',
     'registered_pw'                           => 'Parolanızı zaten unuttuysanız, lütfen [parola sıfırlama aracı] (:adres/parola/sıfırla) kullanarak sıfırlayın.',
     'registered_help'                         => 'Her sayfanın sağ üst köşesinde bir yardım simgesi bulunur. Yardıma ihtiyacınız olursa, tıklayın!',
-    'registered_doc_html'                     => 'Henüz yapmadıysanız, lütfen [büyük teori] \'yi okuyun (https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
-    'registered_doc_text'                     => 'Henüz yapmadıysanız, lütfen ilk kullanım kılavuzunu ve tam açıklamayı da okuyun.',
     'registered_closing'                      => 'Tadını çıkarın!',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Şifre sıfırlama:',

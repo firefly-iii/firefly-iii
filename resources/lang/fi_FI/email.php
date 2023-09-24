@@ -87,8 +87,6 @@ return [
     'registered_welcome'                      => 'Tervetuloa [Firefly III](:address). Rekisteröitymisesi onnistui, ja tämä sähköposti vahvistaa sen. Siistiä!',
     'registered_pw'                           => 'Jos olet jo unohtanut salasanasi, nollaa se käyttäen [salasanan nollaustyökalua](:address/password/reset).',
     'registered_help'                         => 'Jokaisen sivun oikeassa yläkulmassa on apukuvake. Jos tarvitset apua, napsauta sitä!',
-    'registered_doc_html'                     => 'Jos et vielä ole ehtinyt, käy lukemassa [grand theory](https://docs.firefly-iii.org/about-firefly-iiii/personal-finances).',
-    'registered_doc_text'                     => 'Jos et ole vielä ole lukenut, lue myös ensimmäisen käytön opas ja täydellinen kuvaus.',
     'registered_closing'                      => 'Nauti!',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Salasanan nollaus:',

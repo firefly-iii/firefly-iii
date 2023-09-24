@@ -87,8 +87,6 @@ return [
     'registered_welcome'                      => 'Benvenuto in [Firefly III](:address). La tua registrazione è stata completata, e questa è una email di conferma. Olè!',
     'registered_pw'                           => 'Se hai dimenticato la tua password, reimpostala usando [lo strumento di reimpostazione della password](:address/password/reset).',
     'registered_help'                         => 'C\'è un\'icona di aiuto nell\'angolo in alto a destra di ogni pagina. Se hai bisogno di aiuto, clicca su di essa!',
-    'registered_doc_html'                     => 'Se non lo hai già fatto, sei pregato di leggere la [grande teoria](https://docs.firefly-iii.org/about-firefly-iii/personal-finances).',
-    'registered_doc_text'                     => 'Se non lo hai già fatto, sei anche pregato di leggere la prima guida all\'uso e la descrizione completa.',
     'registered_closing'                      => 'Divertiti!',
     'registered_firefly_iii_link'             => 'Firefly III:',
     'registered_pw_reset_link'                => 'Reimposta la password:',
