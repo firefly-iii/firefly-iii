@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  firefly_iii_app:
+    image: fireflyiii/core:latest
+    container_name: firefly_iii_app
+    links:
+      - firefly_iii_db 
+    ports:
+      - "80:8080"
+    volumes:
+      - firefly_iii_upload:/var/www/html/storage/upload
+    env_file:
+      - .env
+      - .db.env
+      - .importer.env
+  firefly_iii_db:
+    image: mysql:latest # or postgres:latest
+    container_name: firefly_iii_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password # Adjust accordingly
+      - MYSQL_DATABASE=firefly
+      - MYSQL_USER=firefly
+      - MYSQL_PASSWORD=firefly_password
+    volumes:
+      - firefly_iii_db:/var/lib/mysql
+volumes:
+  firefly_iii_upload:
+  firefly_iii_db:
