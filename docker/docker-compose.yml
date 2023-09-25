@@ -10,7 +10,7 @@ services:
     volumes:
       - firefly_iii_upload:/var/www/html/storage/upload
     env_file:
-      - .env
+      - .docker.env
       - .db.env
       - .importer.env
   firefly_iii_db:
