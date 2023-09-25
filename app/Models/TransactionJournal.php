@@ -117,6 +117,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int                                      $the_count
  * @property int|null                                 $user_group_id
  * @method static EloquentBuilder|TransactionJournal whereUserGroupId($value)
+ * @property-read Collection<int, \FireflyIII\Models\AuditLogEntry> $auditLogEntries
+ * @property-read int|null $audit_log_entries_count
  * @mixin Eloquent
  */
 class TransactionJournal extends Model
