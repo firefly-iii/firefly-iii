@@ -227,7 +227,6 @@ class EventServiceProvider extends ServiceProvider
      */
     private function registerObservers(): void
     {
-        app('log')->debug('Register observers');
         Attachment::observe(new AttachmentObserver());
         PiggyBank::observe(new PiggyBankObserver());
         Account::observe(new AccountObserver());
