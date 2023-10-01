@@ -186,7 +186,12 @@ export default () => ({
                         let parent = response.data.data;
 
                         // get groups for account:
-                        (new Get).transactions(parent.id, 1).then((response) => {
+                        const params = {
+                            page: 1,
+                            start: new Date(window.store.get('start')),
+                            end: new Date(window.store.get('end')),
+                        };
+                        (new Get).transactions(parent.id, params).then((response) => {
                             let groups = [];
                             for (let ii = 0; ii < response.data.data.length; ii++) {
                                 if (ii >= max) {
