@@ -197,6 +197,9 @@ export default () => ({
             console.error('cannot handle yet');
             return;
         }
+        // reset subscription data
+        subscriptionData = {};
+        this.subscriptions = [];
         console.log('cache is invalid, must download');
         let params = {
             start: format(start, 'y-MM-dd'),
@@ -263,6 +266,10 @@ export default () => ({
                 },
             }
         };
+        var graph = Chart.getChart(document.querySelector(id));
+        if (typeof graph !== 'undefined') {
+            graph.destroy();
+        }
         new Chart(document.querySelector(id), config);
     },
 

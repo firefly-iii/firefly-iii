@@ -25,6 +25,7 @@ import {Flow, SankeyController} from 'chartjs-chart-sankey';
 import {loadTranslations} from "../../support/load-translations.js";
 import {I18n} from "i18n-js";
 import {getCacheKey} from "../../support/get-cache-key.js";
+import {format} from "date-fns";
 
 Chart.register({SankeyController, Flow});
 

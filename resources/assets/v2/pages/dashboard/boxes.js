@@ -70,6 +70,9 @@ export default () => ({
         for (const i in data) {
             if (data.hasOwnProperty(i)) {
                 const current = data[i];
+                if (!current.hasOwnProperty('key')) {
+                    continue;
+                }
                 let key = current.key;
                 // native (auto conversion):
                 if (this.autoConversion) {

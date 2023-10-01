@@ -164,7 +164,7 @@ export default () => ({
             y: {
                 ticks: {
                     callback: function (context) {
-                        return formatMoney(context, currencies[0]);
+                        return formatMoney(context, currencies[0] ?? 'EUR');
                     }
                 }
             }
