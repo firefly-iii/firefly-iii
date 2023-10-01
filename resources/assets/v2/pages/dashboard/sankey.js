@@ -24,6 +24,7 @@ import {Chart} from 'chart.js';
 import {Flow, SankeyController} from 'chartjs-chart-sankey';
 import {loadTranslations} from "../../support/load-translations.js";
 import {I18n} from "i18n-js";
+import {getCacheKey} from "../../support/get-cache-key.js";
 
 Chart.register({SankeyController, Flow});
 
@@ -286,8 +287,12 @@ export default () => ({
 
     },
     getFreshData() {
+        const start = new Date(window.store.get('start'));
+        const end = new Date(window.store.get('end'));
+        const cacheKey = getCacheKey(CACHE_KEY, start, end);
+
         const cacheValid = window.store.get('cacheValid');
-        let cachedData = window.store.get(CACHE_KEY);
+        let cachedData = window.store.get(cacheKey);
 
         if (cacheValid && typeof cachedData !== 'undefined') {
             transactions = cachedData;
@@ -298,14 +303,18 @@ export default () => ({
 
 
         let params = {
-            start: window.store.get('start').slice(0, 10),
-            end: window.store.get('end').slice(0, 10),
+            start: format(start, 'y-MM-dd'),
+            end: format(end, 'y-MM-dd'),
             type: 'withdrawal,deposit',
             page: 1
         };
         this.downloadTransactions(params);
     },
     downloadTransactions(params) {
+        const start = new Date(window.store.get('start'));
+        const end = new Date(window.store.get('end'));
+        const cacheKey = getCacheKey(CACHE_KEY, start, end);
+
         //console.log('Downloading page ' + params.page + '...');
         const getter = new Get();
         getter.get(params).then((response) => {
@@ -318,7 +327,7 @@ export default () => ({
                 this.downloadTransactions(params);
                 return;
             }
-            window.store.set(CACHE_KEY, transactions);
+            window.store.set(cacheKey, transactions);
             this.drawChart(this.generateOptions());
             this.loading = false;
         });

@@ -22,6 +22,7 @@ import Summary from "../../api/v2/summary/index.js";
 import {format} from "date-fns";
 import {getVariable} from "../../store/get-variable.js";
 import formatMoney from "../../util/format-money.js";
+import {getCacheKey} from "../../support/get-cache-key.js";
 
 let afterPromises = false;
 const CACHE_KEY = 'dashboard-boxes-data';
@@ -35,8 +36,12 @@ export default () => ({
     boxData: null,
     boxOptions: null,
     getFreshData() {
+        const start = new Date(window.store.get('start'));
+        const end = new Date(window.store.get('end'));
+        const boxesCacheKey = getCacheKey(CACHE_KEY, start, end);
+
         const cacheValid = window.store.get('cacheValid');
-        let cachedData = window.store.get(CACHE_KEY);
+        let cachedData = window.store.get(boxesCacheKey);
 
         if (cacheValid && typeof cachedData !== 'undefined') {
             this.boxData = cachedData;
@@ -47,12 +52,9 @@ export default () => ({
 
         // get stuff
         let getter = new Summary();
-        let start = new Date(window.store.get('start'));
-        let end = new Date(window.store.get('end'));
-
         getter.get(format(start, 'yyyy-MM-dd'), format(end, 'yyyy-MM-dd'), null).then((response) => {
             this.boxData = response.data;
-            window.store.set(CACHE_KEY, response.data);
+            window.store.set(boxesCacheKey, response.data);
             this.generateOptions(this.boxData);
             //this.drawChart();
         });
