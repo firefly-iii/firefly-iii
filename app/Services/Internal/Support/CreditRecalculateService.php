@@ -185,6 +185,15 @@ class CreditRecalculateService
         app('log')->debug(sprintf('Now processing account #%d ("%s")', $account->id, $account->name));
         // get opening balance (if present)
         $this->repository->setUser($account->user);
+        $direction      = (string)$this->repository->getMetaValue($account, 'liability_direction');
+        $openingBalance = $this->repository->getOpeningBalance($account);
+        if (null !== $openingBalance) {
+            app('log')->debug(sprintf('Found opening balance transaction journal #%d', $openingBalance->id));
+            // if account direction is "debit" ("I owe this amount") the opening balance must always be AWAY from the account:
+            if ('debit' === $direction) {
+                $this->validateOpeningBalance($account, $openingBalance);
+            }
+        }
         $startOfDebt = $this->repository->getOpeningBalanceAmount($account) ?? '0';
         $leftOfDebt  = app('steam')->positive($startOfDebt);
 
@@ -195,9 +204,6 @@ class CreditRecalculateService
 
         // amount is positive or negative, doesn't matter.
         $factory->crud($account, 'start_of_debt', $startOfDebt);
-
-        // get direction of liability:
-        $direction = (string)$this->repository->getMetaValue($account, 'liability_direction');
 
         app('log')->debug(sprintf('Debt direction is "%s"', $direction));
 
@@ -215,6 +221,42 @@ class CreditRecalculateService
         }
         $factory->crud($account, 'current_debt', $leftOfDebt);
         app('log')->debug(sprintf('Done processing account #%d ("%s")', $account->id, $account->name));
+    }
+
+    /**
+     * If account direction is "debit" ("I owe this amount") the opening balance must always be AWAY from the account:
+     *
+     * @param Account            $account
+     * @param TransactionJournal $openingBalance
+     *
+     * @return void
+     */
+    private function validateOpeningBalance(Account $account, TransactionJournal $openingBalance)
+    {
+        /** @var Transaction $source */
+        $source = $openingBalance->transactions()->where('amount', '<', 0)->first();
+        /** @var Transaction $dest */
+        $dest = $openingBalance->transactions()->where('amount', '>', 0)->first();
+        if ((int)$source->account_id !== $account->id) {
+            app('log')->info(sprintf('Liability #%d has a reversed opening balance. Will fix this now.', $account->id));
+            app('log')->debug(sprintf('Source amount "%s" is now "%s"', $source->amount, app('steam')->positive($source->amount)));
+            app('log')->debug(sprintf('Destination amount "%s" is now "%s"', $dest->amount, app('steam')->negative($dest->amount)));
+            $source->amount = app('steam')->positive($source->amount);
+            $dest->amount   = app('steam')->negative($source->amount);
+            var_dump($source->foreign_amount);
+            if (null !== $source->foreign_amount && '' !== $source->foreign_amount) {
+                $source->foreign_amount = app('steam')->positive($source->foreign_amount);
+                app('log')->debug(sprintf('Source foreign amount "%s" is now "%s"', $source->foreign_amount, app('steam')->positive($source->foreign_amount)));
+            }
+            if (null !== $dest->foreign_amount && '' !== $dest->foreign_amount) {
+                $dest->foreign_amount = app('steam')->negative($dest->foreign_amount);
+                app('log')->debug(sprintf('Destination amount "%s" is now "%s"', $dest->foreign_amount, app('steam')->negative($dest->foreign_amount)));
+            }
+            $source->save();
+            $dest->save();
+            return;
+        }
+        app('log')->debug('Opening balance is valid');
     }
 
     /**

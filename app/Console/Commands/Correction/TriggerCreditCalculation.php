@@ -31,7 +31,6 @@ use Illuminate\Console\Command;
 
 /**
  * Class CorrectionSkeleton
- * TODO DONT FORGET TO ADD THIS TO THE DOCKER BUILD
  */
 class TriggerCreditCalculation extends Command
 {
