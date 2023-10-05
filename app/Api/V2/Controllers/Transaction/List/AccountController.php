@@ -72,10 +72,12 @@ class AccountController extends Controller
         $start = $request->getStartDate();
         $end   = $request->getEndDate();
         if (null !== $start) {
+            app('log')->debug(sprintf('Set start date to %s', $start->toIso8601String()));
             $collector->setStart($start);
         }
         if (null !== $end) {
-            $collector->setEnd($start);
+            app('log')->debug(sprintf('Set end date to %s', $start->toIso8601String()));
+            $collector->setEnd($end);
         }
 
         $paginator = $collector->getPaginatedGroups();
