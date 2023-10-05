@@ -75,6 +75,7 @@ class Controller extends BaseController
     private function getParameters(): ParameterBag
     {
         $bag = new ParameterBag();
+        $bag->set('limit', 50);
         try {
             $page = (int)request()->get('page');
         } catch (ContainerExceptionInterface | NotFoundExceptionInterface $e) {
