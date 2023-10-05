@@ -56,7 +56,14 @@ class Controller extends BaseController
      */
     public function __construct()
     {
-        $this->parameters = $this->getParameters();
+        $this->middleware(
+            function ($request, $next) {
+                $this->parameters = $this->getParameters();
+
+                return $next($request);
+            }
+        );
+
     }
 
     /**
