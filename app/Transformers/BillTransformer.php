@@ -163,11 +163,12 @@ class BillTransformer extends AbstractTransformer
         // 2023-07-18 this particular date is used to search for the last paid date.
         // 2023-07-18 the cloned $searchDate is used to grab the correct transactions.
         /** @var Carbon $start */
-        $start = clone $this->parameters->get('start');
+        $start       = clone $this->parameters->get('start');
+        $searchStart = clone $start;
         $start->subDay();
 
-        $searchStart = clone $start;
-        //Log::debug(sprintf('Parameters are start:%s end:%s', $start->format('Y-m-d'), $this->parameters->get('end')->format('Y-m-d')));
+        Log::debug(sprintf('Parameters are start: %s end: %s', $start->format('Y-m-d'), $this->parameters->get('end')->format('Y-m-d')));
+        Log::debug(sprintf('Search parameters are: start: %s', $searchStart->format('Y-m-d')));
 
         /*
          *  Get from database when bill was paid.
