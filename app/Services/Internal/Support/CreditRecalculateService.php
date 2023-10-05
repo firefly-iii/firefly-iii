@@ -404,6 +404,22 @@ class CreditRecalculateService
             app('log')->debug(sprintf('Case 7 (deposit away from liability): %s - %s = %s', $leftOfDebt, $usedAmount, $result));
             return $result;
         }
+        // case 8
+        // it's a withdrawal from this liability (to expense account).
+        // if it's a debit ("I owe this amount") this increase the amount due.
+        // because we are paying interest.
+        if (
+            $type === TransactionType::WITHDRAWAL
+            && (int)$account->id === (int)$transaction->account_id
+            && -1 === bccomp($usedAmount, '0')
+            && 'debit' === $direction
+        ) {
+            $usedAmount = app('steam')->positive($usedAmount);
+            $result     = bcadd($leftOfDebt, $usedAmount);
+            app('log')->debug(sprintf('Case 8 (withdrawal away from liability): %s + %s = %s', $leftOfDebt, $usedAmount, $result));
+            return $result;
+        }
+
 
         // in any other case, remove amount from left of debt.
         if (in_array($type, [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER], true)) {
