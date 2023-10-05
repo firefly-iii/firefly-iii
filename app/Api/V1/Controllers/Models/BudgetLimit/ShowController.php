@@ -85,7 +85,7 @@ class ShowController extends Controller
     {
         $manager = $this->getManager();
         $manager->parseIncludes('budget');
-        $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize     = $this->parameters->get('limit');
         $collection   = $this->blRepository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
@@ -117,7 +117,7 @@ class ShowController extends Controller
     {
         $manager = $this->getManager();
         $manager->parseIncludes('budget');
-        $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize     = $this->parameters->get('limit');
         $collection   = $this->blRepository->getAllBudgetLimits($this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);

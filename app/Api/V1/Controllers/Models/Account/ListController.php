@@ -81,7 +81,7 @@ class ListController extends Controller
     public function attachments(Account $account): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = $this->parameters->get('limit');
         $collection = $this->repository->getAttachments($account);
 
         $count       = $collection->count();
@@ -116,7 +116,7 @@ class ListController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = $this->parameters->get('limit');
 
         // get list of budgets. Count it and split it.
         $collection = $this->repository->getPiggyBanks($account);
@@ -152,15 +152,9 @@ class ListController extends Controller
      */
     public function transactions(Request $request, Account $account): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = $this->parameters->get('limit');
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
-
-        // user can overrule page size with limit parameter.
-        $limit = $this->parameters->get('limit');
-        if (null !== $limit && $limit > 0) {
-            $pageSize = $limit;
-        }
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
         $manager = $this->getManager();
         /** @var User $admin */
@@ -172,8 +166,11 @@ class ListController extends Controller
         $collector->setUser($admin)->setAccounts(new Collection([$account]))
                   ->withAPIInformation()->setLimit($pageSize)->setPage($this->parameters->get('page'))->setTypes($types);
 
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        if (null !== $this->parameters->get('start')) {
+            $collector->setStart($this->parameters->get('start'));
+        }
+        if (null !== $this->parameters->get('end')) {
+            $collector->setEnd($this->parameters->get('end'));
         }
 
         $paginator = $collector->getPaginatedGroups();

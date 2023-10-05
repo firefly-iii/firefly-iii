@@ -137,6 +137,11 @@ abstract class Controller extends BaseController
             if (null !== $value) {
                 $bag->set($integer, (int)$value);
             }
+            if (null === $value && 'limit' === $integer) {
+                // set default for user:
+                $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+                $bag->set($integer, $pageSize);
+            }
         }
 
         // sort fields:

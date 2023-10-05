@@ -70,7 +70,7 @@ class ShowController extends Controller
     public function index(Request $request): JsonResponse
     {
         $piggies     = $this->repository->getPiggyBanks();
-        $pageSize    = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize    = $this->parameters->get('limit');
         $count       = $piggies->count();
         $piggies     = $piggies->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator   = new LengthAwarePaginator($piggies, $count, $pageSize, $this->parameters->get('page'));

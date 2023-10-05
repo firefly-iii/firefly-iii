@@ -64,6 +64,7 @@ class ShowController extends Controller
     public function index(Request $request): JsonResponse
     {
         $collection = new Collection();
+        $pageSize   = $this->parameters->get('limit');
         // if the user has the system owner role, get all. Otherwise, get only the users' groups.
         if (!auth()->user()->hasRole('owner')) {
             $collection = $this->repository->get();
@@ -72,9 +73,9 @@ class ShowController extends Controller
             $collection = $this->repository->getAll();
         }
         $count      = $collection->count();
-        $userGroups = $collection->slice(($this->parameters->get('page') - 1) * $this->pageSize, $this->pageSize);
+        $userGroups = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
-        $paginator   = new LengthAwarePaginator($userGroups, $count, $this->pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($userGroups, $count, $pageSize, $this->parameters->get('page'));
         $transformer = new UserGroupTransformer();
         $transformer->setParameters($this->parameters); // give params to transformer
 

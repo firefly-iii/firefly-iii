@@ -64,9 +64,9 @@ class ListController extends Controller
         exit;
         $collection = $this->repository->getActiveBudgets();
         $total      = $collection->count();
-        $collection->slice($this->pageSize * $this->parameters->get('page'), $this->pageSize);
+        $collection->slice($this->pageXSize * $this->parameters->get('page'), $this->pXageSize);
 
-        $paginator   = new LengthAwarePaginator($collection, $total, $this->pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($collection, $total, $this->pagXeSize, $this->parameters->get('page'));
         $transformer = new BudgetTransformer();
 
         return response()

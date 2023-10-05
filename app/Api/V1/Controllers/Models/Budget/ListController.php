@@ -82,7 +82,7 @@ class ListController extends Controller
     public function attachments(Budget $budget): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = $this->parameters->get('limit');
         $collection = $this->repository->getAttachments($budget);
 
         $count       = $collection->count();
@@ -116,7 +116,7 @@ class ListController extends Controller
     public function budgetLimits(Budget $budget): JsonResponse
     {
         $manager  = $this->getManager();
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = $this->parameters->get('limit');
         $this->parameters->set('budget_id', $budget->id);
         $collection   = $this->blRepository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
@@ -148,13 +148,7 @@ class ListController extends Controller
      */
     public function transactions(Request $request, Budget $budget): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-
-        // user can overrule page size with limit parameter.
-        $limit = $this->parameters->get('limit');
-        if (null !== $limit && $limit > 0) {
-            $pageSize = $limit;
-        }
+        $pageSize = $this->parameters->get('limit');
 
         $type = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
@@ -181,8 +175,11 @@ class ListController extends Controller
             // set types of transactions to return.
             ->setTypes($types);
 
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        if (null !== $this->parameters->get('start')) {
+            $collector->setStart($this->parameters->get('start'));
+        }
+        if (null !== $this->parameters->get('end')) {
+            $collector->setEnd($this->parameters->get('end'));
         }
 
         $paginator = $collector->getPaginatedGroups();
@@ -211,13 +208,7 @@ class ListController extends Controller
      */
     public function withoutBudget(Request $request): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-
-        // user can overrule page size with limit parameter.
-        $limit = $this->parameters->get('limit');
-        if (null !== $limit && $limit > 0) {
-            $pageSize = $limit;
-        }
+        $pageSize = $this->parameters->get('limit');
 
         $type = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
@@ -244,8 +235,11 @@ class ListController extends Controller
             // set types of transactions to return.
             ->setTypes($types);
 
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        if (null !== $this->parameters->get('start')) {
+            $collector->setStart($this->parameters->get('start'));
+        }
+        if (null !== $this->parameters->get('end')) {
+            $collector->setEnd($this->parameters->get('end'));
         }
 
         $paginator = $collector->getPaginatedGroups();

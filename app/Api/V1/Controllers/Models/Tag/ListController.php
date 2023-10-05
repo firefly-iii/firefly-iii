@@ -80,7 +80,7 @@ class ListController extends Controller
     public function attachments(Tag $tag): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = $this->parameters->get('limit');
         $collection = $this->repository->getAttachments($tag);
 
         $count       = $collection->count();
@@ -114,7 +114,7 @@ class ListController extends Controller
      */
     public function transactions(Request $request, Tag $tag): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = $this->parameters->get('limit');
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
@@ -139,8 +139,11 @@ class ListController extends Controller
             // set types of transactions to return.
             ->setTypes($types);
 
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        if (null !== $this->parameters->get('start')) {
+            $collector->setStart($this->parameters->get('start'));
+        }
+        if (null !== $this->parameters->get('end')) {
+            $collector->setEnd($this->parameters->get('end'));
         }
         $paginator = $collector->getPaginatedGroups();
         $paginator->setPath(route('api.v1.tags.transactions', [$tag->id]) . $this->buildParams());

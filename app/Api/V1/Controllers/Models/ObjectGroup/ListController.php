@@ -77,7 +77,7 @@ class ListController extends Controller
     {
         $manager = $this->getManager();
 
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = $this->parameters->get('limit');
         // get list of piggy banks. Count it and split it.
         $collection = $this->repository->getBills($objectGroup);
         $count      = $collection->count();
@@ -114,7 +114,7 @@ class ListController extends Controller
         $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = $this->parameters->get('limit');
 
         // get list of piggy banks. Count it and split it.
         $collection = $this->repository->getPiggyBanks($objectGroup);

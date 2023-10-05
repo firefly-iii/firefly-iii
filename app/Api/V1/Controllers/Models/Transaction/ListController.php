@@ -78,7 +78,7 @@ class ListController extends Controller
     public function attachments(TransactionGroup $transactionGroup): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = $this->parameters->get('limit');
         $collection = new Collection();
         foreach ($transactionGroup->transactionJournals as $transactionJournal) {
             $collection = $this->journalAPIRepository->getAttachments($transactionJournal)->merge($collection);
@@ -114,7 +114,7 @@ class ListController extends Controller
     {
         $manager    = $this->getManager();
         $collection = new Collection();
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = $this->parameters->get('limit');
         foreach ($transactionGroup->transactionJournals as $transactionJournal) {
             $collection = $this->journalAPIRepository->getPiggyBankEvents($transactionJournal)->merge($collection);
         }
@@ -152,7 +152,7 @@ class ListController extends Controller
     {
         $manager      = $this->getManager();
         $collection   = $this->journalAPIRepository->getJournalLinks($transactionJournal);
-        $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize     = $this->parameters->get('limit');
         $count        = $collection->count();
         $journalLinks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 

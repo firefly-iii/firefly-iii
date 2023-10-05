@@ -52,20 +52,16 @@ class AccountController extends Controller
     public function list(ListRequest $request, Account $account): JsonResponse
     {
         // collect transactions:
-        $limit = $request->getLimit();
-        $page  = $request->getPage();
-        $page  = max($page, 1);
-
-        if ($limit > 0 && $limit <= $this->pageSize) {
-            $this->pageSize = $limit;
-        }
+        $page     = $request->getPage();
+        $page     = max($page, 1);
+        $pageSize = $this->parameters->get('limit');
 
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))
                   ->withAPIInformation()
-                  ->setLimit($this->pageSize)
+                  ->setLimit($pageSize)
                   ->setPage($page)
                   ->setTypes($request->getTransactionTypes());
 
@@ -85,7 +81,7 @@ class AccountController extends Controller
             sprintf(
                 '%s?%s',
                 route('api.v2.accounts.transactions', [$account->id]),
-                $request->buildParams()
+                $request->buildParams($pageSize)
             )
         );
 
