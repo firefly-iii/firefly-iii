@@ -150,7 +150,7 @@ class BillTransformer extends AbstractTransformer
      */
     protected function paidData(Bill $bill): array
     {
-        Log::debug(sprintf('Now in paidData for bill #%d', $bill->id));
+        Log::debug(sprintf('---- Now in paidData for bill #%d', $bill->id));
         if (null === $this->parameters->get('start') || null === $this->parameters->get('end')) {
             Log::debug('parameters are NULL, return empty array');
 
@@ -163,45 +163,53 @@ class BillTransformer extends AbstractTransformer
         // 2023-07-18 this particular date is used to search for the last paid date.
         // 2023-07-18 the cloned $searchDate is used to grab the correct transactions.
         /** @var Carbon $start */
-        $start       = clone $this->parameters->get('start');
+
+        $start = clone $this->parameters->get('start');
+        Log::debug(sprintf("start: %s", $start));
+        Log::debug(sprintf('Parameters are start:%s end:%s', $start->format('Y-m-d H:i'), $this->parameters->get('end')->format('Y-m-d H:i')));
+
         $searchStart = clone $start;
-        $start->subDay();
-
-        Log::debug(sprintf('Parameters are start: %s end: %s', $start->format('Y-m-d'), $this->parameters->get('end')->format('Y-m-d')));
-        Log::debug(sprintf('Search parameters are: start: %s', $searchStart->format('Y-m-d')));
-
         /*
          *  Get from database when bill was paid.
          */
         $set = $this->repository->getPaidDatesInRange($bill, $searchStart, $this->parameters->get('end'));
-        //Log::debug(sprintf('Count %d entries in getPaidDatesInRange()', $set->count()));
+        Log::debug(sprintf('Count %d entries in getPaidDatesInRange()', $set->count()));
 
         /*
          * Grab from array the most recent payment. If none exist, fall back to the start date and pretend *that* was the last paid date.
          */
-        //Log::debug(sprintf('Grab last paid date from function, return %s if it comes up with nothing.', $start->format('Y-m-d')));
-        $lastPaidDate = $this->lastPaidDate($set, $start);
-        //Log::debug(sprintf('Result of lastPaidDate is %s', $lastPaidDate->format('Y-m-d')));
+        Log::debug(sprintf('Grab last paid date from function, return %s if it comes up with nothing.', $searchStart->format('Y-m-d H:i')));
+        $lastPaidDate = $this->lastPaidDate($set, $searchStart);
+        Log::debug(sprintf('Result of lastPaidDate is %s', $lastPaidDate->format('Y-m-d H:i')));
 
         /*
          * The next expected match (nextMatch) is, initially, the bill's date.
          */
         $nextMatch = clone $bill->date;
-        //Log::debug(sprintf('Next match is %s (bill->date)', $nextMatch->format('Y-m-d')));
+        $originalNextMatch = clone $bill->date;
+        Log::debug(sprintf('Next match is %s (bill->date)', $nextMatch->format('Y-m-d H:i')));
+        $skip = 0;
         while ($nextMatch < $lastPaidDate) {
             /*
              * As long as this date is smaller than the last time the bill was paid, keep jumping ahead.
              * For example: 1 jan, 1 feb, etc.
              */
-            //Log::debug(sprintf('next match %s < last paid date %s, so add one period.', $nextMatch->format('Y-m-d'), $lastPaidDate->format('Y-m-d')));
-            $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
-            //Log::debug(sprintf('Next match is now %s.', $nextMatch->format('Y-m-d')));
+            Log::debug(sprintf('next match %s < last paid date %s, so add one period.', $nextMatch->format('Y-m-d H:i'), $lastPaidDate->format('Y-m-d H:i')));
+            if ($bill->skip > 0) {
+                $skip = $skip + $bill->skip;
+            } else {
+                $skip++;
+            }
+            Log::debug(sprintf("addPeriod: originalNextMatch:%s, repeat:%s, bill->skip:%s, skip:%s", $originalNextMatch, $bill->repeat_freq, $bill->skip, $skip ));
+            $nextMatch = app('navigation')->addPeriod($originalNextMatch, $bill->repeat_freq, $skip);
+            $skip++;
+            Log::debug(sprintf('Next match is now %s', $nextMatch->format('Y-m-d H:i')));
         }
         if ($nextMatch->isSameDay($lastPaidDate)) {
             /*
              * Add another period because it's the same day as the last paid date.
              */
-            //Log::debug('Because the last paid date was on the same day as our next expected match, add another day.');
+            Log::debug('Because the last paid date was on the same day as our next expected match, add another day.');
             $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
         }
         /*
@@ -216,8 +224,9 @@ class BillTransformer extends AbstractTransformer
             ];
         }
 
-        //Log::debug('Result', $result);
-
+        Log::debug('Result:paid_dates', $result);
+        Log::debug('Result:next_expected_match', array($nextMatch));
+        Log::debug('--------------');
         return [
             'paid_dates'          => $result,
             'next_expected_match' => $nextMatch->format('Y-m-d'),
@@ -255,19 +264,22 @@ class BillTransformer extends AbstractTransformer
      */
     protected function payDates(Bill $bill): array
     {
-        //Log::debug(sprintf('Now in payDates() for bill #%d', $bill->id));
+        Log::debug(sprintf('Now in payDates() for bill #%d', $bill->id));
         if (null === $this->parameters->get('start') || null === $this->parameters->get('end')) {
-            //Log::debug('No start or end date, give empty array.');
+            Log::debug('No start or end date, give empty array.');
 
             return [];
         }
         $set          = new Collection();
         $currentStart = clone $this->parameters->get('start');
-        // 2023-06-23 subDay to fix 7655
-        $currentStart->subDay();
+
         $loop = 0;
         while ($currentStart <= $this->parameters->get('end')) {
+            Log::debug(sprintf('currentStart:%s <= end:%s', $currentStart, $this->parameters->get('end')));
+
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
+            Log::debug(sprintf('nextExpectedMatch:%s', $nextExpectedMatch));
+
             // If nextExpectedMatch is after end, we continue:
             if ($nextExpectedMatch > $this->parameters->get('end')) {
                 break;
@@ -286,6 +298,7 @@ class BillTransformer extends AbstractTransformer
                 return $date->format('Y-m-d');
             }
         );
+        Log::debug($simple);
 
         return $simple->toArray();
     }
@@ -301,15 +314,24 @@ class BillTransformer extends AbstractTransformer
      */
     protected function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {
-        //Log::debug(sprintf('Now in nextDateMatch(%d, %s)', $bill->id, $date->format('Y-m-d')));
+        Log::debug(sprintf('Now in nextDateMatch(%d, %s)', $bill->id, $date->format('Y-m-d H:i')));
         $start = clone $bill->date;
-        //Log::debug(sprintf('Bill start date is %s', $start->format('Y-m-d')));
-        while ($start < $date) {
-            $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
+        $next = clone $bill->date;
+        Log::debug(sprintf('Bill start date is %s', $start->format('Y-m-d H:i')));
+        $skip = 0;
+        while ($next < $date) {
+            if ($bill->skip > 0) {
+                $skip = $skip + $bill->skip;
+            } else {
+                $skip++;
+            }
+            Log::debug(sprintf("addPeriod: start:%s, repeat:%s, bill->skip:%s, skip:%s", $start, $bill->repeat_freq, $bill->skip, $skip ));
+            $next = app('navigation')->addPeriod($start, $bill->repeat_freq, $skip);
+            Log::debug(sprintf("next:%s", $next));
+            $skip++;
         }
+        Log::debug(sprintf('Enad of loop, bill start date is now %s', $next->format('Y-m-d H:i')));
 
-        //Log::debug(sprintf('End of loop, bill start date is now %s', $start->format('Y-m-d')));
-
-        return $start;
+        return $next;
     }
 }
