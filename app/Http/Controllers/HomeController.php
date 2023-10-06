@@ -69,7 +69,7 @@ class HomeController extends Controller
     {
         try {
             $stringStart = e((string)$request->get('start'));
-            $start       = Carbon::createFromFormat('Y-m-d H:i:s', "$stringStart 00:00:00");
+            $start       = Carbon::createFromFormat('!Y-m-d', $stringStart);
         } catch (InvalidFormatException $e) {
             Log::error(sprintf('Start: could not parse date string "%s" so ignore it.', $stringStart));
             $start = Carbon::now()->startOfMonth();
