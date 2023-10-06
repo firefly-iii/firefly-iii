@@ -320,9 +320,9 @@ class BillTransformer extends AbstractTransformer
      */
     protected function payDates(Bill $bill): array
     {
-        //Log::debug(sprintf('Now in payDates() for bill #%d', $bill->id));
+        //app('log')->debug(sprintf('Now in payDates() for bill #%d', $bill->id));
         if (null === $this->parameters->get('start') || null === $this->parameters->get('end')) {
-            //Log::debug('No start or end date, give empty array.');
+            //app('log')->debug('No start or end date, give empty array.');
 
             return [];
         }
@@ -366,14 +366,14 @@ class BillTransformer extends AbstractTransformer
      */
     protected function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {
-        //Log::debug(sprintf('Now in nextDateMatch(%d, %s)', $bill->id, $date->format('Y-m-d')));
+        //app('log')->debug(sprintf('Now in nextDateMatch(%d, %s)', $bill->id, $date->format('Y-m-d')));
         $start = clone $bill->date;
-        //Log::debug(sprintf('Bill start date is %s', $start->format('Y-m-d')));
+        //app('log')->debug(sprintf('Bill start date is %s', $start->format('Y-m-d')));
         while ($start < $date) {
             $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
         }
 
-        //Log::debug(sprintf('End of loop, bill start date is now %s', $start->format('Y-m-d')));
+        //app('log')->debug(sprintf('End of loop, bill start date is now %s', $start->format('Y-m-d')));
 
         return $start;
     }
