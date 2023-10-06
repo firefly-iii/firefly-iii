@@ -159,8 +159,14 @@ class BillTransformer extends AbstractTransformer
                 'next_expected_match' => null,
             ];
         }
+        // 2023-07-1 sub one day from the start date to fix a possible bug (see #7704)
+        // 2023-07-18 this particular date is used to search for the last paid date.
+        // 2023-07-18 the cloned $searchDate is used to grab the correct transactions.
+        // 2023-10-06 we no longer need a searchDate or subDay to fix #7704
         /** @var Carbon $start */
         $start = clone $this->parameters->get('start');
+
+        Log::debug(sprintf('Parameters are start: %s end: %s', $start->format('Y-m-d'), $this->parameters->get('end')->format('Y-m-d')));
         
         /*
          *  Get from database when bill was paid.
