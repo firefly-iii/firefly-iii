@@ -270,7 +270,7 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     private function stringFromArray(NullArrayObject $array, string $key, ?string $default): ?string
     {
-        //Log::debug(sprintf('%s: %s', $key, var_export($array[$key], true)));
+        //app('log')->debug(sprintf('%s: %s', $key, var_export($array[$key], true)));
         if (null === $array[$key] && null === $default) {
             return null;
         }
@@ -301,7 +301,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null === $string) {
             return null;
         }
-        //        Log::debug(sprintf('Now in date("%s")', $string));
+        //        app('log')->debug(sprintf('Now in date("%s")', $string));
         if (10 === strlen($string)) {
             return Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
         }

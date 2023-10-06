@@ -43,8 +43,8 @@ class FixAccountTypes extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected              $description = 'Make sure all journals have the correct from/to account types.';
-    protected              $signature   = 'firefly-iii:fix-account-types';
+    protected $description = 'Make sure all journals have the correct from/to account types.';
+    protected $signature   = 'firefly-iii:fix-account-types';
     private int            $count;
     private array          $expected;
     private AccountFactory $factory;
@@ -62,8 +62,7 @@ class FixAccountTypes extends Command
         $this->expected = config('firefly.source_dests');
         $expected       = config('firefly.source_dests');
 
-        $query = TransactionJournal::
-        leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+        $query = TransactionJournal::leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
                                    ->leftJoin(
                                        'transactions as source',
                                        static function (JoinClause $join) {
