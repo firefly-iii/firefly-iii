@@ -25,7 +25,6 @@ import formatMoney from "../../util/format-money.js";
 import {getCacheKey} from "../../support/get-cache-key.js";
 
 let afterPromises = false;
-const CACHE_KEY = 'dashboard-boxes-data';
 export default () => ({
     balanceBox: {amounts: [], subtitles: []},
     billBox: {paid: [], unpaid: []},
@@ -38,7 +37,7 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const boxesCacheKey = getCacheKey(CACHE_KEY, start, end);
+        const boxesCacheKey = getCacheKey('dashboard-boxes-data', start, end);
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(boxesCacheKey);

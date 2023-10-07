@@ -35,9 +35,6 @@ let chart = null;
 let chartData = null;
 let afterPromises = false;
 
-const CHART_CACHE_KEY = 'dashboard-accounts-chart';
-const ACCOUNTS_CACHE_KEY = 'dashboard-accounts-data';
-
 export default () => ({
     loading: false,
     loadingAccounts: false,
@@ -51,12 +48,13 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const chartCacheKey = getCacheKey(CHART_CACHE_KEY, start, end)
+        const chartCacheKey = getCacheKey('dashboard-accounts-chart', start, end)
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(chartCacheKey);
 
         if (cacheValid && typeof cachedData !== 'undefined') {
+            console.log(cachedData);
             this.drawChart(this.generateOptions(cachedData));
             this.loading = false;
             return;
@@ -66,6 +64,7 @@ export default () => ({
             this.chartData = response.data;
             // cache generated options:
             window.store.set(chartCacheKey, response.data);
+            console.log(response.data);
             this.drawChart(this.generateOptions(this.chartData));
             this.loading = false;
         });
@@ -168,7 +167,7 @@ export default () => ({
         }
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const accountCacheKey = getCacheKey(ACCOUNTS_CACHE_KEY, start, end);
+        const accountCacheKey = getCacheKey('dashboard-accounts-data', start, end);
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(accountCacheKey);

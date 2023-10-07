@@ -30,8 +30,6 @@ let chart = null;
 let chartData = null;
 let afterPromises = false;
 
-const CACHE_KEY = 'dashboard-categories-chart';
-
 export default () => ({
     loading: false,
     autoConversion: false,
@@ -149,7 +147,7 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey(CACHE_KEY, start, end);
+        const cacheKey = getCacheKey('dashboard-categories-chart', start, end);
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(cacheKey);

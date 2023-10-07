@@ -27,7 +27,7 @@ import {format} from "date-fns";
 let apiData = {};
 let afterPromises = false;
 let i18n;
-const CACHE_KEY = 'dashboard-piggies-data';
+const PIGGY_CACHE_KEY = 'dashboard-piggies-data';
 
 export default () => ({
     loading: false,
@@ -37,7 +37,7 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey(CACHE_KEY, start, end);
+        const cacheKey = getCacheKey(PIGGY_CACHE_KEY, start, end);
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(cacheKey);
@@ -59,7 +59,7 @@ export default () => ({
     downloadPiggyBanks(params) {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey(CACHE_KEY, start, end);
+        const cacheKey = getCacheKey(PIGGY_CACHE_KEY, start, end);
         const getter = new Get();
         getter.get(params).then((response) => {
             apiData = [...apiData, ...response.data.data];

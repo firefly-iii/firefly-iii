@@ -34,7 +34,6 @@ let afterPromises = false;
 
 let i18n; // for translating items in the chart.
 
-const CACHE_KEY = 'dashboard-budgets-chart';
 export default () => ({
     loading: false,
     autoConversion: false,
@@ -62,7 +61,7 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey(CACHE_KEY, start, end);
+        const cacheKey = getCacheKey('dashboard-budgets-chart', start, end);
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(cacheKey);
 

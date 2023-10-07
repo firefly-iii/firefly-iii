@@ -32,7 +32,6 @@ import formatMoney from "../../util/format-money.js";
 let afterPromises = false;
 let i18n; // for translating items in the chart.
 let apiData = [];
-const SUBSCRIPTION_CACHE_KEY = 'subscriptions-data-dashboard';
 let subscriptionData = {};
 
 function downloadSubscriptions(params) {
@@ -191,7 +190,7 @@ export default () => ({
 
         console.log('here we are');
         const cacheValid = window.store.get('cacheValid');
-        let cachedData = window.store.get(getCacheKey(SUBSCRIPTION_CACHE_KEY, start, end));
+        let cachedData = window.store.get(getCacheKey('subscriptions-data-dashboard', start, end));
 
         if (cacheValid && typeof cachedData !== 'undefined' && false) {
             console.error('cannot handle yet');

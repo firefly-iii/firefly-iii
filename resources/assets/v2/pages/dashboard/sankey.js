@@ -29,7 +29,7 @@ import {format} from "date-fns";
 
 Chart.register({SankeyController, Flow});
 
-const CACHE_KEY = 'dashboard-sankey-data';
+const SANKEY_CACHE_KEY = 'dashboard-sankey-data';
 let i18n;
 let currencies = [];
 let afterPromises = false;
@@ -290,7 +290,7 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey(CACHE_KEY, start, end);
+        const cacheKey = getCacheKey(SANKEY_CACHE_KEY, start, end);
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(cacheKey);
@@ -314,7 +314,7 @@ export default () => ({
     downloadTransactions(params) {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey(CACHE_KEY, start, end);
+        const cacheKey = getCacheKey(SANKEY_CACHE_KEY, start, end);
 
         //console.log('Downloading page ' + params.page + '...');
         const getter = new Get();
