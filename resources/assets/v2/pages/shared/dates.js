@@ -41,7 +41,7 @@ export default () => ({
     defaultRange: {
         start: null, end: null
     },
-    language: 'en-US',
+    language: 'en_US',
 
     init() {
         // console.log('Dates init');

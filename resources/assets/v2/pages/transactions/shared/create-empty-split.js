@@ -32,7 +32,7 @@ export function createEmptySplit() {
     let now = new Date();
     let formatted = format(now, 'yyyy-MM-dd HH:mm');
     return {
-        description: 'OK then',
+        description: '',
         amount: '',
         source_account: getAccount(),
         destination_account: getAccount(),

@@ -259,7 +259,7 @@ export default () => ({
 
     init() {
         // console.log('accounts init');
-        Promise.all([getVariable('viewRange', '1M'), getVariable('autoConversion', false), getVariable('language', 'en-US')]).then((values) => {
+        Promise.all([getVariable('viewRange', '1M'), getVariable('autoConversion', false), getVariable('language', 'en_US')]).then((values) => {
             //console.log('accounts after promises');
             this.autoConversion = values[1];
             afterPromises = true;

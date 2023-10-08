@@ -1,5 +1,6 @@
+<?php
 /*
- * load-translations.js
+ * JournalRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -18,16 +19,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-let loaded = false;
+declare(strict_types=1);
 
-async function loadTranslations(i18n, locale) {
-    if (false === loaded) {
-        locale = locale.replace('-', '_');
-        const response = await fetch(`./v2/i18n/${locale}.json`);
-        const translations = await response.json();
-        i18n.store(translations);
-    }
-    //loaded = true;
+namespace FireflyIII\Repositories\UserGroups\Journal;
+
+use Illuminate\Support\Collection;
+
+/**
+ * Interface JournalRepositoryInterface
+ */
+interface JournalRepositoryInterface
+{
+    /**
+     * Search in journal descriptions.
+     *
+     * @param string $search
+     * @param int    $limit
+     *
+     * @return Collection
+     */
+    public function searchJournalDescriptions(string $search, int $limit): Collection;
 }
-
-export {loadTranslations};

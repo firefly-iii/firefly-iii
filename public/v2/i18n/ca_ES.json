@@ -23,7 +23,13 @@
             "unknown_budget_plain": "Cap pressupost",
             "expense_account": "Compte de despeses",
             "revenue_account": "Compte d'ingressos",
-            "budget": "Pressupost"
+            "budget": "Pressupost",
+            "account_type_Asset account": "Asset account",
+            "account_type_Expense account": "Expense account",
+            "account_type_Revenue account": "Revenue account",
+            "account_type_Debt": "Deute",
+            "account_type_Loan": "Cr\u00e8dit",
+            "account_type_Mortgage": "Hipoteca"
         }
     }
 }

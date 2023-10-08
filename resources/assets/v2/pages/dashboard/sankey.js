@@ -350,12 +350,13 @@ export default () => ({
     init() {
         // console.log('sankey init');
         transactions = [];
-        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en-US')]).then((values) => {
+        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en_US')]).then((values) => {
             this.autoConversion = values[0];
             autoConversion = values[0];
             i18n = new I18n();
-            i18n.locale = values[1];
-            loadTranslations(i18n, values[1]).then(() => {
+            const locale = values[1].replace('-', '_');
+            i18n.locale = locale;
+            loadTranslations(i18n, locale).then(() => {
                 // some translations:
                 translations.all_money = i18n.t('firefly.all_money');
                 translations.category = i18n.t('firefly.category');

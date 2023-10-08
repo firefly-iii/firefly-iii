@@ -23,7 +23,13 @@
             "unknown_budget_plain": "Ni prora\u010duna",
             "expense_account": "Ra\u010dun stro\u0161kov",
             "revenue_account": "Ra\u010dun prihodkov",
-            "budget": "Prora\u010dun"
+            "budget": "Prora\u010dun",
+            "account_type_Asset account": "Asset account",
+            "account_type_Expense account": "Expense account",
+            "account_type_Revenue account": "Revenue account",
+            "account_type_Debt": "Dolg",
+            "account_type_Loan": "Posojilo",
+            "account_type_Mortgage": "Hipoteka"
         }
     }
 }

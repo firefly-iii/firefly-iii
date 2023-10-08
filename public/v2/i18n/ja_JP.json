@@ -23,7 +23,13 @@
             "unknown_budget_plain": "\u4e88\u7b97\u306a\u3057",
             "expense_account": "\u652f\u51fa\u53e3\u5ea7",
             "revenue_account": "\u53ce\u5165\u53e3\u5ea7",
-            "budget": "\u4e88\u7b97"
+            "budget": "\u4e88\u7b97",
+            "account_type_Asset account": "Asset account",
+            "account_type_Expense account": "Expense account",
+            "account_type_Revenue account": "Revenue account",
+            "account_type_Debt": "\u501f\u91d1",
+            "account_type_Loan": "\u30ed\u30fc\u30f3",
+            "account_type_Mortgage": "\u4f4f\u5b85\u30ed\u30fc\u30f3"
         }
     }
 }

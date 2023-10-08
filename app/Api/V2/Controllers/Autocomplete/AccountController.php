@@ -32,7 +32,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface as AdminAccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
-use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
+use http\Env\Response;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -41,7 +41,6 @@ use Illuminate\Http\JsonResponse;
 class AccountController extends Controller
 {
     use AccountFilter;
-    use ValidatesUserGroupTrait;
 
     private AdminAccountRepositoryInterface $adminRepository;
     private array                           $balanceTypes;
@@ -86,15 +85,14 @@ class AccountController extends Controller
      */
     public function accounts(AutocompleteRequest $request): JsonResponse
     {
-        $data  = $request->getData();
-        $types = $data['types'];
-        $query = $data['query'];
-        $date  = $this->parameters->get('date') ?? today(config('app.timezone'));
-
-        $return          = [];
+        $data            = $request->getData();
+        $types           = $data['types'];
+        $query           = $data['query'];
+        $date            = $this->parameters->get('date') ?? today(config('app.timezone'));
         $result          = $this->adminRepository->searchAccount((string)$query, $types, $data['limit']);
         $defaultCurrency = app('amount')->getDefaultCurrency();
 
+        $allItems = [];
         /** @var Account $account */
         foreach ($result as $account) {
             $nameWithBalance = $account->name;
@@ -104,11 +102,17 @@ class AccountController extends Controller
                 $balance         = app('steam')->balance($account, $date);
                 $nameWithBalance = sprintf('%s (%s)', $account->name, app('amount')->formatAnything($currency, $balance, false));
             }
-
-            $return[] = [
+            $type                 = (string)trans(sprintf('firefly.%s', $account->accountType->type));
+            $groupedResult[$type] = $groupedResult[$type] ?? [
+                'group ' => $type,
+                'items'  => [],
+            ];
+            $allItems[]           = [
                 'id'                      => (string)$account->id,
+                'value'                   => (string)$account->id,
                 'name'                    => $account->name,
                 'name_with_balance'       => $nameWithBalance,
+                'label'                   => $nameWithBalance,
                 'type'                    => $account->accountType->type,
                 'currency_id'             => (string)$currency->id,
                 'currency_name'           => $currency->name,
@@ -118,10 +122,9 @@ class AccountController extends Controller
             ];
         }
 
-        // custom order.
         usort(
-            $return,
-            function ($a, $b) {
+            $allItems,
+            function (array $a, array $b): int {
                 $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
                 $pos_a = array_search($a['type'], $order, true);
                 $pos_b = array_search($b['type'], $order, true);
@@ -129,7 +132,6 @@ class AccountController extends Controller
                 return $pos_a - $pos_b;
             }
         );
-
-        return response()->json($return);
+        return response()->json($allItems);
     }
 }

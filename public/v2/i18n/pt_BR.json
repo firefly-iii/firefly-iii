@@ -23,7 +23,13 @@
             "unknown_budget_plain": "Nenhum or\u00e7amento",
             "expense_account": "Conta de despesas",
             "revenue_account": "Conta de Receitas",
-            "budget": "Or\u00e7amento"
+            "budget": "Or\u00e7amento",
+            "account_type_Asset account": "Asset account",
+            "account_type_Expense account": "Expense account",
+            "account_type_Revenue account": "Revenue account",
+            "account_type_Debt": "D\u00edvida",
+            "account_type_Loan": "Empr\u00e9stimo",
+            "account_type_Mortgage": "Hipoteca"
         }
     }
 }

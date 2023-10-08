@@ -274,14 +274,15 @@ export default () => ({
 
     init() {
         console.log('subscriptions init');
-        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en-US')]).then((values) => {
+        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en_US')]).then((values) => {
             console.log('subscriptions after promises');
             this.autoConversion = values[0];
             afterPromises = true;
 
             i18n = new I18n();
-            i18n.locale = values[1];
-            loadTranslations(i18n, values[1]).then(() => {
+            const locale = values[1].replace('-', '_');
+            i18n.locale = locale;
+            loadTranslations(i18n, locale).then(() => {
                 if (false === this.loading) {
                     this.startSubscriptions();
                 }

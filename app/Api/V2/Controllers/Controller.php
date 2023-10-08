@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V2\Controllers;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
+use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\V2\AbstractTransformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -48,6 +49,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Controller extends BaseController
 {
+    use ValidatesUserGroupTrait;
+
     protected const CONTENT_TYPE = 'application/vnd.api+json';
     protected ParameterBag $parameters;
 
