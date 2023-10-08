@@ -1,4 +1,8 @@
 {
+  "_load-translations-8fb3bca3.js": {
+    "file": "assets/load-translations-8fb3bca3.js",
+    "integrity": "sha384-1tm8zOqLbblwnZffXvzQQFCNRWLpWhejToiHsw78rsavnXdH0sIiblZKnWvyw8l1"
+  },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
     "file": "assets/fa-brands-400-003f1154.ttf",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf",
@@ -30,10 +34,22 @@
     "integrity": "sha384-B73JAwYNSgI4rwb14zwxigHgAkg1Ms+j6+9sJoDpiL11+VW5RjQCLfIh0RVoi0h6"
   },
   "resources/assets/v2/pages/dashboard/dashboard.js": {
-    "file": "assets/dashboard-808f5a4b.js",
+    "file": "assets/dashboard-da918973.js",
+    "imports": [
+      "_load-translations-8fb3bca3.js"
+    ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/dashboard/dashboard.js",
-    "integrity": "sha384-U4rVOcapDLBADgB4Ncgli3+XocCBhndwzaHVmlnYUANCL7GRsVwJsF1/Y50wRHxj"
+    "integrity": "sha384-MFacZzTwYRP1LWahfA/p4juRyEii1fjvzASmjp8evsCaSo2WzAbO8h44MBaR5R1r"
+  },
+  "resources/assets/v2/pages/transactions/create.js": {
+    "file": "assets/create-fc013e9e.js",
+    "imports": [
+      "_load-translations-8fb3bca3.js"
+    ],
+    "isEntry": true,
+    "src": "resources/assets/v2/pages/transactions/create.js",
+    "integrity": "sha384-HXxQJwR0j53cNty5yg/IjbKqoIEk7z/4ZW/TJwYchAr+tf45EnP51u94M3535uD/"
   },
   "resources/assets/v2/sass/app.scss": {
     "file": "assets/app-28a195fd.css",
