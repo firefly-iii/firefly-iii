@@ -10061,16 +10061,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.36",
+            "version": "1.10.38",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "ffa3089511121a672e62969404e4fddc753f9b15"
+                "reference": "5302bb402c57f00fb3c2c015bac86e0827e4b691"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/ffa3089511121a672e62969404e4fddc753f9b15",
-                "reference": "ffa3089511121a672e62969404e4fddc753f9b15",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/5302bb402c57f00fb3c2c015bac86e0827e4b691",
+                "reference": "5302bb402c57f00fb3c2c015bac86e0827e4b691",
                 "shasum": ""
             },
             "require": {
@@ -10119,7 +10119,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-09-29T14:07:45+00:00"
+            "time": "2023-10-06T14:19:14+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
