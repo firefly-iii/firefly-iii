@@ -64,11 +64,15 @@
     <tbody>
     <tr>
         <td>Timezone</td>
-        <td>{{ app.timezone }} + [BrowserTZ]</td>
+        <td>{{ config('app.timezone') }} + [BrowserTZ]</td>
     </tr>
     <tr>
         <td>App environment</td>
         <td>{{ config('app.env') }}, debug: {{ app.debug }}</td>
+    </tr>
+    <tr>
+        <td>Layout</td>
+        <td>{{ config('firefly.layout') }}</td>
     </tr>
     <tr>
         <td>Logging</td>
@@ -98,6 +102,10 @@
         <td>Stateful domains</td>
         <td>{{ app.stateful_domains }}</td>
     </tr>
+    <tr>
+        <td>Last cron job</td>
+        <td>{{ app.last_cronjob }} ({{ app.last_cronjob_ago }})</td>
+    </tr>
     </tbody>
 </table>
 
@@ -118,7 +126,7 @@
     </tr>
     <tr>
         <td>User flags</td>
-        <td>{{ user.user_flags }}</td>
+        <td>{{ user.user_flags | raw }}</td>
     </tr>
     <tr>
         <td>Session start</td>

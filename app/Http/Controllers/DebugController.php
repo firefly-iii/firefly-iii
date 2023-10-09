@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Carbon\Carbon;
 use DB;
 use Exception;
-use FireflyConfig;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\AccountType;
@@ -229,8 +229,17 @@ class DebugController extends Controller
     {
         $userGuard = config('auth.defaults.guard');
 
+        $config         = app('fireflyconfig')->get('last_rt_job', 0);
+        $lastTime       = (int)$config->data;
+        $lastCronjob    = 'never';
+        $lastCronjobAgo = 'never';
+        if ($lastTime > 0) {
+            $carbon         = Carbon::createFromTimestamp($lastTime);
+            $lastCronjob    = $carbon->format('Y-m-d H:i:s');
+            $lastCronjobAgo = $carbon->locale('en')->diffForHumans();
+        }
+
         return [
-            'tz'                 => env('TZ'),
             'debug'              => var_export(config('app.debug'), true),
             'audit_log_channel'  => envNonEmpty('AUDIT_LOG_CHANNEL', '(empty)'),
             'default_language'   => (string)config('firefly.default_language'),
@@ -238,6 +247,13 @@ class DebugController extends Controller
             'remote_header'      => $userGuard === 'remote_user_guard' ? config('auth.guard_header') : 'N/A',
             'remote_mail_header' => $userGuard === 'remote_user_guard' ? config('auth.guard_email') : 'N/A',
             'stateful_domains'   => join(', ', config('sanctum.stateful')),
+
+            // the dates for the cron job are based on the recurring cron job's times.
+            // any of the cron jobs will do, they always run at the same time.
+            // but this job is the oldest, so the biggest chance it ran once
+
+            'last_cronjob'     => $lastCronjob,
+            'last_cronjob_ago' => $lastCronjobAgo,
         ];
     }
 
@@ -288,40 +304,40 @@ class DebugController extends Controller
 
         // has liabilities
         if ($user->accounts()->accountTypeIn([AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE])->count() > 0) {
-            $flags[] = ':credit_card:';
+            $flags[] = '<span title="Has liabilities">:credit_card:</span>';
         }
 
         // has piggies
         if ($user->piggyBanks()->count() > 0) {
-            $flags[] = ':pig:';
+            $flags[] = '<span title="Has piggy banks">:pig:</span>';
         }
 
         // has stored reconciliations
         $type = TransactionType::whereType(TransactionType::RECONCILIATION)->first();
         if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count()) {
-            $flags[] = ':ledger:';
+            $flags[] = '<span title="Has reconciled">:ledger:</span>';
         }
 
         // has used importer?
 
         // has rules
         if ($user->rules()->count() > 0) {
-            $flags[] = ':wrench:';
+            $flags[] = '<span title="Has rules">:wrench:</span>';
         }
 
         // has recurring transactions
         if ($user->recurrences()->count() > 0) {
-            $flags[] = ':clock130:';
+            $flags[] = '<span title="Has recurring transactions">:clock130:</span>';
         }
 
         // has groups
         if ($user->objectGroups()->count() > 0) {
-            $flags[] = ':bookmark_tabs:';
+            $flags[] = '<span title="Has object groups">:bookmark_tabs:</span>';
         }
 
         // uses bills
         if ($user->bills()->count() > 0) {
-            $flags[] = ':email:';
+            $flags[] = '<span title="Has subscriptions">:email:</span>';
         }
         return join(' ', $flags);
     }
