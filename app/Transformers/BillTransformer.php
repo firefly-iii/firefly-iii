@@ -186,16 +186,12 @@ class BillTransformer extends AbstractTransformer
          * The next expected match (nextMatch) is, initially, the bill's date.
          */
         $nextMatch = clone $bill->date;
-        //app('log')->debug(sprintf('Next match is %s (bill->date)', $nextMatch->format('Y-m-d')));
-        while ($nextMatch < $lastPaidDate) {
-            /*
-             * As long as this date is smaller than the last time the bill was paid, keep jumping ahead.
-             * For example: 1 jan, 1 feb, etc.
-             */
-            //app('log')->debug(sprintf('next match %s < last paid date %s, so add one period.', $nextMatch->format('Y-m-d'), $lastPaidDate->format('Y-m-d')));
-            $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
-            //app('log')->debug(sprintf('Next match is now %s.', $nextMatch->format('Y-m-d')));
-        }
+        /*
+         * Diff in months (or other period) between bill start and last paid date or $start.
+         */
+        $steps     = app('navigation')->diffInPeriods($bill->repeat_freq, $start, $nextMatch);
+        $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $steps);
+
         if ($nextMatch->isSameDay($lastPaidDate)) {
             /*
              * Add another period because it's the same day as the last paid date.
@@ -215,7 +211,7 @@ class BillTransformer extends AbstractTransformer
             ];
         }
 
-        //app('log')->debug('Result', $result);
+        app('log')->debug(sprintf('Next match: %s', $nextMatch->toIso8601String()));
 
         return [
             'paid_dates'          => $result,
@@ -270,12 +266,12 @@ class BillTransformer extends AbstractTransformer
             app('log')->debug(sprintf('Current start is %s', $currentStart->toIso8601String()));
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
 
-            app('log')->debug(sprintf('Next expected match is %s', $nextExpectedMatch->toIso8601String()));
             // If nextExpectedMatch is after end, we continue:
             if ($nextExpectedMatch > $this->parameters->get('end')) {
                 app('log')->debug('Next expected match is after END, so stop looking');
                 break;
             }
+            app('log')->debug(sprintf('Next expected match is %s', $nextExpectedMatch->toIso8601String()));
             // add to set
             $set->push(clone $nextExpectedMatch);
             $nextExpectedMatch->addDay();
@@ -290,6 +286,7 @@ class BillTransformer extends AbstractTransformer
                 return $date->format('Y-m-d');
             }
         );
+        app('log')->debug(sprintf('Found %d pay dates', $set->count()), $simple->toArray());
 
         return $simple->toArray();
     }

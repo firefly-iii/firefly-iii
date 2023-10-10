@@ -159,6 +159,7 @@ class ShowController extends Controller
         $object                     = $manager->createData($resource)->toArray();
         $object['data']['currency'] = $bill->transactionCurrency;
 
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setBill($bill)->setLimit($pageSize)->setPage($page)->withBudgetInformation()
