@@ -173,14 +173,14 @@ class BillTransformer extends AbstractTransformer
          *  Get from database when bill was paid.
          */
         $set = $this->repository->getPaidDatesInRange($bill, $searchStart, $this->parameters->get('end'));
-        //app('log')->debug(sprintf('Count %d entries in getPaidDatesInRange()', $set->count()));
+        app('log')->debug(sprintf('Count %d entries in getPaidDatesInRange()', $set->count()));
 
         /*
          * Grab from array the most recent payment. If none exist, fall back to the start date and pretend *that* was the last paid date.
          */
-        //app('log')->debug(sprintf('Grab last paid date from function, return %s if it comes up with nothing.', $start->format('Y-m-d')));
+        app('log')->debug(sprintf('Grab last paid date from function, return %s if it comes up with nothing.', $start->format('Y-m-d')));
         $lastPaidDate = $this->lastPaidDate($set, $start);
-        //app('log')->debug(sprintf('Result of lastPaidDate is %s', $lastPaidDate->format('Y-m-d')));
+        app('log')->debug(sprintf('Result of lastPaidDate is %s', $lastPaidDate->format('Y-m-d')));
 
         /*
          * The next expected match (nextMatch) is, initially, the bill's date.
@@ -192,11 +192,19 @@ class BillTransformer extends AbstractTransformer
         $steps     = app('navigation')->diffInPeriods($bill->repeat_freq, $start, $nextMatch);
         $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $steps);
 
+        if ($nextMatch->lt($lastPaidDate)) {
+            /*
+             * Add another period because it's before the last paid date
+             */
+            app('log')->debug('Because the last paid date was before our next expected match, add another period.');
+            $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
+        }
+
         if ($nextMatch->isSameDay($lastPaidDate)) {
             /*
              * Add another period because it's the same day as the last paid date.
              */
-            //app('log')->debug('Because the last paid date was on the same day as our next expected match, add another day.');
+            app('log')->debug('Because the last paid date was on the same day as our next expected match, add another day.');
             $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
         }
         /*
