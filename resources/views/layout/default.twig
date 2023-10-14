@@ -217,7 +217,7 @@
 
 {# Moment JS #}
 <script src="v1/js/lib/moment.min.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
-<script src="v1/js/lib/moment/{{ language }}.js?v={{ FF_VERSION }}" type="text/javascript"
+<script src="v1/js/lib/moment/{{ language|replace({'-':'_'}) }}.js?v={{ FF_VERSION }}" type="text/javascript"
         nonce="{{ JS_NONCE }}"></script>
 
 {# All kinds of variables. #}
