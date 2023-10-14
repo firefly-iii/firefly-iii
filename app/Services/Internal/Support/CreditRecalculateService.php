@@ -196,7 +196,9 @@ class CreditRecalculateService
         }
         $startOfDebt = $this->repository->getOpeningBalanceAmount($account) ?? '0';
         $leftOfDebt  = app('steam')->positive($startOfDebt);
-        app('log')->debug(sprintf('Start of debt is "%s", so initial left of debt is "%s"', $startOfDebt, $leftOfDebt));
+        $currency    = $this->repository->getAccountCurrency($account);
+        $decimals    = (int)($currency?->decimal_places ?? 2);
+        app('log')->debug(sprintf('Start of debt is "%s", so initial left of debt is "%s"', app('steam')->bcround($startOfDebt, $decimals), app('steam')->bcround($leftOfDebt, $decimals)));
 
         /** @var AccountMetaFactory $factory */
         $factory = app(AccountMetaFactory::class);
@@ -268,16 +270,19 @@ class CreditRecalculateService
      */
     private function processTransaction(Account $account, string $direction, Transaction $transaction, string $leftOfDebt): string
     {
-        app('log')->debug(sprintf('Left of debt is: %s', $leftOfDebt));
         $journal         = $transaction->transactionJournal;
         $foreignCurrency = $transaction->foreignCurrency;
         $accountCurrency = $this->repository->getAccountCurrency($account);
         $groupId         = $journal->transaction_group_id;
+        $decimals        = (int)$accountCurrency->decimal_places;
         $type            = $journal->transactionType->type;
         /** @var Transaction $destTransaction */
         $destTransaction = $journal->transactions()->where('amount', '>', '0')->first();
         /** @var Transaction $sourceTransaction */
         $sourceTransaction = $journal->transactions()->where('amount', '<', '0')->first();
+
+
+        app('log')->debug(sprintf('Left of debt is: %s', app('steam')->bcround($leftOfDebt, $decimals)));
 
         if ('' === $direction) {
             app('log')->warning('Direction is empty, so do nothing.');
@@ -289,7 +294,6 @@ class CreditRecalculateService
         }
 
         // amount to use depends on the currency:
-        $decimals   = (int)$accountCurrency->decimal_places;
         $usedAmount = $transaction->amount;
         app('log')->debug(sprintf('Amount of transaction is %s', app('steam')->bcround($usedAmount, $decimals)));
         if (null !== $foreignCurrency && $foreignCurrency->id === $accountCurrency->id) {
