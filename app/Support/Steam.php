@@ -323,15 +323,15 @@ class Steam
             $balances[$format] = $currentBalance;
 
             app('log')->debug(sprintf(
-                '%s: transaction in %s(!). Conversion rate is %s. %s %s = %s %s',
-                $format,
-                $currency->code,
-                $rate,
-                $currency->code,
-                $transaction['amount'],
-                $native->code,
-                $convertedAmount
-            ));
+                                  '%s: transaction in %s(!). Conversion rate is %s. %s %s = %s %s',
+                                  $format,
+                                  $currency->code,
+                                  $rate,
+                                  $currency->code,
+                                  $transaction['amount'],
+                                  $native->code,
+                                  $convertedAmount
+                              ));
 
 
         }
@@ -782,7 +782,7 @@ class Steam
         if (!is_string($preference)) {
             throw new FireflyException(sprintf('Preference "language" must be a string, but is unexpectedly a "%s".', gettype($preference)));
         }
-        return $preference;
+        return str_replace('-', '_', $preference);
     }
 
     /**
