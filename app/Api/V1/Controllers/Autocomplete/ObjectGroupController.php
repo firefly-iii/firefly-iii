@@ -67,7 +67,7 @@ class ObjectGroupController extends Controller
     {
         $data   = $request->getData();
         $return = [];
-        $result = $this->repository->search($data['query'], $data['limit']);
+        $result = $this->repository->search($data['query'], $this->parameters->get('limit'));
 
         /** @var ObjectGroup $objectGroup */
         foreach ($result as $objectGroup) {

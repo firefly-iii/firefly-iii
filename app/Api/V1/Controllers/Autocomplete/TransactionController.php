@@ -71,7 +71,7 @@ class TransactionController extends Controller
     public function transactions(AutocompleteRequest $request): JsonResponse
     {
         $data   = $request->getData();
-        $result = $this->repository->searchJournalDescriptions($data['query'], $data['limit']);
+        $result = $this->repository->searchJournalDescriptions($data['query'], $this->parameters->get('limit'));
 
         // limit and unique
         $filtered = $result->unique('description');
@@ -113,7 +113,7 @@ class TransactionController extends Controller
             }
         }
         if (!is_numeric($data['query'])) {
-            $result = $this->repository->searchJournalDescriptions($data['query'], $data['limit']);
+            $result = $this->repository->searchJournalDescriptions($data['query'], $this->parameters->get('limit'));
         }
 
         // limit and unique

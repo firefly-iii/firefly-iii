@@ -58,7 +58,6 @@ class BillController extends Controller
     /**
      * Documentation for this endpoint is at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getBillsAC
-     * TODO expand API to add active field.
      *
      * @param AutocompleteRequest $request
      *
@@ -67,7 +66,7 @@ class BillController extends Controller
     public function bills(AutocompleteRequest $request): JsonResponse
     {
         $data     = $request->getData();
-        $result   = $this->repository->searchBill($data['query'], $data['limit']);
+        $result   = $this->repository->searchBill($data['query'], $this->parameters->get('limit'));
         $filtered = $result->map(
             static function (Bill $item) {
                 return [

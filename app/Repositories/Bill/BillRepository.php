@@ -665,13 +665,17 @@ class BillRepository implements BillRepositoryInterface
      */
     public function sumUnpaidInRange(Carbon $start, Carbon $end): array
     {
+        app('log')->debug(sprintf('Now in sumUnpaidInRange("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d')));
         $bills  = $this->getActiveBills();
         $return = [];
         /** @var Bill $bill */
         foreach ($bills as $bill) {
+            app('log')->debug(sprintf('Processing bill #%d ("%s")', $bill->id, $bill->name));
             $dates = $this->getPayDatesInRange($bill, $start, $end);
             $count = $bill->transactionJournals()->after($start)->before($end)->count();
             $total = $dates->count() - $count;
+            app('log')->debug(sprintf('Pay dates: %d, count: %d, left: %d', $dates->count(), $count, $total));
+            app('log')->debug('dates', $dates->toArray());
 
             if ($total > 0) {
                 $currency                     = $bill->transactionCurrency;

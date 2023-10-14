@@ -66,7 +66,7 @@ class BudgetController extends Controller
     public function budgets(AutocompleteRequest $request): JsonResponse
     {
         $data     = $request->getData();
-        $result   = $this->repository->searchBudget($data['query'], $data['limit']);
+        $result   = $this->repository->searchBudget($data['query'], $this->parameters->get('limit'));
         $filtered = $result->map(
             static function (Budget $item) {
                 return [

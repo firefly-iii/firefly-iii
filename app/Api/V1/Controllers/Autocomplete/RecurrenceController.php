@@ -64,7 +64,7 @@ class RecurrenceController extends Controller
     public function recurring(AutocompleteRequest $request): JsonResponse
     {
         $data        = $request->getData();
-        $recurrences = $this->repository->searchRecurrence($data['query'], $data['limit']);
+        $recurrences = $this->repository->searchRecurrence($data['query'], $this->parameters->get('limit'));
         $response    = [];
 
         /** @var Recurrence $recurrence */

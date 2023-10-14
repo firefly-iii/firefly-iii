@@ -236,6 +236,7 @@ class BasicController extends Controller
      */
     private function getBillInformation(Carbon $start, Carbon $end): array
     {
+        app('log')->debug(sprintf('Now in getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
         /*
          * Since both this method and the chart use the exact same data, we can suffice
          * with calling the one method in the bill repository that will get this amount.
@@ -281,7 +282,7 @@ class BasicController extends Controller
                 'sub_title'               => '',
             ];
         }
-
+        app('log')->debug(sprintf('Done with getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
         return $return;
     }
 
