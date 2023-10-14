@@ -106,6 +106,10 @@
         <td>Last cron job</td>
         <td>{{ app.last_cronjob }} ({{ app.last_cronjob_ago }})</td>
     </tr>
+    <tr>
+        <td>Mailer</td>
+        <td>{{ config('mail.default') }}</td>
+    </tr>
     </tbody>
 </table>
 
