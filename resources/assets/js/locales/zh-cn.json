@@ -11,10 +11,10 @@
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">\u4ea4\u6613 #{ID} (\u201c{title}\u201d)<\/a> \u5df2\u4fdd\u5b58\u3002",
         "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">\u63a8\u9001 #{ID} (\"{title}\")<\/a> \u5df2\u4fdd\u5b58.",
         "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">\u63a8\u9001 #{ID}<\/a> (\"{title}\") \u5df2\u66f4\u65b0.",
-        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
+        "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">\u4ea4\u6613 #{ID}<\/a> (\u201c{title}\u201d) \u5df2\u66f4\u65b0\u3002",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\">\u4ea4\u6613 #{ID}<\/a> \u5df2\u4fdd\u5b58\u3002",
         "transaction_journal_information": "\u4ea4\u6613\u4fe1\u606f",
-        "submission_options": "Submission options",
+        "submission_options": "\u63d0\u4ea4\u9009\u9879",
         "apply_rules_checkbox": "\u5e94\u7528\u89c4\u5219",
         "fire_webhooks_checkbox": "\u89e6\u53d1 webhook",
         "no_budget_pointer": "\u60a8\u8fd8\u6ca1\u6709\u9884\u7b97\uff0c\u60a8\u5e94\u8be5\u5728<a href=\"budgets\">\u9884\u7b97\u9875\u9762<\/a>\u8fdb\u884c\u521b\u5efa\u3002\u9884\u7b97\u53ef\u4ee5\u5e2e\u52a9\u60a8\u8ffd\u8e2a\u652f\u51fa\u3002",
@@ -118,7 +118,7 @@
         "message_content_title": "Webhook \u6d88\u606f\u5185\u5bb9",
         "message_content_help": "\u8fd9\u662f\u4f7f\u7528\u63a8\u9001\u53d1\u9001\uff08\u6216\u5c1d\u8bd5\uff09\u7684\u6d88\u606f\u5185\u5bb9",
         "attempt_content_title": "Webhook \u5c1d\u8bd5",
-        "attempt_content_help": "These are all the unsuccessful attempts of this webhook message to submit to the configured URL. After some time, Firefly III will stop trying.",
+        "attempt_content_help": "\u8fd9\u662f\u63d0\u4ea4\u81f3\u914d\u7f6e\u7f51\u5740\u7684webhook\u6d88\u606f\u7684\u6240\u6709\u5931\u8d25\u8bf7\u6c42\uff0c\u4e00\u6bb5\u65f6\u95f4\u540e\uff0cFirefly III \u5c06\u505c\u6b62\u5c1d\u8bd5\u3002",
         "no_attempts": "\u6240\u6709\u5c1d\u8bd5\u5747\u5df2\u6210\u529f\u5b8c\u6210\u3002\u597d\u6781\u4e86\uff01",
         "webhook_attempt_at": "\u5c1d\u8bd5\u4e8e {moment}",
         "logs": "\u65e5\u5fd7",
@@ -152,6 +152,6 @@
     },
     "config": {
         "html_language": "zh-cn",
-        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
+        "date_time_fns": "YYYY\u5e74M\u6708D\u65e5 HH:mm:ss"
     }
 }

@@ -123,7 +123,7 @@ return [
     'budget_count'            => 'Número de orçamentos',
     'rule_and_groups_count'   => 'Número de regras e grupos de regras',
     'tags_count'              => 'Número de tags',
-    'tags'                    => 'Indexadores',
+    'tags'                    => 'Tags',
     'inward'                  => 'Descrição interna',
     'outward'                 => 'Descrição externa',
     'number_of_transactions'  => 'Número de transações',
@@ -131,10 +131,10 @@ return [
     'sum'                     => 'Soma',
     'sum_excluding_transfers' => 'Soma (excluindo transferências)',
     'sum_withdrawals'         => 'Soma de retiradas',
-    'sum_deposits'            => 'Soma dos depósitos',
+    'sum_deposits'            => 'Soma das entradas',
     'sum_transfers'           => 'Soma das transferências',
     'sum_reconciliations'     => 'Soma das reconciliações',
-    'reconcile'               => 'Pago',
+    'reconcile'               => 'Reconciliar',
     'sepa_ct_id'              => 'SEPA Identificador end-to-end',
     'sepa_ct_op'              => 'SEPA Identificador de Conta Destino',
     'sepa_db'                 => 'SEPA Identificador Mandatário',
@@ -144,7 +144,7 @@ return [
     'sepa_ci'                 => 'SEPA Identificador do Credor',
     'sepa_batch_id'           => 'ID de lote SEPA',
     'external_id'             => 'ID externo',
-    'account_at_bunq'         => 'Loja com bunq',
+    'account_at_bunq'         => 'Conta com bunq',
     'file_name'               => 'Nome do arquivo',
 
 /*
@@ -159,7 +159,7 @@ return [
  */
 
 
-    'file_size'           => 'Tamanho do Arquivo',
+    'file_size'           => 'Tamanho do arquivo',
     'file_type'           => 'Tipo do arquivo',
     'attached_to'         => 'Anexado a',
     'file_exists'         => 'Arquivo já existe',

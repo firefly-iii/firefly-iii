@@ -59,8 +59,8 @@ return [
     'transaction_types_equal'        => 'Wszystkie podziały muszą być tego samego typu.',
     'invalid_transaction_type'       => 'Nieprawidłowy typ transakcji.',
     'invalid_selection'              => 'Twój wybór jest nieprawidłowy.',
-    'belongs_user'                   => 'This value is linked to an object that does not belong to you.',
-    'belongs_user_or_user_group'     => 'This value is linked to an object that does not belong to your current financial administration.',
+    'belongs_user'                   => 'This value is linked to an object that does not seem to exist.',
+    'belongs_user_or_user_group'     => 'This value is linked to an object that does not seem to exist in your current financial administration.',
     'at_least_one_transaction'       => 'Wymaga co najmniej jednej transakcji.',
     'recurring_transaction_id'       => 'Wymaga co najmniej jednej transakcji.',
     'need_id_to_match'               => 'Musisz przesłać ten wpis z ID dla API, aby móc go dopasować.',
@@ -235,8 +235,8 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta źródłowego i/lub prawidłową nazwę konta źródłowego.',
-    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_source_bad_data'  => '[a] Nie można znaleźć poprawnego konta źródłowego podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
+    'withdrawal_dest_need_data'   => '[a] Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta wydatków i/lub prawidłową nazwę konta wydatków.',
     'withdrawal_dest_bad_data'    => 'Nie można znaleźć poprawnego konta wydatków podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
 
     'withdrawal_dest_iban_exists' => 'To konto docelowe IBAN jest już używane przez konto aktywów lub zobowiązanie i nie może być użyte jako miejsce docelowe wydatku.',
@@ -244,7 +244,7 @@ return [
 
     'reconciliation_source_bad_data' => 'Nie można znaleźć prawidłowego konta uzgadniania podczas wyszukiwania ID ":id" lub nazwy ":name".',
 
-    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data' => '[e] Nie można znaleźć poprawnego konta źródłowego podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
 
     'deposit_source_need_data' => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta źródłowego i/lub prawidłową nazwę konta źródłowego.',
     'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
@@ -272,7 +272,7 @@ return [
 
     'ob_source_need_data'           => 'Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta źródłowego i/lub prawidłową nazwę konta źródłowego.',
     'lc_source_need_data'           => 'Potrzebujemy poprawny identyfikator konta źródłowego, aby kontynuować.',
-    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_need_data'             => '[d] Aby kontynuować, musisz uzyskać prawidłowy identyfikator konta wydatków i/lub prawidłową nazwę konta wydatków.',
     'ob_dest_bad_data'              => 'Nie można znaleźć poprawnego konta wydatków podczas wyszukiwania identyfikatora ":id" lub nazwy ":name".',
     'reconciliation_either_account' => 'Aby przesłać uzgodnienie, musisz przesłać konto źródłowe lub docelowe. Nie oba te konto, ani nie żadnego konta.',
 

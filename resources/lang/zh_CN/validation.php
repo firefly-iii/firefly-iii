@@ -59,13 +59,13 @@ return [
     'transaction_types_equal'        => '所有拆分的类型必须相同',
     'invalid_transaction_type'       => '无效的交易类型',
     'invalid_selection'              => '您的选择无效',
-    'belongs_user'                   => 'This value is linked to an object that does not belong to you.',
-    'belongs_user_or_user_group'     => 'This value is linked to an object that does not belong to your current financial administration.',
+    'belongs_user'                   => 'This value is linked to an object that does not seem to exist.',
+    'belongs_user_or_user_group'     => 'This value is linked to an object that does not seem to exist in your current financial administration.',
     'at_least_one_transaction'       => '至少需要一笔交易',
     'recurring_transaction_id'       => '至少需要一笔交易。',
-    'need_id_to_match'               => 'You need to submit this entry with an ID for the API to be able to match it.',
-    'too_many_unmatched'             => 'Too many submitted transactions cannot be matched to their respective database entries. Make sure existing entries have a valid ID.',
-    'id_does_not_match'              => 'Submitted ID #:id does not match expected ID. Make sure it matches or omit the field.',
+    'need_id_to_match'               => '您需要提交一个含有ID的条目，API才能匹配。',
+    'too_many_unmatched'             => '已提交的多个交易无法与其各自的数据库条目相匹配。请确保现有条目具有有效的ID。',
+    'id_does_not_match'              => '提交的ID与预期的ID不符，请确保匹配或省略该字段。',
     'at_least_one_repetition'        => '至少需要一次重复',
     'require_repeat_until'           => '仅需填写重复次数或结束日期 (repeat_until) 即可，不需两者全部填写',
     'require_currency_info'          => '此字段需要货币信息',
@@ -235,20 +235,20 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => '需要一个有效的来源账户 ID 和/或来源账户名称才能继续',
-    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_source_bad_data'  => '[a] 搜索ID“:id”或名称“:name”时，没有找到有效的来源账户。',
+    'withdrawal_dest_need_data'   => '[a] 需要一个有效的目标账户ID和/或有效的目标账户名称才能继续。',
     'withdrawal_dest_bad_data'    => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
 
-    'withdrawal_dest_iban_exists' => 'This destination account IBAN is already in use by an asset account or a liability and cannot be used as a withdrawal destination.',
-    'deposit_src_iban_exists'     => 'This source account IBAN is already in use by an asset account or a liability and cannot be used as a deposit source.',
+    'withdrawal_dest_iban_exists' => '此目标账户的 IBAN 已经用于资产账户或债务账户，无法用作支出目标。',
+    'deposit_src_iban_exists'     => '此来源账户的 IBAN 已经用于资产账户或债务账户，无法用作收入来源。',
 
     'reconciliation_source_bad_data' => '在搜索ID“:id”或名称“:name”时，没有找到有效的对账帐户',
 
-    'generic_source_bad_data' => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data' => '[e] 搜索ID“:id”或名称“:name”时，没有找到有效的来源账户。',
 
     'deposit_source_need_data' => '需要一个有效的来源账户 ID 和/或来源账户名称才能继续',
-    'deposit_source_bad_data'  => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'deposit_dest_need_data'   => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'deposit_source_bad_data'  => '[b] 搜索ID“:id”或名称“:name”时，没有找到有效的来源账户。',
+    'deposit_dest_need_data'   => '[b] 需要一个有效的目标账户ID和/或有效的目标账户名称才能继续。',
     'deposit_dest_bad_data'    => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
     'deposit_dest_wrong_type'  => '提交的目标账户的类型不正确',
 
@@ -265,14 +265,14 @@ return [
 
 
     'transfer_source_need_data' => '需要一个有效的来源账户 ID 和/或来源账户名称才能继续',
-    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'transfer_source_bad_data'  => '[c]搜索ID“:id”或名称“:name”时，没有找到有效的来源账户。',
+    'transfer_dest_need_data'   => '[c] 需要一个有效的目标账户ID和/或有效的目标账户名称才能继续。',
     'transfer_dest_bad_data'    => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
     'need_id_in_edit'           => '每笔拆分必须有 transaction_journal_id (有效的 ID 或 0)。',
 
     'ob_source_need_data'           => '需要一个有效的来源账户ID和/或来源账户名称才能继续。',
     'lc_source_need_data'           => '需要获取一个有效的来源账户 ID 才能继续。',
-    'ob_dest_need_data'             => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_need_data'             => '[d] 需要一个有效的目标账户ID和/或有效的目标账户名称才能继续。',
     'ob_dest_bad_data'              => '搜索 ID “:id”或名称“:name”时找不到有效的目标账户',
     'reconciliation_either_account' => '要提交对账，您必须提交来源或目标帐户。不要都提交，也不要都不提交。',
 

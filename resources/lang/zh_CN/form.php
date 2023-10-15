@@ -147,7 +147,7 @@ return [
     'start_date'                  => '范围起始',
     'end_date'                    => '范围结束',
     'enddate'                     => '结束日期',
-    'move_rules_before_delete'    => 'Rule group',
+    'move_rules_before_delete'    => '规则组',
     'start'                       => '范围起始',
     'end'                         => '范围结束',
     'delete_account'              => '删除账户“:name”',
