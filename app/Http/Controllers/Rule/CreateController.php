@@ -98,7 +98,9 @@ class CreateController extends Controller
             $operators = $search->getOperators()->toArray();
             if ('' !== $words) {
                 session()->flash('warning', trans('firefly.rule_from_search_words', ['string' => $words]));
-                $operators[] = ['type' => 'description_contains', 'value' => $words];
+                $operators[] = [
+                    'type'  => 'description_contains',
+                    'value' => $words];
             }
             $oldTriggers = $this->parseFromOperators($operators);
         }
