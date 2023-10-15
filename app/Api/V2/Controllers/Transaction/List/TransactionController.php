@@ -42,20 +42,16 @@ class TransactionController extends Controller
     public function list(ListRequest $request): JsonResponse
     {
         // collect transactions:
-        $limit = $request->getLimit();
-        $page  = $request->getPage();
-        $page  = max($page, 1);
-
-        if ($limit > 0 && $limit <= $this->pageSize) {
-            $this->pageSize = $limit;
-        }
+        $pageSize = $this->parameters->get('limit');
+        $page     = $request->getPage();
+        $page     = max($page, 1);
 
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUserGroup(auth()->user()->userGroup)
                   ->withAPIInformation()
-                  ->setLimit($this->pageSize)
+                  ->setLimit($pageSize)
                   ->setPage($page)
                   ->setTypes($request->getTransactionTypes());
 
@@ -72,11 +68,12 @@ class TransactionController extends Controller
         //        exit;
 
         $paginator = $collector->getPaginatedGroups();
+        $params    = $request->buildParams($pageSize);
         $paginator->setPath(
             sprintf(
                 '%s?%s',
                 route('api.v2.transactions.list'),
-                $request->buildParams()
+                $params
             )
         );
 

@@ -55,7 +55,6 @@ class Navigation
      * @param int    $skip
      *
      * @return Carbon
-     * @deprecated This method will be substituted by nextDateByInterval()
      */
     public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip = 0): Carbon
     {
@@ -340,6 +339,35 @@ class Navigation
         }
 
         return $currentEnd;
+    }
+
+    /**
+     * @param string $period
+     * @param Carbon $beginning
+     * @param Carbon $end
+     *
+     * @return int
+     */
+    public function diffInPeriods(string $period, Carbon $beginning, Carbon $end): int
+    {
+        $map = [
+            'daily'     => 'diffInDays',
+            'weekly'    => 'diffInWeeks',
+            'monthly'   => 'diffInMonths',
+            'quarterly' => 'diffInQuarters',
+            'half-year' => 'diffInQuarters',
+            'yearly'    => 'diffInYears',
+        ];
+        if (!array_key_exists($period, $map)) {
+            app('log')->warning(sprintf('No diffInPeriods for period "%s"', $period));
+            return 1;
+        }
+        $func = $map[$period];
+        $diff = $beginning->$func($end);
+        if ('half-year' === $period) {
+            $diff = ceil($diff / 2);
+        }
+        return (int)$diff;
     }
 
     /**

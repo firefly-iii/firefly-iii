@@ -25,6 +25,7 @@ import {Chart} from 'chart.js';
 import {I18n} from "i18n-js";
 import {loadTranslations} from "../../support/load-translations.js";
 import {getColors} from "../../support/get-colors.js";
+import {getCacheKey} from "../../support/get-cache-key.js";
 
 let currencies = [];
 let chart = null;
@@ -33,7 +34,6 @@ let afterPromises = false;
 
 let i18n; // for translating items in the chart.
 
-const CACHE_KEY = 'dashboard-budgets-chart';
 export default () => ({
     loading: false,
     autoConversion: false,
@@ -59,8 +59,11 @@ export default () => ({
         chart = new Chart(document.querySelector("#budget-chart"), options);
     },
     getFreshData() {
+        const start = new Date(window.store.get('start'));
+        const end = new Date(window.store.get('end'));
+        const cacheKey = getCacheKey('dashboard-budgets-chart', start, end);
         const cacheValid = window.store.get('cacheValid');
-        let cachedData = window.store.get(CACHE_KEY);
+        let cachedData = window.store.get(cacheKey);
 
         if (cacheValid && typeof cachedData !== 'undefined') {
             chartData = cachedData; // save chart data for later.
@@ -70,10 +73,10 @@ export default () => ({
         }
 
         const dashboard = new Dashboard();
-        dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
+        dashboard.dashboard(start, end, null).then((response) => {
             chartData = response.data; // save chart data for later.
             this.drawChart(this.generateOptions(chartData));
-            window.store.set(CACHE_KEY, chartData);
+            window.store.set(cacheKey, chartData);
             this.loading = false;
         });
     },
@@ -160,7 +163,7 @@ export default () => ({
             y: {
                 ticks: {
                     callback: function (context) {
-                        return formatMoney(context, currencies[0]);
+                        return formatMoney(context, currencies[0] ?? 'EUR');
                     }
                 }
             }
@@ -172,11 +175,12 @@ export default () => ({
 
     init() {
         // console.log('budgets init');
-        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en-US')]).then((values) => {
+        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en_US')]).then((values) => {
 
             i18n = new I18n();
-            i18n.locale = values[1];
-            loadTranslations(i18n, values[1]).then(() => {
+            const locale = values[1].replace('-', '_');
+            i18n.locale = locale;
+            loadTranslations(i18n, locale).then(() => {
                 this.autoConversion = values[0];
                 afterPromises = true;
                 if (false === this.loading) {

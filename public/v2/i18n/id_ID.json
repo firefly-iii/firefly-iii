@@ -23,7 +23,13 @@
             "unknown_budget_plain": "No budget",
             "expense_account": "Expense account",
             "revenue_account": "Revenue account",
-            "budget": "Anggaran"
+            "budget": "Anggaran",
+            "account_type_Asset account": "Asset account",
+            "account_type_Expense account": "Expense account",
+            "account_type_Revenue account": "Revenue account",
+            "account_type_Debt": "Debt",
+            "account_type_Loan": "Loan",
+            "account_type_Mortgage": "Mortgage"
         }
     }
 }

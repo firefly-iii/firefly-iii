@@ -24,10 +24,12 @@ import {Chart} from 'chart.js';
 import {Flow, SankeyController} from 'chartjs-chart-sankey';
 import {loadTranslations} from "../../support/load-translations.js";
 import {I18n} from "i18n-js";
+import {getCacheKey} from "../../support/get-cache-key.js";
+import {format} from "date-fns";
 
 Chart.register({SankeyController, Flow});
 
-const CACHE_KEY = 'dashboard-sankey-data';
+const SANKEY_CACHE_KEY = 'dashboard-sankey-data';
 let i18n;
 let currencies = [];
 let afterPromises = false;
@@ -286,8 +288,12 @@ export default () => ({
 
     },
     getFreshData() {
+        const start = new Date(window.store.get('start'));
+        const end = new Date(window.store.get('end'));
+        const cacheKey = getCacheKey(SANKEY_CACHE_KEY, start, end);
+
         const cacheValid = window.store.get('cacheValid');
-        let cachedData = window.store.get(CACHE_KEY);
+        let cachedData = window.store.get(cacheKey);
 
         if (cacheValid && typeof cachedData !== 'undefined') {
             transactions = cachedData;
@@ -298,14 +304,18 @@ export default () => ({
 
 
         let params = {
-            start: window.store.get('start').slice(0, 10),
-            end: window.store.get('end').slice(0, 10),
+            start: format(start, 'y-MM-dd'),
+            end: format(end, 'y-MM-dd'),
             type: 'withdrawal,deposit',
             page: 1
         };
         this.downloadTransactions(params);
     },
     downloadTransactions(params) {
+        const start = new Date(window.store.get('start'));
+        const end = new Date(window.store.get('end'));
+        const cacheKey = getCacheKey(SANKEY_CACHE_KEY, start, end);
+
         //console.log('Downloading page ' + params.page + '...');
         const getter = new Get();
         getter.get(params).then((response) => {
@@ -318,7 +328,7 @@ export default () => ({
                 this.downloadTransactions(params);
                 return;
             }
-            window.store.set(CACHE_KEY, transactions);
+            window.store.set(cacheKey, transactions);
             this.drawChart(this.generateOptions());
             this.loading = false;
         });
@@ -340,12 +350,13 @@ export default () => ({
     init() {
         // console.log('sankey init');
         transactions = [];
-        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en-US')]).then((values) => {
+        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en_US')]).then((values) => {
             this.autoConversion = values[0];
             autoConversion = values[0];
             i18n = new I18n();
-            i18n.locale = values[1];
-            loadTranslations(i18n, values[1]).then(() => {
+            const locale = values[1].replace('-', '_');
+            i18n.locale = locale;
+            loadTranslations(i18n, locale).then(() => {
                 // some translations:
                 translations.all_money = i18n.t('firefly.all_money');
                 translations.category = i18n.t('firefly.category');

@@ -105,6 +105,7 @@ return [
             'charset'     => 'utf8',
             'prefix'      => '',
             'search_path' => envNonEmpty('PGSQL_SCHEMA', 'public'),
+            'schema'      => envNonEmpty('PGSQL_SCHEMA', 'public'),
             'sslmode'     => envNonEmpty('PGSQL_SSL_MODE', 'prefer'),
             'sslcert'     => envNonEmpty('PGSQL_SSL_CERT'),
             'sslkey'      => envNonEmpty('PGSQL_SSL_KEY'),

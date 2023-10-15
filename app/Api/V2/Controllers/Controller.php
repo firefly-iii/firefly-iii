@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V2\Controllers;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
+use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\V2\AbstractTransformer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -48,8 +49,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Controller extends BaseController
 {
+    use ValidatesUserGroupTrait;
+
     protected const CONTENT_TYPE = 'application/vnd.api+json';
-    protected int          $pageSize;
     protected ParameterBag $parameters;
 
     /**
@@ -57,11 +59,14 @@ class Controller extends BaseController
      */
     public function __construct()
     {
-        $this->parameters = $this->getParameters();
-        $this->pageSize   = 50;
-        if (auth()->check()) {
-            $this->pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        }
+        $this->middleware(
+            function ($request, $next) {
+                $this->parameters = $this->getParameters();
+
+                return $next($request);
+            }
+        );
+
     }
 
     /**
@@ -73,6 +78,7 @@ class Controller extends BaseController
     private function getParameters(): ParameterBag
     {
         $bag = new ParameterBag();
+        $bag->set('limit', 50);
         try {
             $page = (int)request()->get('page');
         } catch (ContainerExceptionInterface | NotFoundExceptionInterface $e) {
@@ -128,6 +134,11 @@ class Controller extends BaseController
             }
             if (null !== $value) {
                 $bag->set($integer, (int)$value);
+            }
+            if (null === $value && 'limit' === $integer && auth()->check()) {
+                // set default for user:
+                $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+                $bag->set($integer, $pageSize);
             }
         }
 

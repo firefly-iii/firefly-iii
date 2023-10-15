@@ -23,7 +23,13 @@
             "unknown_budget_plain": "No budget",
             "expense_account": "Expense account",
             "revenue_account": "Revenue account",
-            "budget": "K\u00f6lts\u00e9gkeret"
+            "budget": "K\u00f6lts\u00e9gkeret",
+            "account_type_Asset account": "Asset account",
+            "account_type_Expense account": "Expense account",
+            "account_type_Revenue account": "Revenue account",
+            "account_type_Debt": "Ad\u00f3ss\u00e1g",
+            "account_type_Loan": "Hitel",
+            "account_type_Mortgage": "Jelz\u00e1log"
         }
     }
 }

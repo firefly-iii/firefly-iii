@@ -71,7 +71,7 @@ class ListController extends Controller
     public function attachments(PiggyBank $piggyBank): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = $this->parameters->get('limit');
         $collection = $this->repository->getAttachments($piggyBank);
 
         $count       = $collection->count();
@@ -105,7 +105,7 @@ class ListController extends Controller
     public function piggyBankEvents(PiggyBank $piggyBank): JsonResponse
     {
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = $this->parameters->get('limit');
         $manager  = $this->getManager();
 
         $collection = $this->repository->getEvents($piggyBank);

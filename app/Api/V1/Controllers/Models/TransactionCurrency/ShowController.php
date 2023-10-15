@@ -78,7 +78,7 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = $this->parameters->get('limit');
         $collection = $this->repository->getAll();
         $count      = $collection->count();
         // slice them:

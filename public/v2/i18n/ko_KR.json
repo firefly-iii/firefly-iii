@@ -23,7 +23,13 @@
             "unknown_budget_plain": "\uc608\uc0b0 \uc5c6\uc74c",
             "expense_account": "\uc9c0\ucd9c \uacc4\uc815",
             "revenue_account": "\uc218\uc775 \uacc4\uc815",
-            "budget": "\uc608\uc0b0"
+            "budget": "\uc608\uc0b0",
+            "account_type_Asset account": "Asset account",
+            "account_type_Expense account": "Expense account",
+            "account_type_Revenue account": "Revenue account",
+            "account_type_Debt": "\ub300\ucd9c",
+            "account_type_Loan": "\ube5a",
+            "account_type_Mortgage": "\ubaa8\uae30\uc9c0"
         }
     }
 }

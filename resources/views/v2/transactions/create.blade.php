@@ -5,7 +5,7 @@
 @section('content')
     <div class="app-content">
         <!--begin::Container-->
-        <div class="container-fluid" x-data="transactions">
+        <div class="container-fluid" x-data="transactions" id="form">
             <div class="row mb-2">
                 <div class="col">
                     <template x-if="showSuccessMessage">
@@ -61,11 +61,13 @@
             <div class="tab-content" id="splitTabsContent">
                 <template x-for="transaction,index in entries">
                     <div
-                        :class="{'tab-pane fade pt-2':true, 'show active': index ===0}"
-                        :id="'split-'+index+'-pane'"
-                        role="tabpanel"
-                        :aria-labelledby="'split-'+index+'-tab'"
-                        tabindex="0">
+                            :class="{'tab-pane fade pt-2':true, 'show active': index ===0}"
+                            :id="'split-'+index+'-pane'"
+                            role="tabpanel"
+                            :aria-labelledby="'split-'+index+'-tab'"
+                            tabindex="0"
+                            x-init="addedSplit()"
+                    >
                         <div class="row mb-2">
                             <div class="col-xl-6 col-lg-6 col-md-12 col-xs-12 mb-2">
                                 <div class="card">
@@ -80,8 +82,9 @@
                                                 <em class="fa-solid fa-font"></em>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="autocomplete form-control"
+                                                <input type="text" class="form-control ac-description"
                                                        :id="'description_' + index"
+                                                       @change="detectTransactionType"
                                                        x-model="transaction.description"
                                                        placeholder="Transaction description">
                                             </div>
@@ -92,8 +95,9 @@
                                                 <i class="fa-solid fa-arrow-right"></i>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="source_0"
+                                                <input type="text" class="form-control ac-source" id="source_0"
                                                        x-model="transaction.source_account.name"
+                                                       :data-index="index"
                                                        placeholder="Source account">
                                             </div>
                                         </div>
@@ -103,8 +107,9 @@
                                                 <i class="fa-solid fa-arrow-left"></i>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="dest_0"
+                                                <input type="text" class="form-control ac-dest" id="dest_0"
                                                        x-model="transaction.destination_account.name"
+                                                       :data-index="index"
                                                        placeholder="Destination account">
                                             </div>
                                         </div>
@@ -114,6 +119,7 @@
                                             </label>
                                             <div class="col-sm-10">
                                                 <input type="datetime-local" class="form-control" id="date_0"
+                                                       @change="detectTransactionType"
                                                        x-model="transaction.date"
                                                 >
                                             </div>
@@ -134,8 +140,11 @@
                                                 EUR
                                             </label>
                                             <div class="col-sm-10">
-                                                <input type="number" step="any" min="0" class="form-control" id="amount"
+                                                <input type="number" step="any" min="0" class="form-control"
+                                                       :id="'amount_' + index"
+                                                       :data-index="index"
                                                        x-model="transaction.amount"
+                                                       @change="changedAmount"
                                                        placeholder="Amount">
                                             </div>
                                         </div>
@@ -188,6 +197,8 @@
                                     </div>
                                     <div class="card-body">
                                         submission options
+
+
                                     </div>
                                     <div class="card-footer">
                                         submission options

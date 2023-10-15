@@ -63,7 +63,7 @@ class RuleGroupController extends Controller
     public function ruleGroups(AutocompleteRequest $request): JsonResponse
     {
         $data     = $request->getData();
-        $groups   = $this->repository->searchRuleGroup($data['query'], $data['limit']);
+        $groups   = $this->repository->searchRuleGroup($data['query'], $this->parameters->get('limit'));
         $response = [];
 
         /** @var RuleGroup $group */

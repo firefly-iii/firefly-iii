@@ -23,7 +23,13 @@
             "unknown_budget_plain": "No budget",
             "expense_account": "Expense account",
             "revenue_account": "Revenue account",
-            "budget": "Buget"
+            "budget": "Buget",
+            "account_type_Asset account": "Asset account",
+            "account_type_Expense account": "Expense account",
+            "account_type_Revenue account": "Revenue account",
+            "account_type_Debt": "Datorie",
+            "account_type_Loan": "\u00cemprumut",
+            "account_type_Mortgage": "Credit ipotecar"
         }
     }
 }

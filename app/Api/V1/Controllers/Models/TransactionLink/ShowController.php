@@ -85,7 +85,7 @@ class ShowController extends Controller
         $name = $request->get('name');
 
         // types to get, page size:
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = $this->parameters->get('limit');
         $linkType = $this->repository->findByName($name);
 
         // get list of transaction links. Count it and split it.

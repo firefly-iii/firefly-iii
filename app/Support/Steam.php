@@ -782,7 +782,7 @@ class Steam
         if (!is_string($preference)) {
             throw new FireflyException(sprintf('Preference "language" must be a string, but is unexpectedly a "%s".', gettype($preference)));
         }
-        return $preference;
+        return str_replace('-', '_', $preference);
     }
 
     /**

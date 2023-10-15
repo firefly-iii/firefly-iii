@@ -28,6 +28,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\User;
+use FireflyIII\Validation\Administration\ValidatesAdministrationAccess;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
@@ -38,6 +39,7 @@ class AutocompleteRequest extends FormRequest
 {
     use ConvertsDataTypes;
     use ChecksLogin;
+
     protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
 
     /**
@@ -74,22 +76,5 @@ class AutocompleteRequest extends FormRequest
         return [
             'limit' => 'min:0|max:1337',
         ];
-    }
-
-    /**
-     * Configure the validator instance with special rules for after the basic validation rules.
-     *
-     * @param Validator $validator
-     *
-     * @return void
-     */
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(
-            function (Validator $validator) {
-                // validate if the account can access this administration
-                $this->validateAdministration($validator, [UserRoleEnum::MANAGE_TRANSACTIONS]);
-            }
-        );
     }
 }

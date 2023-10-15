@@ -23,7 +23,13 @@
             "unknown_budget_plain": "Kein Budget",
             "expense_account": "Ausgabenkonto",
             "revenue_account": "Einnahmekonto",
-            "budget": "Budget"
+            "budget": "Budget",
+            "account_type_Asset account": "Asset account",
+            "account_type_Expense account": "Expense account",
+            "account_type_Revenue account": "Revenue account",
+            "account_type_Debt": "Schuld",
+            "account_type_Loan": "Darlehen",
+            "account_type_Mortgage": "Hypothek"
         }
     }
 }

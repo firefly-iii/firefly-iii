@@ -62,7 +62,7 @@ class TransactionTypeController extends Controller
     public function transactionTypes(AutocompleteRequest $request): JsonResponse
     {
         $data  = $request->getData();
-        $types = $this->repository->searchTypes($data['query'], $data['limit']);
+        $types = $this->repository->searchTypes($data['query'], $this->parameters->get('limit'));
         $array = [];
 
         /** @var TransactionType $type */

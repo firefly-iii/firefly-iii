@@ -58,7 +58,7 @@ class PreferencesController extends Controller
         $collection  = app('preferences')->all();
         $manager     = $this->getManager();
         $count       = $collection->count();
-        $pageSize    = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize    = $this->parameters->get('limit');
         $preferences = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:

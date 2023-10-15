@@ -29,6 +29,9 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Http\Request;
 
+/**
+ * Trait ValidatesUserGroupTrait
+ */
 trait ValidatesUserGroupTrait
 {
     /**

@@ -53,8 +53,7 @@ class TransactionController extends Controller
         $manager   = $this->getManager();
         $fullQuery = (string)$request->get('query');
         $page      = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize  = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $pageSize  = 0 === (int)$request->get('limit') ? $pageSize : (int)$request->get('limit');
+        $pageSize  = $this->parameters->get('limit');
         $searcher->parseQuery($fullQuery);
         $searcher->setPage($page);
         $searcher->setLimit($pageSize);

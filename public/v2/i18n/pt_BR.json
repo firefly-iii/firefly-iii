@@ -9,8 +9,8 @@
             "paid": "Pago",
             "unpaid": "N\u00e3o pago",
             "default_group_title_name_plain": "sem grupo",
-            "subscriptions_in_group": "Subscriptions in group \"%{title}\"",
-            "subscr_expected_x_times": "Expect to pay %{amount} %{times} times this period",
+            "subscriptions_in_group": "Assinaturas no grupo \"%{title}\"",
+            "subscr_expected_x_times": "Espera-se pagar %{amount} %{times} vezes neste per\u00edodo",
             "overspent": "Gasto excedido",
             "money_flowing_in": "Entrada",
             "money_flowing_out": "Sa\u00edda",
@@ -23,7 +23,13 @@
             "unknown_budget_plain": "Nenhum or\u00e7amento",
             "expense_account": "Conta de despesas",
             "revenue_account": "Conta de Receitas",
-            "budget": "Or\u00e7amento"
+            "budget": "Or\u00e7amento",
+            "account_type_Asset account": "Asset account",
+            "account_type_Expense account": "Expense account",
+            "account_type_Revenue account": "Revenue account",
+            "account_type_Debt": "D\u00edvida",
+            "account_type_Loan": "Empr\u00e9stimo",
+            "account_type_Mortgage": "Hipoteca"
         }
     }
 }

@@ -26,6 +26,7 @@ import Get from "../../api/v2/model/account/get.js";
 import {Chart} from 'chart.js';
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import {getColors} from "../../support/get-colors.js";
+import {getCacheKey} from "../../support/get-cache-key.js";
 
 // this is very ugly, but I have no better ideas at the moment to save the currency info
 // for each series.
@@ -34,8 +35,6 @@ let chart = null;
 let chartData = null;
 let afterPromises = false;
 
-const CHART_CACHE_KEY = 'dashboard-accounts-chart';
-const ACCOUNTS_CACHE_KEY = 'dashboard-accounts-data';
 export default () => ({
     loading: false,
     loadingAccounts: false,
@@ -47,19 +46,25 @@ export default () => ({
         setVariable('autoConversion', this.autoConversion);
     },
     getFreshData() {
+        const start = new Date(window.store.get('start'));
+        const end = new Date(window.store.get('end'));
+        const chartCacheKey = getCacheKey('dashboard-accounts-chart', start, end)
+
         const cacheValid = window.store.get('cacheValid');
-        let cachedData = window.store.get(CHART_CACHE_KEY);
+        let cachedData = window.store.get(chartCacheKey);
 
         if (cacheValid && typeof cachedData !== 'undefined') {
+            console.log(cachedData);
             this.drawChart(this.generateOptions(cachedData));
             this.loading = false;
             return;
         }
         const dashboard = new Dashboard();
-        dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
+        dashboard.dashboard(start, end, null).then((response) => {
             this.chartData = response.data;
             // cache generated options:
-            window.store.set(CHART_CACHE_KEY, response.data);
+            window.store.set(chartCacheKey, response.data);
+            console.log(response.data);
             this.drawChart(this.generateOptions(this.chartData));
             this.loading = false;
         });
@@ -160,8 +165,12 @@ export default () => ({
             this.loadingAccounts = false;
             return;
         }
+        const start = new Date(window.store.get('start'));
+        const end = new Date(window.store.get('end'));
+        const accountCacheKey = getCacheKey('dashboard-accounts-data', start, end);
+
         const cacheValid = window.store.get('cacheValid');
-        let cachedData = window.store.get(ACCOUNTS_CACHE_KEY);
+        let cachedData = window.store.get(accountCacheKey);
 
         if (cacheValid && typeof cachedData !== 'undefined') {
             this.accountList = cachedData;
@@ -186,7 +195,12 @@ export default () => ({
                         let parent = response.data.data;
 
                         // get groups for account:
-                        (new Get).transactions(parent.id, 1).then((response) => {
+                        const params = {
+                            page: 1,
+                            start: new Date(window.store.get('start')),
+                            end: new Date(window.store.get('end')),
+                        };
+                        (new Get).transactions(parent.id, params).then((response) => {
                             let groups = [];
                             for (let ii = 0; ii < response.data.data.length; ii++) {
                                 if (ii >= max) {
@@ -233,7 +247,7 @@ export default () => ({
 
                                 this.accountList = accounts;
                                 this.loadingAccounts = false;
-                                window.store.set(ACCOUNTS_CACHE_KEY, accounts);
+                                window.store.set(accountCacheKey, accounts);
                             }
                         });
                     });
@@ -245,7 +259,7 @@ export default () => ({
 
     init() {
         // console.log('accounts init');
-        Promise.all([getVariable('viewRange', '1M'), getVariable('autoConversion', false), getVariable('language', 'en-US')]).then((values) => {
+        Promise.all([getVariable('viewRange', '1M'), getVariable('autoConversion', false), getVariable('language', 'en_US')]).then((values) => {
             //console.log('accounts after promises');
             this.autoConversion = values[1];
             afterPromises = true;

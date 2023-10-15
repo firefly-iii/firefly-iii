@@ -30,7 +30,7 @@ export default class Get {
      * @returns {Promise<AxiosResponse<any>>}
      */
     get(identifier, date) {
-        let params = {date: format(date, 'y-MM-d').slice(0, 10)};
+        let params = {date: format(date, 'y-MM-dd').slice(0, 10)};
         if (!date) {
             return api.get('/api/v1/accounts/' + identifier);
         }

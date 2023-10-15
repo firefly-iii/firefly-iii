@@ -213,7 +213,7 @@ class ShowController extends Controller
         $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->withAccountInformation()
                   ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation()->withCategoryInformation();
         $groups = $collector->getPaginatedGroups();
-        $groups->setPath(route('budgets.show', [$budget->id, $budgetLimit->id]));
+        $groups->setPath(route('budgets.show.limit', [$budget->id, $budgetLimit->id]));
         /** @var Carbon $start */
         $start       = session('first', today(config('app.timezone'))->startOfYear());
         $end         = today(config('app.timezone'));

@@ -21,11 +21,13 @@ import {getVariable} from "../../store/get-variable.js";
 import Get from "../../api/v2/model/piggy-bank/get.js";
 import {I18n} from "i18n-js";
 import {loadTranslations} from "../../support/load-translations.js";
+import {getCacheKey} from "../../support/get-cache-key.js";
+import {format} from "date-fns";
 
 let apiData = {};
 let afterPromises = false;
 let i18n;
-const CACHE_KEY = 'dashboard-piggies-data';
+const PIGGY_CACHE_KEY = 'dashboard-piggies-data';
 
 export default () => ({
     loading: false,
@@ -33,8 +35,12 @@ export default () => ({
     sankeyGrouping: 'account',
     piggies: [],
     getFreshData() {
+        const start = new Date(window.store.get('start'));
+        const end = new Date(window.store.get('end'));
+        const cacheKey = getCacheKey(PIGGY_CACHE_KEY, start, end);
+
         const cacheValid = window.store.get('cacheValid');
-        let cachedData = window.store.get(CACHE_KEY);
+        let cachedData = window.store.get(cacheKey);
 
         if (cacheValid && typeof cachedData !== 'undefined') {
             apiData = cachedData;
@@ -44,14 +50,16 @@ export default () => ({
         }
 
         let params = {
-            start: window.store.get('start').slice(0, 10),
-            end: window.store.get('end').slice(0, 10),
+            start: format(start, 'y-MM-dd'),
+            end: format(end, 'y-MM-dd'),
             page: 1
         };
         this.downloadPiggyBanks(params);
     },
     downloadPiggyBanks(params) {
-        // console.log('Downloading page ' + params.page + '...');
+        const start = new Date(window.store.get('start'));
+        const end = new Date(window.store.get('end'));
+        const cacheKey = getCacheKey(PIGGY_CACHE_KEY, start, end);
         const getter = new Get();
         getter.get(params).then((response) => {
             apiData = [...apiData, ...response.data.data];
@@ -60,7 +68,7 @@ export default () => ({
                 this.downloadPiggyBanks(params);
                 return;
             }
-            window.store.set(CACHE_KEY, apiData);
+            window.store.set(cacheKey, apiData);
             this.parsePiggies();
             this.loading = false;
         });
@@ -122,11 +130,12 @@ export default () => ({
     init() {
         // console.log('piggies init');
         apiData = [];
-        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en-US')]).then((values) => {
+        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en_US')]).then((values) => {
 
             i18n = new I18n();
-            i18n.locale = values[1];
-            loadTranslations(i18n, values[1]).then(() => {
+            const locale = values[1].replace('-', '_');
+            i18n.locale = locale;
+            loadTranslations(i18n, locale).then(() => {
                 // console.log('piggies after promises');
                 afterPromises = true;
                 this.autoConversion = values[0];

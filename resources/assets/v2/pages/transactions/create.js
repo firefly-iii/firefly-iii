@@ -25,14 +25,135 @@ import {parseFromEntries} from "./shared/parse-from-entries.js";
 import formatMoney from "../../util/format-money.js";
 import Autocomplete from "bootstrap5-autocomplete";
 import Post from "../../api/v2/model/transaction/post.js";
+import {getVariable} from "../../store/get-variable.js";
+import {I18n} from "i18n-js";
+import {loadTranslations} from "../../support/load-translations.js";
+
+let i18n;
+
+const urls = {
+    description: '/api/v2/autocomplete/transaction-descriptions',
+    account: '/api/v2/autocomplete/accounts',
+};
 
 let transactions = function () {
     return {
         count: 0,
         totalAmount: 0,
+        transactionType: 'unknown',
         showSuccessMessage: false,
         showErrorMessage: false,
         entries: [],
+        filters: {
+            source: [],
+            destination: [],
+        },
+        detectTransactionType() {
+            const sourceType = this.entries[0].source_account.type ?? 'unknown';
+            const destType = this.entries[0].destination_account.type ?? 'unknown';
+            if ('unknown' === sourceType && 'unknown' === destType) {
+                this.transactionType = 'unknown';
+                console.warn('Cannot infer transaction type from two unknown accounts.');
+                return;
+            }
+            // transfer: both are the same and in strict set of account types
+            if (sourceType === destType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(sourceType)) {
+                this.transactionType = 'transfer';
+                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                return;
+            }
+            // withdrawals:
+            if ('Asset account' === sourceType && ['Expense account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
+                this.transactionType = 'withdrawal';
+                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                return;
+            }
+            if ('Asset account' === sourceType && 'unknown' === destType) {
+                this.transactionType = 'withdrawal';
+                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                return;
+            }
+            if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Expense account' === destType) {
+                this.transactionType = 'withdrawal';
+                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                return;
+            }
+
+            // deposits:
+            if ('Revenue account' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
+                this.transactionType = 'deposit';
+                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                return;
+            }
+            if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Asset account' === destType) {
+                this.transactionType = 'deposit';
+                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                return;
+            }
+            console.warn('Unknown account combination between "' + sourceType + '" and "' + destType + '".');
+        },
+        selectSourceAccount(item, ac) {
+            const index = parseInt(ac._searchInput.attributes['data-index'].value);
+            document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account =
+                {
+                    id: item.id,
+                    name: item.name,
+                    type: item.type,
+                };
+            console.log('Changed source account into a known ' + item.type.toLowerCase());
+        },
+        changedAmount(e) {
+            const index = parseInt(e.target.dataset.index);
+            this.entries[index].amount = parseFloat(e.target.value);
+            this.totalAmount = 0;
+            for (let i in this.entries) {
+                if (this.entries.hasOwnProperty(i)) {
+                    this.totalAmount = this.totalAmount + parseFloat(this.entries[i].amount);
+                }
+            }
+            console.log('Changed amount to ' + this.totalAmount);
+        },
+        selectDestAccount(item, ac) {
+            const index = parseInt(ac._searchInput.attributes['data-index'].value);
+            document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account =
+                {
+                    id: item.id,
+                    name: item.name,
+                    type: item.type,
+                };
+            console.log('Changed destination account into a known ' + item.type.toLowerCase());
+        },
+        changeSourceAccount(item, ac) {
+            if (typeof item === 'undefined') {
+                const index = parseInt(ac._searchInput.attributes['data-index'].value);
+                let source = document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account;
+                if (source.name === ac._searchInput.value) {
+                    console.warn('Ignore hallucinated source account name change to "' + ac._searchInput.value + '"');
+                    return;
+                }
+                document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account =
+                    {
+                        name: ac._searchInput.value,
+                    };
+                console.log('Changed source account into a unknown account called "' + ac._searchInput.value + '"');
+            }
+        },
+        changeDestAccount(item, ac) {
+            if (typeof item === 'undefined') {
+                const index = parseInt(ac._searchInput.attributes['data-index'].value);
+                let destination = document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account;
+                if (destination.name === ac._searchInput.value) {
+                    console.warn('Ignore hallucinated destination account name change to "' + ac._searchInput.value + '"');
+                    return;
+                }
+                document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account =
+                    {
+                        name: ac._searchInput.value,
+                    };
+                console.log('Changed destination account into a unknown account called "' + ac._searchInput.value + '"');
+            }
+        },
+
 
         // error and success messages:
         showError: false,
@@ -40,62 +161,85 @@ let transactions = function () {
 
         addedSplit() {
             console.log('addedSplit');
-            const opts = {
-                onSelectItem: console.log,
-            };
-            var src = [];
-            for (let i = 0; i < 50; i++) {
-                src.push({
-                    title: "Option " + i,
-                    id: "opt" + i,
-                    data: {
-                        key: i,
-                    },
-                });
-            }
+            Autocomplete.init("input.ac-source", {
+                server: urls.account,
+                serverParams: {
+                    types: this.filters.source,
+                },
+                fetchOptions: {
+                    headers: {
+                        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+                    }
+                },
+                hiddenInput: true,
+                preventBrowserAutocomplete: true,
+                highlightTyped: true,
+                liveServer: true,
+                onChange: this.changeSourceAccount,
+                onSelectItem: this.selectSourceAccount,
+                onRenderItem: function (item, b, c) {
+                    return item.name_with_balance + '<br><small class="text-muted">' + i18n.t('firefly.account_type_' + item.type) + '</small>';
+                }
+            });
 
-            Autocomplete.init("input.autocomplete", {
-                items: src,
+            Autocomplete.init("input.ac-dest", {
+                server: urls.account,
+                serverParams: {
+                    types: this.filters.destination,
+                },
+                fetchOptions: {
+                    headers: {
+                        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+                    }
+                },
+                hiddenInput: true,
+                preventBrowserAutocomplete: true,
+                liveServer: true,
+                highlightTyped: true,
+                onSelectItem: this.selectDestAccount,
+                onChange: this.changeDestAccount,
+                onRenderItem: function (item, b, c) {
+                    return item.name_with_balance + '<br><small class="text-muted">' + i18n.t('firefly.account_type_' + item.type) + '</small>';
+                }
+            });
+            this.filters.destination = [];
+            Autocomplete.init('input.ac-description', {
+                server: urls.description,
+                fetchOptions: {
+                    headers: {
+                        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+                    }
+                },
                 valueField: "id",
-                labelField: "title",
+                labelField: "description",
                 highlightTyped: true,
                 onSelectItem: console.log,
             });
 
 
-            // setTimeout(() => {
-            //     console.log('timed out');
-            //     console.log(document.querySelector('input.autocomplete'));
-
-            // }, 1500);
-
         },
 
         init() {
-            console.log('init()');
-            this.addSplit();
+            Promise.all([getVariable('language', 'en_US')]).then((values) => {
+                i18n = new I18n();
+                const locale = values[0].replace('-', '_');
+                i18n.locale = locale;
+                loadTranslations(i18n, locale).then(() => {
+                    this.addSplit();
+                });
 
-            // // We can use regular objects as source and customize label
-            // new Autocomplete(document.getElementById("autocompleteRegularInput"), {
-            //     items: {
-            //         opt_some: "Some",
-            //         opt_value: "Value",
-            //         opt_here: "Here is a very long element that should be truncated",
-            //         opt_dia: "çaça"
-            //     },
-            //     onRenderItem: (item, label) => {
-            //         return label + " (" + item.value + ")";
-            //     },
-            // });
-            // new Autocomplete(document.getElementById("autocompleteDatalist"), opts);
-            //new Autocomplete(document.getElementById("autocompleteRemote"), opts);
-            // new Autocomplete(document.getElementById("autocompleteLiveRemote"), opts);
+            });
 
+            // source can never be expense account
+            this.filters.source = ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'];
+            // destination can never be revenue account
+            this.filters.destination = ['Expense account', 'Loan', 'Debt', 'Mortgage', 'Asset account'];
         },
         submitTransaction() {
+            this.detectTransactionType();
             // todo disable buttons
 
-            let transactions = parseFromEntries(this.entries);
+            let transactions = parseFromEntries(this.entries, this.transactionType);
             let submission = {
                 // todo process all options
                 group_title: null,

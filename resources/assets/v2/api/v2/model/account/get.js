@@ -30,7 +30,7 @@ export default class Get {
      * @returns {Promise<AxiosResponse<any>>}
      */
     get(identifier, date) {
-        let params = {date: format(date, 'y-MM-d').slice(0, 10)};
+        let params = {date: format(date, 'y-MM-dd').slice(0, 10)};
         if (!date) {
             return api.get('/api/v2/accounts/' + identifier);
         }
@@ -40,10 +40,20 @@ export default class Get {
     /**
      *
      * @param identifier
-     * @param page
+     * @param params
      * @returns {Promise<AxiosResponse<any>>}
      */
-    transactions(identifier, page) {
-        return api.get('/api/v2/accounts/' + identifier + '/transactions', {params: {page: page}});
+    transactions(identifier, params) {
+        const newParams = {
+            page: params.page ?? 1
+        };
+        if (params.hasOwnProperty('start')) {
+            newParams.start = format(params.start, 'y-MM-dd');
+        }
+        if (params.hasOwnProperty('end')) {
+            newParams.end = format(params.end, 'y-MM-dd');
+        }
+
+        return api.get('/api/v2/accounts/' + identifier + '/transactions', {params: newParams});
     }
 }

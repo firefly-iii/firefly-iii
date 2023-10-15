@@ -100,9 +100,11 @@ class AccountDestroyService
                 $ibAccount->delete();
             }
             $journal = TransactionJournal::find($journalId);
-            /** @var JournalDestroyService $service */
-            $service = app(JournalDestroyService::class);
-            $service->destroy($journal);
+            if (null !== $journal) {
+                /** @var JournalDestroyService $service */
+                $service = app(JournalDestroyService::class);
+                $service->destroy($journal);
+            }
         }
     }
 

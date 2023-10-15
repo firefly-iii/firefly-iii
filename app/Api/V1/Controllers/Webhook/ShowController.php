@@ -74,7 +74,7 @@ class ShowController extends Controller
     {
         $manager    = $this->getManager();
         $collection = $this->repository->all();
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = $this->parameters->get('limit');
         $count      = $collection->count();
         $webhooks   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 

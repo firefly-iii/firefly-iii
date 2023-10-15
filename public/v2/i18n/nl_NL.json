@@ -23,7 +23,13 @@
             "unknown_budget_plain": "Geen budget",
             "expense_account": "Crediteur",
             "revenue_account": "Debiteur",
-            "budget": "Budget"
+            "budget": "Budget",
+            "account_type_Asset account": "Asset account",
+            "account_type_Expense account": "Expense account",
+            "account_type_Revenue account": "Revenue account",
+            "account_type_Debt": "Schuld",
+            "account_type_Loan": "Lening",
+            "account_type_Mortgage": "Hypotheek"
         }
     }
 }

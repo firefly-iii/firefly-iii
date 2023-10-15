@@ -22,6 +22,7 @@ let loaded = false;
 
 async function loadTranslations(i18n, locale) {
     if (false === loaded) {
+        locale = locale.replace('-', '_');
         const response = await fetch(`./v2/i18n/${locale}.json`);
         const translations = await response.json();
         i18n.store(translations);

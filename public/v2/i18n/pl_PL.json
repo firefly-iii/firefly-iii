@@ -23,7 +23,13 @@
             "unknown_budget_plain": "Brak bud\u017cetu",
             "expense_account": "Konto wydatk\u00f3w",
             "revenue_account": "Konto przychod\u00f3w",
-            "budget": "Bud\u017cet"
+            "budget": "Bud\u017cet",
+            "account_type_Asset account": "Asset account",
+            "account_type_Expense account": "Expense account",
+            "account_type_Revenue account": "Revenue account",
+            "account_type_Debt": "D\u0142ug",
+            "account_type_Loan": "Po\u017cyczka",
+            "account_type_Mortgage": "Hipoteka"
         }
     }
 }

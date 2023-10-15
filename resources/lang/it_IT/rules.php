@@ -24,10 +24,10 @@
 declare(strict_types=1);
 
 return [
-    'main_message'                                => 'Action ":action", present in rule ":rule", could not be applied to transaction #:group: :error',
-    'find_or_create_tag_failed'                   => 'Could not find or create tag ":tag"',
-    'tag_already_added'                           => 'Tag ":tag" is already linked to this transaction',
-    'inspect_transaction'                         => 'Inspect transaction ":title" @ Firefly III',
+    'main_message'                                => 'L\'azione ":action", presente nella regola ":rule", non può essere applicata alla transazione #:group: :error',
+    'find_or_create_tag_failed'                   => 'Impossibile trovare o creare il tag ":tag"',
+    'tag_already_added'                           => 'Tag ":tag" è già collegato a questa transazione',
+    'inspect_transaction'                         => 'Ispeziona la transazione ":title" @ Firefly III',
     'inspect_rule'                                => 'Inspect rule ":title" @ Firefly III',
     'journal_other_user'                          => 'This transaction doesn\'t belong to the user',
     'no_such_journal'                             => 'This transaction doesn\'t exist',

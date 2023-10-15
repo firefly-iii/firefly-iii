@@ -20,10 +20,10 @@
 
 import {format} from "date-fns";
 
-async function getCacheKey(string, start, end) {
+function getCacheKey(string, start, end) {
     const cacheKey = format(start, 'y-MM-dd') + '_' + format(end, 'y-MM-dd') + '_' + string;
     console.log('getCacheKey: ' + cacheKey);
-    return cacheKey;
+    return String(cacheKey);
 }
 
 export {getCacheKey};

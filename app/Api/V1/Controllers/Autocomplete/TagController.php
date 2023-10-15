@@ -67,7 +67,7 @@ class TagController extends Controller
     {
         $data = $request->getData();
 
-        $result = $this->repository->searchTags($data['query'], $data['limit']);
+        $result = $this->repository->searchTags($data['query'], $this->parameters->get('limit'));
         $array  = [];
         /** @var Tag $tag */
         foreach ($result as $tag) {

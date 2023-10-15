@@ -143,11 +143,12 @@ trait RuleManagement
                 $renderedEntries[] = view(
                     'rules.partials.trigger',
                     [
-                        'oldTrigger' => OperatorQuerySearch::getRootOperator($operator['type']),
-                        'oldValue'   => $operator['value'],
-                        'oldChecked' => false,
-                        'count'      => $index + 1,
-                        'triggers'   => $triggers,
+                        'oldTrigger'    => OperatorQuerySearch::getRootOperator($operator['type']),
+                        'oldValue'      => $operator['value'],
+                        'oldChecked'    => false,
+                        'oldProhibited' => $operator['prohibited'] ?? false,
+                        'count'         => $index + 1,
+                        'triggers'      => $triggers,
                     ]
                 )->render();
             } catch (Throwable $e) {

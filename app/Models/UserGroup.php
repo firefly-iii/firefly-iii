@@ -65,6 +65,26 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null                            $piggy_banks_count
  * @property-read Collection<int, TransactionJournal> $transactionJournals
  * @property-read int|null                            $transaction_journals_count
+ * @property-read Collection<int, \FireflyIII\Models\Attachment> $attachments
+ * @property-read int|null $attachments_count
+ * @property-read Collection<int, \FireflyIII\Models\Category> $categories
+ * @property-read int|null $categories_count
+ * @property-read Collection<int, \FireflyIII\Models\CurrencyExchangeRate> $currencyExchangeRates
+ * @property-read int|null $currency_exchange_rates_count
+ * @property-read Collection<int, \FireflyIII\Models\ObjectGroup> $objectGroups
+ * @property-read int|null $object_groups_count
+ * @property-read Collection<int, \FireflyIII\Models\Recurrence> $recurrences
+ * @property-read int|null $recurrences_count
+ * @property-read Collection<int, \FireflyIII\Models\RuleGroup> $ruleGroups
+ * @property-read int|null $rule_groups_count
+ * @property-read Collection<int, \FireflyIII\Models\Rule> $rules
+ * @property-read int|null $rules_count
+ * @property-read Collection<int, \FireflyIII\Models\Tag> $tags
+ * @property-read int|null $tags_count
+ * @property-read Collection<int, \FireflyIII\Models\TransactionGroup> $transactionGroups
+ * @property-read int|null $transaction_groups_count
+ * @property-read Collection<int, \FireflyIII\Models\Webhook> $webhooks
+ * @property-read int|null $webhooks_count
  * @mixin Eloquent
  */
 class UserGroup extends Model

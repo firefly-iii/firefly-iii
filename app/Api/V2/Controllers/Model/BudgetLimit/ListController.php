@@ -57,12 +57,13 @@ class ListController extends Controller
      */
     public function index(DateRequest $request, Budget $budget): JsonResponse
     {
+        $pageSize   = $this->parameters->get('limit');
         $dates      = $request->getAll();
         $collection = $this->repository->getBudgetLimits($budget, $dates['start'], $dates['end']);
         $total      = $collection->count();
-        $collection->slice($this->pageSize * $this->parameters->get('page'), $this->pageSize);
+        $collection->slice($pageSize * $this->parameters->get('page'), $pageSize);
 
-        $paginator   = new LengthAwarePaginator($collection, $total, $this->pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($collection, $total, $pageSize, $this->parameters->get('page'));
         $transformer = new BudgetLimitTransformer();
 
         return response()

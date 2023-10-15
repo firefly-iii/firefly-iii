@@ -30,6 +30,7 @@ export default defineConfig({
             input: [
                 'resources/assets/v2/sass/app.scss',
                 'resources/assets/v2/pages/dashboard/dashboard.js',
+                'resources/assets/v2/pages/transactions/create.js',
             ],
             refresh: true,
         }),

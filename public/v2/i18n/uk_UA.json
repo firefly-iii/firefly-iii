@@ -23,7 +23,13 @@
             "unknown_budget_plain": "No budget",
             "expense_account": "Expense account",
             "revenue_account": "Revenue account",
-            "budget": "Budget"
+            "budget": "Budget",
+            "account_type_Asset account": "Asset account",
+            "account_type_Expense account": "Expense account",
+            "account_type_Revenue account": "Revenue account",
+            "account_type_Debt": "\u0414\u0435\u0431\u0456\u0442",
+            "account_type_Loan": "\u041f\u043e\u0437\u0438\u043a\u0430",
+            "account_type_Mortgage": "\u0406\u043f\u043e\u0442\u0435\u043a\u0430"
         }
     }
 }

@@ -22,7 +22,7 @@
  *
  * @param entries
  */
-export function parseFromEntries(entries) {
+export function parseFromEntries(entries, transactionType) {
     let returnArray = [];
     for (let i in entries) {
         if (entries.hasOwnProperty(i)) {
@@ -36,8 +36,16 @@ export function parseFromEntries(entries) {
             current.amount = entry.amount;
             current.date = entry.date;
 
+            // if ID is set:
+            if ('' !== entry.source_account.id.toString()) {
+                current.source_id = entry.source_account.id;
+            }
+            if ('' !== entry.destination_account.id.toString()) {
+                current.destination_id = entry.destination_account.id;
+            }
+
             // TODO transaction type is hard coded:
-            current.type = 'withdrawal';
+            current.type = transactionType;
 
 
             returnArray.push(current);

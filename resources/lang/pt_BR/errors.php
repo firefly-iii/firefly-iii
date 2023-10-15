@@ -37,12 +37,12 @@ declare(strict_types=1);
 return [
     '404_header'              => 'Firefly III não conseguiu encontrar esta página.',
     '404_page_does_not_exist' => 'A página que você solicitou não existe. Por favor, verifique se você não digitou o endereço errado. Talvez você tenha cometido um erro de digitação?',
-    '404_send_error'          => 'Se você foi redirecionado para esta página, por favor aceite minhas desculpas. Há uma referência para este erro nos seus arquivos de registo e ficarei agradecido se você me enviar o erro.',
+    '404_send_error'          => 'Se você foi redirecionado para esta página automaticamente, por favor aceite minhas desculpas. Há uma referência para este erro nos seus arquivos de registro e ficarei agradecido se você me enviar o erro.',
     '404_github_link'         => 'Se você tem certeza que esta página deveria existir, abra um ticket no <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
     'whoops'                  => 'Ops',
     'fatal_error'             => 'Houve um erro fatal. Por favor, verifique os arquivos de log em "storage/logs" ou use "docker logs -f [container]" para ver o que está acontecendo.',
     'maintenance_mode'        => 'Firefly III está em modo de manutenção.',
-    'be_right_back'           => 'Volto já!',
+    'be_right_back'           => 'Volta logo!',
     'check_back'              => 'Firefly III está fora do ar devido a manutenção necessária. Acesse novamente em alguns instantes.',
     'error_occurred'          => 'Ops! Aconteceu um erro.',
     'db_error_occurred'       => 'Ops! Ocorreu um erro no banco de dados.',
@@ -64,7 +64,7 @@ return [
  */
 
 
-    'collect_info'        => 'Por favor recupere mais informações no diretório <code>storage/logs</code> onde você encontrará os arquivos de log. Se você estiver executando o Docker, use <code>docker logs -f [container]</code>.',
+    'collect_info'        => 'Por favor, colete mais informações no diretório <code>storage/logs</code>, onde você encontrará os arquivos de log. Se você estiver executando o Docker, use <code>docker logs -f [container]</code>.',
     'collect_info_more'   => 'Você pode ler mais sobre a coleta de informações de erro em <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">Perguntas Frequentes</a>.',
     'github_help'         => 'Obtenha ajuda no GitHub',
     'github_instructions' => 'Você é mais do que bem-vindo para abrir uma nova issue <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">no GitHub</a>.</strong>.',

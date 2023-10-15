@@ -245,7 +245,7 @@ class JournalRepository implements JournalRepositoryInterface
     {
         $query = $this->user->transactionJournals()
                             ->orderBy('date', 'DESC');
-        if ('' !== $query) {
+        if ('' !== $search) {
             $query->where('description', 'LIKE', sprintf('%%%s%%', $search));
         }
 

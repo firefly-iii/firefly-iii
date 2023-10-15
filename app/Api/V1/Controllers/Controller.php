@@ -61,9 +61,9 @@ abstract class Controller extends BaseController
     {
         // get global parameters
         $this->allowedSort = config('firefly.allowed_sort_parameters');
-        $this->parameters  = $this->getParameters();
         $this->middleware(
             function ($request, $next) {
+                $this->parameters = $this->getParameters();
                 if (auth()->check()) {
                     $language = app('steam')->getLanguage();
                     app()->setLocale($language);
@@ -136,6 +136,11 @@ abstract class Controller extends BaseController
             }
             if (null !== $value) {
                 $bag->set($integer, (int)$value);
+            }
+            if (null === $value && 'limit' === $integer && auth()->check()) {
+                // set default for user:
+                $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+                $bag->set($integer, $pageSize);
             }
         }
 

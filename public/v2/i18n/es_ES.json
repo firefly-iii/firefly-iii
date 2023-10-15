@@ -23,7 +23,13 @@
             "unknown_budget_plain": "Sin presupuesto",
             "expense_account": "Cuenta de gastos",
             "revenue_account": "Cuenta de ingresos",
-            "budget": "Presupuesto"
+            "budget": "Presupuesto",
+            "account_type_Asset account": "Asset account",
+            "account_type_Expense account": "Expense account",
+            "account_type_Revenue account": "Revenue account",
+            "account_type_Debt": "Deuda",
+            "account_type_Loan": "Pr\u00e9stamo",
+            "account_type_Mortgage": "Hipoteca"
         }
     }
 }

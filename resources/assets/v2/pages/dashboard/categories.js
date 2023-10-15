@@ -23,13 +23,12 @@ import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import {Chart} from "chart.js";
 import formatMoney from "../../util/format-money.js";
 import {getColors} from "../../support/get-colors.js";
+import {getCacheKey} from "../../support/get-cache-key.js";
 
 let currencies = [];
 let chart = null;
 let chartData = null;
 let afterPromises = false;
-
-const CACHE_KEY = 'dashboard-categories-chart';
 
 export default () => ({
     loading: false,
@@ -146,8 +145,12 @@ export default () => ({
 
     },
     getFreshData() {
+        const start = new Date(window.store.get('start'));
+        const end = new Date(window.store.get('end'));
+        const cacheKey = getCacheKey('dashboard-categories-chart', start, end);
+
         const cacheValid = window.store.get('cacheValid');
-        let cachedData = window.store.get(CACHE_KEY);
+        let cachedData = window.store.get(cacheKey);
 
         if (cacheValid && typeof cachedData !== 'undefined') {
             chartData = cachedData; // save chart data for later.
@@ -157,10 +160,10 @@ export default () => ({
         }
 
         const dashboard = new Dashboard();
-        dashboard.dashboard(new Date(window.store.get('start')), new Date(window.store.get('end')), null).then((response) => {
+        dashboard.dashboard(start, end, null).then((response) => {
             chartData = response.data; // save chart data for later.
             this.drawChart(this.generateOptions(response.data));
-            window.store.set(CACHE_KEY, chartData);
+            window.store.set(cacheKey, chartData);
             this.loading = false;
         });
     },

@@ -101,7 +101,7 @@ class UserController extends Controller
     public function index(): JsonResponse
     {
         // user preferences
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize = $this->parameters->get('limit');
         $manager  = $this->getManager();
 
         // build collection

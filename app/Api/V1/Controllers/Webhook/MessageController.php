@@ -70,7 +70,7 @@ class MessageController extends Controller
     public function index(Webhook $webhook): JsonResponse
     {
         $manager    = $this->getManager();
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $pageSize   = $this->parameters->get('limit');
         $collection = $this->repository->getMessages($webhook);
 
         $count    = $collection->count();

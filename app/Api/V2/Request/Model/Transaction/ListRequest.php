@@ -43,10 +43,11 @@ class ListRequest extends FormRequest
     /**
      * @return string
      */
-    public function buildParams(): string
+    public function buildParams(int $pageSize): string
     {
         $array = [
-            'page' => $this->getPage(),
+            'page'  => $this->getPage(),
+            'limit' => $pageSize,
         ];
 
         $start = $this->getStartDate();
@@ -54,9 +55,6 @@ class ListRequest extends FormRequest
         if (null !== $start && null !== $end) {
             $array['start'] = $start->format('Y-m-d');
             $array['end']   = $end->format('Y-m-d');
-        }
-        if (0 !== $this->getLimit()) {
-            $array['limit'] = $this->getLimit();
         }
         return http_build_query($array);
     }
@@ -84,14 +82,6 @@ class ListRequest extends FormRequest
     public function getEndDate(): ?Carbon
     {
         return $this->getCarbonDate('end');
-    }
-
-    /**
-     * @return int
-     */
-    public function getLimit(): int
-    {
-        return $this->convertInteger('limit');
     }
 
     /**

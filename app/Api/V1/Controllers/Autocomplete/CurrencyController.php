@@ -66,7 +66,7 @@ class CurrencyController extends Controller
     public function currencies(AutocompleteRequest $request): JsonResponse
     {
         $data       = $request->getData();
-        $collection = $this->repository->searchCurrency($data['query'], $data['limit']);
+        $collection = $this->repository->searchCurrency($data['query'], $this->parameters->get('limit'));
         $result     = [];
 
         /** @var TransactionCurrency $currency */
@@ -95,7 +95,7 @@ class CurrencyController extends Controller
     public function currenciesWithCode(AutocompleteRequest $request): JsonResponse
     {
         $data       = $request->getData();
-        $collection = $this->repository->searchCurrency($data['query'], $data['limit']);
+        $collection = $this->repository->searchCurrency($data['query'], $this->parameters->get('limit'));
         $result     = [];
 
         /** @var TransactionCurrency $currency */
