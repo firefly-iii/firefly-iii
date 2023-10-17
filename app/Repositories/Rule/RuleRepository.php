@@ -289,7 +289,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->strict          = array_key_exists('strict', $data) ? $data['strict'] : false;
         $rule->stop_processing = array_key_exists('stop_processing', $data) ? $data['stop_processing'] : false;
         $rule->title           = $data['title'];
-        $rule->description     = array_key_exists('stop_processing', $data) ? $data['stop_processing'] : null;
+        $rule->description     = $data['description'];
         $rule->save();
         $rule->refresh();
 
