@@ -176,7 +176,7 @@
       "@php vendor/bin/phpunit -c phpunit.xml --testsuite integration --no-coverage"
     ],
     "coverage": [
-      "@php vendor/bin/phpunit -c phpunit.xml --testsuite unit"
+      "@php vendor/bin/phpunit -c phpunit.xml"
     ]
   },
   "config": {
