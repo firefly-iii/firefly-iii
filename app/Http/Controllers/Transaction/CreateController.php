@@ -92,7 +92,7 @@ class CreateController extends Controller
                 if('edit' === $request->get('redirect')) {
                     return response()->json(['redirect' => route('transactions.edit', [$newGroup->id])]);
                 }
-                
+
                 return response()->json(['redirect' => route('transactions.show', [$newGroup->id])]);
             }
         }

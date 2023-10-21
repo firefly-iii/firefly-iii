@@ -44,6 +44,10 @@ let transactions = function () {
         showSuccessMessage: false,
         showErrorMessage: false,
         entries: [],
+        loadingCurrencies: true,
+        enabledCurrencies: [],
+        nativeCurrencies: [],
+        foreignCurrencies: [],
         filters: {
             source: [],
             destination: [],
@@ -123,6 +127,9 @@ let transactions = function () {
                 };
             console.log('Changed destination account into a known ' + item.type.toLowerCase());
         },
+        loadCurrencies() {
+            console.log('Loading user currencies.');
+        },
         changeSourceAccount(item, ac) {
             if (typeof item === 'undefined') {
                 const index = parseInt(ac._searchInput.attributes['data-index'].value);
@@ -161,6 +168,7 @@ let transactions = function () {
 
         addedSplit() {
             console.log('addedSplit');
+            // TODO improve code location
             Autocomplete.init("input.ac-source", {
                 server: urls.account,
                 serverParams: {
@@ -229,6 +237,7 @@ let transactions = function () {
                 });
 
             });
+            this.loadCurrencies();
 
             // source can never be expense account
             this.filters.source = ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'];
