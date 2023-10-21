@@ -47,6 +47,8 @@
                                 <li role="separator" class="divider"></li>
                                 <li><a href="#" class="clone-transaction" data-id="{{ transactionGroup.id }}"><span
                                             class="fa fa-copy"></span> {{ 'clone'|_ }}</a></li>
+                                <li><a href="#" class="clone-transaction-and-edit" data-id="{{ transactionGroup.id }}"><span
+                                            class="fa fa-copy"></span> {{ 'clone_and_edit'|_ }}</a></li>
                             {% endif %}
 
                         </ul>
@@ -246,6 +248,8 @@
                                     <li role="separator" class="divider"></li>
                                     <li><a href="#" data-id="{{ transactionGroup.id }}" class="clone-transaction"><span
                                                 class="fa fa-copy"></span> {{ 'clone'|_ }}</a></li>
+                                    <li><a href="#" data-id="{{ transactionGroup.id }}" class="clone-transaction-and-edit"><span
+                                                class="fa fa-copy"></span> {{ 'clone_and_edit'|_ }}</a></li>
                                 {% endif %}
 
                                 <li><a href="#" class="link-modal"
@@ -498,6 +502,7 @@
         var acURL = '{{ route('api.v1.autocomplete.transactions-with-id') }}';
         var groupURL = '{{ route('transactions.show',['%GROUP%']) }}';
         var cloneGroupUrl = '{{ route('transactions.clone') }}';
+        var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
 
         $('.switch-link').on('click', switchLink);
         var switchLinkUrl = '{{ route('transactions.link.switch') }}';

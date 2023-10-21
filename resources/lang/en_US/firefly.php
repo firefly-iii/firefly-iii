@@ -33,6 +33,7 @@ return [
     'split'                                => 'Split',
     'single_split'                         => 'Split',
     'clone'                                => 'Clone',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Last seven days',
     'last_thirty_days'                     => 'Last thirty days',
@@ -1980,6 +1981,7 @@ return [
     'first_split_overrules_source'              => 'The first split may overrule the source account',
     'first_split_overrules_destination'         => 'The first split may overrule the destination account',
     'spent_x_of_y'                              => 'Spent {amount} of {total}',
+
 
     // new user:
     'welcome'                                   => 'Welcome to Firefly III!',

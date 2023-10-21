@@ -24,6 +24,7 @@ $(document).ready(function () {
     updateListButtons();
     addSort();
     $('.clone-transaction').click(cloneTransaction);
+    $('.clone-transaction-and-edit').click(cloneTransactionAndEdit);
 });
 
 var fixHelper = function (e, tr) {
@@ -233,6 +234,21 @@ function cloneTransaction(e) {
 
     $.post(cloneGroupUrl, {
         _token: token,
+        id: groupId
+    }).done(function (data) {
+        // lame but it works
+        location.href = data.redirect;
+    }).fail(function () {
+        console.error('I failed :(');
+    });
+    return false;
+}
+
+function cloneTransactionAndEdit(e) {
+    var button = $(e.currentTarget);
+    var groupId = parseInt(button.data('id'));
+
+    $.post(cloneAndEditUrl, {
         id: groupId
     }).done(function (data) {
         // lame but it works
