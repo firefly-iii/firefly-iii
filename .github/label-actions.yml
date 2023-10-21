@@ -4,7 +4,7 @@
 feature:
   issues:
     # Post a comment, `{issue-author}` is an optional placeholder
-    comment: >
+    comment: |
       Hi there!
 
       This issue has been marked as a feature request. The requested (new) feature will become a part of Firefly III
@@ -19,7 +19,7 @@ feature:
 enhancement:
   issues:
     # Post a comment, `{issue-author}` is an optional placeholder
-    comment: >
+    comment: |
       Hi there!
 
       This issue has been marked as an enhancement. The requested (new) feature will become a part of Firefly III
@@ -35,7 +35,7 @@ enhancement:
 triage:
   issues:
     # Post a comment, `{issue-author}` is an optional placeholder
-    comment: >
+    comment: |
       Hi there!
 
       This issue has been marked as being in triage. The root cause is not known yet, or the issue needs more
