@@ -1,0 +1,45 @@
+# Configuration for Label Actions - https://github.com/dessant/label-actions
+
+# The `feature` label is added to issues
+feature:
+  issues:
+    # Post a comment, `{issue-author}` is an optional placeholder
+    comment: >
+      Hi there!
+
+      This issue has been marked as a feature request. The requested (new) feature will become a part of Firefly III
+      or the data importer in due course.
+
+      If you come across this issue, please be aware there is NO need to reply with "+1" or "me too" or
+      "I need this too" or whatever. Such comments are not helpful and will be :skull: deleted. You can subscribe to
+      this issue to get updates.
+
+      Thank you for your contributions.
+
+enhancement:
+  issues:
+    # Post a comment, `{issue-author}` is an optional placeholder
+    comment: >
+      Hi there!
+
+      This issue has been marked as an enhancement. The requested (new) feature will become a part of Firefly III
+      or the data importer in due course.
+
+      If you come across this issue, please be aware there is NO need to reply with "+1" or "me too" or
+      "I need this too" or whatever. Such comments are not helpful and will be :skull: deleted. You can subscribe to
+      this issue to get updates.
+
+      Thank you for your contributions.
+
+# The `solved` label is added to discussions
+triage:
+  issues:
+    # Post a comment, `{issue-author}` is an optional placeholder
+    comment: >
+      Hi there!
+
+      This issue has been marked as being in triage. The root cause is not known yet, or the issue needs more
+      investigation. You can help by sharing debug information (from `/debug`) if you also have this issue or
+      when you haven't already done so.
+
+      Thank you for your contributions.
