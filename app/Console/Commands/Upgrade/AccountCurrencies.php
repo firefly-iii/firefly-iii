@@ -129,20 +129,7 @@ class AccountCurrencies extends Command
         $accounts = $this->accountRepos->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
 
         // get user's currency preference:
-        $defaultCurrencyCode = app('preferences')->getForUser($user, 'currencyPreference', $systemCurrencyCode)->data;
-        if (!is_string($defaultCurrencyCode)) {
-            $defaultCurrencyCode = $systemCurrencyCode;
-        }
-
-        /** @var TransactionCurrency|null $defaultCurrency */
-        $defaultCurrency = TransactionCurrency::where('code', $defaultCurrencyCode)->first();
-
-        if (null === $defaultCurrency) {
-            Log::error(sprintf('Users currency pref "%s" does not exist!', $defaultCurrencyCode));
-            $this->friendlyError(sprintf('User has a preference for "%s", but this currency does not exist.', $defaultCurrencyCode));
-
-            return;
-        }
+        $defaultCurrency = app('amount')->getDefaultCurrencyByUser($user);
 
         /** @var Account $account */
         foreach ($accounts as $account) {
