@@ -108,8 +108,9 @@ class Amount
      */
     public function getCurrencies(): Collection
     {
-        throw new FireflyException(sprintf('Method "%s" needs a refactor', __METHOD__));
-        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
+        /** @var User $user */
+        $user = auth()->user();
+        return $user->currencies()->orderBy('code','ASC')->get();
     }
 
     /**
