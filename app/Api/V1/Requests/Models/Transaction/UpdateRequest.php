@@ -321,7 +321,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-
+        $validProtocols = config('firefly.valid_url_protocols');
         return [
             // basic fields for group:
             'group_title'                           => 'between:1,1000|nullable',
@@ -375,7 +375,7 @@ class UpdateRequest extends FormRequest
             'transactions.*.external_id'            => 'min:1|max:255|nullable',
             'transactions.*.recurrence_id'          => 'min:1|max:255|nullable',
             'transactions.*.bunq_payment_id'        => 'min:1|max:255|nullable',
-            'transactions.*.external_url'           => 'min:1|max:255|nullable|url',
+            'transactions.*.external_url'           => sprintf('min:1|max:255|nullable|url:%s', $validProtocols),
 
             // SEPA fields:
             'transactions.*.sepa_cc'                => 'min:1|max:255|nullable',

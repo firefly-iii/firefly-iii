@@ -74,14 +74,14 @@ class CreateRequest extends FormRequest
         $triggers   = implode(',', array_keys(Webhook::getTriggersForValidation()));
         $responses  = implode(',', array_keys(Webhook::getResponsesForValidation()));
         $deliveries = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
-
+        $validProtocols = config('firefly.valid_url_protocols');
         return [
             'title'    => 'required|between:1,512|uniqueObjectForUser:webhooks,title',
             'active'   => [new IsBoolean()],
             'trigger'  => sprintf('required|in:%s', $triggers),
             'response' => sprintf('required|in:%s', $responses),
             'delivery' => sprintf('required|in:%s', $deliveries),
-            'url'      => ['required', 'url', 'uniqueWebhook'],
+            'url'      => ['required', sprintf('url:%s', $validProtocols), 'uniqueWebhook'],
         ];
     }
 }
