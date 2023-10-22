@@ -46,6 +46,7 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
@@ -229,6 +230,16 @@ class User extends Authenticatable
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class);
+    }
+
+    /**
+     * Link to currencies
+     *
+     * @return BelongsToMany
+     */
+    public function currencies(): BelongsToMany
+    {
+        return $this->belongsToMany(TransactionCurrency::class)->withTimestamps()->withPivot('default');
     }
 
     /**
