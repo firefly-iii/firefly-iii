@@ -45,8 +45,13 @@ function setDefaultCurrency(e) {
             'Content-Type': 'application/json',
             'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
         },
+        error: function () {
+            window.location = redirectUrl + '?message=default_failed&code=' + currencyCode;
+        },
+        success: function () {
+            window.location = redirectUrl + '?message=default&code=' + currencyCode;
+        }
     });
-    window.location = redirectUrl + '?message=default&code=' + currencyCode;
     return false;
 }
 
@@ -66,8 +71,13 @@ function enableCurrency(e) {
             'Content-Type': 'application/json',
             'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
         },
+        error: function () {
+            window.location = redirectUrl + '?message=enable_failed&code=' + currencyCode;
+        },
+        success: function () {
+            window.location = redirectUrl + '?message=enabled&code=' + currencyCode;
+        }
     });
-    window.location = redirectUrl + '?message=enabled&code=' + currencyCode;
     return false;
 }
 
@@ -76,7 +86,7 @@ function disableCurrency(e) {
     var currencyCode = button.data('code');
 
     var params = {
-        enabled: true
+        enabled: false
     }
 
     $.ajax({
@@ -87,7 +97,12 @@ function disableCurrency(e) {
             'Content-Type': 'application/json',
             'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
         },
+        error: function () {
+            window.location = redirectUrl + '?message=disable_failed&code=' + currencyCode;
+        },
+        success: function () {
+            window.location = redirectUrl + '?message=disabled&code=' + currencyCode;
+        }
     });
-    window.location = redirectUrl + '?message=disabled&code=' + currencyCode;
     return false;
 }
