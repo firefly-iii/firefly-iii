@@ -131,7 +131,7 @@ class TransactionCurrency extends Model
      */
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)->withTimestamps()->withPivot('default');
+        return $this->belongsToMany(User::class)->withTimestamps()->withPivot('user_default');
     }
 
     /**
@@ -141,7 +141,7 @@ class TransactionCurrency extends Model
      */
     public function userGroups(): BelongsToMany
     {
-        return $this->belongsToMany(UserGroup::class)->withTimestamps()->withPivot('default');
+        return $this->belongsToMany(UserGroup::class)->withTimestamps()->withPivot('group_default');
     }
 
     /**

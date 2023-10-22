@@ -18,7 +18,7 @@ return new class extends Migration {
                     $table->timestamps();
                     $table->integer('user_id', false, true);
                     $table->integer('transaction_currency_id', false, true);
-                    $table->boolean('default')->default(false);
+                    $table->boolean('user_default')->default(false);
                     $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
                     $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
                     $table->unique(['user_id', 'transaction_currency_id'],'unique_combo');
@@ -37,7 +37,7 @@ return new class extends Migration {
                     $table->timestamps();
                     $table->bigInteger('user_group_id', false, true);
                     $table->integer('transaction_currency_id', false, true);
-                    $table->boolean('default')->default(false);
+                    $table->boolean('group_default')->default(false);
                     $table->foreign('user_group_id')->references('id')->on('user_groups')->onDelete('cascade');
                     $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
                     $table->unique(['user_group_id', 'transaction_currency_id'],'unique_combo');

@@ -239,7 +239,7 @@ class User extends Authenticatable
      */
     public function currencies(): BelongsToMany
     {
-        return $this->belongsToMany(TransactionCurrency::class)->withTimestamps()->withPivot('default');
+        return $this->belongsToMany(TransactionCurrency::class)->withTimestamps()->withPivot('user_default');
     }
 
     /**

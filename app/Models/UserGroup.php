@@ -137,7 +137,7 @@ class UserGroup extends Model
      */
     public function currencies(): BelongsToMany
     {
-        return $this->belongsToMany(TransactionCurrency::class);
+        return $this->belongsToMany(TransactionCurrency::class)->withTimestamps()->withPivot('group_default');
     }
 
     /**
