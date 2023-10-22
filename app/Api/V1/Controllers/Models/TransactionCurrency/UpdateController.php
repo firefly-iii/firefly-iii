@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use JsonException;
 use League\Fractal\Resource\Item;
@@ -82,11 +83,12 @@ class UpdateController extends Controller
         if ($this->repository->currencyInUse($currency)) {
             return response()->json([], 409);
         }
+        /** @var User $user */
+        $user = auth()->user();
         $this->repository->disable($currency);
         $manager = $this->getManager();
 
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $defaultCurrency);
+        $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
@@ -110,14 +112,15 @@ class UpdateController extends Controller
      */
     public function makeDefault(TransactionCurrency $currency): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
         $this->repository->enable($currency);
+        $this->repository->makeDefault($currency);
 
-        app('preferences')->set('currencyPreference', $currency->code);
         app('preferences')->mark();
 
         $manager = $this->getManager();
-
-        $this->parameters->set('defaultCurrency', $currency);
+        $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
@@ -144,9 +147,10 @@ class UpdateController extends Controller
     {
         $this->repository->enable($currency);
         $manager = $this->getManager();
+        /** @var User $user */
+        $user = auth()->user();
 
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $defaultCurrency);
+        $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
@@ -172,18 +176,16 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, TransactionCurrency $currency): JsonResponse
     {
-        $data     = $request->getAll();
+        $data = $request->getAll();
+
+        /** @var User $user */
+        $user     = auth()->user();
         $currency = $this->repository->update($currency, $data);
 
-        if (true === $request->boolean('default')) {
-            app('preferences')->set('currencyPreference', $currency->code);
-            app('preferences')->mark();
-        }
+        app('preferences')->mark();
 
         $manager = $this->getManager();
-
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $defaultCurrency);
+        $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
