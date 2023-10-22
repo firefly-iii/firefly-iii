@@ -108,33 +108,8 @@ class Amount
      */
     public function getCurrencies(): Collection
     {
+        throw new FireflyException(sprintf('Method "%s" needs a refactor', __METHOD__));
         return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
-    }
-
-    /**
-     * @return string
-     * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function getCurrencyCode(): string
-    {
-        $cache = new CacheProperties();
-        $cache->addProperty('getCurrencyCode');
-        if ($cache->has()) {
-            return $cache->get();
-        }
-        $currencyPreference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
-
-        $currency = TransactionCurrency::where('code', $currencyPreference->data)->first();
-        if ($currency) {
-            $cache->store($currency->code);
-
-            return $currency->code;
-        }
-        $cache->store(config('firefly.default_currency', 'EUR'));
-
-        return (string)config('firefly.default_currency', 'EUR');
     }
 
     /**
@@ -163,22 +138,14 @@ class Amount
         if ($cache->has()) {
             return $cache->get();
         }
-        $currencyPreference = app('preferences')->getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
-        $currencyPrefStr    = $currencyPreference ? $currencyPreference->data : 'EUR';
-
-        // at this point the currency preference could be encrypted, if coming from an old version.
-        $currencyCode = $this->tryDecrypt((string)$currencyPrefStr);
-
-        // could still be json encoded:
-        /** @var TransactionCurrency|null $currency */
-        $currency = TransactionCurrency::where('code', $currencyCode)->first();
-        if (null === $currency) {
-            // get EUR
-            $currency = TransactionCurrency::where('code', 'EUR')->first();
+        $default = $user->currencies()->where('user_default', true)->first();
+        if(null === $default) {
+            $default = $this->getSystemCurrency();
+            $user->currencies()->sync([$default->id => ['user_default' => true]]);
         }
-        $cache->store($currency);
+        $cache->store($default);
 
-        return $currency;
+        return $default;
     }
 
     /**

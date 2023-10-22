@@ -56,13 +56,11 @@ class JavascriptController extends Controller
      */
     public function accounts(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
-        $accounts   = $repository->getAccountsByType(
+        $accounts = $repository->getAccountsByType(
             [AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD]
         );
-        $preference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
-        $default    = $currencyRepository->findByCodeNull((string)$preference->data);
-
-        $data = ['accounts' => []];
+        $default  = app('amount')->getDefaultCurrency();
+        $data     = ['accounts' => []];
 
         /** @var Account $account */
         foreach ($accounts as $account) {

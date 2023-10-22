@@ -114,7 +114,7 @@ class NewUserController extends Controller
         $this->createCashWalletAccount($currency, $language);        // create cash wallet account
 
         // store currency preference:
-        app('preferences')->set('currencyPreference', $currency->code);
+        $currencyRepository->makeDefault($currency);
 
         // store frontpage preferences:
         $accounts = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
