@@ -1,4 +1,4 @@
-name: 'Dependency Review'
+name: 'Code - dependency review'
 on: [ pull_request ]
 
 permissions:
