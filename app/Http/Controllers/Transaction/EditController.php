@@ -25,8 +25,11 @@ namespace FireflyIII\Http\Controllers\Transaction;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
@@ -36,8 +39,11 @@ use Illuminate\View\View;
  */
 class EditController extends Controller
 {
+
+    private JournalRepositoryInterface $repository;
+
     /**
-     * EditController constructor.
+     * IndexController constructor.
      *
 
      */
@@ -45,15 +51,28 @@ class EditController extends Controller
     {
         parent::__construct();
 
-        // some useful repositories:
+        // translations:
         $this->middleware(
-            static function ($request, $next) {
+            function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
+
+                $this->repository = app(JournalRepositoryInterface::class);
 
                 return $next($request);
             }
         );
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return JsonResponse
+     */
+    public function unreconcile(TransactionJournal $journal): JsonResponse
+    {
+        $this->repository->unreconcileById($journal->id);
+        return response()->json([], 204);
     }
 
     /**

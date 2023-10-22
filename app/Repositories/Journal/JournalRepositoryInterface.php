@@ -134,6 +134,13 @@ interface JournalRepositoryInterface
     public function reconcileById(int $journalId): void;
 
     /**
+     * TODO Maybe to account repository? Do this wen reconcile is API only.
+     *
+     * @param int $journalId
+     */
+    public function unreconcileById(int $journalId): void;
+
+    /**
      * Search in journal descriptions.
      *
      * @param string $search

@@ -2,6 +2,7 @@
     "firefly": {
         "welcome_back": "Neler oluyor?",
         "flash_error": "Hata!",
+        "flash_warning": "Uyar\u0131!",
         "flash_success": "Ba\u015far\u0131l\u0131!",
         "close": "Kapat",
         "split_transaction_title": "Description of the split transaction",
@@ -29,6 +30,7 @@
         "submit": "G\u00f6nder",
         "amount": "Miktar",
         "date": "Tarih",
+        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
         "tags": "Etiketler",
         "no_budget": "(b\u00fct\u00e7e yok)",
         "no_bill": "(hay\u0131r bill)",

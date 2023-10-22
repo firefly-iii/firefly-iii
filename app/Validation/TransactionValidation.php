@@ -376,6 +376,11 @@ trait TransactionValidation
     public function validateAccountInformationUpdate(Validator $validator, TransactionGroup $transactionGroup): void
     {
         Log::debug('Now in validateAccountInformationUpdate()');
+        if ($validator->errors()->count() > 0) {
+            Log::debug('Validator already has errors, so return.');
+            return;
+        }
+
         $transactions = $this->getTransactionsArray($validator);
 
         /**
@@ -699,6 +704,11 @@ trait TransactionValidation
      */
     private function validateEqualAccountsForUpdate(Validator $validator, TransactionGroup $transactionGroup): void
     {
+        if ($validator->errors()->count() > 0) {
+            Log::debug('Validator already has errors, so return.');
+            return;
+        }
+
         Log::debug('Now in validateEqualAccountsForUpdate()');
         $transactions = $this->getTransactionsArray($validator);
 

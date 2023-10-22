@@ -1227,6 +1227,9 @@ Route::group(
         Route::get('delete/{transactionGroup}', ['uses' => 'Transaction\DeleteController@delete', 'as' => 'delete']);
         Route::post('destroy/{transactionGroup}', ['uses' => 'Transaction\DeleteController@destroy', 'as' => 'destroy']);
 
+        // unreconcile
+        Route::post('unreconcile/{tj}', ['uses' => 'Transaction\EditController@unreconcile', 'as' => 'unreconcile']);
+
         Route::get('show/{transactionGroup}', ['uses' => 'Transaction\ShowController@show', 'as' => 'show']);
         Route::get('debug/{transactionGroup}', ['uses' => 'Transaction\ShowController@debugShow', 'as' => 'debug']);
     }

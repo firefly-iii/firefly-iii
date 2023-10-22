@@ -2,6 +2,7 @@
     "firefly": {
         "welcome_back": "Ch\u00e0o m\u1eebng tr\u1edf l\u1ea1i?",
         "flash_error": "L\u1ed7i!",
+        "flash_warning": "C\u1ea3nh b\u00e1o!",
         "flash_success": "Th\u00e0nh c\u00f4ng!",
         "close": "\u0110\u00f3ng",
         "split_transaction_title": "M\u00f4 t\u1ea3 giao d\u1ecbch t\u00e1ch",
@@ -29,6 +30,7 @@
         "submit": "G\u1eedi",
         "amount": "S\u1ed1 ti\u1ec1n",
         "date": "Ng\u00e0y",
+        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
         "tags": "Nh\u00e3n",
         "no_budget": "(kh\u00f4ng c\u00f3 ng\u00e2n s\u00e1ch)",
         "no_bill": "(no bill)",

@@ -220,6 +220,10 @@
                                             class="fa fa-pencil"></span> {{ 'edit'|_ }}</a></li>
                                 <li><a href="{{ route('transactions.delete', [transactionGroup.id]) }}"><span
                                             class="fa fa-trash"></span> {{ 'delete'|_ }}</a></li>
+                                {% if journal.reconciled %}
+                                <li><a class="reconcile-button" href="{{ route('transactions.unreconcile', [journal.transaction_journal_id]) }}"><span
+                                            class="fa fa-history"></span> {{ 'unreconcile'|_ }}</a></li>
+                                {% endif %}
                                 <li role="separator" class="divider"></li>
 
                                 {# convert to different type #}
@@ -504,8 +508,24 @@
         var cloneGroupUrl = '{{ route('transactions.clone') }}';
         var cloneAndEditUrl = '{{ route('transactions.clone') }}?redirect=edit';
 
+
         $('.switch-link').on('click', switchLink);
+        $('.reconcile-button').on('click', unreconcile);
         var switchLinkUrl = '{{ route('transactions.link.switch') }}';
+
+        function unreconcile(e) {
+            e.preventDefault();
+            var obj = $(e.currentTarget);
+            $.post(obj.attr('href'), {
+                _token: token
+            }).done(function () {
+                location.reload();
+            }).fail(function () {
+                console.error('I failed :(');
+            });
+
+            return false
+        }
 
         function switchLink(e) {
             e.preventDefault();

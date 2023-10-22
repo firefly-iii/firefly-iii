@@ -2,6 +2,7 @@
     "firefly": {
         "welcome_back": "Jak to jde?",
         "flash_error": "Chyba!",
+        "flash_warning": "Varov\u00e1n\u00ed!",
         "flash_success": "\u00dasp\u011b\u0161n\u011b dokon\u010deno!",
         "close": "Zav\u0159\u00edt",
         "split_transaction_title": "Popis roz\u00fa\u010dtov\u00e1n\u00ed",
@@ -29,6 +30,7 @@
         "submit": "Odeslat",
         "amount": "\u010c\u00e1stka",
         "date": "Datum",
+        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
         "tags": "\u0160t\u00edtky",
         "no_budget": "(\u017e\u00e1dn\u00fd rozpo\u010det)",
         "no_bill": "(no bill)",

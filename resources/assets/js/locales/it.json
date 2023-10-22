@@ -2,6 +2,7 @@
     "firefly": {
         "welcome_back": "La tua situazione finanziaria",
         "flash_error": "Errore!",
+        "flash_warning": "Avviso!",
         "flash_success": "Successo!",
         "close": "Chiudi",
         "split_transaction_title": "Descrizione della transazione suddivisa",
@@ -29,6 +30,7 @@
         "submit": "Invia",
         "amount": "Importo",
         "date": "Data",
+        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
         "tags": "Etichette",
         "no_budget": "(nessun budget)",
         "no_bill": "(nessuna bolletta)",

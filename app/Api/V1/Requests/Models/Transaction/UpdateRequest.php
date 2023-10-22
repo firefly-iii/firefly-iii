@@ -417,15 +417,22 @@ class UpdateRequest extends FormRequest
                 // all transaction types must be equal:
                 $this->validateTransactionTypesForUpdate($validator);
 
+
+                // user wants to update a reconciled transaction.
+                // source, destination, amount + foreign_amount cannot be changed
+                // and must be omitted from the request.
+                $this->preventUpdateReconciled($validator, $transactionGroup);
+
                 // validate source/destination is equal, depending on the transaction journal type.
                 $this->validateEqualAccountsForUpdate($validator, $transactionGroup);
 
-                // a catch when users submit splits with no source or destination info at all.
-                $this->preventNoAccountInfo($validator, );
+                // see method:
+                //$this->preventNoAccountInfo($validator, );
 
                 // validate that the currency fits the source and/or destination account.
                 // validate all account info
                 $this->validateAccountInformationUpdate($validator, $transactionGroup);
+
             }
         );
     }

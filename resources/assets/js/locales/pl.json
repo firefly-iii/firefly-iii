@@ -2,6 +2,7 @@
     "firefly": {
         "welcome_back": "Co jest grane?",
         "flash_error": "B\u0142\u0105d!",
+        "flash_warning": "Ostrze\u017cenie!",
         "flash_success": "Sukces!",
         "close": "Zamknij",
         "split_transaction_title": "Opis podzielonej transakcji",
@@ -29,6 +30,7 @@
         "submit": "Prze\u015blij",
         "amount": "Kwota",
         "date": "Data",
+        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
         "tags": "Tagi",
         "no_budget": "(brak bud\u017cetu)",
         "no_bill": "(brak rachunku)",

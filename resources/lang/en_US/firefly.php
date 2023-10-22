@@ -1516,6 +1516,7 @@ return [
     'list_all_attachments'                      => 'List of all attachments',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'Expenses',
     'title_withdrawal'                          => 'Expenses',
     'title_revenue'                             => 'Revenue / income',
@@ -1888,6 +1889,7 @@ return [
     // Ignore this comment
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Update withdrawal',
     'update_deposit'                            => 'Update deposit',
     'update_transaction'                        => 'Update transaction',

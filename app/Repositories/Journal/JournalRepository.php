@@ -46,7 +46,7 @@ use Illuminate\Support\Collection;
 class JournalRepository implements JournalRepositoryInterface
 {
     /** @var User */
-    private $user;
+    private User $user;
 
     /**
      * @param TransactionGroup $transactionGroup
@@ -333,5 +333,15 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->refresh();
 
         return $journal;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function unreconcileById(int $journalId): void
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $this->user->transactionJournals()->find($journalId);
+        $journal?->transactions()->update(['reconciled' => false]);
     }
 }
