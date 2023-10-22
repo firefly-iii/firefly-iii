@@ -166,11 +166,25 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * Returns ALL currencies, regardless of whether they are enabled or not.
+     *
      * @return Collection
      */
     public function getAll(): Collection
     {
-        return TransactionCurrency::orderBy('code', 'ASC')->get();
+        $all   = TransactionCurrency::orderBy('code', 'ASC')->get();
+        $local = $this->get();
+        return $all->map(function (TransactionCurrency $current) use ($local) {
+            $hasId                = $local->contains(function (TransactionCurrency $entry) use ($current) {
+                return (int)$entry->id === (int)$current->id;
+            });
+            $isDefault            = $local->contains(function (TransactionCurrency $entry) use ($current) {
+                return 1 === (int)$entry->pivot->user_default && (int)$entry->id === (int)$current->id;
+            });
+            $current->userEnabled = $hasId;
+            $current->userDefault = $isDefault;
+            return $current;
+        });
     }
 
     /**
@@ -178,7 +192,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function get(): Collection
     {
-        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
+        $all = $this->user->currencies()->orderBy('code', 'ASC')->withPivot(['user_default'])->get();
+        $all->map(function (TransactionCurrency $current) {
+            $current->userEnabled = true;
+            $current->userDefault = 1 === (int)$current->pivot->user_default;
+            return $current;
+        });
+        return $all;
     }
 
     /**
