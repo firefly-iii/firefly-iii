@@ -140,8 +140,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         // is the default currency for the user or the system
-        $defaultCode = app('preferences')->getForUser($this->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
-        if ($currency->code === $defaultCode) {
+        $count = $this->user->currencies()->where('transaction_currencies.id', $currency->id)->wherePivot('user_default', 1)->count();
+        if ($count > 0) {
             Log::info('Is the default currency of the user, return true.');
 
             return 'current_default';
@@ -166,11 +166,25 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * Returns ALL currencies, regardless of whether they are enabled or not.
+     *
      * @return Collection
      */
     public function getAll(): Collection
     {
-        return TransactionCurrency::orderBy('code', 'ASC')->get();
+        $all   = TransactionCurrency::orderBy('code', 'ASC')->get();
+        $local = $this->get();
+        return $all->map(function (TransactionCurrency $current) use ($local) {
+            $hasId                = $local->contains(function (TransactionCurrency $entry) use ($current) {
+                return (int)$entry->id === (int)$current->id;
+            });
+            $isDefault            = $local->contains(function (TransactionCurrency $entry) use ($current) {
+                return 1 === (int)$entry->pivot->user_default && (int)$entry->id === (int)$current->id;
+            });
+            $current->userEnabled = $hasId;
+            $current->userDefault = $isDefault;
+            return $current;
+        });
     }
 
     /**
@@ -178,7 +192,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function get(): Collection
     {
-        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
+        $all = $this->user->currencies()->orderBy('code', 'ASC')->withPivot(['user_default'])->get();
+        $all->map(function (TransactionCurrency $current) {
+            $current->userEnabled = true;
+            $current->userDefault = 1 === (int)$current->pivot->user_default;
+            return $current;
+        });
+        return $all;
     }
 
     /**
@@ -206,6 +226,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function disable(TransactionCurrency $currency): void
     {
+        $this->user->currencies()->detach($currency->id);
         $currency->enabled = false;
         $currency->save();
     }
@@ -216,15 +237,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function ensureMinimalEnabledCurrencies(): void
     {
         // if no currencies are enabled, enable the first one in the DB (usually the EUR)
-        if (0 === $this->get()->count()) {
-            /** @var TransactionCurrency $first */
-            $first = $this->getAll()->first();
-            if (null === $first) {
+        if (0 === $this->user->currencies()->count()) {
+            $euro = app('amount')->getSystemCurrency();
+            if (null === $euro) {
                 throw new FireflyException('No currencies found. You broke Firefly III');
             }
-            Log::channel('audit')->info(sprintf('Auto-enabled currency %s.', $first->code));
-            $this->enable($first);
-            app('preferences')->set('currencyPreference', $first->code);
+            Log::channel('audit')->info(sprintf('Auto-enabled currency %s.', $euro->code));
+            $this->enable($euro);
             app('preferences')->mark();
         }
     }
@@ -235,7 +254,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function enable(TransactionCurrency $currency): void
     {
-        $currency->enabled = true;
+        $this->user->currencies()->syncWithoutDetaching([$currency->id]);
+        $currency->enabled = false;
         $currency->save();
     }
 
@@ -445,6 +465,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * @inheritDoc
      */
+    public function getUserCurrencies(User $user): Collection
+    {
+        return $user->currencies()->get();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function isFallbackCurrency(TransactionCurrency $currency): bool
     {
         return $currency->code === config('firefly.default_currency', 'EUR');
@@ -507,6 +535,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function store(array $data): TransactionCurrency
     {
+        throw new FireflyException(sprintf('Method "%s" needs a refactor.', __METHOD__));
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
         $result  = $factory->create($data);
@@ -526,9 +555,61 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency
     {
+        app('log')->debug('Now in update()');
+        // can be true, false, null
+        $enabled = array_key_exists('enabled', $data) ? $data['enabled'] : null;
+        // can be true, false, but method only responds to "true".
+        $default = array_key_exists('default', $data) ? $data['default'] : false;
+
+        // remove illegal combo's:
+        if (false === $enabled && true === $default) {
+            $enabled = true;
+        }
+        if (false === $default) {
+            app('log')->warning(sprintf('Set default=false will NOT do anything for currency %s', $currency->code));
+        }
+
+        // update currency with current user specific settings
+        $currency->refreshForUser($this->user);
+
+        // currency is enabled, must be disabled.
+        if (false === $enabled) {
+            app('log')->debug(sprintf('Disabled currency %s for user #%d', $currency->code, $this->user->id));
+            $this->user->currencies()->detach($currency->id);
+        }
+        // currency must be enabled
+        if (true === $enabled) {
+            app('log')->debug(sprintf('Enabled currency %s for user #%d', $currency->code, $this->user->id));
+            $this->user->currencies()->detach($currency->id);
+            $this->user->currencies()->syncWithoutDetaching([$currency->id => ['user_default' => false]]);
+        }
+
+        // currency must be made default.
+        if (true === $default) {
+            app('log')->debug(sprintf('Enabled + made default currency %s for user #%d', $currency->code, $this->user->id));
+            $this->user->currencies()->detach($currency->id);
+            foreach ($this->user->currencies()->get() as $item) {
+                $this->user->currencies()->updateExistingPivot($item->id, ['user_default' => false]);
+            }
+            $this->user->currencies()->syncWithoutDetaching([$currency->id => ['user_default' => true]]);
+        }
+
         /** @var CurrencyUpdateService $service */
         $service = app(CurrencyUpdateService::class);
 
         return $service->update($currency, $data);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function makeDefault(TransactionCurrency $currency): void
+    {
+        app('log')->debug(sprintf('Enabled + made default currency %s for user #%d', $currency->code, $this->user->id));
+        $this->user->currencies()->detach($currency->id);
+        foreach ($this->user->currencies()->get() as $item) {
+            $this->user->currencies()->updateExistingPivot($item->id, ['user_default' => false]);
+        }
+        $this->user->currencies()->syncWithoutDetaching([$currency->id => ['user_default' => true]]);
     }
 }

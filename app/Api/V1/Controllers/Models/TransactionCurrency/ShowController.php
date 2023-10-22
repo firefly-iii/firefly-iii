@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use JsonException;
@@ -81,13 +82,12 @@ class ShowController extends Controller
         $pageSize   = $this->parameters->get('limit');
         $collection = $this->repository->getAll();
         $count      = $collection->count();
+
         // slice them:
         $currencies = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator  = new LengthAwarePaginator($currencies, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.currencies.index') . $this->buildParams());
         $manager         = $this->getManager();
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $defaultCurrency);
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
@@ -113,9 +113,14 @@ class ShowController extends Controller
      */
     public function show(TransactionCurrency $currency): JsonResponse
     {
+        /** @var User $user */
+        $user            = auth()->user();
         $manager         = $this->getManager();
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
         $this->parameters->set('defaultCurrency', $defaultCurrency);
+
+        // update fields with user info.
+        $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
@@ -138,9 +143,13 @@ class ShowController extends Controller
      */
     public function showDefault(): JsonResponse
     {
+        /** @var User $user */
+        $user = auth()->user();
         $manager  = $this->getManager();
-        $currency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $currency);
+        $currency = app('amount')->getDefaultCurrencyByUser($user);
+
+        // update fields with user info.
+        $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);

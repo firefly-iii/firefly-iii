@@ -207,6 +207,20 @@ interface CurrencyRepositoryInterface
     /**
      * @param TransactionCurrency $currency
      *
+     * @return void
+     */
+    public function makeDefault(TransactionCurrency $currency): void;
+
+    /**
+     * @param User $user
+     *
+     * @return Collection
+     */
+    public function getUserCurrencies(User $user): Collection;
+
+    /**
+     * @param TransactionCurrency $currency
+     *
      * @return bool
      */
     public function isFallbackCurrency(TransactionCurrency $currency): bool;

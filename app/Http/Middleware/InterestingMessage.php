@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Middleware;
 use Closure;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
@@ -67,6 +68,10 @@ class InterestingMessage
         if ($this->webhookMessage($request)) {
             Preferences::mark();
             $this->handleWebhookMessage($request);
+        }
+        if ($this->currencyMessage($request)) {
+            Preferences::mark();
+            $this->handleCurrencyMessage($request);
         }
 
         return $next($request);
@@ -221,10 +226,57 @@ class InterestingMessage
     private function webhookMessage(Request $request): bool
     {
         // get parameters from request.
-        $billId  = $request->get('webhook_id');
+        $webhookId = $request->get('webhook_id');
+        $message   = $request->get('message');
+
+        return null !== $webhookId && null !== $message;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return bool
+     */
+    private function currencyMessage(Request $request): bool
+    {
+        // get parameters from request.
+        $code    = $request->get('code');
         $message = $request->get('message');
 
-        return null !== $billId && null !== $message;
+        return null !== $code && null !== $message;
+    }
+
+    private function handleCurrencyMessage(Request $request): void
+    {
+        // params:
+        // get parameters from request.
+        $code    = $request->get('code');
+        $message = $request->get('message');
+
+        /** @var TransactionCurrency $webhook */
+        $currency = TransactionCurrency::whereCode($code)->first();
+
+        if (null === $currency) {
+            return;
+        }
+        if ('enabled' === $message) {
+            session()->flash('success', (string)trans('firefly.currency_is_now_enabled', ['name' => $currency->name]));
+        }
+        if ('enable_failed' === $message) {
+            session()->flash('error', (string)trans('firefly.could_not_enable_currency', ['name' => $currency->name]));
+        }
+        if ('disabled' === $message) {
+            session()->flash('success', (string)trans('firefly.currency_is_now_disabled', ['name' => $currency->name]));
+        }
+        if ('disable_failed' === $message) {
+            session()->flash('error', (string)trans('firefly.could_not_disable_currency', ['name' => $currency->name]));
+        }
+        if ('default' === $message) {
+            session()->flash('success', (string)trans('firefly.new_default_currency', ['name' => $currency->name]));
+        }
+        if ('default_failed' === $message) {
+            session()->flash('error', (string)trans('firefly.default_currency_failed', ['name' => $currency->name]));
+        }
     }
 
     /**

@@ -52,14 +52,13 @@ class CurrencyUpdateService
             $currency->name = e($data['name']);
         }
 
-        if (array_key_exists('enabled', $data) && is_bool($data['enabled'])) {
-            $currency->enabled = (bool)$data['enabled'];
-        }
+        $currency->enabled = false;
 
         if (array_key_exists('decimal_places', $data) && is_int($data['decimal_places'])) {
             $currency->decimal_places = (int)$data['decimal_places'];
         }
-
+        unset($currency->userEnabled);
+        unset($currency->userDefault);
         $currency->save();
 
         return $currency;

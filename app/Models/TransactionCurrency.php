@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Eloquent;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
@@ -40,6 +42,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                          $updated_at
  * @property Carbon|null                          $deleted_at
  * @property bool                                 $enabled
+ * @property bool                                 $userDefault
+ * @property bool                                 $userEnabled
  * @property string                               $code
  * @property string                               $name
  * @property string                               $symbol
@@ -105,6 +109,39 @@ class TransactionCurrency extends Model
             }
         }
         throw new NotFoundHttpException();
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
+    public function refreshForUser(User $user)
+    {
+        $current       = $user->currencies()->where('transaction_currencies.id', $this->id)->first();
+        $default       = app('amount')->getDefaultCurrencyByUser($user);
+        $this->userDefault = (int)$default->id === (int)$this->id;
+        $this->userEnabled = null !== $current;
+    }
+
+    /**
+     * Link to users
+     *
+     * @return BelongsToMany
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->withTimestamps()->withPivot('user_default');
+    }
+
+    /**
+     * Link to user groups
+     *
+     * @return BelongsToMany
+     */
+    public function userGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(UserGroup::class)->withTimestamps()->withPivot('group_default');
     }
 
     /**

@@ -418,10 +418,6 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             if (null !== $currencyPreference) {
                 $currency = TransactionCurrency::where('id', $currencyPreference->data)->first();
             }
-            if (null === $currencyPreference) {
-                $currencyCode = app('preferences')->getForUser($this->user, 'currencyPreference', 'EUR')->data;
-                $currency     = TransactionCurrency::where('code', $currencyCode)->first();
-            }
             $journalId          = (int)$row->transaction_journal_id;
             $return[$journalId] = $return[$journalId] ?? [];
 

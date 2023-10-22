@@ -30,6 +30,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Carbon;
@@ -127,6 +128,16 @@ class UserGroup extends Model
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class);
+    }
+
+    /**
+     * Link to currencies
+     *
+     * @return BelongsToMany
+     */
+    public function currencies(): BelongsToMany
+    {
+        return $this->belongsToMany(TransactionCurrency::class)->withTimestamps()->withPivot('group_default');
     }
 
     /**
