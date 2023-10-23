@@ -83,6 +83,7 @@ class CreateDatabase extends Command
             $pdo = new PDO($dsn, env('DB_USERNAME'), env('DB_PASSWORD'), $options);
         } catch (PDOException $e) {
             $this->friendlyError(sprintf('Error when connecting to DB: %s', $e->getMessage()));
+            return 1;
         }
 
         // only continue when no error.
