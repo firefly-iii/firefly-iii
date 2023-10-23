@@ -37,6 +37,15 @@ use Illuminate\Support\Collection;
  */
 interface CurrencyRepositoryInterface
 {
+
+    /**
+     * Returns the complete set of transactions but needs
+     * no user object.
+     *
+     * @return Collection
+     */
+    public function getCompleteSet(): Collection;
+
     /**
      * @param TransactionCurrency $currency
      *

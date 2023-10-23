@@ -202,6 +202,17 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * Returns the complete set of transactions but needs
+     * no user object.
+     *
+     * @return Collection
+     */
+    public function getCompleteSet(): Collection
+    {
+        return TransactionCurrency::orderBy('code', 'ASC')->get();
+    }
+
+    /**
      * @param TransactionCurrency $currency
      *
      * @return bool
