@@ -39,7 +39,6 @@ use Illuminate\View\View;
  */
 class EditController extends Controller
 {
-
     private JournalRepositoryInterface $repository;
 
     /**

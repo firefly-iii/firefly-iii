@@ -546,13 +546,12 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function store(array $data): TransactionCurrency
     {
-        throw new FireflyException(sprintf('Method "%s" needs a refactor.', __METHOD__));
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
         $result  = $factory->create($data);
 
-        if (null === $result) {
-            throw new FireflyException('400004: Could not store new currency.');
+        if (true === $data['enabled']) {
+            $this->user->currencies()->attach($result->id);
         }
 
         return $result;

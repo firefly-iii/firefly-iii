@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -21,7 +23,7 @@ return new class extends Migration {
                     $table->boolean('user_default')->default(false);
                     $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
                     $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
-                    $table->unique(['user_id', 'transaction_currency_id'],'unique_combo');
+                    $table->unique(['user_id', 'transaction_currency_id'], 'unique_combo');
                 });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "transaction_currency_user": %s', $e->getMessage()));
@@ -40,7 +42,7 @@ return new class extends Migration {
                     $table->boolean('group_default')->default(false);
                     $table->foreign('user_group_id')->references('id')->on('user_groups')->onDelete('cascade');
                     $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
-                    $table->unique(['user_group_id', 'transaction_currency_id'],'unique_combo');
+                    $table->unique(['user_group_id', 'transaction_currency_id'], 'unique_combo');
                 });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "transaction_currency_user_group": %s', $e->getMessage()));

@@ -37,7 +37,6 @@ use Illuminate\Support\Collection;
  */
 interface CurrencyRepositoryInterface
 {
-
     /**
      * Returns the complete set of transactions but needs
      * no user object.

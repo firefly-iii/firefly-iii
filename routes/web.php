@@ -342,7 +342,7 @@ Route::group(
 
         Route::post('store', ['uses' => 'CreateController@store', 'as' => 'store']);
         Route::post('update/{currency}', ['uses' => 'EditController@update', 'as' => 'update']);
-        Route::post('destroy/{currency}', ['uses' => 'EditController@destroy', 'as' => 'destroy']);
+        Route::post('destroy/{currency}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
     }
 );
 

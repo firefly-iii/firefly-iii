@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\TransactionCurrency;
@@ -69,7 +70,7 @@ class IndexController extends Controller
             function (TransactionCurrency $currency) {
                 $default = true === $currency->userDefault ? 0 : 1;
                 $enabled = true === $currency->userEnabled ? 0 : 1;
-                return sprintf('%s-%s-%s',$default, $enabled, $currency->code);
+                return sprintf('%s-%s-%s', $default, $enabled, $currency->code);
             }
         );
 
@@ -81,7 +82,7 @@ class IndexController extends Controller
             $isOwner = false;
         }
 
-        return view('currencies.index', compact('currencies',  'isOwner'));
+        return view('currencies.index', compact('currencies', 'isOwner'));
     }
 
 }

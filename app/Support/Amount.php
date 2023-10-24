@@ -110,7 +110,7 @@ class Amount
     {
         /** @var User $user */
         $user = auth()->user();
-        return $user->currencies()->orderBy('code','ASC')->get();
+        return $user->currencies()->orderBy('code', 'ASC')->get();
     }
 
     /**

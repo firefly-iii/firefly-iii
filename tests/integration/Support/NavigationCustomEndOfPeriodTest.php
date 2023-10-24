@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\integration\Support;
 
 use Carbon\Carbon;
@@ -8,7 +10,6 @@ use Tests\integration\TestCase;
 
 class NavigationCustomEndOfPeriodTest extends TestCase
 {
-
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
