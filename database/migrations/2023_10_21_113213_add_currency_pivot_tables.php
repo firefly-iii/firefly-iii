@@ -42,7 +42,7 @@ return new class () extends Migration {
                     $table->boolean('group_default')->default(false);
                     $table->foreign('user_group_id')->references('id')->on('user_groups')->onDelete('cascade');
                     $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
-                    $table->unique(['user_group_id', 'transaction_currency_id'], 'unique_combo');
+                    $table->unique(['user_group_id', 'transaction_currency_id'], 'unique_combo_ug');
                 });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "transaction_currency_user_group": %s', $e->getMessage()));
