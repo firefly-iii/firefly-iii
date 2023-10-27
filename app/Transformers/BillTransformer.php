@@ -302,8 +302,10 @@ class BillTransformer extends AbstractTransformer
                 break;
             }
             app('log')->debug(sprintf('Next expected match is %s', $nextExpectedMatch->format('Y-m-d')));
-            // add to set
-            $set->push(clone $nextExpectedMatch);
+            // add to set, if the date is ON or after the start parameter
+            if($nextExpectedMatch->gte($this->parameters->get('start'))) {
+                $set->push(clone $nextExpectedMatch);
+            }
 
             // 2023-10
             // for the next loop, go to end of period, THEN add day.

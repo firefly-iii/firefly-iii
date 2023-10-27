@@ -357,8 +357,8 @@ class Navigation
             'daily'     => 'floatDiffInDays',
             'weekly'    => 'floatDiffInWeeks',
             'monthly'   => 'floatDiffInMonths',
-            //'quarterly' => 'floatDiffInMonths',
-            //'half-year' => 'floatDiffInQuarters',
+            'quarterly' => 'floatDiffInMonths',
+            'half-year' => 'floatDiffInMonths',
             'yearly'    => 'floatDiffInYears',
         ];
         if (!array_key_exists($period, $map)) {
@@ -366,11 +366,23 @@ class Navigation
             return 1;
         }
         $func = $map[$period];
-        $diff = ceil($beginning->$func($end));
-        app('log')->debug(sprintf('Diff is %f (%d)', $beginning->$func($end), $diff));
-        if ('half-year' === $period) {
-            $diff = ceil($diff / 2);
+        // first do the diff
+        $diff = $beginning->$func($end);
+
+        // then correct for quarterly or half-year
+        if('quarterly' === $period) {
+            app('log')->debug(sprintf('Q: Corrected %f to %f', $diff, $diff / 3));
+            $diff = $diff / 3;
         }
+        if('half-year' === $period) {
+            app('log')->debug(sprintf('H: Corrected %f to %f', $diff, $diff / 6));
+            $diff = $diff / 6;
+        }
+
+        // then do ceil()
+        $diff = ceil($diff);
+
+        app('log')->debug(sprintf('Diff is %f (%d)', $beginning->$func($end), $diff));
 
         if($skip > 0) {
             $parameter = $skip + 1;
