@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.29 - 2023-10-29
+
+### Fixed
+
+- Null pointer in bill overview
+
 ## 6.0.28 - 2023-10-29
 
 ### Added
