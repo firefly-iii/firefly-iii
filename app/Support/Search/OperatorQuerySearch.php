@@ -1536,9 +1536,9 @@ class OperatorQuerySearch implements SearchInterface
             $parts = explode(' ', $value);
             $value = trim($parts[count($parts) - 1], "() \t\n\r\0\x0B");
         }
-        $result = $this->currencyRepository->findByCodeNull($value);
+        $result = $this->currencyRepository->findByCode($value);
         if (null === $result) {
-            $result = $this->currencyRepository->findByNameNull($value);
+            $result = $this->currencyRepository->findByName($value);
         }
 
         return $result;

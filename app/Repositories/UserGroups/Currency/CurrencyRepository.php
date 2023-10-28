@@ -240,6 +240,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function findByName(string $name): ?TransactionCurrency
+    {
+        return TransactionCurrency::where('name', $name)->first();
+    }
+
+    /**
      * Find by object, ID or code. Returns user default or system default.
      *
      * @param int|null    $currencyId

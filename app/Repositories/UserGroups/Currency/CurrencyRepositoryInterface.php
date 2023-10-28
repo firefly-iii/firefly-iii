@@ -85,6 +85,13 @@ interface CurrencyRepositoryInterface
     public function findByCode(string $currencyCode): ?TransactionCurrency;
 
     /**
+     * @param string $name
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findByName(string $name): ?TransactionCurrency;
+
+    /**
      * Find by object, ID or code. Returns user default or system default.
      *
      * @param int|null    $currencyId
