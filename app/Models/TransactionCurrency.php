@@ -69,6 +69,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereUpdatedAt($value)
  * @method static Builder|TransactionCurrency withTrashed()
  * @method static Builder|TransactionCurrency withoutTrashed()
+ * @property-read Collection<int, \FireflyIII\Models\UserGroup> $userGroups
+ * @property-read int|null $user_groups_count
+ * @property-read Collection<int, User> $users
+ * @property-read int|null $users_count
  * @mixin Eloquent
  */
 class TransactionCurrency extends Model
@@ -118,8 +122,8 @@ class TransactionCurrency extends Model
      */
     public function refreshForUser(User $user)
     {
-        $current       = $user->currencies()->where('transaction_currencies.id', $this->id)->first();
-        $default       = app('amount')->getDefaultCurrencyByUser($user);
+        $current       = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
+        $default       = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
         $this->userDefault = (int)$default->id === (int)$this->id;
         $this->userEnabled = null !== $current;
     }

@@ -28,7 +28,7 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\TransactionCurrency\UpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
@@ -81,6 +81,10 @@ class UpdateController extends Controller
     {
         // must be unused.
         if ($this->repository->currencyInUse($currency)) {
+            return response()->json([], 409);
+        }
+        // must not be the only one in use:
+        if (1 === $this->repository->get()->count()) {
             return response()->json([], 409);
         }
         /** @var User $user */
@@ -180,6 +184,13 @@ class UpdateController extends Controller
 
         /** @var User $user */
         $user     = auth()->user();
+
+        // safety catch on currency disablement.
+        $set = $this->repository->get();
+        if(array_key_exists('enabled', $data) && false === $data['enabled'] && 1 === count($set) && $set->first()->id === $currency->id){
+            return response()->json([], 409);
+
+        }
         $currency = $this->repository->update($currency, $data);
 
         app('preferences')->mark();

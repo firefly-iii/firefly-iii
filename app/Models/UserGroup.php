@@ -86,6 +86,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null $transaction_groups_count
  * @property-read Collection<int, \FireflyIII\Models\Webhook> $webhooks
  * @property-read int|null $webhooks_count
+ * @property-read Collection<int, \FireflyIII\Models\TransactionCurrency> $currencies
+ * @property-read int|null $currencies_count
  * @mixin Eloquent
  */
 class UserGroup extends Model

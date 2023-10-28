@@ -103,6 +103,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                          $current_debt
  * @property int|null                        $user_group_id
  * @method static EloquentBuilder|Account whereUserGroupId($value)
+ * @property-read \FireflyIII\Models\UserGroup|null $userGroup
  * @mixin Eloquent
  */
 class Account extends Model
@@ -281,6 +282,14 @@ class Account extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function userGroup(): BelongsTo
+    {
+        return $this->belongsTo(UserGroup::class);
     }
 
     /**

@@ -26,6 +26,7 @@ namespace FireflyIII\Support;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
@@ -129,7 +130,6 @@ class Amount
      * @param User $user
      *
      * @return TransactionCurrency
-     * @throws FireflyException
      */
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {
@@ -143,6 +143,28 @@ class Amount
         if(null === $default) {
             $default = $this->getSystemCurrency();
             $user->currencies()->sync([$default->id => ['user_default' => true]]);
+        }
+        $cache->store($default);
+
+        return $default;
+    }
+    /**
+     * @param User $user
+     *
+     * @return TransactionCurrency
+     */
+    public function getDefaultCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
+    {
+        $cache = new CacheProperties();
+        $cache->addProperty('getDefaultCurrencyByGroup');
+        $cache->addProperty($userGroup->id);
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        $default = $userGroup->currencies()->where('group_default', true)->first();
+        if(null === $default) {
+            $default = $this->getSystemCurrency();
+            $userGroup->currencies()->sync([$default->id => ['group_default' => true]]);
         }
         $cache->store($default);
 

@@ -129,7 +129,7 @@ class AccountCurrencies extends Command
         $accounts = $this->accountRepos->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
 
         // get user's currency preference:
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser($user);
+        $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
 
         /** @var Account $account */
         foreach ($accounts as $account) {

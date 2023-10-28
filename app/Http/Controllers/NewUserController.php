@@ -27,7 +27,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -41,8 +41,7 @@ class NewUserController extends Controller
 {
     use CreateStuff;
 
-    /** @var AccountRepositoryInterface The account repository */
-    private $repository;
+    private AccountRepositoryInterface $repository;
 
     /**
      * NewUserController constructor.

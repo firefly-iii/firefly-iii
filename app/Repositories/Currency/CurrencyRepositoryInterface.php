@@ -26,7 +26,6 @@ namespace FireflyIII\Repositories\Currency;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\CurrencyExchangeRate;
-use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -38,73 +37,9 @@ use Illuminate\Support\Collection;
 interface CurrencyRepositoryInterface
 {
     /**
-     * Returns the complete set of transactions but needs
-     * no user object.
-     *
-     * @return Collection
-     */
-    public function getCompleteSet(): Collection;
-
-    /**
-     * @param TransactionCurrency $currency
-     *
-     * @return int
-     */
-    public function countJournals(TransactionCurrency $currency): int;
-
-    /**
-     * @param TransactionCurrency $currency
-     *
-     * @return bool
-     */
-    public function currencyInUse(TransactionCurrency $currency): bool;
-
-    /**
-     * Currency is in use where exactly.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return string|null
-     */
-    public function currencyInUseAt(TransactionCurrency $currency): ?string;
-
-    /**
-     * @param TransactionCurrency $currency
-     *
-     * @return bool
-     */
-    public function destroy(TransactionCurrency $currency): bool;
-
-    /**
-     * Disables a currency
-     *
-     * @param TransactionCurrency $currency
-     */
-    public function disable(TransactionCurrency $currency): void;
-
-    /**
-     * Enables a currency
-     *
-     * @param TransactionCurrency $currency
-     */
-    public function enable(TransactionCurrency $currency): void;
-
-    /**
-     * @return void
-     */
-    public function ensureMinimalEnabledCurrencies(): void;
-
-    /**
-     * Find by ID, return NULL if not found.
-     *
-     * @param int $currencyId
-     *
-     * @return TransactionCurrency|null
-     */
-    public function find(int $currencyId): ?TransactionCurrency;
-
-    /**
      * Find by currency code, return NULL if unfound.
+     *
+     * Used in the download exchange rates cron job. Does not require user object.
      *
      * @param string $currencyCode
      *
@@ -113,96 +48,19 @@ interface CurrencyRepositoryInterface
     public function findByCode(string $currencyCode): ?TransactionCurrency;
 
     /**
-     * Find by currency code, return NULL if unfound.
+     * Returns the complete set of transactions but needs
+     * no user object.
      *
-     * @param string $currencyCode
-     *
-     * @return TransactionCurrency|null
-     */
-    public function findByCodeNull(string $currencyCode): ?TransactionCurrency;
-
-    /**
-     * Find by currency name.
-     *
-     * @param string $currencyName
-     *
-     * @return TransactionCurrency|null
-     */
-    public function findByName(string $currencyName): ?TransactionCurrency;
-
-    /**
-     * Find by currency name.
-     *
-     * @param string $currencyName
-     *
-     * @return TransactionCurrency|null
-     */
-    public function findByNameNull(string $currencyName): ?TransactionCurrency;
-
-    /**
-     * Find by currency symbol.
-     *
-     * @param string $currencySymbol
-     *
-     * @return TransactionCurrency|null
-     */
-    public function findBySymbol(string $currencySymbol): ?TransactionCurrency;
-
-    /**
-     * Find by currency symbol.
-     *
-     * @param string $currencySymbol
-     *
-     * @return TransactionCurrency|null
-     */
-    public function findBySymbolNull(string $currencySymbol): ?TransactionCurrency;
-
-    /**
-     * Find by object, ID or code. Returns user default or system default.
-     *
-     * @param int|null    $currencyId
-     * @param string|null $currencyCode
-     *
-     * @return TransactionCurrency
-     */
-    public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency;
-
-    /**
-     * Find by object, ID or code. Returns NULL if nothing found.
-     *
-     * @param int|null    $currencyId
-     * @param string|null $currencyCode
-     *
-     * @return TransactionCurrency|null
-     */
-    public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency;
-
-    /**
-     * @return Collection
-     */
-    public function get(): Collection;
-
-    /**
-     * @return Collection
-     */
-    public function getAll(): Collection;
-
-    /**
-     * @param array $ids
+     * Used by the download exchange rate cron job.
      *
      * @return Collection
      */
-    public function getByIds(array $ids): Collection;
-
-    /**
-     * @param Preference $preference
-     *
-     * @return TransactionCurrency
-     */
-    public function getCurrencyByPreference(Preference $preference): TransactionCurrency;
+    public function getCompleteSet(): Collection;
 
     /**
      * Get currency exchange rate.
+     *
+     * Used in the download exchange rate cron job. Needs the user object!
      *
      * @param TransactionCurrency $fromCurrency
      * @param TransactionCurrency $toCurrency
@@ -213,36 +71,9 @@ interface CurrencyRepositoryInterface
     public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate;
 
     /**
-     * @param TransactionCurrency $currency
+     * Set currency exchange rate.
      *
-     * @return void
-     */
-    public function makeDefault(TransactionCurrency $currency): void;
-
-    /**
-     * @param User $user
-     *
-     * @return Collection
-     */
-    public function getUserCurrencies(User $user): Collection;
-
-    /**
-     * @param TransactionCurrency $currency
-     *
-     * @return bool
-     */
-    public function isFallbackCurrency(TransactionCurrency $currency): bool;
-
-    /**
-     * @param string $search
-     * @param int    $limit
-     *
-     * @return Collection
-     */
-    public function searchCurrency(string $search, int $limit): Collection;
-
-    /**
-     * TODO must be a factory
+     * Used in download exchange rate cron job. Needs the user object!
      *
      * @param TransactionCurrency $fromCurrency
      * @param TransactionCurrency $toCurrency
@@ -258,19 +89,4 @@ interface CurrencyRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void;
 
-    /**
-     * @param array $data
-     *
-     * @return TransactionCurrency
-     * @throws FireflyException
-     */
-    public function store(array $data): TransactionCurrency;
-
-    /**
-     * @param TransactionCurrency $currency
-     * @param array               $data
-     *
-     * @return TransactionCurrency
-     */
-    public function update(TransactionCurrency $currency, array $data): TransactionCurrency;
 }

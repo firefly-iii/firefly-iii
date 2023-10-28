@@ -27,7 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\TransactionCurrency;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
@@ -116,7 +116,7 @@ class ShowController extends Controller
         /** @var User $user */
         $user            = auth()->user();
         $manager         = $this->getManager();
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
+        $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
         $this->parameters->set('defaultCurrency', $defaultCurrency);
 
         // update fields with user info.
@@ -146,7 +146,7 @@ class ShowController extends Controller
         /** @var User $user */
         $user = auth()->user();
         $manager  = $this->getManager();
-        $currency = app('amount')->getDefaultCurrencyByUser($user);
+        $currency = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
 
         // update fields with user info.
         $currency->refreshForUser($user);

@@ -167,6 +167,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read int|null                                                        $group_memberships_count
  * @property-read UserGroup|null                                                  $userGroup
  * @method static Builder|User whereUserGroupId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, TransactionCurrency> $currencies
+ * @property-read int|null $currencies_count
  * @mixin Eloquent
  */
 class User extends Authenticatable
