@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.28 - 2023-10-28
+
+### Added
+
+- #8076 Clone and edit button
+- #7204 ability to 
+
+### Changed
+
+- New actions for GitHub
+- Currencies are now linked to users, and can be enabled per user
+- Refactored upgrade commands
+- You can no longer edit vital parts of reconciled transactions
+
+### Deprecated
+
+- Remove old v3 layout.
+
+### Removed
+
+- Initial release.
+
+### Fixed
+
+- Bad math in the order of piggy banks
+- #8084 @JoSchrader fixed an issue with a duplicate button
+
+### Security
+
+- Initial release.
+
+### API
+
+- Initial release.
+
 ## v6.0.27 - 2023-10-16
 
 ### Added

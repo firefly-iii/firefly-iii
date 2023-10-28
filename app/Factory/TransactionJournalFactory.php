@@ -479,7 +479,7 @@ class TransactionJournalFactory
         $preference = $this->accountRepository->getAccountCurrency($account);
         if (null === $preference && null === $currency) {
             // return user's default:
-            return app('amount')->getDefaultCurrencyByUser($this->user);
+            return app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         }
         $result = ($preference ?? $currency) ?? app('amount')->getSystemCurrency();
         Log::debug(sprintf('Currency is now #%d (%s) because of account #%d (%s)', $result->id, $result->code, $account->id, $account->name));

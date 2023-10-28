@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Currency;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;

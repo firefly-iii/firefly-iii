@@ -173,6 +173,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     /**
      * Get the user group's currencies.
+     *
      * @return Collection
      */
     public function get(): Collection
@@ -291,7 +292,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @return TransactionCurrency|null
      */
-    private function findByCode(string $currencyCode): ?TransactionCurrency
+    public function findByCode(string $currencyCode): ?TransactionCurrency
     {
         return TransactionCurrency::where('code', $currencyCode)->first();
     }
@@ -305,6 +306,16 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $this->userGroup->currencies()->syncWithoutDetaching([$currency->id]);
         $currency->enabled = false;
         $currency->save();
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids): Collection
+    {
+        return TransactionCurrency::orderBy('code', 'ASC')->whereIn('id', $ids)->get();
     }
 
     /**

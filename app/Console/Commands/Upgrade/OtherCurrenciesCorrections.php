@@ -31,7 +31,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Console\Command;
@@ -46,13 +45,12 @@ class OtherCurrenciesCorrections extends Command
     use ShowsFriendlyMessages;
 
     public const CONFIG_NAME = '480_other_currencies';
-    protected $description = 'Update all journal currency information.';
-    protected $signature   = 'firefly-iii:other-currencies {--F|force : Force the execution of this command.}';
+    protected                             $description = 'Update all journal currency information.';
+    protected                             $signature   = 'firefly-iii:other-currencies {--F|force : Force the execution of this command.}';
     private array                         $accountCurrencies;
     private AccountRepositoryInterface    $accountRepos;
     private JournalCLIRepositoryInterface $cliRepos;
     private int                           $count;
-    private CurrencyRepositoryInterface   $currencyRepos;
     private JournalRepositoryInterface    $journalRepos;
 
     /**
@@ -93,7 +91,6 @@ class OtherCurrenciesCorrections extends Command
         $this->count             = 0;
         $this->accountCurrencies = [];
         $this->accountRepos      = app(AccountRepositoryInterface::class);
-        $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
         $this->journalRepos      = app(JournalRepositoryInterface::class);
         $this->cliRepos          = app(JournalCLIRepositoryInterface::class);
     }
@@ -138,7 +135,6 @@ class OtherCurrenciesCorrections extends Command
     {
         $this->accountRepos->setUser($journal->user);
         $this->journalRepos->setUser($journal->user);
-        $this->currencyRepos->setUser($journal->user);
         $this->cliRepos->setUser($journal->user);
 
         $leadTransaction = $this->getLeadTransaction($journal);

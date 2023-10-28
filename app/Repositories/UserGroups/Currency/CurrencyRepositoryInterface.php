@@ -56,6 +56,13 @@ interface CurrencyRepositoryInterface
     public function find(int $currencyId): ?TransactionCurrency;
 
     /**
+     * @param string $currencyCode
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findByCode(string $currencyCode): ?TransactionCurrency;
+
+    /**
      * Find by object, ID or code. Returns user default or system default.
      *
      * @param int|null    $currencyId
@@ -88,6 +95,13 @@ interface CurrencyRepositoryInterface
      * @return Collection
      */
     public function getAll(): Collection;
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids): Collection;
 
     /**
      * @param TransactionCurrency $currency
