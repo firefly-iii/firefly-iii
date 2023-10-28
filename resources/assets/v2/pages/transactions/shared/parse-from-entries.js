@@ -35,6 +35,7 @@ export function parseFromEntries(entries, transactionType) {
             current.destination_name = entry.destination_account.name;
             current.amount = entry.amount;
             current.date = entry.date;
+            current.currency_code = entry.currency_code;
 
             // if ID is set:
             if ('' !== entry.source_account.id.toString()) {

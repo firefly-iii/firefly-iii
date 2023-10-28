@@ -3,40 +3,36 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.0.28 - 2023-10-28
+## 6.0.28 - 2023-10-29
 
 ### Added
 
-- #8076 Clone and edit button
-- #7204 ability to 
+- [Issue 8076](https://github.com/firefly-iii/firefly-iii/issues/8076) Added a "Clone and edit"-button
+- [Issue 7204](https://github.com/firefly-iii/firefly-iii/issues/7204) Added the ability to customize the URL protocol types Firefly III accepts 
+- [Issue 8098](https://github.com/firefly-iii/firefly-iii/issues/8098) More tests in the navigation class, thanks @tonicospinelli!
 
 ### Changed
 
-- New actions for GitHub
-- Currencies are now linked to users, and can be enabled per user
-- Refactored upgrade commands
+- Refactored the Actions of GitHub
+- The transaction currencies are now linked to users, and can be enabled per user
+- A few upgrade commands are refactored
 - You can no longer edit vital parts of reconciled transactions
 
 ### Deprecated
 
 - Remove old v3 layout.
 
-### Removed
-
-- Initial release.
-
 ### Fixed
 
 - Bad math in the order of piggy banks
-- #8084 @JoSchrader fixed an issue with a duplicate button
-
-### Security
-
-- Initial release.
+- [Issue 8084](https://github.com/firefly-iii/firefly-iii/issues/8084) @JoSchrader fixed an issue with a duplicate button
+- [Issue 8103](https://github.com/firefly-iii/firefly-iii/issues/8103) Bulk edit would not accept transaction descriptions longer than 255 characters
+- [Issue 8099](https://github.com/firefly-iii/firefly-iii/issues/8099) The bill index would never skip the number of periods you indicated
+- [Issue 8069](https://github.com/firefly-iii/firefly-iii/issues/8069) Rule descriptions would always "1" as description. Thanks @Maxco10!
 
 ### API
 
-- Initial release.
+- API will no longer accept changes to amount and account fields for reconciled transactions
 
 ## v6.0.27 - 2023-10-16
 

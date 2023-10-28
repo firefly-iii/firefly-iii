@@ -61,7 +61,7 @@ export default () => ({
         const end = new Date(window.store.get('end'));
         const cacheKey = getCacheKey(PIGGY_CACHE_KEY, start, end);
         const getter = new Get();
-        getter.get(params).then((response) => {
+        getter.list(params).then((response) => {
             apiData = [...apiData, ...response.data.data];
             if (parseInt(response.data.meta.pagination.total_pages) > params.page) {
                 params.page++;

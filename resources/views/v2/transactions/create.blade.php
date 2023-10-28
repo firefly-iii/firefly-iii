@@ -17,10 +17,7 @@
                         </div>
                     </template>
                     <template x-if="showErrorMessage">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            A simple ERROR alert with <a href="#" class="alert-link">an example link</a>. Give it a
-                            click
-                            if you like.
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" x-text="errorMessageText">
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </template>
@@ -38,7 +35,7 @@
                                         type="button" role="tab"
                                         :aria-controls="'split-'+index+'-pane'"
                                         aria-selected="true">{{ __('firefly.single_split') }} #
-                                    <span x-text="index"></span>
+                                    <span x-text="index+1"></span>
                                 </button>
                             </li>
                         </template>
@@ -125,7 +122,7 @@
                                                 <i class="fa-solid fa-calendar"></i>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input type="datetime-local" class="form-control" id="date_0"
+                                                <input type="datetime-local" class="form-control" :id="'date_' + index"
                                                        @change="detectTransactionType"
                                                        x-model="transaction.date"
                                                 >
@@ -148,16 +145,12 @@
                                                     <span class="form-control-plaintext"><em class="fa-solid fa-spinner fa-spin"></em></span>
                                                 </template>
                                                 <template x-if="!loadingCurrencies">
-                                                <select class="form-control">
-                                                    <option>
-                                                        Euro
-                                                    </option>
-                                                    <option>
-                                                        Euro
-                                                    </option>
-                                                    <option>
-                                                        Euro
-                                                    </option>
+                                                <select class="form-control" :id="'currency_code_' + index"
+                                                        x-model="transaction.currency_code"
+                                                >
+                                                    <template x-for="currency in enabledCurrencies">
+                                                        <option :selected="currency.id == defaultCurrency.id" :label="currency.name" :value="currency.code" x-text="currency.name"></option>
+                                                    </template>
                                                 </select>
                                                 </template>
                                             </div>

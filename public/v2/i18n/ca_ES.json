@@ -24,9 +24,9 @@
             "expense_account": "Compte de despeses",
             "revenue_account": "Compte d'ingressos",
             "budget": "Pressupost",
-            "account_type_Asset account": "Asset account",
-            "account_type_Expense account": "Expense account",
-            "account_type_Revenue account": "Revenue account",
+            "account_type_Asset account": "Compte d'actius",
+            "account_type_Expense account": "Compte de despeses",
+            "account_type_Revenue account": "Compte d'ingressos",
             "account_type_Debt": "Deute",
             "account_type_Loan": "Cr\u00e8dit",
             "account_type_Mortgage": "Hipoteca"

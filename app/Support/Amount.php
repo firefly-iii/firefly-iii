@@ -126,25 +126,12 @@ class Amount
 
     /**
      * @param User $user
-     *
+     * @deprecated use getDefaultCurrencyByUserGroup instead.
      * @return TransactionCurrency
      */
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {
-        $cache = new CacheProperties();
-        $cache->addProperty('getDefaultCurrency');
-        $cache->addProperty($user->id);
-        if ($cache->has()) {
-            return $cache->get();
-        }
-        $default = $user->currencies()->where('user_default', true)->first();
-        if (null === $default) {
-            $default = $this->getSystemCurrency();
-            $user->currencies()->sync([$default->id => ['user_default' => true]]);
-        }
-        $cache->store($default);
-
-        return $default;
+        return $this->getDefaultCurrencyByUserGroup($user->userGroup);
     }
 
     /**

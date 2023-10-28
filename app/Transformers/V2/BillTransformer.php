@@ -358,6 +358,8 @@ class BillTransformer extends AbstractTransformer
      * Given a bill and a date, this method will tell you at which moment this bill expects its next
      * transaction. Whether or not it is there already, is not relevant.
      *
+     * TODO this method is bad compared to the v1 one.
+     *
      * @param Bill   $bill
      * @param Carbon $date
      *

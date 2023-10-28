@@ -36,7 +36,7 @@ let subscriptionData = {};
 
 function downloadSubscriptions(params) {
     const getter = new Get();
-    return getter.get(params)
+    return getter.list(params)
         // first promise: parse the data:
         .then((response) => {
             let data = response.data.data;

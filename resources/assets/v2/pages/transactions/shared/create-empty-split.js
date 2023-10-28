@@ -33,9 +33,16 @@ export function createEmptySplit() {
     let formatted = format(now, 'yyyy-MM-dd HH:mm');
     return {
         description: '',
+
+        // amount information:
         amount: '',
+        currency_code: 'EUR',
+
+        // source and destination
         source_account: getAccount(),
         destination_account: getAccount(),
+
+        // date and time
         date: formatted
     };
 }
