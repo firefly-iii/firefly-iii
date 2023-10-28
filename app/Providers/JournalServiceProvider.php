@@ -31,10 +31,10 @@ use FireflyIII\Repositories\Journal\JournalCLIRepository;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepository;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Journal\JournalRepository as GroupJournalRepository;
-use FireflyIII\Repositories\UserGroups\Journal\JournalRepositoryInterface as GroupJournalRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepository;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Journal\JournalRepository as GroupJournalRepository;
+use FireflyIII\Repositories\UserGroups\Journal\JournalRepositoryInterface as GroupJournalRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 

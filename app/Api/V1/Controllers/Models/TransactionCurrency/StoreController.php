@@ -83,7 +83,7 @@ class StoreController extends Controller
             $this->repository->makeDefault($currency);
             app('preferences')->mark();
         }
-        $manager         = $this->getManager();
+        $manager = $this->getManager();
 
         /** @var User $user */
         $user = auth()->user();

@@ -26,10 +26,7 @@ namespace FireflyIII\Support\Http\Api;
 
 use Carbon\Carbon;
 use DateTimeInterface;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Support\CacheProperties;
 
 /**
  * Trait ConvertsExchangeRates

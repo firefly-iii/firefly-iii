@@ -31,8 +31,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use NumberFormatter;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class Amount.
@@ -140,7 +138,7 @@ class Amount
             return $cache->get();
         }
         $default = $user->currencies()->where('user_default', true)->first();
-        if(null === $default) {
+        if (null === $default) {
             $default = $this->getSystemCurrency();
             $user->currencies()->sync([$default->id => ['user_default' => true]]);
         }
@@ -148,6 +146,15 @@ class Amount
 
         return $default;
     }
+
+    /**
+     * @return TransactionCurrency
+     */
+    public function getSystemCurrency(): TransactionCurrency
+    {
+        return TransactionCurrency::where('code', 'EUR')->first();
+    }
+
     /**
      * @param User $user
      *
@@ -162,29 +169,13 @@ class Amount
             return $cache->get();
         }
         $default = $userGroup->currencies()->where('group_default', true)->first();
-        if(null === $default) {
+        if (null === $default) {
             $default = $this->getSystemCurrency();
             $userGroup->currencies()->sync([$default->id => ['group_default' => true]]);
         }
         $cache->store($default);
 
         return $default;
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return string
-     */
-    private function tryDecrypt(string $value): string
-    {
-        try {
-            $value = Crypt::decrypt($value); // verified
-        } catch (DecryptException $e) {
-            // @ignoreException
-        }
-
-        return $value;
     }
 
     /**
@@ -328,10 +319,18 @@ class Amount
     }
 
     /**
-     * @return TransactionCurrency
+     * @param string $value
+     *
+     * @return string
      */
-    public function getSystemCurrency(): TransactionCurrency
+    private function tryDecrypt(string $value): string
     {
-        return TransactionCurrency::where('code', 'EUR')->first();
+        try {
+            $value = Crypt::decrypt($value); // verified
+        } catch (DecryptException $e) {
+            // @ignoreException
+        }
+
+        return $value;
     }
 }

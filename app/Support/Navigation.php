@@ -58,7 +58,7 @@ class Navigation
      */
     public function addPeriod(Carbon $theDate, string $repeatFreq, int $skip = 0): Carbon
     {
-        $date = clone $theDate;
+        $date        = clone $theDate;
         $functionMap = [
             '1D'        => Periodicity::Daily,
             'daily'     => Periodicity::Daily,
@@ -351,8 +351,13 @@ class Navigation
      */
     public function diffInPeriods(string $period, int $skip, Carbon $beginning, Carbon $end): int
     {
-        app('log')->debug(sprintf('diffInPeriods: %s (skip: %d), between %s and %s.',
-        $period, $skip, $beginning->format('Y-m-d'), $end->format('Y-m-d')));
+        app('log')->debug(sprintf(
+            'diffInPeriods: %s (skip: %d), between %s and %s.',
+            $period,
+            $skip,
+            $beginning->format('Y-m-d'),
+            $end->format('Y-m-d')
+        ));
         $map = [
             'daily'     => 'floatDiffInDays',
             'weekly'    => 'floatDiffInWeeks',
@@ -370,11 +375,11 @@ class Navigation
         $diff = $beginning->$func($end);
 
         // then correct for quarterly or half-year
-        if('quarterly' === $period) {
+        if ('quarterly' === $period) {
             app('log')->debug(sprintf('Q: Corrected %f to %f', $diff, $diff / 3));
             $diff = $diff / 3;
         }
-        if('half-year' === $period) {
+        if ('half-year' === $period) {
             app('log')->debug(sprintf('H: Corrected %f to %f', $diff, $diff / 6));
             $diff = $diff / 6;
         }
@@ -384,11 +389,15 @@ class Navigation
 
         app('log')->debug(sprintf('Diff is %f (%d)', $beginning->$func($end), $diff));
 
-        if($skip > 0) {
+        if ($skip > 0) {
             $parameter = $skip + 1;
-            $diff = ceil($diff / $parameter) * $parameter;
-            app('log')->debug(sprintf('diffInPeriods: skip is %d, so param is %d, and diff becomes %d',
-                $skip, $parameter, $diff));
+            $diff      = ceil($diff / $parameter) * $parameter;
+            app('log')->debug(sprintf(
+                'diffInPeriods: skip is %d, so param is %d, and diff becomes %d',
+                $skip,
+                $parameter,
+                $diff
+            ));
         }
 
         return (int)$diff;

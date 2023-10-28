@@ -58,8 +58,8 @@ class AccountTransformer extends AbstractTransformer
         $this->convertedBalances = app('steam')->balancesByAccountsConverted($objects, $this->getDate());
 
         /** @var CurrencyRepositoryInterface $repository */
-        $repository              = app(CurrencyRepositoryInterface::class);
-        $this->default           = app('amount')->getDefaultCurrency();
+        $repository    = app(CurrencyRepositoryInterface::class);
+        $this->default = app('amount')->getDefaultCurrency();
 
         // get currencies:
         $accountIds  = $objects->pluck('id')->toArray();

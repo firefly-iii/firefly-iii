@@ -37,23 +37,23 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionCurrency
  *
- * @property int                                  $id
- * @property Carbon|null                          $created_at
- * @property Carbon|null                          $updated_at
- * @property Carbon|null                          $deleted_at
- * @property bool                                 $enabled
- * @property bool                                 $userDefault
- * @property bool                                 $userEnabled
- * @property string                               $code
- * @property string                               $name
- * @property string                               $symbol
- * @property int                                  $decimal_places
- * @property-read Collection|BudgetLimit[]        $budgetLimits
- * @property-read int|null                        $budget_limits_count
- * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read int|null                        $transaction_journals_count
- * @property-read Collection|Transaction[]        $transactions
- * @property-read int|null                        $transactions_count
+ * @property int                                                $id
+ * @property Carbon|null                                        $created_at
+ * @property Carbon|null                                        $updated_at
+ * @property Carbon|null                                        $deleted_at
+ * @property bool                                               $enabled
+ * @property bool                                               $userDefault
+ * @property bool                                               $userEnabled
+ * @property string                                             $code
+ * @property string                                             $name
+ * @property string                                             $symbol
+ * @property int                                                $decimal_places
+ * @property-read Collection|BudgetLimit[]                      $budgetLimits
+ * @property-read int|null                                      $budget_limits_count
+ * @property-read Collection|TransactionJournal[]               $transactionJournals
+ * @property-read int|null                                      $transaction_journals_count
+ * @property-read Collection|Transaction[]                      $transactions
+ * @property-read int|null                                      $transactions_count
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency newQuery()
  * @method static Builder|TransactionCurrency onlyTrashed()
@@ -69,10 +69,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereUpdatedAt($value)
  * @method static Builder|TransactionCurrency withTrashed()
  * @method static Builder|TransactionCurrency withoutTrashed()
- * @property-read Collection<int, \FireflyIII\Models\UserGroup> $userGroups
- * @property-read int|null $user_groups_count
- * @property-read Collection<int, User> $users
- * @property-read int|null $users_count
+ * @property-read Collection<int, UserGroup> $userGroups
+ * @property-read int|null                   $user_groups_count
+ * @property-read Collection<int, User>      $users
+ * @property-read int|null                   $users_count
  * @mixin Eloquent
  */
 class TransactionCurrency extends Model
@@ -116,44 +116,24 @@ class TransactionCurrency extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function budgetLimits(): HasMany
+    {
+        return $this->hasMany(BudgetLimit::class);
+    }
+
+    /**
      * @param User $user
      *
      * @return void
      */
     public function refreshForUser(User $user)
     {
-        $current       = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
-        $default       = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
+        $current           = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
+        $default           = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
         $this->userDefault = (int)$default->id === (int)$this->id;
         $this->userEnabled = null !== $current;
-    }
-
-    /**
-     * Link to users
-     *
-     * @return BelongsToMany
-     */
-    public function users(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class)->withTimestamps()->withPivot('user_default');
-    }
-
-    /**
-     * Link to user groups
-     *
-     * @return BelongsToMany
-     */
-    public function userGroups(): BelongsToMany
-    {
-        return $this->belongsToMany(UserGroup::class)->withTimestamps()->withPivot('group_default');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function budgetLimits(): HasMany
-    {
-        return $this->hasMany(BudgetLimit::class);
     }
 
     /**
@@ -170,5 +150,25 @@ class TransactionCurrency extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * Link to user groups
+     *
+     * @return BelongsToMany
+     */
+    public function userGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(UserGroup::class)->withTimestamps()->withPivot('group_default');
+    }
+
+    /**
+     * Link to users
+     *
+     * @return BelongsToMany
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->withTimestamps()->withPivot('user_default');
     }
 }

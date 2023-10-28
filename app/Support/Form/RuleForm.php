@@ -26,7 +26,6 @@ namespace FireflyIII\Support\Form;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Form;
-use Illuminate\Support\HtmlString;
 
 /**
  * Class RuleForm

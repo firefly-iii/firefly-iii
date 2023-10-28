@@ -26,7 +26,6 @@ namespace FireflyIII\Notifications\Admin;
 
 use FireflyIII\Models\InvitedUser;
 use FireflyIII\Support\Notifications\UrlValidator;
-use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;

@@ -60,7 +60,7 @@ class Preferences
      */
     public function get(string $name, $default = null): ?Preference
     {
-        if('currencyPreference' === $name) {
+        if ('currencyPreference' === $name) {
             throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
         }
         /** @var User|null $user */
@@ -85,7 +85,7 @@ class Preferences
      */
     public function getForUser(User $user, string $name, $default = null): ?Preference
     {
-        if('currencyPreference' === $name) {
+        if ('currencyPreference' === $name) {
             throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
         }
         $preference = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at']);
@@ -114,7 +114,7 @@ class Preferences
      */
     public function delete(string $name): bool
     {
-        if('currencyPreference' === $name) {
+        if ('currencyPreference' === $name) {
             throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
         }
         $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
@@ -132,7 +132,7 @@ class Preferences
      */
     public function forget(User $user, string $name): void
     {
-        if('currencyPreference' === $name) {
+        if ('currencyPreference' === $name) {
             throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
         }
         $key = sprintf('preference%s%s', $user->id, $name);
@@ -150,7 +150,7 @@ class Preferences
      */
     public function setForUser(User $user, string $name, $value): Preference
     {
-        if('currencyPreference' === $name) {
+        if ('currencyPreference' === $name) {
             throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
         }
         $fullName = sprintf('preference%s%s', $user->id, $name);
@@ -200,7 +200,7 @@ class Preferences
      */
     public function findByName(string $name): Collection
     {
-        if('currencyPreference' === $name) {
+        if ('currencyPreference' === $name) {
             throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
         }
         return Preference::where('name', $name)->get();
@@ -238,7 +238,7 @@ class Preferences
      */
     public function getFresh(string $name, $default = null): ?Preference
     {
-        if('currencyPreference' === $name) {
+        if ('currencyPreference' === $name) {
             throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
         }
         /** @var User|null $user */
@@ -264,7 +264,7 @@ class Preferences
      */
     public function getFreshForUser(User $user, string $name, $default = null): ?Preference
     {
-        if('currencyPreference' === $name) {
+        if ('currencyPreference' === $name) {
             throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
         }
         return $this->getForUser($user, $name, $default);
@@ -307,7 +307,7 @@ class Preferences
      */
     public function set(string $name, $value): Preference
     {
-        if('currencyPreference' === $name) {
+        if ('currencyPreference' === $name) {
             throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
         }
         $user = auth()->user();

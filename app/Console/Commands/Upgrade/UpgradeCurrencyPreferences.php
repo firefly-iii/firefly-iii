@@ -68,30 +68,6 @@ class UpgradeCurrencyPreferences extends Command
         return false;
     }
 
-    /**
-     * @param User $user
-     *
-     * @return string
-     */
-    private function getPreference(User $user): string
-    {
-        $preference = Preference::where('user_id', $user->id)->where('name', 'currencyPreference')->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at']);
-
-        if (null !== $preference) {
-            return (string)$preference->data;
-        }
-        return 'EUR';
-    }
-
-
-    /**
-     *
-     */
-    private function markAsExecuted(): void
-    {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
-    }
-
     private function runUpgrade(): void
     {
         $groups = UserGroup::get();
@@ -105,6 +81,24 @@ class UpgradeCurrencyPreferences extends Command
         foreach ($users as $user) {
             $this->upgradeUserPreferences($user);
         }
+    }
+
+    /**
+     * @param UserGroup $group
+     *
+     * @return void
+     */
+    private function upgradeGroupPreferences(UserGroup $group)
+    {
+        $currencies = TransactionCurrency::get();
+        $enabled    = new Collection();
+        /** @var TransactionCurrency $currency */
+        foreach ($currencies as $currency) {
+            if ($currency->enabled) {
+                $enabled->push($currency);
+            }
+        }
+        $group->currencies()->sync($enabled->pluck('id')->toArray());
     }
 
     /**
@@ -136,20 +130,25 @@ class UpgradeCurrencyPreferences extends Command
     }
 
     /**
-     * @param UserGroup $group
+     * @param User $user
      *
-     * @return void
+     * @return string
      */
-    private function upgradeGroupPreferences(UserGroup $group)
+    private function getPreference(User $user): string
     {
-        $currencies = TransactionCurrency::get();
-        $enabled    = new Collection();
-        /** @var TransactionCurrency $currency */
-        foreach ($currencies as $currency) {
-            if ($currency->enabled) {
-                $enabled->push($currency);
-            }
+        $preference = Preference::where('user_id', $user->id)->where('name', 'currencyPreference')->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at']);
+
+        if (null !== $preference) {
+            return (string)$preference->data;
         }
-        $group->currencies()->sync($enabled->pluck('id')->toArray());
+        return 'EUR';
+    }
+
+    /**
+     *
+     */
+    private function markAsExecuted(): void
+    {
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 }

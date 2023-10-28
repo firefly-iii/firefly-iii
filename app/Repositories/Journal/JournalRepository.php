@@ -263,6 +263,16 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function unreconcileById(int $journalId): void
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $this->user->transactionJournals()->find($journalId);
+        $journal?->transactions()->update(['reconciled' => false]);
+    }
+
+    /**
      * Update budget for a journal.
      *
      * @param TransactionJournal $journal
@@ -333,15 +343,5 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->refresh();
 
         return $journal;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function unreconcileById(int $journalId): void
-    {
-        /** @var TransactionJournal $journal */
-        $journal = $this->user->transactionJournals()->find($journalId);
-        $journal?->transactions()->update(['reconciled' => false]);
     }
 }

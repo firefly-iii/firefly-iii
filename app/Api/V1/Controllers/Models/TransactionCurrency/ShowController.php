@@ -87,7 +87,7 @@ class ShowController extends Controller
         $currencies = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator  = new LengthAwarePaginator($currencies, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.currencies.index') . $this->buildParams());
-        $manager         = $this->getManager();
+        $manager = $this->getManager();
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
@@ -144,7 +144,7 @@ class ShowController extends Controller
     public function showDefault(): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user     = auth()->user();
         $manager  = $this->getManager();
         $currency = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
 

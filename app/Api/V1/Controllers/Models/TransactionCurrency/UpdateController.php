@@ -183,11 +183,11 @@ class UpdateController extends Controller
         $data = $request->getAll();
 
         /** @var User $user */
-        $user     = auth()->user();
+        $user = auth()->user();
 
         // safety catch on currency disablement.
         $set = $this->repository->get();
-        if(array_key_exists('enabled', $data) && false === $data['enabled'] && 1 === count($set) && $set->first()->id === $currency->id){
+        if (array_key_exists('enabled', $data) && false === $data['enabled'] && 1 === count($set) && $set->first()->id === $currency->id) {
             return response()->json([], 409);
 
         }

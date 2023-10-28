@@ -7,8 +7,8 @@ namespace FireflyIII\Http\Controllers\TransactionCurrency;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\CurrencyFormRequest;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -68,7 +68,7 @@ class EditController extends Controller
 
         // is currently enabled (for this user?)
         $userCurrencies = $this->repository->get()->pluck('id')->toArray();
-        $enabled = in_array($currency->id, $userCurrencies, true);
+        $enabled        = in_array($currency->id, $userCurrencies, true);
 
         // code to handle active-checkboxes
         $hasOldInput = null !== $request->old('_token');

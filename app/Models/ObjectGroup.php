@@ -61,7 +61,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|ObjectGroup whereTitle($value)
  * @method static Builder|ObjectGroup whereUpdatedAt($value)
  * @method static Builder|ObjectGroup whereUserId($value)
- * @property int|null $user_group_id
+ * @property int|null                    $user_group_id
  * @method static Builder|ObjectGroup whereUserGroupId($value)
  * @mixin Eloquent
  */

@@ -34,6 +34,7 @@ class CurrencyTransformer extends AbstractTransformer
      * Transform the currency.
      *
      * @param TransactionCurrency $currency
+     *
      * @return array
      */
     public function transform(TransactionCurrency $currency): array

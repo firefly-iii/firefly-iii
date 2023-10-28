@@ -64,17 +64,6 @@ class EditController extends Controller
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @return JsonResponse
-     */
-    public function unreconcile(TransactionJournal $journal): JsonResponse
-    {
-        $this->repository->unreconcileById($journal->id);
-        return response()->json([], 204);
-    }
-
-    /**
      * @param TransactionGroup $transactionGroup
      *
      * @return Factory|View|RedirectResponse|Redirector
@@ -115,5 +104,16 @@ class EditController extends Controller
                 'previousUrl'
             )
         );
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return JsonResponse
+     */
+    public function unreconcile(TransactionJournal $journal): JsonResponse
+    {
+        $this->repository->unreconcileById($journal->id);
+        return response()->json([], 204);
     }
 }

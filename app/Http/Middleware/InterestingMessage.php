@@ -234,6 +234,32 @@ class InterestingMessage
 
     /**
      * @param Request $request
+     */
+    private function handleWebhookMessage(Request $request): void
+    {
+        // get parameters from request.
+        $webhookId = $request->get('webhook_id');
+        $message   = $request->get('message');
+
+        /** @var Webhook $webhook */
+        $webhook = auth()->user()->webhooks()->withTrashed()->find($webhookId);
+
+        if (null === $webhook) {
+            return;
+        }
+        if ('deleted' === $message) {
+            session()->flash('success', (string)trans('firefly.deleted_webhook', ['title' => $webhook->title]));
+        }
+        if ('updated' === $message) {
+            session()->flash('success', (string)trans('firefly.updated_webhook', ['title' => $webhook->title]));
+        }
+        if ('created' === $message) {
+            session()->flash('success', (string)trans('firefly.stored_new_webhook', ['title' => $webhook->title]));
+        }
+    }
+
+    /**
+     * @param Request $request
      *
      * @return bool
      */
@@ -276,32 +302,6 @@ class InterestingMessage
         }
         if ('default_failed' === $message) {
             session()->flash('error', (string)trans('firefly.default_currency_failed', ['name' => $currency->name]));
-        }
-    }
-
-    /**
-     * @param Request $request
-     */
-    private function handleWebhookMessage(Request $request): void
-    {
-        // get parameters from request.
-        $webhookId = $request->get('webhook_id');
-        $message   = $request->get('message');
-
-        /** @var Webhook $webhook */
-        $webhook = auth()->user()->webhooks()->withTrashed()->find($webhookId);
-
-        if (null === $webhook) {
-            return;
-        }
-        if ('deleted' === $message) {
-            session()->flash('success', (string)trans('firefly.deleted_webhook', ['title' => $webhook->title]));
-        }
-        if ('updated' === $message) {
-            session()->flash('success', (string)trans('firefly.updated_webhook', ['title' => $webhook->title]));
-        }
-        if ('created' === $message) {
-            session()->flash('success', (string)trans('firefly.stored_new_webhook', ['title' => $webhook->title]));
         }
     }
 }

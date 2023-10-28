@@ -40,6 +40,7 @@ class AccountFormRequest extends FormRequest
     use ConvertsDataTypes;
     use AppendsLocationData;
     use ChecksLogin;
+
     protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
 
     /**
