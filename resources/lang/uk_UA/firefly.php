@@ -43,6 +43,7 @@ return [
     'split'                                => 'Розділити',
     'single_split'                         => 'Розділити',
     'clone'                                => 'Клонувати',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Підтвердити дію',
     'last_seven_days'                      => 'Останні сім днів',
     'last_thirty_days'                     => 'Останні тридцять днів',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => 'Список всіх вкладень',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'Витрати',
     'title_withdrawal'                          => 'Витрати',
     'title_revenue'                             => 'Дохід / прихід',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => 'Створити нову валюту',
     'store_currency'                            => 'Зберегти нову валюту',
     'update_currency'                           => 'Оновити валюту',
-    'new_default_currency'                      => ':name тепер є валютою за замовчуванням.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => 'Неможливо видалити валюту :name, оскільки вона використовується.',
     'cannot_delete_fallback_currency'           => ':name є системною резервною валютою і не може бути видалена.',
     'cannot_disable_currency_journals'          => 'Не вдалося вимкнути :name , тому що операції все ще використовують його.',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => 'Вимкнути',
     'currencies_default_disabled'               => 'Більшість із цих валют вимкнено за замовчуванням. Щоб використовувати їх, ви повинні спочатку їх увімкнути.',
     'currency_is_now_enabled'                   => 'Валюту ":name" увімкнено',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => 'Валюту ":name" вимкнено',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => 'Обов\'язкові поля',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Update withdrawal',
     'update_deposit'                            => 'Update deposit',
     'update_transaction'                        => 'Update transaction',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => 'The first split may overrule the source account',
     'first_split_overrules_destination'         => 'The first split may overrule the destination account',
     'spent_x_of_y'                              => 'Spent {amount} of {total}',
+
 
     // new user:
     'welcome'                                   => 'Welcome to Firefly III!',

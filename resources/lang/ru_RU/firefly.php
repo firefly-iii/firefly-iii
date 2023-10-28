@@ -43,6 +43,7 @@ return [
     'split'                                => 'Разделить',
     'single_split'                         => 'Разделённая транзакция',
     'clone'                                => 'Клонировать',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Подтвердите действие',
     'last_seven_days'                      => 'Последние 7 дней',
     'last_thirty_days'                     => 'Последние 30 дней',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => 'Список всех вложений',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'Расходы',
     'title_withdrawal'                          => 'Расходы',
     'title_revenue'                             => 'Доход',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => 'Создать новую валюту',
     'store_currency'                            => 'Сохранить новую валюту',
     'update_currency'                           => 'Обновить валюту',
-    'new_default_currency'                      => ':name теперь является вашей основной валютой.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => 'Невозможно удалить валюту :name, поскольку она используется.',
     'cannot_delete_fallback_currency'           => ':name - это системная резервная валюта, она не может быть удалена.',
     'cannot_disable_currency_journals'          => 'Не удается отключить валюту :name, потому что она была использована в транзакциях.',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => 'Отключить',
     'currencies_default_disabled'               => 'Большинство этих валют по умолчанию отключены. Для использования, сначала включите их.',
     'currency_is_now_enabled'                   => 'Валюта ":name" была включена',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => 'Валюта ":name" была отключена',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => 'Обязательные поля',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Обновить расход',
     'update_deposit'                            => 'Обновить доход',
     'update_transaction'                        => 'Обновить транзакцию',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => 'Значение из первой части транзакции может изменить счет источника',
     'first_split_overrules_destination'         => 'Значение из первой части транзакции может изменить счет назначения',
     'spent_x_of_y'                              => 'Потрачено {amount} из {total}',
+
 
     // new user:
     'welcome'                                   => 'Добро пожаловать в Firefly III!',

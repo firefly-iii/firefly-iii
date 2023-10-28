@@ -43,6 +43,7 @@ return [
     'split'                                => 'Rozúčtovať',
     'single_split'                         => 'Rozúčtovať',
     'clone'                                => 'Klonovať',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Uplynulých 7 dní',
     'last_thirty_days'                     => 'Uplynulých 30 dní',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => 'Zoznam všetkých príloh',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'Výdavky',
     'title_withdrawal'                          => 'Výdavky',
     'title_revenue'                             => 'Zisky / príjmy',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => 'Vytvoriť novú menu',
     'store_currency'                            => 'Uložiť novú menu',
     'update_currency'                           => 'Upraviť menu',
-    'new_default_currency'                      => ':name je teraz predvolená mena.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => ':name nie je možné odstrániť, pretože sa stále v aplikácii používa.',
     'cannot_delete_fallback_currency'           => ':name je predvolená systémová základná mena a nie je možné ju odstrániť.',
     'cannot_disable_currency_journals'          => ':name nie je možné vypnúť, pretože ju používajú niektoré transakcie.',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => 'Vypnúť',
     'currencies_default_disabled'               => 'Väčšina týchto mien je v základnom stave vypnutá. Ak ich chcete používať, musíte ich najprv zapnúť.',
     'currency_is_now_enabled'                   => 'Mena „:name“ bola zapnutá',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => 'Mena „:name“ bola vypnutá',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => 'Povinné údaje',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Upraviť výber',
     'update_deposit'                            => 'Upraviť vklad',
     'update_transaction'                        => 'Upraviť transakciu',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => 'Prvé rozdelenie môže pozmeniť zdrojový účet',
     'first_split_overrules_destination'         => 'Prvé rozdelenie môže pozmeniť cieľový účet',
     'spent_x_of_y'                              => 'Utratené {amount} z {total}',
+
 
     // new user:
     'welcome'                                   => 'Vitajte ve Firefly III!',

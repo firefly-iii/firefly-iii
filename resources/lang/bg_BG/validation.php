@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'Разходната сметка е еднаква на приходната сметка.',
     'unique_account_number_for_user' => 'Изглежда, че този номер на сметка вече се използва.',
     'unique_iban_for_user'           => 'Изглежда, че този IBAN вече се използва.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Поради съображения за сигурност не можете да се регистрирате, като използвате този имейл адрес.',
     'rule_trigger_value'             => 'Тази стойност е невалидна за избраното задействане.',
     'rule_action_value'              => 'Тази стойност е невалидна за избраното действие.',

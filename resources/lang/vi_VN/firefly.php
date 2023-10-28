@@ -43,6 +43,7 @@ return [
     'split'                                => 'Chia ra',
     'single_split'                         => 'Chia ra',
     'clone'                                => 'Nhân ra',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Bảy ngày gần đây',
     'last_thirty_days'                     => 'Ba mươi ngày gần đây',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => 'Danh sách tất cả các tệp đính kèm',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'Chi phí',
     'title_withdrawal'                          => 'Chi phí',
     'title_revenue'                             => 'Thu nhập doanh thu',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => 'Tạo một loại tiền tệ mới',
     'store_currency'                            => 'Lưu trữ tiền tệ mới',
     'update_currency'                           => 'Cập nhật tiền tệ',
-    'new_default_currency'                      => ':bây giờ là tiền tệ mặc định.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => 'Không thể xóa: vì nó vẫn đang được sử dụng.',
     'cannot_delete_fallback_currency'           => ':name là loại tiền dự phòng hệ thống và không thể xóa.',
     'cannot_disable_currency_journals'          => 'Không thể tắt: vì các giao dịch vẫn đang sử dụng nó.',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => 'Tắt',
     'currencies_default_disabled'               => 'Hầu hết các loại tiền tệ này bị tắt theo mặc định. Để sử dụng chúng, bạn phải kích hoạt chúng trước.',
     'currency_is_now_enabled'                   => 'Tiền tệ ":name" đã được kích hoạt',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => 'Tiền tệ ":name" đã được tắt',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => 'Các trường bắt buộc',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Cập nhật rút tiền',
     'update_deposit'                            => 'Cập nhật tiền gửi',
     'update_transaction'                        => 'Cập nhật giao dịch',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => 'The first split may overrule the source account',
     'first_split_overrules_destination'         => 'The first split may overrule the destination account',
     'spent_x_of_y'                              => 'Spent {amount} of {total}',
+
 
     // new user:
     'welcome'                                   => 'Chào mừng đến với Firefly III!',

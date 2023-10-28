@@ -43,6 +43,7 @@ return [
     'split'                                => 'Teilen',
     'single_split'                         => 'Teilen',
     'clone'                                => 'Duplizieren',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Aktion bestätigen',
     'last_seven_days'                      => 'Letzte sieben Tage',
     'last_thirty_days'                     => 'Letzte 30 Tage',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => 'Liste aller Anhänge',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'Ausgaben',
     'title_withdrawal'                          => 'Ausgaben',
     'title_revenue'                             => 'Einnahmen / Einkommen',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => 'Eine neue Währung erstellen',
     'store_currency'                            => 'Neue Währung speichern',
     'update_currency'                           => 'Währung aktualisieren',
-    'new_default_currency'                      => '„:name” wird nun als Standardwährung verwendet.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => '„:name” konnte nicht gelöscht werden, da diese noch verwendet wird.',
     'cannot_delete_fallback_currency'           => ':name ist die Standardwährung des Systems und kann daher nicht gelöscht werden.',
     'cannot_disable_currency_journals'          => '„:name” konnte nicht deaktiviert werden, da dieser noch von Buchungen verwendet wird.',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => 'Deaktivieren',
     'currencies_default_disabled'               => 'Die meisten dieser Währungen sind standardmäßig deaktiviert. Um sie zu verwenden, müssen Sie diese zuerst aktivieren.',
     'currency_is_now_enabled'                   => 'Währung „:name” wurde aktiviert',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => 'Währung „:name” wurde deaktiviert',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => 'Pflichtfelder',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Ausgaben aktualisieren',
     'update_deposit'                            => 'Einnahmen aktualisieren',
     'update_transaction'                        => 'Buchung aktualisieren',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => 'Die erste Aufteilung könnte das Quellkonto überschreiben',
     'first_split_overrules_destination'         => 'Die erste Aufteilung könnte das Zielkonto überschreiben',
     'spent_x_of_y'                              => '{amount} von {total} ausgegeben',
+
 
     // new user:
     'welcome'                                   => 'Willkommen bei Firefly III!',

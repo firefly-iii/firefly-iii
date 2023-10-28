@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'Kildekontoen er den samme som modtagerkontoen.',
     'unique_account_number_for_user' => 'Det ser ud som om dette kontonummer allerede er i brug.',
     'unique_iban_for_user'           => 'Det ser ud til denne IBAN allerede er i brug.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'På grund af sikkerhedspolikker, kan du ikke registrere med denne email adresse.',
     'rule_trigger_value'             => 'Denne værdi er ikke gyldig for den valgte trigger.',
     'rule_action_value'              => 'Denne værdi er ikke gyldig for den valgte handling.',

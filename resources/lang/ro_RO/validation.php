@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'Contul sursă este egal cu contul de destinație.',
     'unique_account_number_for_user' => 'Se pare că acest număr de cont este deja utilizat.',
     'unique_iban_for_user'           => 'Se pare că acest IBAN este deja utilizat.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Din cauza constrângerilor de securitate, nu vă puteți înregistra utilizând această adresă de e-mail.',
     'rule_trigger_value'             => 'Această valoare nu este validă pentru declanșatorul selectat.',
     'rule_action_value'              => 'Această valoare nu este validă pentru acțiunea selectată.',

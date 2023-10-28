@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'Lähdetili on sama kuin kohdetili - ja sehän ei käy.',
     'unique_account_number_for_user' => 'Tämä tilinumero näyttäisi olevan jo käytössä.',
     'unique_iban_for_user'           => 'Tämä IBAN näyttäisi olevan jo käytössä.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Turvallisuussyistä et pysty käyttämään tätä sähköpostiosoitetta rekisteröitymiseen.',
     'rule_trigger_value'             => 'Arvo ei kelpaa valitulle ehdolle.',
     'rule_action_value'              => 'Arvo ei kelpaa valitulle toiminnolle.',

@@ -43,6 +43,7 @@ return [
     'split'                                => 'Раздели',
     'single_split'                         => 'Раздел',
     'clone'                                => 'Дублирай',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Последните седем дни',
     'last_thirty_days'                     => 'Последните трийсет дни',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => 'Списък на всички прикачени файлове',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'Разходи',
     'title_withdrawal'                          => 'Тегления',
     'title_revenue'                             => 'Приходи',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => 'Създай нова валута',
     'store_currency'                            => 'Запази нова валута',
     'update_currency'                           => 'Обнови нова валута',
-    'new_default_currency'                      => ':name сега е валутата по подразбиране.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => 'Не може да се изтрие :name, защото все още се използва.',
     'cannot_delete_fallback_currency'           => ':name е резервната валута на системата и не може да бъде изтрита.',
     'cannot_disable_currency_journals'          => 'Не може да се деактивира :name, защото транзакции все още я използват.',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => 'Деактивиране',
     'currencies_default_disabled'               => 'Повечето от тези валути са деактивирани по подразбиране. За да ги използвате, първо трябва да ги активирате.',
     'currency_is_now_enabled'                   => 'Валута ":name" беше активирана',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => 'Валута ":name" беше деактивирана',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => 'Задължителни полета',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Обнови тегленето',
     'update_deposit'                            => 'Обнови депозита',
     'update_transaction'                        => 'Обнови транзакцията',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => 'Първия раздел може да отмени разходната сметка',
     'first_split_overrules_destination'         => 'Първия раздел може да отмени приходната сметка',
     'spent_x_of_y'                              => 'Похарчено е {amount} от {total}',
+
 
     // new user:
     'welcome'                                   => 'Добре дошли в Firefly III!',

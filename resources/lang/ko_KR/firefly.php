@@ -43,6 +43,7 @@ return [
     'split'                                => '나누기',
     'single_split'                         => '나누기',
     'clone'                                => '복사',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => '액션 확인',
     'last_seven_days'                      => '최근 7일',
     'last_thirty_days'                     => '최근 30일',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => '모든 첨부 파일 목록',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => '지출',
     'title_withdrawal'                          => '지출',
     'title_revenue'                             => '수익 / 수입',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => '새로운 통화 생성',
     'store_currency'                            => '새 통화 저장',
     'update_currency'                           => '통화 업데이트',
-    'new_default_currency'                      => '기본 통화는 이제 :name 입니다.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => ':name을(를) 아직 사용 중이므로 삭제할 수 없습니다.',
     'cannot_delete_fallback_currency'           => ':name은 시스템 대체 통화이며 삭제할 수 없습니다.',
     'cannot_disable_currency_journals'          => '거래가 여전히 :name을 사용하고 있으므로 비활성화할 수 없습니다.',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => '비활성화',
     'currencies_default_disabled'               => '이러한 통화는 대부분 기본적으로 비활성화되어 있습니다. 사용하려면 먼저 활성화해야 합니다.',
     'currency_is_now_enabled'                   => '":name" 통화가 활성화되었습니다',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => '":name" 통화가 비활성화되었습니다',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => '필수 입력 항목',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => '출금 업데이트',
     'update_deposit'                            => '입금 업데이트',
     'update_transaction'                        => '거래 업데이트',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => '첫 번째 분할은 소스 계정을 무시할 수 있습니다.',
     'first_split_overrules_destination'         => '첫 번째 분할은 대상 계정을 무시할 수 있습니다.',
     'spent_x_of_y'                              => '{total} 중 {amount} 지출',
+
 
     // new user:
     'welcome'                                   => 'Firefly III에 오신 것을 환영합니다!',

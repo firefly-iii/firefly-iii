@@ -43,6 +43,7 @@ return [
     'split'                                => 'Διαχωρισμός',
     'single_split'                         => 'Διαχωρισμός',
     'clone'                                => 'Κλωνοποίηση',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Επιβεβαίωση ενέργειας',
     'last_seven_days'                      => 'Τελευταίες επτά ημέρες',
     'last_thirty_days'                     => 'Τελευταίες τριάντα ημέρες',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => 'Λίστα όλων των συνημμένων',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'Δαπάνες',
     'title_withdrawal'                          => 'Δαπάνες',
     'title_revenue'                             => 'Έσοδα',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => 'Δημιουργία νέου νομίσματος',
     'store_currency'                            => 'Αποθήκευση νέου νομίσματος',
     'update_currency'                           => 'Ενημέρωση νομίσματος',
-    'new_default_currency'                      => ':name είναι τώρα το προεπιλεγμένο νόμισμα.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => 'Δεν είναι δυνατή η απενεργοποίηση του :name επειδή είναι ακόμα σε χρήση.',
     'cannot_delete_fallback_currency'           => ':name είναι το εφεδρικό νόμισμα του συστήματος και δεν μπορεί να διαγραφεί.',
     'cannot_disable_currency_journals'          => 'Δεν είναι δυνατή η απενεργοποίηση του :name επειδή το χρησιμοποιούν ορισμένες συναλλαγές.',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => 'Απενεργοποίηση',
     'currencies_default_disabled'               => 'Τα περισσότερα από αυτά τα νομίσματα είναι απενεργοποιημένα από προεπιλογή. Για να τα χρησιμοποιήσετε, πρέπει πρώτα να τα ενεργοποιήσετε.',
     'currency_is_now_enabled'                   => 'Το νόμισμα:name ενεργοποιήθηκε',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => 'Το νόμισμα:name απενεργοποιήθηκε',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => 'Υποχρεωτικά πεδία',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Ενημέρωση ανάληψης',
     'update_deposit'                            => 'Ενημέρωση κατάθεσης',
     'update_transaction'                        => 'Ενημέρωση συναλλαγής',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => 'Ο πρώτος διαχωρισμός ενδέχεται να παρακάμψει τον λογαριασμό προέλευσης',
     'first_split_overrules_destination'         => 'Ο πρώτος διαχωρισμός ενδέχεται να παρακάμψει τον λογαριασμό προορισμού',
     'spent_x_of_y'                              => 'Δαπανήθηκαν {amount} από {total}',
+
 
     // new user:
     'welcome'                                   => 'Καλωσήρθατε στο Firefly III!',

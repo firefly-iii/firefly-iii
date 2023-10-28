@@ -43,6 +43,7 @@ return [
     'split'                                => 'Split',
     'single_split'                         => 'Split',
     'clone'                                => 'Clone',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Last seven days',
     'last_thirty_days'                     => 'Last thirty days',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => 'List of all attachments',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'Expenses',
     'title_withdrawal'                          => 'Expenses',
     'title_revenue'                             => 'Revenue / income',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => 'Create a new currency',
     'store_currency'                            => 'Store new currency',
     'update_currency'                           => 'Update currency',
-    'new_default_currency'                      => ':name is now the default currency.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => 'Cannot delete :name because it is still in use.',
     'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Cannot disable :name because transactions are still using it.',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => 'Disable',
     'currencies_default_disabled'               => 'Most of these currencies are disabled by default. To use them, you must enable them first.',
     'currency_is_now_enabled'                   => 'Currency ":name" has been enabled',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => 'Currency ":name" has been disabled',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => 'Mandatory fields',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Update withdrawal',
     'update_deposit'                            => 'Update deposit',
     'update_transaction'                        => 'Update transaction',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => 'The first split may overrule the source account',
     'first_split_overrules_destination'         => 'The first split may overrule the destination account',
     'spent_x_of_y'                              => 'Spent {amount} of {total}',
+
 
     // new user:
     'welcome'                                   => 'Welcome to Firefly III!',

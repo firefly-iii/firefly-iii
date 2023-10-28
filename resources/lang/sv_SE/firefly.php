@@ -43,6 +43,7 @@ return [
     'split'                                => 'Dela',
     'single_split'                         => 'Dela',
     'clone'                                => 'Klona',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Bekräfta åtgärd',
     'last_seven_days'                      => 'Senaste 7 dagarna',
     'last_thirty_days'                     => 'Senaste 30 dagarna',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => 'Lista alla bilagor',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'Utgifter',
     'title_withdrawal'                          => 'Utgifter',
     'title_revenue'                             => 'Intäkter / inkomst',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => 'Skapa en ny valuta',
     'store_currency'                            => 'Lagra en ny valuta',
     'update_currency'                           => 'Uppdatera valuta',
-    'new_default_currency'                      => ':name är nu standard valuta.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => 'Kan ej ta bort :name då den fortfarande används.',
     'cannot_delete_fallback_currency'           => ':name är systemets reservvaluta och kan inte tas bort.',
     'cannot_disable_currency_journals'          => 'Kan inte inaktivera :name då transaktioner fortfarande använder den.',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => 'Inaktivera',
     'currencies_default_disabled'               => 'De flesta valutor är inaktiverade som standard. För att använda dem, så måste de aktiveras först.',
     'currency_is_now_enabled'                   => 'Valuta ":name" har aktiverats',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => 'Valuta ":name" har inaktiverats',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => 'Obligatoriska fält',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Uppdatera uttag',
     'update_deposit'                            => 'Uppdatera insättning',
     'update_transaction'                        => 'Uppdatera transaktion',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => 'Den första delningen kan åsidosätta källkontot',
     'first_split_overrules_destination'         => 'Den första delningen kan åsidosätta målkontot',
     'spent_x_of_y'                              => 'Spenderade {amount} av {total}',
+
 
     // new user:
     'welcome'                                   => 'Välkommen till Firefly III!',

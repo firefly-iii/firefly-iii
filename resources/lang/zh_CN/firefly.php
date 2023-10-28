@@ -43,6 +43,7 @@ return [
     'split'                                => '拆分',
     'single_split'                         => '拆分',
     'clone'                                => '复制',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => '确认操作',
     'last_seven_days'                      => '最近 7 天',
     'last_thirty_days'                     => '最近 30 天',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => '附件列表',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => '支出',
     'title_withdrawal'                          => '支出',
     'title_revenue'                             => '收入',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => '创建新货币',
     'store_currency'                            => '保存新货币',
     'update_currency'                           => '更新货币',
-    'new_default_currency'                      => ':name 现已为默认货币',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => '因为仍在使用中，无法删除 :name 。',
     'cannot_delete_fallback_currency'           => ':name 是系统默认货币，无法删除',
     'cannot_disable_currency_journals'          => '无法禁用 :name，因为仍有交易在使用。',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => '停用',
     'currencies_default_disabled'               => '大多数的货币均默认为停用，若需使用，请先启用。',
     'currency_is_now_enabled'                   => '货币 ":name" 已被启用',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => '货币 ":name" 已被停用',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => '必填字段',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => '更新支出',
     'update_deposit'                            => '更新收入',
     'update_transaction'                        => '更新交易',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => '首笔拆分可能覆盖来源账户',
     'first_split_overrules_destination'         => '首笔拆分可能覆盖目标账户',
     'spent_x_of_y'                              => '花费{total}的{amount}',
+
 
     // new user:
     'welcome'                                   => '欢迎使用 Firefly III！',

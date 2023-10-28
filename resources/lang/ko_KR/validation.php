@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => '소스 계정이 대상 계정과 같습니다.',
     'unique_account_number_for_user' => '이 계좌 번호는 이미 사용 중인 것 같습니다.',
     'unique_iban_for_user'           => '이 IBAN은 이미 사용 중인 것 같습니다.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => '보안 제약으로 인해 이 이메일 주소를 사용하여 등록할 수 없습니다.',
     'rule_trigger_value'             => '선택한 트리거에 대해 이 값은 유효하지 않습니다.',
     'rule_action_value'              => '선택한 액션에 대해 이 값은 유효하지 않습니다.',

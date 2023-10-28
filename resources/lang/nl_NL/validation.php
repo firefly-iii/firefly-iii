@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'De bronrekening is gelijk aan de doelrekening.',
     'unique_account_number_for_user' => 'Het lijkt erop dat dit rekeningnummer al in gebruik is.',
     'unique_iban_for_user'           => 'Het lijkt erop dat deze IBAN al in gebruik is.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Je kan je niet registreren met dit e-mailadres.',
     'rule_trigger_value'             => 'Deze waarde is niet geldig voor de geselecteerde trigger.',
     'rule_action_value'              => 'Deze waarde is niet geldig voor de geselecteerde actie.',

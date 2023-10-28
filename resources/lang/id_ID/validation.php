@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'Akun sumber sama dengan akun tujuan.',
     'unique_account_number_for_user' => 'Sepertinya nomor rekening ini sudah digunakan.',
     'unique_iban_for_user'           => 'Sepertinya nomor rekening ini sudah digunakan.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Kerena kendala keamanan, anda tidak bisa mendaftar menggunkan alamat email ini.',
     'rule_trigger_value'             => 'Nilai ini tidak validi untuk trigger yang dipilih.',
     'rule_action_value'              => 'Nilai ini tidak valid untuk tindakan yang dipilih.',

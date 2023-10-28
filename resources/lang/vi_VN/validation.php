@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'Tài khoản nguồn bằng với tài khoản đích.',
     'unique_account_number_for_user' => 'Có vẻ như số tài khoản này đã được sử dụng.',
     'unique_iban_for_user'           => 'Có vẻ như IBAN này đã được sử dụng.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Do những hạn chế về bảo mật, bạn không thể đăng ký bằng địa chỉ email này.',
     'rule_trigger_value'             => 'Giá trị này không hợp lệ cho trình kích hoạt được chọn.',
     'rule_action_value'              => 'Giá trị này không hợp lệ cho hành động đã chọn.',

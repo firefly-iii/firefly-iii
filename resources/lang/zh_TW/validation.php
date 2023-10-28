@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => '來源帳戶與目標帳戶相同。',
     'unique_account_number_for_user' => '此帳戶號碼似乎已在使用。',
     'unique_iban_for_user'           => '此 IBAN 似乎已在使用。',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => '受安全限制，您無法使用此電子郵件地址註冊。',
     'rule_trigger_value'             => '此值不適用於選取的觸發器。',
     'rule_action_value'              => '此值不適用於選取的動作。',

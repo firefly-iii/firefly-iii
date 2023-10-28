@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'Kaynak hesabın hedef hesap eşittir.',
     'unique_account_number_for_user' => 'Bu hesap numarası zaten kullanılmaktadır.',
     'unique_iban_for_user'           => 'Bu IBAN numarası zaten kullanılmaktadır.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Güvenlik kısıtlamaları nedeniyle, bu e-posta adresini kullanarak kayıt yapamazsınız.',
     'rule_trigger_value'             => 'Bu eylem, seçili işlem için geçersizdir.',
     'rule_action_value'              => 'Bu eylem seçili işlem için geçersizdir.',

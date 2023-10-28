@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'Källkontot motsvarar mottagarkontot.',
     'unique_account_number_for_user' => 'Det ser ut som att detta kontonummer redan används.',
     'unique_iban_for_user'           => 'Det ser ut som att detta IBAN redan används.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'På grund av säkerhetsbegränsningar går det inte att registrera sig med denna e-postadress.',
     'rule_trigger_value'             => 'Detta värde är ogiltigt för vald trigger.',
     'rule_action_value'              => 'Detta värde är ogiltigt för den valda åtgärden.',
