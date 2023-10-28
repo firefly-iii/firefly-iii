@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.0.30 - 2023-10-29
+
+### Fixed
+
+- Missing method after refactoring.
+
 ## 6.0.29 - 2023-10-29
 
 ### Fixed
