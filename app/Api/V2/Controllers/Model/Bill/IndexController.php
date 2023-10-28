@@ -38,7 +38,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 /**
  * Class ShowController
  */
-class ShowController extends Controller
+class IndexController extends Controller
 {
     use ValidatesUserGroupTrait;
 
@@ -63,15 +63,25 @@ class ShowController extends Controller
     }
 
     /**
-     * TODO this endpoint is not documented
+     * @param Request $request
+     *
+     * TODO see autocomplete/accountcontroller for list.
+     *
+     * @return JsonResponse
      */
-    public function show(Request $request, Bill $bill): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $this->repository->correctOrder();
+        $bills       = $this->repository->getBills();
+        $pageSize    = $this->parameters->get('limit');
+        $count       = $bills->count();
+        $bills       = $bills->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator   = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
         $transformer = new BillTransformer();
-        $transformer->setParameters($this->parameters);
+        $transformer->setParameters($this->parameters); // give params to transformer
 
         return response()
-            ->api($this->jsonApiObject('subscriptions', $bill, $transformer))
+            ->json($this->jsonApiList('subscriptions', $paginator, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

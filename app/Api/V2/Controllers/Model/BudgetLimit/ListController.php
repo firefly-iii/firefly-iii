@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V2\Controllers\Model\BudgetLimit;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Transformers\V2\BudgetLimitTransformer;
@@ -57,6 +58,7 @@ class ListController extends Controller
      */
     public function index(DateRequest $request, Budget $budget): JsonResponse
     {
+        throw new FireflyException('Needs refactoring, move to IndexController.');
         $pageSize   = $this->parameters->get('limit');
         $dates      = $request->getAll();
         $collection = $this->repository->getBudgetLimits($budget, $dates['start'], $dates['end']);
@@ -67,7 +69,7 @@ class ListController extends Controller
         $transformer = new BudgetLimitTransformer();
 
         return response()
-            ->api($this->jsonApiList('budget_limits', $paginator, $transformer))
+            ->api($this->jsonApiList('budget-limits', $paginator, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

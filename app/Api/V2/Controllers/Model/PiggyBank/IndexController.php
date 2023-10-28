@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Model\PiggyBank;
 
 use FireflyIII\Api\V2\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\UserGroups\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\V2\PiggyBankTransformer;
@@ -36,7 +37,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 /**
  * Class ShowController
  */
-class ShowController extends Controller
+class IndexController extends Controller
 {
     use ValidatesUserGroupTrait;
 

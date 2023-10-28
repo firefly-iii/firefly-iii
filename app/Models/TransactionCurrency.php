@@ -109,6 +109,7 @@ class TransactionCurrency extends Model
             $currencyId = (int)$value;
             $currency   = self::find($currencyId);
             if (null !== $currency) {
+                $currency->refreshForUser(auth()->user());
                 return $currency;
             }
         }
