@@ -38,7 +38,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -429,6 +429,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         // set or update the currency.
         if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
+            /** @var CurrencyRepositoryInterface $repos */
             $repos        = app(CurrencyRepositoryInterface::class);
             $currencyId   = (int)($data['currency_id'] ?? 0);
             $currencyCode = (string)($data['currency_code'] ?? '');
@@ -837,6 +838,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $type = AutoBudget::AUTO_BUDGET_ADJUSTED;
         }
 
+        /** @var CurrencyRepositoryInterface $repos */
         $repos    = app(CurrencyRepositoryInterface::class);
         $currency = null;
         if (array_key_exists('currency_id', $data)) {

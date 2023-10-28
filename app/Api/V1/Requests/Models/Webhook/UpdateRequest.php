@@ -81,10 +81,10 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $triggers   = implode(',', array_keys(Webhook::getTriggersForValidation()));
-        $responses  = implode(',', array_keys(Webhook::getResponsesForValidation()));
-        $deliveries = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
-
+        $triggers       = implode(',', array_keys(Webhook::getTriggersForValidation()));
+        $responses      = implode(',', array_keys(Webhook::getResponsesForValidation()));
+        $deliveries     = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
+        $validProtocols = config('firefly.valid_url_protocols');
         /** @var Webhook $webhook */
         $webhook = $this->route()->parameter('webhook');
 
@@ -94,7 +94,7 @@ class UpdateRequest extends FormRequest
             'trigger'  => sprintf('in:%s', $triggers),
             'response' => sprintf('in:%s', $responses),
             'delivery' => sprintf('in:%s', $deliveries),
-            'url'      => ['url', sprintf('uniqueExistingWebhook:%d', $webhook->id)],
+            'url'      => [sprintf('url:%s', $validProtocols), sprintf('uniqueExistingWebhook:%d', $webhook->id)],
         ];
     }
 }

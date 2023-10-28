@@ -31,6 +31,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 /**
+ * Show = show a single account.
+ * Index = show all accounts
  * Class ShowController
  */
 class ShowController extends Controller

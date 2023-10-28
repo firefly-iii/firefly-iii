@@ -57,7 +57,6 @@ class UpdateRequest extends FormRequest
         ];
 
         return $this->getAllData($fields);
-        //        return $return;
     }
 
     /**

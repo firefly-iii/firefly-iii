@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace Tests\integration\Api\Autocomplete;
 
-use Laravel\Passport\Passport;
-use Log;
 use Tests\integration\TestCase;
 
 /**
@@ -33,32 +31,15 @@ use Tests\integration\TestCase;
 class AccountControllerTest extends TestCase
 {
     /**
-     *
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-        Passport::actingAs($this->user());
-        Log::info(sprintf('Now in %s.', get_class($this)));
-    }
-
-    /**
      * @covers \FireflyIII\Api\V1\Controllers\Autocomplete\AccountController
+     * @runInSeparateProcess
      */
-    public function testAccounts(): void
+    public function testGivenAnUnauthenticatedRequestWhenCallingTheAccountsEndpointThenReturns401HttpCode(): void
     {
         // test API
         $response = $this->get(route('api.v1.autocomplete.accounts'), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/json');
-        $response->assertSee('Checking Account');
-    }
-
-    /**
-     *
-     */
-    public function testBasic(): void
-    {
-        $this->assertTrue(true);
+        $response->assertContent('{"message":"Unauthenticated","exception":"AuthenticationException"}');
     }
 }

@@ -43,6 +43,7 @@ return [
     'split'                                => 'Böl',
     'single_split'                         => 'Böl',
     'clone'                                => 'Klonla',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Son yedi gün',
     'last_thirty_days'                     => 'Son otuz gün',
@@ -1566,6 +1567,7 @@ return [
     'list_all_attachments'                      => 'Tüm eklerin listesi',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'Giderler',
     'title_withdrawal'                          => 'Giderler',
     'title_revenue'                             => 'Gelir / Gelir',
@@ -1633,7 +1635,8 @@ return [
     'create_currency'                           => 'Yeni para birimi oluştur',
     'store_currency'                            => 'Yeni para birimini sakla',
     'update_currency'                           => 'Para birimini güncelle',
-    'new_default_currency'                      => ':name artık varsayılan para birimi.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => ':name hala kullanıldığı için silinemiyor.',
     'cannot_delete_fallback_currency'           => ':name sistem geri dönüş para birimidir ve silinemez.',
     'cannot_disable_currency_journals'          => 'Devre dışı bırakılamıyor :name çünkü işlemler hala kullanıyor.',
@@ -1659,7 +1662,9 @@ return [
     'disable_currency'                          => 'Devre dışı bırakmak',
     'currencies_default_disabled'               => 'Most of these currencies are disabled by default. To use them, you must enable them first.',
     'currency_is_now_enabled'                   => 'Currency ":name" has been enabled',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => 'Currency ":name" has been disabled',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => 'Zorunlu alanlar',
@@ -1945,6 +1950,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Geri çekmeyi güncelle',
     'update_deposit'                            => 'Depozitoyu güncelle',
     'update_transaction'                        => 'Update transaction',
@@ -2041,6 +2047,7 @@ return [
     'first_split_overrules_source'              => 'The first split may overrule the source account',
     'first_split_overrules_destination'         => 'The first split may overrule the destination account',
     'spent_x_of_y'                              => 'Spent {amount} of {total}',
+
 
     // new user:
     'welcome'                                   => 'Firefly III\'e hoşgeldiniz!',

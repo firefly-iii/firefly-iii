@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'A forrásszámla egyenlő a célszámlával.',
     'unique_account_number_for_user' => 'Úgy tűnik, hogy ez a számlaszám már használatban van.',
     'unique_iban_for_user'           => 'Úgy tűnik, hogy ez a számlaszám már használatban van.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Biztonsági megkötések miatt ezzel az email címmel nem lehet regisztrálni.',
     'rule_trigger_value'             => 'Ez az érték érvénytelen a kiválasztott eseményindítóhoz.',
     'rule_action_value'              => 'Ez az érték érvénytelen a kiválasztott művelethez.',

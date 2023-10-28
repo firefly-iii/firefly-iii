@@ -24,9 +24,9 @@
             "expense_account": "Cuenta de gastos",
             "revenue_account": "Cuenta de ingresos",
             "budget": "Presupuesto",
-            "account_type_Asset account": "Asset account",
-            "account_type_Expense account": "Expense account",
-            "account_type_Revenue account": "Revenue account",
+            "account_type_Asset account": "Cuenta de activos",
+            "account_type_Expense account": "Cuenta de gastos",
+            "account_type_Revenue account": "Cuenta de ingresos",
             "account_type_Debt": "Deuda",
             "account_type_Loan": "Pr\u00e9stamo",
             "account_type_Mortgage": "Hipoteca"

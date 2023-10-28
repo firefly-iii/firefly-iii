@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'Початковий рахунок дорівнює рахунку призначення.',
     'unique_account_number_for_user' => 'Схоже, цей номер рахунку вже використовується.',
     'unique_iban_for_user'           => 'Схоже, цей номер рахунку (IBAN) вже використовується.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Через обмеження безпеки ви не можете зареєструвати цю електронну адресу.',
     'rule_trigger_value'             => 'Це значення неправильне для вибраного тригера.',
     'rule_action_value'              => 'Це значення є неприпустимим для вибраної дії.',

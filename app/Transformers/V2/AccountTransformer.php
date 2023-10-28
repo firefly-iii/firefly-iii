@@ -30,7 +30,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -56,8 +56,10 @@ class AccountTransformer extends AbstractTransformer
         $this->accountTypes      = [];
         $this->balances          = app('steam')->balancesByAccounts($objects, $this->getDate());
         $this->convertedBalances = app('steam')->balancesByAccountsConverted($objects, $this->getDate());
-        $repository              = app(CurrencyRepositoryInterface::class);
-        $this->default           = app('amount')->getDefaultCurrency();
+
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository    = app(CurrencyRepositoryInterface::class);
+        $this->default = app('amount')->getDefaultCurrency();
 
         // get currencies:
         $accountIds  = $objects->pluck('id')->toArray();

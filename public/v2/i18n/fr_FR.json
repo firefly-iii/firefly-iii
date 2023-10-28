@@ -24,9 +24,9 @@
             "expense_account": "Compte de d\u00e9penses",
             "revenue_account": "Compte de recettes",
             "budget": "Budget",
-            "account_type_Asset account": "Asset account",
-            "account_type_Expense account": "Expense account",
-            "account_type_Revenue account": "Revenue account",
+            "account_type_Asset account": "Compte d\u2019actif",
+            "account_type_Expense account": "Compte de d\u00e9penses",
+            "account_type_Revenue account": "Compte de recettes",
             "account_type_Debt": "Dette",
             "account_type_Loan": "Pr\u00eat",
             "account_type_Mortgage": "Pr\u00eat hypoth\u00e9caire"

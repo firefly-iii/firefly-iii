@@ -318,7 +318,7 @@ export default () => ({
 
         //console.log('Downloading page ' + params.page + '...');
         const getter = new Get();
-        getter.get(params).then((response) => {
+        getter.list(params).then((response) => {
             transactions = [...transactions, ...response.data.data];
             //this.drawChart(this.generateOptions(response.data));
             //this.loading = false;

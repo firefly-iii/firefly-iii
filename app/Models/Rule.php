@@ -126,6 +126,14 @@ class Rule extends Model
     }
 
     /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
      * @return HasMany
      */
     public function ruleActions(): HasMany
@@ -157,14 +165,6 @@ class Rule extends Model
     public function setDescriptionAttribute($value): void
     {
         $this->attributes['description'] = e($value);
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 
     /**

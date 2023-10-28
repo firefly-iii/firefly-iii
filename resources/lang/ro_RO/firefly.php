@@ -43,6 +43,7 @@ return [
     'split'                                => 'Împarte',
     'single_split'                         => 'Împarte',
     'clone'                                => 'Clonă',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Ultimele 7 zile',
     'last_thirty_days'                     => 'Ultimele 30 de zile',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => 'Lista tuturor atașamentelor',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'Cheltuieli',
     'title_withdrawal'                          => 'Cheltuieli',
     'title_revenue'                             => 'Venituri',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => 'Creați o nouă monedă',
     'store_currency'                            => 'Salvați o nouă monedă',
     'update_currency'                           => 'Actualizați monedă',
-    'new_default_currency'                      => ':name este acum moneda implicită.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => 'Nu se poate șterge :nume deoarece este încă în uz.',
     'cannot_delete_fallback_currency'           => ':name este moneda de rezervă a sistemului și nu poate fi ștearsă.',
     'cannot_disable_currency_journals'          => 'Nu se poate dezactiva :name, deoarece tranzacțiile încă îl utilizează.',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => 'Dezactivează',
     'currencies_default_disabled'               => 'Cele mai multe dintre aceste monede sunt dezactivate în mod prestabilit. Pentru a le folosi, trebuie să le activați mai întâi.',
     'currency_is_now_enabled'                   => 'Moneda ":name" a fost activată',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => 'Moneda ":name" a fost dezactivată',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => 'Câmpuri obligatorii',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Actualizați retragere',
     'update_deposit'                            => 'Actualizați depozit',
     'update_transaction'                        => 'Actualizați tranzacția',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => 'Prima împărțire poate suprascrie contul sursă',
     'first_split_overrules_destination'         => 'Prima împărțire poate suprascrie contul de destinație',
     'spent_x_of_y'                              => 'Cheltuit {amount} din {total}',
+
 
     // new user:
     'welcome'                                   => 'Bine ați venit!',

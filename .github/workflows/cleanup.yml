@@ -1,6 +1,6 @@
 # This workflow prunes old workflow runs for an entire repository.
 
-name: Prune old builds
+name: "Chore - prune old builds"
 
 on:
   schedule:
@@ -22,14 +22,14 @@ jobs:
               repo: context.repo.repo,
               status: 'cancelled',
             });
-            
+
             const skipped = await github.rest.actions.listWorkflowRunsForRepo({
               owner: context.repo.owner,
               per_page: 100,
               repo: context.repo.repo,
               status: 'skipped',
             });
-            
+
             for (const response of [cancelled, skipped]) {
               for (const run of response.data.workflow_runs) {
                 console.log(`Run id ${run.id} of '${run.name}' is a cancelled/skipped run. Deleting...`);
@@ -50,10 +50,10 @@ jobs:
             const ms_in_day = 86400000;
             const now = Date.now();
             const pages = 5;
-            
+
             // we don't want to prune old runs from test.yml
             // because we track the duration of runs over time
-            
+
             const workflows = [
               'cleanup.yml',
               'closed-issues.yml',
@@ -64,9 +64,9 @@ jobs:
               'sonarcloud.yml',
               'stale.yml'
             ]
-            
+
             let runs_to_delete = [];
-            
+
             for (const workflow of workflows) {
               for (let page = 0; page < pages; page += 1) {
                 let response = await github.rest.actions.listWorkflowRuns({
@@ -76,7 +76,7 @@ jobs:
                   repo: context.repo.repo,
                   workflow_id: workflow
                 });
-            
+
                 if (response.data.workflow_runs.length > 0) {
                   for (const run of response.data.workflow_runs) {
                     if (now - Date.parse(run.created_at) > ms_in_day * days_to_expiration) {
@@ -86,7 +86,7 @@ jobs:
                 }
               }
             }
-            
+
             for (const run of runs_to_delete) {
               console.log(`Run id ${run[0]} of '${run[1]}' is older than ${days_to_expiration} days. Deleting...`);
               try {

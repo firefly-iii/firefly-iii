@@ -84,7 +84,7 @@ class DownloadExchangeRates implements ShouldQueue
     public function handle(): void
     {
         Log::debug('Now in handle()');
-        $currencies = $this->repository->get();
+        $currencies = $this->repository->getCompleteSet();
 
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {

@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -66,8 +65,6 @@ trait ChartGeneration
         /** @var GeneratorInterface $generator */
         $generator = app(GeneratorInterface::class);
 
-        /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
         /** @var AccountRepositoryInterface $accountRepos */
         $accountRepos = app(AccountRepositoryInterface::class);
 
@@ -76,7 +73,7 @@ trait ChartGeneration
         /** @var Account $account */
         foreach ($accounts as $account) {
             // TODO we can use getAccountCurrency instead.
-            $currency = $repository->find((int)$accountRepos->getMetaValue($account, 'currency_id'));
+            $currency = $accountRepos->getAccountCurrency($account);
             if (null === $currency) {
                 $currency = $default;
             }

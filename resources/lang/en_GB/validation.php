@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'The source account equals the destination account.',
     'unique_account_number_for_user' => 'This account number seems to be already in use.',
     'unique_iban_for_user'           => 'It looks like this IBAN is already in use.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Due to security constraints, you cannot register using this email address.',
     'rule_trigger_value'             => 'This value is invalid for the selected trigger.',
     'rule_action_value'              => 'This value is invalid for the selected action.',

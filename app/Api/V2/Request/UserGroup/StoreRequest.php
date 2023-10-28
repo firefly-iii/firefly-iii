@@ -37,6 +37,7 @@ class StoreRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+
     protected array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
 
     /**

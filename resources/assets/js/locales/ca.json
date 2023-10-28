@@ -2,6 +2,7 @@
     "firefly": {
         "welcome_back": "Qu\u00e8 est\u00e0 passant?",
         "flash_error": "Error!",
+        "flash_warning": "Atenci\u00f3!",
         "flash_success": "\u00c8xit!",
         "close": "Tancar",
         "split_transaction_title": "Descripci\u00f3 de la transacci\u00f3 dividida",
@@ -29,6 +30,7 @@
         "submit": "Enviar",
         "amount": "Import",
         "date": "Data",
+        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
         "tags": "Etiquetes",
         "no_budget": "(cap pressupost)",
         "no_bill": "(cap factura)",

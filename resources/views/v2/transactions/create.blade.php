@@ -17,10 +17,7 @@
                         </div>
                     </template>
                     <template x-if="showErrorMessage">
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            A simple ERROR alert with <a href="#" class="alert-link">an example link</a>. Give it a
-                            click
-                            if you like.
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" x-text="errorMessageText">
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </template>
@@ -37,8 +34,8 @@
                                         :data-bs-target="'#split-'+index+'-pane'"
                                         type="button" role="tab"
                                         :aria-controls="'split-'+index+'-pane'"
-                                        aria-selected="true">Split #
-                                    <span x-text="index"></span>
+                                        aria-selected="true">{{ __('firefly.single_split') }} #
+                                    <span x-text="index+1"></span>
                                 </button>
                             </li>
                         </template>
@@ -49,7 +46,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link disabled" aria-disabled="true">
-                                Total:
+                                {{ __('firefly.total') }}:
                                 <span x-text="formattedTotalAmount()"></span>
                             </a>
                         </li>
@@ -72,45 +69,52 @@
                             <div class="col-xl-6 col-lg-6 col-md-12 col-xs-12 mb-2">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h3 class="card-title">{{ __('firefly.basic_journal_information') }}</h3>
+                                        <h3 class="card-title"
+                                        >{{ __('firefly.basic_journal_information') }}</h3>
                                     </div>
                                     <div class="card-body">
 
                                         <div class="row mb-3">
-                                            <label for="description_0"
+                                            <label :for="'description_' + index"
                                                    class="col-sm-1 col-form-label d-none d-sm-block">
-                                                <em class="fa-solid fa-font"></em>
+                                                <em
+                                                    title="TODO explain me"
+                                                class="fa-solid fa-font"></em>
                                             </label>
                                             <div class="col-sm-10">
                                                 <input type="text" class="form-control ac-description"
                                                        :id="'description_' + index"
                                                        @change="detectTransactionType"
                                                        x-model="transaction.description"
-                                                       placeholder="Transaction description">
+                                                       placeholder="{{ __('firefly.description')  }}">
                                             </div>
                                         </div>
 
                                         <div class="row mb-3">
-                                            <label for="source_0" class="col-sm-1 col-form-label d-none d-sm-block">
+                                            <label :for="'source_' + index" class="col-sm-1 col-form-label d-none d-sm-block">
                                                 <i class="fa-solid fa-arrow-right"></i>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control ac-source" id="source_0"
+                                                <input type="text"
+                                                       class="form-control ac-source"
+                                                       :id="'source_' + index"
                                                        x-model="transaction.source_account.name"
                                                        :data-index="index"
-                                                       placeholder="Source account">
+                                                       placeholder="{{ __('firefly.source_account')  }}">
                                             </div>
                                         </div>
 
                                         <div class="row mb-3">
-                                            <label for="dest_0" class="col-sm-1 col-form-label d-none d-sm-block">
+                                            <label :for ="'dest_' + index" class="col-sm-1 col-form-label d-none d-sm-block">
                                                 <i class="fa-solid fa-arrow-left"></i>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input type="text" class="form-control ac-dest" id="dest_0"
+                                                <input type="text"
+                                                       class="form-control ac-dest"
+                                                       :id="'dest_' + index"
                                                        x-model="transaction.destination_account.name"
                                                        :data-index="index"
-                                                       placeholder="Destination account">
+                                                       placeholder="{{ __('firefly.destination_account')  }}">
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -118,7 +122,7 @@
                                                 <i class="fa-solid fa-calendar"></i>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input type="datetime-local" class="form-control" id="date_0"
+                                                <input type="datetime-local" class="form-control" :id="'date_' + index"
                                                        @change="detectTransactionType"
                                                        x-model="transaction.date"
                                                 >
@@ -136,10 +140,21 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="row mb-3">
-                                            <label for="dest_0" class="col-sm-1 col-form-label d-none d-sm-block">
-                                                EUR
-                                            </label>
-                                            <div class="col-sm-10">
+                                            <div class="col-sm-3">
+                                                <template x-if="loadingCurrencies">
+                                                    <span class="form-control-plaintext"><em class="fa-solid fa-spinner fa-spin"></em></span>
+                                                </template>
+                                                <template x-if="!loadingCurrencies">
+                                                <select class="form-control" :id="'currency_code_' + index"
+                                                        x-model="transaction.currency_code"
+                                                >
+                                                    <template x-for="currency in enabledCurrencies">
+                                                        <option :selected="currency.id == defaultCurrency.id" :label="currency.name" :value="currency.code" x-text="currency.name"></option>
+                                                    </template>
+                                                </select>
+                                                </template>
+                                            </div>
+                                            <div class="col-sm-9">
                                                 <input type="number" step="any" min="0" class="form-control"
                                                        :id="'amount_' + index"
                                                        :data-index="index"

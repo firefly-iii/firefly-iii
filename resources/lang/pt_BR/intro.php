@@ -136,9 +136,9 @@ return [
     'piggy-banks_show_piggyEvents'                            => 'Todas as adições ou remoções também estão listadas aqui.',
 
     // bill index
-    'bills_index_rules'                                       => 'Aqui você visualiza quais regras se aplicam a esta conta',
+    'bills_index_rules'                                       => 'Aqui você visualiza quais regras se aplicam a esta fatura',
     'bills_index_paid_in_period'                              => 'Este campo indica quando a fatura foi paga pela última vez.',
-    'bills_index_expected_in_period'                          => 'Este campo indica, para cada conta, se e quando a próxima fatura é esperada para cair em conta.',
+    'bills_index_expected_in_period'                          => 'Este campo indica para cada fatura se e quando a próxima é esperada.',
 
     // show bill
     'bills_show_billInfo'                                     => 'Esta tabela mostra algumas informações gerais sobre esta fatura.',
@@ -146,8 +146,8 @@ return [
     'bills_show_billChart'                                    => 'Este gráfico mostra as transações vinculadas a esta fatura.',
 
     // create bill
-    'bills_create_intro'                                      => 'Use faturas para acompanhar a quantidade de dinheiro devido por período. Pense em gastos como aluguel, seguro ou pagamentos de hipoteca.',
-    'bills_create_name'                                       => 'Use um nome descritivo como "Aluguel" ou "Seguro de saúde".',
+    'bills_create_intro'                                      => 'Use as faturas para acompanhar a quantidade de dinheiro devido por período. Pense em gastos como aluguel, seguro ou pagamentos de hipoteca.',
+    'bills_create_name'                                       => 'Use um nome descritivo como "Aluguel" ou "Plano de saúde".',
     //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Selecione um valor mínimo e máximo para esta fatura.',
     'bills_create_repeat_freq_holder'                         => 'A maioria das faturas repetem mensalmente, mas você pode definir outra frequência aqui.',

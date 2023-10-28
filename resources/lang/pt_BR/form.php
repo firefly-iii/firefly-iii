@@ -63,7 +63,7 @@ return [
     'source_account'            => 'Conta de origem',
     'destination_account'       => 'Conta de destino',
     'asset_destination_account' => 'Conta de destino',
-    'include_net_worth'         => 'Incluir no patrimonio liquido',
+    'include_net_worth'         => 'Incluir no patrimônio líquido',
     'asset_source_account'      => 'Conta de origem',
     'journal_description'       => 'Descrição',
     'note'                      => 'Notas',

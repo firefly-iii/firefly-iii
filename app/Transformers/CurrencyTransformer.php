@@ -39,18 +39,12 @@ class CurrencyTransformer extends AbstractTransformer
      */
     public function transform(TransactionCurrency $currency): array
     {
-        $isDefault       = false;
-        $defaultCurrency = $this->parameters->get('defaultCurrency');
-        if (null !== $defaultCurrency) {
-            $isDefault = (int)$defaultCurrency->id === (int)$currency->id;
-        }
-
         return [
             'id'             => (int)$currency->id,
             'created_at'     => $currency->created_at->toAtomString(),
             'updated_at'     => $currency->updated_at->toAtomString(),
-            'default'        => $isDefault,
-            'enabled'        => $currency->enabled,
+            'default'        => $currency->userDefault,
+            'enabled'        => $currency->userEnabled,
             'name'           => $currency->name,
             'code'           => $currency->code,
             'symbol'         => $currency->symbol,

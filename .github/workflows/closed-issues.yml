@@ -1,4 +1,4 @@
-name: "Reply to closed issue"
+name: "Issues - reply to closed issue"
 on:
   issues:
     types:

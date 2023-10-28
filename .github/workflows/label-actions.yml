@@ -1,4 +1,4 @@
-name: 'Label Actions'
+name: 'Issues - reply to specific labels'
 
 on:
   issues:

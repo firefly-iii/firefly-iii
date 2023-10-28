@@ -2,6 +2,7 @@
     "firefly": {
         "welcome_back": "Ako to ide?",
         "flash_error": "Chyba!",
+        "flash_warning": "Varovanie!",
         "flash_success": "Hotovo!",
         "close": "Zavrie\u0165",
         "split_transaction_title": "Popis roz\u00fa\u010dtovania",
@@ -29,6 +30,7 @@
         "submit": "Odosla\u0165",
         "amount": "Suma",
         "date": "D\u00e1tum",
+        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
         "tags": "\u0160t\u00edtky",
         "no_budget": "(\u017eiadny rozpo\u010det)",
         "no_bill": "(\u017eiadny \u00fa\u010det)",

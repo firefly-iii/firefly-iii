@@ -65,6 +65,7 @@ class ShowController extends Controller
      */
     public function budgeted(DateRequest $request, Budget $budget): JsonResponse
     {
+        throw new FireflyException('Needs refactoring, uses deprecated method.');
         $data      = $request->getAll();
         $result    = $this->repository->budgetedInPeriodForBudget($budget, $data['start'], $data['end']);
         $converted = $this->cerSum(array_values($result));
@@ -79,6 +80,7 @@ class ShowController extends Controller
      */
     public function spent(DateRequest $request, Budget $budget): JsonResponse
     {
+        throw new FireflyException('Needs refactoring, uses deprecated method.');
         $data      = $request->getAll();
         $result    = $this->repository->spentInPeriodForBudget($budget, $data['start'], $data['end']);
         $converted = $this->cerSum(array_values($result));

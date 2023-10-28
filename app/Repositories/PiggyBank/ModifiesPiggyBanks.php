@@ -313,13 +313,13 @@ trait ModifiesPiggyBanks
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool
     {
         $oldOrder = (int)$piggyBank->order;
-        Log::debug(sprintf('Will move piggy bank #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
+        //Log::debug(sprintf('Will move piggy bank #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
         if ($newOrder > $oldOrder) {
             $this->user->piggyBanks()->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
                        ->where('piggy_banks.id', '!=', $piggyBank->id)
                        ->decrement('piggy_banks.order');
             $piggyBank->order = $newOrder;
-            Log::debug(sprintf('Order of piggy #%d ("%s") is now %d', $piggyBank->id, $piggyBank->name, $newOrder));
+            Log::debug(sprintf('[1] Order of piggy #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
             $piggyBank->save();
 
             return true;
@@ -329,7 +329,7 @@ trait ModifiesPiggyBanks
                    ->where('piggy_banks.id', '!=', $piggyBank->id)
                    ->increment('piggy_banks.order');
         $piggyBank->order = $newOrder;
-        Log::debug(sprintf('Order of piggy #%d ("%s") is now %d', $piggyBank->id, $piggyBank->name, $newOrder));
+        Log::debug(sprintf('[2] Order of piggy #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
         $piggyBank->save();
 
         return true;

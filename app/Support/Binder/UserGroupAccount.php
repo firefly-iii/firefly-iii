@@ -26,7 +26,6 @@ namespace FireflyIII\Support\Binder;
 use FireflyIII\Models\Account;
 use FireflyIII\User;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

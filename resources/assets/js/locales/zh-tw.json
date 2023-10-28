@@ -2,6 +2,7 @@
     "firefly": {
         "welcome_back": "What's playing?",
         "flash_error": "\u932f\u8aa4\uff01",
+        "flash_warning": "\u8b66\u544a\uff01",
         "flash_success": "\u6210\u529f\uff01",
         "close": "\u95dc\u9589",
         "split_transaction_title": "\u62c6\u5206\u4ea4\u6613\u7684\u63cf\u8ff0",
@@ -29,6 +30,7 @@
         "submit": "\u9001\u51fa",
         "amount": "\u91d1\u984d",
         "date": "\u65e5\u671f",
+        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
         "tags": "\u6a19\u7c64",
         "no_budget": "(\u7121\u9810\u7b97)",
         "no_bill": "(no bill)",

@@ -38,7 +38,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
@@ -64,26 +63,6 @@ class ListController extends Controller
 {
     use AccountFilter;
     use TransactionFilter;
-
-    private CurrencyRepositoryInterface $repository;
-
-    /**
-     * CurrencyRepository constructor.
-     *
-
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(CurrencyRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
-
-                return $next($request);
-            }
-        );
-    }
 
     /**
      * This endpoint is documented at:

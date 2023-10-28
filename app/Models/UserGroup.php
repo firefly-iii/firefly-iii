@@ -30,6 +30,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Carbon;
@@ -38,13 +39,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class UserGroup
  *
- * @property int                                      $id
- * @property Carbon|null                              $created_at
- * @property Carbon|null                              $updated_at
- * @property string|null                              $deleted_at
- * @property string                                   $title
- * @property-read Collection|GroupMembership[]        $groupMemberships
- * @property-read int|null                            $group_memberships_count
+ * @property int                                                           $id
+ * @property Carbon|null                                                   $created_at
+ * @property Carbon|null                                                   $updated_at
+ * @property string|null                                                   $deleted_at
+ * @property string                                                        $title
+ * @property-read Collection|GroupMembership[]                             $groupMemberships
+ * @property-read int|null                                                 $group_memberships_count
  * @method static Builder|UserGroup newModelQuery()
  * @method static Builder|UserGroup newQuery()
  * @method static Builder|UserGroup query()
@@ -53,38 +54,40 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|UserGroup whereId($value)
  * @method static Builder|UserGroup whereTitle($value)
  * @method static Builder|UserGroup whereUpdatedAt($value)
- * @property-read Collection<int, Account>            $accounts
- * @property-read int|null                            $accounts_count
- * @property-read Collection<int, AvailableBudget>    $availableBudgets
- * @property-read int|null                            $available_budgets_count
- * @property-read Collection<int, Bill>               $bills
- * @property-read int|null                            $bills_count
- * @property-read Collection<int, Budget>             $budgets
- * @property-read int|null                            $budgets_count
- * @property-read Collection<int, PiggyBank>          $piggyBanks
- * @property-read int|null                            $piggy_banks_count
- * @property-read Collection<int, TransactionJournal> $transactionJournals
- * @property-read int|null                            $transaction_journals_count
- * @property-read Collection<int, \FireflyIII\Models\Attachment> $attachments
- * @property-read int|null $attachments_count
- * @property-read Collection<int, \FireflyIII\Models\Category> $categories
- * @property-read int|null $categories_count
- * @property-read Collection<int, \FireflyIII\Models\CurrencyExchangeRate> $currencyExchangeRates
- * @property-read int|null $currency_exchange_rates_count
- * @property-read Collection<int, \FireflyIII\Models\ObjectGroup> $objectGroups
- * @property-read int|null $object_groups_count
- * @property-read Collection<int, \FireflyIII\Models\Recurrence> $recurrences
- * @property-read int|null $recurrences_count
- * @property-read Collection<int, \FireflyIII\Models\RuleGroup> $ruleGroups
- * @property-read int|null $rule_groups_count
- * @property-read Collection<int, \FireflyIII\Models\Rule> $rules
- * @property-read int|null $rules_count
- * @property-read Collection<int, \FireflyIII\Models\Tag> $tags
- * @property-read int|null $tags_count
- * @property-read Collection<int, \FireflyIII\Models\TransactionGroup> $transactionGroups
- * @property-read int|null $transaction_groups_count
- * @property-read Collection<int, \FireflyIII\Models\Webhook> $webhooks
- * @property-read int|null $webhooks_count
+ * @property-read Collection<int, Account>                                 $accounts
+ * @property-read int|null                                                 $accounts_count
+ * @property-read Collection<int, AvailableBudget>      $availableBudgets
+ * @property-read int|null                              $available_budgets_count
+ * @property-read Collection<int, Bill>                 $bills
+ * @property-read int|null                              $bills_count
+ * @property-read Collection<int, Budget>               $budgets
+ * @property-read int|null                              $budgets_count
+ * @property-read Collection<int, PiggyBank>            $piggyBanks
+ * @property-read int|null                              $piggy_banks_count
+ * @property-read Collection<int, TransactionJournal>   $transactionJournals
+ * @property-read int|null                              $transaction_journals_count
+ * @property-read Collection<int, Attachment>           $attachments
+ * @property-read int|null                              $attachments_count
+ * @property-read Collection<int, Category>             $categories
+ * @property-read int|null                              $categories_count
+ * @property-read Collection<int, CurrencyExchangeRate> $currencyExchangeRates
+ * @property-read int|null                              $currency_exchange_rates_count
+ * @property-read Collection<int, ObjectGroup>          $objectGroups
+ * @property-read int|null                              $object_groups_count
+ * @property-read Collection<int, Recurrence>           $recurrences
+ * @property-read int|null                              $recurrences_count
+ * @property-read Collection<int, RuleGroup>            $ruleGroups
+ * @property-read int|null                                       $rule_groups_count
+ * @property-read Collection<int, Rule>                          $rules
+ * @property-read int|null                                       $rules_count
+ * @property-read Collection<int, Tag>                           $tags
+ * @property-read int|null                                                 $tags_count
+ * @property-read Collection<int, TransactionGroup>                        $transactionGroups
+ * @property-read int|null                                                 $transaction_groups_count
+ * @property-read Collection<int, Webhook>                                 $webhooks
+ * @property-read int|null                                                 $webhooks_count
+ * @property-read Collection<int, TransactionCurrency>                     $currencies
+ * @property-read int|null                                                 $currencies_count
  * @mixin Eloquent
  */
 class UserGroup extends Model
@@ -177,6 +180,16 @@ class UserGroup extends Model
     public function categories(): HasMany
     {
         return $this->hasMany(Category::class);
+    }
+
+    /**
+     * Link to currencies
+     *
+     * @return BelongsToMany
+     */
+    public function currencies(): BelongsToMany
+    {
+        return $this->belongsToMany(TransactionCurrency::class)->withTimestamps()->withPivot('group_default');
     }
 
     /**

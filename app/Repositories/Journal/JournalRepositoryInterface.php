@@ -149,6 +149,13 @@ interface JournalRepositoryInterface
     public function setUser(User | Authenticatable | null $user): void;
 
     /**
+     * TODO Maybe to account repository? Do this wen reconcile is API only.
+     *
+     * @param int $journalId
+     */
+    public function unreconcileById(int $journalId): void;
+
+    /**
      * Update budget for a journal.
      *
      * @param TransactionJournal $journal

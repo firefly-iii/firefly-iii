@@ -23,18 +23,6 @@
 declare(strict_types=1);
 
 /**
- * V2 API route for TransactionSum API endpoints
- * TODO what to do with these routes
- */
-//Route::group(
-//    ['namespace' => 'FireflyIII\Api\V2\Controllers\Transaction\Sum', 'prefix' => 'v2/transaction/sum',
-//     'as'        => 'api.v2.transaction.sum.',],
-//    static function () {
-//        Route::get('bills/paid', ['uses' => 'BillController@paid', 'as' => 'bills.paid']);
-//    }
-//);
-
-/**
  * V2 API route for Summary boxes
  */
 // BASIC
@@ -134,7 +122,7 @@ Route::group(
         'as'        => 'api.v2.subscriptions.',
     ],
     static function () {
-        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
         Route::get('{userGroupBill}', ['uses' => 'ShowController@show', 'as' => 'show']);
         Route::get('sum/paid', ['uses' => 'SumController@paid', 'as' => 'sum.paid']);
         Route::get('sum/unpaid', ['uses' => 'SumController@unpaid', 'as' => 'sum.unpaid']);
@@ -151,7 +139,21 @@ Route::group(
         'as'        => 'api.v2.piggy-banks.',
     ],
     static function () {
-        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+    }
+);
+
+/**
+ * V2 API route for transaction currencies
+ */
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Currency',
+        'prefix'    => 'v2/currencies',
+        'as'        => 'api.v2.currencies.',
+    ],
+    static function () {
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
     }
 );
 
@@ -179,12 +181,12 @@ Route::group(
         'as'        => 'api.v2.budgets',
     ],
     static function () {
-        Route::get('', ['uses' => 'Budget\ListController@index', 'as' => 'index']);
+        Route::get('', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);
         Route::get('{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
-        Route::get('{budget}/limits', ['uses' => 'BudgetLimit\ListController@index', 'as' => 'budget-limits.index']);
-        Route::get('sum/budgeted', ['uses' => 'Budget\ShowController@budgeted', 'as' => 'sum.budgeted']);
-        Route::get('sum/spent', ['uses' => 'Budget\SumController@spent', 'as' => 'sum.spent']);
-        Route::get('{budget}/budgeted', ['uses' => 'Budget\SumController@budgeted', 'as' => 'budget.budgeted']);
+        Route::get('{budget}/limits', ['uses' => 'BudgetLimit\IndexController@index', 'as' => 'budget-limits.index']);
+        Route::get('sum/budgeted', ['uses' => 'Budget\IndexController@budgeted', 'as' => 'sum.budgeted']);
+        Route::get('sum/spent', ['uses' => 'Budget\IndexController@spent', 'as' => 'sum.spent']);
+        Route::get('{budget}/budgeted', ['uses' => 'Budget\ShowController@budgeted', 'as' => 'budget.budgeted']);
         Route::get('{budget}/spent', ['uses' => 'Budget\ShowController@spent', 'as' => 'budget.spent']);
     }
 );
@@ -213,7 +215,7 @@ Route::group(
         'as'        => 'api.v2.user-groups.',
     ],
     static function () {
-        Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{userGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
         Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);

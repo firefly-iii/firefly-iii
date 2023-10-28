@@ -43,6 +43,7 @@ return [
     'split'                                => '分割',
     'single_split'                         => '分割',
     'clone'                                => '複製',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => '操作を確認',
     'last_seven_days'                      => '過去7日間',
     'last_thirty_days'                     => '過去30日間',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => 'すべての添付ファイルのリスト',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => '支出',
     'title_withdrawal'                          => '支出',
     'title_revenue'                             => '収益 / 収入',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => '新しい通貨を作成',
     'store_currency'                            => '新しい通貨を保存',
     'update_currency'                           => '通貨を更新',
-    'new_default_currency'                      => ':name はデフォルト通貨です',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => ':nameは使用されているため削除できません。',
     'cannot_delete_fallback_currency'           => ':name はシステムのフォールバック通貨であり、削除できません。',
     'cannot_disable_currency_journals'          => '取引がまだ使用しているため、:name を無効にできません。',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => '無効',
     'currencies_default_disabled'               => 'これらの通貨のほとんどはデフォルトで無効になっています。使用するには、まず有効にする必要があります。',
     'currency_is_now_enabled'                   => '通貨「:name」が有効になりました',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => '通貨「:name」は無効になりました',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => '必須項目',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => '出金を更新',
     'update_deposit'                            => '入金を更新',
     'update_transaction'                        => '取引を更新',
@@ -2041,6 +2047,7 @@ return [
     'first_split_overrules_destination'         => '最初の分割が預け入れ口座を覆す可能性があります',
     'spent_x_of_y'                              => '{amount} / {total} を支出しました',
 
+
     // new user:
     'welcome'                                   => 'Firefly IIIへようこそ！',
     'submit'                                    => '送信',
@@ -2107,9 +2114,9 @@ return [
     'Expense account'                           => '支出口座',
     'Revenue account'                           => '収入口座',
     'Initial balance account'                   => '初期口座残高',
-    'account_type_Asset account'                => 'Asset account',
-    'account_type_Expense account'              => 'Expense account',
-    'account_type_Revenue account'              => 'Revenue account',
+    'account_type_Asset account'                => '資産口座',
+    'account_type_Expense account'              => '支出口座',
+    'account_type_Revenue account'              => '収入口座',
     'account_type_Debt'                         => '借金',
     'account_type_Loan'                         => 'ローン',
     'account_type_Mortgage'                     => '住宅ローン',

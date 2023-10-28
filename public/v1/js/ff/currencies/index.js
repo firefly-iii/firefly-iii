@@ -24,55 +24,85 @@
 $(function () {
     "use strict";
     $('.make_default').on('click', setDefaultCurrency);
-
     $('.enable-currency').on('click', enableCurrency);
     $('.disable-currency').on('click', disableCurrency);
 });
 
 function setDefaultCurrency(e) {
     var button = $(e.currentTarget);
-    var currencyId = parseInt(button.data('id'));
+    var currencyCode = button.data('code');
 
-    $.post(makeDefaultUrl, {
-        _token: token,
-        id: currencyId
-    }).done(function (data) {
-        // lame but it works
-        location.reload();
-    }).fail(function () {
-        console.error('I failed :(');
+    var params = {
+        default: true,
+        enabled: true
+    }
+
+    $.ajax({
+        url: updateCurrencyUrl + '/' + currencyCode,
+        data: JSON.stringify(params),
+        type: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+        },
+        error: function () {
+            window.location = redirectUrl + '?message=default_failed&code=' + currencyCode;
+        },
+        success: function () {
+            window.location = redirectUrl + '?message=default&code=' + currencyCode;
+        }
     });
     return false;
 }
 
 function enableCurrency(e) {
     var button = $(e.currentTarget);
-    var currencyId = parseInt(button.data('id'));
+    var currencyCode = button.data('code');
 
-    $.post(enableCurrencyUrl, {
-        _token: token,
-        id: currencyId
-    }).done(function (data) {
-        // lame but it works
-        location.reload();
-    }).fail(function () {
-        console.error('I failed :(');
+    var params = {
+        enabled: true
+    }
+
+    $.ajax({
+        url: updateCurrencyUrl + '/' + currencyCode,
+        data: JSON.stringify(params),
+        type: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+        },
+        error: function () {
+            window.location = redirectUrl + '?message=enable_failed&code=' + currencyCode;
+        },
+        success: function () {
+            window.location = redirectUrl + '?message=enabled&code=' + currencyCode;
+        }
     });
     return false;
 }
 
 function disableCurrency(e) {
     var button = $(e.currentTarget);
-    var currencyId = parseInt(button.data('id'));
+    var currencyCode = button.data('code');
 
-    $.post(disableCurrencyUrl, {
-        _token: token,
-        id: currencyId
-    }).done(function (data) {
-        // lame but it works
-        location.reload();
-    }).fail(function () {
-        console.error('I failed :(');
+    var params = {
+        enabled: false
+    }
+
+    $.ajax({
+        url: updateCurrencyUrl + '/' + currencyCode,
+        data: JSON.stringify(params),
+        type: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+        },
+        error: function () {
+            window.location = redirectUrl + '?message=disable_failed&code=' + currencyCode;
+        },
+        success: function () {
+            window.location = redirectUrl + '?message=disabled&code=' + currencyCode;
+        }
     });
     return false;
 }

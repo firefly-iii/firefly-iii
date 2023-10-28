@@ -43,6 +43,7 @@ return [
     'split'                                => 'Jaa',
     'single_split'                         => 'Jako',
     'clone'                                => 'Kopioi',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Vahvista toiminto',
     'last_seven_days'                      => 'Viimeiset 7 päivää',
     'last_thirty_days'                     => 'Viimeiset 30 päivää',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => 'Lista kaikista liitteistä',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'Kustannukset',
     'title_withdrawal'                          => 'Kustannukset',
     'title_revenue'                             => 'Tuotto / ansio',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => 'Luo uusi valuutta',
     'store_currency'                            => 'Tallenna uusi valuutta',
     'update_currency'                           => 'Päivitä valuutta',
-    'new_default_currency'                      => ':name on nyt oletusvaluutta.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => 'Valuuttaa :name ei voida poistaa koska se on yhä käytössä.',
     'cannot_delete_fallback_currency'           => ':name on järjestelmän varavaluutta eikä sitä voi poistaa.',
     'cannot_disable_currency_journals'          => 'Valuuttaa :name ei voi poistaa käytöstä koska tapahtumat käyttävät sitä yhä.',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => 'Poista käytöstä',
     'currencies_default_disabled'               => 'Suurin osa näistä valuutoista on alkuun poistettu käytöstä. Ne pitää erikseen kytkeä päälle jos haluat käyttää niitä.',
     'currency_is_now_enabled'                   => 'Valuutta ":name" on otettu käyttöön',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => 'Valuutta ":name" poistettiin käytöstä',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => 'Pakolliset kentät',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Päivitä nosto',
     'update_deposit'                            => 'Päivitä talletus',
     'update_transaction'                        => 'Päivitä tapahtuma',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => 'Ensimmäinen jako voi kumota lähdetilin',
     'first_split_overrules_destination'         => 'Ensimmäinen jako voi kumota kohdetilin',
     'spent_x_of_y'                              => 'Käytetty {amount} / {total}',
+
 
     // new user:
     'welcome'                                   => 'Tervetuloa Firefly III:een!',

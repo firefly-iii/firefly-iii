@@ -27,7 +27,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use JsonException;
 
@@ -37,7 +36,6 @@ use JsonException;
 class PiggyBankTransformer extends AbstractTransformer
 {
     private AccountRepositoryInterface   $accountRepos;
-    private CurrencyRepositoryInterface  $currencyRepos;
     private PiggyBankRepositoryInterface $piggyRepos;
 
     /**
@@ -47,9 +45,8 @@ class PiggyBankTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->accountRepos  = app(AccountRepositoryInterface::class);
-        $this->currencyRepos = app(CurrencyRepositoryInterface::class);
-        $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
+        $this->accountRepos = app(AccountRepositoryInterface::class);
+        $this->piggyRepos   = app(PiggyBankRepositoryInterface::class);
     }
 
     /**
@@ -67,7 +64,6 @@ class PiggyBankTransformer extends AbstractTransformer
 
         // set up repositories
         $this->accountRepos->setUser($account->user);
-        $this->currencyRepos->setUser($account->user);
         $this->piggyRepos->setUser($account->user);
 
         // get currency from account, or use default.

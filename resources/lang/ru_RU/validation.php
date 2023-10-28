@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'Счёт источник и счёт назначения совпадают.',
     'unique_account_number_for_user' => 'Этот номер счёта уже используется.',
     'unique_iban_for_user'           => 'Этот IBAN уже используется.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'По соображениям безопасности, вы не можете зарегистрироваться, используя этот адрес электронной почты.',
     'rule_trigger_value'             => 'Это значение является недопустимым для выбранного триггера.',
     'rule_action_value'              => 'Это значение является недопустимым для выбранного действия.',

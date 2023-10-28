@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'A conta de origem é igual à conta de destino.',
     'unique_account_number_for_user' => 'Parece que este número de conta já está em uso.',
     'unique_iban_for_user'           => 'Parece que este IBAN já está em uso.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Devido a motivos de segurança, não se pode registar com este email.',
     'rule_trigger_value'             => 'Este valor é inválido para o gatilho selecionado.',
     'rule_action_value'              => 'Este valor é inválido para a ação selecionada.',

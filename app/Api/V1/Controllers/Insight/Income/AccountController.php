@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Insight\GenericRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\OperationsRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use Illuminate\Http\JsonResponse;
 
@@ -43,7 +42,6 @@ class AccountController extends Controller
 {
     use ApiSupport;
 
-    private CurrencyRepositoryInterface   $currencyRepository;
     private OperationsRepositoryInterface $opsRepository;
     private AccountRepositoryInterface    $repository;
 
@@ -60,9 +58,6 @@ class AccountController extends Controller
                 $user             = auth()->user();
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUser($user);
-
-                $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-                $this->currencyRepository->setUser($user);
 
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
                 $this->opsRepository->setUser($user);

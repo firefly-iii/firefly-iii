@@ -89,10 +89,10 @@ class CreateController extends Controller
                 session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
                 session()->flash('success_url', $link);
 
-                if('edit' === $request->get('redirect')) {
+                if ('edit' === $request->get('redirect')) {
                     return response()->json(['redirect' => route('transactions.edit', [$newGroup->id])]);
                 }
-                
+
                 return response()->json(['redirect' => route('transactions.show', [$newGroup->id])]);
             }
         }

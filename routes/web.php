@@ -333,19 +333,16 @@ Route::group(
  * Currency Controller.
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'currencies', 'as' => 'currencies.'],
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\TransactionCurrency', 'prefix' => 'currencies', 'as' => 'currencies.'],
     static function () {
-        Route::get('', ['uses' => 'CurrencyController@index', 'as' => 'index']);
-        Route::get('create', ['uses' => 'CurrencyController@create', 'as' => 'create']);
-        Route::get('edit/{currency}', ['uses' => 'CurrencyController@edit', 'as' => 'edit']);
-        Route::get('delete/{currency}', ['uses' => 'CurrencyController@delete', 'as' => 'delete']);
-        Route::post('default', ['uses' => 'CurrencyController@defaultCurrency', 'as' => 'default']);
-        Route::post('enable', ['uses' => 'CurrencyController@enableCurrency', 'as' => 'enable']);
-        Route::post('disable', ['uses' => 'CurrencyController@disableCurrency', 'as' => 'disable']);
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
+        Route::get('create', ['uses' => 'CreateController@create', 'as' => 'create']);
+        Route::get('edit/{currency}', ['uses' => 'EditController@edit', 'as' => 'edit']);
+        Route::get('delete/{currency}', ['uses' => 'DeleteController@delete', 'as' => 'delete']);
 
-        Route::post('store', ['uses' => 'CurrencyController@store', 'as' => 'store']);
-        Route::post('update/{currency}', ['uses' => 'CurrencyController@update', 'as' => 'update']);
-        Route::post('destroy/{currency}', ['uses' => 'CurrencyController@destroy', 'as' => 'destroy']);
+        Route::post('store', ['uses' => 'CreateController@store', 'as' => 'store']);
+        Route::post('update/{currency}', ['uses' => 'EditController@update', 'as' => 'update']);
+        Route::post('destroy/{currency}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
     }
 );
 
@@ -1229,6 +1226,9 @@ Route::group(
         // delete group
         Route::get('delete/{transactionGroup}', ['uses' => 'Transaction\DeleteController@delete', 'as' => 'delete']);
         Route::post('destroy/{transactionGroup}', ['uses' => 'Transaction\DeleteController@destroy', 'as' => 'destroy']);
+
+        // unreconcile
+        Route::post('unreconcile/{tj}', ['uses' => 'Transaction\EditController@unreconcile', 'as' => 'unreconcile']);
 
         Route::get('show/{transactionGroup}', ['uses' => 'Transaction\ShowController@show', 'as' => 'show']);
         Route::get('debug/{transactionGroup}', ['uses' => 'Transaction\ShowController@debugShow', 'as' => 'debug']);

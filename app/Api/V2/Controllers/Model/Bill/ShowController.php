@@ -30,7 +30,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\UserGroups\Bill\BillRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
-use FireflyIII\Transformers\V2\AccountTransformer;
 use FireflyIII\Transformers\V2\BillTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -61,29 +60,6 @@ class ShowController extends Controller
                 return $next($request);
             }
         );
-    }
-
-    /**
-     * @param Request $request
-     *
-     * TODO see autocomplete/accountcontroller for list.
-     *
-     * @return JsonResponse
-     */
-    public function index(Request $request): JsonResponse
-    {
-        $this->repository->correctOrder();
-        $bills       = $this->repository->getBills();
-        $pageSize    = $this->parameters->get('limit');
-        $count       = $bills->count();
-        $bills       = $bills->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator   = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
-        $transformer = new BillTransformer();
-        $transformer->setParameters($this->parameters); // give params to transformer
-
-        return response()
-            ->json($this->jsonApiList('subscriptions', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
     }
 
     /**

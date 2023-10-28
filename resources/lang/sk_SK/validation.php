@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'Zdrojový účet je zároveň cieľový.',
     'unique_account_number_for_user' => 'Zdá sa, že toto číslo účtu sa už používa.',
     'unique_iban_for_user'           => 'Vyzerá to tak, že tento IBAN kód sa už používa.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Z bezpečnostných dôvodov pre registráciu nemôžete použiť túto emailovú adresu.',
     'rule_trigger_value'             => 'Táto hodnota je pre označený spúšťač neplatná.',
     'rule_action_value'              => 'Táto hodnota je pre vybranú akciu neplatná.',

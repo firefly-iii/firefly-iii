@@ -43,6 +43,7 @@ return [
     'split'                                => 'Felosztás',
     'single_split'                         => 'Felosztás',
     'clone'                                => 'Másolás',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Confirm action',
     'last_seven_days'                      => 'Utolsó hét nap',
     'last_thirty_days'                     => 'Elmúlt harminc nap',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => 'Mellékletek listája',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'Költségek',
     'title_withdrawal'                          => 'Költségek',
     'title_revenue'                             => 'Jövedelem / bevétel',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => 'Új pénznem létrehozása',
     'store_currency'                            => 'Új pénznem tárolása',
     'update_currency'                           => 'Pénznem frissítése',
-    'new_default_currency'                      => ':name lett az alapértelmezett pénznem.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => ':name nem törölhető mert még használatban van.',
     'cannot_delete_fallback_currency'           => ':name a rendszer biztonsági pénzneme és nem törölhető.',
     'cannot_disable_currency_journals'          => ':name nem tiltható le mert még használják tranzakciók.',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => 'Tiltás',
     'currencies_default_disabled'               => 'A pénznemek többsége alapértelmezés szerint tiltva van. A használathoz először engedélyezni kell azokat.',
     'currency_is_now_enabled'                   => 'Pénznem ":name" engedélyezve',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => 'Pénznem ":name" letiltva',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => 'Kötelező mezők',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Költség frissítése',
     'update_deposit'                            => 'Bevétel szerkesztése',
     'update_transaction'                        => 'Tranzakció frissítése',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => 'The first split may overrule the source account',
     'first_split_overrules_destination'         => 'The first split may overrule the destination account',
     'spent_x_of_y'                              => 'Spent {amount} of {total}',
+
 
     // new user:
     'welcome'                                   => 'Üdvözöli a Firefly III!',

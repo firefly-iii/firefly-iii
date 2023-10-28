@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Validation;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
@@ -37,6 +38,11 @@ use Illuminate\Validation\Validator;
 trait GroupValidation
 {
     /**
+     * A catch when users submit splits with no source or destination info at all.
+     *
+     * TODO This should prevent errors down the road but I'm not yet sure what I'm validating here
+     * TODO so I disabled this on 2023-10-22 to see if it causes any issues.
+     *
      * @param Validator $validator
      *
      * @throws FireflyException
@@ -87,6 +93,43 @@ trait GroupValidation
      * @return array
      */
     abstract protected function getTransactionsArray(Validator $validator): array;
+
+    /**
+     * @param Validator        $validator
+     * @param TransactionGroup $transactionGroup
+     *
+     * @return void
+     */
+    protected function preventUpdateReconciled(Validator $validator, TransactionGroup $transactionGroup): void
+    {
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
+
+        $count = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+                            ->leftJoin('transaction_groups', 'transaction_groups.id', 'transaction_journals.transaction_group_id')
+                            ->where('transaction_journals.transaction_group_id', $transactionGroup->id)
+                            ->where('transactions.reconciled', 1)->where('transactions.amount', '<', 0)->count(['transactions.id']);
+        if (0 === $count) {
+            app('log')->debug(sprintf('Transaction is not reconciled, done with %s', __METHOD__));
+            return;
+        }
+        $data      = $validator->getData();
+        $forbidden = ['amount', 'foreign_amount', 'currency_code', 'currency_id', 'foreign_currency_code', 'foreign_currency_id',
+                      'source_id', 'source_name', 'source_number', 'source_iban',
+                      'destination_id', 'destination_name', 'destination_number', 'destination_iban',
+        ];
+        foreach ($data['transactions'] as $index => $row) {
+            foreach ($forbidden as $key) {
+                if (array_key_exists($key, $row)) {
+                    $validator->errors()->add(
+                        sprintf('transactions.%d.%s', $index, $key),
+                        (string)trans('validation.reconciled_forbidden_field', ['field' => $key])
+                    );
+                }
+            }
+        }
+
+        app('log')->debug(sprintf('Done with %s', __METHOD__));
+    }
 
     /**
      * Adds an error to the "description" field when the user has submitted no descriptions and no

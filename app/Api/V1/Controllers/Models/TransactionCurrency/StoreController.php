@@ -27,10 +27,11 @@ namespace FireflyIII\Api\V1\Controllers\Models\TransactionCurrency;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\TransactionCurrency\StoreRequest;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use JsonException;
 use League\Fractal\Resource\Item;
@@ -79,12 +80,14 @@ class StoreController extends Controller
     {
         $currency = $this->repository->store($request->getAll());
         if (true === $request->boolean('default')) {
-            app('preferences')->set('currencyPreference', $currency->code);
+            $this->repository->makeDefault($currency);
             app('preferences')->mark();
         }
-        $manager         = $this->getManager();
-        $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
-        $this->parameters->set('defaultCurrency', $defaultCurrency);
+        $manager = $this->getManager();
+
+        /** @var User $user */
+        $user = auth()->user();
+        $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);

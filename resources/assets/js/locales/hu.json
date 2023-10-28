@@ -2,6 +2,7 @@
     "firefly": {
         "welcome_back": "Mi a helyzet?",
         "flash_error": "Hiba!",
+        "flash_warning": "Figyelmeztet\u00e9s!",
         "flash_success": "Siker!",
         "close": "Bez\u00e1r\u00e1s",
         "split_transaction_title": "Felosztott tranzakci\u00f3 le\u00edr\u00e1sa",
@@ -29,6 +30,7 @@
         "submit": "Bek\u00fcld\u00e9s",
         "amount": "\u00d6sszeg",
         "date": "D\u00e1tum",
+        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
         "tags": "C\u00edmk\u00e9k",
         "no_budget": "(nincs k\u00f6lts\u00e9gkeret)",
         "no_bill": "(no bill)",

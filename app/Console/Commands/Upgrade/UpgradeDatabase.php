@@ -25,7 +25,6 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 set_time_limit(0);
 
-use Artisan;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 
@@ -72,6 +71,7 @@ class UpgradeDatabase extends Command
             // also just in case, some integrity commands:
             'firefly-iii:create-group-memberships',
             'firefly-iii:upgrade-group-information',
+            'firefly-iii:upgrade-currency-preferences',
         ];
         $args     = [];
         if ($this->option('force')) {

@@ -9,7 +9,7 @@
             "paid": "Pagati",
             "unpaid": "Da pagare",
             "default_group_title_name_plain": "ungrouped",
-            "subscriptions_in_group": "Subscriptions in group \"%{title}\"",
+            "subscriptions_in_group": "Abbonamenti nel gruppo \"%{title}\"",
             "subscr_expected_x_times": "Expect to pay %{amount} %{times} times this period",
             "overspent": "Speso troppo",
             "money_flowing_in": "Entrate",

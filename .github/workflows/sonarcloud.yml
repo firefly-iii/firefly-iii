@@ -1,14 +1,37 @@
-name: Sonarcloud
+name: 'Code - Run Sonarcloud'
 on:
-  pull_request: 
+  pull_request:
   push:
     branches:
       - main
       - develop
+env:
+  DB_CONNECTION: mysql
+  DB_HOST: "127.0.0.1"
+  DB_DATABASE: firefly
+  DB_USER: firefly
+  DB_PASSWORD: secret_firefly_password
+
 jobs:
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:latest
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: yes
+          MYSQL_USER: ${{ env.DB_USER }}
+          MYSQL_PASSWORD: ${{ env.DB_PASSWORD }}
+          MYSQL_DATABASE: ${{ env.DB_DATABASE }}
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -24,15 +47,48 @@ jobs:
         with:
           php-version: '8.2'
           coverage: xdebug
+          extensions: >-
+            bcmath
+            curl
+            fileinfo
+            iconv
+            intl
+            json
+            mbstring
+            openssl
+            pdo
+            session
+            simplexml
+            sodium
+            tokenizer
+            xml
+            xmlwriter
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress --no-scripts
 
+      - name: Verify Database connection
+        env:
+          PORT: ${{ job.services.mariadb.ports[3306] }}
+        run: |
+          while ! mysqladmin ping -h"${{env.DB_HOST}}" -P"${PORT}" --silent; do
+            sleep 1
+          done
+
       - name: Copy environment file
-        run: cp .env.example .env
+        run: sed 's@DB_HOST=.*@DB_HOST=${{env.DB_HOST}}@g' .env.example > .env
 
       - name: Generate app key
         run: php artisan key:generate
+
+      - name: "Create the database"
+        run: php artisan firefly-iii:create-database
+
+      - name: "Upgrades the database to the latest version"
+        run: php artisan firefly-iii:upgrade-database
+
+      - name: "Integrity Database Report"
+        run: php artisan firefly-iii:report-integrity
 
       - name: "Run tests with coverage"
         run: composer coverage

@@ -31,7 +31,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -46,8 +45,7 @@ class AccountController extends Controller
 {
     use ApiSupport;
 
-    private CurrencyRepositoryInterface $currencyRepository;
-    private AccountRepositoryInterface  $repository;
+    private AccountRepositoryInterface $repository;
 
     /**
      * AccountController constructor.
@@ -63,9 +61,6 @@ class AccountController extends Controller
                 $user             = auth()->user();
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUser($user);
-
-                $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-                $this->currencyRepository->setUser($user);
 
                 return $next($request);
             }

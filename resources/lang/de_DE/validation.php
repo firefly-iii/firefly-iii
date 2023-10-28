@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'Das Quellkonto entspricht dem Zielkonto.',
     'unique_account_number_for_user' => 'Diese Kontonummer scheint bereits verwendet zu sein.',
     'unique_iban_for_user'           => 'Dieser IBAN scheint bereits verwendet zu werden.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Aufgrund von Sicherheitsbeschränkungen ist eine Registrierung mit dieser E-Mail-Adresse nicht zugelassen.',
     'rule_trigger_value'             => 'Dieser Wert ist für den ausgewählten Auslöser ungültig.',
     'rule_action_value'              => 'Dieser Wert ist für die gewählte Aktion ungültig.',

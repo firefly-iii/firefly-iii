@@ -26,12 +26,11 @@ namespace FireflyIII\Support;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use NumberFormatter;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class Amount.
@@ -108,33 +107,9 @@ class Amount
      */
     public function getCurrencies(): Collection
     {
-        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
-    }
-
-    /**
-     * @return string
-     * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function getCurrencyCode(): string
-    {
-        $cache = new CacheProperties();
-        $cache->addProperty('getCurrencyCode');
-        if ($cache->has()) {
-            return $cache->get();
-        }
-        $currencyPreference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
-
-        $currency = TransactionCurrency::where('code', $currencyPreference->data)->first();
-        if ($currency) {
-            $cache->store($currency->code);
-
-            return $currency->code;
-        }
-        $cache->store(config('firefly.default_currency', 'EUR'));
-
-        return (string)config('firefly.default_currency', 'EUR');
+        /** @var User $user */
+        $user = auth()->user();
+        return $user->currencies()->orderBy('code', 'ASC')->get();
     }
 
     /**
@@ -151,50 +126,43 @@ class Amount
 
     /**
      * @param User $user
-     *
+     * @deprecated use getDefaultCurrencyByUserGroup instead.
      * @return TransactionCurrency
-     * @throws FireflyException
      */
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {
-        $cache = new CacheProperties();
-        $cache->addProperty('getDefaultCurrency');
-        $cache->addProperty($user->id);
-        if ($cache->has()) {
-            return $cache->get();
-        }
-        $currencyPreference = app('preferences')->getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
-        $currencyPrefStr    = $currencyPreference ? $currencyPreference->data : 'EUR';
-
-        // at this point the currency preference could be encrypted, if coming from an old version.
-        $currencyCode = $this->tryDecrypt((string)$currencyPrefStr);
-
-        // could still be json encoded:
-        /** @var TransactionCurrency|null $currency */
-        $currency = TransactionCurrency::where('code', $currencyCode)->first();
-        if (null === $currency) {
-            // get EUR
-            $currency = TransactionCurrency::where('code', 'EUR')->first();
-        }
-        $cache->store($currency);
-
-        return $currency;
+        return $this->getDefaultCurrencyByUserGroup($user->userGroup);
     }
 
     /**
-     * @param string $value
-     *
-     * @return string
+     * @return TransactionCurrency
      */
-    private function tryDecrypt(string $value): string
+    public function getSystemCurrency(): TransactionCurrency
     {
-        try {
-            $value = Crypt::decrypt($value); // verified
-        } catch (DecryptException $e) {
-            // @ignoreException
-        }
+        return TransactionCurrency::where('code', 'EUR')->first();
+    }
 
-        return $value;
+    /**
+     * @param User $user
+     *
+     * @return TransactionCurrency
+     */
+    public function getDefaultCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
+    {
+        $cache = new CacheProperties();
+        $cache->addProperty('getDefaultCurrencyByGroup');
+        $cache->addProperty($userGroup->id);
+        if ($cache->has()) {
+            return $cache->get();
+        }
+        $default = $userGroup->currencies()->where('group_default', true)->first();
+        if (null === $default) {
+            $default = $this->getSystemCurrency();
+            $userGroup->currencies()->sync([$default->id => ['group_default' => true]]);
+        }
+        $cache->store($default);
+
+        return $default;
     }
 
     /**
@@ -338,10 +306,18 @@ class Amount
     }
 
     /**
-     * @return TransactionCurrency
+     * @param string $value
+     *
+     * @return string
      */
-    public function getSystemCurrency(): TransactionCurrency
+    private function tryDecrypt(string $value): string
     {
-        return TransactionCurrency::where('code', 'EUR')->first();
+        try {
+            $value = Crypt::decrypt($value); // verified
+        } catch (DecryptException $e) {
+            // @ignoreException
+        }
+
+        return $value;
     }
 }

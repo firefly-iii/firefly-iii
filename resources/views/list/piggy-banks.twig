@@ -19,7 +19,7 @@
                 <td colspan="8"><small>{{ objectGroup.object_group_title }}</small></td>
             </tr>
             {% for piggy in objectGroup.piggy_banks %}
-                <tr class="piggy-sortable" data-id="{{ piggy.id }}" data-name="{{ piggy.name }}" data-order="{{ piggy.order }}" data-position="{{ loop.index0 }}">
+                <tr class="piggy-sortable" data-id="{{ piggy.id }}" data-name="{{ piggy.name }}" data-order="{{ piggy.order }}">
                     <td class="visible-xs visible-sm hidden-md hidden-lg">
                         &nbsp;
                     </td>

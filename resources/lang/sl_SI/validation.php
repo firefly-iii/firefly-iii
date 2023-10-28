@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'The source account equals the destination account.',
     'unique_account_number_for_user' => 'Kaže, da je ta številka računa že v uporabi.',
     'unique_iban_for_user'           => 'It looks like this IBAN is already in use.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Iz varnostnih razlogov ne morete ustvariti uporabnika s takim e-poštnim naslovom.',
     'rule_trigger_value'             => 'Ta vrednost je neveljavna za izbrani sprožilec.',
     'rule_action_value'              => 'This value is invalid for the selected action.',

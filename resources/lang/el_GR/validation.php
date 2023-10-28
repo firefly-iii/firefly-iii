@@ -48,6 +48,7 @@ return [
     'source_equals_destination'      => 'Ο λογαριασμός προέλευσης ισούται με το λογαριασμό προορισμού.',
     'unique_account_number_for_user' => 'Φαίνεται πως αυτός ο αριθμός λογαριασμού χρησιμοποιείται ήδη.',
     'unique_iban_for_user'           => 'Φαίνεται πως αυτό το IBAN είναι ήδη σε χρήση.',
+    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
     'deleted_user'                   => 'Για λόγους ασφαλείας, δεν μπορείτε να εγγραφείτε χρησιμοποιώντας αυτή τη διεύθυνση email.',
     'rule_trigger_value'             => 'Αυτή η τιμή δεν είναι έγκυρη για το επιλεγμένο κριτήριο ενεργοποίησης.',
     'rule_action_value'              => 'Αυτή η τιμή δεν είναι έγκυρη για την επιλεγμένη ενέργεια.',

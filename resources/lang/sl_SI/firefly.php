@@ -43,6 +43,7 @@ return [
     'split'                                => 'Razdeli',
     'single_split'                         => 'Razdeli',
     'clone'                                => 'Kloniraj',
+    'clone_and_edit'                       => 'Clone and edit',
     'confirm_action'                       => 'Potrdi dejanje',
     'last_seven_days'                      => 'Zadnjih sedem dni',
     'last_thirty_days'                     => 'Zadnjih 30 dni',
@@ -1565,6 +1566,7 @@ return [
     'list_all_attachments'                      => 'Seznam vseh prilog',
 
     // transaction index
+    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
     'title_expenses'                            => 'stroški',
     'title_withdrawal'                          => 'stroški',
     'title_revenue'                             => 'Dohodki / prihodki',
@@ -1632,7 +1634,8 @@ return [
     'create_currency'                           => 'Ustvarite valuto',
     'store_currency'                            => 'Shrani novo valuto',
     'update_currency'                           => 'Osveži valuto',
-    'new_default_currency'                      => ':name ni v privzeti valuti.',
+    'new_default_currency'                      => '":name" is now the default currency.',
+    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
     'cannot_delete_currency'                    => 'Ne morem izbrisati :name ker je v uporabi.',
     'cannot_delete_fallback_currency'           => ':name is the system fallback currency and can\'t be deleted.',
     'cannot_disable_currency_journals'          => 'Cannot disable :name because transactions are still using it.',
@@ -1658,7 +1661,9 @@ return [
     'disable_currency'                          => 'Onemogoči',
     'currencies_default_disabled'               => 'Večina teh valut je privzeto onemogočena. Če jih želite uporabiti, jih morate najprej omogočiti.',
     'currency_is_now_enabled'                   => 'Valuta ":name" je bila omogočena',
+    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
     'currency_is_now_disabled'                  => 'Valuta ":name" je bila onemogočena',
+    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
 
     // forms:
     'mandatoryFields'                           => 'Obvezna polja',
@@ -1944,6 +1949,7 @@ return [
 
 
     // transactions:
+    'unreconcile'                               => 'Undo reconciliation',
     'update_withdrawal'                         => 'Posodobi odliv',
     'update_deposit'                            => 'Posodobi polog',
     'update_transaction'                        => 'Posodobi transakcije',
@@ -2040,6 +2046,7 @@ return [
     'first_split_overrules_source'              => 'The first split may overrule the source account',
     'first_split_overrules_destination'         => 'The first split may overrule the destination account',
     'spent_x_of_y'                              => 'Spent {amount} of {total}',
+
 
     // new user:
     'welcome'                                   => 'Dobrodošli v Firefly III!',

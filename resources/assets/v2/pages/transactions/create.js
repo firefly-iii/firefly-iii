@@ -25,6 +25,7 @@ import {parseFromEntries} from "./shared/parse-from-entries.js";
 import formatMoney from "../../util/format-money.js";
 import Autocomplete from "bootstrap5-autocomplete";
 import Post from "../../api/v2/model/transaction/post.js";
+import Get from "../../api/v2/model/currency/get.js";
 import {getVariable} from "../../store/get-variable.js";
 import {I18n} from "i18n-js";
 import {loadTranslations} from "../../support/load-translations.js";
@@ -44,10 +45,16 @@ let transactions = function () {
         showSuccessMessage: false,
         showErrorMessage: false,
         entries: [],
+        loadingCurrencies: true,
+        defaultCurrency: {},
+        enabledCurrencies: [],
+        nativeCurrencies: [],
+        foreignCurrencies: [],
         filters: {
             source: [],
             destination: [],
         },
+        errorMessageText: '',
         detectTransactionType() {
             const sourceType = this.entries[0].source_account.type ?? 'unknown';
             const destType = this.entries[0].destination_account.type ?? 'unknown';
@@ -123,6 +130,40 @@ let transactions = function () {
                 };
             console.log('Changed destination account into a known ' + item.type.toLowerCase());
         },
+        loadCurrencies() {
+            console.log('Loading user currencies.');
+            let params = {
+                page: 1,
+                limit: 1337
+            };
+            let getter = new Get();
+            getter.list({}).then((response) => {
+                for(let i in response.data.data) {
+                    if(response.data.data.hasOwnProperty(i)) {
+                        let current = response.data.data[i];
+                        if(current.attributes.enabled) {
+                            let obj =
+
+                                {
+                                    id: current.id,
+                                    name: current.attributes.name,
+                                    code: current.attributes.code,
+                                    default: current.attributes.default,
+                                    symbol: current.attributes.symbol,
+                                    decimal_places: current.attributes.decimal_places,
+
+                                };
+                            if(obj.default) {
+                                this.defaultCurrency = obj;
+                            }
+                            this.enabledCurrencies.push(obj);
+                        }
+                    }
+                }
+                this.loadingCurrencies = false;
+                console.log(this.enabledCurrencies);
+            });
+        },
         changeSourceAccount(item, ac) {
             if (typeof item === 'undefined') {
                 const index = parseInt(ac._searchInput.attributes['data-index'].value);
@@ -161,6 +202,7 @@ let transactions = function () {
 
         addedSplit() {
             console.log('addedSplit');
+            // TODO improve code location
             Autocomplete.init("input.ac-source", {
                 server: urls.account,
                 serverParams: {
@@ -229,6 +271,7 @@ let transactions = function () {
                 });
 
             });
+            this.loadCurrencies();
 
             // source can never be expense account
             this.filters.source = ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'];
@@ -266,7 +309,7 @@ let transactions = function () {
                 this.showErrorMessage = true;
                 // todo create error banner.
                 // todo release form
-                console.error(error);
+                this.errorMessageText = error.response.data.message;
             });
         },
         addSplit() {

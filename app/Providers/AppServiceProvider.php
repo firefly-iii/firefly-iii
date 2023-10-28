@@ -28,7 +28,6 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use Laravel\Sanctum\Sanctum;
-use URL;
 
 /**
  * Class AppServiceProvider

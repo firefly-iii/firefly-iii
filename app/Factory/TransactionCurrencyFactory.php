@@ -45,7 +45,6 @@ class TransactionCurrencyFactory
         $data['symbol']         = e($data['symbol']);
         $data['name']           = e($data['name']);
         $data['decimal_places'] = (int)$data['decimal_places'];
-        $data['enabled']        = (bool)$data['enabled'];
         // if the code already exists (deleted)
         // force delete it and then create the transaction:
         $count = TransactionCurrency::withTrashed()->whereCode($data['code'])->count();
@@ -63,7 +62,7 @@ class TransactionCurrencyFactory
                     'code'           => $data['code'],
                     'symbol'         => $data['symbol'],
                     'decimal_places' => $data['decimal_places'],
-                    'enabled'        => $data['enabled'],
+                    'enabled'        => false,
                 ]
             );
         } catch (QueryException $e) {
