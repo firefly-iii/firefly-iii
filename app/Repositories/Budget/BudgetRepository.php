@@ -435,7 +435,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $currencyCode = (string)($data['currency_code'] ?? '');
             $currency     = $repos->find($currencyId);
             if (null === $currency) {
-                $currency = $repos->findByCodeNull($currencyCode);
+                $currency = $repos->findByCode($currencyCode);
             }
             if (null !== $currency) {
                 $autoBudget->transaction_currency_id = $currency->id;

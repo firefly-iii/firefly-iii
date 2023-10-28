@@ -104,7 +104,7 @@ class NewUserController extends Controller
 
         // if is null, set to EUR:
         if (null === $currency) {
-            $currency = $currencyRepository->findByCodeNull('EUR');
+            $currency = $currencyRepository->findByCode('EUR');
         }
         $currencyRepository->enable($currency);
 
