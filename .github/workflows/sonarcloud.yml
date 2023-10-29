@@ -7,39 +7,15 @@ on:
       - main
       - develop
 env:
-  DB_CONNECTION: mysql
-  DB_HOST: "127.0.0.1"
-  DB_DATABASE: firefly
-  DB_USER: firefly
-  DB_PASSWORD: secret_firefly_password
-
+  DB_CONNECTION: sqlite
+  APP_KEY: UfpBqqeXx7zpNodsC6yjYQcRfDdm4Bxh
 jobs:
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
-    services:
-      mariadb:
-        image: mariadb:latest
-        ports:
-          - 3306:3306
-        env:
-          MYSQL_ROOT_PASSWORD: yes
-          MYSQL_USER: ${{ env.DB_USER }}
-          MYSQL_PASSWORD: ${{ env.DB_PASSWORD }}
-          MYSQL_DATABASE: ${{ env.DB_DATABASE }}
-        options: >-
-          --health-cmd="healthcheck.sh --connect --innodb_initialized"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
-
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -55,6 +31,7 @@ jobs:
             iconv
             intl
             json
+            sqlite3
             mbstring
             openssl
             pdo
@@ -68,19 +45,8 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress --no-scripts
 
-      - name: Verify Database connection
-        env:
-          PORT: ${{ job.services.mariadb.ports[3306] }}
-        run: |
-          while ! mysqladmin ping -h"${{env.DB_HOST}}" -P"${PORT}" --silent; do
-            sleep 1
-          done
-
-      - name: Copy environment file
-        run: sed 's@DB_HOST=.*@DB_HOST=${{env.DB_HOST}}@g' .env.example > .env
-
-      - name: Generate app key
-        run: php artisan key:generate
+      - name: "Create database file"
+        run: touch storage/database/database.sqlite
 
       - name: "Create the database"
         run: php artisan firefly-iii:create-database

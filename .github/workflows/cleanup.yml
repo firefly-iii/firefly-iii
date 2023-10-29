@@ -1,6 +1,6 @@
 # This workflow prunes old workflow runs for an entire repository.
 
-name: "Chore - prune old builds"
+name: "Chore - Prune old builds"
 
 on:
   schedule:

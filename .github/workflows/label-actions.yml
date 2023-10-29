@@ -1,4 +1,4 @@
-name: 'Issues - reply to specific labels'
+name: 'Issues - Reply to specific labels'
 
 on:
   issues:

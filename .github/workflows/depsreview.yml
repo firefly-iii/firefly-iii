@@ -1,4 +1,4 @@
-name: 'Code - dependency review'
+name: 'Code - Dependency review'
 on: [ pull_request ]
 
 permissions:
@@ -8,7 +8,9 @@ jobs:
   dependency-review:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout Repository'
+      - name: 'Checkout repository'
         uses: actions/checkout@v3
-      - name: 'Dependency Review'
+        with:
+          fetch-depth: 0
+      - name: 'Dependency review'
         uses: actions/dependency-review-action@v3
