@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Repositories\Recurring;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class CalculateXOccurrencesSince

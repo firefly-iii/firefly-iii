@@ -26,7 +26,6 @@ namespace FireflyIII\Handlers\Events;
 use Exception;
 use FireflyIII\Notifications\User\NewAccessToken;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Passport\Events\AccessTokenCreated;
 

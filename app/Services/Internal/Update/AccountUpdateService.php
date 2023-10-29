@@ -31,7 +31,6 @@ use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**

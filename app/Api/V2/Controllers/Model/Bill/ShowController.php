@@ -26,14 +26,12 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Model\Bill;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\UserGroups\Bill\BillRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\V2\BillTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Class ShowController

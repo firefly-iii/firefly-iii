@@ -39,7 +39,6 @@ use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View as IlluminateView;
 use InvalidArgumentException;
 

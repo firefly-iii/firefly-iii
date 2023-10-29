@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

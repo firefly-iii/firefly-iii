@@ -27,7 +27,6 @@ use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**

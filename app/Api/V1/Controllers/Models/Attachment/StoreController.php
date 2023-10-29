@@ -34,7 +34,6 @@ use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
 
 /**

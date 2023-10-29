@@ -28,7 +28,6 @@ use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait ConvertsDataTypes

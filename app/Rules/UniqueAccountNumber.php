@@ -27,7 +27,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class UniqueAccountNumber

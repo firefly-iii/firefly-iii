@@ -35,7 +35,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
 use League\OAuth2\Server\Exception\OAuthServerException;

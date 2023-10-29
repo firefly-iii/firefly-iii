@@ -31,7 +31,6 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\OperationsRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
 

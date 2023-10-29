@@ -45,7 +45,6 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class DestroyController

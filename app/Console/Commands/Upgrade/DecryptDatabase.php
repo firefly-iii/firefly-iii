@@ -31,7 +31,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

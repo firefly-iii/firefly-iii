@@ -35,7 +35,6 @@ use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use FireflyIII\Support\Report\Category\CategoryReportGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
 

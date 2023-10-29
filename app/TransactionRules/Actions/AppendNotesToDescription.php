@@ -30,7 +30,6 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class AppendNotesToDescription

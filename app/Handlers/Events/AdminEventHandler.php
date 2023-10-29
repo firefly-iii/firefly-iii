@@ -32,7 +32,6 @@ use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\FireflyConfig;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 /**

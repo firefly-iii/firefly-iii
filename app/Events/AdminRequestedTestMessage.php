@@ -26,7 +26,6 @@ namespace FireflyIII\Events;
 
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class AdminRequestedTestMessage.

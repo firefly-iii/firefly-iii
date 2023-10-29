@@ -29,7 +29,6 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class ChangedAmount

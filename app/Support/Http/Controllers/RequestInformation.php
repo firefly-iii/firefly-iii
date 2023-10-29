@@ -33,7 +33,6 @@ use FireflyIII\User;
 use Hash;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;

@@ -38,7 +38,6 @@ use FireflyIII\Services\Internal\Update\CategoryUpdateService;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Storage;
 
 /**

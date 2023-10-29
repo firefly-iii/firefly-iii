@@ -27,7 +27,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Support\Domain;
 use FireflyIII\TransactionRules\Actions\ActionInterface;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class ActionFactory can create actions.

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**

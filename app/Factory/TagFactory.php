@@ -26,7 +26,6 @@ namespace FireflyIII\Factory;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TagFactory

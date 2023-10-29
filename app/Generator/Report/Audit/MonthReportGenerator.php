@@ -31,7 +31,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 use Throwable;
 

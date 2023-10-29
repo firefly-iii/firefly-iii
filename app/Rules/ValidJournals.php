@@ -26,7 +26,6 @@ namespace FireflyIII\Rules;
 
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class ValidJournals

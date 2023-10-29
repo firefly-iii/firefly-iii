@@ -36,7 +36,6 @@ class CurrencyTransformer extends AbstractTransformer
      */
     public function collectMetaData(Collection $objects): void
     {
-
     }
 
     /**

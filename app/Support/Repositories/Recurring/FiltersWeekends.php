@@ -27,7 +27,6 @@ namespace FireflyIII\Support\Repositories\Recurring;
 use Carbon\Carbon;
 use FireflyIII\Models\RecurrenceRepetition;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait FiltersWeekends

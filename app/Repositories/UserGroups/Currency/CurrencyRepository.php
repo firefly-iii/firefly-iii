@@ -39,7 +39,6 @@ use FireflyIII\Services\Internal\Destroy\CurrencyDestroyService;
 use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**

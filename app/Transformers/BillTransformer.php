@@ -196,7 +196,7 @@ class BillTransformer extends AbstractTransformer
         }
 
         return [
-            'paid_dates'          => $result
+            'paid_dates' => $result,
         ];
     }
 
@@ -225,7 +225,33 @@ class BillTransformer extends AbstractTransformer
     }
 
     /**
-     * @param Bill $bill
+     * @param array $paidData
+     *
+     * @return Carbon|null
+     */
+    private function getLastPaidDate(array $paidData): ?Carbon
+    {
+        app('log')->debug('getLastPaidDate()');
+        $return = null;
+        foreach ($paidData['paid_dates'] as $entry) {
+            if (null !== $return) {
+                $current = Carbon::createFromFormat('!Y-m-d', $entry['date'], config('app.timezone'));
+                if ($current->gt($return)) {
+                    $return = clone $current;
+                }
+                app('log')->debug(sprintf('Last paid date is: %s', $return->format('Y-m-d')));
+            }
+            if (null === $return) {
+                $return = Carbon::createFromFormat('!Y-m-d', $entry['date'], config('app.timezone'));
+                app('log')->debug(sprintf('Last paid date is: %s', $return->format('Y-m-d')));
+            }
+        }
+        app('log')->debug(sprintf('Last paid date is: "%s"', $return?->format('Y-m-d')));
+        return $return;
+    }
+
+    /**
+     * @param Bill   $bill
      * @param Carbon $lastPaidDate
      *
      * @return array
@@ -279,7 +305,7 @@ class BillTransformer extends AbstractTransformer
             // add to set, if the date is ON or after the start parameter
             // AND date is after last paid date
             if ($nextExpectedMatch->gte($this->parameters->get('start'))
-            && (null === $lastPaidDate || $nextExpectedMatch->gt($lastPaidDate))
+                && (null === $lastPaidDate || $nextExpectedMatch->gt($lastPaidDate))
             ) {
                 app('log')->debug('Add date to set.');
                 $set->push(clone $nextExpectedMatch);
@@ -336,31 +362,5 @@ class BillTransformer extends AbstractTransformer
         }
         app('log')->debug(sprintf('Number of steps is %d, result is %s', $steps, $result->format('Y-m-d')));
         return $result;
-    }
-
-    /**
-     * @param array $paidData
-     *
-     * @return Carbon|null
-     */
-    private function getLastPaidDate(array $paidData): ?Carbon
-    {
-        app('log')->debug('getLastPaidDate()');
-        $return = null;
-        foreach ($paidData['paid_dates'] as $entry) {
-            if (null !== $return) {
-                $current = Carbon::createFromFormat('!Y-m-d', $entry['date'], config('app.timezone'));
-                if ($current->gt($return)) {
-                    $return = clone $current;
-                }
-                app('log')->debug(sprintf('Last paid date is: %s', $return->format('Y-m-d')));
-            }
-            if (null === $return) {
-                $return = Carbon::createFromFormat('!Y-m-d', $entry['date'], config('app.timezone'));
-                app('log')->debug(sprintf('Last paid date is: %s', $return->format('Y-m-d')));
-            }
-        }
-        app('log')->debug(sprintf('Last paid date is: "%s"', $return?->format('Y-m-d')));
-        return $return;
     }
 }

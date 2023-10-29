@@ -27,7 +27,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**

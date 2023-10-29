@@ -25,7 +25,6 @@ namespace FireflyIII\Helpers\Webhook;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\WebhookMessage;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**

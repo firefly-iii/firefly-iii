@@ -54,7 +54,6 @@ use Gdbots\QueryParser\Node\Word;
 use Gdbots\QueryParser\QueryParser;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use LogicException;
 use TypeError;
 

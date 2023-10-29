@@ -26,7 +26,6 @@ namespace FireflyIII\Services\Password;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class PwndVerifierV2.

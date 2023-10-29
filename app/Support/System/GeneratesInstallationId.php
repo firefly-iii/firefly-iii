@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\System;
 
 use FireflyIII\Exceptions\FireflyException;
-use Illuminate\Support\Facades\Log;
 use Ramsey\Uuid\Uuid;
 
 /**

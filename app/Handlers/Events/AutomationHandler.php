@@ -30,7 +30,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Notifications\User\TransactionCreation;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\TransactionGroupTransformer;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 /**

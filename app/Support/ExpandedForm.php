@@ -27,7 +27,6 @@ use Eloquent;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Form\FormSupport;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**

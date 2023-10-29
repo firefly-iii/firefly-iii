@@ -27,8 +27,6 @@ namespace FireflyIII\Handlers\Events;
 use Exception;
 use FireflyIII\Events\WarnUserAboutBill;
 use FireflyIII\Notifications\User\BillReminder;
-use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 /**

@@ -35,7 +35,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\NullArrayObject;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait JournalServiceTrait

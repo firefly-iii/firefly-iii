@@ -32,7 +32,6 @@ use FireflyIII\Repositories\ObjectGroup\OrganisesObjectGroups;
 use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;

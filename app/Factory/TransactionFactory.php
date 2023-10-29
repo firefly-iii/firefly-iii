@@ -33,7 +33,6 @@ use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
 use Validator;
 
 /**

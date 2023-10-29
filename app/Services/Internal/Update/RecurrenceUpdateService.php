@@ -32,7 +32,6 @@ use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**

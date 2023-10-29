@@ -27,7 +27,6 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\System\CronRequest;
 use FireflyIII\Support\Http\Controllers\CronRunner;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

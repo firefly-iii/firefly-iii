@@ -40,7 +40,6 @@ use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Validation\AccountValidator;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**

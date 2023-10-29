@@ -32,7 +32,6 @@ use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use JsonException;
 use Psr\Container\ContainerExceptionInterface;

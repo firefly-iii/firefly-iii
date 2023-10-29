@@ -28,7 +28,6 @@ use Artisan;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Console\KeysCommand;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

@@ -29,7 +29,6 @@ use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Support\Calendar\Calculator;
 use FireflyIII\Support\Calendar\Exceptions\IntervalException;
 use FireflyIII\Support\Calendar\Periodicity;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Throwable;

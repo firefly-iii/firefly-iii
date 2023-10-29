@@ -28,7 +28,6 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class FireflyConfig.

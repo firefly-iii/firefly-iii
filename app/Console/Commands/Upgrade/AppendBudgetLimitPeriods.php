@@ -26,7 +26,6 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

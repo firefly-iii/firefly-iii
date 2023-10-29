@@ -27,7 +27,6 @@ namespace FireflyIII\Validation;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**

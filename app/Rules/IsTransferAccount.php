@@ -27,7 +27,6 @@ namespace FireflyIII\Rules;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class IsTransferAccount

@@ -26,7 +26,6 @@ namespace FireflyIII\Services\Internal\Support;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionTypeFactory;
 use FireflyIII\Models\TransactionType;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait TransactionTypeTrait

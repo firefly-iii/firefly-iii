@@ -36,7 +36,6 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**

@@ -27,7 +27,6 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

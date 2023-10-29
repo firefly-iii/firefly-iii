@@ -28,7 +28,6 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Attachment;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Log;
 use Storage;
 
 /**

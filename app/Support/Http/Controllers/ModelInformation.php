@@ -30,7 +30,6 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**

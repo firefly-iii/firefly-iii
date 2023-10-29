@@ -36,7 +36,6 @@ use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use JsonException;
 
 /**
  * This class can handle both request with and without a user group and will return the appropriate repository when

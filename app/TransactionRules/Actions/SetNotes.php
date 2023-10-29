@@ -27,7 +27,6 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class SetNotes.

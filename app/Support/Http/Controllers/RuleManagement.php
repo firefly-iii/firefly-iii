@@ -27,7 +27,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**

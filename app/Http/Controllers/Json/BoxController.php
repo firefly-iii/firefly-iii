@@ -30,7 +30,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\AvailableBudget;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
@@ -38,7 +37,6 @@ use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class BoxController.
@@ -271,7 +269,7 @@ class BoxController extends Controller
         $netWorthSet = $netWorthHelper->byAccounts($filtered, $date);
         $return      = [];
         foreach ($netWorthSet as $key => $data) {
-            if('native' === $key) {
+            if ('native' === $key) {
                 continue;
             }
             $return[$data['currency_id']] = app('amount')->formatFlat($data['currency_symbol'], $data['currency_decimal_places'], $data['balance'], false);

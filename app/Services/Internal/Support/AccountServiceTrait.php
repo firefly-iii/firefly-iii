@@ -38,7 +38,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 use Validator;
 

@@ -39,13 +39,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class UserGroup
  *
- * @property int                                                           $id
- * @property Carbon|null                                                   $created_at
- * @property Carbon|null                                                   $updated_at
- * @property string|null                                                   $deleted_at
- * @property string                                                        $title
- * @property-read Collection|GroupMembership[]                             $groupMemberships
- * @property-read int|null                                                 $group_memberships_count
+ * @property int                                        $id
+ * @property Carbon|null                                $created_at
+ * @property Carbon|null                                $updated_at
+ * @property string|null                                $deleted_at
+ * @property string                                     $title
+ * @property-read Collection|GroupMembership[]          $groupMemberships
+ * @property-read int|null                              $group_memberships_count
  * @method static Builder|UserGroup newModelQuery()
  * @method static Builder|UserGroup newQuery()
  * @method static Builder|UserGroup query()
@@ -54,8 +54,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|UserGroup whereId($value)
  * @method static Builder|UserGroup whereTitle($value)
  * @method static Builder|UserGroup whereUpdatedAt($value)
- * @property-read Collection<int, Account>                                 $accounts
- * @property-read int|null                                                 $accounts_count
+ * @property-read Collection<int, Account>              $accounts
+ * @property-read int|null                              $accounts_count
  * @property-read Collection<int, AvailableBudget>      $availableBudgets
  * @property-read int|null                              $available_budgets_count
  * @property-read Collection<int, Bill>                 $bills
@@ -77,17 +77,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read Collection<int, Recurrence>           $recurrences
  * @property-read int|null                              $recurrences_count
  * @property-read Collection<int, RuleGroup>            $ruleGroups
- * @property-read int|null                                       $rule_groups_count
- * @property-read Collection<int, Rule>                          $rules
- * @property-read int|null                                       $rules_count
- * @property-read Collection<int, Tag>                           $tags
- * @property-read int|null                                                 $tags_count
- * @property-read Collection<int, TransactionGroup>                        $transactionGroups
- * @property-read int|null                                                 $transaction_groups_count
- * @property-read Collection<int, Webhook>                                 $webhooks
- * @property-read int|null                                                 $webhooks_count
- * @property-read Collection<int, TransactionCurrency>                     $currencies
- * @property-read int|null                                                 $currencies_count
+ * @property-read int|null                              $rule_groups_count
+ * @property-read Collection<int, Rule>                 $rules
+ * @property-read int|null                              $rules_count
+ * @property-read Collection<int, Tag>                  $tags
+ * @property-read int|null                              $tags_count
+ * @property-read Collection<int, TransactionGroup>     $transactionGroups
+ * @property-read int|null                              $transaction_groups_count
+ * @property-read Collection<int, Webhook>              $webhooks
+ * @property-read int|null                              $webhooks_count
+ * @property-read Collection<int, TransactionCurrency>  $currencies
+ * @property-read int|null                              $currencies_count
  * @mixin Eloquent
  */
 class UserGroup extends Model

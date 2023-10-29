@@ -26,7 +26,6 @@ namespace FireflyIII\Support\Request;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait ChecksLogin

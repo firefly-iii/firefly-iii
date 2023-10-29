@@ -30,7 +30,6 @@ use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class SetCategory.

@@ -34,7 +34,6 @@ use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**

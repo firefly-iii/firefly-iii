@@ -27,7 +27,6 @@ namespace FireflyIII\Api\V2\Controllers\Model\Budget;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
@@ -68,8 +67,8 @@ class ShowController extends Controller
      */
     public function budgeted(DateRequest $request, Budget $budget): JsonResponse
     {
-        $data      = $request->getAll();
-        $result    = $this->repository->budgetedInPeriodForBudget($budget, $data['start'], $data['end']);
+        $data   = $request->getAll();
+        $result = $this->repository->budgetedInPeriodForBudget($budget, $data['start'], $data['end']);
         //$converted = $this->cerSum(array_values($result));
 
         return response()->json($result);
@@ -82,8 +81,8 @@ class ShowController extends Controller
      */
     public function spent(DateRequest $request, Budget $budget): JsonResponse
     {
-        $data      = $request->getAll();
-        $result    = $this->repository->spentInPeriodForBudget($budget, $data['start'], $data['end']);
+        $data   = $request->getAll();
+        $result = $this->repository->spentInPeriodForBudget($budget, $data['start'], $data['end']);
         // $converted = $this->cerSum(array_values($result));
 
         return response()->json($result);

@@ -29,7 +29,6 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class MoveNotesToDescription

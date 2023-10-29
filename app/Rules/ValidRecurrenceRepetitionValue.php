@@ -25,7 +25,6 @@ namespace FireflyIII\Rules;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 
 /**

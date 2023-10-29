@@ -26,7 +26,6 @@ namespace FireflyIII\Services\Internal\Support;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait BillServiceTrait

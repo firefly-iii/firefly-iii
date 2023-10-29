@@ -25,7 +25,6 @@ namespace FireflyIII\Validation\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait DepositValidation

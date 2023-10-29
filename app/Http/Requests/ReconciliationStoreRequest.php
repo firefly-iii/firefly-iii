@@ -27,7 +27,6 @@ use FireflyIII\Rules\ValidJournals;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class ReconciliationStoreRequest

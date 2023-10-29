@@ -36,7 +36,6 @@ use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**
@@ -114,7 +113,7 @@ class ReportController extends Controller
             // loop result, add to array.
             /** @var array $netWorthItem */
             foreach ($result as $key => $netWorthItem) {
-                if('native' === $key) {
+                if ('native' === $key) {
                     continue;
                 }
                 $currencyId = $netWorthItem['currency_id'];

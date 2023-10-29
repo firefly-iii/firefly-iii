@@ -26,7 +26,6 @@ namespace FireflyIII\Factory;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionCurrencyFactory

@@ -29,7 +29,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Message;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Mail;
 use Symfony\Component\Mailer\Exception\TransportException;
 

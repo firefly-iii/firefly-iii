@@ -41,7 +41,6 @@ use FireflyIII\Support\ParseDateString;
 use FireflyIII\TransactionRules\Triggers\TriggerInterface;
 use FireflyIII\User;
 use Google2FA;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;

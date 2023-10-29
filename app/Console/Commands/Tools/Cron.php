@@ -32,7 +32,6 @@ use FireflyIII\Support\Cronjobs\BillWarningCronjob;
 use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

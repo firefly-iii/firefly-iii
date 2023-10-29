@@ -33,7 +33,6 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\Request\ChecksLogin;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class CategoryFormRequest.

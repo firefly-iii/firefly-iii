@@ -48,7 +48,6 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Mail;
 

@@ -34,7 +34,6 @@ use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use FireflyIII\Support\Report\Budget\BudgetReportGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use JsonException;
 use Throwable;

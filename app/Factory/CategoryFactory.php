@@ -27,7 +27,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Category;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class CategoryFactory

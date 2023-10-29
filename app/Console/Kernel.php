@@ -26,7 +26,6 @@ namespace FireflyIII\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Illuminate\Support\Facades\Log;
 
 /**
  * File to make sure commands work.

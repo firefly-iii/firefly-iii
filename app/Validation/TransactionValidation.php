@@ -33,7 +33,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**

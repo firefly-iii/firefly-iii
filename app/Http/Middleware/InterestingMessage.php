@@ -31,7 +31,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
 use Illuminate\Http\Request;
-use Preferences;
 
 /**
  * Class InterestingMessage

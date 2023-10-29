@@ -30,7 +30,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**

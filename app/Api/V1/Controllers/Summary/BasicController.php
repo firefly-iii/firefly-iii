@@ -32,7 +32,6 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -371,10 +370,10 @@ class BasicController extends Controller
         $netWorthSet = $netWorthHelper->byAccounts($filtered, $date);
         $return      = [];
         foreach ($netWorthSet as $key => $data) {
-            if('native' === $key) {
+            if ('native' === $key) {
                 continue;
             }
-            $amount   = $data['balance'];
+            $amount = $data['balance'];
             if (0 === bccomp($amount, '0')) {
                 continue;
             }

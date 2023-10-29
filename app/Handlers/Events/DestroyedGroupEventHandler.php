@@ -28,7 +28,6 @@ use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class DestroyedGroupEventHandler

@@ -35,7 +35,6 @@ use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

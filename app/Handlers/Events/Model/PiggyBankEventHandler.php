@@ -26,7 +26,6 @@ namespace FireflyIII\Handlers\Events\Model;
 
 use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
 use FireflyIII\Models\PiggyBankEvent;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class PiggyBankEventHandler

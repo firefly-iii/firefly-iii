@@ -25,7 +25,6 @@ namespace FireflyIII\Repositories\TransactionType;
 
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionTypeRepository

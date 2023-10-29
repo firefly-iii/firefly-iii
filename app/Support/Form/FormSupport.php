@@ -26,7 +26,6 @@ namespace FireflyIII\Support\Form;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\MessageBag;
 use Throwable;
 

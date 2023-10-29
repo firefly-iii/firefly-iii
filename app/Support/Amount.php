@@ -126,20 +126,13 @@ class Amount
 
     /**
      * @param User $user
-     * @deprecated use getDefaultCurrencyByUserGroup instead.
+     *
      * @return TransactionCurrency
+     * @deprecated use getDefaultCurrencyByUserGroup instead.
      */
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {
         return $this->getDefaultCurrencyByUserGroup($user->userGroup);
-    }
-
-    /**
-     * @return TransactionCurrency
-     */
-    public function getSystemCurrency(): TransactionCurrency
-    {
-        return TransactionCurrency::where('code', 'EUR')->first();
     }
 
     /**
@@ -163,6 +156,14 @@ class Amount
         $cache->store($default);
 
         return $default;
+    }
+
+    /**
+     * @return TransactionCurrency
+     */
+    public function getSystemCurrency(): TransactionCurrency
+    {
+        return TransactionCurrency::where('code', 'EUR')->first();
     }
 
     /**
