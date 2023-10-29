@@ -158,7 +158,7 @@ class InstallController extends Controller
         }
         // clear cache as well.
         Cache::clear();
-        Preferences::mark();
+        app('preferences')->mark();
 
         return true;
     }

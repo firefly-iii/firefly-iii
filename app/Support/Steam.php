@@ -535,7 +535,7 @@ class Steam
         $result = [];
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $default = app('amount')->getDefaultCurrencyByUser($account->user);
+            $default = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
             $result[(int)$account->id]
                      = [
                 'balance'        => $this->balance($account, $date),

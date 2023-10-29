@@ -54,23 +54,23 @@ class InterestingMessage
         }
 
         if ($this->groupMessage($request)) {
-            Preferences::mark();
+            app('preferences')->mark();
             $this->handleGroupMessage($request);
         }
         if ($this->accountMessage($request)) {
-            Preferences::mark();
+            app('preferences')->mark();
             $this->handleAccountMessage($request);
         }
         if ($this->billMessage($request)) {
-            Preferences::mark();
+            app('preferences')->mark();
             $this->handleBillMessage($request);
         }
         if ($this->webhookMessage($request)) {
-            Preferences::mark();
+            app('preferences')->mark();
             $this->handleWebhookMessage($request);
         }
         if ($this->currencyMessage($request)) {
-            Preferences::mark();
+            app('preferences')->mark();
             $this->handleCurrencyMessage($request);
         }
 

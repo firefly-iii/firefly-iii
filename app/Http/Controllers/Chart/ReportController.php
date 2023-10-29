@@ -109,19 +109,22 @@ class ReportController extends Controller
 
         while ($current < $end) {
             // get balances by date, grouped by currency.
-            $result = $helper->getNetWorthByCurrency($filtered, $current);
+            $result = $helper->byAccounts($filtered, $current);
 
             // loop result, add to array.
             /** @var array $netWorthItem */
-            foreach ($result as $netWorthItem) {
-                $currencyId = $netWorthItem['currency']->id;
+            foreach ($result as $key => $netWorthItem) {
+                if('native' === $key) {
+                    continue;
+                }
+                $currencyId = $netWorthItem['currency_id'];
                 $label      = $current->isoFormat((string)trans('config.month_and_day_js', [], $locale));
                 if (!array_key_exists($currencyId, $chartData)) {
                     $chartData[$currencyId] = [
-                        'label'           => 'Net worth in ' . $netWorthItem['currency']->name,
+                        'label'           => 'Net worth in ' . $netWorthItem['currency_name'],
                         'type'            => 'line',
-                        'currency_symbol' => $netWorthItem['currency']->symbol,
-                        'currency_code'   => $netWorthItem['currency']->code,
+                        'currency_symbol' => $netWorthItem['currency_symbol'],
+                        'currency_code'   => $netWorthItem['currency_code'],
                         'entries'         => [],
                     ];
                 }

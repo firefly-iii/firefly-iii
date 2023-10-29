@@ -268,12 +268,13 @@ class BoxController extends Controller
             }
         );
 
-        $netWorthSet = $netWorthHelper->getNetWorthByCurrency($filtered, $date);
+        $netWorthSet = $netWorthHelper->byAccounts($filtered, $date);
         $return      = [];
-        foreach ($netWorthSet as $data) {
-            /** @var TransactionCurrency $currency */
-            $currency              = $data['currency'];
-            $return[$currency->id] = app('amount')->formatAnything($currency, $data['balance'], false);
+        foreach ($netWorthSet as $key => $data) {
+            if('native' === $key) {
+                continue;
+            }
+            $return[$data['currency_id']] = app('amount')->formatFlat($data['currency_symbol'], $data['currency_decimal_places'], $data['balance'], false);
         }
         $return = [
             'net_worths' => array_values($return),

@@ -30,6 +30,6 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 # Do static code analysis.
 # ./vendor/bin/phpstan analyse -c .ci/phpstan.neon --no-progress
-./vendor/bin/phpstan analyse -c .ci/phpstan.neon --xdebug --error-format=table > phpstan-report.txt
+./vendor/bin/phpstan analyse -c .ci/phpstan.neon --error-format=table > phpstan-report.txt
 
 echo 'The PHPstan report can be found in phpstan-report.txt'

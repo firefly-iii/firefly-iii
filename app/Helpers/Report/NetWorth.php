@@ -54,6 +54,11 @@ class NetWorth implements NetWorthInterface
     private null | UserGroup            $userGroup;
 
     /**
+     * This method collects the user's net worth in ALL the user's currencies
+     * (1, 4 and 8) and also in the 'native' currency for ease of use.
+     *
+     * The set of accounts has to be fed to it.
+     *
      * @param Collection $accounts
      * @param Carbon     $date
      *
@@ -148,88 +153,6 @@ class NetWorth implements NetWorthInterface
             return $this->accountRepository;
         }
         return $this->adminAccountRepository;
-    }
-
-    /**
-     * Returns the user's net worth in an array with the following layout:
-     *
-     * -
-     *  - currency: TransactionCurrency object
-     *  - date: the current date
-     *  - amount: the user's net worth in that currency.
-     *
-     * This repeats for each currency the user has transactions in.
-     * Result of this method is cached.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $date
-     *
-     * @return array
-     * @throws JsonException
-     * @throws FireflyException
-     * @deprecated
-     */
-    public function getNetWorthByCurrency(Collection $accounts, Carbon $date): array
-    {
-        // start in the past, end in the future? use $date
-        $cache = new CacheProperties();
-        $cache->addProperty($date);
-        $cache->addProperty('net-worth-by-currency');
-        $cache->addProperty(implode(',', $accounts->pluck('id')->toArray()));
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
-        $netWorth = [];
-        $result   = [];
-        //        Log::debug(sprintf('Now in getNetWorthByCurrency(%s)', $date->format('Y-m-d')));
-
-        // get default currency
-        $default = app('amount')->getDefaultCurrencyByUser($this->user);
-
-        // get all balances:
-        $balances = app('steam')->balancesByAccounts($accounts, $date);
-
-        // get the preferred currency for this account
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            //            Log::debug(sprintf('Now at account #%d: "%s"', $account->id, $account->name));
-            $currencyId = (int)$this->getRepository()->getMetaValue($account, 'currency_id');
-            $currencyId = 0 === $currencyId ? $default->id : $currencyId;
-
-            //            Log::debug(sprintf('Currency ID is #%d', $currencyId));
-
-            // balance in array:
-            $balance = $balances[$account->id] ?? '0';
-
-            //Log::debug(sprintf('Balance for %s is %s', $date->format('Y-m-d'), $balance));
-
-            // always subtract virtual balance.
-            $virtualBalance = (string)$account->virtual_balance;
-            if ('' !== $virtualBalance) {
-                $balance = bcsub($balance, $virtualBalance);
-            }
-
-            //            Log::debug(sprintf('Balance corrected to %s because of virtual balance (%s)', $balance, $virtualBalance));
-
-            if (!array_key_exists($currencyId, $netWorth)) {
-                $netWorth[$currencyId] = '0';
-            }
-            $netWorth[$currencyId] = bcadd($balance, $netWorth[$currencyId]);
-            //            Log::debug(sprintf('Total net worth for currency #%d is %s', $currencyId, $netWorth[$currencyId]));
-        }
-        ksort($netWorth);
-
-        // loop results and add currency information:
-        foreach ($netWorth as $currencyId => $balance) {
-            $result[] = [
-                'currency' => $this->currencyRepos->find($currencyId),
-                'balance'  => $balance,
-            ];
-        }
-        $cache->store($result);
-
-        return $result;
     }
 
     /**

@@ -79,7 +79,7 @@ class UpdateController extends Controller
         $account      = $this->repository->update($account, $data);
         $manager      = $this->getManager();
         $account->refresh();
-        Preferences::mark();
+        app('preferences')->mark();
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
