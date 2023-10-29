@@ -385,7 +385,7 @@ class UserRepository implements UserRepositoryInterface
     {
         $roleObject = Role::where('name', $role)->first();
         if (null === $roleObject) {
-            Log::error(sprintf('Could not find role "%s" in attachRole()', $role));
+            app('log')->error(sprintf('Could not find role "%s" in attachRole()', $role));
 
             return false;
         }
@@ -394,7 +394,7 @@ class UserRepository implements UserRepositoryInterface
             $user->roles()->attach($roleObject);
         } catch (QueryException $e) {
             // don't care
-            Log::error(sprintf('Query exception when giving user a role: %s', $e->getMessage()));
+            app('log')->error(sprintf('Query exception when giving user a role: %s', $e->getMessage()));
         }
 
         return true;

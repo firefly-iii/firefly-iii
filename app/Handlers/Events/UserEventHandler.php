@@ -99,7 +99,7 @@ class UserEventHandler
             if (null === $role) {
                 // create role, does not exist. Very strange situation so let's raise a big fuss about it.
                 $role = $repository->createRole('owner', 'Site Owner', 'User runs this instance of FF3');
-                Log::error('Could not find role "owner". This is weird.');
+                app('log')->error('Could not find role "owner". This is weird.');
             }
 
             app('log')->info(sprintf('Gave user #%d role #%d ("%s")', $user->id, $role->id, $role->name));
@@ -214,8 +214,8 @@ class UserEventHandler
                         app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
                         return;
                     }
-                    Log::error($e->getMessage());
-                    Log::error($e->getTraceAsString());
+                    app('log')->error($e->getMessage());
+                    app('log')->error($e->getTraceAsString());
                 }
             }
             $list[$index]['notified'] = true;
@@ -248,8 +248,8 @@ class UserEventHandler
                             app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
                             return;
                         }
-                        Log::error($e->getMessage());
-                        Log::error($e->getTraceAsString());
+                        app('log')->error($e->getMessage());
+                        app('log')->error($e->getTraceAsString());
                     }
                 }
             }
@@ -275,8 +275,8 @@ class UserEventHandler
         try {
             Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $url));
         } catch (Exception $e) { // intentional generic exception
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
         }
     }
@@ -300,8 +300,8 @@ class UserEventHandler
         try {
             Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $url));
         } catch (Exception $e) { // intentional generic exception
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
         }
     }
@@ -325,8 +325,8 @@ class UserEventHandler
                 app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
                 return;
             }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
         }
     }
 
@@ -344,8 +344,8 @@ class UserEventHandler
         try {
             Mail::to($invitee)->send(new InvitationMail($invitee, $admin, $url));
         } catch (Exception $e) { // intentional generic exception
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
         }
     }
@@ -373,8 +373,8 @@ class UserEventHandler
                     app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
                     return;
                 }
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
+                app('log')->error($e->getMessage());
+                app('log')->error($e->getTraceAsString());
             }
         }
     }
@@ -399,7 +399,7 @@ class UserEventHandler
             $preference = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
         } catch (FireflyException $e) {
             // don't care.
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
 
             return;
         }

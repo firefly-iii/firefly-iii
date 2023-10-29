@@ -88,7 +88,7 @@ class Navigation
         ];
 
         if (!array_key_exists($repeatFreq, $functionMap)) {
-            Log::error(sprintf(
+            app('log')->error(sprintf(
                 'The periodicity %s is unknown. Choose one of available periodicity: %s',
                 $repeatFreq,
                 join(', ', array_keys($functionMap))
@@ -113,7 +113,7 @@ class Navigation
         } catch (IntervalException $exception) {
             app('log')->warning($exception->getMessage(), ['exception' => $exception]);
         } catch (Throwable $exception) {
-            Log::error($exception->getMessage(), ['exception' => $exception]);
+            app('log')->error($exception->getMessage(), ['exception' => $exception]);
         }
 
         Log::debug(
@@ -242,7 +242,7 @@ class Navigation
         if ('custom' === $repeatFreq) {
             return $date; // the date is already at the start.
         }
-        Log::error(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
+        app('log')->error(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
 
         return $theDate;
     }
@@ -318,7 +318,7 @@ class Navigation
 
 
         if (!array_key_exists($repeatFreq, $functionMap)) {
-            Log::error(sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $repeatFreq));
+            app('log')->error(sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $repeatFreq));
 
             return $end;
         }
@@ -571,7 +571,7 @@ class Navigation
         }
 
         // special formatter for quarter of year
-        Log::error(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
+        app('log')->error(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
 
         return $date->format('Y-m-d');
     }

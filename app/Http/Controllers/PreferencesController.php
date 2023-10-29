@@ -124,7 +124,7 @@ class PreferencesController extends Controller
         try {
             $locales = json_decode(file_get_contents(resource_path(sprintf('lang/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $locales = [];
         }
         $locales = ['equal' => (string)trans('firefly.equal_to_language')] + $locales;

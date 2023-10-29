@@ -67,8 +67,8 @@ class TransactionCurrencyFactory
             );
         } catch (QueryException $e) {
             $result = null;
-            Log::error(sprintf('Could not create new currency: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Could not create new currency: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException('400004: Could not store new currency.', 0, $e);
         }
 

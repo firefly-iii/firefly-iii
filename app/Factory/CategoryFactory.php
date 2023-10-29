@@ -76,8 +76,8 @@ class CategoryFactory
                     ]
                 );
             } catch (QueryException $e) {
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
+                app('log')->error($e->getMessage());
+                app('log')->error($e->getTraceAsString());
                 throw new FireflyException('400003: Could not store new category.', 0, $e);
             }
         }

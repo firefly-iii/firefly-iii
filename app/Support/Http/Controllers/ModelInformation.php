@@ -60,8 +60,8 @@ trait ModelInformation
                 ]
             )->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = 'Could not render view. See log files.';
             throw new FireflyException($result, 0, $e);
         }

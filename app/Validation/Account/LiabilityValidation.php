@@ -50,12 +50,12 @@ trait LiabilityValidation
         // the ID of the destination must belong to a liability.
         if (null !== $accountId) {
             if (AccountType::LIABILITY_CREDIT !== $this?->source?->accountType?->type) {
-                Log::error('Source account is not a liability.');
+                app('log')->error('Source account is not a liability.');
                 return false;
             }
             $result = $this->findExistingAccount($validTypes, $array);
             if (null === $result) {
-                Log::error('Destination account is not a liability.');
+                app('log')->error('Destination account is not a liability.');
                 return false;
             }
             return true;
@@ -65,7 +65,7 @@ trait LiabilityValidation
             Log::debug('Destination ID is null, now we can assume the destination is a (new) liability credit account.');
             return true;
         }
-        Log::error('Destination ID is null, but destination name is also NULL.');
+        app('log')->error('Destination ID is null, but destination name is also NULL.');
         return false;
     }
 
@@ -87,7 +87,7 @@ trait LiabilityValidation
             // find liability credit:
             $result = $this->findExistingAccount(config('firefly.valid_liabilities'), $array);
             if (null === $result) {
-                Log::error('Did not find a liability account, return false.');
+                app('log')->error('Did not find a liability account, return false.');
                 return false;
             }
             Log::debug(sprintf('Return true, found #%d ("%s")', $result->id, $result->name));
@@ -100,11 +100,11 @@ trait LiabilityValidation
 
         $result = true;
         if ('' === $accountName || null === $accountName) {
-            Log::error('Array must have a name, is not the case, return false.');
+            app('log')->error('Array must have a name, is not the case, return false.');
             $result = false;
         }
         if (true === $result) {
-            Log::error('Array has a name, return true.');
+            app('log')->error('Array has a name, return true.');
             // set the source to be a (dummy) revenue account.
             $account              = new Account();
             $accountType          = AccountType::whereType(AccountType::LIABILITY_CREDIT)->first();

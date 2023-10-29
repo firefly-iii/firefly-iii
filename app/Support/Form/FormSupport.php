@@ -158,7 +158,7 @@ trait FormSupport
         try {
             $date = today(config('app.timezone'));
         } catch (InvalidDateException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
         }
 
         return $date;

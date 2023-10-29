@@ -252,7 +252,7 @@ trait ModifiesPiggyBanks
             /** @var PiggyBank $piggyBank */
             $piggyBank = PiggyBank::create($piggyData);
         } catch (QueryException $e) {
-            Log::error(sprintf('Could not store piggy bank: %s', $e->getMessage()), $piggyData);
+            app('log')->error(sprintf('Could not store piggy bank: %s', $e->getMessage()), $piggyData);
             throw new FireflyException('400005: Could not store new piggy bank.', 0, $e);
         }
 

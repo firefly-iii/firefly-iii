@@ -107,7 +107,7 @@ class CreateController extends Controller
         try {
             $bill = $this->repository->store($billData);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $request->session()->flash('error', (string)trans('firefly.bill_store_error'));
 
             return redirect(route('bills.create'))->withInput();

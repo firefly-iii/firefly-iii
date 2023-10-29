@@ -268,10 +268,10 @@ trait ConvertsDataTypes
             try {
                 $carbon = Carbon::createFromFormat('Y-m-d', $value);
             } catch (InvalidDateException $e) {
-                Log::error(sprintf('[1] "%s" is not a valid date: %s', $value, $e->getMessage()));
+                app('log')->error(sprintf('[1] "%s" is not a valid date: %s', $value, $e->getMessage()));
                 return null;
             } catch (InvalidFormatException $e) {
-                Log::error(sprintf('[2] "%s" is of an invalid format: %s', $value, $e->getMessage()));
+                app('log')->error(sprintf('[2] "%s" is of an invalid format: %s', $value, $e->getMessage()));
 
                 return null;
             }
@@ -281,11 +281,11 @@ trait ConvertsDataTypes
         try {
             $carbon = Carbon::parse($value);
         } catch (InvalidDateException $e) {
-            Log::error(sprintf('[3] "%s" is not a valid date or time: %s', $value, $e->getMessage()));
+            app('log')->error(sprintf('[3] "%s" is not a valid date or time: %s', $value, $e->getMessage()));
 
             return null;
         } catch (InvalidFormatException $e) {
-            Log::error(sprintf('[4] "%s" is of an invalid format: %s', $value, $e->getMessage()));
+            app('log')->error(sprintf('[4] "%s" is of an invalid format: %s', $value, $e->getMessage()));
 
             return null;
         }

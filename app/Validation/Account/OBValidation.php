@@ -51,7 +51,7 @@ trait OBValidation
             // if both values are NULL we return false,
             // because the destination of a deposit can't be created.
             $this->destError = (string)trans('validation.ob_dest_need_data');
-            Log::error('Both values are NULL, cant create OB destination.');
+            app('log')->error('Both values are NULL, cant create OB destination.');
             $result = false;
         }
         // if the account can be created anyway we don't need to search.

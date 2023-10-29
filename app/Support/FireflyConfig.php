@@ -104,7 +104,7 @@ class FireflyConfig
         try {
             $config = Configuration::whereName($name)->whereNull('deleted_at')->first();
         } catch (QueryException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $item       = new Configuration();
             $item->name = $name;
             $item->data = $value;

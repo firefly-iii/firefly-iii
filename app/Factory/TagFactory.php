@@ -63,7 +63,7 @@ class TagFactory
             ]
         );
         if (null === $newTag) {
-            Log::error(sprintf('TagFactory::findOrCreate("%s") but tag is unexpectedly NULL!', $tag));
+            app('log')->error(sprintf('TagFactory::findOrCreate("%s") but tag is unexpectedly NULL!', $tag));
 
             return null;
         }

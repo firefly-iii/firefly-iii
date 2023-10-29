@@ -319,7 +319,7 @@ class TransferCurrenciesCorrections extends Command
         // source account must have a currency preference.
         if (null === $this->sourceCurrency) {
             $message = sprintf('Account #%d ("%s") must have currency preference but has none.', $this->sourceAccount->id, $this->sourceAccount->name);
-            Log::error($message);
+            app('log')->error($message);
             $this->friendlyError($message);
 
             return true;
@@ -332,7 +332,7 @@ class TransferCurrenciesCorrections extends Command
                 $this->destinationAccount->id,
                 $this->destinationAccount->name
             );
-            Log::error($message);
+            app('log')->error($message);
             $this->friendlyError($message);
 
             return true;

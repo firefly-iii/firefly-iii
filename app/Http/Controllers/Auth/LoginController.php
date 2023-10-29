@@ -98,7 +98,7 @@ class LoginController extends Controller
         // the IP address of the client making these requests into this application.
         if (method_exists($this, 'hasTooManyLoginAttempts') && $this->hasTooManyLoginAttempts($request)) {
             Log::channel('audit')->info(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
-            Log::error(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
+            app('log')->error(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
             $this->fireLockoutEvent($request);
 
             $this->sendLockoutResponse($request);

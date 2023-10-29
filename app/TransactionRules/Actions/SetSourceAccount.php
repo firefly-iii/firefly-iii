@@ -64,7 +64,7 @@ class SetSourceAccount implements ActionInterface
         $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
         if (null === $object) {
-            Log::error('Could not find journal.');
+            app('log')->error('Could not find journal.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_such_journal')));
             return false;
         }
@@ -74,7 +74,7 @@ class SetSourceAccount implements ActionInterface
         // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
         $newAccount = $this->findAssetAccount($type);
         if ((TransactionType::WITHDRAWAL === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
-            Log::error(
+            app('log')->error(
                 sprintf('Cant change source account of journal #%d because no asset account with name "%s" exists.', $object->id, $this->action->action_value)
             );
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_asset', ['name' => $this->action->action_value])));
@@ -85,18 +85,18 @@ class SetSourceAccount implements ActionInterface
         /** @var Transaction|null $destination */
         $destination = $object->transactions()->where('amount', '>', 0)->first();
         if (null === $destination) {
-            Log::error('Could not find destination transaction.');
+            app('log')->error('Could not find destination transaction.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_destination_transaction')));
             return false;
         }
         // account must not be deleted (in the meantime):
         if (null === $destination->account) {
-            Log::error('Could not find destination transaction account.');
+            app('log')->error('Could not find destination transaction account.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_destination_transaction_account')));
             return false;
         }
         if (null !== $newAccount && (int)$newAccount->id === (int)$destination->account_id) {
-            Log::error(
+            app('log')->error(
                 sprintf(
                     'New source account ID #%d and current destination account ID #%d are the same. Do nothing.',
                     $newAccount->id,

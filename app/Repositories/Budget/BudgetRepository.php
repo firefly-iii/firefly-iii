@@ -807,8 +807,8 @@ class BudgetRepository implements BudgetRepositoryInterface
                 ]
             );
         } catch (QueryException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException('400002: Could not store budget.', 0, $e);
         }
 

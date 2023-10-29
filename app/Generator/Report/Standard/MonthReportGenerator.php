@@ -58,8 +58,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
         try {
             return view('reports.default.month', compact('accountIds', 'reportType'))->with('start', $this->start)->with('end', $this->end)->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Cannot render reports.default.month: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Cannot render reports.default.month: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = 'Could not render report view.';
             throw new FireflyException($result, 0, $e);
         }

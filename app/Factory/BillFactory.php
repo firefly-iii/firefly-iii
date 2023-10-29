@@ -80,8 +80,8 @@ class BillFactory
                 ]
             );
         } catch (QueryException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException('400000: Could not store bill.', 0, $e);
         }
 

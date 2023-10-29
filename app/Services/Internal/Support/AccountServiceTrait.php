@@ -298,8 +298,8 @@ trait AccountServiceTrait
         try {
             $group = $factory->create($submission);
         } catch (DuplicateTransactionException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -543,8 +543,8 @@ trait AccountServiceTrait
         try {
             $group = $factory->create($submission);
         } catch (DuplicateTransactionException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -758,8 +758,8 @@ trait AccountServiceTrait
         try {
             $group = $factory->create($submission);
         } catch (DuplicateTransactionException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 

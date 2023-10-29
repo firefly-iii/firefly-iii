@@ -110,7 +110,7 @@ class TransactionJournalFactory
         $collection   = new Collection();
         $transactions = $dataObject['transactions'] ?? [];
         if (0 === count($transactions)) {
-            Log::error('There are no transactions in the array, the TransactionJournalFactory cannot continue.');
+            app('log')->error('There are no transactions in the array, the TransactionJournalFactory cannot continue.');
 
             return new Collection();
         }
@@ -123,19 +123,19 @@ class TransactionJournalFactory
                     $collection->push($journal);
                 }
                 if (null === $journal) {
-                    Log::error('The createJournal() method returned NULL. This may indicate an error.');
+                    app('log')->error('The createJournal() method returned NULL. This may indicate an error.');
                 }
             }
         } catch (DuplicateTransactionException $e) {
             app('log')->warning('TransactionJournalFactory::create() caught a duplicate journal in createJournal()');
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             $this->forceDeleteOnError($collection);
             throw new DuplicateTransactionException($e->getMessage(), 0, $e);
         } catch (FireflyException $e) {
             app('log')->warning('TransactionJournalFactory::create() caught an exception.');
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             $this->forceDeleteOnError($collection);
             throw new FireflyException($e->getMessage(), 0, $e);
         }
@@ -174,8 +174,8 @@ class TransactionJournalFactory
             // validate source and destination using a new Validator.
             $this->validateAccounts($row);
         } catch (FireflyException $e) {
-            Log::error('Could not validate source or destination.');
-            Log::error($e->getMessage());
+            app('log')->error('Could not validate source or destination.');
+            app('log')->error($e->getMessage());
 
             return null;
         }
@@ -250,9 +250,9 @@ class TransactionJournalFactory
         try {
             $negative = $transactionFactory->createNegative((string)$row['amount'], (string)$row['foreign_amount']);
         } catch (FireflyException $e) {
-            Log::error('Exception creating negative transaction.');
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error('Exception creating negative transaction.');
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             $this->forceDeleteOnError(new Collection([$journal]));
             throw new FireflyException($e->getMessage(), 0, $e);
         }
@@ -270,9 +270,9 @@ class TransactionJournalFactory
         try {
             $transactionFactory->createPositive((string)$row['amount'], (string)$row['foreign_amount']);
         } catch (FireflyException $e) {
-            Log::error('Exception creating positive transaction.');
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error('Exception creating positive transaction.');
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             app('log')->warning('Delete negative transaction.');
             $this->forceTrDelete($negative);
             $this->forceDeleteOnError(new Collection([$journal]));

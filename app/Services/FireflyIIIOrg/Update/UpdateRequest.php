@@ -52,8 +52,8 @@ class UpdateRequest implements UpdateRequestInterface
         // try get array from update server:
         $updateInfo = $this->contactServer($channel);
         if ('error' === $updateInfo['level']) {
-            Log::error('Update information contains an error.');
-            Log::error($updateInfo['message']);
+            app('log')->error('Update information contains an error.');
+            app('log')->error($updateInfo['message']);
             $information['message'] = $updateInfo['message'];
 
             return $information;
@@ -91,17 +91,17 @@ class UpdateRequest implements UpdateRequestInterface
             ];
             $res     = $client->request('GET', $url, $options);
         } catch (GuzzleException $e) {
-            Log::error('Ran into Guzzle error.');
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error('Ran into Guzzle error.');
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             $return['message'] = sprintf('Guzzle: %s', strip_tags($e->getMessage()));
 
             return $return;
         }
 
         if (200 !== $res->getStatusCode()) {
-            Log::error(sprintf('Response status from server is %d.', $res->getStatusCode()));
-            Log::error((string)$res->getBody());
+            app('log')->error(sprintf('Response status from server is %d.', $res->getStatusCode()));
+            app('log')->error((string)$res->getBody());
             $return['message'] = sprintf('Error: %d', $res->getStatusCode());
 
             return $return;
@@ -110,16 +110,16 @@ class UpdateRequest implements UpdateRequestInterface
         try {
             $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
-            Log::error('Body is not valid JSON');
-            Log::error($body);
+            app('log')->error('Body is not valid JSON');
+            app('log')->error($body);
             $return['message'] = 'Invalid JSON :(';
 
             return $return;
         }
 
         if (!array_key_exists($channel, $json['firefly_iii'])) {
-            Log::error(sprintf('No valid update channel "%s"', $channel));
-            Log::error($body);
+            app('log')->error(sprintf('No valid update channel "%s"', $channel));
+            app('log')->error($body);
             $return['message'] = sprintf('Unknown update channel "%s" :(', $channel);
         }
 

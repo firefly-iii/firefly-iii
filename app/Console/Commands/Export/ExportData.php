@@ -203,7 +203,7 @@ class ExportData extends Command
             try {
                 $date = Carbon::createFromFormat('!Y-m-d', $this->option($field));
             } catch (InvalidArgumentException $e) {
-                Log::error($e->getMessage());
+                app('log')->error($e->getMessage());
                 $this->friendlyError(sprintf('%s date "%s" must be formatted YYYY-MM-DD. Field will be ignored.', $field, $this->option('start')));
                 $error = true;
             }

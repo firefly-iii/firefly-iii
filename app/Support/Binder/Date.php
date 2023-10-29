@@ -74,7 +74,7 @@ class Date implements BinderInterface
             $result = new Carbon($value);
         } catch (InvalidDateException $e) {
             $message = sprintf('Could not parse date "%s" for user #%d: %s', $value, auth()->user()->id, $e->getMessage());
-            Log::error($message);
+            app('log')->error($message);
             throw new NotFoundHttpException($message, $e);
         }
 

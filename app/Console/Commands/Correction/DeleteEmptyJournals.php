@@ -82,7 +82,7 @@ class DeleteEmptyJournals extends Command
                     TransactionJournal::find((int)$row->transaction_journal_id)->delete();
                 } catch (QueryException $e) {
                     app('log')->info(sprintf('Could not delete journal: %s', $e->getMessage()));
-                    Log::error($e->getTraceAsString());
+                    app('log')->error($e->getTraceAsString());
                 }
 
 
@@ -114,7 +114,7 @@ class DeleteEmptyJournals extends Command
                 TransactionJournal::find($entry->id)->delete();
             } catch (QueryException $e) {
                 app('log')->info(sprintf('Could not delete entry: %s', $e->getMessage()));
-                Log::error($e->getTraceAsString());
+                app('log')->error($e->getTraceAsString());
             }
 
 

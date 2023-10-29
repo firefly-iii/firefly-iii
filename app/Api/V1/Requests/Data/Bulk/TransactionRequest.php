@@ -55,7 +55,7 @@ class TransactionRequest extends FormRequest
             ];
         } catch (JsonException $e) {
             // dont really care. the validation should catch invalid json.
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
         }
 
         return $data;

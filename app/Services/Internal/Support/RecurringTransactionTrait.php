@@ -222,7 +222,7 @@ trait RecurringTransactionTrait
                 try {
                     $result = $factory->findOrCreate($accountName, $expectedType);
                 } catch (FireflyException $e) {
-                    Log::error($e->getMessage());
+                    app('log')->error($e->getMessage());
                 }
             }
         }

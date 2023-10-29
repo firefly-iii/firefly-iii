@@ -69,8 +69,8 @@ class AdminEventHandler
                         app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
                         return;
                     }
-                    Log::error($e->getMessage());
-                    Log::error($e->getTraceAsString());
+                    app('log')->error($e->getMessage());
+                    app('log')->error($e->getTraceAsString());
                 }
             }
         }
@@ -107,8 +107,8 @@ class AdminEventHandler
                         app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
                         return;
                     }
-                    Log::error($e->getMessage());
-                    Log::error($e->getTraceAsString());
+                    app('log')->error($e->getMessage());
+                    app('log')->error($e->getTraceAsString());
                 }
             }
         }
@@ -141,8 +141,8 @@ class AdminEventHandler
                 app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
                 return;
             }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
         }
     }
 }

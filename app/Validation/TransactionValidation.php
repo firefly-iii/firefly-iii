@@ -94,7 +94,7 @@ trait TransactionValidation
         }
         // should be impossible to hit this:
         if (!is_countable($transactions)) {
-            Log::error(sprintf('Transactions array is not countable, because its a %s', gettype($transactions)));
+            app('log')->error(sprintf('Transactions array is not countable, because its a %s', gettype($transactions)));
             return [];
         }
         //Log::debug('Returning transactions.', $transactions);

@@ -207,7 +207,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
                 try {
                     $dbNote->delete();
                 } catch (LogicException $e) {
-                    Log::error($e->getMessage());
+                    app('log')->error($e->getMessage());
                 }
             }
 

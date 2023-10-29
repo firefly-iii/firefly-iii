@@ -107,9 +107,9 @@ class TransactionFactory
             /** @var Transaction|null $result */
             $result = Transaction::create($data);
         } catch (QueryException $e) {
-            Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException(sprintf('Query exception when creating transaction: %s', $e->getMessage()), 0, $e);
         }
         if (null === $result) {

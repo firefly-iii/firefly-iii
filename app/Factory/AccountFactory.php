@@ -228,16 +228,16 @@ class AccountFactory
         try {
             $this->storeOpeningBalance($account, $data);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
         }
 
         // create credit liability data (only liabilities)
         try {
             $this->storeCreditLiability($account, $data);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
         }
 
         // create notes

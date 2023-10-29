@@ -157,7 +157,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         /** @var Account|null $account */
         $account = $user->accounts()->with(['accountType'])->withTrashed()->find($accountId);
         if (null === $account) {
-            Log::error(sprintf('Could not find account %d, so give big fat error.', $accountId));
+            app('log')->error(sprintf('Could not find account %d, so give big fat error.', $accountId));
 
             return parent::render($request, $exception);
         }
@@ -186,14 +186,14 @@ class GracefulNotFoundHandler extends ExceptionHandler
         /** @var TransactionGroup|null $group */
         $group = $user->transactionGroups()->withTrashed()->find($groupId);
         if (null === $group) {
-            Log::error(sprintf('Could not find group %d, so give big fat error.', $groupId));
+            app('log')->error(sprintf('Could not find group %d, so give big fat error.', $groupId));
 
             return parent::render($request, $exception);
         }
         /** @var TransactionJournal|null $journal */
         $journal = $group->transactionJournals()->withTrashed()->first();
         if (null === $journal) {
-            Log::error(sprintf('Could not find journal for group %d, so give big fat error.', $groupId));
+            app('log')->error(sprintf('Could not find journal for group %d, so give big fat error.', $groupId));
 
             return parent::render($request, $exception);
         }
@@ -224,7 +224,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         /** @var Attachment|null $attachment */
         $attachment = $user->attachments()->withTrashed()->find($attachmentId);
         if (null === $attachment) {
-            Log::error(sprintf('Could not find attachment %d, so give big fat error.', $attachmentId));
+            app('log')->error(sprintf('Could not find attachment %d, so give big fat error.', $attachmentId));
 
             return parent::render($request, $exception);
         }
@@ -246,7 +246,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
             }
         }
 
-        Log::error(sprintf('Could not redirect attachment %d, its linked to a %s.', $attachmentId, $attachment->attachable_type));
+        app('log')->error(sprintf('Could not redirect attachment %d, its linked to a %s.', $attachmentId, $attachment->attachable_type));
 
         return parent::render($request, $exception);
     }

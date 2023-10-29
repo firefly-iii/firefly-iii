@@ -71,14 +71,14 @@ class HomeController extends Controller
             $stringStart = e((string)$request->get('start'));
             $start       = Carbon::createFromFormat('Y-m-d', $stringStart);
         } catch (InvalidFormatException $e) {
-            Log::error(sprintf('Start: could not parse date string "%s" so ignore it.', $stringStart));
+            app('log')->error(sprintf('Start: could not parse date string "%s" so ignore it.', $stringStart));
             $start = Carbon::now()->startOfMonth();
         }
         try {
             $stringEnd = e((string)$request->get('end'));
             $end       = Carbon::createFromFormat('Y-m-d', $stringEnd);
         } catch (InvalidFormatException $e) {
-            Log::error(sprintf('End could not parse date string "%s" so ignore it.', $stringEnd));
+            app('log')->error(sprintf('End could not parse date string "%s" so ignore it.', $stringEnd));
             $end = Carbon::now()->endOfMonth();
         }
         $label         = $request->get('label');

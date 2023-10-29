@@ -190,14 +190,14 @@ class ParseDateString
             $pattern = '/[+-]\d+[wqmdy]/';
             $res     = preg_match($pattern, $part);
             if (0 === $res || false === $res) {
-                Log::error(sprintf('Part "%s" does not match regular expression. Will be skipped.', $part));
+                app('log')->error(sprintf('Part "%s" does not match regular expression. Will be skipped.', $part));
                 continue;
             }
             $direction = str_starts_with($part, '+') ? 1 : 0;
             $period    = $part[strlen($part) - 1];
             $number    = (int)substr($part, 1, -1);
             if (!array_key_exists($period, $functions[$direction])) {
-                Log::error(sprintf('No method for direction %d and period "%s".', $direction, $period));
+                app('log')->error(sprintf('No method for direction %d and period "%s".', $direction, $period));
                 continue;
             }
             $func = $functions[$direction][$period];

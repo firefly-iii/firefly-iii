@@ -99,7 +99,7 @@ class GroupUpdateService
         Log::debug('Array of updated IDs: ', $updated);
 
         if (0 === count($updated)) {
-            Log::error('There were no transactions updated or created. Will not delete anything.');
+            app('log')->error('There were no transactions updated or created. Will not delete anything.');
             $transactionGroup->refresh();
             app('preferences')->mark();
 
@@ -197,7 +197,7 @@ class GroupUpdateService
                     $updated[] = $newJournal->id;
                 }
                 if (null === $newJournal) {
-                    Log::error('createTransactionJournal returned NULL, indicating something went wrong.');
+                    app('log')->error('createTransactionJournal returned NULL, indicating something went wrong.');
                 }
             }
             if (null !== $journal) {
@@ -234,8 +234,8 @@ class GroupUpdateService
         try {
             $collection = $factory->create($submission);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException(
                 sprintf('Could not create new transaction journal: %s', $e->getMessage()),
                 0,

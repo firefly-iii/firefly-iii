@@ -157,14 +157,14 @@ class ReportFormRequest extends FormRequest
                     $date = new Carbon($parts[1]);
                 } catch (Exception $e) { // intentional generic exception
                     $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
-                    Log::error($error);
-                    Log::error($e->getTraceAsString());
+                    app('log')->error($error);
+                    app('log')->error($e->getTraceAsString());
                     throw new FireflyException($error, 0, $e);
                 }
                 return $date;
             }
             $error = sprintf('"%s" is not a valid date range: %s', $range, 'invalid format :(');
-            Log::error($error);
+            app('log')->error($error);
             throw new FireflyException($error, 0);
         }
         return $date;
@@ -192,14 +192,14 @@ class ReportFormRequest extends FormRequest
                     $date = new Carbon($parts[0]);
                 } catch (Exception $e) { // intentional generic exception
                     $error = sprintf('"%s" is not a valid date range: %s', $range, $e->getMessage());
-                    Log::error($error);
-                    Log::error($e->getTraceAsString());
+                    app('log')->error($error);
+                    app('log')->error($e->getTraceAsString());
                     throw new FireflyException($error, 0, $e);
                 }
                 return $date;
             }
             $error = sprintf('"%s" is not a valid date range: %s', $range, 'invalid format :(');
-            Log::error($error);
+            app('log')->error($error);
             throw new FireflyException($error, 0);
         }
 
@@ -221,7 +221,7 @@ class ReportFormRequest extends FormRequest
             Log::debug('Set is:', $set);
         }
         if (!is_array($set)) {
-            Log::error(sprintf('Set is not an array! "%s"', $set));
+            app('log')->error(sprintf('Set is not an array! "%s"', $set));
             return $collection;
         }
         foreach ($set as $tagTag) {

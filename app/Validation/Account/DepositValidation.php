@@ -52,7 +52,7 @@ trait DepositValidation
             // if both values are NULL we return false,
             // because the destination of a deposit can't be created.
             $this->destError = (string)trans('validation.deposit_dest_need_data');
-            Log::error('Both values are NULL, cant create deposit destination.');
+            app('log')->error('Both values are NULL, cant create deposit destination.');
             $result = false;
         }
         // if the account can be created anyway we don't need to search.

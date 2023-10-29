@@ -154,7 +154,7 @@ class AccountValidator
     {
         Log::debug('Now in AccountValidator::validateDestination()', $array);
         if (null === $this->source) {
-            Log::error('Source is NULL, always FALSE.');
+            app('log')->error('Source is NULL, always FALSE.');
             $this->destError = 'No source account validation has taken place yet. Please do this first or overrule the object.';
 
             return false;
@@ -162,7 +162,7 @@ class AccountValidator
         switch ($this->transactionType) {
             default:
                 $this->destError = sprintf('AccountValidator::validateDestination cannot handle "%s", so it will always return false.', $this->transactionType);
-                Log::error(sprintf('AccountValidator::validateDestination cannot handle "%s", so it will always return false.', $this->transactionType));
+                app('log')->error(sprintf('AccountValidator::validateDestination cannot handle "%s", so it will always return false.', $this->transactionType));
 
                 $result = false;
                 break;
@@ -200,7 +200,7 @@ class AccountValidator
         Log::debug('Now in AccountValidator::validateSource()', $array);
         switch ($this->transactionType) {
             default:
-                Log::error(sprintf('AccountValidator::validateSource cannot handle "%s", so it will do a generic check.', $this->transactionType));
+                app('log')->error(sprintf('AccountValidator::validateSource cannot handle "%s", so it will do a generic check.', $this->transactionType));
                 $result = $this->validateGenericSource($array);
                 break;
             case TransactionType::WITHDRAWAL:

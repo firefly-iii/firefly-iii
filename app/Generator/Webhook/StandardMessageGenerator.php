@@ -144,7 +144,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         switch ($class) {
             default:
                 // Line is ignored because all of Firefly III's Models have an id property.
-                Log::error(
+                app('log')->error(
                     sprintf('Webhook #%d was given %s#%d to deal with but can\'t extract user ID from it.', $webhook->id, $class, $model->id)
                 );
 
@@ -158,7 +158,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         // then depends on the response what to put in the message:
         switch ($webhook->response) {
             default:
-                Log::error(
+                app('log')->error(
                     sprintf('The response code for webhook #%d is "%d" and the message generator cant handle it. Soft fail.', $webhook->id, $webhook->response)
                 );
 
@@ -171,10 +171,10 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 try {
                     $basicMessage['content'] = $transformer->transformObject($model);
                 } catch (FireflyException $e) {
-                    Log::error(
+                    app('log')->error(
                         sprintf('The transformer could not include the requested transaction group for webhook #%d: %s', $webhook->id, $e->getMessage())
                     );
-                    Log::error($e->getTraceAsString());
+                    app('log')->error($e->getTraceAsString());
 
                     return;
                 }

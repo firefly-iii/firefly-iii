@@ -956,8 +956,8 @@ class Steam
                 $amount = bcmul($amount, '-1');
             }
         } catch (ValueError $e) {
-            Log::error(sprintf('ValueError in Steam::positive("%s"): %s', $amount, $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('ValueError in Steam::positive("%s"): %s', $amount, $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             return '0';
         }
 

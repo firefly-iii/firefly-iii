@@ -65,7 +65,7 @@ class SetDestinationAccount implements ActionInterface
         $this->repository = app(AccountRepositoryInterface::class);
 
         if (null === $object) {
-            Log::error('Could not find journal.');
+            app('log')->error('Could not find journal.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_such_journal')));
             return false;
         }
@@ -75,7 +75,7 @@ class SetDestinationAccount implements ActionInterface
         // if this is a transfer or a deposit, the new destination account must be an asset account or a default account, and it MUST exist:
         $newAccount = $this->findAssetAccount($type);
         if ((TransactionType::DEPOSIT === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
-            Log::error(
+            app('log')->error(
                 sprintf(
                     'Cant change destination account of journal #%d because no asset account with name "%s" exists.',
                     $object->id,
@@ -90,18 +90,18 @@ class SetDestinationAccount implements ActionInterface
         /** @var Transaction|null $source */
         $source = $object->transactions()->where('amount', '<', 0)->first();
         if (null === $source) {
-            Log::error('Could not find source transaction.');
+            app('log')->error('Could not find source transaction.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_source_transaction')));
             return false;
         }
         // account must not be deleted (in the meantime):
         if (null === $source->account) {
-            Log::error('Could not find source transaction account.');
+            app('log')->error('Could not find source transaction account.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_source_transaction_account')));
             return false;
         }
         if (null !== $newAccount && (int)$newAccount->id === (int)$source->account_id) {
-            Log::error(
+            app('log')->error(
                 sprintf(
                     'New destination account ID #%d and current source account ID #%d are the same. Do nothing.',
                     $newAccount->id,

@@ -116,7 +116,7 @@ class DecryptDatabase extends Command
         try {
             $configVar = app('fireflyconfig')->get($configName, false);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
         }
         if (null !== $configVar) {
             return (bool)$configVar->data;
@@ -157,8 +157,8 @@ class DecryptDatabase extends Command
         } catch (FireflyException $e) {
             $message = sprintf('Could not decrypt field "%s" in row #%d of table "%s": %s', $field, $id, $table, $e->getMessage());
             $this->friendlyError($message);
-            Log::error($message);
-            Log::error($e->getTraceAsString());
+            app('log')->error($message);
+            app('log')->error($e->getTraceAsString());
         }
 
         // A separate routine for preferences table:

@@ -107,7 +107,7 @@ trait UserNavigation
             /** @var Transaction|null $transaction */
             $transaction = $account->transactions()->first();
             if (null === $transaction) {
-                Log::error(sprintf('Account #%d has no transactions. Dont know where it belongs.', $account->id));
+                app('log')->error(sprintf('Account #%d has no transactions. Dont know where it belongs.', $account->id));
                 session()->flash('error', trans('firefly.cant_find_redirect_account'));
 
                 return redirect(route('index'));
@@ -116,7 +116,7 @@ trait UserNavigation
             /** @var Transaction|null $other */
             $other = $journal->transactions()->where('id', '!=', $transaction->id)->first();
             if (null === $other) {
-                Log::error(sprintf('Account #%d has no valid journals. Dont know where it belongs.', $account->id));
+                app('log')->error(sprintf('Account #%d has no valid journals. Dont know where it belongs.', $account->id));
                 session()->flash('error', trans('firefly.cant_find_redirect_account'));
 
                 return redirect(route('index'));
@@ -138,7 +138,7 @@ trait UserNavigation
         /** @var TransactionJournal|null $journal */
         $journal = $group->transactionJournals()->first();
         if (null === $journal) {
-            Log::error(sprintf('No journals in group #%d', $group->id));
+            app('log')->error(sprintf('No journals in group #%d', $group->id));
 
             return redirect(route('index'));
         }

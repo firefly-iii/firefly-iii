@@ -103,9 +103,9 @@ class Controller extends BaseController
             try {
                 $date = request()->query->get($field);
             } catch (BadRequestException $e) {
-                Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $field));
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
+                app('log')->error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $field));
+                app('log')->error($e->getMessage());
+                app('log')->error($e->getTraceAsString());
             }
             if (null !== $date) {
                 try {
@@ -128,8 +128,8 @@ class Controller extends BaseController
             try {
                 $value = request()->query->get($integer);
             } catch (BadRequestException $e) {
-                Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $integer));
-                Log::error($e->getMessage());
+                app('log')->error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $integer));
+                app('log')->error($e->getMessage());
                 $value = null;
             }
             if (null !== $value) {

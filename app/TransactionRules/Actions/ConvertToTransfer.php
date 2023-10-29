@@ -63,13 +63,13 @@ class ConvertToTransfer implements ActionInterface
         /** @var TransactionJournal|null $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
-            Log::error(sprintf('Cannot find journal #%d, cannot convert to transfer.', $journal['transaction_journal_id']));
+            app('log')->error(sprintf('Cannot find journal #%d, cannot convert to transfer.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_not_found')));
             return false;
         }
         $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
-            Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to transfer.', $journal['transaction_group_id']));
+            app('log')->error(sprintf('Group #%d has more than one transaction in it, cannot convert to transfer.', $journal['transaction_group_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
             return false;
         }
@@ -78,7 +78,7 @@ class ConvertToTransfer implements ActionInterface
         $user      = $object->user;
         $journalId = (int)$object->id;
         if (TransactionType::TRANSFER === $type) {
-            Log::error(
+            app('log')->error(
                 sprintf('Journal #%d is already a transfer so cannot be converted (rule #%d).', $object->id, $this->action->rule_id)
             );
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.is_already_transfer')));
@@ -106,7 +106,7 @@ class ConvertToTransfer implements ActionInterface
         $opposing = $repository->findByName($this->action->action_value, [$expectedType]);
 
         if (null === $opposing) {
-            Log::error(
+            app('log')->error(
                 sprintf(
                     'Journal #%d cannot be converted because no valid %s account with name "%s" exists (rule #%d).',
                     $expectedType,
@@ -126,7 +126,7 @@ class ConvertToTransfer implements ActionInterface
                 $res = $this->convertWithdrawalArray($object, $opposing);
             } catch (FireflyException $e) {
                 Log::debug('Could not convert withdrawal to transfer.');
-                Log::error($e->getMessage());
+                app('log')->error($e->getMessage());
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
             }
@@ -141,7 +141,7 @@ class ConvertToTransfer implements ActionInterface
                 $res = $this->convertDepositArray($object, $opposing);
             } catch (FireflyException $e) {
                 Log::debug('Could not convert deposit to transfer.');
-                Log::error($e->getMessage());
+                app('log')->error($e->getMessage());
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
             }
@@ -164,7 +164,7 @@ class ConvertToTransfer implements ActionInterface
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::find($journalId);
         if (null === $journal) {
-            Log::error(sprintf('Journal #%d does not exist. Cannot convert to transfer.', $journalId));
+            app('log')->error(sprintf('Journal #%d does not exist. Cannot convert to transfer.', $journalId));
             return '';
         }
         return (string)$journal->transactions()->where('amount', '<', 0)->first()?->account?->accountType?->type;
@@ -180,7 +180,7 @@ class ConvertToTransfer implements ActionInterface
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::find($journalId);
         if (null === $journal) {
-            Log::error(sprintf('Journal #%d does not exist. Cannot convert to transfer.', $journalId));
+            app('log')->error(sprintf('Journal #%d does not exist. Cannot convert to transfer.', $journalId));
             return '';
         }
         return (string)$journal->transactions()->where('amount', '>', 0)->first()?->account?->accountType?->type;
@@ -201,7 +201,7 @@ class ConvertToTransfer implements ActionInterface
     {
         $sourceAccount = $this->getSourceAccount($journal);
         if ((int)$sourceAccount->id === (int)$opposing->id) {
-            Log::error(
+            app('log')->error(
                 vsprintf(
                     'Journal #%d has already has "%s" as a source asset. ConvertToTransfer failed. (rule #%d).',
                     [$journal->id, $opposing->name, $this->action->rule_id]
@@ -260,7 +260,7 @@ class ConvertToTransfer implements ActionInterface
     {
         $destAccount = $this->getDestinationAccount($journal);
         if ((int)$destAccount->id === (int)$opposing->id) {
-            Log::error(
+            app('log')->error(
                 vsprintf(
                     'Journal #%d has already has "%s" as a destination asset. ConvertToTransfer failed. (rule #%d).',
                     [$journal->id, $opposing->name, $this->action->rule_id]

@@ -156,8 +156,8 @@ class OperatorQuerySearch implements SearchInterface
         try {
             $query1 = $parser->parse($query);
         } catch (TypeError | LogicException $e) {
-            Log::error($e->getMessage());
-            Log::error(sprintf('Could not parse search: "%s".', $query));
+            app('log')->error($e->getMessage());
+            app('log')->error(sprintf('Could not parse search: "%s".', $query));
             throw new FireflyException(sprintf('Invalid search value "%s". See the logs.', e($query)), 0, $e);
         }
 
@@ -181,7 +181,7 @@ class OperatorQuerySearch implements SearchInterface
         Log::debug(sprintf('Now in handleSearchNode(%s)', $class));
         switch ($class) {
             default:
-                Log::error(sprintf('Cannot handle node %s', $class));
+                app('log')->error(sprintf('Cannot handle node %s', $class));
                 throw new FireflyException(sprintf('Firefly III search cant handle "%s"-nodes', $class));
             case Subquery::class:
                 // loop all notes in subquery:
@@ -257,7 +257,7 @@ class OperatorQuerySearch implements SearchInterface
 
         switch ($operator) {
             default:
-                Log::error(sprintf('No such operator: %s', $operator));
+                app('log')->error(sprintf('No such operator: %s', $operator));
                 throw new FireflyException(sprintf('Unsupported search operator: "%s"', $operator));
                 // some search operators are ignored, basically:
             case 'user_action':

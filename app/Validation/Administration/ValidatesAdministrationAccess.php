@@ -53,7 +53,7 @@ trait ValidatesAdministrationAccess
         throw new FireflyException('deprecated method, must be done through user.');
         Log::debug('Now in validateAdministration()');
         if (!auth()->check()) {
-            Log::error('User is not authenticated.');
+            app('log')->error('User is not authenticated.');
             throw new AuthenticationException('No access to validateAdministration() method.');
         }
         /** @var User $user */
@@ -64,7 +64,7 @@ trait ValidatesAdministrationAccess
         $administrationId = (int)($data['administration_id'] ?? $user->getAdministrationId());
         // safety catch:
         if (0 === $administrationId) {
-            Log::error('validateAdministration ran into empty administration ID.');
+            app('log')->error('validateAdministration ran into empty administration ID.');
             throw new AuthenticationException('Cannot validate administration.');
         }
         // grab the group:
@@ -73,7 +73,7 @@ trait ValidatesAdministrationAccess
         // collect the user's roles in this group:
         $array = $repository->getRolesInGroup($user, $administrationId);
         if (0 === count($array)) {
-            Log::error(sprintf('User #%d ("%s") has no membership in group #%d.', $user->id, $user->email, $administrationId));
+            app('log')->error(sprintf('User #%d ("%s") has no membership in group #%d.', $user->id, $user->email, $administrationId));
             $validator->errors()->add('administration', (string)trans('validation.no_access_user_group'));
             return;
         }
@@ -92,7 +92,7 @@ trait ValidatesAdministrationAccess
             }
         }
         if (false === $access) {
-            Log::error(
+            app('log')->error(
                 sprintf(
                     'User #%d has memberships [%s] to group #%d but needs [%s].',
                     $user->id,

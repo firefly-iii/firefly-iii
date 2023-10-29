@@ -140,7 +140,7 @@ class AmountController extends Controller
             return redirect(route('piggy-banks.index'));
         }
 
-        Log::error('Cannot add ' . $amount . ' because canAddAmount returned false.');
+        app('log')->error('Cannot add ' . $amount . ' because canAddAmount returned false.');
         session()->flash(
             'error',
             (string)trans(

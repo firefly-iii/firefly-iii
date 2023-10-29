@@ -384,7 +384,7 @@ class JournalUpdateService
         try {
             $result = $this->getAccount($expectedType, 'source', $sourceInfo);
         } catch (FireflyException $e) {
-            Log::error(sprintf('Cant get the valid source account: %s', $e->getMessage()));
+            app('log')->error(sprintf('Cant get the valid source account: %s', $e->getMessage()));
 
             $result = $this->getOriginalSourceAccount();
         }
@@ -404,7 +404,7 @@ class JournalUpdateService
 
         // cowardly refuse to update if both accounts are the same.
         if ($source->id === $destination->id) {
-            Log::error(sprintf('Source + dest accounts are equal (%d, "%s")', $source->id, $source->name));
+            app('log')->error(sprintf('Source + dest accounts are equal (%d, "%s")', $source->id, $source->name));
 
             return;
         }
@@ -451,7 +451,7 @@ class JournalUpdateService
         try {
             $result = $this->getAccount($expectedType, 'destination', $destInfo);
         } catch (FireflyException $e) {
-            Log::error(sprintf('getValidDestinationAccount() threw unexpected error: %s', $e->getMessage()));
+            app('log')->error(sprintf('getValidDestinationAccount() threw unexpected error: %s', $e->getMessage()));
             $result = $this->getOriginalDestinationAccount();
         }
 
@@ -766,7 +766,7 @@ class JournalUpdateService
 
         // not the same as normal currency
         if (null !== $foreignCurrency && $foreignCurrency->id === $this->transactionJournal->transaction_currency_id) {
-            Log::error(sprintf('Foreign currency is equal to normal currency (%s)', $foreignCurrency->code));
+            app('log')->error(sprintf('Foreign currency is equal to normal currency (%s)', $foreignCurrency->code));
 
             return;
         }

@@ -74,8 +74,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 ->with('accounts', $this->accounts)
                 ->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());
             throw new FireflyException($result, 0, $e);
         }

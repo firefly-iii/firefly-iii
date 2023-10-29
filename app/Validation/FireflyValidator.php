@@ -71,7 +71,7 @@ class FireflyValidator extends Validator
         }
         $user = auth()->user();
         if (null === $user) {
-            Log::error('No user during validate2faCode');
+            app('log')->error('No user during validate2faCode');
             return false;
         }
         $secretPreference = Preferences::get('temp-mfa-secret');
@@ -230,8 +230,8 @@ class FireflyValidator extends Validator
             $checksum = bcmod($iban, '97');
         } catch (ValueError $e) {
             $message = sprintf('Could not validate IBAN check value "%s" (IBAN "%s")', $iban, $value);
-            Log::error($message);
-            Log::error($e->getTraceAsString());
+            app('log')->error($message);
+            app('log')->error($e->getTraceAsString());
 
             return false;
         }
@@ -432,7 +432,7 @@ class FireflyValidator extends Validator
             try {
                 $parser->parseDate($value);
             } catch (FireflyException $e) {
-                Log::error($e->getMessage());
+                app('log')->error($e->getMessage());
 
                 return false;
             }

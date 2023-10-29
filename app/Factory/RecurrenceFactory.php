@@ -67,8 +67,8 @@ class RecurrenceFactory
             $type = $this->findTransactionType(ucfirst($data['recurrence']['type']));
         } catch (FireflyException $e) {
             $message = sprintf('Cannot make a recurring transaction of type "%s"', $data['recurrence']['type']);
-            Log::error($message);
-            Log::error($e->getTraceAsString());
+            app('log')->error($message);
+            app('log')->error($e->getTraceAsString());
 
             throw new FireflyException($message, 0, $e);
         }
@@ -129,8 +129,8 @@ class RecurrenceFactory
         try {
             $this->createTransactions($recurrence, $data['transactions'] ?? []);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             $recurrence->forceDelete();
             $message = sprintf('Could not create recurring transaction: %s', $e->getMessage());
             $this->errors->add('store', $message);

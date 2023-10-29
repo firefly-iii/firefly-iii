@@ -107,7 +107,7 @@ class StoreController extends Controller
         $helper = app(AttachmentHelperInterface::class);
         $body   = $request->getContent();
         if ('' === $body) {
-            Log::error('Body of attachment is empty.');
+            app('log')->error('Body of attachment is empty.');
 
             return response()->json([], 422);
         }

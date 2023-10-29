@@ -101,7 +101,7 @@ class StoreController extends Controller
             throw new ValidationException($validator, 0, $e);
         } catch (FireflyException $e) {
             app('log')->warning('Caught an exception. Return error message.');
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $message   = sprintf('Internal exception: %s', $e->getMessage());
             $validator = Validator::make(['transactions' => [['description' => $message]]], ['transactions.0.description' => new IsDuplicateTransaction()]);
             throw new ValidationException($validator, 0, $e);

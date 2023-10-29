@@ -80,7 +80,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         try {
             $unencryptedData = Crypt::decrypt($encryptedData); // verified
         } catch (DecryptException $e) {
-            Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
+            app('log')->error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
             $unencryptedData = $encryptedData;
         }
 
@@ -141,13 +141,13 @@ class AttachmentHelper implements AttachmentHelperInterface
     {
         $resource = tmpfile();
         if (false === $resource) {
-            Log::error('Cannot create temp-file for file upload.');
+            app('log')->error('Cannot create temp-file for file upload.');
 
             return false;
         }
 
         if ('' === $content) {
-            Log::error('Cannot upload empty file.');
+            app('log')->error('Cannot upload empty file.');
 
             return false;
         }
@@ -158,7 +158,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $mime        = finfo_file($finfo, $path);
         $allowedMime = config('firefly.allowedMimes');
         if (!in_array($mime, $allowedMime, true)) {
-            Log::error(sprintf('Mime type %s is not allowed for API file upload.', $mime));
+            app('log')->error(sprintf('Mime type %s is not allowed for API file upload.', $mime));
             fclose($resource);
 
             return false;
@@ -284,7 +284,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             $result = false;
         }
         if (0 === $file->getSize()) {
-            Log::error('Cannot upload empty file.');
+            app('log')->error('Cannot upload empty file.');
             $result = false;
         }
 
@@ -320,7 +320,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         if (!in_array($mime, $this->allowedMimes, true)) {
             $msg = (string)trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
             $this->errors->add('attachments', $msg);
-            Log::error($msg);
+            app('log')->error($msg);
 
             $result = false;
         }
@@ -344,7 +344,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         if ($size > $this->maxUploadSize) {
             $msg = (string)trans('validation.file_too_large', ['name' => $name]);
             $this->errors->add('attachments', $msg);
-            Log::error($msg);
+            app('log')->error($msg);
 
             $result = false;
         }
@@ -377,7 +377,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         if ($count > 0) {
             $msg = (string)trans('validation.file_already_attached', ['name' => $name]);
             $this->errors->add('attachments', $msg);
-            Log::error($msg);
+            app('log')->error($msg);
             $result = true;
         }
 

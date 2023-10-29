@@ -85,8 +85,8 @@ class CreditRecalculateService
             try {
                 $this->findByJournal($journal);
             } catch (FireflyException $e) {
-                Log::error($e->getTraceAsString());
-                Log::error(sprintf('Could not find work account for transaction group #%d.', $this->group->id));
+                app('log')->error($e->getTraceAsString());
+                app('log')->error(sprintf('Could not find work account for transaction group #%d.', $this->group->id));
             }
         }
     }

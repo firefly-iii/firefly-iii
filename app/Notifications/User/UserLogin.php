@@ -80,7 +80,7 @@ class UserLogin extends Notification
         try {
             $hostName = app('steam')->getHostName($this->ip);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $hostName = $this->ip;
         }
         if ($hostName !== $this->ip) {
@@ -105,7 +105,7 @@ class UserLogin extends Notification
         try {
             $hostName = app('steam')->getHostName($this->ip);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $hostName = $this->ip;
         }
         if ($hostName !== $this->ip) {

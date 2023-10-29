@@ -171,7 +171,7 @@ class TransactionIdentifier extends Command
                                    ->whereNotIn('id', $exclude)
                                    ->first();
         } catch (QueryException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $this->friendlyError('Firefly III could not find the "identifier" field in the "transactions" table.');
             $this->friendlyError(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
             $this->friendlyError('Please run "php artisan migrate" to add this field to the table.');

@@ -65,7 +65,7 @@ class ExpandedForm
         try {
             $html = view('form.amount-no-currency', compact('classes', 'name', 'label', 'value', 'options'))->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Could not render amountNoCurrency(): %s', $e->getMessage()));
+            app('log')->error(sprintf('Could not render amountNoCurrency(): %s', $e->getMessage()));
             $html = 'Could not render amountNoCurrency.';
             throw new FireflyException($html, 0, $e);
         }

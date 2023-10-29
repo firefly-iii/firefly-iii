@@ -65,20 +65,20 @@ class ConvertToWithdrawal implements ActionInterface
         /** @var TransactionJournal|null $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
-            Log::error(sprintf('Cannot find journal #%d, cannot convert to withdrawal.', $journal['transaction_journal_id']));
+            app('log')->error(sprintf('Cannot find journal #%d, cannot convert to withdrawal.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_not_found')));
             return false;
         }
         $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
-            Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to withdrawal.', $journal['transaction_group_id']));
+            app('log')->error(sprintf('Group #%d has more than one transaction in it, cannot convert to withdrawal.', $journal['transaction_group_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
             return false;
         }
 
         $type = $object->transactionType->type;
         if (TransactionType::WITHDRAWAL === $type) {
-            Log::error(sprintf('Journal #%d is already a withdrawal (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
+            app('log')->error(sprintf('Journal #%d is already a withdrawal (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.is_already_withdrawal')));
             return false;
         }
@@ -92,7 +92,7 @@ class ConvertToWithdrawal implements ActionInterface
                 $res = $this->convertDepositArray($object);
             } catch (JsonException | FireflyException $e) {
                 Log::debug('Could not convert transfer to deposit.');
-                Log::error($e->getMessage());
+                app('log')->error($e->getMessage());
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
             }
@@ -107,7 +107,7 @@ class ConvertToWithdrawal implements ActionInterface
                 $res = $this->convertTransferArray($object);
             } catch (JsonException | FireflyException $e) {
                 Log::debug('Could not convert transfer to deposit.');
-                Log::error($e->getMessage());
+                app('log')->error($e->getMessage());
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
             }

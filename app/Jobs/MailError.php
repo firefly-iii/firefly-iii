@@ -65,7 +65,7 @@ class MailError extends Job implements ShouldQueue
         $debug             = $exceptionData;
         unset($debug['stackTrace']);
         unset($debug['headers']);
-        Log::error(sprintf('Exception is: %s', json_encode($debug)));
+        app('log')->error(sprintf('Exception is: %s', json_encode($debug)));
     }
 
     /**
@@ -102,8 +102,8 @@ class MailError extends Job implements ShouldQueue
                     app('log')->warning('[RFC] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
                     return;
                 }
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
+                app('log')->error($e->getMessage());
+                app('log')->error($e->getTraceAsString());
             }
         }
     }

@@ -67,7 +67,7 @@ class LinkToBill implements ActionInterface
             $count = DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])
                        ->where('bill_id', $bill->id)->count();
             if (0 !== $count) {
-                Log::error(
+                app('log')->error(
                     sprintf(
                         'RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": already set.',
                         $journal['transaction_journal_id'],
@@ -92,7 +92,7 @@ class LinkToBill implements ActionInterface
             return true;
         }
 
-        Log::error(
+        app('log')->error(
             sprintf(
                 'RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": no such bill found or not a withdrawal.',
                 $journal['transaction_journal_id'],

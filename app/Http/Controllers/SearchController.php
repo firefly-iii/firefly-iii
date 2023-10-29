@@ -127,8 +127,8 @@ class SearchController extends Controller
         try {
             $html = view('search.search', compact('groups', 'hasPages', 'searchTime'))->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Cannot render search.search: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Cannot render search.search: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $html = 'Could not render view.';
             throw new FireflyException($html, 0, $e);
         }

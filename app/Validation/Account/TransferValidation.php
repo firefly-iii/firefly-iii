@@ -48,7 +48,7 @@ trait TransferValidation
             // if both values are NULL we return false,
             // because the destination of a transfer can't be created.
             $this->destError = (string)trans('validation.transfer_dest_need_data');
-            Log::error('Both values are NULL, cant create transfer destination.');
+            app('log')->error('Both values are NULL, cant create transfer destination.');
 
             return false;
         }

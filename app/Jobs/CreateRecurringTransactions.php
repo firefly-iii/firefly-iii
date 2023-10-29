@@ -417,7 +417,7 @@ class CreateRecurringTransactions implements ShouldQueue
             $groupTitle = $first->description;
         }
         if (0 === $count) {
-            Log::error('No transactions to be created in this recurrence. Cannot continue.');
+            app('log')->error('No transactions to be created in this recurrence. Cannot continue.');
 
             return null;
         }

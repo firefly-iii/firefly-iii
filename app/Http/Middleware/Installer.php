@@ -92,7 +92,7 @@ class Installer
             DB::table('users')->count();
         } catch (QueryException $e) {
             $message = $e->getMessage();
-            Log::error(sprintf('Error message trying to access users-table: %s', $message));
+            app('log')->error(sprintf('Error message trying to access users-table: %s', $message));
             if ($this->isAccessDenied($message)) {
                 throw new FireflyException(
                     'It seems your database configuration is not correct. Please verify the username and password in your .env file.',

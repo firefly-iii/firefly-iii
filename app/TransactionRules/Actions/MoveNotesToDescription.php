@@ -63,7 +63,7 @@ class MoveNotesToDescription implements ActionInterface
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
-            Log::error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
+            app('log')->error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_other_user')));
             return false;
         }

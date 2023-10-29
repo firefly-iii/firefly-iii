@@ -54,7 +54,7 @@ class TagList implements BinderInterface
             Log::debug('List of tags is', $list);
 
             if (0 === count($list)) {
-                Log::error('Tag list is empty.');
+                app('log')->error('Tag list is empty.');
                 throw new NotFoundHttpException();
             }
 
@@ -81,7 +81,7 @@ class TagList implements BinderInterface
                 return $collection;
             }
         }
-        Log::error('TagList: user is not logged in.');
+        app('log')->error('TagList: user is not logged in.');
         throw new NotFoundHttpException();
     }
 }
