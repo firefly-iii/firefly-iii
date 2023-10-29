@@ -114,7 +114,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      */
     public function findLink(TransactionJournal $one, TransactionJournal $two): bool
     {
-        Log::debug(sprintf('Now in findLink(%d, %d)', $one->id, $two->id));
+        app('log')->debug(sprintf('Now in findLink(%d, %d)', $one->id, $two->id));
         $count         = TransactionJournalLink::whereDestinationId($one->id)->whereSourceId($two->id)->count();
         $opposingCount = TransactionJournalLink::whereDestinationId($two->id)->whereSourceId($one->id)->count();
 
@@ -263,13 +263,13 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $link = new TransactionJournalLink();
         $link->linkType()->associate($linkType);
         if ('inward' === $information['direction']) {
-            Log::debug(sprintf('Link type is inwards ("%s"), so %d is source and %d is destination.', $linkType->inward, $inward->id, $outward->id));
+            app('log')->debug(sprintf('Link type is inwards ("%s"), so %d is source and %d is destination.', $linkType->inward, $inward->id, $outward->id));
             $link->source()->associate($inward);
             $link->destination()->associate($outward);
         }
 
         if ('outward' === $information['direction']) {
-            Log::debug(sprintf('Link type is inwards ("%s"), so %d is source and %d is destination.', $linkType->outward, $outward->id, $inward->id));
+            app('log')->debug(sprintf('Link type is inwards ("%s"), so %d is source and %d is destination.', $linkType->outward, $outward->id, $inward->id));
             $link->source()->associate($outward);
             $link->destination()->associate($inward);
         }

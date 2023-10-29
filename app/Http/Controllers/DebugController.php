@@ -69,7 +69,7 @@ class DebugController extends Controller
      */
     public function displayError(): void
     {
-        Log::debug('This is a test message at the DEBUG level.');
+        app('log')->debug('This is a test message at the DEBUG level.');
         app('log')->info('This is a test message at the INFO level.');
         Log::notice('This is a test message at the NOTICE level.');
         app('log')->warning('This is a test message at the WARNING level.');
@@ -92,21 +92,21 @@ class DebugController extends Controller
     {
         app('preferences')->mark();
         $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range', 'temp-mfa-secret', 'temp-mfa-codes']);
-        Log::debug('Call cache:clear...');
+        app('log')->debug('Call cache:clear...');
 
         Artisan::call('cache:clear');
-        Log::debug('Call config:clear...');
+        app('log')->debug('Call config:clear...');
         Artisan::call('config:clear');
-        Log::debug('Call route:clear...');
+        app('log')->debug('Call route:clear...');
         Artisan::call('route:clear');
-        Log::debug('Call twig:clean...');
+        app('log')->debug('Call twig:clean...');
         try {
             Artisan::call('twig:clean');
         } catch (Exception $e) {  // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
-        Log::debug('Call view:clear...');
+        app('log')->debug('Call view:clear...');
         Artisan::call('view:clear');
 
         return redirect(route('index'));
@@ -202,7 +202,7 @@ class DebugController extends Controller
                 $return['build'] = trim(file_get_contents('/var/www/counter-main.txt'));
             }
         } catch (Exception $e) { // generic catch for open basedir.
-            Log::debug('Could not check build counter, but thats ok.');
+            app('log')->debug('Could not check build counter, but thats ok.');
             app('log')->warning($e->getMessage());
         }
         try {
@@ -210,7 +210,7 @@ class DebugController extends Controller
                 $return['build_date'] = trim(file_get_contents('/var/www/build-date-main.txt'));
             }
         } catch (Exception $e) { // generic catch for open basedir.
-            Log::debug('Could not check build date, but thats ok.');
+            app('log')->debug('Could not check build date, but thats ok.');
             app('log')->warning($e->getMessage());
         }
         if ('' !== (string)env('BASE_IMAGE_BUILD')) {
@@ -275,7 +275,7 @@ class DebugController extends Controller
         $parts          = app('steam')->getLocaleArray(app('steam')->getLocale());
         foreach ($parts as $code) {
             $code = trim($code);
-            Log::debug(sprintf('Trying to set %s', $code));
+            app('log')->debug(sprintf('Trying to set %s', $code));
             $result                = setlocale(LC_ALL, $code);
             $localeAttempts[$code] = $result === $code;
         }

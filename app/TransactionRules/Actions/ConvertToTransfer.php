@@ -121,11 +121,11 @@ class ConvertToTransfer implements ActionInterface
         }
 
         if (TransactionType::WITHDRAWAL === $type) {
-            Log::debug('Going to transform a withdrawal to a transfer.');
+            app('log')->debug('Going to transform a withdrawal to a transfer.');
             try {
                 $res = $this->convertWithdrawalArray($object, $opposing);
             } catch (FireflyException $e) {
-                Log::debug('Could not convert withdrawal to transfer.');
+                app('log')->debug('Could not convert withdrawal to transfer.');
                 app('log')->error($e->getMessage());
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
@@ -136,11 +136,11 @@ class ConvertToTransfer implements ActionInterface
             return $res;
         }
         if (TransactionType::DEPOSIT === $type) {
-            Log::debug('Going to transform a deposit to a transfer.');
+            app('log')->debug('Going to transform a deposit to a transfer.');
             try {
                 $res = $this->convertDepositArray($object, $opposing);
             } catch (FireflyException $e) {
-                Log::debug('Could not convert deposit to transfer.');
+                app('log')->debug('Could not convert deposit to transfer.');
                 app('log')->error($e->getMessage());
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
@@ -225,7 +225,7 @@ class ConvertToTransfer implements ActionInterface
           ->where('id', '=', $journal->id)
           ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
 
-        Log::debug('Converted withdrawal to transfer.');
+        app('log')->debug('Converted withdrawal to transfer.');
 
         return true;
     }
@@ -284,7 +284,7 @@ class ConvertToTransfer implements ActionInterface
           ->where('id', '=', $journal->id)
           ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
 
-        Log::debug('Converted deposit to transfer.');
+        app('log')->debug('Converted deposit to transfer.');
 
         return true;
     }

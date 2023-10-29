@@ -190,8 +190,8 @@ class IndexController extends Controller
     {
         $avg = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
 
-        Log::debug(sprintf('Amount per period for bill #%d "%s"', $bill['id'], $bill['name']));
-        Log::debug(sprintf('Average is %s', $avg));
+        app('log')->debug(sprintf('Amount per period for bill #%d "%s"', $bill['id'], $bill['name']));
+        app('log')->debug(sprintf('Average is %s', $avg));
         // calculate amount per year:
         $multiplies = [
             'yearly'    => '1',
@@ -202,7 +202,7 @@ class IndexController extends Controller
             'daily'     => '365.24',
         ];
         $yearAmount = bcmul($avg, bcdiv($multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
-        Log::debug(sprintf('Amount per year is %s (%s * %s / %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
+        app('log')->debug(sprintf('Amount per year is %s (%s * %s / %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
 
         // per period:
         $division  = [
@@ -222,7 +222,7 @@ class IndexController extends Controller
         ];
         $perPeriod = bcdiv($yearAmount, $division[$range]);
 
-        Log::debug(sprintf('Amount per %s is %s (%s / %s)', $range, $perPeriod, $yearAmount, $division[$range]));
+        app('log')->debug(sprintf('Amount per %s is %s (%s / %s)', $range, $perPeriod, $yearAmount, $division[$range]));
 
         return $perPeriod;
     }

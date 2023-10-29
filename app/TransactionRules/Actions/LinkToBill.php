@@ -82,7 +82,7 @@ class LinkToBill implements ActionInterface
             DB::table('transaction_journals')
               ->where('id', '=', $journal['transaction_journal_id'])
               ->update(['bill_id' => $bill->id]);
-            Log::debug(
+            app('log')->debug(
                 sprintf('RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").', $journal['transaction_journal_id'], $bill->id, $bill->name)
             );
 

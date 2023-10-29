@@ -193,19 +193,19 @@ class AttachmentHelper implements AttachmentHelperInterface
             return false;
         }
 
-        Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
+        app('log')->debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
         if (is_array($files)) {
-            Log::debug('$files is an array.');
+            app('log')->debug('$files is an array.');
             /** @var UploadedFile $entry */
             foreach ($files as $entry) {
                 if (null !== $entry) {
                     $this->processFile($entry, $model);
                 }
             }
-            Log::debug('Done processing uploads.');
+            app('log')->debug('Done processing uploads.');
         }
         if (!is_array($files)) {
-            Log::debug('Array of files is not an array. Probably nothing uploaded. Will not store attachments.');
+            app('log')->debug('Array of files is not an array. Probably nothing uploaded. Will not store attachments.');
         }
 
         return true;
@@ -223,7 +223,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function processFile(UploadedFile $file, Model $model): ?Attachment
     {
-        Log::debug('Now in processFile()');
+        app('log')->debug('Now in processFile()');
         $validation = $this->validateUpload($file, $model);
         $attachment = null;
         if (false !== $validation) {
@@ -242,7 +242,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             $attachment->size     = $file->getSize();
             $attachment->uploaded = false;
             $attachment->save();
-            Log::debug('Created attachment:', $attachment->toArray());
+            app('log')->debug('Created attachment:', $attachment->toArray());
 
             $fileObject = $file->openFile();
             $fileObject->rewind();
@@ -252,7 +252,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             }
 
             $content = $fileObject->fread($file->getSize());
-            Log::debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
+            app('log')->debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
 
             // store it without encryption.
             $this->uploadDisk->put($attachment->fileName(), $content);
@@ -278,7 +278,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function validateUpload(UploadedFile $file, Model $model): bool
     {
-        Log::debug('Now in validateUpload()');
+        app('log')->debug('Now in validateUpload()');
         $result = true;
         if (!$this->validMime($file)) {
             $result = false;
@@ -310,11 +310,11 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function validMime(UploadedFile $file): bool
     {
-        Log::debug('Now in validMime()');
+        app('log')->debug('Now in validMime()');
         $mime = e($file->getMimeType());
         $name = e($file->getClientOriginalName());
-        Log::debug(sprintf('Name is %s, and mime is %s', $name, $mime));
-        Log::debug('Valid mimes are', $this->allowedMimes);
+        app('log')->debug(sprintf('Name is %s, and mime is %s', $name, $mime));
+        app('log')->debug('Valid mimes are', $this->allowedMimes);
         $result = true;
 
         if (!in_array($mime, $this->allowedMimes, true)) {

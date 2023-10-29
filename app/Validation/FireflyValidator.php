@@ -474,33 +474,33 @@ class FireflyValidator extends Validator
     {
         // because a user does not have to be logged in (tests and what-not).
         if (!auth()->check()) {
-            Log::debug('validateUniqueAccountForUser::anon');
+            app('log')->debug('validateUniqueAccountForUser::anon');
             return $this->validateAccountAnonymously();
         }
         if (array_key_exists('objectType', $this->data)) {
-            Log::debug('validateUniqueAccountForUser::typeString');
+            app('log')->debug('validateUniqueAccountForUser::typeString');
             return $this->validateByAccountTypeString($value, $parameters, $this->data['objectType']);
         }
         if (array_key_exists('type', $this->data)) {
-            Log::debug('validateUniqueAccountForUser::typeString');
+            app('log')->debug('validateUniqueAccountForUser::typeString');
             return $this->validateByAccountTypeString($value, $parameters, (string)$this->data['type']);
         }
         if (array_key_exists('account_type_id', $this->data)) {
-            Log::debug('validateUniqueAccountForUser::typeId');
+            app('log')->debug('validateUniqueAccountForUser::typeId');
             return $this->validateByAccountTypeId($value, $parameters);
         }
         $parameterId = $parameters[0] ?? null;
         if (null !== $parameterId) {
-            Log::debug('validateUniqueAccountForUser::paramId');
+            app('log')->debug('validateUniqueAccountForUser::paramId');
             return $this->validateByParameterId((int)$parameterId, $value);
         }
         if (array_key_exists('id', $this->data)) {
-            Log::debug('validateUniqueAccountForUser::accountId');
+            app('log')->debug('validateUniqueAccountForUser::accountId');
             return $this->validateByAccountId($value);
         }
 
         // without type, just try to validate the name.
-        Log::debug('validateUniqueAccountForUser::accountName');
+        app('log')->debug('validateUniqueAccountForUser::accountName');
         return $this->validateByAccountName($value);
     }
 
@@ -657,17 +657,17 @@ class FireflyValidator extends Validator
             app('log')->warning(sprintf('Account number "%s" is not unique and account type "%s" cannot share its account number.', $value, $type));
             return false;
         }
-        Log::debug(sprintf('Account number "%s" is not unique but account type "%s" may share its account number.', $value, $type));
+        app('log')->debug(sprintf('Account number "%s" is not unique but account type "%s" may share its account number.', $value, $type));
         // one other account with this account number.
         /** @var AccountMeta $entry */
         foreach ($set as $entry) {
             $otherAccount = $entry->account;
             $otherType    = (string)config(sprintf('firefly.shortNamesByFullName.%s', $otherAccount->accountType->type));
             if (('expense' === $otherType || 'revenue' === $otherType) && $otherType !== $type) {
-                Log::debug(sprintf('The other account with this account number is a "%s" so return true.', $otherType));
+                app('log')->debug(sprintf('The other account with this account number is a "%s" so return true.', $otherType));
                 return true;
             }
-            Log::debug(sprintf('The other account with this account number is a "%s" so return false.', $otherType));
+            app('log')->debug(sprintf('The other account with this account number is a "%s" so return false.', $otherType));
         }
         return false;
     }

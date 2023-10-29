@@ -87,11 +87,11 @@ class ConvertToWithdrawal implements ActionInterface
             return false;
         }
         if (TransactionType::DEPOSIT === $type) {
-            Log::debug('Going to transform a deposit to a withdrawal.');
+            app('log')->debug('Going to transform a deposit to a withdrawal.');
             try {
                 $res = $this->convertDepositArray($object);
             } catch (JsonException | FireflyException $e) {
-                Log::debug('Could not convert transfer to deposit.');
+                app('log')->debug('Could not convert transfer to deposit.');
                 app('log')->error($e->getMessage());
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
@@ -101,12 +101,12 @@ class ConvertToWithdrawal implements ActionInterface
             return $res;
         }
         if (TransactionType::TRANSFER === $type) {
-            Log::debug('Going to transform a transfer to a withdrawal.');
+            app('log')->debug('Going to transform a transfer to a withdrawal.');
 
             try {
                 $res = $this->convertTransferArray($object);
             } catch (JsonException | FireflyException $e) {
-                Log::debug('Could not convert transfer to deposit.');
+                app('log')->debug('Could not convert transfer to deposit.');
                 app('log')->error($e->getMessage());
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
@@ -149,7 +149,7 @@ class ConvertToWithdrawal implements ActionInterface
             $opposingAccount = $factory->findOrCreate($opposingName, AccountType::EXPENSE);
         }
 
-        Log::debug(sprintf('ConvertToWithdrawal. Action value is "%s", expense name is "%s"', $this->action->action_value, $opposingName));
+        app('log')->debug(sprintf('ConvertToWithdrawal. Action value is "%s", expense name is "%s"', $this->action->action_value, $opposingName));
 
         // update source transaction(s) to be the original destination account
         DB::table('transactions')
@@ -169,7 +169,7 @@ class ConvertToWithdrawal implements ActionInterface
           ->where('id', '=', $journal->id)
           ->update(['transaction_type_id' => $newType->id]);
 
-        Log::debug('Converted deposit to withdrawal.');
+        app('log')->debug('Converted deposit to withdrawal.');
 
         return true;
     }
@@ -239,7 +239,7 @@ class ConvertToWithdrawal implements ActionInterface
             $opposingAccount = $factory->findOrCreate($opposingName, AccountType::EXPENSE);
         }
 
-        Log::debug(sprintf('ConvertToWithdrawal. Action value is "%s", destination name is "%s"', $this->action->action_value, $opposingName));
+        app('log')->debug(sprintf('ConvertToWithdrawal. Action value is "%s", destination name is "%s"', $this->action->action_value, $opposingName));
 
         // update destination transaction(s) to be new expense account.
         DB::table('transactions')
@@ -253,7 +253,7 @@ class ConvertToWithdrawal implements ActionInterface
           ->where('id', '=', $journal->id)
           ->update(['transaction_type_id' => $newType->id]);
 
-        Log::debug('Converted transfer to withdrawal.');
+        app('log')->debug('Converted transfer to withdrawal.');
 
         return true;
     }

@@ -63,7 +63,7 @@ class SetNotes implements ActionInterface
         $dbNote->text = $this->action->action_value;
         $dbNote->save();
 
-        Log::debug(
+        app('log')->debug(
             sprintf(
                 'RuleAction SetNotes changed the notes of journal #%d from "%s" to "%s".',
                 $journal['transaction_journal_id'],

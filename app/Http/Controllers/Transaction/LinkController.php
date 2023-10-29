@@ -123,7 +123,7 @@ class LinkController extends Controller
     {
         $linkInfo = $request->getLinkInfo();
 
-        Log::debug('We are here (store)');
+        app('log')->debug('We are here (store)');
         $other = $this->journalRepository->find($linkInfo['transaction_journal_id']);
         if (null === $other) {
             session()->flash('error', (string)trans('firefly.invalid_link_selection'));
@@ -144,7 +144,7 @@ class LinkController extends Controller
 
             return redirect(route('transactions.show', [$journal->transaction_group_id]));
         }
-        Log::debug(sprintf('Journal is %d, opposing is %d', $journal->id, $other->id));
+        app('log')->debug(sprintf('Journal is %d, opposing is %d', $journal->id, $other->id));
         $this->repository->storeLink($linkInfo, $other, $journal);
         session()->flash('success', (string)trans('firefly.journals_linked'));
 

@@ -66,7 +66,7 @@ class BelongsUserGroup implements ValidationRule
             return;
         }
         $attribute = (string)$attribute;
-        Log::debug(sprintf('Group: Going to validate "%s"', $attribute));
+        app('log')->debug(sprintf('Group: Going to validate "%s"', $attribute));
 
         $result = match ($attribute) {
             'piggy_bank_id'               => $this->validatePiggyBankId((int)$value),

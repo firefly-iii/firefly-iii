@@ -315,7 +315,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         if (null !== $limit) {
             throw new FireflyException('200027: Budget limit already exists.');
         }
-        Log::debug('No existing budget limit, create a new one');
+        app('log')->debug('No existing budget limit, create a new one');
 
         // or create one and return it.
         $limit = new BudgetLimit();
@@ -325,7 +325,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         $limit->amount                  = $data['amount'];
         $limit->transaction_currency_id = $currency->id;
         $limit->save();
-        Log::debug(sprintf('Created new budget limit with ID #%d and amount %s', $limit->id, $data['amount']));
+        app('log')->debug(sprintf('Created new budget limit with ID #%d and amount %s', $limit->id, $data['amount']));
 
         return $limit;
     }
@@ -399,7 +399,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                          ->where('budget_limits.start_date', $start->format('Y-m-d 00:00:00'))
                          ->where('budget_limits.end_date', $end->format('Y-m-d 00:00:00'))
                          ->count(['budget_limits.*']);
-        Log::debug(sprintf('Found %d budget limits.', $limits));
+        app('log')->debug(sprintf('Found %d budget limits.', $limits));
 
         // there might be a budget limit for these dates:
         /** @var BudgetLimit $limit */
@@ -410,7 +410,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 
         // if more than 1 limit found, delete the others:
         if ($limits > 1 && null !== $limit) {
-            Log::debug(sprintf('Found more than 1, delete all except #%d', $limit->id));
+            app('log')->debug(sprintf('Found more than 1, delete all except #%d', $limit->id));
             $budget->budgetlimits()
                    ->where('budget_limits.start_date', $start->format('Y-m-d 00:00:00'))
                    ->where('budget_limits.end_date', $end->format('Y-m-d 00:00:00'))
@@ -421,20 +421,20 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         // Returns 0 if the two operands are equal,
         // 1 if the left_operand is larger than the right_operand, -1 otherwise.
         if (null !== $limit && bccomp($amount, '0') <= 0) {
-            Log::debug(sprintf('%s is zero, delete budget limit #%d', $amount, $limit->id));
+            app('log')->debug(sprintf('%s is zero, delete budget limit #%d', $amount, $limit->id));
             $limit->delete();
 
             return null;
         }
         // update if exists:
         if (null !== $limit) {
-            Log::debug(sprintf('Existing budget limit is #%d, update this to amount %s', $limit->id, $amount));
+            app('log')->debug(sprintf('Existing budget limit is #%d, update this to amount %s', $limit->id, $amount));
             $limit->amount = $amount;
             $limit->save();
 
             return $limit;
         }
-        Log::debug('No existing budget limit, create a new one');
+        app('log')->debug('No existing budget limit, create a new one');
         // or create one and return it.
         $limit = new BudgetLimit();
         $limit->budget()->associate($budget);
@@ -442,7 +442,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         $limit->end_date   = $end->startOfDay();
         $limit->amount     = $amount;
         $limit->save();
-        Log::debug(sprintf('Created new budget limit with ID #%d and amount %s', $limit->id, $amount));
+        app('log')->debug(sprintf('Created new budget limit with ID #%d and amount %s', $limit->id, $amount));
 
         return $limit;
     }

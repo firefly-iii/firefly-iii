@@ -63,7 +63,7 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         $this->integerFields = [
             'order',
             'currency_id',
@@ -157,7 +157,7 @@ class UpdateRequest extends FormRequest
      */
     private function getTransactionData(): array
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         $return = [];
 
         if (!is_countable($this->get('transactions'))) {
@@ -246,9 +246,9 @@ class UpdateRequest extends FormRequest
     private function getDateData(array $current, array $transaction): array
     {
         foreach ($this->dateFields as $fieldName) {
-            Log::debug(sprintf('Now at date field %s', $fieldName));
+            app('log')->debug(sprintf('Now at date field %s', $fieldName));
             if (array_key_exists($fieldName, $transaction)) {
-                Log::debug(sprintf('New value: "%s"', (string)$transaction[$fieldName]));
+                app('log')->debug(sprintf('New value: "%s"', (string)$transaction[$fieldName]));
                 $current[$fieldName] = $this->dateFromValue((string)$transaction[$fieldName]);
             }
         }
@@ -320,7 +320,7 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         $validProtocols = config('firefly.valid_url_protocols');
         return [
             // basic fields for group:
@@ -406,7 +406,7 @@ class UpdateRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        Log::debug('Now in withValidator');
+        app('log')->debug('Now in withValidator');
         /** @var TransactionGroup $transactionGroup */
         $transactionGroup = $this->route()->parameter('transactionGroup');
         $validator->after(

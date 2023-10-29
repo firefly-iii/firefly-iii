@@ -62,14 +62,14 @@ class TriggerController extends Controller
         $job->setDate($date);
         $job->setForce(false);
         $job->handle();
-        Log::debug('Done with recurrence.');
+        app('log')->debug('Done with recurrence.');
 
         $groups = $job->getGroups();
         /** @var TransactionGroup $group */
         foreach ($groups as $group) {
             /** @var TransactionJournal $journal */
             foreach ($group->transactionJournals as $journal) {
-                Log::debug(sprintf('Set date of journal #%d to today!', $journal->id));
+                app('log')->debug(sprintf('Set date of journal #%d to today!', $journal->id));
                 $journal->date = today(config('app.timezone'));
                 $journal->save();
             }

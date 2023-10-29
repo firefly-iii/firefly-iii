@@ -98,23 +98,23 @@ class MassController extends Controller
      */
     public function destroy(MassDeleteJournalRequest $request)
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         $ids   = $request->get('confirm_mass_delete');
         $count = 0;
         if (is_array($ids)) {
-            Log::debug('Array of IDs', $ids);
+            app('log')->debug('Array of IDs', $ids);
             /** @var string $journalId */
             foreach ($ids as $journalId) {
-                Log::debug(sprintf('Searching for ID #%d', $journalId));
+                app('log')->debug(sprintf('Searching for ID #%d', $journalId));
                 /** @var TransactionJournal $journal */
                 $journal = $this->repository->find((int)$journalId);
                 if (null !== $journal && (int)$journalId === (int)$journal->id) {
                     $this->repository->destroyJournal($journal);
                     ++$count;
-                    Log::debug(sprintf('Deleted transaction journal #%d', $journalId));
+                    app('log')->debug(sprintf('Deleted transaction journal #%d', $journalId));
                     continue;
                 }
-                Log::debug(sprintf('Could not find transaction journal #%d', $journalId));
+                app('log')->debug(sprintf('Could not find transaction journal #%d', $journalId));
             }
         }
         app('preferences')->mark();
@@ -224,7 +224,7 @@ class MassController extends Controller
             'amount'           => $this->getStringFromRequest($request, $journal->id, 'amount'),
             'foreign_amount'   => $this->getStringFromRequest($request, $journal->id, 'foreign_amount'),
         ];
-        Log::debug(sprintf('Will update journal #%d with data.', $journal->id), $data);
+        app('log')->debug(sprintf('Will update journal #%d with data.', $journal->id), $data);
 
         // call service to update.
         $service->setData($data);

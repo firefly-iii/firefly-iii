@@ -90,7 +90,7 @@ class ProfileController extends Controller
         );
         $authGuard          = config('firefly.authentication_guard');
         $this->internalAuth = 'web' === $authGuard;
-        Log::debug(sprintf('ProfileController::__construct(). Authentication guard is "%s"', $authGuard));
+        app('log')->debug(sprintf('ProfileController::__construct(). Authentication guard is "%s"', $authGuard));
 
         $this->middleware(IsDemoUser::class)->except(['index']);
     }

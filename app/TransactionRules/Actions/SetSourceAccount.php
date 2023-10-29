@@ -113,7 +113,7 @@ class SetSourceAccount implements ActionInterface
             $newAccount = $this->findDepositSourceAccount();
         }
 
-        Log::debug(sprintf('New source account is #%d ("%s").', $newAccount->id, $newAccount->name));
+        app('log')->debug(sprintf('New source account is #%d ("%s").', $newAccount->id, $newAccount->name));
 
         // update source transaction with new source account:
         DB::table('transactions')
@@ -123,7 +123,7 @@ class SetSourceAccount implements ActionInterface
 
         event(new TriggeredAuditLog($this->action->rule, $object, 'set_source', null, $newAccount->name));
 
-        Log::debug(sprintf('Updated journal #%d (group #%d) and gave it new source account ID.', $object->id, $object->transaction_group_id));
+        app('log')->debug(sprintf('Updated journal #%d (group #%d) and gave it new source account ID.', $object->id, $object->transaction_group_id));
 
         return true;
     }
@@ -138,7 +138,7 @@ class SetSourceAccount implements ActionInterface
         // switch on type:
         $allowed = config(sprintf('firefly.expected_source_types.source.%s', $type));
         $allowed = is_array($allowed) ? $allowed : [];
-        Log::debug(sprintf('Check config for expected_source_types.source.%s, result is', $type), $allowed);
+        app('log')->debug(sprintf('Check config for expected_source_types.source.%s, result is', $type), $allowed);
 
         return $this->repository->findByName($this->action->action_value, $allowed);
     }
@@ -162,7 +162,7 @@ class SetSourceAccount implements ActionInterface
             ];
             $account = $this->repository->store($data);
         }
-        Log::debug(sprintf('Found or created revenue account #%d ("%s")', $account->id, $account->name));
+        app('log')->debug(sprintf('Found or created revenue account #%d ("%s")', $account->id, $account->name));
 
         return $account;
     }

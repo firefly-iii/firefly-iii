@@ -119,7 +119,7 @@ class SetDestinationAccount implements ActionInterface
             $newAccount = $this->findWithdrawalDestinationAccount();
         }
 
-        Log::debug(sprintf('New destination account is #%d ("%s").', $newAccount->id, $newAccount->name));
+        app('log')->debug(sprintf('New destination account is #%d ("%s").', $newAccount->id, $newAccount->name));
 
         event(new TriggeredAuditLog($this->action->rule, $object, 'set_destination', null, $newAccount->name));
 
@@ -129,7 +129,7 @@ class SetDestinationAccount implements ActionInterface
           ->where('amount', '>', 0)
           ->update(['account_id' => $newAccount->id]);
 
-        Log::debug(sprintf('Updated journal #%d (group #%d) and gave it new destination account ID.', $object->id, $object->transaction_group_id));
+        app('log')->debug(sprintf('Updated journal #%d (group #%d) and gave it new destination account ID.', $object->id, $object->transaction_group_id));
 
         return true;
     }
@@ -144,7 +144,7 @@ class SetDestinationAccount implements ActionInterface
         // switch on type:
         $allowed = config(sprintf('firefly.expected_source_types.destination.%s', $type));
         $allowed = is_array($allowed) ? $allowed : [];
-        Log::debug(sprintf('Check config for expected_source_types.destination.%s, result is', $type), $allowed);
+        app('log')->debug(sprintf('Check config for expected_source_types.destination.%s, result is', $type), $allowed);
 
         return $this->repository->findByName($this->action->action_value, $allowed);
     }
@@ -167,7 +167,7 @@ class SetDestinationAccount implements ActionInterface
             ];
             $account = $this->repository->store($data);
         }
-        Log::debug(sprintf('Found or created expense account #%d ("%s")', $account->id, $account->name));
+        app('log')->debug(sprintf('Found or created expense account #%d ("%s")', $account->id, $account->name));
 
         return $account;
     }

@@ -57,7 +57,7 @@ class ReconciliationStoreRequest extends FormRequest
             'journals'      => $transactions,
             'reconcile'     => $this->convertString('reconcile'),
         ];
-        Log::debug('In ReconciliationStoreRequest::getAll(). Will now return data.');
+        app('log')->debug('In ReconciliationStoreRequest::getAll(). Will now return data.');
 
         return $data;
     }

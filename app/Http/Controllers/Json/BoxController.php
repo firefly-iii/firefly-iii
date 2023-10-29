@@ -253,7 +253,7 @@ class BoxController extends Controller
         $allAccounts       = $accountRepository->getActiveAccountsByType(
             [AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]
         );
-        Log::debug(sprintf('Found %d accounts.', $allAccounts->count()));
+        app('log')->debug(sprintf('Found %d accounts.', $allAccounts->count()));
 
         // filter list on preference of being included.
         $filtered = $allAccounts->filter(
@@ -261,7 +261,7 @@ class BoxController extends Controller
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
                 $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
                 if (false === $result) {
-                    Log::debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
+                    app('log')->debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
                 }
 
                 return $result;

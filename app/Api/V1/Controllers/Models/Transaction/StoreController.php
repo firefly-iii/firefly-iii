@@ -83,7 +83,7 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        Log::debug('Now in API StoreController::store()');
+        app('log')->debug('Now in API StoreController::store()');
         $data         = $request->getAll();
         $data['user'] = auth()->user()->id;
 

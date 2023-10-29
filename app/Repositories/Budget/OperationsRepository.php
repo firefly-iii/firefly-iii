@@ -53,7 +53,7 @@ class OperationsRepository implements OperationsRepositoryInterface
      */
     public function budgetedPerDay(Budget $budget): string
     {
-        Log::debug(sprintf('Now with budget #%d "%s"', $budget->id, $budget->name));
+        app('log')->debug(sprintf('Now with budget #%d "%s"', $budget->id, $budget->name));
         $total = '0';
         $count = 0;
         foreach ($budget->budgetlimits as $limit) {
@@ -63,13 +63,13 @@ class OperationsRepository implements OperationsRepositoryInterface
             $perDay = bcdiv($amount, (string)$diff);
             $total  = bcadd($total, $perDay);
             $count++;
-            Log::debug(sprintf('Found %d budget limits. Per day is %s, total is %s', $count, $perDay, $total));
+            app('log')->debug(sprintf('Found %d budget limits. Per day is %s, total is %s', $count, $perDay, $total));
         }
         $avg = $total;
         if ($count > 0) {
             $avg = bcdiv($total, (string)$count);
         }
-        Log::debug(sprintf('%s / %d = %s = average.', $total, $count, $avg));
+        app('log')->debug(sprintf('%s / %d = %s = average.', $total, $count, $avg));
 
         return $avg;
     }
@@ -299,7 +299,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?Collection          $budgets = null,
         ?TransactionCurrency $currency = null
     ): array {
-        //Log::debug(sprintf('Now in %s', __METHOD__));
+        //app('log')->debug(sprintf('Now in %s', __METHOD__));
         $start->startOfDay();
         $end->endOfDay();
 
@@ -341,7 +341,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         // same but for foreign currencies:
         if (null !== $currency) {
-            //Log::debug(sprintf('Currency is "%s".', $currency->name));
+            //app('log')->debug(sprintf('Currency is "%s".', $currency->name));
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
             $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])
@@ -351,7 +351,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $collector->setAccounts($accounts);
             }
             $result = $collector->getExtractedJournals();
-            //Log::debug(sprintf('Found %d journals with currency %s.', count($result), $currency->code));
+            //app('log')->debug(sprintf('Found %d journals with currency %s.', count($result), $currency->code));
             // do not use array_merge because you want keys to overwrite (otherwise you get double results):
             $journals = $result + $journals;
         }

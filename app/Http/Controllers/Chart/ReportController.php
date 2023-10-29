@@ -98,7 +98,7 @@ class ReportController extends Controller
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
                 $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
                 if (false === $result) {
-                    Log::debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
+                    app('log')->debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
                 }
 
                 return $result;
@@ -160,7 +160,7 @@ class ReportController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
+        app('log')->debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
         $format         = app('navigation')->preferredCarbonFormat($start, $end);
         $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
         $preferredRange = app('navigation')->preferredRangeFormat($start, $end);

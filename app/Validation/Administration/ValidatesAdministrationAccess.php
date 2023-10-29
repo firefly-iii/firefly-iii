@@ -51,7 +51,7 @@ trait ValidatesAdministrationAccess
     protected function validateAdministration(Validator $validator, array $allowedRoles): void
     {
         throw new FireflyException('deprecated method, must be done through user.');
-        Log::debug('Now in validateAdministration()');
+        app('log')->debug('Now in validateAdministration()');
         if (!auth()->check()) {
             app('log')->error('User is not authenticated.');
             throw new AuthenticationException('No access to validateAdministration() method.');
@@ -78,11 +78,11 @@ trait ValidatesAdministrationAccess
             return;
         }
         if (in_array(UserRoleEnum::OWNER->value, $array, true)) {
-            Log::debug('User is owner of this administration.');
+            app('log')->debug('User is owner of this administration.');
             return;
         }
         if (in_array(UserRoleEnum::OWNER->value, $array, true)) {
-            Log::debug('User has full access to this administration.');
+            app('log')->debug('User has full access to this administration.');
             return;
         }
         $access = true;

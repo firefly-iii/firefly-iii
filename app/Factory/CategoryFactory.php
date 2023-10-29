@@ -48,7 +48,7 @@ class CategoryFactory
         $categoryId   = (int)$categoryId;
         $categoryName = (string)$categoryName;
 
-        Log::debug(sprintf('Going to find category with ID %d and name "%s"', $categoryId, $categoryName));
+        app('log')->debug(sprintf('Going to find category with ID %d and name "%s"', $categoryId, $categoryName));
 
         if ('' === $categoryName && 0 === $categoryId) {
             return null;

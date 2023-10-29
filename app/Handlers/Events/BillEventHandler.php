@@ -43,14 +43,14 @@ class BillEventHandler
      */
     public function warnAboutBill(WarnUserAboutBill $event): void
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
 
         $bill = $event->bill;
         /** @var bool $preference */
         $preference = app('preferences')->getForUser($bill->user, 'notification_bill_reminder', true)->data;
 
         if (true === $preference) {
-            Log::debug('Bill reminder is true!');
+            app('log')->debug('Bill reminder is true!');
             try {
                 Notification::send($bill->user, new BillReminder($bill, $event->field, $event->diff));
             } catch (Exception $e) {
@@ -68,7 +68,7 @@ class BillEventHandler
             }
         }
         if (false === $preference) {
-            Log::debug('User has disabled bill reminders.');
+            app('log')->debug('User has disabled bill reminders.');
         }
     }
 }

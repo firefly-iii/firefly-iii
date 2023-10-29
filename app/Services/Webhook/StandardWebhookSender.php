@@ -77,7 +77,7 @@ class StandardWebhookSender implements WebhookSenderInterface
             return;
         }
 
-        Log::debug(sprintf('Trying to send webhook message #%d', $this->message->id));
+        app('log')->debug(sprintf('Trying to send webhook message #%d', $this->message->id));
 
         try {
             $json = json_encode($this->message->message, JSON_THROW_ON_ERROR);
@@ -139,9 +139,9 @@ class StandardWebhookSender implements WebhookSenderInterface
         $this->message->sent = true;
         $this->message->save();
 
-        Log::debug(sprintf('Webhook message #%d was sent. Status code %d', $this->message->id, $res->getStatusCode()));
-        Log::debug(sprintf('Webhook request body size: %d bytes', strlen($json)));
-        Log::debug(sprintf('Response body: %s', $res->getBody()));
+        app('log')->debug(sprintf('Webhook message #%d was sent. Status code %d', $this->message->id, $res->getStatusCode()));
+        app('log')->debug(sprintf('Webhook request body size: %d bytes', strlen($json)));
+        app('log')->debug(sprintf('Response body: %s', $res->getBody()));
     }
 
     /**

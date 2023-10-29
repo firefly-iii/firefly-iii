@@ -297,7 +297,7 @@ class RecurrenceFormRequest extends FormRequest
      */
     public function validateAccountInformation(Validator $validator): void
     {
-        Log::debug('Now in validateAccountInformation (RecurrenceFormRequest)()');
+        app('log')->debug('Now in validateAccountInformation (RecurrenceFormRequest)()');
         /** @var AccountValidator $accountValidator */
         $accountValidator = app(AccountValidator::class);
         $data             = $validator->getData();

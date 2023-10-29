@@ -57,7 +57,7 @@ class AccountTasker implements AccountTaskerInterface
         $yesterday->subDay();
         $startSet = app('steam')->balancesByAccounts($accounts, $yesterday);
         $endSet   = app('steam')->balancesByAccounts($accounts, $end);
-        Log::debug('Start of accountreport');
+        app('log')->debug('Start of accountreport');
 
         /** @var AccountRepositoryInterface $repository */
         $repository      = app(AccountRepositoryInterface::class);
@@ -99,9 +99,9 @@ class AccountTasker implements AccountTaskerInterface
 
             // first journal exists, and is on start, then this is the actual opening balance:
             if (null !== $first && $first->date->isSameDay($start) && TransactionType::OPENING_BALANCE === $first->transactionType->type) {
-                Log::debug(sprintf('Date of first journal for %s is %s', $account->name, $first->date->format('Y-m-d')));
+                app('log')->debug(sprintf('Date of first journal for %s is %s', $account->name, $first->date->format('Y-m-d')));
                 $entry['start_balance'] = $first->transactions()->where('account_id', $account->id)->first()->amount;
-                Log::debug(sprintf('Account %s was opened on %s, so opening balance is %f', $account->name, $start->format('Y-m-d'), $entry['start_balance']));
+                app('log')->debug(sprintf('Account %s was opened on %s, so opening balance is %f', $account->name, $start->format('Y-m-d'), $entry['start_balance']));
             }
             $return['sums'][$currency->id]['start'] = bcadd($return['sums'][$currency->id]['start'], $entry['start_balance']);
             $return['sums'][$currency->id]['end']   = bcadd($return['sums'][$currency->id]['end'], $entry['end_balance']);
@@ -190,7 +190,7 @@ class AccountTasker implements AccountTaskerInterface
             ];
             $report['accounts'][$key]['sum'] = bcadd($report['accounts'][$key]['sum'], $journal['amount']);
 
-            Log::debug(sprintf('Sum for %s is now %s', $journal['destination_account_name'], $report['accounts'][$key]['sum']));
+            app('log')->debug(sprintf('Sum for %s is now %s', $journal['destination_account_name'], $report['accounts'][$key]['sum']));
 
             ++$report['accounts'][$key]['count'];
         }

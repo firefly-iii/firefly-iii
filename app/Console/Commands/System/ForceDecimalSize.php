@@ -95,7 +95,7 @@ class ForceDecimalSize extends Command
      */
     public function handle(): int
     {
-        Log::debug('Now in ForceDecimalSize::handle()');
+        app('log')->debug('Now in ForceDecimalSize::handle()');
         $this->determineDatabaseType();
 
         $this->friendlyError('Running this command is dangerous and can cause data loss.');

@@ -90,7 +90,7 @@ class LoginController extends Controller
         app('log')->info('User is trying to login.');
 
         $this->validateLogin($request);
-        Log::debug('Login data is present.');
+        app('log')->debug('Login data is present.');
 
         /** Copied directly from AuthenticatesUsers, but with logging added: */
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
@@ -106,7 +106,7 @@ class LoginController extends Controller
         /** Copied directly from AuthenticatesUsers, but with logging added: */
         if ($this->attemptLogin($request)) {
             Log::channel('audit')->info(sprintf('User "%s" has been logged in.', $request->get($this->username())));
-            Log::debug(sprintf('Redirect after login is %s.', $this->redirectPath()));
+            app('log')->debug(sprintf('Redirect after login is %s.', $this->redirectPath()));
 
             // if you just logged in, it can't be that you have a valid 2FA cookie.
 

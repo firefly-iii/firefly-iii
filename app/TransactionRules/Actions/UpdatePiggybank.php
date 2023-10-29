@@ -57,7 +57,7 @@ class UpdatePiggybank implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        Log::debug(sprintf('Triggered rule action UpdatePiggybank on journal #%d', $journal['transaction_journal_id']));
+        app('log')->debug(sprintf('Triggered rule action UpdatePiggybank on journal #%d', $journal['transaction_journal_id']));
 
         // refresh the transaction type.
         $user = User::find($journal['user_id']);
@@ -74,7 +74,7 @@ class UpdatePiggybank implements ActionInterface
             return false;
         }
 
-        Log::debug(sprintf('Found piggy bank #%d ("%s")', $piggyBank->id, $piggyBank->name));
+        app('log')->debug(sprintf('Found piggy bank #%d ("%s")', $piggyBank->id, $piggyBank->name));
 
         /** @var Transaction $source */
         $source = $journalObj->transactions()->where('amount', '<', 0)->first();
@@ -82,7 +82,7 @@ class UpdatePiggybank implements ActionInterface
         $destination = $journalObj->transactions()->where('amount', '>', 0)->first();
 
         if ((int)$source->account_id === (int)$piggyBank->account_id) {
-            Log::debug('Piggy bank account is linked to source, so remove amount from piggy bank.');
+            app('log')->debug('Piggy bank account is linked to source, so remove amount from piggy bank.');
             $this->removeAmount($piggyBank, $journalObj, $destination->amount);
 
             event(
@@ -103,7 +103,7 @@ class UpdatePiggybank implements ActionInterface
             return true;
         }
         if ((int)$destination->account_id === (int)$piggyBank->account_id) {
-            Log::debug('Piggy bank account is linked to source, so add amount to piggy bank.');
+            app('log')->debug('Piggy bank account is linked to source, so add amount to piggy bank.');
             $this->addAmount($piggyBank, $journalObj, $destination->amount);
 
             event(
@@ -158,11 +158,11 @@ class UpdatePiggybank implements ActionInterface
 
         // how much can we remove from this piggy bank?
         $toRemove = $repository->getCurrentAmount($piggyBank);
-        Log::debug(sprintf('Amount is %s, max to remove is %s', $amount, $toRemove));
+        app('log')->debug(sprintf('Amount is %s, max to remove is %s', $amount, $toRemove));
 
         // if $amount is bigger than $toRemove, shrink it.
         $amount = -1 === bccomp($amount, $toRemove) ? $amount : $toRemove;
-        Log::debug(sprintf('Amount is now %s', $amount));
+        app('log')->debug(sprintf('Amount is now %s', $amount));
 
         // if amount is zero, stop.
         if (0 === bccomp('0', $amount)) {
@@ -177,7 +177,7 @@ class UpdatePiggybank implements ActionInterface
 
             return;
         }
-        Log::debug(sprintf('Will now remove %s from piggy bank.', $amount));
+        app('log')->debug(sprintf('Will now remove %s from piggy bank.', $amount));
 
         $repository->removeAmount($piggyBank, $amount, $journal);
     }
@@ -197,14 +197,14 @@ class UpdatePiggybank implements ActionInterface
         // how much can we add to the piggy bank?
         if (0 !== bccomp($piggyBank->targetamount, '0')) {
             $toAdd = bcsub($piggyBank->targetamount, $repository->getCurrentAmount($piggyBank));
-            Log::debug(sprintf('Max amount to add to piggy bank is %s, amount is %s', $toAdd, $amount));
+            app('log')->debug(sprintf('Max amount to add to piggy bank is %s, amount is %s', $toAdd, $amount));
 
             // update amount to fit:
             $amount = -1 === bccomp($amount, $toAdd) ? $amount : $toAdd;
-            Log::debug(sprintf('Amount is now %s', $amount));
+            app('log')->debug(sprintf('Amount is now %s', $amount));
         }
         if (0 === bccomp($piggyBank->targetamount, '0')) {
-            Log::debug('Target amount is zero, can add anything.');
+            app('log')->debug('Target amount is zero, can add anything.');
         }
 
 
@@ -221,7 +221,7 @@ class UpdatePiggybank implements ActionInterface
 
             return;
         }
-        Log::debug(sprintf('Will now add %s to piggy bank.', $amount));
+        app('log')->debug(sprintf('Will now add %s to piggy bank.', $amount));
 
         $repository->addAmount($piggyBank, $amount, $journal);
     }

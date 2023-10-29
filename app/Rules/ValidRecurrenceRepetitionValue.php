@@ -142,7 +142,7 @@ class ValidRecurrenceRepetitionValue implements Rule
         try {
             Carbon::createFromFormat('Y-m-d', $dateString);
         } catch (InvalidArgumentException $e) {
-            Log::debug(sprintf('Could not parse date %s: %s', $dateString, $e->getMessage()));
+            app('log')->debug(sprintf('Could not parse date %s: %s', $dateString, $e->getMessage()));
 
             return false;
         }

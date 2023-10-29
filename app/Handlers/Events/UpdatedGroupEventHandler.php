@@ -62,7 +62,7 @@ class UpdatedGroupEventHandler
             $array[] = $journal->id;
         }
         $journalIds = implode(',', $array);
-        Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
+        app('log')->debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
         $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
@@ -95,7 +95,7 @@ class UpdatedGroupEventHandler
      */
     public function triggerWebhooks(UpdatedTransactionGroup $updatedGroupEvent): void
     {
-        Log::debug(__METHOD__);
+        app('log')->debug(__METHOD__);
         $group = $updatedGroupEvent->transactionGroup;
         if (false === $updatedGroupEvent->fireWebhooks) {
             app('log')->info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));

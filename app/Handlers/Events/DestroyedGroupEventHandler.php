@@ -40,7 +40,7 @@ class DestroyedGroupEventHandler
      */
     public function triggerWebhooks(DestroyedTransactionGroup $destroyedGroupEvent): void
     {
-        Log::debug('DestroyedTransactionGroup:triggerWebhooks');
+        app('log')->debug('DestroyedTransactionGroup:triggerWebhooks');
         $group = $destroyedGroupEvent->transactionGroup;
         $user  = $group->user;
         /** @var MessageGeneratorInterface $engine */

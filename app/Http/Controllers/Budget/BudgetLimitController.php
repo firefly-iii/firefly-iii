@@ -130,7 +130,7 @@ class BudgetLimitController extends Controller
      */
     public function store(Request $request): RedirectResponse | JsonResponse
     {
-        Log::debug('Going to store new budget-limit.', $request->all());
+        app('log')->debug('Going to store new budget-limit.', $request->all());
         // first search for existing one and update it if necessary.
         $currency = $this->currencyRepos->find((int)$request->get('transaction_currency_id'));
         $budget   = $this->repository->find((int)$request->get('budget_id'));
@@ -147,7 +147,7 @@ class BudgetLimitController extends Controller
             return response()->json([]);
         }
 
-        Log::debug(sprintf('Start: %s, end: %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
+        app('log')->debug(sprintf('Start: %s, end: %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         $limit = $this->blRepository->find($budget, $currency, $start, $end);
 

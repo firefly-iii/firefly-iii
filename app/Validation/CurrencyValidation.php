@@ -46,7 +46,7 @@ trait CurrencyValidation
         if ($validator->errors()->count() > 0) {
             return;
         }
-        Log::debug('Now in validateForeignCurrencyInformation()');
+        app('log')->debug('Now in validateForeignCurrencyInformation()');
         $transactions = $this->getTransactionsArray($validator);
 
         foreach ($transactions as $index => $transaction) {

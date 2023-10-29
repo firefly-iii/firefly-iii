@@ -62,7 +62,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
             $newDate = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;
-            Log::debug(sprintf('Created new CreateAutoBudgetLimits("%s")', $this->date->format('Y-m-d')));
+            app('log')->debug(sprintf('Created new CreateAutoBudgetLimits("%s")', $this->date->format('Y-m-d')));
         }
     }
 
@@ -73,9 +73,9 @@ class CreateAutoBudgetLimits implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::debug(sprintf('Now at start of CreateAutoBudgetLimits() job for %s.', $this->date->format('D d M Y')));
+        app('log')->debug(sprintf('Now at start of CreateAutoBudgetLimits() job for %s.', $this->date->format('D d M Y')));
         $autoBudgets = AutoBudget::get();
-        Log::debug(sprintf('Found %d auto budgets.', $autoBudgets->count()));
+        app('log')->debug(sprintf('Found %d auto budgets.', $autoBudgets->count()));
         foreach ($autoBudgets as $autoBudget) {
             $this->handleAutoBudget($autoBudget);
         }
@@ -110,7 +110,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
                     $autoBudget->budget->name
                 )
             );
-            Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
+            app('log')->debug(sprintf('Done with auto budget #%d', $autoBudget->id));
 
             return;
         }
@@ -136,7 +136,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
             // that's easy: create one.
             // do nothing else.
             $this->createBudgetLimit($autoBudget, $start, $end);
-            Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
+            app('log')->debug(sprintf('Done with auto budget #%d', $autoBudget->id));
 
             return;
         }
@@ -144,18 +144,18 @@ class CreateAutoBudgetLimits implements ShouldQueue
         if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_ROLLOVER === (int)$autoBudget->auto_budget_type) {
             // budget limit exists already,
             $this->createRollover($autoBudget);
-            Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
+            app('log')->debug(sprintf('Done with auto budget #%d', $autoBudget->id));
 
             return;
         }
         if (null === $budgetLimit && AutoBudget::AUTO_BUDGET_ADJUSTED === (int)$autoBudget->auto_budget_type) {
             // budget limit exists already,
             $this->createAdjustedLimit($autoBudget);
-            Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
+            app('log')->debug(sprintf('Done with auto budget #%d', $autoBudget->id));
 
             return;
         }
-        Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
+        app('log')->debug(sprintf('Done with auto budget #%d', $autoBudget->id));
     }
 
     /**
@@ -207,7 +207,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
      */
     private function findBudgetLimit(Budget $budget, Carbon $start, Carbon $end): ?BudgetLimit
     {
-        Log::debug(
+        app('log')->debug(
             sprintf(
                 'Going to find a budget limit for budget #%d ("%s") between %s and %s',
                 $budget->id,
@@ -230,9 +230,9 @@ class CreateAutoBudgetLimits implements ShouldQueue
      */
     private function createBudgetLimit(AutoBudget $autoBudget, Carbon $start, Carbon $end, ?string $amount = null)
     {
-        Log::debug(sprintf('No budget limit exist. Must create one for auto-budget #%d', $autoBudget->id));
+        app('log')->debug(sprintf('No budget limit exist. Must create one for auto-budget #%d', $autoBudget->id));
         if (null !== $amount) {
-            Log::debug(sprintf('Amount is overruled and will be set to %s', $amount));
+            app('log')->debug(sprintf('Amount is overruled and will be set to %s', $amount));
         }
         $budgetLimit = new BudgetLimit();
         $budgetLimit->budget()->associate($autoBudget->budget);
@@ -244,7 +244,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $budgetLimit->generated  = true;
         $budgetLimit->save();
 
-        Log::debug(sprintf('Created budget limit #%d.', $budgetLimit->id));
+        app('log')->debug(sprintf('Created budget limit #%d.', $budgetLimit->id));
     }
 
     /**
@@ -254,7 +254,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
      */
     private function createRollover(AutoBudget $autoBudget): void
     {
-        Log::debug(sprintf('Will now manage rollover for auto budget #%d', $autoBudget->id));
+        app('log')->debug(sprintf('Will now manage rollover for auto budget #%d', $autoBudget->id));
         // current period:
         $start = app('navigation')->startOfPeriod($this->date, $autoBudget->period);
         $end   = app('navigation')->endOfPeriod($start, $autoBudget->period);
@@ -263,7 +263,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $previousStart = app('navigation')->subtractPeriod($start, $autoBudget->period);
         $previousEnd   = app('navigation')->endOfPeriod($previousStart, $autoBudget->period);
 
-        Log::debug(
+        app('log')->debug(
             sprintf(
                 'Current period is %s-%s, so previous period is %s-%s',
                 $start->format('Y-m-d'),
@@ -277,27 +277,27 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $budgetLimit = $this->findBudgetLimit($autoBudget->budget, $previousStart, $previousEnd);
 
         if (null === $budgetLimit) {
-            Log::debug('No budget limit exists in previous period, so create one.');
+            app('log')->debug('No budget limit exists in previous period, so create one.');
             // if not, create it and we're done.
             $this->createBudgetLimit($autoBudget, $start, $end);
-            Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
+            app('log')->debug(sprintf('Done with auto budget #%d', $autoBudget->id));
 
             return;
         }
-        Log::debug('Budget limit exists for previous period.');
+        app('log')->debug('Budget limit exists for previous period.');
         // if has one, calculate expenses and use that as a base.
         $repository = app(OperationsRepositoryInterface::class);
         $repository->setUser($autoBudget->budget->user);
         $spent       = $repository->sumExpenses($previousStart, $previousEnd, null, new Collection([$autoBudget->budget]), $autoBudget->transactionCurrency);
         $currencyId  = (int)$autoBudget->transaction_currency_id;
         $spentAmount = $spent[$currencyId]['sum'] ?? '0';
-        Log::debug(sprintf('Spent in previous budget period (%s-%s) is %s', $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d'), $spentAmount));
+        app('log')->debug(sprintf('Spent in previous budget period (%s-%s) is %s', $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d'), $spentAmount));
 
         // if you spent more in previous budget period, than whatever you had previous budget period, the amount resets
         // previous budget limit + spent
         $budgetLeft  = bcadd($budgetLimit->amount, $spentAmount);
         $totalAmount = $autoBudget->amount;
-        Log::debug(sprintf('Total amount left for previous budget period is %s', $budgetLeft));
+        app('log')->debug(sprintf('Total amount left for previous budget period is %s', $budgetLeft));
 
         if (-1 !== bccomp('0', $budgetLeft)) {
             app('log')->info(sprintf('The amount left is negative, so it will be reset to %s.', $totalAmount));
@@ -309,7 +309,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
 
         // create budget limit:
         $this->createBudgetLimit($autoBudget, $start, $end, $totalAmount);
-        Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
+        app('log')->debug(sprintf('Done with auto budget #%d', $autoBudget->id));
     }
 
     /**
@@ -319,7 +319,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
      */
     private function createAdjustedLimit(AutoBudget $autoBudget): void
     {
-        Log::debug(sprintf('Will now manage rollover for auto budget #%d', $autoBudget->id));
+        app('log')->debug(sprintf('Will now manage rollover for auto budget #%d', $autoBudget->id));
         // current period:
         $start = app('navigation')->startOfPeriod($this->date, $autoBudget->period);
         $end   = app('navigation')->endOfPeriod($start, $autoBudget->period);
@@ -328,7 +328,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $previousStart = app('navigation')->subtractPeriod($start, $autoBudget->period);
         $previousEnd   = app('navigation')->endOfPeriod($previousStart, $autoBudget->period);
 
-        Log::debug(
+        app('log')->debug(
             sprintf(
                 'Current period is %s-%s, so previous period is %s-%s',
                 $start->format('Y-m-d'),
@@ -342,12 +342,12 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $budgetLimit = $this->findBudgetLimit($autoBudget->budget, $previousStart, $previousEnd);
 
         if (null === $budgetLimit) {
-            Log::debug('No budget limit exists in previous period, so create one.');
+            app('log')->debug('No budget limit exists in previous period, so create one.');
             // if not, create standard amount, and we're done.
             $this->createBudgetLimit($autoBudget, $start, $end);
             return;
         }
-        Log::debug('Budget limit exists for previous period.');
+        app('log')->debug('Budget limit exists for previous period.');
 
         // if has one, calculate expenses and use that as a base.
         $repository = app(OperationsRepositoryInterface::class);
@@ -355,14 +355,14 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $spent       = $repository->sumExpenses($previousStart, $previousEnd, null, new Collection([$autoBudget->budget]), $autoBudget->transactionCurrency);
         $currencyId  = (int)$autoBudget->transaction_currency_id;
         $spentAmount = $spent[$currencyId]['sum'] ?? '0';
-        Log::debug(sprintf('Spent in previous budget period (%s-%s) is %s', $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d'), $spentAmount));
+        app('log')->debug(sprintf('Spent in previous budget period (%s-%s) is %s', $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d'), $spentAmount));
 
         // what you spent in previous period PLUS the amount for the current period,
         // if that is more than zero, that's the amount that will be set.
 
         $budgetAvailable = bcadd(bcadd($budgetLimit->amount, $autoBudget->amount), $spentAmount);
         $totalAmount     = $autoBudget->amount;
-        Log::debug(sprintf('Total amount available for current budget period is %s', $budgetAvailable));
+        app('log')->debug(sprintf('Total amount available for current budget period is %s', $budgetAvailable));
 
 
         if (-1 !== bccomp($budgetAvailable, $totalAmount)) {
@@ -380,7 +380,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
             // create budget limit:
             $this->createBudgetLimit($autoBudget, $start, $end, '1');
         }
-        Log::debug(sprintf('Done with auto budget #%d', $autoBudget->id));
+        app('log')->debug(sprintf('Done with auto budget #%d', $autoBudget->id));
     }
 
     /**

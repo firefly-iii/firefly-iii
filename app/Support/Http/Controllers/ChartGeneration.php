@@ -60,7 +60,7 @@ trait ChartGeneration
         if ($cache->has()) {
             return $cache->get();
         }
-        Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
+        app('log')->debug('Regenerate chart.account.account-balance-chart from scratch.');
         $locale = app('steam')->getLocale();
         /** @var GeneratorInterface $generator */
         $generator = app(GeneratorInterface::class);

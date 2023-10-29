@@ -292,7 +292,7 @@ trait RenderPartialViews
                     ]
                 )->render();
             } catch (Throwable $e) {
-                Log::debug(sprintf('Throwable was thrown in getCurrentActions(): %s', $e->getMessage()));
+                app('log')->debug(sprintf('Throwable was thrown in getCurrentActions(): %s', $e->getMessage()));
                 app('log')->error($e->getTraceAsString());
                 throw new FireflyException(sprintf('Could not render: %s', $e->getMessage()), 0, $e);
             }
@@ -347,7 +347,7 @@ trait RenderPartialViews
                         ]
                     )->render();
                 } catch (Throwable $e) {
-                    Log::debug(sprintf('Throwable was thrown in getCurrentTriggers(): %s', $e->getMessage()));
+                    app('log')->debug(sprintf('Throwable was thrown in getCurrentTriggers(): %s', $e->getMessage()));
                     app('log')->error($e->getTraceAsString());
                     throw new FireflyException(sprintf('Could not render: %s', $e->getMessage()), 0, $e);
                 }

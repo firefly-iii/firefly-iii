@@ -73,7 +73,7 @@ trait AttachmentCollection
      */
     public function hasAttachments(): GroupCollectorInterface
     {
-        Log::debug('Add filter on attachment ID.');
+        app('log')->debug('Add filter on attachment ID.');
         $this->joinAttachmentTables();
         $this->query->whereNotNull('attachments.attachable_id');
         $this->query->whereNull('attachments.deleted_at');
@@ -542,7 +542,7 @@ trait AttachmentCollection
      */
     public function hasNoAttachments(): GroupCollectorInterface
     {
-        Log::debug('Add filter on no attachments.');
+        app('log')->debug('Add filter on no attachments.');
         $this->joinAttachmentTables();
 
         $this->query->where(function (Builder $q1) {

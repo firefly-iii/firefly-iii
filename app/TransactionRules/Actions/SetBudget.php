@@ -59,7 +59,7 @@ class SetBudget implements ActionInterface
 
         $budget = $user->budgets()->where('name', $search)->first();
         if (null === $budget) {
-            Log::debug(
+            app('log')->debug(
                 sprintf(
                     'RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.',
                     $journal['transaction_journal_id'],
@@ -71,7 +71,7 @@ class SetBudget implements ActionInterface
         }
 
         if (TransactionType::WITHDRAWAL !== $journal['transaction_type_type']) {
-            Log::debug(
+            app('log')->debug(
                 sprintf(
                     'RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a %s.',
                     $journal['transaction_journal_id'],
@@ -94,7 +94,7 @@ class SetBudget implements ActionInterface
         }
 
 
-        Log::debug(
+        app('log')->debug(
             sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal['transaction_journal_id'], $budget->id, $budget->name)
         );
 

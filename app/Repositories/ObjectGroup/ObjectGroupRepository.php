@@ -114,13 +114,13 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
      */
     public function resetOrder(): void
     {
-        Log::debug('Now in resetOrder');
+        app('log')->debug('Now in resetOrder');
         $list  = $this->get();
         $index = 1;
         /** @var ObjectGroup $objectGroup */
         foreach ($list as $objectGroup) {
             if ($index !== (int)$objectGroup->order) {
-                Log::debug(
+                app('log')->debug(
                     sprintf('objectGroup #%d ("%s"): order should %d be but is %d.', $objectGroup->id, $objectGroup->title, $index, $objectGroup->order)
                 );
                 $objectGroup->order = $index;
@@ -203,7 +203,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
             $objectGroup->save();
         }
 
-        Log::debug(sprintf('Objectgroup #%d order is now %d', $objectGroup->id, $newOrder));
+        app('log')->debug(sprintf('Objectgroup #%d order is now %d', $objectGroup->id, $newOrder));
 
         return $objectGroup;
     }

@@ -169,14 +169,14 @@ class ReconcileController extends Controller
             return $this->redirectAccountToAccount($account);
         }
 
-        Log::debug('In ReconcileController::submit()');
+        app('log')->debug('In ReconcileController::submit()');
         $data = $request->getAll();
 
         /** @var string $journalId */
         foreach ($data['journals'] as $journalId) {
             $this->repository->reconcileById((int)$journalId);
         }
-        Log::debug('Reconciled all transactions.');
+        app('log')->debug('Reconciled all transactions.');
 
         // switch dates if necessary
         if ($end->lt($start)) {
@@ -188,7 +188,7 @@ class ReconcileController extends Controller
         if ('create' === $data['reconcile']) {
             $result = $this->createReconciliation($account, $start, $end, $data['difference']);
         }
-        Log::debug('End of routine.');
+        app('log')->debug('End of routine.');
         app('preferences')->mark();
         if ('' === $result) {
             session()->flash('success', (string)trans('firefly.reconciliation_stored'));

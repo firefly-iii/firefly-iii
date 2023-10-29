@@ -346,7 +346,7 @@ class ReportController extends Controller
         $double     = implode(',', $request->getDoubleList()->pluck('id')->toArray());
 
         if (0 === $request->getAccountList()->count()) {
-            Log::debug('Account count is zero');
+            app('log')->debug('Account count is zero');
             session()->flash('error', (string)trans('firefly.select_at_least_one_account'));
 
             return redirect(route('reports.index'));

@@ -65,7 +65,7 @@ class Date implements BinderInterface
         ];
         if (array_key_exists($value, $magicWords)) {
             $return = $magicWords[$value];
-            Log::debug(sprintf('User requests "%s", so will return "%s"', $value, $return));
+            app('log')->debug(sprintf('User requests "%s", so will return "%s"', $value, $return));
 
             return $return;
         }

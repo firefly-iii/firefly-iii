@@ -57,8 +57,8 @@ class PwndVerifierV2 implements Verifier
             'timeout' => 3.1415,
         ];
 
-        Log::debug(sprintf('hash prefix is %s', $prefix));
-        Log::debug(sprintf('rest is %s', $rest));
+        app('log')->debug(sprintf('hash prefix is %s', $prefix));
+        app('log')->debug(sprintf('rest is %s', $rest));
 
         try {
             $client = new Client();
@@ -68,17 +68,17 @@ class PwndVerifierV2 implements Verifier
 
             return true;
         }
-        Log::debug(sprintf('Status code returned is %d', $res->getStatusCode()));
+        app('log')->debug(sprintf('Status code returned is %d', $res->getStatusCode()));
         if (404 === $res->getStatusCode()) {
             return true;
         }
         $strpos = stripos($res->getBody()->getContents(), $rest);
         if (false === $strpos) {
-            Log::debug(sprintf('%s was not found in result body. Return true.', $rest));
+            app('log')->debug(sprintf('%s was not found in result body. Return true.', $rest));
 
             return true;
         }
-        Log::debug(sprintf('Found %s, return FALSE.', $rest));
+        app('log')->debug(sprintf('Found %s, return FALSE.', $rest));
 
         return false;
     }

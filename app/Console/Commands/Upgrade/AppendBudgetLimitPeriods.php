@@ -125,7 +125,7 @@ class AppendBudgetLimitPeriods extends Command
             $limit->end_date->format('Y-m-d'),
             $period
         );
-        Log::debug($msg);
+        app('log')->debug($msg);
     }
 
     /**

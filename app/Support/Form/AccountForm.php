@@ -147,7 +147,7 @@ class AccountForm
         try {
             $html = view('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
+            app('log')->debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
             $html = 'Could not render assetAccountCheckList.';
             throw new FireflyException($html, 0, $e);
         }

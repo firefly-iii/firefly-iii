@@ -54,7 +54,7 @@ trait FormSupport
         try {
             $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render select(): %s', $e->getMessage()));
+            app('log')->debug(sprintf('Could not render select(): %s', $e->getMessage()));
             $html = 'Could not render select.';
         }
 

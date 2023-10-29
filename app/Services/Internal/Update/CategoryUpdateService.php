@@ -94,12 +94,12 @@ class CategoryUpdateService
                                ->whereIn('rule_triggers.trigger_type', $types)
                                ->where('rule_triggers.trigger_value', $oldName)
                                ->get(['rule_triggers.*']);
-        Log::debug(sprintf('Found %d triggers to update.', $triggers->count()));
+        app('log')->debug(sprintf('Found %d triggers to update.', $triggers->count()));
         /** @var RuleTrigger $trigger */
         foreach ($triggers as $trigger) {
             $trigger->trigger_value = $newName;
             $trigger->save();
-            Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
+            app('log')->debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
         }
     }
 
@@ -115,12 +115,12 @@ class CategoryUpdateService
                              ->whereIn('rule_actions.action_type', $types)
                              ->where('rule_actions.action_value', $oldName)
                              ->get(['rule_actions.*']);
-        Log::debug(sprintf('Found %d actions to update.', $actions->count()));
+        app('log')->debug(sprintf('Found %d actions to update.', $actions->count()));
         /** @var RuleAction $action */
         foreach ($actions as $action) {
             $action->action_value = $newName;
             $action->save();
-            Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
+            app('log')->debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
         }
     }
 

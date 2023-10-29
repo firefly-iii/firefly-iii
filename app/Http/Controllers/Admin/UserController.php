@@ -94,13 +94,13 @@ class UserController extends Controller
      */
     public function deleteInvite(InvitedUser $invitedUser): JsonResponse
     {
-        Log::debug('Will now delete invitation');
+        app('log')->debug('Will now delete invitation');
         if ($invitedUser->redeemed) {
-            Log::debug('Is already redeemed.');
+            app('log')->debug('Is already redeemed.');
             session()->flash('error', trans('firefly.invite_is_already_redeemed', ['address' => $invitedUser->email]));
             return response()->json(['success' => false]);
         }
-        Log::debug('Delete!');
+        app('log')->debug('Delete!');
         session()->flash('success', trans('firefly.invite_is_deleted', ['address' => $invitedUser->email]));
         $this->repository->deleteInvite($invitedUser);
         return response()->json(['success' => true]);
@@ -246,7 +246,7 @@ class UserController extends Controller
      */
     public function update(UserFormRequest $request, User $user)
     {
-        Log::debug('Actually here');
+        app('log')->debug('Actually here');
         $data = $request->getUserData();
 
         //var_dump($data);

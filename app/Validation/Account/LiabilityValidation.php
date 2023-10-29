@@ -40,7 +40,7 @@ trait LiabilityValidation
      */
     protected function validateLCDestination(array $array): bool
     {
-        Log::debug('Now in validateLCDestination', $array);
+        app('log')->debug('Now in validateLCDestination', $array);
         $result      = null;
         $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
         $accountName = array_key_exists('name', $array) ? $array['name'] : null;
@@ -62,7 +62,7 @@ trait LiabilityValidation
         }
 
         if (null !== $accountName && '' !== $accountName) {
-            Log::debug('Destination ID is null, now we can assume the destination is a (new) liability credit account.');
+            app('log')->debug('Destination ID is null, now we can assume the destination is a (new) liability credit account.');
             return true;
         }
         app('log')->error('Destination ID is null, but destination name is also NULL.');
@@ -78,19 +78,19 @@ trait LiabilityValidation
      */
     protected function validateLCSource(array $array): bool
     {
-        Log::debug('Now in validateLCSource', $array);
+        app('log')->debug('Now in validateLCSource', $array);
         // if the array has an ID and ID is not null, try to find it and check type.
         // this account must be a liability
         $accountId = array_key_exists('id', $array) ? $array['id'] : null;
         if (null !== $accountId) {
-            Log::debug('Source ID is not null, assume were looking for a liability.');
+            app('log')->debug('Source ID is not null, assume were looking for a liability.');
             // find liability credit:
             $result = $this->findExistingAccount(config('firefly.valid_liabilities'), $array);
             if (null === $result) {
                 app('log')->error('Did not find a liability account, return false.');
                 return false;
             }
-            Log::debug(sprintf('Return true, found #%d ("%s")', $result->id, $result->name));
+            app('log')->debug(sprintf('Return true, found #%d ("%s")', $result->id, $result->name));
             $this->setSource($result);
             return true;
         }

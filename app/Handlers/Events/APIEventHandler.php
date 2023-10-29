@@ -43,7 +43,7 @@ class APIEventHandler
      */
     public function accessTokenCreated(AccessTokenCreated $event): void
     {
-        Log::debug(__METHOD__);
+        app('log')->debug(__METHOD__);
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->find((int)$event->userId);

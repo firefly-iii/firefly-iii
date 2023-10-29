@@ -67,7 +67,7 @@ class SetCategory implements ActionInterface
         $factory->setUser($user);
         $category = $factory->findOrCreate(null, $search);
         if (null === $category) {
-            Log::debug(
+            app('log')->debug(
                 sprintf(
                     'RuleAction SetCategory could not set category of journal #%d to "%s" because no such category exists.',
                     $journal['transaction_journal_id'],
@@ -78,7 +78,7 @@ class SetCategory implements ActionInterface
             return false;
         }
 
-        Log::debug(
+        app('log')->debug(
             sprintf(
                 'RuleAction SetCategory set the category of journal #%d to category #%d ("%s").',
                 $journal['transaction_journal_id'],

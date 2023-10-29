@@ -76,7 +76,7 @@ class ConvertToDeposit implements ActionInterface
             return false;
         }
 
-        Log::debug(sprintf('Convert journal #%d to deposit.', $journal['transaction_journal_id']));
+        app('log')->debug(sprintf('Convert journal #%d to deposit.', $journal['transaction_journal_id']));
         $type = $object->transactionType->type;
         if (TransactionType::DEPOSIT === $type) {
             app('log')->error(sprintf('Journal #%d is already a deposit (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
@@ -85,12 +85,12 @@ class ConvertToDeposit implements ActionInterface
         }
 
         if (TransactionType::WITHDRAWAL === $type) {
-            Log::debug('Going to transform a withdrawal to a deposit.');
+            app('log')->debug('Going to transform a withdrawal to a deposit.');
 
             try {
                 $res = $this->convertWithdrawalArray($object);
             } catch (JsonException | FireflyException $e) {
-                Log::debug('Could not convert withdrawal to deposit.');
+                app('log')->debug('Could not convert withdrawal to deposit.');
                 app('log')->error($e->getMessage());
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
@@ -101,12 +101,12 @@ class ConvertToDeposit implements ActionInterface
             return $res;
         }
         if (TransactionType::TRANSFER === $type) {
-            Log::debug('Going to transform a transfer to a deposit.');
+            app('log')->debug('Going to transform a transfer to a deposit.');
 
             try {
                 $res = $this->convertTransferArray($object);
             } catch (JsonException | FireflyException $e) {
-                Log::debug('Could not convert transfer to deposit.');
+                app('log')->debug('Could not convert transfer to deposit.');
                 app('log')->error($e->getMessage());
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
@@ -153,7 +153,7 @@ class ConvertToDeposit implements ActionInterface
             $opposingAccount = $factory->findOrCreate($opposingName, AccountType::REVENUE);
         }
 
-        Log::debug(sprintf('ConvertToDeposit. Action value is "%s", new opposing name is "%s"', $this->action->action_value, $opposingAccount->name));
+        app('log')->debug(sprintf('ConvertToDeposit. Action value is "%s", new opposing name is "%s"', $this->action->action_value, $opposingAccount->name));
 
         // update the source transaction and put in the new revenue ID.
         DB::table('transactions')
@@ -174,7 +174,7 @@ class ConvertToDeposit implements ActionInterface
           ->where('id', '=', $journal->id)
           ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
 
-        Log::debug('Converted withdrawal to deposit.');
+        app('log')->debug('Converted withdrawal to deposit.');
 
         return true;
     }
@@ -245,7 +245,7 @@ class ConvertToDeposit implements ActionInterface
             $opposingAccount = $factory->findOrCreate($opposingName, AccountType::REVENUE);
         }
 
-        Log::debug(sprintf('ConvertToDeposit. Action value is "%s", revenue name is "%s"', $this->action->action_value, $opposingAccount->name));
+        app('log')->debug(sprintf('ConvertToDeposit. Action value is "%s", revenue name is "%s"', $this->action->action_value, $opposingAccount->name));
 
         // update source transaction(s) to be revenue account
         DB::table('transactions')
@@ -260,7 +260,7 @@ class ConvertToDeposit implements ActionInterface
           ->where('id', '=', $journal->id)
           ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
 
-        Log::debug('Converted transfer to deposit.');
+        app('log')->debug('Converted transfer to deposit.');
 
         return true;
     }

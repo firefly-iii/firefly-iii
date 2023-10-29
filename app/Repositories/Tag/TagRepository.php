@@ -183,12 +183,12 @@ class TagRepository implements TagRepositoryInterface
 
         // add date range (or not):
         if (null === $year) {
-            Log::debug('Get tags without a date.');
+            app('log')->debug('Get tags without a date.');
             $tagQuery->whereNull('tags.date');
         }
 
         if (null !== $year) {
-            Log::debug(sprintf('Get tags with year %s.', $year));
+            app('log')->debug(sprintf('Get tags with year %s.', $year));
             $tagQuery->where('tags.date', '>=', $year . '-01-01 00:00:00')->where('tags.date', '<=', $year . '-12-31 23:59:59');
         }
         $collection = $tagQuery->get();

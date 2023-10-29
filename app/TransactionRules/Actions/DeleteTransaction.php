@@ -57,7 +57,7 @@ class DeleteTransaction implements ActionInterface
 
         // destroy entire group.
         if (1 === $count) {
-            Log::debug(
+            app('log')->debug(
                 sprintf(
                     'RuleAction DeleteTransaction DELETED the entire transaction group of journal #%d ("%s").',
                     $journal['transaction_journal_id'],
@@ -72,7 +72,7 @@ class DeleteTransaction implements ActionInterface
 
             return true;
         }
-        Log::debug(
+        app('log')->debug(
             sprintf('RuleAction DeleteTransaction DELETED transaction journal #%d ("%s").', $journal['transaction_journal_id'], $journal['description'])
         );
 

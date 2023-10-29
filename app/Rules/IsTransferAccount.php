@@ -54,7 +54,7 @@ class IsTransferAccount implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        Log::debug(sprintf('Now in %s(%s)', __METHOD__, $value));
+        app('log')->debug(sprintf('Now in %s(%s)', __METHOD__, $value));
         /** @var AccountValidator $validator */
         $validator = app(AccountValidator::class);
         $validator->setTransactionType(TransactionType::TRANSFER);
@@ -62,13 +62,13 @@ class IsTransferAccount implements Rule
 
         $validAccount = $validator->validateSource(['name' => (string)$value,]);
         if (true === $validAccount) {
-            Log::debug('Found account based on name. Return true.');
+            app('log')->debug('Found account based on name. Return true.');
 
             // found by name, use repos to return.
             return true;
         }
         $validAccount = $validator->validateSource(['id' => (int)$value,]);
-        Log::debug(sprintf('Search by id (%d), result is %s.', (int)$value, var_export($validAccount, true)));
+        app('log')->debug(sprintf('Search by id (%d), result is %s.', (int)$value, var_export($validAccount, true)));
 
         return false !== $validAccount;
     }

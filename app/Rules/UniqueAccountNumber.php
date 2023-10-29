@@ -46,7 +46,7 @@ class UniqueAccountNumber implements Rule
      */
     public function __construct(?Account $account, ?string $expectedType)
     {
-        Log::debug('Constructed UniqueAccountNumber');
+        app('log')->debug('Constructed UniqueAccountNumber');
         $this->account      = $account;
         $this->expectedType = $expectedType;
         // a very basic fix to make sure we get the correct account type:
@@ -59,7 +59,7 @@ class UniqueAccountNumber implements Rule
         if ('asset' === $expectedType) {
             $this->expectedType = AccountType::ASSET;
         }
-        Log::debug(sprintf('Expected type is "%s"', $this->expectedType));
+        app('log')->debug(sprintf('Expected type is "%s"', $this->expectedType));
     }
 
     /**
@@ -94,9 +94,9 @@ class UniqueAccountNumber implements Rule
 
         foreach ($maxCounts as $type => $max) {
             $count = $this->countHits($type, $value);
-            Log::debug(sprintf('Count for "%s" and account number "%s" is %d', $type, $value, $count));
+            app('log')->debug(sprintf('Count for "%s" and account number "%s" is %d', $type, $value, $count));
             if ($count > $max) {
-                Log::debug(
+                app('log')->debug(
                     sprintf(
                         'account number "%s" is in use with %d account(s) of type "%s", which is too much for expected type "%s"',
                         $value,
@@ -109,7 +109,7 @@ class UniqueAccountNumber implements Rule
                 return false;
             }
         }
-        Log::debug('Account number is valid.');
+        app('log')->debug('Account number is valid.');
 
         return true;
     }

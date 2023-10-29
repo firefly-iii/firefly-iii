@@ -92,7 +92,7 @@ class MigrateAttachments extends Command
                 $att->description = '';
                 $att->save();
 
-                Log::debug(sprintf('Migrated attachment #%s description to note #%d.', $att->id, $note->id));
+                app('log')->debug(sprintf('Migrated attachment #%s description to note #%d.', $att->id, $note->id));
                 $count++;
             }
         }

@@ -51,13 +51,13 @@ class GroupUpdateService
      */
     public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
-        Log::debug('Now in group update service', $data);
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug('Now in group update service', $data);
         /** @var array $transactions */
         $transactions = $data['transactions'] ?? [];
         // update group name.
         if (array_key_exists('group_title', $data)) {
-            Log::debug(sprintf('Update transaction group #%d title.', $transactionGroup->id));
+            app('log')->debug(sprintf('Update transaction group #%d title.', $transactionGroup->id));
             $oldTitle                = $transactionGroup->title;
             $transactionGroup->title = $data['group_title'];
             $transactionGroup->save();
@@ -74,7 +74,7 @@ class GroupUpdateService
 
 
         if (0 === count($transactions)) {
-            Log::debug('No transactions submitted, do nothing.');
+            app('log')->debug('No transactions submitted, do nothing.');
 
             return $transactionGroup;
         }
@@ -82,7 +82,7 @@ class GroupUpdateService
         if (1 === count($transactions) && 1 === $transactionGroup->transactionJournals()->count()) {
             /** @var TransactionJournal $first */
             $first = $transactionGroup->transactionJournals()->first();
-            Log::debug(
+            app('log')->debug(
                 sprintf('Will now update journal #%d (only journal in group #%d)', $first->id, $transactionGroup->id)
             );
             $this->updateTransactionJournal($transactionGroup, $first, reset($transactions));
@@ -92,11 +92,11 @@ class GroupUpdateService
             return $transactionGroup;
         }
 
-        Log::debug('Going to update split group.');
+        app('log')->debug('Going to update split group.');
 
         $existing = $transactionGroup->transactionJournals->pluck('id')->toArray();
         $updated  = $this->updateTransactions($transactionGroup, $transactions);
-        Log::debug('Array of updated IDs: ', $updated);
+        app('log')->debug('Array of updated IDs: ', $updated);
 
         if (0 === count($updated)) {
             app('log')->error('There were no transactions updated or created. Will not delete anything.');
@@ -107,7 +107,7 @@ class GroupUpdateService
         }
 
         $result = array_diff($existing, $updated);
-        Log::debug('Result of DIFF: ', $result);
+        app('log')->debug('Result of DIFF: ', $result);
         if (count($result) > 0) {
             /** @var string $deletedId */
             foreach ($result as $deletedId) {
@@ -137,7 +137,7 @@ class GroupUpdateService
         TransactionJournal $journal,
         array              $data
     ): void {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         if (0 === count($data)) {
             return;
         }
@@ -163,7 +163,7 @@ class GroupUpdateService
      */
     private function updateTransactions(TransactionGroup $transactionGroup, array $transactions): array
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         // updated or created transaction journals:
         $updated = [];
         /**
@@ -171,28 +171,28 @@ class GroupUpdateService
          * @var array $transaction
          */
         foreach ($transactions as $index => $transaction) {
-            Log::debug(sprintf('Now at #%d of %d', ($index + 1), count($transactions)), $transaction);
+            app('log')->debug(sprintf('Now at #%d of %d', ($index + 1), count($transactions)), $transaction);
             $journalId = (int)($transaction['transaction_journal_id'] ?? 0);
             /** @var TransactionJournal|null $journal */
             $journal = $transactionGroup->transactionJournals()->find($journalId);
             if (null === $journal) {
-                Log::debug('This entry has no existing journal: make a new split.');
+                app('log')->debug('This entry has no existing journal: make a new split.');
                 // force the transaction type on the transaction data.
                 // by plucking it from another journal in the group:
                 if (!array_key_exists('type', $transaction)) {
-                    Log::debug('No transaction type is indicated.');
+                    app('log')->debug('No transaction type is indicated.');
                     /** @var TransactionJournal|null $randomJournal */
                     $randomJournal = $transactionGroup->transactionJournals()->inRandomOrder()->with(
                         ['transactionType']
                     )->first();
                     if (null !== $randomJournal) {
                         $transaction['type'] = $randomJournal->transactionType->type;
-                        Log::debug(sprintf('Transaction type set to %s.', $transaction['type']));
+                        app('log')->debug(sprintf('Transaction type set to %s.', $transaction['type']));
                     }
                 }
-                Log::debug('Call createTransactionJournal');
+                app('log')->debug('Call createTransactionJournal');
                 $newJournal = $this->createTransactionJournal($transactionGroup, $transaction);
-                Log::debug('Done calling createTransactionJournal');
+                app('log')->debug('Done calling createTransactionJournal');
                 if (null !== $newJournal) {
                     $updated[] = $newJournal->id;
                 }
@@ -201,10 +201,10 @@ class GroupUpdateService
                 }
             }
             if (null !== $journal) {
-                Log::debug('Call updateTransactionJournal');
+                app('log')->debug('Call updateTransactionJournal');
                 $this->updateTransactionJournal($transactionGroup, $journal, $transaction);
                 $updated[] = $journal->id;
-                Log::debug('Done calling updateTransactionJournal');
+                app('log')->debug('Done calling updateTransactionJournal');
             }
         }
 

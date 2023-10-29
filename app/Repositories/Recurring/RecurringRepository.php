@@ -78,14 +78,14 @@ class RecurringRepository implements RecurringRepositoryInterface
         foreach ($set as $journalMeta) {
             $count = TransactionJournalMeta::where(function (Builder $q2) use ($date) {
                 $string = (string)$date;
-                Log::debug(sprintf('Search for date: %s', json_encode($string)));
+                app('log')->debug(sprintf('Search for date: %s', json_encode($string)));
                 $q2->where('name', 'recurrence_date');
                 $q2->where('data', json_encode($string));
             })
                                            ->where('transaction_journal_id', $journalMeta->transaction_journal_id)
                                            ->count();
             if ($count > 0) {
-                Log::debug(sprintf('Looks like journal #%d was already created', $journalMeta->transaction_journal_id));
+                app('log')->debug(sprintf('Looks like journal #%d was already created', $journalMeta->transaction_journal_id));
                 return true;
             }
         }
@@ -437,7 +437,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      */
     public function getXOccurrencesSince(RecurrenceRepetition $repetition, Carbon $date, Carbon $afterDate, int $count): array
     {
-        Log::debug('Now in getXOccurrencesSince()');
+        app('log')->debug('Now in getXOccurrencesSince()');
         $skipMod     = $repetition->repetition_skip + 1;
         $occurrences = [];
         if ('daily' === $repetition->repetition_type) {
@@ -496,7 +496,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      */
     public function repetitionDescription(RecurrenceRepetition $repetition): string
     {
-        Log::debug('Now in repetitionDescription()');
+        app('log')->debug('Now in repetitionDescription()');
         /** @var Preference $pref */
         $pref     = app('preferences')->getForUser($this->user, 'language', config('firefly.default_language', 'en_US'));
         $language = $pref->data;
@@ -622,8 +622,8 @@ class RecurringRepository implements RecurringRepositoryInterface
         $mutator     = clone $start;
         $mutator->startOfDay();
         $skipMod = $repetition->repetition_skip + 1;
-        Log::debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
-        Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
+        app('log')->debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
+        app('log')->debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
 
         if ('daily' === $repetition->repetition_type) {
             $occurrences = $this->getDailyInRange($mutator, $end, $skipMod);

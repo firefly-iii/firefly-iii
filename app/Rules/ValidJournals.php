@@ -56,7 +56,7 @@ class ValidJournals implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        Log::debug('In ValidJournals::passes');
+        app('log')->debug('In ValidJournals::passes');
         if (!is_array($value)) {
             return true;
         }
@@ -64,12 +64,12 @@ class ValidJournals implements Rule
         foreach ($value as $journalId) {
             $count = TransactionJournal::where('id', $journalId)->where('user_id', $userId)->count();
             if (0 === $count) {
-                Log::debug(sprintf('Count for transaction #%d and user #%d is zero! Return FALSE', $journalId, $userId));
+                app('log')->debug(sprintf('Count for transaction #%d and user #%d is zero! Return FALSE', $journalId, $userId));
 
                 return false;
             }
         }
-        Log::debug('Return true!');
+        app('log')->debug('Return true!');
 
         return true;
     }

@@ -173,7 +173,7 @@ trait RequestInformation
         try {
             $attributes['startDate'] = Carbon::createFromFormat('Ymd', $attributes['startDate'])->startOfDay();
         } catch (InvalidArgumentException $e) {
-            Log::debug(sprintf('Not important error message: %s', $e->getMessage()));
+            app('log')->debug(sprintf('Not important error message: %s', $e->getMessage()));
             $date                    = today(config('app.timezone'))->startOfMonth();
             $attributes['startDate'] = $date;
         }
@@ -181,7 +181,7 @@ trait RequestInformation
         try {
             $attributes['endDate'] = Carbon::createFromFormat('Ymd', $attributes['endDate'])->endOfDay();
         } catch (InvalidArgumentException $e) {
-            Log::debug(sprintf('Not important error message: %s', $e->getMessage()));
+            app('log')->debug(sprintf('Not important error message: %s', $e->getMessage()));
             $date                  = today(config('app.timezone'))->startOfMonth();
             $attributes['endDate'] = $date;
         }

@@ -142,7 +142,7 @@ trait GroupValidation
         if ($validator->errors()->count() > 0) {
             return;
         }
-        Log::debug('Now in GroupValidation::validateDescriptions()');
+        app('log')->debug('Now in GroupValidation::validateDescriptions()');
         $transactions      = $this->getTransactionsArray($validator);
         $validDescriptions = 0;
         foreach ($transactions as $transaction) {
@@ -168,7 +168,7 @@ trait GroupValidation
         if ($validator->errors()->count() > 0) {
             return;
         }
-        Log::debug('Now in validateGroupDescription()');
+        app('log')->debug('Now in validateGroupDescription()');
         $data         = $validator->getData();
         $transactions = $this->getTransactionsArray($validator);
 
@@ -188,12 +188,12 @@ trait GroupValidation
      */
     protected function validateJournalIds(Validator $validator, TransactionGroup $transactionGroup): void
     {
-        Log::debug(sprintf('Now in GroupValidation::validateJournalIds(%d)', $transactionGroup->id));
+        app('log')->debug(sprintf('Now in GroupValidation::validateJournalIds(%d)', $transactionGroup->id));
         $transactions = $this->getTransactionsArray($validator);
 
         if (count($transactions) < 2) {
             // no need for validation.
-            Log::debug(sprintf('%d transaction(s) in submission, can skip this check.', count($transactions)));
+            app('log')->debug(sprintf('%d transaction(s) in submission, can skip this check.', count($transactions)));
 
             return;
         }
@@ -222,9 +222,9 @@ trait GroupValidation
         if (array_key_exists('transaction_journal_id', $transaction)) {
             $journalId = $transaction['transaction_journal_id'];
         }
-        Log::debug(sprintf('Now in validateJournalId(%d, %d)', $index, $journalId));
+        app('log')->debug(sprintf('Now in validateJournalId(%d, %d)', $index, $journalId));
         if (0 === $journalId || '' === $journalId || '0' === $journalId) {
-            Log::debug('Submitted 0, will accept to be used in a new transaction.');
+            app('log')->debug('Submitted 0, will accept to be used in a new transaction.');
 
             return;
         }

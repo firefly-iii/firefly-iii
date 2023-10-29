@@ -51,17 +51,17 @@ class AccountRepository implements AccountRepositoryInterface
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
-        Log::debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
+        app('log')->debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
 
         $query->where('accounts.name', $name);
         /** @var Account $account */
         $account = $query->first(['accounts.*']);
         if (null === $account) {
-            Log::debug(sprintf('There is no account with name "%s" of types', $name), $types);
+            app('log')->debug(sprintf('There is no account with name "%s" of types', $name), $types);
 
             return null;
         }
-        Log::debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
+        app('log')->debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
 
         return $account;
     }

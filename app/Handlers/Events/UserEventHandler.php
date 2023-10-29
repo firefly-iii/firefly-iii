@@ -73,7 +73,7 @@ class UserEventHandler
 
         // first user ever?
         if (1 === $repository->count()) {
-            Log::debug('User count is one, attach role.');
+            app('log')->debug('User count is one, attach role.');
             $repository->attachRole($event->user, 'owner');
         }
     }
@@ -386,11 +386,11 @@ class UserEventHandler
      */
     public function storeUserIPAddress(ActuallyLoggedIn $event): void
     {
-        Log::debug('Now in storeUserIPAddress');
+        app('log')->debug('Now in storeUserIPAddress');
         $user = $event->user;
 
         if ($user->hasRole('demo')) {
-            Log::debug('Do not log demo user logins');
+            app('log')->debug('Do not log demo user logins');
             return;
         }
 
@@ -405,19 +405,19 @@ class UserEventHandler
         }
         $inArray = false;
         $ip      = request()->ip();
-        Log::debug(sprintf('User logging in from IP address %s', $ip));
+        app('log')->debug(sprintf('User logging in from IP address %s', $ip));
 
         // update array if in array
         foreach ($preference as $index => $row) {
             if ($row['ip'] === $ip) {
-                Log::debug('Found IP in array, refresh time.');
+                app('log')->debug('Found IP in array, refresh time.');
                 $preference[$index]['time'] = now(config('app.timezone'))->format('Y-m-d H:i:s');
                 $inArray                    = true;
             }
             // clean up old entries (6 months)
             $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $preference[$index]['time']);
             if ($carbon->diffInMonths(today()) > 6) {
-                Log::debug(sprintf('Entry for %s is very old, remove it.', $row['ip']));
+                app('log')->debug(sprintf('Entry for %s is very old, remove it.', $row['ip']));
                 unset($preference[$index]);
             }
         }

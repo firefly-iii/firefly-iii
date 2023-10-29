@@ -74,14 +74,14 @@ class AddTag implements ActionInterface
         if (0 === $count) {
             // add to journal:
             DB::table('tag_transaction_journal')->insert(['tag_id' => $tag->id, 'transaction_journal_id' => $journal['transaction_journal_id']]);
-            Log::debug(sprintf('RuleAction AddTag. Added tag #%d ("%s") to journal %d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
+            app('log')->debug(sprintf('RuleAction AddTag. Added tag #%d ("%s") to journal %d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
             $object = TransactionJournal::find($journal['transaction_journal_id']);
 
             // event for audit log entry
             event(new TriggeredAuditLog($this->action->rule, $object, 'add_tag', null, $tag->tag));
             return true;
         }
-        Log::debug(
+        app('log')->debug(
             sprintf('RuleAction AddTag fired but tag %d ("%s") was already added to journal %d.', $tag->id, $tag->tag, $journal['transaction_journal_id'])
         );
         event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.tag_already_added', ['tag' => $this->action->action_value])));

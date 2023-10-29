@@ -124,7 +124,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function deleteInvite(InvitedUser $invite): void
     {
-        Log::debug(sprintf('Deleting invite #%d', $invite->id));
+        app('log')->debug(sprintf('Deleting invite #%d', $invite->id));
         $invite->delete();
     }
 
@@ -136,7 +136,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function destroy(User $user): bool
     {
-        Log::debug(sprintf('Calling delete() on user %d', $user->id));
+        app('log')->debug(sprintf('Calling delete() on user %d', $user->id));
 
         $user->groupMemberships()->delete();
         $user->delete();

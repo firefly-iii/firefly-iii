@@ -119,7 +119,7 @@ class ConvertController extends Controller
         ];
 
         if ($sourceType->type === $destinationType->type) { // cannot convert to its own type.
-            Log::debug('This is already a transaction of the expected type..');
+            app('log')->debug('This is already a transaction of the expected type..');
             session()->flash('info', (string)trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$group->id]));

@@ -43,7 +43,7 @@ class BillWarningCronjob extends AbstractCronjob
      */
     public function fire(): void
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         /** @var Configuration $config */
         $config        = app('fireflyconfig')->get('last_bw_job', 0);
         $lastTime      = (int)$config->data;

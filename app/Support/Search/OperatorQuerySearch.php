@@ -87,7 +87,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     public function __construct()
     {
-        Log::debug('Constructed OperatorQuerySearch');
+        app('log')->debug('Constructed OperatorQuerySearch');
         $this->operators          = new Collection();
         $this->page               = 1;
         $this->words              = [];
@@ -151,7 +151,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     public function parseQuery(string $query)
     {
-        Log::debug(sprintf('Now in parseQuery(%s)', $query));
+        app('log')->debug(sprintf('Now in parseQuery(%s)', $query));
         $parser = new QueryParser();
         try {
             $query1 = $parser->parse($query);
@@ -161,7 +161,7 @@ class OperatorQuerySearch implements SearchInterface
             throw new FireflyException(sprintf('Invalid search value "%s". See the logs.', e($query)), 0, $e);
         }
 
-        Log::debug(sprintf('Found %d node(s)', count($query1->getNodes())));
+        app('log')->debug(sprintf('Found %d node(s)', count($query1->getNodes())));
         foreach ($query1->getNodes() as $searchNode) {
             $this->handleSearchNode($searchNode);
         }
@@ -178,7 +178,7 @@ class OperatorQuerySearch implements SearchInterface
     private function handleSearchNode(Node $searchNode): void
     {
         $class = get_class($searchNode);
-        Log::debug(sprintf('Now in handleSearchNode(%s)', $class));
+        app('log')->debug(sprintf('Now in handleSearchNode(%s)', $class));
         switch ($class) {
             default:
                 app('log')->error(sprintf('Cannot handle node %s', $class));
@@ -199,11 +199,11 @@ class OperatorQuerySearch implements SearchInterface
             case Emoji::class:
             case Mention::class:
                 $allWords = (string)$searchNode->getValue();
-                Log::debug(sprintf('Add words "%s" to search string, because Node class is "%s"', $allWords, $class));
+                app('log')->debug(sprintf('Add words "%s" to search string, because Node class is "%s"', $allWords, $class));
                 $this->words[] = $allWords;
                 break;
             case Field::class:
-                Log::debug(sprintf('Now handle Node class %s', $class));
+                app('log')->debug(sprintf('Now handle Node class %s', $class));
                 /** @var Field $searchNode */
                 // used to search for x:y
                 $operator   = strtolower($searchNode->getValue());
@@ -227,10 +227,10 @@ class OperatorQuerySearch implements SearchInterface
                             'prohibited' => $prohibited,
                         ]
                     );
-                    Log::debug(sprintf('Added operator type "%s"', $operator));
+                    app('log')->debug(sprintf('Added operator type "%s"', $operator));
                 }
                 if (!in_array($operator, $this->validOperators, true)) {
-                    Log::debug(sprintf('Added INVALID operator type "%s"', $operator));
+                    app('log')->debug(sprintf('Added INVALID operator type "%s"', $operator));
                     $this->invalidOperators[] = [
                         'type'  => $operator,
                         'value' => (string)$value,
@@ -246,11 +246,11 @@ class OperatorQuerySearch implements SearchInterface
     private function updateCollector(string $operator, string $value, bool $prohibited): bool
     {
         if ($prohibited) {
-            Log::debug(sprintf('Operator "%s" is now "%s"', $operator, sprintf('-%s', $operator)));
+            app('log')->debug(sprintf('Operator "%s" is now "%s"', $operator, sprintf('-%s', $operator)));
             $operator = sprintf('-%s', $operator);
         }
 
-        Log::debug(sprintf('Now in updateCollector("%s", "%s")', $operator, $value));
+        app('log')->debug(sprintf('Now in updateCollector("%s", "%s")', $operator, $value));
 
         // check if alias, replace if necessary:
         $operator = self::getRootOperator($operator);
@@ -597,12 +597,12 @@ class OperatorQuerySearch implements SearchInterface
                 //
             case 'has_attachments':
             case '-has_no_attachments':
-                Log::debug('Set collector to filter on attachments.');
+                app('log')->debug('Set collector to filter on attachments.');
                 $this->collector->hasAttachments();
                 break;
             case 'has_no_attachments':
             case '-has_attachments':
-                Log::debug('Set collector to filter on NO attachments.');
+                app('log')->debug('Set collector to filter on NO attachments.');
                 $this->collector->hasNoAttachments();
                 break;
                 //
@@ -920,18 +920,18 @@ class OperatorQuerySearch implements SearchInterface
                 //
             case 'amount_is':
                 // strip comma's, make dots.
-                Log::debug(sprintf('Original value "%s"', $value));
+                app('log')->debug(sprintf('Original value "%s"', $value));
                 $value  = str_replace(',', '.', (string)$value);
                 $amount = app('steam')->positive($value);
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIs($amount);
                 break;
             case '-amount_is':
                 // strip comma's, make dots.
-                Log::debug(sprintf('Original value "%s"', $value));
+                app('log')->debug(sprintf('Original value "%s"', $value));
                 $value  = str_replace(',', '.', (string)$value);
                 $amount = app('steam')->positive($value);
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIsNot($amount);
                 break;
             case 'foreign_amount_is':
@@ -940,7 +940,7 @@ class OperatorQuerySearch implements SearchInterface
                 $value = str_replace(',', '.', (string)$value);
 
                 $amount = app('steam')->positive($value);
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountIs($amount);
                 break;
             case '-foreign_amount_is':
@@ -949,7 +949,7 @@ class OperatorQuerySearch implements SearchInterface
                 $value = str_replace(',', '.', (string)$value);
 
                 $amount = app('steam')->positive($value);
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountIsNot($amount);
                 break;
             case '-amount_more':
@@ -958,7 +958,7 @@ class OperatorQuerySearch implements SearchInterface
                 $value = str_replace(',', '.', (string)$value);
 
                 $amount = app('steam')->positive($value);
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountLess($amount);
                 break;
             case '-foreign_amount_more':
@@ -967,25 +967,25 @@ class OperatorQuerySearch implements SearchInterface
                 $value = str_replace(',', '.', (string)$value);
 
                 $amount = app('steam')->positive($value);
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountLess($amount);
                 break;
             case '-amount_less':
             case 'amount_more':
-                Log::debug(sprintf('Now handling operator "%s"', $operator));
+                app('log')->debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
                 $value  = str_replace(',', '.', (string)$value);
                 $amount = app('steam')->positive($value);
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
                 break;
             case '-foreign_amount_less':
             case 'foreign_amount_more':
-                Log::debug(sprintf('Now handling operator "%s"', $operator));
+                app('log')->debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
                 $value  = str_replace(',', '.', (string)$value);
                 $amount = app('steam')->positive($value);
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountMore($amount);
                 break;
                 //
@@ -993,11 +993,11 @@ class OperatorQuerySearch implements SearchInterface
                 //
             case 'transaction_type':
                 $this->collector->setTypes([ucfirst($value)]);
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 break;
             case '-transaction_type':
                 $this->collector->excludeTypes([ucfirst($value)]);
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 break;
                 //
                 // dates
@@ -1116,38 +1116,38 @@ class OperatorQuerySearch implements SearchInterface
 
             case 'created_at_on':
             case '-created_at_on':
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($operator, $value);
                 $this->setExactObjectDateParams('created_at', $range, $prohibited);
                 return false;
             case 'created_at_before':
             case '-created_at_after':
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($operator, $value);
                 $this->setObjectDateBeforeParams('created_at', $range);
                 return false;
             case 'created_at_after':
             case '-created_at_before':
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($operator, $value);
                 $this->setObjectDateAfterParams('created_at', $range);
                 return false;
 
             case 'updated_at_on':
             case '-updated_at_on':
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($operator, $value);
                 $this->setExactObjectDateParams('updated_at', $range, $prohibited);
                 return false;
             case 'updated_at_before':
             case '-updated_at_after':
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($operator, $value);
                 $this->setObjectDateBeforeParams('updated_at', $range);
                 return false;
             case 'updated_at_after':
             case '-updated_at_before':
-                Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
+                app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
                 $range = $this->parseDateRange($operator, $value);
                 $this->setObjectDateAfterParams('updated_at', $range);
                 return false;
@@ -1341,11 +1341,11 @@ class OperatorQuerySearch implements SearchInterface
             if (str_starts_with($original, '-')) {
                 $return = sprintf('-%s', $config['alias_for']);
             }
-            Log::debug(sprintf('"%s" is an alias for "%s", so return that instead.', $original, $return));
+            app('log')->debug(sprintf('"%s" is an alias for "%s", so return that instead.', $original, $return));
 
             return $return;
         }
-        Log::debug(sprintf('"%s" is not an alias.', $operator));
+        app('log')->debug(sprintf('"%s" is not an alias.', $operator));
 
         return $original;
     }
@@ -1361,7 +1361,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     private function searchAccount(string $value, int $searchDirection, int $stringPosition, bool $prohibited = false): void
     {
-        Log::debug(sprintf('searchAccount("%s", %d, %d)', $value, $stringPosition, $searchDirection));
+        app('log')->debug(sprintf('searchAccount("%s", %d, %d)', $value, $stringPosition, $searchDirection));
 
         // search direction (default): for source accounts
         $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
@@ -1404,12 +1404,12 @@ class OperatorQuerySearch implements SearchInterface
         // get accounts:
         $accounts = $this->accountRepository->searchAccount($value, $searchTypes, 1337);
         if (0 === $accounts->count()) {
-            Log::debug('Found zero accounts, search for non existing account, NO results will be returned.');
+            app('log')->debug('Found zero accounts, search for non existing account, NO results will be returned.');
             $this->collector->findNothing();
 
             return;
         }
-        Log::debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
+        app('log')->debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
         $filtered = $accounts->filter(
             function (Account $account) use ($value, $stringMethod) {
                 return $stringMethod(strtolower($account->name), strtolower($value));
@@ -1417,12 +1417,12 @@ class OperatorQuerySearch implements SearchInterface
         );
 
         if (0 === $filtered->count()) {
-            Log::debug('Left with zero accounts, so cannot find anything, NO results will be returned.');
+            app('log')->debug('Left with zero accounts, so cannot find anything, NO results will be returned.');
             $this->collector->findNothing();
 
             return;
         }
-        Log::debug(sprintf('Left with %d, set as %s().', $filtered->count(), $collectorMethod));
+        app('log')->debug(sprintf('Left with %d, set as %s().', $filtered->count(), $collectorMethod));
         $this->collector->$collectorMethod($filtered);
     }
 
@@ -1437,7 +1437,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     private function searchAccountNr(string $value, int $searchDirection, int $stringPosition, bool $prohibited = false): void
     {
-        Log::debug(sprintf('searchAccountNr(%s, %d, %d)', $value, $searchDirection, $stringPosition));
+        app('log')->debug(sprintf('searchAccountNr(%s, %d, %d)', $value, $searchDirection, $stringPosition));
 
         // search direction (default): for source accounts
         $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
@@ -1482,14 +1482,14 @@ class OperatorQuerySearch implements SearchInterface
         // search for accounts:
         $accounts = $this->accountRepository->searchAccountNr($value, $searchTypes, 1337);
         if (0 === $accounts->count()) {
-            Log::debug('Found zero accounts, search for invalid account.');
+            app('log')->debug('Found zero accounts, search for invalid account.');
             $this->collector->findNothing();
 
             return;
         }
 
         // if found, do filter
-        Log::debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
+        app('log')->debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
         $filtered = $accounts->filter(
             function (Account $account) use ($value, $stringMethod) {
                 // either IBAN or account number
@@ -1507,12 +1507,12 @@ class OperatorQuerySearch implements SearchInterface
         );
 
         if (0 === $filtered->count()) {
-            Log::debug('Left with zero, search for invalid account');
+            app('log')->debug('Left with zero, search for invalid account');
             $this->collector->findNothing();
 
             return;
         }
-        Log::debug(sprintf('Left with %d, set as %s().', $filtered->count(), $collectorMethod));
+        app('log')->debug(sprintf('Left with %d, set as %s().', $filtered->count(), $collectorMethod));
         $this->collector->$collectorMethod($filtered);
     }
 
@@ -1559,7 +1559,7 @@ class OperatorQuerySearch implements SearchInterface
         try {
             $parsedDate = $parser->parseDate($value);
         } catch (FireflyException $e) {
-            Log::debug(sprintf('Could not parse date "%s", will return empty array.', $value));
+            app('log')->debug(sprintf('Could not parse date "%s", will return empty array.', $value));
             $this->invalidOperators[] = [
                 'type'  => $type,
                 'value' => (string)$value,
@@ -1588,7 +1588,7 @@ class OperatorQuerySearch implements SearchInterface
                 default:
                     throw new FireflyException(sprintf('Cannot handle key "%s" in setExactParameters()', $key));
                 case 'exact':
-                    Log::debug(sprintf('Set date_is_exact value "%s"', $value->format('Y-m-d')));
+                    app('log')->debug(sprintf('Set date_is_exact value "%s"', $value->format('Y-m-d')));
                     $this->collector->setRange($value, $value);
                     $this->operators->push(['type' => 'date_on', 'value' => $value->format('Y-m-d'),]);
                     break;
@@ -1597,32 +1597,32 @@ class OperatorQuerySearch implements SearchInterface
                     $this->operators->push(['type' => 'not_date_on', 'value' => $value->format('Y-m-d'),]);
                     break;
                 case 'year':
-                    Log::debug(sprintf('Set date_is_exact YEAR value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_exact YEAR value "%s"', $value));
                     $this->collector->yearIs($value);
                     $this->operators->push(['type' => 'date_on_year', 'value' => $value,]);
                     break;
                 case 'year_not':
-                    Log::debug(sprintf('Set date_is_exact_not YEAR value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_exact_not YEAR value "%s"', $value));
                     $this->collector->yearIsNot($value);
                     $this->operators->push(['type' => 'not_date_on_year', 'value' => $value,]);
                     break;
                 case 'month':
-                    Log::debug(sprintf('Set date_is_exact MONTH value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_exact MONTH value "%s"', $value));
                     $this->collector->monthIs($value);
                     $this->operators->push(['type' => 'date_on_month', 'value' => $value,]);
                     break;
                 case 'month_not':
-                    Log::debug(sprintf('Set date_is_exact not MONTH value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_exact not MONTH value "%s"', $value));
                     $this->collector->monthIsNot($value);
                     $this->operators->push(['type' => 'not_date_on_month', 'value' => $value,]);
                     break;
                 case 'day':
-                    Log::debug(sprintf('Set date_is_exact DAY value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_exact DAY value "%s"', $value));
                     $this->collector->dayIs($value);
                     $this->operators->push(['type' => 'date_on_day', 'value' => $value,]);
                     break;
                 case 'day_not':
-                    Log::debug(sprintf('Set not date_is_exact DAY value "%s"', $value));
+                    app('log')->debug(sprintf('Set not date_is_exact DAY value "%s"', $value));
                     $this->collector->dayIsNot($value);
                     $this->operators->push(['type' => 'not_date_on_day', 'value' => $value,]);
                     break;
@@ -1650,17 +1650,17 @@ class OperatorQuerySearch implements SearchInterface
                     $this->operators->push(['type' => 'date_before', 'value' => $value->format('Y-m-d'),]);
                     break;
                 case 'year':
-                    Log::debug(sprintf('Set date_is_before YEAR value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_before YEAR value "%s"', $value));
                     $this->collector->yearBefore($value);
                     $this->operators->push(['type' => 'date_before_year', 'value' => $value,]);
                     break;
                 case 'month':
-                    Log::debug(sprintf('Set date_is_before MONTH value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_before MONTH value "%s"', $value));
                     $this->collector->monthBefore($value);
                     $this->operators->push(['type' => 'date_before_month', 'value' => $value,]);
                     break;
                 case 'day':
-                    Log::debug(sprintf('Set date_is_before DAY value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_before DAY value "%s"', $value));
                     $this->collector->dayBefore($value);
                     $this->operators->push(['type' => 'date_before_day', 'value' => $value,]);
                     break;
@@ -1688,17 +1688,17 @@ class OperatorQuerySearch implements SearchInterface
                     $this->operators->push(['type' => 'date_after', 'value' => $value->format('Y-m-d'),]);
                     break;
                 case 'year':
-                    Log::debug(sprintf('Set date_is_after YEAR value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_after YEAR value "%s"', $value));
                     $this->collector->yearAfter($value);
                     $this->operators->push(['type' => 'date_after_year', 'value' => $value,]);
                     break;
                 case 'month':
-                    Log::debug(sprintf('Set date_is_after MONTH value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_after MONTH value "%s"', $value));
                     $this->collector->monthAfter($value);
                     $this->operators->push(['type' => 'date_after_month', 'value' => $value,]);
                     break;
                 case 'day':
-                    Log::debug(sprintf('Set date_is_after DAY value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_after DAY value "%s"', $value));
                     $this->collector->dayAfter($value);
                     $this->operators->push(['type' => 'date_after_day', 'value' => $value,]);
                     break;
@@ -1711,7 +1711,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     private function setExactMetaDateParams(string $field, array $range, bool $prohibited = false): void
     {
-        Log::debug('Now in setExactMetaDateParams()');
+        app('log')->debug('Now in setExactMetaDateParams()');
         /**
          * @var string        $key
          * @var Carbon|string $value
@@ -1722,42 +1722,42 @@ class OperatorQuerySearch implements SearchInterface
                 default:
                     throw new FireflyException(sprintf('Cannot handle key "%s" in setExactMetaDateParams()', $key));
                 case 'exact':
-                    Log::debug(sprintf('Set %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
+                    app('log')->debug(sprintf('Set %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
                     $this->collector->setMetaDateRange($value, $value, $field);
                     $this->operators->push(['type' => sprintf('%s_on', $field), 'value' => $value->format('Y-m-d'),]);
                     break;
                 case 'exact_not':
-                    Log::debug(sprintf('Set NOT %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
+                    app('log')->debug(sprintf('Set NOT %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
                     $this->collector->excludeMetaDateRange($value, $value, $field);
                     $this->operators->push(['type' => sprintf('not_%s_on', $field), 'value' => $value->format('Y-m-d'),]);
                     break;
                 case 'year':
-                    Log::debug(sprintf('Set %s_is_exact YEAR value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set %s_is_exact YEAR value "%s"', $field, $value));
                     $this->collector->metaYearIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_year', $field), 'value' => $value,]);
                     break;
                 case 'year_not':
-                    Log::debug(sprintf('Set NOT %s_is_exact YEAR value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set NOT %s_is_exact YEAR value "%s"', $field, $value));
                     $this->collector->metaYearIsNot($value, $field);
                     $this->operators->push(['type' => sprintf('not_%s_on_year', $field), 'value' => $value,]);
                     break;
                 case 'month':
-                    Log::debug(sprintf('Set %s_is_exact MONTH value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set %s_is_exact MONTH value "%s"', $field, $value));
                     $this->collector->metaMonthIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_month', $field), 'value' => $value,]);
                     break;
                 case 'month_not':
-                    Log::debug(sprintf('Set NOT %s_is_exact MONTH value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set NOT %s_is_exact MONTH value "%s"', $field, $value));
                     $this->collector->metaMonthIsNot($value, $field);
                     $this->operators->push(['type' => sprintf('not_%s_on_month', $field), 'value' => $value,]);
                     break;
                 case 'day':
-                    Log::debug(sprintf('Set %s_is_exact DAY value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set %s_is_exact DAY value "%s"', $field, $value));
                     $this->collector->metaDayIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_day', $field), 'value' => $value,]);
                     break;
                 case 'day_not':
-                    Log::debug(sprintf('Set NOT %s_is_exact DAY value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set NOT %s_is_exact DAY value "%s"', $field, $value));
                     $this->collector->metaDayIsNot($value, $field);
                     $this->operators->push(['type' => sprintf('not_%s_on_day', $field), 'value' => $value,]);
                     break;
@@ -1784,17 +1784,17 @@ class OperatorQuerySearch implements SearchInterface
                     $this->operators->push(['type' => sprintf('%s_before', $field), 'value' => $value->format('Y-m-d'),]);
                     break;
                 case 'year':
-                    Log::debug(sprintf('Set %s_is_before YEAR value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set %s_is_before YEAR value "%s"', $field, $value));
                     $this->collector->metaYearBefore($value, $field);
                     $this->operators->push(['type' => sprintf('%s_before_year', $field), 'value' => $value,]);
                     break;
                 case 'month':
-                    Log::debug(sprintf('Set %s_is_before MONTH value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set %s_is_before MONTH value "%s"', $field, $value));
                     $this->collector->metaMonthBefore($value, $field);
                     $this->operators->push(['type' => sprintf('%s_before_month', $field), 'value' => $value,]);
                     break;
                 case 'day':
-                    Log::debug(sprintf('Set %s_is_before DAY value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set %s_is_before DAY value "%s"', $field, $value));
                     $this->collector->metaDayBefore($value, $field);
                     $this->operators->push(['type' => sprintf('%s_before_day', $field), 'value' => $value,]);
                     break;
@@ -1821,17 +1821,17 @@ class OperatorQuerySearch implements SearchInterface
                     $this->operators->push(['type' => sprintf('%s_after', $field), 'value' => $value->format('Y-m-d'),]);
                     break;
                 case 'year':
-                    Log::debug(sprintf('Set %s_is_after YEAR value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set %s_is_after YEAR value "%s"', $field, $value));
                     $this->collector->metaYearAfter($value, $field);
                     $this->operators->push(['type' => sprintf('%s_after_year', $field), 'value' => $value,]);
                     break;
                 case 'month':
-                    Log::debug(sprintf('Set %s_is_after MONTH value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set %s_is_after MONTH value "%s"', $field, $value));
                     $this->collector->metaMonthAfter($value, $field);
                     $this->operators->push(['type' => sprintf('%s_after_month', $field), 'value' => $value,]);
                     break;
                 case 'day':
-                    Log::debug(sprintf('Set %s_is_after DAY value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set %s_is_after DAY value "%s"', $field, $value));
                     $this->collector->metaDayAfter($value, $field);
                     $this->operators->push(['type' => sprintf('%s_after_day', $field), 'value' => $value,]);
                     break;
@@ -1854,42 +1854,42 @@ class OperatorQuerySearch implements SearchInterface
                 default:
                     throw new FireflyException(sprintf('Cannot handle key "%s" in setExactObjectDateParams()', $key));
                 case 'exact':
-                    Log::debug(sprintf('Set %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
+                    app('log')->debug(sprintf('Set %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
                     $this->collector->setObjectRange($value, clone $value, $field);
                     $this->operators->push(['type' => sprintf('%s_on', $field), 'value' => $value->format('Y-m-d'),]);
                     break;
                 case 'exact_not':
-                    Log::debug(sprintf('Set NOT %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
+                    app('log')->debug(sprintf('Set NOT %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
                     $this->collector->excludeObjectRange($value, clone $value, $field);
                     $this->operators->push(['type' => sprintf('not_%s_on', $field), 'value' => $value->format('Y-m-d'),]);
                     break;
                 case 'year':
-                    Log::debug(sprintf('Set %s_is_exact YEAR value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set %s_is_exact YEAR value "%s"', $field, $value));
                     $this->collector->objectYearIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_year', $field), 'value' => $value,]);
                     break;
                 case 'year_not':
-                    Log::debug(sprintf('Set NOT %s_is_exact YEAR value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set NOT %s_is_exact YEAR value "%s"', $field, $value));
                     $this->collector->objectYearIsNot($value, $field);
                     $this->operators->push(['type' => sprintf('not_%s_on_year', $field), 'value' => $value,]);
                     break;
                 case 'month':
-                    Log::debug(sprintf('Set %s_is_exact MONTH value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set %s_is_exact MONTH value "%s"', $field, $value));
                     $this->collector->objectMonthIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_month', $field), 'value' => $value,]);
                     break;
                 case 'month_not':
-                    Log::debug(sprintf('Set NOT %s_is_exact MONTH value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set NOT %s_is_exact MONTH value "%s"', $field, $value));
                     $this->collector->objectMonthIsNot($value, $field);
                     $this->operators->push(['type' => sprintf('not_%s_on_month', $field), 'value' => $value,]);
                     break;
                 case 'day':
-                    Log::debug(sprintf('Set %s_is_exact DAY value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set %s_is_exact DAY value "%s"', $field, $value));
                     $this->collector->objectDayIs($value, $field);
                     $this->operators->push(['type' => sprintf('%s_on_day', $field), 'value' => $value,]);
                     break;
                 case 'day_not':
-                    Log::debug(sprintf('Set NOT %s_is_exact DAY value "%s"', $field, $value));
+                    app('log')->debug(sprintf('Set NOT %s_is_exact DAY value "%s"', $field, $value));
                     $this->collector->objectDayIsNot($value, $field);
                     $this->operators->push(['type' => sprintf('not_%s_on_day', $field), 'value' => $value,]);
                     break;
@@ -1917,17 +1917,17 @@ class OperatorQuerySearch implements SearchInterface
                     $this->operators->push(['type' => sprintf('%s_before', $field), 'value' => $value->format('Y-m-d'),]);
                     break;
                 case 'year':
-                    Log::debug(sprintf('Set date_is_before YEAR value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_before YEAR value "%s"', $value));
                     $this->collector->objectYearBefore($value, $field);
                     $this->operators->push(['type' => sprintf('%s_before_year', $field), 'value' => $value,]);
                     break;
                 case 'month':
-                    Log::debug(sprintf('Set date_is_before MONTH value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_before MONTH value "%s"', $value));
                     $this->collector->objectMonthBefore($value, $field);
                     $this->operators->push(['type' => sprintf('%s_before_month', $field), 'value' => $value,]);
                     break;
                 case 'day':
-                    Log::debug(sprintf('Set date_is_before DAY value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_before DAY value "%s"', $value));
                     $this->collector->objectDayBefore($value, $field);
                     $this->operators->push(['type' => sprintf('%s_before_day', $field), 'value' => $value,]);
                     break;
@@ -1955,17 +1955,17 @@ class OperatorQuerySearch implements SearchInterface
                     $this->operators->push(['type' => sprintf('%s_after', $field), 'value' => $value->format('Y-m-d'),]);
                     break;
                 case 'year':
-                    Log::debug(sprintf('Set date_is_after YEAR value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_after YEAR value "%s"', $value));
                     $this->collector->objectYearAfter($value, $field);
                     $this->operators->push(['type' => sprintf('%s_after_year', $field), 'value' => $value,]);
                     break;
                 case 'month':
-                    Log::debug(sprintf('Set date_is_after MONTH value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_after MONTH value "%s"', $value));
                     $this->collector->objectMonthAfter($value, $field);
                     $this->operators->push(['type' => sprintf('%s_after_month', $field), 'value' => $value,]);
                     break;
                 case 'day':
-                    Log::debug(sprintf('Set date_is_after DAY value "%s"', $value));
+                    app('log')->debug(sprintf('Set date_is_after DAY value "%s"', $value));
                     $this->collector->objectDayAfter($value, $field);
                     $this->operators->push(['type' => sprintf('%s_after_day', $field), 'value' => $value,]);
                     break;

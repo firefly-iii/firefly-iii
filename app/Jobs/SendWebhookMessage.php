@@ -62,7 +62,7 @@ class SendWebhookMessage implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::debug(sprintf('Now handling webhook message #%d', $this->message->id));
+        app('log')->debug(sprintf('Now handling webhook message #%d', $this->message->id));
         // send job!
         $sender = app(WebhookSenderInterface::class);
         $sender->setMessage($this->message);

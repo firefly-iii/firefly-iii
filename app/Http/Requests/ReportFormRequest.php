@@ -218,14 +218,14 @@ class ReportFormRequest extends FormRequest
         $set        = $this->get('tag');
         $collection = new Collection();
         if (is_array($set)) {
-            Log::debug('Set is:', $set);
+            app('log')->debug('Set is:', $set);
         }
         if (!is_array($set)) {
             app('log')->error(sprintf('Set is not an array! "%s"', $set));
             return $collection;
         }
         foreach ($set as $tagTag) {
-            Log::debug(sprintf('Now searching for "%s"', $tagTag));
+            app('log')->debug(sprintf('Now searching for "%s"', $tagTag));
             $tag = $repository->findByTag($tagTag);
             if (null !== $tag) {
                 $collection->push($tag);

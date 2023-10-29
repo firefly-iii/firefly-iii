@@ -335,12 +335,12 @@ class AccountController extends Controller
         $start      = clone session('start', today(config('app.timezone'))->startOfMonth());
         $end        = clone session('end', today(config('app.timezone'))->endOfMonth());
         $defaultSet = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
-        Log::debug('Default set is ', $defaultSet);
+        app('log')->debug('Default set is ', $defaultSet);
         $frontPage = app('preferences')->get('frontPageAccounts', $defaultSet);
-        Log::debug('Frontpage preference set is ', $frontPage->data);
+        app('log')->debug('Frontpage preference set is ', $frontPage->data);
         if (0 === count($frontPage->data)) {
             app('preferences')->set('frontPageAccounts', $defaultSet);
-            Log::debug('frontpage set is empty!');
+            app('log')->debug('frontpage set is empty!');
         }
         $accounts = $repository->getAccountsById($frontPage->data);
 

@@ -54,7 +54,7 @@ class ActionFactory
     public static function getAction(RuleAction $action): ActionInterface
     {
         $class = self::getActionClass($action->action_type);
-        Log::debug(sprintf('self::getActionClass("%s") = "%s"', $action->action_type, $class));
+        app('log')->debug(sprintf('self::getActionClass("%s") = "%s"', $action->action_type, $class));
 
         return new $class($action);
     }

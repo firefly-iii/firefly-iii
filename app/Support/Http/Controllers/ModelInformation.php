@@ -147,8 +147,8 @@ trait ModelInformation
                     ]
                 )->render();
             } catch (Throwable $e) {
-                Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
-                Log::debug($e->getTraceAsString());
+                app('log')->debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
+                app('log')->debug($e->getTraceAsString());
                 $string = '';
                 throw new FireflyException('Could not render trigger', 0, $e);
             }
@@ -263,8 +263,8 @@ trait ModelInformation
                     ]
                 )->render();
             } catch (Throwable $e) {
-                Log::debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
-                Log::debug($e->getTraceAsString());
+                app('log')->debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
+                app('log')->debug($e->getTraceAsString());
                 $string = '';
                 throw new FireflyException('Could not render trigger', 0, $e);
             }

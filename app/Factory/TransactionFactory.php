@@ -116,7 +116,7 @@ class TransactionFactory
             throw new FireflyException('Transaction is NULL.');
         }
 
-        Log::debug(
+        app('log')->debug(
             sprintf(
                 'Created transaction #%d (%s %s, account %s), part of journal #%d',
                 $result->id,
@@ -147,15 +147,15 @@ class TransactionFactory
     private function updateAccountInformation(): void
     {
         if (!array_key_exists('iban', $this->accountInformation)) {
-            Log::debug('No IBAN information in array, will not update.');
+            app('log')->debug('No IBAN information in array, will not update.');
             return;
         }
         if ('' !== (string)$this->account->iban) {
-            Log::debug('Account already has IBAN information, will not update.');
+            app('log')->debug('Account already has IBAN information, will not update.');
             return;
         }
         if ($this->account->iban === $this->accountInformation['iban']) {
-            Log::debug('Account already has this IBAN, will not update.');
+            app('log')->debug('Account already has this IBAN, will not update.');
             return;
         }
         // validate info:
@@ -163,11 +163,11 @@ class TransactionFactory
             'iban' => ['required', new UniqueIban($this->account, $this->account->accountType->type)],
         ]);
         if ($validator->fails()) {
-            Log::debug('Invalid or non-unique IBAN, will not update.');
+            app('log')->debug('Invalid or non-unique IBAN, will not update.');
             return;
         }
 
-        Log::debug('Will update account with IBAN information.');
+        app('log')->debug('Will update account with IBAN information.');
         $service = app(AccountUpdateService::class);
         $service->update($this->account, ['iban' => $this->accountInformation['iban']]);
     }

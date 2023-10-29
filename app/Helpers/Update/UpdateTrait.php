@@ -45,7 +45,7 @@ trait UpdateTrait
      */
     public function getLatestRelease(): array
     {
-        Log::debug('Now in getLatestRelease()');
+        app('log')->debug('Now in getLatestRelease()');
         /** @var UpdateRequestInterface $checker */
         $checker       = app(UpdateRequestInterface::class);
         $channelConfig = app('fireflyconfig')->get('update_channel', 'stable');

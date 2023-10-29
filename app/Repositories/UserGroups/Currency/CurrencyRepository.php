@@ -262,17 +262,17 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $result = $this->findCurrencyNull($currencyId, $currencyCode);
 
         if (null === $result) {
-            Log::debug('Grabbing default currency for this user...');
+            app('log')->debug('Grabbing default currency for this user...');
             $result = app('amount')->getDefaultCurrencyByUser($this->user);
         }
 
         if (null === $result) {
-            Log::debug('Grabbing EUR as fallback.');
+            app('log')->debug('Grabbing EUR as fallback.');
             $result = $this->findByCode('EUR');
         }
-        Log::debug(sprintf('Final result: %s', $result->code));
+        app('log')->debug(sprintf('Final result: %s', $result->code));
         if (false === $result->enabled) {
-            Log::debug(sprintf('Also enabled currency %s', $result->code));
+            app('log')->debug(sprintf('Also enabled currency %s', $result->code));
             $this->enable($result);
         }
 
@@ -289,14 +289,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
-        Log::debug('Now in findCurrencyNull()');
+        app('log')->debug('Now in findCurrencyNull()');
         $result = $this->find((int)$currencyId);
         if (null === $result) {
-            Log::debug(sprintf('Searching for currency with code %s...', $currencyCode));
+            app('log')->debug(sprintf('Searching for currency with code %s...', $currencyCode));
             $result = $this->findByCode((string)$currencyCode);
         }
         if (null !== $result && false === $result->enabled) {
-            Log::debug(sprintf('Also enabled currency %s', $result->code));
+            app('log')->debug(sprintf('Also enabled currency %s', $result->code));
             $this->enable($result);
         }
 

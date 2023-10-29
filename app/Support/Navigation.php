@@ -116,7 +116,7 @@ class Navigation
             app('log')->error($exception->getMessage(), ['exception' => $exception]);
         }
 
-        Log::debug(
+        app('log')->debug(
             'Any error occurred to calculate the next date.',
             ['date' => $epoch, 'periodicity' => $periodicity->name, 'skipInterval' => $skipInterval]
         );
@@ -788,7 +788,7 @@ class Navigation
      */
     public function updateEndDate(string $range, Carbon $start): Carbon
     {
-        Log::debug(sprintf('updateEndDate("%s", "%s")', $range, $start->format('Y-m-d')));
+        app('log')->debug(sprintf('updateEndDate("%s", "%s")', $range, $start->format('Y-m-d')));
         $functionMap = [
             '1D'     => 'endOfDay',
             '1W'     => 'endOfWeek',
@@ -834,7 +834,7 @@ class Navigation
         if (in_array($range, $list, true)) {
             $end = today(config('app.timezone'));
             $end->endOfDay();
-            Log::debug(sprintf('updateEndDate returns "%s"', $end->format('Y-m-d')));
+            app('log')->debug(sprintf('updateEndDate returns "%s"', $end->format('Y-m-d')));
             return $end;
         }
 
@@ -851,7 +851,7 @@ class Navigation
      */
     public function updateStartDate(string $range, Carbon $start): Carbon
     {
-        Log::debug(sprintf('updateStartDate("%s", "%s")', $range, $start->format('Y-m-d')));
+        app('log')->debug(sprintf('updateStartDate("%s", "%s")', $range, $start->format('Y-m-d')));
         $functionMap = [
             '1D'     => 'startOfDay',
             '1W'     => 'startOfWeek',

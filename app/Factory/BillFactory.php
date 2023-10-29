@@ -52,7 +52,7 @@ class BillFactory
      */
     public function create(array $data): ?Bill
     {
-        Log::debug(sprintf('Now in %s', __METHOD__), $data);
+        app('log')->debug(sprintf('Now in %s', __METHOD__), $data);
         $factory  = app(TransactionCurrencyFactory::class);
         $currency = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null)) ??
                     app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);

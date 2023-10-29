@@ -328,8 +328,8 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function dumpQueryInLogs(): void
     {
-        Log::debug($this->query->select($this->fields)->toSql());
-        Log::debug('Bindings', $this->query->getBindings());
+        app('log')->debug($this->query->select($this->fields)->toSql());
+        app('log')->debug('Bindings', $this->query->getBindings());
     }
 
     /**
@@ -653,7 +653,7 @@ class GroupCollector implements GroupCollectorInterface
             try {
                 $tagDate = Carbon::parse($augumentedJournal['tag_date']);
             } catch (InvalidFormatException $e) {
-                Log::debug(sprintf('Could not parse date: %s', $e->getMessage()));
+                app('log')->debug(sprintf('Could not parse date: %s', $e->getMessage()));
             }
 
             $result['tags'][$tagId] = [
@@ -734,7 +734,7 @@ class GroupCollector implements GroupCollectorInterface
             try {
                 $tagDate = Carbon::parse($newArray['tag_date']);
             } catch (InvalidFormatException $e) {
-                Log::debug(sprintf('Could not parse date: %s', $e->getMessage()));
+                app('log')->debug(sprintf('Could not parse date: %s', $e->getMessage()));
             }
 
             $existingJournal['tags'][$tagId] = [

@@ -40,9 +40,9 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
      */
     public function findTransactionType(?TransactionType $type, ?string $typeString): TransactionType
     {
-        Log::debug('Now looking for a transaction type.');
+        app('log')->debug('Now looking for a transaction type.');
         if (null !== $type) {
-            Log::debug(sprintf('Found $type in parameters, its %s. Will return it.', $type->type));
+            app('log')->debug(sprintf('Found $type in parameters, its %s. Will return it.', $type->type));
 
             return $type;
         }
@@ -51,7 +51,7 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
         if (null === $search) {
             $search = $this->findByType(TransactionType::WITHDRAWAL);
         }
-        Log::debug(sprintf('Tried to search for "%s", came up with "%s". Will return it.', $typeString, $search->type));
+        app('log')->debug(sprintf('Tried to search for "%s", came up with "%s". Will return it.', $typeString, $search->type));
 
         return $search;
     }

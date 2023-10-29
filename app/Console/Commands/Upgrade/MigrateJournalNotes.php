@@ -82,7 +82,7 @@ class MigrateJournalNotes extends Command
 
             $note->text = $meta->data;
             $note->save();
-            Log::debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
+            app('log')->debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
             $meta->delete();
 
             $count++;

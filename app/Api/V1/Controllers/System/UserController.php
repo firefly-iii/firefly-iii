@@ -192,7 +192,7 @@ class UserController extends Controller
 
         // can only update 'blocked' when user is admin.
         if (!$this->repository->hasRole(auth()->user(), 'owner')) {
-            Log::debug('Quietly drop fields "blocked" and "blocked_code" from request.');
+            app('log')->debug('Quietly drop fields "blocked" and "blocked_code" from request.');
             unset($data['blocked'], $data['blocked_code']);
         }
 

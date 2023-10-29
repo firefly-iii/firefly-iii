@@ -46,7 +46,7 @@ class AdminRequestedTestMessage extends Event
      */
     public function __construct(User $user)
     {
-        Log::debug(sprintf('Triggered AdminRequestedTestMessage for user #%d (%s)', $user->id, $user->email));
+        app('log')->debug(sprintf('Triggered AdminRequestedTestMessage for user #%d (%s)', $user->id, $user->email));
         $this->user = $user;
     }
 }

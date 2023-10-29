@@ -409,14 +409,14 @@ trait PeriodOverview
      */
     protected function getNoCategoryPeriodOverview(Carbon $theDate): array
     {
-        Log::debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
+        app('log')->debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
         $range = app('navigation')->getViewRange(true);
         $first = $this->journalRepos->firstNull();
         $start = null === $first ? new Carbon() : $first->date;
         $end   = clone $theDate;
 
-        Log::debug(sprintf('Start for getNoCategoryPeriodOverview() is %s', $start->format('Y-m-d')));
-        Log::debug(sprintf('End for getNoCategoryPeriodOverview() is %s', $end->format('Y-m-d')));
+        app('log')->debug(sprintf('Start for getNoCategoryPeriodOverview() is %s', $start->format('Y-m-d')));
+        app('log')->debug(sprintf('End for getNoCategoryPeriodOverview() is %s', $end->format('Y-m-d')));
 
         // properties for cache
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -462,7 +462,7 @@ trait PeriodOverview
                 'transferred'        => $this->groupByCurrency($transferred),
             ];
         }
-        Log::debug('End of loops');
+        app('log')->debug('End of loops');
 
         return $entries;
     }

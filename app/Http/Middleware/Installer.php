@@ -52,7 +52,7 @@ class Installer
      */
     public function handle($request, Closure $next)
     {
-        //Log::debug(sprintf('Installer middleware for URL %s', $request->url()));
+        //app('log')->debug(sprintf('Installer middleware for URL %s', $request->url()));
         // ignore installer in test environment.
         if ('testing' === config('app.env')) {
             return $next($request);
@@ -61,7 +61,7 @@ class Installer
         $url    = $request->url();
         $strpos = stripos($url, '/install');
         if (false !== $strpos) {
-            //Log::debug(sprintf('URL is %s, will NOT run installer middleware', $url));
+            //app('log')->debug(sprintf('URL is %s, will NOT run installer middleware', $url));
 
             return $next($request);
         }
@@ -86,7 +86,7 @@ class Installer
      */
     private function hasNoTables(): bool
     {
-        //Log::debug('Now in routine hasNoTables()');
+        //app('log')->debug('Now in routine hasNoTables()');
 
         try {
             DB::table('users')->count();
@@ -109,7 +109,7 @@ class Installer
             throw new FireflyException(sprintf('Could not access the database: %s', $message), 0, $e);
         }
 
-        //Log::debug('Everything seems OK with the tables.');
+        //app('log')->debug('Everything seems OK with the tables.');
 
         return false;
     }

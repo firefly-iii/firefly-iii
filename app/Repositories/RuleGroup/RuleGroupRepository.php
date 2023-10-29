@@ -153,7 +153,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         /** @var Rule $entry */
         foreach ($set as $entry) {
             if ((int)$entry->order !== $count) {
-                Log::debug(sprintf('Rule #%d was on spot %d but must be on spot %d', $entry->id, $entry->order, $count));
+                app('log')->debug(sprintf('Rule #%d was on spot %d but must be on spot %d', $entry->id, $entry->order, $count));
                 $entry->order = $count;
                 $entry->save();
             }
@@ -182,7 +182,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
             if ((int)$action->order !== $index) {
                 $action->order = $index;
                 $action->save();
-                Log::debug(sprintf('Rule action #%d was on spot %d but must be on spot %d', $action->id, $action->order, $index));
+                app('log')->debug(sprintf('Rule action #%d was on spot %d but must be on spot %d', $action->id, $action->order, $index));
             }
             $index++;
         }
@@ -205,7 +205,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
             if ($order !== $index) {
                 $trigger->order = $index;
                 $trigger->save();
-                Log::debug(sprintf('Rule trigger #%d was on spot %d but must be on spot %d', $trigger->id, $order, $index));
+                app('log')->debug(sprintf('Rule trigger #%d was on spot %d but must be on spot %d', $trigger->id, $order, $index));
             }
             $index++;
         }
@@ -319,23 +319,23 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         if (null === $filter) {
             return $groups;
         }
-        Log::debug(sprintf('Will filter getRuleGroupsWithRules on "%s".', $filter));
+        app('log')->debug(sprintf('Will filter getRuleGroupsWithRules on "%s".', $filter));
 
         return $groups->map(
             function (RuleGroup $group) use ($filter) {
-                Log::debug(sprintf('Now filtering group #%d', $group->id));
+                app('log')->debug(sprintf('Now filtering group #%d', $group->id));
                 // filter the rules in the rule group:
                 $group->rules = $group->rules->filter(
                     function (Rule $rule) use ($filter) {
-                        Log::debug(sprintf('Now filtering rule #%d', $rule->id));
+                        app('log')->debug(sprintf('Now filtering rule #%d', $rule->id));
                         foreach ($rule->ruleTriggers as $trigger) {
                             if ('user_action' === $trigger->trigger_type && $filter === $trigger->trigger_value) {
-                                Log::debug(sprintf('Rule #%d triggers on %s, include it.', $rule->id, $filter));
+                                app('log')->debug(sprintf('Rule #%d triggers on %s, include it.', $rule->id, $filter));
 
                                 return true;
                             }
                         }
-                        Log::debug(sprintf('Rule #%d does not trigger on %s, do not include it.', $rule->id, $filter));
+                        app('log')->debug(sprintf('Rule #%d does not trigger on %s, do not include it.', $rule->id, $filter));
 
                         return false;
                     }
@@ -382,23 +382,23 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         if (null === $filter) {
             return $groups;
         }
-        Log::debug(sprintf('Will filter getRuleGroupsWithRules on "%s".', $filter));
+        app('log')->debug(sprintf('Will filter getRuleGroupsWithRules on "%s".', $filter));
 
         return $groups->map(
             function (RuleGroup $group) use ($filter) {
-                Log::debug(sprintf('Now filtering group #%d', $group->id));
+                app('log')->debug(sprintf('Now filtering group #%d', $group->id));
                 // filter the rules in the rule group:
                 $group->rules = $group->rules->filter(
                     function (Rule $rule) use ($filter) {
-                        Log::debug(sprintf('Now filtering rule #%d', $rule->id));
+                        app('log')->debug(sprintf('Now filtering rule #%d', $rule->id));
                         foreach ($rule->ruleTriggers as $trigger) {
                             if ('user_action' === $trigger->trigger_type && $filter === $trigger->trigger_value) {
-                                Log::debug(sprintf('Rule #%d triggers on %s, include it.', $rule->id, $filter));
+                                app('log')->debug(sprintf('Rule #%d triggers on %s, include it.', $rule->id, $filter));
 
                                 return true;
                             }
                         }
-                        Log::debug(sprintf('Rule #%d does not trigger on %s, do not include it.', $rule->id, $filter));
+                        app('log')->debug(sprintf('Rule #%d does not trigger on %s, do not include it.', $rule->id, $filter));
 
                         return false;
                     }
@@ -491,7 +491,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                        ->where('rule_groups.id', '!=', $ruleGroup->id)
                        ->decrement('order');
             $ruleGroup->order = $newOrder;
-            Log::debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
+            app('log')->debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
             $ruleGroup->save();
 
             return;
@@ -501,7 +501,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                    ->where('rule_groups.id', '!=', $ruleGroup->id)
                    ->increment('order');
         $ruleGroup->order = $newOrder;
-        Log::debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
+        app('log')->debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
         $ruleGroup->save();
     }
 

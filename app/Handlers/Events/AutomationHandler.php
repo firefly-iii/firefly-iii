@@ -47,23 +47,23 @@ class AutomationHandler
      */
     public function reportJournals(RequestedReportOnJournals $event): void
     {
-        Log::debug('In reportJournals.');
+        app('log')->debug('In reportJournals.');
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->find($event->userId);
         $sendReport = app('preferences')->getForUser($user, 'notification_transaction_creation', false)->data;
 
         if (false === $sendReport) {
-            Log::debug('Not sending report, because config says so.');
+            app('log')->debug('Not sending report, because config says so.');
             return;
         }
 
 
         if (null === $user || 0 === $event->groups->count()) {
-            Log::debug('No transaction groups in event, nothing to email about.');
+            app('log')->debug('No transaction groups in event, nothing to email about.');
             return;
         }
-        Log::debug('Continue with message!');
+        app('log')->debug('Continue with message!');
 
         // transform groups into array:
         /** @var TransactionGroupTransformer $transformer */
@@ -88,6 +88,6 @@ class AutomationHandler
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
         }
-        Log::debug('If there is no error above this line, message was sent.');
+        app('log')->debug('If there is no error above this line, message was sent.');
     }
 }

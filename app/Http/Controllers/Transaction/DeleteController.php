@@ -79,7 +79,7 @@ class DeleteController extends Controller
             return $this->redirectGroupToAccount($group);
         }
 
-        Log::debug(sprintf('Start of delete view for group #%d', $group->id));
+        app('log')->debug(sprintf('Start of delete view for group #%d', $group->id));
 
         $journal = $group->transactionJournals->first();
         if (null === $journal) {
@@ -89,7 +89,7 @@ class DeleteController extends Controller
         $subTitle   = (string)trans('firefly.delete_' . $objectType, ['description' => $group->title ?? $journal->description]);
         $previous   = app('steam')->getSafePreviousUrl();
         // put previous url in session
-        Log::debug('Will try to remember previous URL');
+        app('log')->debug('Will try to remember previous URL');
         $this->rememberPreviousUrl('transactions.delete.url');
 
         return view('transactions.delete', compact('group', 'journal', 'subTitle', 'objectType', 'previous'));
@@ -104,7 +104,7 @@ class DeleteController extends Controller
      */
     public function destroy(TransactionGroup $group): RedirectResponse
     {
-        Log::debug(sprintf('Now in %s(#%d).', __METHOD__, $group->id));
+        app('log')->debug(sprintf('Now in %s(#%d).', __METHOD__, $group->id));
         if (!$this->isEditableGroup($group)) {
             return $this->redirectGroupToAccount($group);
         }
@@ -134,7 +134,7 @@ class DeleteController extends Controller
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            Log::debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
+            app('log')->debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
             event(new UpdatedAccount($account));
         }
         app('preferences')->mark();

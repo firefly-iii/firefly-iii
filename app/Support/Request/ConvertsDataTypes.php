@@ -329,11 +329,11 @@ trait ConvertsDataTypes
             // @ignoreException
         }
         if (null === $carbon) {
-            Log::debug(sprintf('Invalid date: %s', $string));
+            app('log')->debug(sprintf('Invalid date: %s', $string));
 
             return null;
         }
-        Log::debug(sprintf('Date object: %s (%s)', $carbon->toW3cString(), $carbon->getTimezone()));
+        app('log')->debug(sprintf('Date object: %s (%s)', $carbon->toW3cString(), $carbon->getTimezone()));
 
         return $carbon;
     }
@@ -385,7 +385,7 @@ trait ConvertsDataTypes
             // @ignoreException
         }
         if (null === $result) {
-            Log::debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
+            app('log')->debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
         }
 
         return $result;

@@ -67,7 +67,7 @@ class AccountController extends Controller
      */
     public function search(Request $request): JsonResponse | Response
     {
-        Log::debug('Now in account search()');
+        app('log')->debug('Now in account search()');
         $manager = $this->getManager();
         $query   = trim((string)$request->get('query'));
         $field   = trim((string)$request->get('field'));

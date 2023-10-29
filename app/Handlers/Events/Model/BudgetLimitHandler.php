@@ -51,7 +51,7 @@ class BudgetLimitHandler
      */
     public function created(Created $event): void
     {
-        Log::debug(sprintf('BudgetLimitHandler::created(#%s)', $event->budgetLimit->id));
+        app('log')->debug(sprintf('BudgetLimitHandler::created(#%s)', $event->budgetLimit->id));
         $this->updateAvailableBudget($event->budgetLimit);
     }
 
@@ -62,7 +62,7 @@ class BudgetLimitHandler
      */
     private function updateAvailableBudget(BudgetLimit $budgetLimit): void
     {
-        Log::debug(sprintf('Now in updateAvailableBudget(#%d)', $budgetLimit->id));
+        app('log')->debug(sprintf('Now in updateAvailableBudget(#%d)', $budgetLimit->id));
         $budget = Budget::find($budgetLimit->budget_id);
         if (null === $budget) {
             app('log')->warning('Budget is null, probably deleted, find deleted version.');
@@ -113,7 +113,7 @@ class BudgetLimitHandler
             )->where('transaction_currency_id', $budgetLimit->transaction_currency_id)->first();
 
             if (null !== $availableBudget) {
-                Log::debug('Found 1 AB, will update.');
+                app('log')->debug('Found 1 AB, will update.');
                 $this->calculateAmount($availableBudget);
             }
             if (null === $availableBudget) {
@@ -127,10 +127,10 @@ class BudgetLimitHandler
                     $amount = 0 === (int)$budgetLimit->id ? '0' : $budgetLimit->amount;
                 }
                 if (0 === bccomp($amount, '0')) {
-                    Log::debug('Amount is zero, will not create AB.');
+                    app('log')->debug('Amount is zero, will not create AB.');
                 }
                 if (0 !== bccomp($amount, '0')) {
-                    Log::debug(sprintf('Will create AB for period %s to %s', $current->format('Y-m-d'), $currentEnd->format('Y-m-d')));
+                    app('log')->debug(sprintf('Will create AB for period %s to %s', $current->format('Y-m-d'), $currentEnd->format('Y-m-d')));
                     $availableBudget = new AvailableBudget(
                         [
                             'user_id'                 => $budgetLimit->budget->user->id,
@@ -161,7 +161,7 @@ class BudgetLimitHandler
         $repository->setUser($availableBudget->user);
         $newAmount = '0';
         $abPeriod  = Period::make($availableBudget->start_date, $availableBudget->end_date, Precision::DAY());
-        Log::debug(
+        app('log')->debug(
             sprintf(
                 'Now at AB #%d, ("%s" to "%s")',
                 $availableBudget->id,
@@ -171,10 +171,10 @@ class BudgetLimitHandler
         );
         // have to recalculate everything just in case.
         $set = $repository->getAllBudgetLimitsByCurrency($availableBudget->transactionCurrency, $availableBudget->start_date, $availableBudget->end_date);
-        Log::debug(sprintf('Found %d interesting budget limit(s).', $set->count()));
+        app('log')->debug(sprintf('Found %d interesting budget limit(s).', $set->count()));
         /** @var BudgetLimit $budgetLimit */
         foreach ($set as $budgetLimit) {
-            Log::debug(
+            app('log')->debug(
                 sprintf(
                     'Found interesting budget limit #%d ("%s" to "%s")',
                     $budgetLimit->id,
@@ -210,11 +210,11 @@ class BudgetLimitHandler
             }
         }
         if (0 === bccomp('0', $newAmount)) {
-            Log::debug('New amount is zero, deleting AB.');
+            app('log')->debug('New amount is zero, deleting AB.');
             $availableBudget->delete();
             return;
         }
-        Log::debug(sprintf('Concluded new amount for this AB must be %s', $newAmount));
+        app('log')->debug(sprintf('Concluded new amount for this AB must be %s', $newAmount));
         $availableBudget->amount = app('steam')->bcround($newAmount, $availableBudget->transactionCurrency->decimal_places);
         $availableBudget->save();
     }
@@ -237,7 +237,7 @@ class BudgetLimitHandler
         );
         $days        = $limitPeriod->length();
         $amount      = bcdiv((string)$budgetLimit->amount, (string)$days, 12);
-        Log::debug(
+        app('log')->debug(
             sprintf('Total amount for budget limit #%d is %s. Nr. of days is %d. Amount per day is %s', $budgetLimit->id, $budgetLimit->amount, $days, $amount)
         );
         return $amount;
@@ -250,7 +250,7 @@ class BudgetLimitHandler
      */
     public function deleted(Deleted $event): void
     {
-        Log::debug(sprintf('BudgetLimitHandler::deleted(#%s)', $event->budgetLimit->id));
+        app('log')->debug(sprintf('BudgetLimitHandler::deleted(#%s)', $event->budgetLimit->id));
         $budgetLimit     = $event->budgetLimit;
         $budgetLimit->id = null;
         $this->updateAvailableBudget($event->budgetLimit);
@@ -263,7 +263,7 @@ class BudgetLimitHandler
      */
     public function updated(Updated $event): void
     {
-        Log::debug(sprintf('BudgetLimitHandler::updated(#%s)', $event->budgetLimit->id));
+        app('log')->debug(sprintf('BudgetLimitHandler::updated(#%s)', $event->budgetLimit->id));
         $this->updateAvailableBudget($event->budgetLimit);
     }
 

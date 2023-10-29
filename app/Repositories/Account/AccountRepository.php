@@ -165,17 +165,17 @@ class AccountRepository implements AccountRepositoryInterface
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
-        Log::debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
+        app('log')->debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
 
         $query->where('accounts.name', $name);
         /** @var Account $account */
         $account = $query->first(['accounts.*']);
         if (null === $account) {
-            Log::debug(sprintf('There is no account with name "%s" of types', $name), $types);
+            app('log')->debug(sprintf('There is no account with name "%s" of types', $name), $types);
 
             return null;
         }
-        Log::debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
+        app('log')->debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
 
         return $account;
     }
@@ -568,14 +568,14 @@ class AccountRepository implements AccountRepositoryInterface
         ];
         if (array_key_exists(ucfirst($type), $sets)) {
             $order = (int)$this->getAccountsByType($sets[ucfirst($type)])->max('order');
-            Log::debug(sprintf('Return max order of "%s" set: %d', $type, $order));
+            app('log')->debug(sprintf('Return max order of "%s" set: %d', $type, $order));
 
             return $order;
         }
         $specials = [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION];
 
         $order = (int)$this->getAccountsByType($specials)->max('order');
-        Log::debug(sprintf('Return max order of "%s" set (specials!): %d', $type, $order));
+        app('log')->debug(sprintf('Return max order of "%s" set (specials!): %d', $type, $order));
 
         return $order;
     }
@@ -670,7 +670,7 @@ class AccountRepository implements AccountRepositoryInterface
                     continue;
                 }
                 if ($index !== (int)$account->order) {
-                    Log::debug(sprintf('Account #%d ("%s"): order should %d be but is %d.', $account->id, $account->name, $index, $account->order));
+                    app('log')->debug(sprintf('Account #%d ("%s"): order should %d be but is %d.', $account->id, $account->name, $index, $account->order));
                     $account->order = $index;
                     $account->save();
                 }

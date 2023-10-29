@@ -120,7 +120,7 @@ class HomeController extends Controller
         Log::channel('audit')->info('User sends test message.');
         /** @var User $user */
         $user = auth()->user();
-        Log::debug('Now in testMessage() controller.');
+        app('log')->debug('Now in testMessage() controller.');
         event(new AdminRequestedTestMessage($user));
         session()->flash('info', (string)trans('firefly.send_test_triggered'));
 

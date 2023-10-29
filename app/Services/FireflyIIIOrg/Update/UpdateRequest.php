@@ -43,7 +43,7 @@ class UpdateRequest implements UpdateRequestInterface
      */
     public function getUpdateInformation(string $channel): array
     {
-        Log::debug(sprintf('Now in getUpdateInformation(%s)', $channel));
+        app('log')->debug(sprintf('Now in getUpdateInformation(%s)', $channel));
         $information = [
             'level'   => 'error',
             'message' => (string)trans('firefly.unknown_error'),
@@ -70,7 +70,7 @@ class UpdateRequest implements UpdateRequestInterface
      */
     private function contactServer(string $channel): array
     {
-        Log::debug(sprintf('Now in contactServer(%s)', $channel));
+        app('log')->debug(sprintf('Now in contactServer(%s)', $channel));
         // always fall back to current version:
         $return = [
             'version' => config('firefly.version'),
@@ -80,7 +80,7 @@ class UpdateRequest implements UpdateRequestInterface
         ];
 
         $url = config('firefly.update_endpoint');
-        Log::debug(sprintf('Going to call %s', $url));
+        app('log')->debug(sprintf('Going to call %s', $url));
         try {
             $client  = new Client();
             $options = [
@@ -140,7 +140,7 @@ class UpdateRequest implements UpdateRequestInterface
      */
     private function parseResult(array $information): array
     {
-        Log::debug('Now in parseResult()', $information);
+        app('log')->debug('Now in parseResult()', $information);
         $return  = [
             'level'   => 'error',
             'message' => (string)trans('firefly.unknown_error'),
@@ -155,13 +155,13 @@ class UpdateRequest implements UpdateRequestInterface
 
         $compare = version_compare($latest, $current);
 
-        Log::debug(sprintf('Current version is "%s", latest is "%s", result is: %d', $current, $latest, $compare));
+        app('log')->debug(sprintf('Current version is "%s", latest is "%s", result is: %d', $current, $latest, $compare));
 
         // -1: you're running a newer version:
         if (-1 === $compare) {
             $return['level']   = 'info';
             $return['message'] = (string)trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $latest]);
-            Log::debug('User is running a newer version', $return);
+            app('log')->debug('User is running a newer version', $return);
 
             return $return;
         }
@@ -169,7 +169,7 @@ class UpdateRequest implements UpdateRequestInterface
         if (0 === $compare) {
             $return['level']   = 'info';
             $return['message'] = (string)trans('firefly.update_current_version_alert', ['version' => $current]);
-            Log::debug('User is the current version.', $return);
+            app('log')->debug('User is the current version.', $return);
 
             return $return;
         }
@@ -191,7 +191,7 @@ class UpdateRequest implements UpdateRequestInterface
                     'days'    => $expectedDiff,
                 ]
             );
-            Log::debug('Release is very fresh.', $return);
+            app('log')->debug('Release is very fresh.', $return);
 
             return $return;
         }
@@ -206,22 +206,22 @@ class UpdateRequest implements UpdateRequestInterface
                 'date'         => $released->isoFormat((string)trans('config.month_and_day_js')),
             ]
         );
-        Log::debug('New release is old enough.');
+        app('log')->debug('New release is old enough.');
 
         // add warning in case of alpha or beta:
         // append warning if beta or alpha.
         $isBeta = $information['is_beta'] ?? false;
         if (true === $isBeta) {
             $return['message'] = sprintf('%s %s', $return['message'], trans('firefly.update_version_beta'));
-            Log::debug('New release is also a beta!');
+            app('log')->debug('New release is also a beta!');
         }
 
         $isAlpha = $information['is_alpha'] ?? false;
         if (true === $isAlpha) {
             $return['message'] = sprintf('%s %s', $return['message'], trans('firefly.update_version_alpha'));
-            Log::debug('New release is also a alpha!');
+            app('log')->debug('New release is also a alpha!');
         }
-        Log::debug('New release is here!', $return);
+        app('log')->debug('New release is here!', $return);
 
         // send event, this may result in a notification.
         event(new NewVersionAvailable($return['message']));

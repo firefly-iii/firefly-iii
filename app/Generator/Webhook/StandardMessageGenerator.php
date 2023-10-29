@@ -67,14 +67,14 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     public function generateMessages(): void
     {
-        Log::debug(__METHOD__);
+        app('log')->debug(__METHOD__);
         // get the webhooks:
         if (0 === $this->webhooks->count()) {
             $this->webhooks = $this->getWebhooks();
         }
 
         // do some debugging
-        Log::debug(
+        app('log')->debug(
             sprintf('StandardMessageGenerator will generate messages for %d object(s) and %d webhook(s).', $this->objects->count(), $this->webhooks->count())
         );
         $this->run();
@@ -93,12 +93,12 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     private function run(): void
     {
-        Log::debug('Now in StandardMessageGenerator::run');
+        app('log')->debug('Now in StandardMessageGenerator::run');
         /** @var Webhook $webhook */
         foreach ($this->webhooks as $webhook) {
             $this->runWebhook($webhook);
         }
-        Log::debug('Done with StandardMessageGenerator::run');
+        app('log')->debug('Done with StandardMessageGenerator::run');
     }
 
     /**
@@ -109,7 +109,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     private function runWebhook(Webhook $webhook): void
     {
-        Log::debug(sprintf('Now in runWebhook(#%d)', $webhook->id));
+        app('log')->debug(sprintf('Now in runWebhook(#%d)', $webhook->id));
         /** @var Model $object */
         foreach ($this->objects as $object) {
             $this->generateMessage($webhook, $object);
@@ -127,7 +127,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     {
         $class = get_class($model);
         // Line is ignored because all of Firefly III's Models have an id property.
-        Log::debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id));
+        app('log')->debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id));
 
         $uuid         = Uuid::uuid4();
         $basicMessage = [
@@ -232,7 +232,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $webhookMessage->uuid    = $message['uuid'];
         $webhookMessage->message = $message;
         $webhookMessage->save();
-        Log::debug(sprintf('Stored new webhook message #%d', $webhookMessage->id));
+        app('log')->debug(sprintf('Stored new webhook message #%d', $webhookMessage->id));
     }
 
     /**

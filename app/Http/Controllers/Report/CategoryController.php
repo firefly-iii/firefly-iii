@@ -729,7 +729,7 @@ class CategoryController extends Controller
         try {
             $result = view('reports.category.partials.top-expenses', compact('result'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            app('log')->debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
             throw new FireflyException($e->getMessage(), 0, $e);
         }
@@ -780,7 +780,7 @@ class CategoryController extends Controller
         try {
             $result = view('reports.category.partials.top-income', compact('result'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            app('log')->debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
             throw new FireflyException($e->getMessage(), 0, $e);
         }

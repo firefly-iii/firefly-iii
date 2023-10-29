@@ -73,7 +73,7 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Account $account): JsonResponse
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         $data         = $request->getUpdateData();
         $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $account      = $this->repository->update($account, $data);

@@ -43,7 +43,7 @@ class RemoteUserProvider implements UserProvider
      */
     public function retrieveByCredentials(array $credentials)
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
         throw new FireflyException(sprintf('Did not implement %s', __METHOD__));
     }
 
@@ -52,10 +52,10 @@ class RemoteUserProvider implements UserProvider
      */
     public function retrieveById($identifier): User
     {
-        Log::debug(sprintf('Now at %s(%s)', __METHOD__, $identifier));
+        app('log')->debug(sprintf('Now at %s(%s)', __METHOD__, $identifier));
         $user = User::where('email', $identifier)->first();
         if (null === $user) {
-            Log::debug(sprintf('User with email "%s" not found. Will be created.', $identifier));
+            app('log')->debug(sprintf('User with email "%s" not found. Will be created.', $identifier));
             $user = User::create(
                 [
                     'blocked'      => false,
@@ -72,7 +72,7 @@ class RemoteUserProvider implements UserProvider
             // make sure the user gets an administration as well.
             CreateGroupMemberships::createGroupMembership($user);
         }
-        Log::debug(sprintf('Going to return user #%d (%s)', $user->id, $user->email));
+        app('log')->debug(sprintf('Going to return user #%d (%s)', $user->id, $user->email));
 
         return $user;
     }
@@ -82,7 +82,7 @@ class RemoteUserProvider implements UserProvider
      */
     public function retrieveByToken($identifier, $token)
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
         throw new FireflyException(sprintf('A) Did not implement %s', __METHOD__));
     }
 
@@ -91,7 +91,7 @@ class RemoteUserProvider implements UserProvider
      */
     public function updateRememberToken(Authenticatable $user, $token)
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
         throw new FireflyException(sprintf('B) Did not implement %s', __METHOD__));
     }
 
@@ -100,7 +100,7 @@ class RemoteUserProvider implements UserProvider
      */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
         throw new FireflyException(sprintf('C) Did not implement %s', __METHOD__));
     }
 }

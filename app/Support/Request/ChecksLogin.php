@@ -40,7 +40,7 @@ trait ChecksLogin
      */
     public function authorize(): bool
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         // Only allow logged-in users
         $check = auth()->check();
         if (!$check) {

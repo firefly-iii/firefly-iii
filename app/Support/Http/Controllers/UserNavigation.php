@@ -53,9 +53,9 @@ trait UserNavigation
      */
     final protected function getPreviousUrl(string $identifier): string
     {
-        Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
+        app('log')->debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
         $url = (string)session($identifier);
-        Log::debug(sprintf('The URL is %s', $url));
+        app('log')->debug(sprintf('The URL is %s', $url));
 
         return app('steam')->getSafeUrl($url, route('index'));
     }
@@ -166,7 +166,7 @@ trait UserNavigation
         $return = app('steam')->getSafePreviousUrl();
         session()->put($identifier, $return);
 
-        Log::debug(sprintf('rememberPreviousUrl: %s: "%s"', $identifier, $return));
+        app('log')->debug(sprintf('rememberPreviousUrl: %s: "%s"', $identifier, $return));
 
         return $return;
     }

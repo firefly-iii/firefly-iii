@@ -102,7 +102,7 @@ class IndexController extends Controller
     public function index(Request $request, Carbon $start = null, Carbon $end = null)
     {
         $this->abRepository->cleanup();
-        Log::debug(sprintf('Start of IndexController::index("%s", "%s")', $start?->format('Y-m-d'), $end?->format('Y-m-d')));
+        app('log')->debug(sprintf('Start of IndexController::index("%s", "%s")', $start?->format('Y-m-d'), $end?->format('Y-m-d')));
 
         // collect some basic vars:
         $range         = app('navigation')->getViewRange(true);
@@ -219,12 +219,12 @@ class IndexController extends Controller
         // get all budgets, and paginate them into $budgets.
         $collection = $this->repository->getActiveBudgets();
         $budgets    = [];
-        Log::debug(sprintf('7) Start is "%s", end is "%s"', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        app('log')->debug(sprintf('7) Start is "%s", end is "%s"', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
 
         // complement budget with budget limits in range, and expenses in currency X in range.
         /** @var Budget $current */
         foreach ($collection as $current) {
-            Log::debug(sprintf('Working on budget #%d ("%s")', $current->id, $current->name));
+            app('log')->debug(sprintf('Working on budget #%d ("%s")', $current->id, $current->name));
             $array                = $current->toArray();
             $array['spent']       = [];
             $array['spent_total'] = [];
@@ -234,7 +234,7 @@ class IndexController extends Controller
             $budgetLimits         = $this->blRepository->getBudgetLimits($current, $start, $end);
             /** @var BudgetLimit $limit */
             foreach ($budgetLimits as $limit) {
-                Log::debug(sprintf('Working on budget limit #%d', $limit->id));
+                app('log')->debug(sprintf('Working on budget limit #%d', $limit->id));
                 $currency            = $limit->transactionCurrency ?? $defaultCurrency;
                 $amount              = app('steam')->bcround($limit->amount, $currency->decimal_places);
                 $array['budgeted'][] = [
@@ -248,7 +248,7 @@ class IndexController extends Controller
                     'currency_name'           => $currency->name,
                     'currency_decimal_places' => $currency->decimal_places,
                 ];
-                Log::debug(sprintf('The amount budgeted for budget limit #%d is %s %s', $limit->id, $currency->code, $amount));
+                app('log')->debug(sprintf('The amount budgeted for budget limit #%d is %s %s', $limit->id, $currency->code, $amount));
             }
 
             /** @var TransactionCurrency $currency */
@@ -348,7 +348,7 @@ class IndexController extends Controller
             $budgetId = (int)$budgetId;
             $budget   = $repository->find($budgetId);
             if (null !== $budget) {
-                Log::debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
+                app('log')->debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
                 $repository->setBudgetOrder($budget, $index + 1);
             }
         }

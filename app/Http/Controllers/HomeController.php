@@ -84,12 +84,12 @@ class HomeController extends Controller
         $label         = $request->get('label');
         $isCustomRange = false;
 
-        Log::debug('Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->get('label')]);
+        app('log')->debug('Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->get('label')]);
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
         if ($label === (string)trans('firefly.everything') || $label === (string)trans('firefly.customRange')) {
             $isCustomRange = true;
-            Log::debug('Range is now marked as "custom".');
+            app('log')->debug('Range is now marked as "custom".');
         }
 
         $diff = $start->diffInDays($end) + 1;
@@ -99,11 +99,11 @@ class HomeController extends Controller
         }
 
         $request->session()->put('is_custom_range', $isCustomRange);
-        Log::debug(sprintf('Set is_custom_range to %s', var_export($isCustomRange, true)));
+        app('log')->debug(sprintf('Set is_custom_range to %s', var_export($isCustomRange, true)));
         $request->session()->put('start', $start);
-        Log::debug(sprintf('Set start to %s', $start->format('Y-m-d H:i:s')));
+        app('log')->debug(sprintf('Set start to %s', $start->format('Y-m-d H:i:s')));
         $request->session()->put('end', $end);
-        Log::debug(sprintf('Set end to %s', $end->format('Y-m-d H:i:s')));
+        app('log')->debug(sprintf('Set end to %s', $end->format('Y-m-d H:i:s')));
 
         return response()->json(['ok' => 'ok']);
     }
@@ -138,7 +138,7 @@ class HomeController extends Controller
         // sort frontpage accounts by order
         $accounts = $accounts->sortBy('order');
 
-        Log::debug('Frontpage accounts are ', $frontPage->data);
+        app('log')->debug('Frontpage accounts are ', $frontPage->data);
 
         /** @var BillRepositoryInterface $billRepository */
         $billRepository = app(BillRepositoryInterface::class);

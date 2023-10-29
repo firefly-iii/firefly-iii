@@ -56,7 +56,7 @@ class AppendNotesToDescription implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        Log::debug('Now in AppendNotesToDescription');
+        app('log')->debug('Now in AppendNotesToDescription');
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
@@ -66,7 +66,7 @@ class AppendNotesToDescription implements ActionInterface
         }
         $note = $object->notes()->first();
         if (null === $note) {
-            Log::debug('Journal has no notes.');
+            app('log')->debug('Journal has no notes.');
             $note = new Note();
             $note->noteable()->associate($object);
             $note->text = '';
@@ -76,7 +76,7 @@ class AppendNotesToDescription implements ActionInterface
             $before              = $object->description;
             $object->description = trim(sprintf('%s %s', $object->description, (string)$this->clearString($note->text, false)));
             $object->save();
-            Log::debug(sprintf('Journal description is updated to "%s".', $object->description));
+            app('log')->debug(sprintf('Journal description is updated to "%s".', $object->description));
 
             event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $object->description));
 

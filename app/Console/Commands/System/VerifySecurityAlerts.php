@@ -66,7 +66,7 @@ class VerifySecurityAlerts extends Command
         $disk    = Storage::disk('resources');
         // Next line is ignored because it's a Laravel Facade.
         if (!$disk->has('alerts.json')) {
-            Log::debug('No alerts.json file present.');
+            app('log')->debug('No alerts.json file present.');
 
             return 0;
         }
@@ -76,19 +76,19 @@ class VerifySecurityAlerts extends Command
         /** @var array $array */
         foreach ($json as $array) {
             if ($version === $array['version'] && true === $array['advisory']) {
-                Log::debug(sprintf('Version %s has an alert!', $array['version']));
+                app('log')->debug(sprintf('Version %s has an alert!', $array['version']));
                 // add advisory to configuration.
                 $this->saveSecurityAdvisory($array);
 
                 // depends on level
                 if ('info' === $array['level']) {
-                    Log::debug('INFO level alert');
+                    app('log')->debug('INFO level alert');
                     $this->friendlyInfo($array['message']);
 
                     return 0;
                 }
                 if ('warning' === $array['level']) {
-                    Log::debug('WARNING level alert');
+                    app('log')->debug('WARNING level alert');
                     $this->friendlyWarning('------------------------ :o');
                     $this->friendlyWarning($array['message']);
                     $this->friendlyWarning('------------------------ :o');
@@ -96,7 +96,7 @@ class VerifySecurityAlerts extends Command
                     return 0;
                 }
                 if ('danger' === $array['level']) {
-                    Log::debug('DANGER level alert');
+                    app('log')->debug('DANGER level alert');
                     $this->friendlyError('------------------------ :-(');
                     $this->friendlyError($array['message']);
                     $this->friendlyError('------------------------ :-(');
@@ -107,7 +107,7 @@ class VerifySecurityAlerts extends Command
                 return 0;
             }
         }
-        Log::debug(sprintf('No security alerts for version %s', $version));
+        app('log')->debug(sprintf('No security alerts for version %s', $version));
         $this->friendlyPositive(sprintf('No security alerts for version %s', $version));
         return 0;
     }
@@ -121,7 +121,7 @@ class VerifySecurityAlerts extends Command
             app('fireflyconfig')->delete('upgrade_security_message');
             app('fireflyconfig')->delete('upgrade_security_level');
         } catch (QueryException $e) {
-            Log::debug(sprintf('Could not delete old security advisory, but thats OK: %s', $e->getMessage()));
+            app('log')->debug(sprintf('Could not delete old security advisory, but thats OK: %s', $e->getMessage()));
         }
     }
 
@@ -136,7 +136,7 @@ class VerifySecurityAlerts extends Command
             app('fireflyconfig')->set('upgrade_security_message', $array['message']);
             app('fireflyconfig')->set('upgrade_security_level', $array['level']);
         } catch (QueryException $e) {
-            Log::debug(sprintf('Could not save new security advisory, but thats OK: %s', $e->getMessage()));
+            app('log')->debug(sprintf('Could not save new security advisory, but thats OK: %s', $e->getMessage()));
         }
     }
 }

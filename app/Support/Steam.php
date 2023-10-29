@@ -632,7 +632,7 @@ class Steam
             $number = sprintf('%.12f', $number);
         }
 
-        // Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
+        // app('log')->debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
         if (str_contains($number, '.')) {
             if ($number[0] !== '-') {
                 return bcadd($number, '0.' . str_repeat('0', $precision) . '5', $precision);
@@ -812,7 +812,7 @@ class Steam
      */
     public function getSafePreviousUrl(): string
     {
-        //Log::debug(sprintf('getSafePreviousUrl: "%s"', session()->previousUrl()));
+        //app('log')->debug(sprintf('getSafePreviousUrl: "%s"', session()->previousUrl()));
         return session()->previousUrl() ?? route('index');
     }
 
@@ -826,7 +826,7 @@ class Steam
      */
     public function getSafeUrl(string $unknownUrl, string $safeUrl): string
     {
-        //Log::debug(sprintf('getSafeUrl(%s, %s)', $unknownUrl, $safeUrl));
+        //app('log')->debug(sprintf('getSafeUrl(%s, %s)', $unknownUrl, $safeUrl));
         $returnUrl   = $safeUrl;
         $unknownHost = parse_url($unknownUrl, PHP_URL_HOST);
         $safeHost    = parse_url($safeUrl, PHP_URL_HOST);

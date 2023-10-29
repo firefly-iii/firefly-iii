@@ -107,12 +107,12 @@ class InstallController extends Controller
             'errorMessage'   => null,
         ];
 
-        Log::debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
+        app('log')->debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
         $indexes = array_values(array_keys($this->upgradeCommands));
         if (array_key_exists($requestIndex, $indexes)) {
             $command    = $indexes[$requestIndex];
             $parameters = $this->upgradeCommands[$command];
-            Log::debug(sprintf('Will now execute command "%s" with parameters', $command), $parameters);
+            app('log')->debug(sprintf('Will now execute command "%s" with parameters', $command), $parameters);
             try {
                 $result = $this->executeCommand($command, $parameters);
             } catch (FireflyException $e) {
@@ -144,14 +144,14 @@ class InstallController extends Controller
      */
     private function executeCommand(string $command, array $args): bool
     {
-        Log::debug(sprintf('Will now call command %s with args.', $command), $args);
+        app('log')->debug(sprintf('Will now call command %s with args.', $command), $args);
         try {
             if ('generate-keys' === $command) {
                 $this->keys();
             }
             if ('generate-keys' !== $command) {
                 Artisan::call($command, $args);
-                Log::debug(Artisan::output());
+                app('log')->debug(Artisan::output());
             }
         } catch (Exception $e) { // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);

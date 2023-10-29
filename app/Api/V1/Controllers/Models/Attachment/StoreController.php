@@ -78,7 +78,7 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         $data       = $request->getAll();
         $attachment = $this->repository->store($data);
         $manager    = $this->getManager();

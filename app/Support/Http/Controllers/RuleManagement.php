@@ -107,7 +107,7 @@ trait RuleManagement
                         ]
                     )->render();
                 } catch (Throwable $e) {
-                    Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
+                    app('log')->debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
                     app('log')->error($e->getTraceAsString());
                     throw new FireflyException(sprintf('Could not render: %s', $e->getMessage()), 0, $e);
                 }
@@ -152,7 +152,7 @@ trait RuleManagement
                     ]
                 )->render();
             } catch (Throwable $e) {
-                Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
+                app('log')->debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
                 app('log')->error($e->getTraceAsString());
                 throw new FireflyException(sprintf('Could not render: %s', $e->getMessage()), 0, $e);
             }

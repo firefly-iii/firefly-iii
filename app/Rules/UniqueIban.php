@@ -109,9 +109,9 @@ class UniqueIban implements ValidationRule
 
         foreach ($maxCounts as $type => $max) {
             $count = $this->countHits($type, $value);
-            Log::debug(sprintf('Count for "%s" and IBAN "%s" is %d', $type, $value, $count));
+            app('log')->debug(sprintf('Count for "%s" and IBAN "%s" is %d', $type, $value, $count));
             if ($count > $max) {
-                Log::debug(
+                app('log')->debug(
                     sprintf(
                         'IBAN "%s" is in use with %d account(s) of type "%s", which is too much for expected types "%s"',
                         $value,

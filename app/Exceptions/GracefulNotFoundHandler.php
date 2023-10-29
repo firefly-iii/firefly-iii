@@ -143,7 +143,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      */
     private function handleAccount(Request $request, Throwable $exception)
     {
-        Log::debug('404 page is probably a deleted account. Redirect to overview of account types.');
+        app('log')->debug('404 page is probably a deleted account. Redirect to overview of account types.');
         /** @var User $user */
         $user  = auth()->user();
         $route = $request->route();
@@ -177,7 +177,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      */
     private function handleGroup(Request $request, Throwable $exception)
     {
-        Log::debug('404 page is probably a deleted group. Redirect to overview of group types.');
+        app('log')->debug('404 page is probably a deleted group. Redirect to overview of group types.');
         /** @var User $user */
         $user    = auth()->user();
         $route   = $request->route();
@@ -216,7 +216,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      */
     private function handleAttachment(Request $request, Throwable $exception)
     {
-        Log::debug('404 page is probably a deleted attachment. Redirect to parent object.');
+        app('log')->debug('404 page is probably a deleted attachment. Redirect to parent object.');
         /** @var User $user */
         $user         = auth()->user();
         $route        = $request->route();
