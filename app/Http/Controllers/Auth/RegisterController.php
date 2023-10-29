@@ -98,7 +98,7 @@ class RegisterController extends Controller
 
         $this->validator($request->all())->validate();
         $user = $this->createUser($request->all());
-        Log::info(sprintf('Registered new user %s', $user->email));
+        app('log')->info(sprintf('Registered new user %s', $user->email));
         event(new RegisteredUser($user));
 
         $this->guard()->login($user);

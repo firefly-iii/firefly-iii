@@ -626,7 +626,7 @@ class TransactionJournalFactory
     {
         $this->errorOnHash = $errorOnHash;
         if (true === $errorOnHash) {
-            Log::info('Will trigger duplication alert for this journal.');
+            app('log')->info('Will trigger duplication alert for this journal.');
         }
     }
 }

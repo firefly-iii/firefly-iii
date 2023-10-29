@@ -89,18 +89,18 @@ class CreateAutoBudgetLimits implements ShouldQueue
     private function handleAutoBudget(AutoBudget $autoBudget): void
     {
         if (null === $autoBudget->budget) {
-            Log::info(sprintf('Auto budget #%d is associated with a deleted budget.', $autoBudget->id));
+            app('log')->info(sprintf('Auto budget #%d is associated with a deleted budget.', $autoBudget->id));
             $autoBudget->delete();
 
             return;
         }
         if (false === $autoBudget->budget->active) {
-            Log::info(sprintf('Auto budget #%d is associated with an inactive budget.', $autoBudget->id));
+            app('log')->info(sprintf('Auto budget #%d is associated with an inactive budget.', $autoBudget->id));
 
             return;
         }
         if (!$this->isMagicDay($autoBudget)) {
-            Log::info(
+            app('log')->info(
                 sprintf(
                     'Today (%s) is not a magic day for %s auto-budget #%d (part of budget #%d "%s")',
                     $this->date->format('Y-m-d'),
@@ -114,7 +114,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
 
             return;
         }
-        Log::info(
+        app('log')->info(
             sprintf(
                 'Today (%s) is a magic day for %s auto-budget #%d (part of budget #%d "%s")',
                 $this->date->format('Y-m-d'),
@@ -300,11 +300,11 @@ class CreateAutoBudgetLimits implements ShouldQueue
         Log::debug(sprintf('Total amount left for previous budget period is %s', $budgetLeft));
 
         if (-1 !== bccomp('0', $budgetLeft)) {
-            Log::info(sprintf('The amount left is negative, so it will be reset to %s.', $totalAmount));
+            app('log')->info(sprintf('The amount left is negative, so it will be reset to %s.', $totalAmount));
         }
         if (1 !== bccomp('0', $budgetLeft)) {
             $totalAmount = bcadd($budgetLeft, $totalAmount);
-            Log::info(sprintf('The amount left is positive, so the new amount will be %s.', $totalAmount));
+            app('log')->info(sprintf('The amount left is positive, so the new amount will be %s.', $totalAmount));
         }
 
         // create budget limit:
@@ -366,17 +366,17 @@ class CreateAutoBudgetLimits implements ShouldQueue
 
 
         if (-1 !== bccomp($budgetAvailable, $totalAmount)) {
-            Log::info(sprintf('There is no overspending, no need to adjust. Budget limit amount will be %s.', $budgetAvailable));
+            app('log')->info(sprintf('There is no overspending, no need to adjust. Budget limit amount will be %s.', $budgetAvailable));
             // create budget limit:
             $this->createBudgetLimit($autoBudget, $start, $end, $budgetAvailable);
         }
         if (1 !== bccomp($budgetAvailable, $totalAmount) && 1 === bccomp($budgetAvailable, '0')) {
-            Log::info(sprintf('There was overspending, so the new amount will be %s.', $budgetAvailable));
+            app('log')->info(sprintf('There was overspending, so the new amount will be %s.', $budgetAvailable));
             // create budget limit:
             $this->createBudgetLimit($autoBudget, $start, $end, $budgetAvailable);
         }
         if (1 !== bccomp($budgetAvailable, $totalAmount) && -1 === bccomp($budgetAvailable, '0')) {
-            Log::info('There was overspending, but so much even this period cant fix that. Reset it to 1.');
+            app('log')->info('There was overspending, but so much even this period cant fix that. Reset it to 1.');
             // create budget limit:
             $this->createBudgetLimit($autoBudget, $start, $end, '1');
         }

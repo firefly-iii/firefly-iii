@@ -55,7 +55,7 @@ class TriggerController extends Controller
         $backupDate = $recurrence->latest_date;
 
         // fire the recurring cron job on the given date, then post-date the created transaction.
-        Log::info(sprintf('Trigger: will now fire recurring cron job task for date "%s".', $date->format('Y-m-d H:i:s')));
+        app('log')->info(sprintf('Trigger: will now fire recurring cron job task for date "%s".', $date->format('Y-m-d H:i:s')));
         /** @var CreateRecurringTransactions $job */
         $job = app(CreateRecurringTransactions::class);
         $job->setRecurrences(new Collection([$recurrence]));

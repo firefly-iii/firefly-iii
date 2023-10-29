@@ -209,7 +209,7 @@ class ExportData extends Command
             }
         }
         if (null === $this->option($field)) {
-            Log::info(sprintf('No date given in field "%s"', $field));
+            app('log')->info(sprintf('No date given in field "%s"', $field));
             $error = true;
         }
 

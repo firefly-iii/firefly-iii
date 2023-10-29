@@ -47,7 +47,7 @@ class StoredGroupEventHandler
     public function processRules(StoredTransactionGroup $storedGroupEvent): void
     {
         if (false === $storedGroupEvent->applyRules) {
-            Log::info(sprintf('Will not run rules on group #%d', $storedGroupEvent->transactionGroup->id));
+            app('log')->info(sprintf('Will not run rules on group #%d', $storedGroupEvent->transactionGroup->id));
 
             return;
         }
@@ -100,7 +100,7 @@ class StoredGroupEventHandler
         Log::debug(__METHOD__);
         $group = $storedGroupEvent->transactionGroup;
         if (false === $storedGroupEvent->fireWebhooks) {
-            Log::info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
+            app('log')->info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
 
             return;
         }

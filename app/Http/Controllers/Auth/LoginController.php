@@ -87,7 +87,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get($this->username())));
-        Log::info('User is trying to login.');
+        app('log')->info('User is trying to login.');
 
         $this->validateLogin($request);
         Log::debug('Login data is present.');

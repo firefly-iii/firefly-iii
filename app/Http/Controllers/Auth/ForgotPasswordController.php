@@ -68,7 +68,7 @@ class ForgotPasswordController extends Controller
      */
     public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
     {
-        Log::info('Start of sendResetLinkEmail()');
+        app('log')->info('Start of sendResetLinkEmail()');
         if ('web' !== config('firefly.authentication_guard')) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', config('firefly.authentication_guard'));
             Log::error($message);

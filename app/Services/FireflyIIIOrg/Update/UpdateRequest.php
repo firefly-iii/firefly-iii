@@ -128,7 +128,7 @@ class UpdateRequest implements UpdateRequestInterface
         $return['version'] = $response['version'];
         $return['level']   = 'success';
         $return['date']    = Carbon::createFromFormat('Y-m-d', $response['date'])->startOfDay();
-        Log::info('Response from update server', $response);
+        app('log')->info('Response from update server', $response);
 
         return $return;
     }

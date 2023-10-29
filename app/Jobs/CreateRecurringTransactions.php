@@ -186,7 +186,7 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::debug(sprintf('Now filtering recurrence #%d, owned by user #%d', $recurrence->id, $recurrence->user_id));
         // is not active.
         if (!$this->active($recurrence)) {
-            Log::info(sprintf('Recurrence #%d is not active. Skipped.', $recurrence->id));
+            app('log')->info(sprintf('Recurrence #%d is not active. Skipped.', $recurrence->id));
 
             return false;
         }
@@ -194,14 +194,14 @@ class CreateRecurringTransactions implements ShouldQueue
         // has repeated X times.
         $journalCount = $this->repository->getJournalCount($recurrence);
         if (0 !== $recurrence->repetitions && $journalCount >= $recurrence->repetitions && false === $this->force) {
-            Log::info(sprintf('Recurrence #%d has run %d times, so will run no longer.', $recurrence->id, $recurrence->repetitions));
+            app('log')->info(sprintf('Recurrence #%d has run %d times, so will run no longer.', $recurrence->id, $recurrence->repetitions));
 
             return false;
         }
 
         // is no longer running
         if ($this->repeatUntilHasPassed($recurrence)) {
-            Log::info(
+            app('log')->info(
                 sprintf(
                     'Recurrence #%d was set to run until %s, and today\'s date is %s. Skipped.',
                     $recurrence->id,
@@ -215,7 +215,7 @@ class CreateRecurringTransactions implements ShouldQueue
 
         // first_date is in the future
         if ($this->hasNotStartedYet($recurrence)) {
-            Log::info(
+            app('log')->info(
                 sprintf(
                     'Recurrence #%d is set to run on %s, and today\'s date is %s. Skipped.',
                     $recurrence->id,
@@ -229,7 +229,7 @@ class CreateRecurringTransactions implements ShouldQueue
 
         // already fired today (with success):
         if (false === $this->force && $this->hasFiredToday($recurrence)) {
-            Log::info(sprintf('Recurrence #%d has already fired today. Skipped.', $recurrence->id));
+            app('log')->info(sprintf('Recurrence #%d has already fired today. Skipped.', $recurrence->id));
 
             return false;
         }
@@ -391,13 +391,13 @@ class CreateRecurringTransactions implements ShouldQueue
         // count created journals on THIS day.
         $journalCount = $this->repository->getJournalCount($recurrence, $date, $date);
         if ($journalCount > 0 && false === $this->force) {
-            Log::info(sprintf('Already created %d journal(s) for date %s', $journalCount, $date->format('Y-m-d')));
+            app('log')->info(sprintf('Already created %d journal(s) for date %s', $journalCount, $date->format('Y-m-d')));
 
             return null;
         }
 
         if ($this->repository->createdPreviously($recurrence, $date) && false === $this->force) {
-            Log::info('There is a transaction already made for this date, so will not be created now');
+            app('log')->info('There is a transaction already made for this date, so will not be created now');
 
             return null;
         }
@@ -431,7 +431,7 @@ class CreateRecurringTransactions implements ShouldQueue
         /** @var TransactionGroup $group */
         $group = $this->groupRepository->store($array);
         $this->created++;
-        Log::info(sprintf('Created new transaction group #%d', $group->id));
+        app('log')->info(sprintf('Created new transaction group #%d', $group->id));
 
         // trigger event:
         event(new StoredTransactionGroup($group, $recurrence->apply_rules, true));

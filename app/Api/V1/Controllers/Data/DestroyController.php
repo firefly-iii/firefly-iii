@@ -303,12 +303,12 @@ class DestroyController extends Controller
         foreach ($collection as $account) {
             $count = $account->transactions()->count();
             if (true === $this->unused && 0 === $count) {
-                Log::info(sprintf('Deleted unused account #%d "%s"', $account->id, $account->name));
+                app('log')->info(sprintf('Deleted unused account #%d "%s"', $account->id, $account->name));
                 $service->destroy($account, null);
                 continue;
             }
             if (false === $this->unused) {
-                Log::info(sprintf('Deleting account #%d "%s"', $account->id, $account->name));
+                app('log')->info(sprintf('Deleting account #%d "%s"', $account->id, $account->name));
                 $service->destroy($account, null);
             }
         }

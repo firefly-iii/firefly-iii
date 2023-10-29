@@ -171,7 +171,7 @@ class InstallController extends Controller
         // switch on PHP version.
         $keys = [];
         // switch on class existence.
-        Log::info('Will run PHP8 code.');
+        app('log')->info('Will run PHP8 code.');
         $keys = RSA::createKey(4096);
 
         [$publicKey, $privateKey] = [

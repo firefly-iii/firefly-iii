@@ -595,7 +595,7 @@ class ProfileController extends Controller
         }
         /** @var User $user */
         $user = auth()->user();
-        Log::info(sprintf('User #%d has opted to delete their account', auth()->user()->id));
+        app('log')->info(sprintf('User #%d has opted to delete their account', auth()->user()->id));
         // make repository delete user:
         auth()->logout();
         session()->flush();

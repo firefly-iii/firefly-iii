@@ -50,7 +50,7 @@ class UpdatedGroupEventHandler
     public function processRules(UpdatedTransactionGroup $updatedGroupEvent): void
     {
         if (false === $updatedGroupEvent->applyRules) {
-            Log::info(sprintf('Will not run rules on group #%d', $updatedGroupEvent->transactionGroup->id));
+            app('log')->info(sprintf('Will not run rules on group #%d', $updatedGroupEvent->transactionGroup->id));
 
             return;
         }
@@ -98,7 +98,7 @@ class UpdatedGroupEventHandler
         Log::debug(__METHOD__);
         $group = $updatedGroupEvent->transactionGroup;
         if (false === $updatedGroupEvent->fireWebhooks) {
-            Log::info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
+            app('log')->info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
 
             return;
         }

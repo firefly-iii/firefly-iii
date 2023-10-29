@@ -261,7 +261,7 @@ class OperatorQuerySearch implements SearchInterface
                 throw new FireflyException(sprintf('Unsupported search operator: "%s"', $operator));
                 // some search operators are ignored, basically:
             case 'user_action':
-                Log::info(sprintf('Ignore search operator "%s"', $operator));
+                app('log')->info(sprintf('Ignore search operator "%s"', $operator));
 
                 return false;
                 //
@@ -863,7 +863,7 @@ class OperatorQuerySearch implements SearchInterface
                 }
                 // no tags found means search must result in nothing.
                 if (null === $result) {
-                    Log::info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
+                    app('log')->info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
                     $this->collector->findNothing();
                 }
                 break;

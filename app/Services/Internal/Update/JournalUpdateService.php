@@ -148,7 +148,7 @@ class JournalUpdateService
 
         // can we update account data using the new type?
         if ($this->hasValidAccounts()) {
-            Log::info('Account info is valid, now update.');
+            app('log')->info('Account info is valid, now update.');
             // update accounts:
             $this->updateAccounts();
 
@@ -805,7 +805,7 @@ class JournalUpdateService
             $dest->save();
             Log::debug(sprintf('Foreign amount is "%s" so remove foreign amount info.', $amount));
         }
-        Log::info('Not enough info to update foreign currency info.');
+        app('log')->info('Not enough info to update foreign currency info.');
 
         // refresh transactions.
         $this->sourceTransaction->refresh();

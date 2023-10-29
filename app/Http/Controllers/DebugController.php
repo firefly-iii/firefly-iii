@@ -70,7 +70,7 @@ class DebugController extends Controller
     public function displayError(): void
     {
         Log::debug('This is a test message at the DEBUG level.');
-        Log::info('This is a test message at the INFO level.');
+        app('log')->info('This is a test message at the INFO level.');
         Log::notice('This is a test message at the NOTICE level.');
         app('log')->warning('This is a test message at the WARNING level.');
         Log::error('This is a test message at the ERROR level.');

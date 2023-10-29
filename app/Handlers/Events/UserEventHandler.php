@@ -102,7 +102,7 @@ class UserEventHandler
                 Log::error('Could not find role "owner". This is weird.');
             }
 
-            Log::info(sprintf('Gave user #%d role #%d ("%s")', $user->id, $role->id, $role->name));
+            app('log')->info(sprintf('Gave user #%d role #%d ("%s")', $user->id, $role->id, $role->name));
             // give user the role
             $repository->attachRole($user, 'owner');
         }

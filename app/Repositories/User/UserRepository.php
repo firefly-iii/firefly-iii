@@ -155,7 +155,7 @@ class UserRepository implements UserRepositoryInterface
         foreach ($groups as $group) {
             $count = $group->groupMemberships()->count();
             if (0 === $count) {
-                Log::info(sprintf('Deleted empty group #%d ("%s")', $group->id, $group->title));
+                app('log')->info(sprintf('Deleted empty group #%d ("%s")', $group->id, $group->title));
                 $group->delete();
             }
         }

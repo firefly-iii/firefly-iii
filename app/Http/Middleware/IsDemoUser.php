@@ -53,7 +53,7 @@ class IsDemoUser
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         if ($repository->hasRole($user, 'demo')) {
-            Log::info('User is a demo user.');
+            app('log')->info('User is a demo user.');
             $request->session()->flash('info', (string)trans('firefly.not_available_demo_user'));
             $current  = $request->url();
             $previous = $request->session()->previousUrl();
