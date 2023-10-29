@@ -203,7 +203,7 @@ class DebugController extends Controller
             }
         } catch (Exception $e) { // generic catch for open basedir.
             Log::debug('Could not check build counter, but thats ok.');
-            Log::warning($e->getMessage());
+            app('log')->warning($e->getMessage());
         }
         try {
             if (file_exists('/var/www/build-date-main.txt')) {
@@ -211,7 +211,7 @@ class DebugController extends Controller
             }
         } catch (Exception $e) { // generic catch for open basedir.
             Log::debug('Could not check build date, but thats ok.');
-            Log::warning($e->getMessage());
+            app('log')->warning($e->getMessage());
         }
         if ('' !== (string)env('BASE_IMAGE_BUILD')) {
             $return['base_build'] = env('BASE_IMAGE_BUILD');

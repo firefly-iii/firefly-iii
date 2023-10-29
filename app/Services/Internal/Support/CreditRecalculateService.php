@@ -433,7 +433,7 @@ class CreditRecalculateService
             return $result;
         }
 
-        Log::warning(sprintf('[-1] Catch-all, should not happen. Left of debt = %s', app('steam')->bcround($leftOfDebt, $decimals)));
+        app('log')->warning(sprintf('[-1] Catch-all, should not happen. Left of debt = %s', app('steam')->bcround($leftOfDebt, $decimals)));
 
         return $leftOfDebt;
     }

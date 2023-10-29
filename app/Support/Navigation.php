@@ -111,7 +111,7 @@ class Navigation
         try {
             return $this->calculator->nextDateByInterval($epoch, $periodicity, $skipInterval);
         } catch (IntervalException $exception) {
-            Log::warning($exception->getMessage(), ['exception' => $exception]);
+            app('log')->warning($exception->getMessage(), ['exception' => $exception]);
         } catch (Throwable $exception) {
             Log::error($exception->getMessage(), ['exception' => $exception]);
         }

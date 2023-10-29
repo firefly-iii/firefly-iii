@@ -216,7 +216,7 @@ class UpgradeLiabilitiesEight extends Command
 
             return;
         }
-        Log::warning('Did not find opening balance.');
+        app('log')->warning('Did not find opening balance.');
     }
 
     /**

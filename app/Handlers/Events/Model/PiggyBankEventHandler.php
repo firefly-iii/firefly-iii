@@ -52,7 +52,7 @@ class PiggyBankEventHandler
                                     ->where('transaction_journal_id', $journal->id)
                                     ->exists();
             if ($exists) {
-                Log::warning('Already have event for this journal and piggy, will not create another.');
+                app('log')->warning('Already have event for this journal and piggy, will not create another.');
                 return;
             }
         }

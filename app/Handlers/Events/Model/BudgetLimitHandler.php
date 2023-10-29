@@ -65,11 +65,11 @@ class BudgetLimitHandler
         Log::debug(sprintf('Now in updateAvailableBudget(#%d)', $budgetLimit->id));
         $budget = Budget::find($budgetLimit->budget_id);
         if (null === $budget) {
-            Log::warning('Budget is null, probably deleted, find deleted version.');
+            app('log')->warning('Budget is null, probably deleted, find deleted version.');
             $budget = Budget::withTrashed()->find($budgetLimit->budget_id);
         }
         if (null === $budget) {
-            Log::warning('Budget is still null, cannot continue, will delete budget limit.');
+            app('log')->warning('Budget is still null, cannot continue, will delete budget limit.');
             $budgetLimit->forceDelete();
             return;
         }
@@ -77,7 +77,7 @@ class BudgetLimitHandler
 
         // sanity check. It happens when the budget has been deleted so the original user is unknown.
         if (null === $user) {
-            Log::warning('User is null, cannot continue.');
+            app('log')->warning('User is null, cannot continue.');
             $budgetLimit->forceDelete();
             return;
         }

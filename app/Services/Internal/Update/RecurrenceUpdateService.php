@@ -224,7 +224,7 @@ class RecurrenceUpdateService
         Log::debug(sprintf('Original count is %d', $originalCount));
         if (0 === count($transactions)) {
             // won't drop transactions, rather avoid.
-            Log::warning('No transactions to update, too scared to continue!');
+            app('log')->warning('No transactions to update, too scared to continue!');
             return;
         }
         $combinations         = [];

@@ -340,12 +340,12 @@ trait RecurrenceValidation
 
         //$recurrence = $validator->get
         if (null === $transactions) {
-            Log::warning('[a] User submitted no transactions.');
+            app('log')->warning('[a] User submitted no transactions.');
             $validator->errors()->add('transactions', (string)trans('validation.at_least_one_transaction'));
             return;
         }
         if (0 === $submittedTrCount) {
-            Log::warning('[b] User submitted no transactions.');
+            app('log')->warning('[b] User submitted no transactions.');
             $validator->errors()->add('transactions', (string)trans('validation.at_least_one_transaction'));
             return;
         }
@@ -393,12 +393,12 @@ trait RecurrenceValidation
         foreach ($transactions as $index => $transaction) {
             Log::debug(sprintf('Now at %d/%d', $index + 1, $submittedTrCount));
             if (!is_array($transaction)) {
-                Log::warning('Not an array. Give error.');
+                app('log')->warning('Not an array. Give error.');
                 $validator->errors()->add(sprintf('transactions.%d.id', $index), (string)trans('validation.at_least_one_transaction'));
                 return;
             }
             if (!array_key_exists('id', $transaction) && $idsMandatory) {
-                Log::warning('ID is mandatory but array has no ID.');
+                app('log')->warning('ID is mandatory but array has no ID.');
                 $validator->errors()->add(sprintf('transactions.%d.id', $index), (string)trans('validation.need_id_to_match'));
                 return;
             }
@@ -419,7 +419,7 @@ trait RecurrenceValidation
         $maxUnmatched = max(1, $submittedTrCount - $originalTrCount);
         Log::debug(sprintf('Submitted: %d. Original: %d. User can submit %d unmatched transactions.', $submittedTrCount, $originalTrCount, $maxUnmatched));
         if ($unmatchedIds > $maxUnmatched) {
-            Log::warning(sprintf('Too many unmatched transactions (%d).', $unmatchedIds));
+            app('log')->warning(sprintf('Too many unmatched transactions (%d).', $unmatchedIds));
             $validator->errors()->add('transactions.0.id', (string)trans('validation.too_many_unmatched'));
             return;
         }

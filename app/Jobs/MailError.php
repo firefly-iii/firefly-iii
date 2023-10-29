@@ -95,11 +95,11 @@ class MailError extends Job implements ShouldQueue
             } catch (Exception | TransportException $e) { // intentional generic exception
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
-                    Log::warning('[Bcc] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
+                    app('log')->warning('[Bcc] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
                     return;
                 }
                 if (str_contains($message, 'RFC 2822')) {
-                    Log::warning('[RFC] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
+                    app('log')->warning('[RFC] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
                     return;
                 }
                 Log::error($e->getMessage());
