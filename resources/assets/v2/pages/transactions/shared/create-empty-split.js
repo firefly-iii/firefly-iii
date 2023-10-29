@@ -25,6 +25,7 @@ function getAccount() {
     return {
         id: '',
         name: '',
+        alpine_name: '',
     };
 }
 

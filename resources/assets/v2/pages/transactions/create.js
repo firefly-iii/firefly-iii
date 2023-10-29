@@ -67,22 +67,31 @@ let transactions = function () {
             if (sourceType === destType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(sourceType)) {
                 this.transactionType = 'transfer';
                 console.log('Transaction type is detected to be "' + this.transactionType + '".');
+
+                // this also locks the amount into the amount of the source account
+                // and the foreign amount (if different) in that of the destination account.
+                console.log('filter down currencies for transfer.');
+
                 return;
             }
             // withdrawals:
             if ('Asset account' === sourceType && ['Expense account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
                 this.transactionType = 'withdrawal';
-                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                console.log('[a] Transaction type is detected to be "' + this.transactionType + '".');
+                this.filterNativeCurrencies(this.entries[0].source_account.currency_code);
                 return;
             }
             if ('Asset account' === sourceType && 'unknown' === destType) {
                 this.transactionType = 'withdrawal';
-                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                console.log('[b] Transaction type is detected to be "' + this.transactionType + '".');
+                console.log(this.entries[0].source_account);
+                this.filterNativeCurrencies(this.entries[0].source_account.currency_code);
                 return;
             }
             if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Expense account' === destType) {
                 this.transactionType = 'withdrawal';
-                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                console.log('[c] Transaction type is detected to be "' + this.transactionType + '".');
+                this.filterNativeCurrencies(this.entries[0].source_account.currency_code);
                 return;
             }
 
@@ -105,9 +114,33 @@ let transactions = function () {
                 {
                     id: item.id,
                     name: item.name,
+                    alpine_name: item.name,
                     type: item.type,
+                    currency_code: item.currency_code,
                 };
             console.log('Changed source account into a known ' + item.type.toLowerCase());
+            document.querySelector('#form')._x_dataStack[0].detectTransactionType();
+        },
+        filterNativeCurrencies(code) {
+            console.log('filterNativeCurrencies("' + code + '")');
+            let list = [];
+            let currency;
+            for (let i in this.enabledCurrencies) {
+                if (this.enabledCurrencies.hasOwnProperty(i)) {
+                    let current = this.enabledCurrencies[i];
+                    if (current.code === code) {
+                        currency = current;
+                    }
+                }
+            }
+            list.push(currency);
+            this.nativeCurrencies = list;
+            // this also forces the currency_code on ALL entries.
+            for(let i in this.entries) {
+                if(this.entries.hasOwnProperty(i)) {
+                    this.entries[i].currency_code = code;
+                }
+            }
         },
         changedAmount(e) {
             const index = parseInt(e.target.dataset.index);
@@ -126,9 +159,12 @@ let transactions = function () {
                 {
                     id: item.id,
                     name: item.name,
+                    alpine_name: item.name,
                     type: item.type,
+                    currency_code: item.currency_code,
                 };
             console.log('Changed destination account into a known ' + item.type.toLowerCase());
+            document.querySelector('#form')._x_dataStack[0].detectTransactionType();
         },
         loadCurrencies() {
             console.log('Loading user currencies.');
@@ -138,10 +174,10 @@ let transactions = function () {
             };
             let getter = new Get();
             getter.list({}).then((response) => {
-                for(let i in response.data.data) {
-                    if(response.data.data.hasOwnProperty(i)) {
+                for (let i in response.data.data) {
+                    if (response.data.data.hasOwnProperty(i)) {
                         let current = response.data.data[i];
-                        if(current.attributes.enabled) {
+                        if (current.attributes.enabled) {
                             let obj =
 
                                 {
@@ -153,10 +189,11 @@ let transactions = function () {
                                     decimal_places: current.attributes.decimal_places,
 
                                 };
-                            if(obj.default) {
+                            if (obj.default) {
                                 this.defaultCurrency = obj;
                             }
                             this.enabledCurrencies.push(obj);
+                            this.nativeCurrencies.push(obj);
                         }
                     }
                 }
@@ -165,33 +202,43 @@ let transactions = function () {
             });
         },
         changeSourceAccount(item, ac) {
+            console.log('changeSourceAccount');
             if (typeof item === 'undefined') {
                 const index = parseInt(ac._searchInput.attributes['data-index'].value);
                 let source = document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account;
                 if (source.name === ac._searchInput.value) {
                     console.warn('Ignore hallucinated source account name change to "' + ac._searchInput.value + '"');
+                    document.querySelector('#form')._x_dataStack[0].detectTransactionType();
                     return;
                 }
                 document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account =
                     {
                         name: ac._searchInput.value,
+                        alpine_name: ac._searchInput.value,
                     };
+
                 console.log('Changed source account into a unknown account called "' + ac._searchInput.value + '"');
+                document.querySelector('#form')._x_dataStack[0].detectTransactionType();
             }
         },
         changeDestAccount(item, ac) {
+            let destination = document.querySelector('#form')._x_dataStack[0].$data.entries[0].destination_account;
             if (typeof item === 'undefined') {
                 const index = parseInt(ac._searchInput.attributes['data-index'].value);
                 let destination = document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account;
+
                 if (destination.name === ac._searchInput.value) {
                     console.warn('Ignore hallucinated destination account name change to "' + ac._searchInput.value + '"');
+                    document.querySelector('#form')._x_dataStack[0].detectTransactionType();
                     return;
                 }
                 document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account =
                     {
                         name: ac._searchInput.value,
+                        alpine_name: ac._searchInput.value,
                     };
                 console.log('Changed destination account into a unknown account called "' + ac._searchInput.value + '"');
+                document.querySelector('#form')._x_dataStack[0].detectTransactionType();
             }
         },
 
