@@ -26,8 +26,6 @@ namespace FireflyIII\Console\Commands\System;
 use FireflyIII\Support\System\GeneratesInstallationId;
 use Illuminate\Console\Command;
 
-use function FireflyIII\Console\Commands\str_starts_with;
-
 /**
  * Class UpgradeFireflyInstructions.
  *
@@ -77,7 +75,7 @@ class UpgradeFireflyInstructions extends Command
         $text    = '';
         foreach (array_keys($config) as $compare) {
             // if string starts with:
-            if (\str_starts_with($version, $compare)) {
+            if (str_starts_with($version, $compare)) {
                 $text = $config[$compare];
             }
         }
@@ -190,7 +188,7 @@ class UpgradeFireflyInstructions extends Command
         $text    = '';
         foreach (array_keys($config) as $compare) {
             // if string starts with:
-            if (\str_starts_with($version, $compare)) {
+            if (str_starts_with($version, $compare)) {
                 $text = $config[$compare];
             }
         }

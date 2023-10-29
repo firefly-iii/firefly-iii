@@ -47,7 +47,7 @@ class BillEventHandler
 
         $bill = $event->bill;
         /** @var bool $preference */
-        $preference = Preferences::getForUser($bill->user, 'notification_bill_reminder', true)->data;
+        $preference = app('preferences')->getForUser($bill->user, 'notification_bill_reminder', true)->data;
 
         if (true === $preference) {
             Log::debug('Bill reminder is true!');

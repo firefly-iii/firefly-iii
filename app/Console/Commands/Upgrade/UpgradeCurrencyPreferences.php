@@ -142,7 +142,7 @@ class UpgradeCurrencyPreferences extends Command
         // set the default currency for the user and for the group:
         $preference      = $this->getPreference($user);
         $defaultCurrency = TransactionCurrency::where('code', $preference)->first();
-        if (null === $currency) {
+        if (null === $defaultCurrency) {
             // get EUR
             $defaultCurrency = TransactionCurrency::where('code', 'EUR')->first();
         }

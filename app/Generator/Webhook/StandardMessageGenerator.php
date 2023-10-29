@@ -127,7 +127,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     {
         $class = get_class($model);
         // Line is ignored because all of Firefly III's Models have an id property.
-        Log::debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id)); // @phpstan-ignore-line
+        Log::debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id));
 
         $uuid         = Uuid::uuid4();
         $basicMessage = [
@@ -146,7 +146,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 // Line is ignored because all of Firefly III's Models have an id property.
                 Log::error(
                     sprintf('Webhook #%d was given %s#%d to deal with but can\'t extract user ID from it.', $webhook->id, $class, $model->id)
-                ); // @phpstan-ignore-line
+                );
 
                 return;
             case TransactionGroup::class:
