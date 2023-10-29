@@ -8,7 +8,7 @@ on:
       - develop
 env:
   DB_CONNECTION: sqlite
-
+  APP_KEY: UfpBqqeXx7zpNodsC6yjYQcRfDdm4Bxh
 jobs:
   sonarcloud:
     name: SonarCloud
@@ -44,9 +44,6 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress --no-scripts
-
-      - name: Generate app key
-        run: php artisan key:generate
 
       - name: "Create database file"
         run: touch storage/database/database.sqlite
