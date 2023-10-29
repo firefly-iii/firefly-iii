@@ -186,6 +186,7 @@ class NetWorth implements NetWorthInterface
 
     /**
      * @inheritDoc
+     * @deprecated
      */
     public function sumNetWorthByCurrency(Carbon $date): array
     {

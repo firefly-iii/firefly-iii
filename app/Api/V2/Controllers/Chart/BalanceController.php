@@ -45,23 +45,6 @@ class BalanceController extends Controller
 {
     use CleansChartData;
 
-    private AccountRepositoryInterface $repository;
-
-    /**
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(AccountRepositoryInterface::class);
-
-                return $next($request);
-            }
-        );
-    }
-
     /**
      * The code is practically a duplicate of ReportController::operations.
      *

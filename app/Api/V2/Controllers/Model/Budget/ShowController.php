@@ -59,18 +59,20 @@ class ShowController extends Controller
     }
 
     /**
+     * 2023-10-29 removed the cerSum reference, not sure where this is used atm
+     * so removed from api.php. Also applies to "spent" method.
+     *
      * This endpoint is documented at:
      * TODO add URL
      *
      */
     public function budgeted(DateRequest $request, Budget $budget): JsonResponse
     {
-        throw new FireflyException('Needs refactoring, uses deprecated method.');
         $data      = $request->getAll();
         $result    = $this->repository->budgetedInPeriodForBudget($budget, $data['start'], $data['end']);
-        $converted = $this->cerSum(array_values($result));
+        //$converted = $this->cerSum(array_values($result));
 
-        return response()->json($converted);
+        return response()->json($result);
     }
 
     /**
@@ -80,11 +82,10 @@ class ShowController extends Controller
      */
     public function spent(DateRequest $request, Budget $budget): JsonResponse
     {
-        throw new FireflyException('Needs refactoring, uses deprecated method.');
         $data      = $request->getAll();
         $result    = $this->repository->spentInPeriodForBudget($budget, $data['start'], $data['end']);
-        $converted = $this->cerSum(array_values($result));
+        // $converted = $this->cerSum(array_values($result));
 
-        return response()->json($converted);
+        return response()->json($result);
     }
 }

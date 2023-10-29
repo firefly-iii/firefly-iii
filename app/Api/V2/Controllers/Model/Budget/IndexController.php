@@ -33,9 +33,9 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
- * Class ListController
+ * Class IndexController
  */
-class ListController extends Controller
+class IndexController extends Controller
 {
     private BudgetRepositoryInterface $repository;
 
@@ -61,13 +61,12 @@ class ListController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        echo 'this needs move to Administration';
-        throw new FireflyException('Needs migration to IndexController');
+        $pageSize = $this->parameters->get('limit');
         $collection = $this->repository->getActiveBudgets();
         $total      = $collection->count();
-        $collection->slice($this->pageXSize * $this->parameters->get('page'), $this->pXageSize);
+        $collection->slice($pageSize * $this->parameters->get('page'), $pageSize);
 
-        $paginator   = new LengthAwarePaginator($collection, $total, $this->pagXeSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($collection, $total, $pageSize, $this->parameters->get('page'));
         $transformer = new BudgetTransformer();
 
         return response()
