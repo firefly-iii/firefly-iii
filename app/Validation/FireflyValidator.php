@@ -47,7 +47,6 @@ use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use ValueError;
 
-use function is_string;
 
 /**
  * Class FireflyValidator.
@@ -73,7 +72,7 @@ class FireflyValidator extends Validator
             app('log')->error('No user during validate2faCode');
             return false;
         }
-        $secretPreference = Preferences::get('temp-mfa-secret');
+        $secretPreference = app('preferences')->get('temp-mfa-secret');
         $secret           = $secretPreference?->data ?? '';
 
         return Google2FA::verifyKey($secret, $value);

@@ -84,7 +84,7 @@ class EditController extends Controller
         $startDate  = $piggyBank->startdate?->format('Y-m-d');
         $currency   = $this->accountRepository->getAccountCurrency($piggyBank->account);
         if (null === $currency) {
-            $currency = Amount::getDefaultCurrency();
+            $currency = app('amount')->getDefaultCurrency();
         }
 
         $preFilled = [

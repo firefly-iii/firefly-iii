@@ -87,6 +87,6 @@ class FixFrontpageAccounts extends Command
                 }
             }
         }
-        Preferences::setForUser($preference->user, 'frontPageAccounts', $fixed);
+        app('preferences')->setForUser($preference->user, 'frontPageAccounts', $fixed);
     }
 }

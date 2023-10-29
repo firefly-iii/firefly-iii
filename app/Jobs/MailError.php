@@ -91,7 +91,7 @@ class MailError extends Job implements ShouldQueue
                         }
                     }
                 );
-            } catch (Exception | TransportException $e) { // intentional generic exception
+            } catch (Exception | TransportException $e) { // @phpstan-ignore-line
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
                     app('log')->warning('[Bcc] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');

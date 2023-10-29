@@ -203,7 +203,7 @@ class UserEventHandler
             if (false === $entry['notified']) {
                 try {
                     Notification::send($user, new UserLogin($ipAddress));
-                } catch (Exception $e) {
+                } catch (Exception $e) { // @phpstan-ignore-line
                     $message = $e->getMessage();
                     if (str_contains($message, 'Bcc')) {
                         app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -228,7 +228,7 @@ class UserEventHandler
      */
     public function sendAdminRegistrationNotification(RegisteredUser $event): void
     {
-        $sendMail = FireflyConfig::get('notification_admin_new_reg', true)->data;
+        $sendMail = app('fireflyconfig')->get('notification_admin_new_reg', true)->data;
         if ($sendMail) {
             /** @var UserRepositoryInterface $repository */
             $repository = app(UserRepositoryInterface::class);
@@ -237,7 +237,7 @@ class UserEventHandler
                 if ($repository->hasRole($user, 'owner')) {
                     try {
                         Notification::send($user, new AdminRegistrationNotification($event->user));
-                    } catch (Exception $e) {
+                    } catch (Exception $e) { // @phpstan-ignore-line
                         $message = $e->getMessage();
                         if (str_contains($message, 'Bcc')) {
                             app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -273,7 +273,7 @@ class UserEventHandler
 
         try {
             Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $url));
-        } catch (Exception $e) { // intentional generic exception
+        } catch (Exception $e) {
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
@@ -298,7 +298,7 @@ class UserEventHandler
         $url      = route('profile.undo-email-change', [$token->data, $hashed]);
         try {
             Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $url));
-        } catch (Exception $e) { // intentional generic exception
+        } catch (Exception $e) {
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
@@ -314,7 +314,7 @@ class UserEventHandler
     {
         try {
             Notification::send($event->user, new UserNewPassword(route('password.reset', [$event->token])));
-        } catch (Exception $e) {
+        } catch (Exception $e) { // @phpstan-ignore-line
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -342,7 +342,7 @@ class UserEventHandler
         $url     = route('invite', [$event->invitee->invite_code]);
         try {
             Mail::to($invitee)->send(new InvitationMail($invitee, $admin, $url));
-        } catch (Exception $e) { // intentional generic exception
+        } catch (Exception $e) {
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
@@ -358,11 +358,11 @@ class UserEventHandler
      */
     public function sendRegistrationMail(RegisteredUser $event): void
     {
-        $sendMail = FireflyConfig::get('notification_user_new_reg', true)->data;
+        $sendMail = app('fireflyconfig')->get('notification_user_new_reg', true)->data;
         if ($sendMail) {
             try {
                 Notification::send($event->user, new UserRegistrationNotification());
-            } catch (Exception $e) {
+            } catch (Exception $e) { // @phpstan-ignore-line
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
                     app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');

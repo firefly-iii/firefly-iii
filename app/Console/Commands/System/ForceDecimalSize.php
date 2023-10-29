@@ -53,8 +53,8 @@ class ForceDecimalSize extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description = 'This command resizes DECIMAL columns in MySQL or PostgreSQL and correct amounts (only MySQL).';
-    protected $signature   = 'firefly-iii:force-decimal-size';
+    protected      $description = 'This command resizes DECIMAL columns in MySQL or PostgreSQL and correct amounts (only MySQL).';
+    protected      $signature   = 'firefly-iii:force-decimal-size';
     private string $cast;
     private array  $classes
                                 = [
@@ -183,7 +183,7 @@ class ForceDecimalSize extends Command
          * @var array  $fields
          */
         foreach ($this->tables as $name => $fields) {
-            switch ($name) {
+            switch ($name) { // @phpstan-ignore-line
                 default:
                     $message = sprintf('Cannot handle table "%s"', $name);
                     $this->friendlyError($message);
@@ -558,22 +558,18 @@ class ForceDecimalSize extends Command
             /** @var string $field */
             foreach ($fields as $field) {
                 $this->friendlyLine(sprintf('Updating table "%s", field "%s"...', $name, $field));
-
-                switch ($type) {
-                    default:
-                        $this->friendlyError(sprintf('Cannot handle database type "%s".', $type));
-
-                        return;
-                    case 'pgsql':
-                        $query = sprintf('ALTER TABLE %s ALTER COLUMN %s TYPE DECIMAL(32,12);', $name, $field);
-                        break;
-                    case 'mysql':
-                        $query = sprintf('ALTER TABLE %s CHANGE COLUMN %s %s DECIMAL(32, 12);', $name, $field, $field);
-                        break;
+                if ('pgsql' === $type) {
+                    DB::select(sprintf('ALTER TABLE %s ALTER COLUMN %s TYPE DECIMAL(32,12);', $name, $field));
+                    sleep(1);
+                    return;
                 }
+                if ('mysql' === $type) {
+                    DB::select(sprintf('ALTER TABLE %s CHANGE COLUMN %s %s DECIMAL(32, 12);', $name, $field, $field));
+                    sleep(1);
+                    return;
+                }
+                $this->friendlyError(sprintf('Cannot handle database type "%s".', $type));
 
-                DB::select($query);
-                sleep(1);
             }
         }
     }

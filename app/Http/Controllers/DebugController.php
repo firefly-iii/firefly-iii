@@ -201,7 +201,7 @@ class DebugController extends Controller
             if (file_exists('/var/www/counter-main.txt')) {
                 $return['build'] = trim(file_get_contents('/var/www/counter-main.txt'));
             }
-        } catch (Exception $e) { // generic catch for open basedir.
+        } catch (Exception $e) { // @phpstan-ignore-line
             app('log')->debug('Could not check build counter, but thats ok.');
             app('log')->warning($e->getMessage());
         }
@@ -209,7 +209,7 @@ class DebugController extends Controller
             if (file_exists('/var/www/build-date-main.txt')) {
                 $return['build_date'] = trim(file_get_contents('/var/www/build-date-main.txt'));
             }
-        } catch (Exception $e) { // generic catch for open basedir.
+        } catch (Exception $e) { // @phpstan-ignore-line
             app('log')->debug('Could not check build date, but thats ok.');
             app('log')->warning($e->getMessage());
         }

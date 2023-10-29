@@ -226,7 +226,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $validation = $this->validateUpload($file, $model);
         $attachment = null;
         if (false !== $validation) {
-            $user = $model->user; // @phpstan-ignore-line
+            $user = $model->user;
             // ignore lines about polymorphic calls.
             if ($model instanceof PiggyBank) {
                 $user = $model->account->user;
@@ -370,7 +370,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             $count = $model->account->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
         }
         if (!($model instanceof PiggyBank)) {
-            $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count(); // @phpstan-ignore-line
+            $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
         }
         $result = false;
         if ($count > 0) {

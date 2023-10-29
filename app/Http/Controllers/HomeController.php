@@ -67,6 +67,8 @@ class HomeController extends Controller
      */
     public function dateRange(Request $request): JsonResponse
     {
+        $stringStart = '';
+        $stringEnd = '';
         try {
             $stringStart = e((string)$request->get('start'));
             $start       = Carbon::createFromFormat('Y-m-d', $stringStart);

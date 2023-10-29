@@ -114,14 +114,14 @@ class ProfileController extends Controller
             return redirect(route('profile.index'));
         }
         $domain           = $this->getDomain();
-        $secretPreference = Preferences::get('temp-mfa-secret');
-        $codesPreference  = Preferences::get('temp-mfa-codes');
+        $secretPreference = app('preferences')->get('temp-mfa-secret');
+        $codesPreference  = app('preferences')->get('temp-mfa-codes');
 
         // generate secret if not in session
         if (null === $secretPreference) {
             // generate secret + store + flash
             $secret = Google2FA::generateSecretKey();
-            Preferences::set('temp-mfa-secret', $secret);
+            app('preferences')->set('temp-mfa-secret', $secret);
         }
 
         // re-use secret if in session
@@ -137,7 +137,7 @@ class ProfileController extends Controller
             // generate codes + store + flash:
             $recovery      = app(Recovery::class);
             $recoveryCodes = $recovery->lowercase()->setCount(8)->setBlocks(2)->setChars(6)->toArray();
-            Preferences::set('temp-mfa-codes', $recoveryCodes);
+            app('preferences')->set('temp-mfa-codes', $recoveryCodes);
         }
 
         // get codes from session if present already:
@@ -227,8 +227,8 @@ class ProfileController extends Controller
         /** @var User $user */
         $user = auth()->user();
 
-        Preferences::delete('temp-mfa-secret');
-        Preferences::delete('temp-mfa-codes');
+        app('preferences')->delete('temp-mfa-secret');
+        app('preferences')->delete('temp-mfa-codes');
         $repository->setMFACode($user, null);
         app('preferences')->mark();
 
@@ -498,12 +498,12 @@ class ProfileController extends Controller
         $user = auth()->user();
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $secret     = Preferences::get('temp-mfa-secret')?->data;
+        $secret     = app('preferences')->get('temp-mfa-secret')?->data;
 
         $repository->setMFACode($user, $secret);
 
-        Preferences::delete('temp-mfa-secret');
-        Preferences::delete('temp-mfa-codes');
+        app('preferences')->delete('temp-mfa-secret');
+        app('preferences')->delete('temp-mfa-codes');
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();
