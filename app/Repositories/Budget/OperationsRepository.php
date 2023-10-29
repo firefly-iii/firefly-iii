@@ -221,67 +221,6 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     * @deprecated
-     */
-    public function spentInPeriodMc(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
-    {
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setBudgets($budgets)->withBudgetInformation();
-
-        if ($accounts->count() > 0) {
-            $collector->setAccounts($accounts);
-        }
-        // TODO possible candidate for "get extracted groups" method.
-        $set        = $collector->getGroups();
-        $return     = [];
-        $total      = [];
-        $currencies = [];
-        /** @var array $group */
-        foreach ($set as $group) {
-            /** @var array $transaction */
-            foreach ($group['transactions'] as $transaction) {
-                $code = $transaction['currency_code'];
-                if (!array_key_exists($code, $currencies)) {
-                    $currencies[$code] = [
-                        'id'             => $transaction['currency_id'],
-                        'decimal_places' => $transaction['currency_decimal_places'],
-                        'code'           => $transaction['currency_code'],
-                        'name'           => $transaction['currency_name'],
-                        'symbol'         => $transaction['currency_symbol'],
-                    ];
-                }
-                $total[$code] = array_key_exists($code, $total) ? bcadd($total[$code], $transaction['amount']) : $transaction['amount'];
-            }
-        }
-        /**
-         * @var string $code
-         * @var string $spent
-         */
-        foreach ($total as $code => $spent) {
-            /** @var TransactionCurrency $currency */
-            $currency = $currencies[$code];
-            $return[] = [
-                'currency_id'             => (string)$currency['id'],
-                'currency_code'           => $code,
-                'currency_name'           => $currency['name'],
-                'currency_symbol'         => $currency['symbol'],
-                'currency_decimal_places' => $currency['decimal_places'],
-                'amount'                  => app('steam')->bcround($spent, $currency['decimal_places']),
-            ];
-        }
-
-        return $return;
-    }
-
-    /**
      * @param Carbon                   $start
      * @param Carbon                   $end
      * @param Collection|null          $accounts
@@ -289,7 +228,6 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @param TransactionCurrency|null $currency
      *
      * @return array
-     * @deprecated
      */
     public function sumExpenses(
         Carbon               $start,

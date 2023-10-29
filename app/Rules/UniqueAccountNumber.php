@@ -23,15 +23,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Closure;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
  * Class UniqueAccountNumber
  */
-class UniqueAccountNumber implements Rule
+class UniqueAccountNumber implements ValidationRule
 {
     private ?Account $account;
     private ?string  $expectedType;
@@ -73,21 +74,19 @@ class UniqueAccountNumber implements Rule
     }
 
     /**
-     * Determine if the validation rule passes.
+     * @param string  $attribute
+     * @param mixed   $value
+     * @param Closure $fail
      *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return bool
-     *
+     * @return void
      */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!auth()->check()) {
-            return true;
+            return;
         }
         if (null === $this->expectedType) {
-            return true;
+            return;
         }
         $maxCounts = $this->getMaxOccurrences();
 
@@ -105,12 +104,11 @@ class UniqueAccountNumber implements Rule
                     )
                 );
 
-                return false;
+                $fail('validation.unique_account_number_for_user')->translate();
+                return;
             }
         }
         app('log')->debug('Account number is valid.');
-
-        return true;
     }
 
     /**

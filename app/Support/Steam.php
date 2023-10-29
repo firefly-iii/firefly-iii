@@ -134,7 +134,7 @@ class Steam
         if (null === $currency) {
             $repository = app(AccountRepositoryInterface::class);
             $repository->setUser($account->user);
-            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
+            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
         $currencyId = (int)$currency->id;
 
@@ -211,7 +211,7 @@ class Steam
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         if (null === $currency) {
-            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
+            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
         // first part: get all balances in own currency:
         $transactions  = $account->transactions()

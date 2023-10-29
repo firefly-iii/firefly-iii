@@ -27,6 +27,7 @@ namespace FireflyIII\Repositories\UserGroups\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -34,6 +35,14 @@ use Illuminate\Support\Collection;
  */
 interface AccountRepositoryInterface
 {
+
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
+    public function setUser(User $user): void;
+
     /**
      * @param int $accountId
      *

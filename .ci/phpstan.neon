@@ -5,14 +5,21 @@ includes:
   - ../vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
 
 parameters:
+  universalObjectCratesClasses:
+    - Illuminate\Database\Eloquent\Model
+  reportUnmatchedIgnoredErrors: false
   ignoreErrors:
     - '#is not allowed to extend#'
     - '#is neither abstract nor final#'
     - '#has a nullable return type declaration#'
     - '#with a nullable type declaration#'
     - '#with null as default value#'
-    - 'No error to ignore is reported on#'
     - '#is not covariant with PHPDoc type array#'
+    -
+        message: '#Constructor in [a-zA-Z0-9\\_]+ has parameter \$[a-zA-Z0-9\\_]+ with default value#'
+        paths:
+            - ../app/Exceptions/IntervalException.php
+            - ../app/Support/Navigation.php
     -
         message: '#but containers should not be injected#'
         paths:
@@ -67,5 +74,5 @@ parameters:
     - ../bootstrap/app.php
 
   # The level 8 is the highest level. original was 5
-  level: 1
+  level: 2
 

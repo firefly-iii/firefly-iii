@@ -299,10 +299,12 @@ class UserRepository implements UserRepositoryInterface
         if (null === $user) {
             return false;
         }
-        /** @var Role $userRole */
-        foreach ($user->roles as $userRole) {
-            if ($userRole->name === $role) {
-                return true;
+        if ($user instanceof User) {
+            /** @var Role $userRole */
+            foreach ($user->roles as $userRole) {
+                if ($userRole->name === $role) {
+                    return true;
+                }
             }
         }
 

@@ -24,34 +24,25 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Closure;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Validation\AccountValidator;
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
  * Class IsTransferAccount
  */
-class IsTransferAccount implements Rule
+class IsTransferAccount implements ValidationRule
 {
-    /**
-     * Get the validation error message.
-     *
-     * @return string
-     */
-    public function message(): string
-    {
-        return (string)trans('validation.not_transfer_account');
-    }
 
     /**
-     * Determine if the validation rule passes.
+     * @param string  $attribute
+     * @param mixed   $value
+     * @param Closure $fail
      *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return bool
+     * @return void
      */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         app('log')->debug(sprintf('Now in %s(%s)', __METHOD__, $value));
         /** @var AccountValidator $validator */
@@ -64,11 +55,13 @@ class IsTransferAccount implements Rule
             app('log')->debug('Found account based on name. Return true.');
 
             // found by name, use repos to return.
-            return true;
+            return;
         }
         $validAccount = $validator->validateSource(['id' => (int)$value,]);
         app('log')->debug(sprintf('Search by id (%d), result is %s.', (int)$value, var_export($validAccount, true)));
 
-        return false !== $validAccount;
+        if(false === $validAccount) {
+            $fail('validation.not_transfer_account')->translate();
+        }
     }
 }

@@ -262,7 +262,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
         if (null === $result) {
             app('log')->debug('Grabbing default currency for this user...');
-            $result = app('amount')->getDefaultCurrencyByUser($this->user);
+            $result = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         }
 
         if (null === $result) {

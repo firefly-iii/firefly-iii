@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
 
-use Amount as Amt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
@@ -68,11 +67,10 @@ class CurrencyForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
-        $defaultCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
+        $defaultCurrency = $options['currency'] ?? app('amount')->getDefaultCurrency();
         /** @var Collection $currencies */
         $currencies = app('amount')->getCurrencies();
         unset($options['currency'], $options['placeholder']);
-
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
         $preFilled = session('preFilled');
         if (!is_array($preFilled)) {
@@ -140,7 +138,7 @@ class CurrencyForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
-        $defaultCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
+        $defaultCurrency = $options['currency'] ?? app('amount')->getDefaultCurrency();
         /** @var Collection $currencies */
         $currencies = app('amount')->getAllCurrencies();
         unset($options['currency'], $options['placeholder']);

@@ -27,36 +27,28 @@ namespace FireflyIII\Rules;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
  * Class IsDateOrTime
  */
-class IsDateOrTime implements Rule
+class IsDateOrTime implements ValidationRule
 {
-    /**
-     * Get the validation error message.
-     *
-     * @return string
-     */
-    public function message()
-    {
-        return (string)trans('validation.date_or_time');
-    }
 
     /**
-     * Determine if the validation rule passes.
+     * @param string  $attribute
+     * @param mixed   $value
+     * @param Closure $fail
      *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return bool
+     * @return void
      */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $value = (string)$value;
         if ('' === $value) {
-            return false;
+            $fail('validation.date_or_time')->translate();;
+            return;
         }
         if (10 === strlen($value)) {
             // probably a date format.
@@ -65,14 +57,16 @@ class IsDateOrTime implements Rule
             } catch (InvalidDateException $e) {
                 app('log')->error(sprintf('"%s" is not a valid date: %s', $value, $e->getMessage()));
 
-                return false;
+                $fail('validation.date_or_time')->translate();;
+                return;
             } catch (InvalidFormatException $e) {
                 app('log')->error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
 
-                return false;
+                $fail('validation.date_or_time')->translate();;
+                return;
             }
 
-            return true;
+            return;
         }
         // is an atom string, I hope?
         try {
@@ -80,13 +74,13 @@ class IsDateOrTime implements Rule
         } catch (InvalidDateException $e) {
             app('log')->error(sprintf('"%s" is not a valid date or time: %s', $value, $e->getMessage()));
 
-            return false;
+            $fail('validation.date_or_time')->translate();;
+            return;
         } catch (InvalidFormatException $e) {
             app('log')->error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
 
-            return false;
+            $fail('validation.date_or_time')->translate();;
+            return;
         }
-
-        return true;
     }
 }

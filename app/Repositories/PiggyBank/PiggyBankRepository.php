@@ -194,7 +194,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $accountRepos = app(AccountRepositoryInterface::class);
         $accountRepos->setUser($this->user);
 
-        $defaultCurrency   = app('amount')->getDefaultCurrencyByUser($this->user);
+        $defaultCurrency   = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         $piggyBankCurrency = $accountRepos->getAccountCurrency($piggyBank->account) ?? $defaultCurrency;
 
         app('log')->debug(sprintf('Piggy bank #%d currency is %s', $piggyBank->id, $piggyBankCurrency->code));

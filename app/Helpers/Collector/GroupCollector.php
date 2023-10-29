@@ -1107,7 +1107,7 @@ class GroupCollector implements GroupCollectorInterface
     /**
      * Set the user object and start the query.
      *
-     * @param User $user
+     * @param UserGroup $userGroup
      *
      * @return GroupCollectorInterface
      */

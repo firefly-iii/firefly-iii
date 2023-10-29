@@ -271,6 +271,11 @@ class InterestingMessage
         return null !== $code && null !== $message;
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return void
+     */
     private function handleCurrencyMessage(Request $request): void
     {
         // params:
@@ -278,7 +283,7 @@ class InterestingMessage
         $code    = $request->get('code');
         $message = $request->get('message');
 
-        /** @var TransactionCurrency $webhook */
+        /** @var TransactionCurrency $currency */
         $currency = TransactionCurrency::whereCode($code)->first();
 
         if (null === $currency) {

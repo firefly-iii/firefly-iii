@@ -78,19 +78,17 @@ class AccountMeta extends Model
     /**
      * @param mixed $value
      *
-     * @return mixed
+     * @return string
      */
-    public function getDataAttribute($value): string
+    public function getDataAttribute(mixed $value): string
     {
         return (string)json_decode($value, true);
     }
 
     /**
      * @param mixed $value
-     *
-
      */
-    public function setDataAttribute($value): void
+    public function setDataAttribute(mixed $value): void
     {
         $this->attributes['data'] = json_encode($value);
     }

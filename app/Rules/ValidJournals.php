@@ -24,40 +24,30 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Closure;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
  * Class ValidJournals
  *
 
  */
-class ValidJournals implements Rule
+class ValidJournals implements ValidationRule
 {
-    /**
-     * Get the validation error message.
-     *
-     * @return string
-     */
-    public function message(): string
-    {
-        return (string)trans('validation.invalid_selection');
-    }
 
     /**
-     * Determine if the validation rule passes.
+     * @param string  $attribute
+     * @param mixed   $value
+     * @param Closure $fail
      *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return bool
-     *
+     * @return void
      */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         app('log')->debug('In ValidJournals::passes');
         if (!is_array($value)) {
-            return true;
+            return;
         }
         $userId = auth()->user()->id;
         foreach ($value as $journalId) {
@@ -65,11 +55,10 @@ class ValidJournals implements Rule
             if (0 === $count) {
                 app('log')->debug(sprintf('Count for transaction #%d and user #%d is zero! Return FALSE', $journalId, $userId));
 
-                return false;
+                $fail('validation.invalid_selection')->translate();
+                return;
             }
         }
         app('log')->debug('Return true!');
-
-        return true;
     }
 }

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\UserGroups\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -33,6 +34,13 @@ use Illuminate\Support\Collection;
  */
 interface OperationsRepositoryInterface
 {
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
+    public function setUser(User $user): void;
+
     /**
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
      * which have the specified budget set to them. It's grouped per currency, with as few details in the array

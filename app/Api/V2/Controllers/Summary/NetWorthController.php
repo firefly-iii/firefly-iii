@@ -40,7 +40,6 @@ use Illuminate\Http\JsonResponse;
 class NetWorthController extends Controller
 {
     use ValidatesUserGroupTrait;
-    use ConvertsExchangeRates;
 
     private NetWorthInterface          $netWorth;
     private AccountRepositoryInterface $repository;

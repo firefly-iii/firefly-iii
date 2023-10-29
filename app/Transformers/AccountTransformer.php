@@ -184,7 +184,7 @@ class AccountTransformer extends AbstractTransformer
 
         // only grab default when result is null:
         if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrencyByUser($account->user);
+            $currency = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
         $currencyId     = (string)$currency->id;
         $currencyCode   = $currency->code;

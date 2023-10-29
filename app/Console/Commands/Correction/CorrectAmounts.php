@@ -167,7 +167,7 @@ class CorrectAmounts extends Command
 
             return;
         }
-        /** @var BudgetLimit $item */
+        /** @var CurrencyExchangeRate $item */
         foreach ($set as $item) {
             $item->rate = app('steam')->positive((string)$item->rate);
             $item->save();
@@ -207,7 +207,7 @@ class CorrectAmounts extends Command
 
             return;
         }
-        /** @var PiggyBankRepetition $item */
+        /** @var PiggyBank $item */
         foreach ($set as $item) {
             $item->targetamount = app('steam')->positive((string)$item->targetamount);
             $item->save();
@@ -229,7 +229,7 @@ class CorrectAmounts extends Command
 
             return;
         }
-        /** @var PiggyBankRepetition $item */
+        /** @var RecurrenceTransaction $item */
         foreach ($set as $item) {
             $item->amount         = app('steam')->positive((string)$item->amount);
             $item->foreign_amount = app('steam')->positive((string)$item->foreign_amount);

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Closure;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
@@ -39,15 +40,15 @@ use FireflyIII\Repositories\Journal\JournalAPIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
  * Class IsValidAttachmentModel
  */
-class IsValidAttachmentModel implements Rule
+class IsValidAttachmentModel implements ValidationRule
 {
     /** @var string */
-    private $model;
+    private string $model;
 
     /**
      * IsValidAttachmentModel constructor.
@@ -76,27 +77,17 @@ class IsValidAttachmentModel implements Rule
     }
 
     /**
-     * Get the validation error message.
+     * @param string  $attribute
+     * @param mixed   $value
+     * @param Closure $fail
      *
-     * @return string
+     * @return void
      */
-    public function message(): string
-    {
-        return (string)trans('validation.model_id_invalid');
-    }
-
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return bool
-     */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (!auth()->check()) {
-            return false;
+            $fail('validation.model_id_invalid')->translate();
+            return;
         }
         $methods = [
             Account::class            => 'validateAccount',
@@ -111,11 +102,15 @@ class IsValidAttachmentModel implements Rule
         if (!array_key_exists($this->model, $methods)) {
             app('log')->error(sprintf('Cannot validate model "%s" in %s.', substr($this->model, 0, 20), __METHOD__));
 
-            return false;
+            $fail('validation.model_id_invalid')->translate();
+            return;
         }
         $method = $methods[$this->model];
 
-        return $this->$method((int)$value);
+        $result =  $this->$method((int)$value);
+        if(false === $result) {
+            $fail('validation.model_id_invalid')->translate();
+        }
     }
 
     /**

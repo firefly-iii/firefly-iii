@@ -121,7 +121,7 @@ class Amount
         /** @var User $user */
         $user = auth()->user();
 
-        return $this->getDefaultCurrencyByUser($user);
+        return $this->getDefaultCurrencyByUserGroup($user->userGroup);
     }
 
     /**

@@ -25,9 +25,9 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Exceptions\IntervalException;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Support\Calendar\Calculator;
-use FireflyIII\Support\Calendar\Exceptions\IntervalException;
 use FireflyIII\Support\Calendar\Periodicity;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -111,7 +111,7 @@ class Navigation
             return $this->calculator->nextDateByInterval($epoch, $periodicity, $skipInterval);
         } catch (IntervalException $exception) {
             app('log')->warning($exception->getMessage(), ['exception' => $exception]);
-        } catch (Throwable $exception) {
+        } catch (Throwable $exception) { // @phpstan-ignore-line
             app('log')->error($exception->getMessage(), ['exception' => $exception]);
         }
 
@@ -144,8 +144,8 @@ class Navigation
         $workEnd   = clone $loopDate;
         while ($loopCount < 13) {
             // make range:
-            $workStart = \Navigation::startOfPeriod($workStart, $range);
-            $workEnd   = \Navigation::endOfPeriod($workStart, $range);
+            $workStart = $this->startOfPeriod($workStart, $range);
+            $workEnd   = $this->endOfPeriod($workStart, $range);
 
             // make sure we don't go overboard
             if ($workEnd->gt($start)) {

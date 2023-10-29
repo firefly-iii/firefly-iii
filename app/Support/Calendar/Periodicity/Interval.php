@@ -37,7 +37,7 @@ abstract class Interval implements Interspacable
      *
      * @return int
      */
-    public function skip(int $skip): int
+    final public function skip(int $skip): int
     {
         return static::INTERVAL * $skip;
     }

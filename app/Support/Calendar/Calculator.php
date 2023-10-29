@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Calendar;
 
 use Carbon\Carbon;
-use FireflyIII\Support\Calendar\Exceptions\IntervalException;
+use FireflyIII\Exceptions\IntervalException;
 use SplObjectStorage;
 
 /**

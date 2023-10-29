@@ -27,10 +27,17 @@ namespace FireflyIII\Repositories\UserGroups\Currency;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 interface CurrencyRepositoryInterface
 {
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
+    public function setUser(User $user): void;
     /**
      * @param TransactionCurrency $currency
      *

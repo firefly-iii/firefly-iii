@@ -131,7 +131,7 @@ class PiggyBankTransformer extends AbstractTransformer
             $this->notes[$id] = $note;
         }
 
-        $this->default   = app('amount')->getDefaultCurrencyByUser(auth()->user());
+        $this->default   = app('amount')->getDefaultCurrencyByUserGroup(auth()->user()->userGroup);
         $this->converter = new ExchangeRateConverter();
     }
 

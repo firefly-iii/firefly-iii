@@ -373,6 +373,6 @@ class BudgetReportGenerator
         $this->blRepository->setUser($user);
         $this->opsRepository->setUser($user);
         $this->nbRepository->setUser($user);
-        $this->currency = app('amount')->getDefaultCurrencyByUser($user);
+        $this->currency = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
     }
 }

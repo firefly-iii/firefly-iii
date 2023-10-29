@@ -60,7 +60,7 @@ class BillUpdateService
         if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
             $factory  = app(TransactionCurrencyFactory::class);
             $currency = $factory->find((int)($data['currency_id'] ?? null), $data['currency_code'] ?? null) ??
-                        app('amount')->getDefaultCurrencyByUser($bill->user);
+                        app('amount')->getDefaultCurrencyByUserGroup($bill->user->userGroup);
 
             // enable the currency if it isn't.
             $currency->enabled = true;

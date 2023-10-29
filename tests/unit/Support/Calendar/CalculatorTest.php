@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support\Calendar;
 
+use FireflyIII\Exceptions\IntervalException;
 use FireflyIII\Support\Calendar\Calculator;
-use FireflyIII\Support\Calendar\Exceptions\IntervalException;
 use FireflyIII\Support\Calendar\Periodicity;
 use Generator;
 use PHPUnit\Framework\TestCase;

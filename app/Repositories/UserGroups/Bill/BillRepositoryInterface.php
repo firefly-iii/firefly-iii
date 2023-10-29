@@ -27,6 +27,7 @@ namespace FireflyIII\Repositories\UserGroups\Bill;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -34,6 +35,13 @@ use Illuminate\Support\Collection;
  */
 interface BillRepositoryInterface
 {
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
+    public function setUser(User $user): void;
+
     /**
      * TODO duplicate of other repos
      * Add correct order to bills.

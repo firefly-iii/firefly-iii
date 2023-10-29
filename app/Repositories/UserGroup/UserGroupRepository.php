@@ -220,7 +220,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
             return $userGroup;
         }
         // count the number of members in the group right now:
-        $membershipCount = $userGroup->groupMemberships()->distinct()->get(['group_memberships.user_id'])->count();
+        $membershipCount = $userGroup->groupMemberships()->distinct()->count(['group_memberships.user_id']);
 
         // if it's 1:
         if (1 === $membershipCount) {

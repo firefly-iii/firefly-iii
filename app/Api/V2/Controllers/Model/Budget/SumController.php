@@ -36,8 +36,6 @@ use Illuminate\Http\JsonResponse;
  */
 class SumController extends Controller
 {
-    use ConvertsExchangeRates;
-
     private BudgetRepositoryInterface $repository;
 
     /**
@@ -65,12 +63,10 @@ class SumController extends Controller
      */
     public function budgeted(DateRequest $request): JsonResponse
     {
-        throw new FireflyException('Needs refactoring, uses deprecated method.');
         $data      = $request->getAll();
         $result    = $this->repository->budgetedInPeriod($data['start'], $data['end']);
-        $converted = $this->cerSum(array_values($result));
 
-        return response()->json($converted);
+        return response()->json($result);
     }
 
     /**
@@ -83,11 +79,9 @@ class SumController extends Controller
      */
     public function spent(DateRequest $request): JsonResponse
     {
-        throw new FireflyException('Needs refactoring, uses deprecated method.');
         $data      = $request->getAll();
         $result    = $this->repository->spentInPeriod($data['start'], $data['end']);
-        $converted = $this->cerSum(array_values($result));
 
-        return response()->json($converted);
+        return response()->json($result);
     }
 }

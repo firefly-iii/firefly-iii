@@ -23,30 +23,25 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
+ * TODO not sure where this is used.
+ *
  * Class IsDuplicateTransaction
  */
-class IsDuplicateTransaction implements Rule
+class IsDuplicateTransaction implements ValidationRule
 {
     private string $value;
 
     /**
      * @inheritDoc
      */
-    public function message()
-    {
-        return $this->value;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function passes($attribute, $value)
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $this->value = $value;
 
-        return false;
+        $fail($this->value);
     }
 }

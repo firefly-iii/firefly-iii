@@ -38,8 +38,6 @@ use Illuminate\Http\JsonResponse;
  */
 class ShowController extends Controller
 {
-    use ConvertsExchangeRates;
-
     private BudgetRepositoryInterface $repository;
 
     /**
@@ -69,7 +67,6 @@ class ShowController extends Controller
     {
         $data   = $request->getAll();
         $result = $this->repository->budgetedInPeriodForBudget($budget, $data['start'], $data['end']);
-        //$converted = $this->cerSum(array_values($result));
 
         return response()->json($result);
     }
@@ -83,7 +80,6 @@ class ShowController extends Controller
     {
         $data   = $request->getAll();
         $result = $this->repository->spentInPeriodForBudget($budget, $data['start'], $data['end']);
-        // $converted = $this->cerSum(array_values($result));
 
         return response()->json($result);
     }

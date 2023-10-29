@@ -227,7 +227,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
      * @param Carbon      $end
      * @param string|null $amount
      */
-    private function createBudgetLimit(AutoBudget $autoBudget, Carbon $start, Carbon $end, ?string $amount = null)
+    private function createBudgetLimit(AutoBudget $autoBudget, Carbon $start, Carbon $end, ?string $amount = null): void
     {
         app('log')->debug(sprintf('No budget limit exist. Must create one for auto-budget #%d', $autoBudget->id));
         if (null !== $amount) {

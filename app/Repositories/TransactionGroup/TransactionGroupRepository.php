@@ -401,7 +401,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     {
         $return   = [];
         $journals = $group->transactionJournals->pluck('id')->toArray();
-        $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        $currency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         $data     = PiggyBankEvent::whereIn('transaction_journal_id', $journals)
                                   ->with('piggyBank', 'piggyBank.account')
                                   ->get(['piggy_bank_events.*']);

@@ -24,7 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Rules;
 
 use Carbon\Carbon;
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 use InvalidArgumentException;
 
 /**
@@ -32,56 +33,44 @@ use InvalidArgumentException;
  *
 
  */
-class ValidRecurrenceRepetitionValue implements Rule
+class ValidRecurrenceRepetitionValue implements ValidationRule
 {
     /**
-     * Get the validation error message.
+     * @param string  $attribute
+     * @param mixed   $value
+     * @param Closure $fail
      *
-     * @return string
+     * @return void
      */
-    public function message(): string
-    {
-        return (string)trans('validation.valid_recurrence_rep_type');
-    }
-
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return bool
-     *
-     */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $value = (string)$value;
 
         if ('daily' === $value) {
-            return true;
+            return;
         }
 
-        if (str_starts_with($value, 'monthly')) {
-            return $this->validateMonthly($value);
+        if (str_starts_with($value, 'monthly') && $this->validateMonthly($value)) {
+            return;
         }
 
         // Value is like: ndom,3,7
         // nth x-day of the month.
-        if (str_starts_with($value, 'ndom')) {
-            return $this->validateNdom($value);
+        if (str_starts_with($value, 'ndom') && $this->validateNdom($value)) {
+            return;
         }
 
         // Value is like: weekly,7
-        if (str_starts_with($value, 'weekly')) {
-            return $this->validateWeekly($value);
+        if (str_starts_with($value, 'weekly') && $this->validateWeekly($value)) {
+            return ;
         }
 
         // Value is like: yearly,2018-01-01
-        if (str_starts_with($value, 'yearly')) {
-            return $this->validateYearly($value);
+        if (str_starts_with($value, 'yearly') && $this->validateYearly($value)) {
+            return ;
         }
 
-        return false;
+        $fail('validation.valid_recurrence_rep_type')->translate();
     }
 
     /**

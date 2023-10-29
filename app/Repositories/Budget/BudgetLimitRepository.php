@@ -294,7 +294,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         $factory  = app(TransactionCurrencyFactory::class);
         $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
         if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+            $currency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         }
         $currency->enabled = true;
         $currency->save();
@@ -371,7 +371,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         }
         // catch unexpected null:
         if (null === $currency) {
-            $currency = $budgetLimit->transactionCurrency ?? app('amount')->getDefaultCurrencyByUser($this->user);
+            $currency = $budgetLimit->transactionCurrency ?? app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         }
         $currency->enabled = true;
         $currency->save();
