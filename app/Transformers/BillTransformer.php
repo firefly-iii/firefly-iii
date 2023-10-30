@@ -86,7 +86,7 @@ class BillTransformer extends AbstractTransformer
         foreach ($payDates as $string) {
             $payDatesFormatted[] = Carbon::createFromFormat('!Y-m-d', $string, config('app.timezone'))->toAtomString();
         }
-        $nextExpectedMatch = '';
+        $nextExpectedMatch = null;
         if (null !== ($payDates[0] ?? null)) {
             $nextExpectedMatch = Carbon::createFromFormat('!Y-m-d', $payDates[0], config('app.timezone'))->toAtomString();
         }

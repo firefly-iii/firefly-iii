@@ -201,7 +201,7 @@ class BillTransformer extends AbstractTransformer
         // date for currency conversion
         /** @var Carbon|null $startParam */
         $startParam = $this->parameters->get('start');
-        /** @var Carbon|null $start */
+        /** @var Carbon|null $date */
         $date = null === $startParam ? today() : clone $startParam;
 
 
@@ -290,8 +290,8 @@ class BillTransformer extends AbstractTransformer
     /**
      * Returns the latest date in the set, or start when set is empty.
      *
-     * @param Collection $dates
-     * @param Carbon     $default
+     * @param array  $dates
+     * @param Carbon $default
      *
      * @return Carbon
      */

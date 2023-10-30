@@ -80,7 +80,9 @@
                             {{ trans('firefly.not_expected_period') }}
                         </td>
                         <td class="expected_in_period hidden-sm hidden-xs">
-                            {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                            {% if entry.next_expected_match %}
+                                {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                            {% endif %}
                         </td>
                     {% endif %}
 
@@ -116,7 +118,9 @@
                             {% endfor %}
                         </td>
                         <td class="expected_in_period hidden-sm hidden-xs">
-                            {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                            {% if entry.next_expected_match %}
+                                {{ formatDate(entry.next_expected_match, monthAndDayFormat) }}
+                            {% endif %}
                         </td>
                     {% endif %}
                     {# bill is not active #}
