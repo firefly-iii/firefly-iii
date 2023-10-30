@@ -32,6 +32,7 @@ use FireflyIII\Support\Calendar\Periodicity;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Navigation.
@@ -87,7 +88,7 @@ class Navigation
         ];
 
         if (!array_key_exists($repeatFreq, $functionMap)) {
-            app('log')->error(sprintf(
+            Log::error(sprintf(
                 'The periodicity %s is unknown. Choose one of available periodicity: %s',
                 $repeatFreq,
                 join(', ', array_keys($functionMap))
@@ -110,12 +111,12 @@ class Navigation
         try {
             return $this->calculator->nextDateByInterval($epoch, $periodicity, $skipInterval);
         } catch (IntervalException $exception) {
-            app('log')->warning($exception->getMessage(), ['exception' => $exception]);
+            Log::warning($exception->getMessage(), ['exception' => $exception]);
         } catch (Throwable $exception) { // @phpstan-ignore-line
-            app('log')->error($exception->getMessage(), ['exception' => $exception]);
+            Log::error($exception->getMessage(), ['exception' => $exception]);
         }
 
-        app('log')->debug(
+        Log::debug(
             'Any error occurred to calculate the next date.',
             ['date' => $epoch, 'periodicity' => $periodicity->name, 'skipInterval' => $skipInterval]
         );
@@ -241,7 +242,7 @@ class Navigation
         if ('custom' === $repeatFreq) {
             return $date; // the date is already at the start.
         }
-        app('log')->error(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
+        Log::error(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $repeatFreq));
 
         return $theDate;
     }
@@ -317,7 +318,7 @@ class Navigation
 
 
         if (!array_key_exists($repeatFreq, $functionMap)) {
-            app('log')->error(sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $repeatFreq));
+            Log::error(sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $repeatFreq));
 
             return $end;
         }
@@ -350,7 +351,7 @@ class Navigation
      */
     public function diffInPeriods(string $period, int $skip, Carbon $beginning, Carbon $end): int
     {
-        app('log')->debug(sprintf(
+        Log::debug(sprintf(
             'diffInPeriods: %s (skip: %d), between %s and %s.',
             $period,
             $skip,
@@ -366,7 +367,7 @@ class Navigation
             'yearly'    => 'floatDiffInYears',
         ];
         if (!array_key_exists($period, $map)) {
-            app('log')->warning(sprintf('No diffInPeriods for period "%s"', $period));
+            Log::warning(sprintf('No diffInPeriods for period "%s"', $period));
             return 1;
         }
         $func = $map[$period];
@@ -375,23 +376,23 @@ class Navigation
 
         // then correct for quarterly or half-year
         if ('quarterly' === $period) {
-            app('log')->debug(sprintf('Q: Corrected %f to %f', $diff, $diff / 3));
+            Log::debug(sprintf('Q: Corrected %f to %f', $diff, $diff / 3));
             $diff = $diff / 3;
         }
         if ('half-year' === $period) {
-            app('log')->debug(sprintf('H: Corrected %f to %f', $diff, $diff / 6));
+            Log::debug(sprintf('H: Corrected %f to %f', $diff, $diff / 6));
             $diff = $diff / 6;
         }
 
         // then do ceil()
         $diff = ceil($diff);
 
-        app('log')->debug(sprintf('Diff is %f (%d)', $beginning->$func($end), $diff));
+        Log::debug(sprintf('Diff is %f (%d)', $beginning->$func($end), $diff));
 
         if ($skip > 0) {
             $parameter = $skip + 1;
             $diff      = ceil($diff / $parameter) * $parameter;
-            app('log')->debug(sprintf(
+            Log::debug(sprintf(
                 'diffInPeriods: skip is %d, so param is %d, and diff becomes %d',
                 $skip,
                 $parameter,
@@ -570,7 +571,7 @@ class Navigation
         }
 
         // special formatter for quarter of year
-        app('log')->error(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
+        Log::error(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
 
         return $date->format('Y-m-d');
     }
@@ -787,7 +788,7 @@ class Navigation
      */
     public function updateEndDate(string $range, Carbon $start): Carbon
     {
-        app('log')->debug(sprintf('updateEndDate("%s", "%s")', $range, $start->format('Y-m-d')));
+        Log::debug(sprintf('updateEndDate("%s", "%s")', $range, $start->format('Y-m-d')));
         $functionMap = [
             '1D'     => 'endOfDay',
             '1W'     => 'endOfWeek',
@@ -833,7 +834,7 @@ class Navigation
         if (in_array($range, $list, true)) {
             $end = today(config('app.timezone'));
             $end->endOfDay();
-            app('log')->debug(sprintf('updateEndDate returns "%s"', $end->format('Y-m-d')));
+            Log::debug(sprintf('updateEndDate returns "%s"', $end->format('Y-m-d')));
             return $end;
         }
 
@@ -850,7 +851,7 @@ class Navigation
      */
     public function updateStartDate(string $range, Carbon $start): Carbon
     {
-        app('log')->debug(sprintf('updateStartDate("%s", "%s")', $range, $start->format('Y-m-d')));
+        Log::debug(sprintf('updateStartDate("%s", "%s")', $range, $start->format('Y-m-d')));
         $functionMap = [
             '1D'     => 'startOfDay',
             '1W'     => 'startOfWeek',

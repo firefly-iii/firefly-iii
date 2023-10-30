@@ -51,26 +51,26 @@ $mysql_ssl_verify  = envNonEmpty('MYSQL_SSL_VERIFY_SERVER_CERT', null);
 
 $mySqlSSLOptions = [];
 $useSSL          = envNonEmpty('MYSQL_USE_SSL', false);
-//if (false !== $useSSL && null !== $useSSL && '' !== $useSSL) {
-//    if (null !== $mysql_ssl_ca_dir) {
-//        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CAPATH] = $mysql_ssl_ca_dir;
-//    }
-//    if (null !== $mysql_ssl_ca_file) {
-//        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CA] = $mysql_ssl_ca_file;
-//    }
-//    if (null !== $mysql_ssl_cert) {
-//        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CERT] = $mysql_ssl_cert;
-//    }
-//    if (null !== $mysql_ssl_key) {
-//        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_KEY] = $mysql_ssl_key;
-//    }
-//    if (null !== $mysql_ssl_ciphers) {
-//        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CIPHER] = $mysql_ssl_ciphers;
-//    }
-//    if (null !== $mysql_ssl_verify) {
-//        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = $mysql_ssl_verify;
-//    }
-//}
+if (false !== $useSSL && null !== $useSSL && '' !== $useSSL) {
+    if (null !== $mysql_ssl_ca_dir) {
+        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CAPATH] = $mysql_ssl_ca_dir;
+    }
+    if (null !== $mysql_ssl_ca_file) {
+        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CA] = $mysql_ssl_ca_file;
+    }
+    if (null !== $mysql_ssl_cert) {
+        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CERT] = $mysql_ssl_cert;
+    }
+    if (null !== $mysql_ssl_key) {
+        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_KEY] = $mysql_ssl_key;
+    }
+    if (null !== $mysql_ssl_ciphers) {
+        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CIPHER] = $mysql_ssl_ciphers;
+    }
+    if (null !== $mysql_ssl_verify) {
+        $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = $mysql_ssl_verify;
+    }
+}
 
 return [
     'default'     => envNonEmpty('DB_CONNECTION', 'mysql'),
