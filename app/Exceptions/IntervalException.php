@@ -35,9 +35,9 @@ use Throwable;
 final class IntervalException extends Exception
 {
 
-    public readonly array       $availableIntervals;
-    public readonly Periodicity $periodicity;
-    protected                   $message = 'The periodicity %s is unknown. Choose one of available periodicity: %s';
+    public array       $availableIntervals;
+    public Periodicity $periodicity;
+    protected          $message = 'The periodicity %s is unknown. Choose one of available periodicity: %s';
 
     public function __construct(string $message = "", int $code = 0, ?Throwable $previous = null)
     {

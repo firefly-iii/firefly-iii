@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\UserGroups\Budget;
 
+use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
@@ -39,6 +40,13 @@ interface BudgetRepositoryInterface
      * @return void
      */
     public function setUser(User $user): void;
+
+    /**
+     * @param UserGroup $userGroup
+     *
+     * @return void
+     */
+    public function setUserGroup(UserGroup $userGroup): void;
     /**
      * @return Collection
      */

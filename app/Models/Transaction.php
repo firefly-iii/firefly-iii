@@ -38,9 +38,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * FireflyIII\Models\Transaction
  *
  * @property int                             $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  * @property bool                            $reconciled
  * @property int                             $account_id
  * @property int                             $transaction_journal_id

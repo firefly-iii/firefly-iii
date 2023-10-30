@@ -182,7 +182,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
     public function setUser(Authenticatable | User | null $user): void
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }

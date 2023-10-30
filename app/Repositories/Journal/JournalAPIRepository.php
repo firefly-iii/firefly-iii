@@ -74,7 +74,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : ''; // TODO should not set notes like this.
+                $attachment->notes_text  = $notes ? $notes->text : ''; // TODO should not set notes like this.
 
                 return $attachment;
             }
@@ -115,7 +115,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }

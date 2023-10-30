@@ -239,7 +239,12 @@ class PiggyBankTransformer extends AbstractTransformer
     }
 
     /**
-     * @return string|null
+     * @param string      $currentAmount
+     * @param string      $targetAmount
+     * @param Carbon|null $startDate
+     * @param Carbon|null $targetDate
+     *
+     * @return string
      */
     private function getSuggestedMonthlyAmount(string $currentAmount, string $targetAmount, ?Carbon $startDate, ?Carbon $targetDate): string
     {

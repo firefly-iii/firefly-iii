@@ -327,12 +327,12 @@ class ReportController extends Controller
      *
      * @param ReportFormRequest $request
      *
-     * @return RedirectResponse|Redirector
+     * @return RedirectResponse|Redirector|View
      *
      * @throws FireflyException
      *
      */
-    public function postIndex(ReportFormRequest $request)
+    public function postIndex(ReportFormRequest $request): RedirectResponse|Redirector|View
     {
         // report type:
         $reportType = $request->get('report_type');

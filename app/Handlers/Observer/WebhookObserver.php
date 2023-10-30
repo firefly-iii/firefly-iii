@@ -38,7 +38,7 @@ class WebhookObserver
     public function deleting(Webhook $webhook): void
     {
         app('log')->debug('Observe "deleting" of a webhook.');
-        foreach ($webhook->webhookMessages() as $message) {
+        foreach ($webhook->webhookMessages()->get() as $message) {
             $message->delete();
         }
     }

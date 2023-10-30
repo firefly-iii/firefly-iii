@@ -125,7 +125,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : ''; // TODO setting the text to the 'notes' field doesn't work.
+                $attachment->notes_text       = $notes ? $notes->text : '';
 
                 return $attachment;
             }
@@ -278,7 +278,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }

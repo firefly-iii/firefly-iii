@@ -251,7 +251,7 @@ class BudgetLimitHandler
     {
         app('log')->debug(sprintf('BudgetLimitHandler::deleted(#%s)', $event->budgetLimit->id));
         $budgetLimit     = $event->budgetLimit;
-        $budgetLimit->id = null;
+        $budgetLimit->id = 0;
         $this->updateAvailableBudget($event->budgetLimit);
     }
 

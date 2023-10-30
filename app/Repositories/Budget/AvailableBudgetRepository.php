@@ -248,8 +248,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
             $availableBudget = new AvailableBudget();
             $availableBudget->user()->associate($this->user);
             $availableBudget->transactionCurrency()->associate($currency);
-            $availableBudget->start_date = $start->format('Y-m-d');
-            $availableBudget->end_date   = $end->format('Y-m-d');
+            $availableBudget->start_date = $start->startOfDay();
+            $availableBudget->end_date   = $end->endOfDay();
         }
         $availableBudget->amount = $amount;
         $availableBudget->save();
@@ -262,7 +262,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }

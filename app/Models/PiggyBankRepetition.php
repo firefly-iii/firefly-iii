@@ -34,11 +34,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * FireflyIII\Models\PiggyBankRepetition
  *
  * @property int                             $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property int                             $piggy_bank_id
- * @property \Illuminate\Support\Carbon|null $startdate
- * @property \Illuminate\Support\Carbon|null $targetdate
+ * @property Carbon|null $startdate
+ * @property Carbon|null $targetdate
  * @property string                          $currentamount
  * @property-read PiggyBank                  $piggyBank
  * @method static EloquentBuilder|PiggyBankRepetition newModelQuery()

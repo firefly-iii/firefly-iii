@@ -43,7 +43,7 @@ class PiggyBankObserver
         $repetition->piggyBank()->associate($piggyBank);
         $repetition->startdate     = $piggyBank->startdate;
         $repetition->targetdate    = $piggyBank->targetdate;
-        $repetition->currentamount = 0;
+        $repetition->currentamount = '0';
         $repetition->save();
     }
 

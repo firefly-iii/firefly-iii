@@ -199,7 +199,7 @@ class BillRepository implements BillRepositoryInterface
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : '';
+                $attachment->notes_text       = $notes ? $notes->text : '';
 
                 return $attachment;
             }
@@ -344,7 +344,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }

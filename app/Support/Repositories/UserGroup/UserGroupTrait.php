@@ -66,7 +66,7 @@ trait UserGroupTrait
      */
     public function setUser(Authenticatable | User | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user      = $user;
             $this->userGroup = $user->userGroup;
         }

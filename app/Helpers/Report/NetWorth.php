@@ -159,7 +159,7 @@ class NetWorth implements NetWorthInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null === $user) {
+        if (!($user instanceof User)) {
             return;
         }
         $this->user      = $user;

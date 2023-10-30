@@ -155,7 +155,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }

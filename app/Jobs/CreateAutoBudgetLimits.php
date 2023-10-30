@@ -240,7 +240,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $budgetLimit->end_date   = $end;
         $budgetLimit->amount     = $amount ?? $autoBudget->amount;
         $budgetLimit->period     = $autoBudget->period;
-        $budgetLimit->generated  = true;
+        $budgetLimit->generated  = 1;
         $budgetLimit->save();
 
         app('log')->debug(sprintf('Created budget limit #%d.', $budgetLimit->id));

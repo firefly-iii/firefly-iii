@@ -66,7 +66,7 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laravel\Passport\Client;
@@ -389,7 +389,8 @@ class User extends Authenticatable
      *
      * @param UserGroup    $userGroup
      * @param UserRoleEnum $role
-     * @param bool         $allowOverride
+     * @param bool         $allowGroupOverride
+     * @param bool         $allowSystemOverride
      *
      * @return bool
      */

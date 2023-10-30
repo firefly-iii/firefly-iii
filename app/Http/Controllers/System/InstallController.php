@@ -166,11 +166,8 @@ class InstallController extends Controller
      */
     public function keys(): void
     {
-        // switch on PHP version.
-        $keys = [];
-        // switch on class existence.
-        app('log')->info('Will run PHP8 code.');
-        $keys = RSA::createKey(4096);
+
+        $key = RSA::createKey(4096);
 
         [$publicKey, $privateKey] = [
             Passport::keyPath('oauth-public.key'),
@@ -181,7 +178,7 @@ class InstallController extends Controller
             return;
         }
 
-        file_put_contents($publicKey, $keys['publickey']);
-        file_put_contents($privateKey, $keys['privatekey']);
+        file_put_contents($publicKey, (string) $key->getPublicKey());
+        file_put_contents($privateKey, $key->toString('PKCS1'));
     }
 }

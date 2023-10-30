@@ -136,7 +136,7 @@ class Amount
     }
 
     /**
-     * @param User $user
+     * @param UserGroup $userGroup
      *
      * @return TransactionCurrency
      */

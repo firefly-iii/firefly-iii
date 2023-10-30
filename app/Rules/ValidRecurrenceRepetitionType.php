@@ -36,11 +36,9 @@ class ValidRecurrenceRepetitionType implements ValidationRule
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return bool
-     *
+     * @param string  $attribute
+     * @param mixed   $value
+     * @param Closure $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {

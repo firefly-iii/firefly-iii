@@ -107,9 +107,9 @@ class SelectController extends Controller
      *
      * @param Rule $rule
      *
-     * @return Factory|View
+     * @return Factory|View|RedirectResponse
      */
-    public function selectTransactions(Rule $rule)
+    public function selectTransactions(Rule $rule): Factory|View|RedirectResponse
     {
         if (false === $rule->active) {
             session()->flash('warning', trans('firefly.cannot_fire_inactive_rules'));

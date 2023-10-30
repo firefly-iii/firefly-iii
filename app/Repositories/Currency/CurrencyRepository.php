@@ -76,7 +76,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         if ($fromCurrency->id === $toCurrency->id) {
             $rate       = new CurrencyExchangeRate();
-            $rate->rate = 1;
+            $rate->rate = "1";
             $rate->id   = 0;
 
             return $rate;
@@ -123,7 +123,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
