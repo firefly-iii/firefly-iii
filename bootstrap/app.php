@@ -44,7 +44,7 @@ if (!function_exists('envNonEmpty')) {
     function envNonEmpty(string $key, $default = null)
     {
         $result = env($key, $default);
-        if (is_string($result) && '' === $result) {
+        if ('' === $result) {
             $result = $default;
         }
 
