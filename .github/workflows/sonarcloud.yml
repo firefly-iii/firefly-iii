@@ -43,7 +43,7 @@ jobs:
             xmlwriter
 
       - name: Copy standard configuration
-        run: copy .env.testing .env
+        run: cp .env.testing .env
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress --no-scripts
