@@ -48,14 +48,14 @@ jobs:
       - name: "Create database file"
         run: touch storage/database/database.sqlite
 
-      - name: "Create the database"
-        run: php artisan firefly-iii:create-database
-
       - name: "Upgrades the database to the latest version"
         run: php artisan firefly-iii:upgrade-database
 
       - name: "Integrity Database Report"
         run: php artisan firefly-iii:report-integrity
+
+      - name: "Run Laravel things"
+        run: composer install
 
       - name: "Run tests with coverage"
         run: composer coverage
