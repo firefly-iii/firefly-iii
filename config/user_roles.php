@@ -28,7 +28,7 @@ use FireflyIII\Enums\UserRoleEnum;
 $result = [];
 
 
-foreach (UserRoleEnum::cases() as $role) {
-    $result[$role->value] = [];
-}
+//foreach (UserRoleEnum::cases() as $role) {
+//    $result[$role->value] = [];
+//}
 return $result;
