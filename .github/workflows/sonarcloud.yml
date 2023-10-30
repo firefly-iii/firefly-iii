@@ -42,6 +42,9 @@ jobs:
             xml
             xmlwriter
 
+      - name: Copy standard configuration
+        run: copy .env.example .env
+
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress --no-scripts
 
@@ -53,9 +56,6 @@ jobs:
 
       - name: "Integrity Database Report"
         run: php artisan firefly-iii:report-integrity
-
-      - name: "Run Laravel things"
-        run: composer install
 
       - name: "Run tests with coverage"
         run: composer coverage
