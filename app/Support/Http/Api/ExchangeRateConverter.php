@@ -123,7 +123,7 @@ class ExchangeRateConverter
         }
         app('log')->debug(sprintf('Going to get rate #%d->#%d (%s) from DB.', $from, $to, $date));
 
-        /** @var CurrencyExchangeRate $result */
+        /** @var CurrencyExchangeRate|null $result */
         $result = auth()->user()
                         ->currencyExchangeRates()
                         ->where('from_currency_id', $from)

@@ -268,7 +268,7 @@ class ExportData extends Command
     private function getExportDirectory(): string
     {
         $directory = (string)$this->option('export_directory');
-        if (null === $directory) {
+        if ('' === $directory) {
             $directory = './';
         }
         if (!is_writable($directory)) {

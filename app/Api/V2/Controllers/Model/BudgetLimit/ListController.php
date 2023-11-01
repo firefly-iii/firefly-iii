@@ -38,19 +38,19 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class ListController extends Controller
 {
-    private BudgetLimitRepositoryInterface $repository;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(BudgetLimitRepositoryInterface::class);
-
-                return $next($request);
-            }
-        );
-    }
+//    private BudgetLimitRepositoryInterface $repository;
+//
+//    public function __construct()
+//    {
+//        parent::__construct();
+//        $this->middleware(
+//            function ($request, $next) {
+//                $this->repository = app(BudgetLimitRepositoryInterface::class);
+//
+//                return $next($request);
+//            }
+//        );
+//    }
 
     /**
      * This endpoint is documented at:
@@ -58,18 +58,19 @@ class ListController extends Controller
      */
     public function index(DateRequest $request, Budget $budget): JsonResponse
     {
-        throw new FireflyException('Needs refactoring, move to IndexController.');
-        $pageSize   = $this->parameters->get('limit');
-        $dates      = $request->getAll();
-        $collection = $this->repository->getBudgetLimits($budget, $dates['start'], $dates['end']);
-        $total      = $collection->count();
-        $collection->slice($pageSize * $this->parameters->get('page'), $pageSize);
-
-        $paginator   = new LengthAwarePaginator($collection, $total, $pageSize, $this->parameters->get('page'));
-        $transformer = new BudgetLimitTransformer();
-
-        return response()
-            ->api($this->jsonApiList('budget-limits', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+        return response()->json([]);
+//        throw new FireflyException('Needs refactoring, move to IndexController.');
+//        $pageSize   = $this->parameters->get('limit');
+//        $dates      = $request->getAll();
+//        $collection = $this->repository->getBudgetLimits($budget, $dates['start'], $dates['end']);
+//        $total      = $collection->count();
+//        $collection->slice($pageSize * $this->parameters->get('page'), $pageSize);
+//
+//        $paginator   = new LengthAwarePaginator($collection, $total, $pageSize, $this->parameters->get('page'));
+//        $transformer = new BudgetLimitTransformer();
+//
+//        return response()
+//            ->api($this->jsonApiList('budget-limits', $paginator, $transformer))
+//            ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

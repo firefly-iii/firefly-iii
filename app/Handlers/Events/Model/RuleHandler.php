@@ -44,6 +44,7 @@ class RuleHandler
     {
         $ruleAction = $event->ruleAction;
         $rule       = $ruleAction->rule;
+        /** @var bool $preference */
         $preference = app('preferences')->getForUser($rule->user, 'notification_rule_action_failures', true)->data;
         if (false === $preference) {
             return;
@@ -73,6 +74,7 @@ class RuleHandler
     {
         $ruleAction = $event->ruleAction;
         $rule       = $ruleAction->rule;
+        /** @var bool $preference */
         $preference = app('preferences')->getForUser($rule->user, 'notification_rule_action_failures', true)->data;
         if (false === $preference) {
             return;

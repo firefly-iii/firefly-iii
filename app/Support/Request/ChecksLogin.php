@@ -78,7 +78,7 @@ trait ChecksLogin
         /** @var User $user */
         $user = auth()->user();
         app('log')->debug('Now in getUserGroup()');
-        /** @var UserGroup $userGroup */
+        /** @var UserGroup|null $userGroup */
         $userGroup = $this->route()->parameter('userGroup');
         if (null === $userGroup) {
             app('log')->debug('Request class has no userGroup parameter, but perhaps there is a parameter.');

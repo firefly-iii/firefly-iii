@@ -32,6 +32,7 @@ use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
+use FireflyIII\User;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Spatie\Period\Boundaries;
@@ -72,6 +73,7 @@ class BudgetLimitHandler
             $budgetLimit->forceDelete();
             return;
         }
+        /** @var User|null $user */
         $user = $budget->user;
 
         // sanity check. It happens when the budget has been deleted so the original user is unknown.
@@ -105,7 +107,7 @@ class BudgetLimitHandler
             $currentEnd = app('navigation')->endOfPeriod($current, $viewRange);
 
             // create or find AB for this particular period, and set the amount accordingly.
-            /** @var AvailableBudget $availableBudget */
+            /** @var AvailableBudget|null $availableBudget */
             $availableBudget = $user->availableBudgets()->where('start_date', $current->format('Y-m-d'))->where(
                 'end_date',
                 $currentEnd->format('Y-m-d')

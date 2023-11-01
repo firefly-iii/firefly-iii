@@ -246,14 +246,14 @@ class UpgradeLiabilitiesEight extends Command
             }
 
             // overruled. No transaction will be deleted, ever.
-            // code is kept in place so i can revisit my reasoning.
+            // code is kept in place so I can revisit my reasoning.
             $delete = false;
 
-            if ($delete) {
-                $service = app(TransactionGroupDestroyService::class);
-                $service->destroy($journal->transactionGroup);
-                $count++;
-            }
+//            if ($delete) {
+            $service = app(TransactionGroupDestroyService::class);
+            $service->destroy($journal->transactionGroup);
+            $count++;
+//            }
         }
 
         return $count;

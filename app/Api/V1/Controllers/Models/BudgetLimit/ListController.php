@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
@@ -43,28 +42,6 @@ use League\Fractal\Resource\Collection as FractalCollection;
 class ListController extends Controller
 {
     use TransactionFilter;
-
-    private BudgetLimitRepositoryInterface $blRepository;
-
-    /**
-     * BudgetLimitController constructor.
-     *
-
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user               = auth()->user();
-                $this->blRepository = app(BudgetLimitRepositoryInterface::class);
-                $this->blRepository->setUser($user);
-
-                return $next($request);
-            }
-        );
-    }
 
     /**
      * This endpoint is documented at:

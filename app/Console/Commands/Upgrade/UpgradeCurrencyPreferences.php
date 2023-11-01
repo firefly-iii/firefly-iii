@@ -35,7 +35,6 @@ use Illuminate\Support\Collection;
 
 /**
  * Class UpgradeCurrencyPreferences
- * TODO DONT FORGET TO ADD THIS TO THE DOCKER BUILD
  */
 class UpgradeCurrencyPreferences extends Command
 {
@@ -71,7 +70,7 @@ class UpgradeCurrencyPreferences extends Command
 
         $this->friendlyPositive('Currency preferences migrated.');
 
-        //$this->markAsExecuted();
+        $this->markAsExecuted();
 
         return 0;
     }

@@ -501,8 +501,8 @@ class ForceDecimalSize extends Command
 
         /** @var Transaction $item */
         foreach ($result as $item) {
-            $value = $item->amount;
-            if (null === $value) {
+            $value = (string)$item->amount;
+            if ('' === $value) {
                 continue;
             }
             // fix $field by rounding it down correctly.
