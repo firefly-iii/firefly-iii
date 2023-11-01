@@ -32,6 +32,7 @@ use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -79,7 +80,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         try {
             $unencryptedData = Crypt::decrypt($encryptedData); // verified
         } catch (DecryptException $e) {
-            app('log')->error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
+            Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
             $unencryptedData = $encryptedData;
         }
 
@@ -138,33 +139,42 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function saveAttachmentFromApi(Attachment $attachment, string $content): bool
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $resource = tmpfile();
         if (false === $resource) {
-            app('log')->error('Cannot create temp-file for file upload.');
+            Log::error('Cannot create temp-file for file upload.');
 
             return false;
         }
 
         if ('' === $content) {
-            app('log')->error('Cannot upload empty file.');
+            Log::error('Cannot upload empty file.');
 
             return false;
         }
 
         $path = stream_get_meta_data($resource)['uri'];
-        fwrite($resource, $content);
+        Log::debug(sprintf('Path is %s', $path));
+        $result = fwrite($resource, $content);
+        if(false === $result) {
+            Log::error('Could not write temp file.');
+            return false;
+        }
+        Log::debug(sprintf('Wrote %d bytes to temp file.', $result));
         $finfo       = finfo_open(FILEINFO_MIME_TYPE);
         $mime        = finfo_file($finfo, $path);
         $allowedMime = config('firefly.allowedMimes');
         if (!in_array($mime, $allowedMime, true)) {
-            app('log')->error(sprintf('Mime type %s is not allowed for API file upload.', $mime));
+            Log::error(sprintf('Mime type %s is not allowed for API file upload.', $mime));
             fclose($resource);
 
             return false;
         }
+        Log::debug(sprintf('Found mime "%s" in file "%s"', $mime, $path));
         // is allowed? Save the file, without encryption.
         $parts = explode('/', $attachment->fileName());
         $file  = $parts[count($parts) - 1];
+        Log::debug(sprintf('Write file to disk in file named "%s"', $file));
         $this->uploadDisk->put($file, $content);
 
         // update attachment.
@@ -173,6 +183,8 @@ class AttachmentHelper implements AttachmentHelperInterface
         $attachment->size     = strlen($content);
         $attachment->uploaded = true;
         $attachment->save();
+
+        Log::debug('Done!');
 
         return true;
     }
@@ -192,19 +204,19 @@ class AttachmentHelper implements AttachmentHelperInterface
             return false;
         }
 
-        app('log')->debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
+        Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
         if (is_array($files)) {
-            app('log')->debug('$files is an array.');
+            Log::debug('$files is an array.');
             /** @var UploadedFile $entry */
             foreach ($files as $entry) {
                 if (null !== $entry) {
                     $this->processFile($entry, $model);
                 }
             }
-            app('log')->debug('Done processing uploads.');
+            Log::debug('Done processing uploads.');
         }
         if (!is_array($files)) {
-            app('log')->debug('Array of files is not an array. Probably nothing uploaded. Will not store attachments.');
+            Log::debug('Array of files is not an array. Probably nothing uploaded. Will not store attachments.');
         }
 
         return true;
@@ -222,7 +234,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function processFile(UploadedFile $file, Model $model): ?Attachment
     {
-        app('log')->debug('Now in processFile()');
+        Log::debug('Now in processFile()');
         $validation = $this->validateUpload($file, $model);
         $attachment = null;
         if (false !== $validation) {
@@ -241,7 +253,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             $attachment->size     = $file->getSize();
             $attachment->uploaded = false;
             $attachment->save();
-            app('log')->debug('Created attachment:', $attachment->toArray());
+            Log::debug('Created attachment:', $attachment->toArray());
 
             $fileObject = $file->openFile();
             $fileObject->rewind();
@@ -251,7 +263,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             }
 
             $content = $fileObject->fread($file->getSize());
-            app('log')->debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
+            Log::debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
 
             // store it without encryption.
             $this->uploadDisk->put($attachment->fileName(), $content);
@@ -277,13 +289,13 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function validateUpload(UploadedFile $file, Model $model): bool
     {
-        app('log')->debug('Now in validateUpload()');
+        Log::debug('Now in validateUpload()');
         $result = true;
         if (!$this->validMime($file)) {
             $result = false;
         }
         if (0 === $file->getSize()) {
-            app('log')->error('Cannot upload empty file.');
+            Log::error('Cannot upload empty file.');
             $result = false;
         }
 
@@ -309,17 +321,17 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function validMime(UploadedFile $file): bool
     {
-        app('log')->debug('Now in validMime()');
+        Log::debug('Now in validMime()');
         $mime = e($file->getMimeType());
         $name = e($file->getClientOriginalName());
-        app('log')->debug(sprintf('Name is %s, and mime is %s', $name, $mime));
-        app('log')->debug('Valid mimes are', $this->allowedMimes);
+        Log::debug(sprintf('Name is %s, and mime is %s', $name, $mime));
+        Log::debug('Valid mimes are', $this->allowedMimes);
         $result = true;
 
         if (!in_array($mime, $this->allowedMimes, true)) {
             $msg = (string)trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
             $this->errors->add('attachments', $msg);
-            app('log')->error($msg);
+            Log::error($msg);
 
             $result = false;
         }
@@ -343,7 +355,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         if ($size > $this->maxUploadSize) {
             $msg = (string)trans('validation.file_too_large', ['name' => $name]);
             $this->errors->add('attachments', $msg);
-            app('log')->error($msg);
+            Log::error($msg);
 
             $result = false;
         }
@@ -376,7 +388,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         if ($count > 0) {
             $msg = (string)trans('validation.file_already_attached', ['name' => $name]);
             $this->errors->add('attachments', $msg);
-            app('log')->error($msg);
+            Log::error($msg);
             $result = true;
         }
 
