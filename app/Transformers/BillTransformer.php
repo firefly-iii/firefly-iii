@@ -360,7 +360,7 @@ class BillTransformer extends AbstractTransformer
             app('log')->debug(sprintf('Steps is %d, because addPeriod already adds 1.', $steps));
             $result = app('navigation')->addPeriod($start, $bill->repeat_freq, $steps);
         }
-        app('log')->debug(sprintf('Number of steps is %d, result is %s', $steps, $result->format('Y-m-d')));
+        app('log')->debug(sprintf('Number of steps is %d, added to %s, result is %s', $steps, $start->format('Y-m-d'), $result->format('Y-m-d')));
         return $result;
     }
 }

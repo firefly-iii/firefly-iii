@@ -29,10 +29,10 @@ use FireflyIII\Exceptions\IntervalException;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Support\Calendar\Calculator;
 use FireflyIII\Support\Calendar\Periodicity;
+use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Throwable;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class Navigation.
@@ -89,10 +89,10 @@ class Navigation
 
         if (!array_key_exists($repeatFreq, $functionMap)) {
             Log::error(sprintf(
-                'The periodicity %s is unknown. Choose one of available periodicity: %s',
-                $repeatFreq,
-                join(', ', array_keys($functionMap))
-            ));
+                           'The periodicity %s is unknown. Choose one of available periodicity: %s',
+                           $repeatFreq,
+                           join(', ', array_keys($functionMap))
+                       ));
             return $theDate;
         }
 
@@ -352,12 +352,12 @@ class Navigation
     public function diffInPeriods(string $period, int $skip, Carbon $beginning, Carbon $end): int
     {
         Log::debug(sprintf(
-            'diffInPeriods: %s (skip: %d), between %s and %s.',
-            $period,
-            $skip,
-            $beginning->format('Y-m-d'),
-            $end->format('Y-m-d')
-        ));
+                       'diffInPeriods: %s (skip: %d), between %s and %s.',
+                       $period,
+                       $skip,
+                       $beginning->format('Y-m-d'),
+                       $end->format('Y-m-d')
+                   ));
         $map = [
             'daily'     => 'floatDiffInDays',
             'weekly'    => 'floatDiffInWeeks',
@@ -372,32 +372,33 @@ class Navigation
         }
         $func = $map[$period];
         // first do the diff
-        $diff = $beginning->$func($end);
+        $floatDiff = $beginning->$func($end);
+
 
         // then correct for quarterly or half-year
         if ('quarterly' === $period) {
-            Log::debug(sprintf('Q: Corrected %f to %f', $diff, $diff / 3));
-            $diff = $diff / 3;
+            Log::debug(sprintf('Q: Corrected %f to %f', $floatDiff, $floatDiff / 3));
+            $floatDiff = $floatDiff / 3;
         }
         if ('half-year' === $period) {
-            Log::debug(sprintf('H: Corrected %f to %f', $diff, $diff / 6));
-            $diff = $diff / 6;
+            Log::debug(sprintf('H: Corrected %f to %f', $floatDiff, $floatDiff / 6));
+            $floatDiff = $floatDiff / 6;
         }
 
         // then do ceil()
-        $diff = ceil($diff);
+        $diff = ceil($floatDiff);
 
-        Log::debug(sprintf('Diff is %f (%d)', $beginning->$func($end), $diff));
+        Log::debug(sprintf('Diff is %f periods (%d rounded up)', $floatDiff, $diff));
 
         if ($skip > 0) {
             $parameter = $skip + 1;
             $diff      = ceil($diff / $parameter) * $parameter;
             Log::debug(sprintf(
-                'diffInPeriods: skip is %d, so param is %d, and diff becomes %d',
-                $skip,
-                $parameter,
-                $diff
-            ));
+                           'diffInPeriods: skip is %d, so param is %d, and diff becomes %d',
+                           $skip,
+                           $parameter,
+                           $diff
+                       ));
         }
 
         return (int)$diff;
