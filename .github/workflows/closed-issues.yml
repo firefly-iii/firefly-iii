@@ -1,4 +1,5 @@
-name: "Issues - Reply to closed issue"
+---
+name: Issues - Reply to closed issue
 on:
   issues:
     types:
@@ -21,7 +22,7 @@ jobs:
             If there is more to discuss, please open [a new issue](https://github.com/firefly-iii/firefly-iii/issues/new/choose) or [discussion](https://github.com/firefly-iii/firefly-iii/discussions/).
 
             Thank you for your contributions.
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-    - uses: OSDKDev/lock-issues@v1.1
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: OSDKDev/lock-issues@v1.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
