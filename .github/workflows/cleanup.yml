@@ -59,6 +59,7 @@ jobs:
               'closed-issues.yml',
               'depsreview.yml',
               'label-actions.yml',
+              'lock-after-close.yml',
               'lock.yml',
               'sonarcloud.yml',
               'stale.yml'
