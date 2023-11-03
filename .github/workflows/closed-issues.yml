@@ -5,7 +5,7 @@ on:
     types:
       - closed
 jobs:
-  auto_comment:
+  command_and_close:
     runs-on: ubuntu-latest
     steps:
       - uses: aws-actions/closed-issue-message@v1
