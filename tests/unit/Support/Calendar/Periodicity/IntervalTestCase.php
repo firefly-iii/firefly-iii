@@ -31,7 +31,7 @@ use PHPUnit\Framework\TestCase;
 
 abstract class IntervalTestCase extends TestCase
 {
-    public static function provider(): Generator
+    public static function provider(): iterable
     {
         $intervals = static::provideIntervals();
         /** @var IntervalProvider $interval */
@@ -52,7 +52,7 @@ abstract class IntervalTestCase extends TestCase
     public function testGivenAnEpochWhenCallTheNextDateThenReturnsTheExpectedDateSuccessful(IntervalProvider $provider): void
     {
         $period = static::factory()->nextDate($provider->epoch);
-        $this->assertEquals($provider->expected->toDateString(), $period->toDateString());
+        self::assertSame($provider->expected->toDateString(), $period->toDateString());
     }
 
     abstract public static function factory(): Interval;

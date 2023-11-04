@@ -43,7 +43,7 @@ class NavigationEndOfPeriodTest extends TestCase
         $this->navigation = new Navigation();
     }
 
-    public static function provideDates(): array
+    public static function provideDates(): iterable
     {
         return [
             '1D'                            => ['frequency' => '1D', 'from' => Carbon::now(), 'expected' => Carbon::now()->endOfDay()],
@@ -79,10 +79,10 @@ class NavigationEndOfPeriodTest extends TestCase
     public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected)
     {
         $period = $this->navigation->endOfPeriod($from, $frequency);
-        $this->assertEquals($expected->toDateString(), $period->toDateString());
+        self::assertSame($expected->toDateString(), $period->toDateString());
     }
 
-    public static function provideUnknownFrequencies(): array
+    public static function provideUnknownFrequencies(): iterable
     {
         return [
             '1day'    => ['frequency' => '1day', 'from' => Carbon::now(), 'expected' => Carbon::now()],
@@ -99,7 +99,7 @@ class NavigationEndOfPeriodTest extends TestCase
         Log::spy();
 
         $period = $this->navigation->endOfPeriod($from, $frequency);
-        $this->assertEquals($expected->toDateString(), $period->toDateString());
+        self::assertSame($expected->toDateString(), $period->toDateString());
         $expectedMessage = sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $frequency);
 
         Log::shouldHaveReceived('error', [$expectedMessage]);

@@ -43,7 +43,7 @@ class NavigationPreferredRangeFormatTest extends TestCase
         $this->navigation = new Navigation();
     }
 
-    public static function providePeriods(): array
+    public static function providePeriods(): iterable
     {
         return [
             '1 week'    => ['start' => Carbon::now(), 'end' => Carbon::now()->addWeek(), 'expected' => '1D'],
@@ -67,6 +67,6 @@ class NavigationPreferredRangeFormatTest extends TestCase
     public function testGivenStartAndEndDatesWhenCallPreferredRangeFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected)
     {
         $formatPeriod = $this->navigation->preferredRangeFormat($start, $end);
-        $this->assertEquals($expected, $formatPeriod);
+        self::assertSame($expected, $formatPeriod);
     }
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,7 +32,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -42,8 +42,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                          $updated_at
  * @property Carbon|null                          $deleted_at
  * @property bool                                 $enabled
- * @property bool                                 $userDefault
- * @property bool                                 $userEnabled
+ * @property bool|null                            $userDefault
+ * @property bool|null                            $userEnabled
  * @property string                               $code
  * @property string                               $name
  * @property string                               $symbol

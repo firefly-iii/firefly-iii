@@ -48,7 +48,7 @@ use Tests\unit\Support\Calendar\Periodicity\YearlyTest;
  */
 class CalculatorTest extends TestCase
 {
-    public static function provideAllPeriodicity(): Generator
+    public static function provideAllPeriodicity(): iterable
     {
         $intervals = [];
         $intervals = array_merge($intervals, self::convert(Periodicity::Daily, DailyTest::provideIntervals()));
@@ -78,7 +78,7 @@ class CalculatorTest extends TestCase
         return $periodicityIntervals;
     }
 
-    public static function provideSkippedIntervals(): Generator
+    public static function provideSkippedIntervals(): iterable
     {
         return CalculatorProvider::providePeriodicityWithSkippedIntervals();
     }
@@ -91,7 +91,7 @@ class CalculatorTest extends TestCase
     {
         $calculator = new Calculator();
         $period     = $calculator->nextDateByInterval($provider->epoch(), $provider->periodicity);
-        $this->assertEquals($provider->expected()->toDateString(), $period->toDateString());
+        self::assertSame($provider->expected()->toDateString(), $period->toDateString());
     }
 
     /**
@@ -102,6 +102,6 @@ class CalculatorTest extends TestCase
     {
         $calculator = new Calculator();
         $period     = $calculator->nextDateByInterval($provider->epoch(), $provider->periodicity, $provider->skip);
-        $this->assertEquals($provider->expected()->toDateString(), $period->toDateString());
+        self::assertSame($provider->expected()->toDateString(), $period->toDateString());
     }
 }

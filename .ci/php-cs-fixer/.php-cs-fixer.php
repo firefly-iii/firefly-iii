@@ -41,6 +41,7 @@ return $config->setRules([
                              'declare_strict_types'       => true,
                              'strict_param'               => true,
                              'array_syntax'               => ['syntax' => 'short'],
-                             'native_function_invocation' => false,
+                             'native_function_invocation' => false, // annoying
+                             'php_unit_data_provider_name' => false, // bloody annoying long test names
                          ])
               ->setFinder($finder);
