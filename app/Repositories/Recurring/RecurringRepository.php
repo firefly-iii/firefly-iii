@@ -238,7 +238,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         if (null !== $end) {
             $query->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'));
         }
-        return $query->count(['transaction_journals.id']);
+        return $query->count('transaction_journals.id');
     }
 
     /**

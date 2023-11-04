@@ -98,7 +98,7 @@ class AppendBudgetLimitPeriods extends Command
     /**
      * @param BudgetLimit $limit
      */
-    private function fixLimit(BudgetLimit $limit)
+    private function fixLimit(BudgetLimit $limit): void
     {
         $period = $this->getLimitPeriod($limit);
 

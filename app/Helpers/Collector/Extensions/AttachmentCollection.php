@@ -90,7 +90,7 @@ trait AttachmentCollection
             $this->hasJoinedAttTables = true;
             $this->query->leftJoin('attachments', 'attachments.attachable_id', '=', 'transaction_journals.id')
                         ->where(
-                            static function (EloquentBuilder $q1) {
+                            static function (EloquentBuilder $q1) { // @phpstan-ignore-line
                                 $q1->where('attachments.attachable_type', TransactionJournal::class);
                                 $q1->where('attachments.uploaded', true);
                                 $q1->whereNull('attachments.deleted_at');
@@ -544,7 +544,7 @@ trait AttachmentCollection
         app('log')->debug('Add filter on no attachments.');
         $this->joinAttachmentTables();
 
-        $this->query->where(function (Builder $q1) {
+        $this->query->where(function (Builder $q1) { // @phpstan-ignore-line
             $q1
                 ->whereNull('attachments.attachable_id')
                 ->orWhere(function (Builder $q2) {

@@ -40,7 +40,9 @@ use Psr\Container\NotFoundExceptionInterface;
 class RemoteUserGuard implements Guard
 {
     protected Application $application;
+    /** @var UserProvider */
     protected $provider;
+    /** @var User|null */
     protected $user;
 
     /**
@@ -166,10 +168,14 @@ class RemoteUserGuard implements Guard
     /**
      * @inheritDoc
      */
-    public function setUser(Authenticatable $user)
+    public function setUser(Authenticatable | User | null $user)
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
-        $this->user = $user;
+        if ($user instanceof User) {
+            $this->user = $user;
+            return;
+        }
+        app('log')->error(sprintf('Did not set user at %s', __METHOD__));
     }
 
     /**

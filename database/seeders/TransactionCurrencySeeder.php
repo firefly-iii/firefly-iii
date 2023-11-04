@@ -34,7 +34,7 @@ class TransactionCurrencySeeder extends Seeder
 {
     /**
      */
-    public function run()
+    public function run(): void
     {
         $currencies = [];
         // european currencies

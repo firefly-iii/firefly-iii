@@ -56,16 +56,12 @@ class MigrateToRules extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:bills-to-rules {--F|force : Force the execution of this command.}';
-    /** @var BillRepositoryInterface */
-    private $billRepository;
-    private $count;
-    /** @var RuleGroupRepositoryInterface */
-    private $ruleGroupRepository;
-    /** @var RuleRepositoryInterface */
-    private $ruleRepository;
-    /** @var UserRepositoryInterface */
-    private $userRepository;
+    protected                            $signature = 'firefly-iii:bills-to-rules {--F|force : Force the execution of this command.}';
+    private BillRepositoryInterface      $billRepository;
+    private int                          $count;
+    private RuleGroupRepositoryInterface $ruleGroupRepository;
+    private RuleRepositoryInterface      $ruleRepository;
+    private UserRepositoryInterface      $userRepository;
 
     /**
      * Execute the console command.

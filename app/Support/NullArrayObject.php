@@ -32,6 +32,7 @@ use ArrayObject;
  */
 class NullArrayObject extends ArrayObject
 {
+    /** @var mixed|null */
     public $default = null;
 
     /**

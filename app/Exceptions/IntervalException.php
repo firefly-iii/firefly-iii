@@ -37,9 +37,10 @@ final class IntervalException extends Exception
 
     public array       $availableIntervals;
     public Periodicity $periodicity;
-    protected          $message = 'The periodicity %s is unknown. Choose one of available periodicity: %s';
+    /** @var string  */
+    protected    $message = 'The periodicity %s is unknown. Choose one of available periodicity: %s';
 
-    public function __construct(string $message = "", int $code = 0, ?Throwable $previous = null)
+    public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->availableIntervals = [];

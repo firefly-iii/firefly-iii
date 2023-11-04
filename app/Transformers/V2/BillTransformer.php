@@ -119,7 +119,7 @@ class BillTransformer extends AbstractTransformer
                 app('log')->debug(sprintf('Processing journal #%d', $journal->id));
                 $transaction             = $transactions[(int)$journal->id] ?? [];
                 $billId                  = (int)$journal->bill_id;
-                $currencyId              = (int)$transaction['transaction_currency_id'] ?? 0;
+                $currencyId              = (int)($transaction['transaction_currency_id'] ?? 0);
                 $currencies[$currencyId] = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
 
                 // foreign currency

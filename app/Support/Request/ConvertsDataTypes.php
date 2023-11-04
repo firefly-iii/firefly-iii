@@ -274,6 +274,10 @@ trait ConvertsDataTypes
 
                 return null;
             }
+            if(false === $carbon) {
+                app('log')->error(sprintf('[2] "%s" is of an invalid format.', $value));
+                return null;
+            }
             return $carbon;
         }
         // is an atom string, I hope?

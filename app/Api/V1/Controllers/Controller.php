@@ -50,6 +50,7 @@ abstract class Controller extends BaseController
     use ValidatesRequests;
 
     protected const CONTENT_TYPE = 'application/vnd.api+json';
+    /** @var array<int, string> */
     protected array        $allowedSort;
     protected ParameterBag $parameters;
 
@@ -107,13 +108,13 @@ abstract class Controller extends BaseController
             $obj = null;
             if (null !== $date) {
                 try {
-                    $obj = Carbon::parse($date);
+                    $obj = Carbon::parse((string)$date);
                 } catch (InvalidDateException | InvalidFormatException $e) {
                     // don't care
                     app('log')->warning(
                         sprintf(
                             'Ignored invalid date "%s" in API controller parameter check: %s',
-                            substr($date, 0, 20),
+                            substr((string)$date, 0, 20),
                             $e->getMessage()
                         )
                     );

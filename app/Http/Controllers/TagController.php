@@ -180,9 +180,11 @@ class TagController extends Controller
     }
 
     /**
+     * @param Request $request
      *
+     * @return RedirectResponse
      */
-    public function massDestroy(Request $request)
+    public function massDestroy(Request $request): RedirectResponse
     {
         $tags = $request->get('tags');
         if (null === $tags || !is_array($tags)) {

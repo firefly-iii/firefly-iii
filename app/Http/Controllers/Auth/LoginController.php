@@ -34,6 +34,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -81,10 +82,10 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     *
+     * @return JsonResponse|RedirectResponse
      * @throws ValidationException
      */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse | RedirectResponse
     {
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get($this->username())));
         app('log')->info('User is trying to login.');

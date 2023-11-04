@@ -70,9 +70,8 @@ class MailError extends Job implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @throws FireflyException
      */
-    public function handle()
+    public function handle(): void
     {
         $email            = (string)config('firefly.site_owner');
         $args             = $this->exception;

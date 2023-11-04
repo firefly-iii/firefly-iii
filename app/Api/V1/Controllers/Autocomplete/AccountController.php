@@ -41,6 +41,7 @@ class AccountController extends Controller
 {
     use AccountFilter;
 
+    /** @var array<int, string>  */
     private array                      $balanceTypes;
     private AccountRepositoryInterface $repository;
 

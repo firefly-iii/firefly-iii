@@ -8,7 +8,10 @@ parameters:
   universalObjectCratesClasses:
     - Illuminate\Database\Eloquent\Model
   reportUnmatchedIgnoredErrors: false
+  checkGenericClassInNonGenericObjectType: false  # remove this rule when all other issues are solved.
   ignoreErrors:
+    - '#with no value type specified in iterable type array#' # remove this rule when all other issues are solved.
+    - '#has no value type specified in iterable type array#' # remove this rule when all other issues are solved.
     - '#is not allowed to extend#'
     - '#is neither abstract nor final#'
     - '#has a nullable return type declaration#'
@@ -74,5 +77,5 @@ parameters:
     - ../bootstrap/app.php
 
   # The level 8 is the highest level. original was 5
-  level: 4
+  level: 7
 

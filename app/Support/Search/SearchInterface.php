@@ -61,7 +61,7 @@ interface SearchInterface
     /**
      * @param string $query
      */
-    public function parseQuery(string $query);
+    public function parseQuery(string $query): void;
 
     /**
      * @return float
@@ -91,5 +91,5 @@ interface SearchInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user);
+    public function setUser(User $user): void;
 }

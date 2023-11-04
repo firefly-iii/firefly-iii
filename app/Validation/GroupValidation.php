@@ -106,7 +106,7 @@ trait GroupValidation
         $count = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
                             ->leftJoin('transaction_groups', 'transaction_groups.id', 'transaction_journals.transaction_group_id')
                             ->where('transaction_journals.transaction_group_id', $transactionGroup->id)
-                            ->where('transactions.reconciled', 1)->where('transactions.amount', '<', 0)->count(['transactions.id']);
+                            ->where('transactions.reconciled', 1)->where('transactions.amount', '<', 0)->count('transactions.id');
         if (0 === $count) {
             app('log')->debug(sprintf('Transaction is not reconciled, done with %s', __METHOD__));
             return;

@@ -240,7 +240,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         // when both dates are set:
         return $budget->budgetlimits()
                       ->where(
-                          static function (Builder $q5) use ($start, $end) {
+                          static function (Builder $q5) use ($start, $end) { // @phpstan-ignore-line
                               $q5->where(
                                   static function (Builder $q1) use ($start, $end) {
                                       // budget limit ends within period
@@ -397,7 +397,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         $limits = $budget->budgetlimits()
                          ->where('budget_limits.start_date', $start->format('Y-m-d 00:00:00'))
                          ->where('budget_limits.end_date', $end->format('Y-m-d 00:00:00'))
-                         ->count(['budget_limits.*']);
+                         ->count('budget_limits.*');
         app('log')->debug(sprintf('Found %d budget limits.', $limits));
 
         // there might be a budget limit for these dates:

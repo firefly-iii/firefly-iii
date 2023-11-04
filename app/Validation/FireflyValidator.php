@@ -671,12 +671,12 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
+     * @param string|null $attribute
+     * @param string|null $value
      *
      * @return bool
      */
-    public function validateUniqueCurrencyCode($attribute, $value): bool
+    public function validateUniqueCurrencyCode(string|null $attribute, string|null $value): bool
     {
         return $this->validateUniqueCurrency('code', (string)$attribute, (string)$value);
     }
@@ -694,23 +694,23 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
+     * @param string|null $attribute
+     * @param string|null $value
      *
      * @return bool
      */
-    public function validateUniqueCurrencyName($attribute, $value): bool
+    public function validateUniqueCurrencyName(string|null $attribute, string|null $value): bool
     {
         return $this->validateUniqueCurrency('name', (string)$attribute, (string)$value);
     }
 
     /**
-     * @param $attribute
-     * @param $value
+     * @param string|null $attribute
+     * @param string|null $value
      *
      * @return bool
      */
-    public function validateUniqueCurrencySymbol($attribute, $value): bool
+    public function validateUniqueCurrencySymbol(string|null $attribute, string|null $value): bool
     {
         return $this->validateUniqueCurrency('symbol', (string)$attribute, (string)$value);
     }

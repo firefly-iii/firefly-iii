@@ -324,7 +324,7 @@ trait TransactionValidation
      */
     private function isLiability(Account $account): bool
     {
-        $type = $account->accountType?->type;
+        $type = $account->accountType->type;
         if (in_array($type, config('firefly.valid_liabilities'), true)) {
             return true;
         }
@@ -338,7 +338,7 @@ trait TransactionValidation
      */
     private function isAsset(Account $account): bool
     {
-        $type = $account->accountType?->type;
+        $type = $account->accountType->type;
         return $type === AccountType::ASSET;
     }
 

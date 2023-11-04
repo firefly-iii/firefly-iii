@@ -148,7 +148,7 @@ class OperatorQuerySearch implements SearchInterface
      * @inheritDoc
      * @throws FireflyException
      */
-    public function parseQuery(string $query)
+    public function parseQuery(string $query): void
     {
         app('log')->debug(sprintf('Now in parseQuery(%s)', $query));
         $parser = new QueryParser();
@@ -1671,7 +1671,7 @@ class OperatorQuerySearch implements SearchInterface
      *
      * @throws FireflyException
      */
-    private function setDateAfterParams(array $range, bool $prohibited = false)
+    private function setDateAfterParams(array $range, bool $prohibited = false): void
     {
         /**
          * @var string        $key

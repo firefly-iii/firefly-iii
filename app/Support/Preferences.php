@@ -78,12 +78,12 @@ class Preferences
     /**
      * @param User            $user
      * @param string          $name
-     * @param null|string|int $default
+     * @param null|string|int|bool|array $default
      *
      * @return Preference|null
      * @throws FireflyException
      */
-    public function getForUser(User $user, string $name, $default = null): ?Preference
+    public function getForUser(User $user, string $name, string|int|bool|null|array $default = null): ?Preference
     {
         if ('currencyPreference' === $name) {
             throw new FireflyException('No longer supports "currencyPreference", please refactor me.');

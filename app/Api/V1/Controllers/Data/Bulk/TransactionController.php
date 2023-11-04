@@ -89,7 +89,7 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param array $params
+     * @param array $params<array<string, array<string, int|string>>>
      *
      * @return bool
      */

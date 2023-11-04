@@ -73,7 +73,7 @@ class BoxController extends Controller
         $cache->addProperty($today);
         $cache->addProperty('box-available');
         if ($cache->has()) {
-            //return response()->json($cache->get());
+            return response()->json($cache->get());
         }
         $leftPerDayAmount  = '0';
         $leftToSpendAmount = '0';
@@ -83,7 +83,7 @@ class BoxController extends Controller
         $availableBudgets = $abRepository->getAvailableBudgetsByExactDate($start, $end);
         app('log')->debug(sprintf('Found %d available budget(s)', $availableBudgets->count()));
         $availableBudgets = $availableBudgets->filter(
-            static function (AvailableBudget $availableBudget) use ($currency) {
+            static function (AvailableBudget $availableBudget) use ($currency) { // @phpstan-ignore-line
                 if ($availableBudget->transaction_currency_id === $currency->id) {
                     app('log')->debug(sprintf(
                         'Will include AB #%d: from %s-%s amount %s',

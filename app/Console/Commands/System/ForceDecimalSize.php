@@ -239,7 +239,7 @@ class ForceDecimalSize extends Command
         $query->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression) {
             foreach ($fields as $field) {
                 $q->orWhere(
-                    DB::raw(sprintf('CAST(accounts.%s AS %s)', $field, $cast)),
+                    DB::raw(sprintf('CAST(accounts.%s AS %s)', $field, $cast)), // @phpstan-ignore-line
                     $operator,
                     DB::raw(sprintf($regularExpression, $currency->decimal_places))
                 );
@@ -288,7 +288,7 @@ class ForceDecimalSize extends Command
             static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression) {
                 foreach ($fields as $field) {
                     $q->orWhere(
-                        DB::raw(sprintf('CAST(%s AS %s)', $field, $cast)),
+                        DB::raw(sprintf('CAST(%s AS %s)', $field, $cast)), // @phpstan-ignore-line
                         $operator,
                         DB::raw(sprintf($regularExpression, $currency->decimal_places))
                     );
@@ -341,7 +341,7 @@ class ForceDecimalSize extends Command
                                ->where(static function (Builder $q) use ($fields, $currency, $cast, $operator, $regularExpression) {
                                    foreach ($fields as $field) {
                                        $q->orWhere(
-                                           DB::raw(sprintf('CAST(piggy_bank_events.%s AS %s)', $field, $cast)),
+                                           DB::raw(sprintf('CAST(piggy_bank_events.%s AS %s)', $field, $cast)), // @phpstan-ignore-line
                                            $operator,
                                            DB::raw(sprintf($regularExpression, $currency->decimal_places))
                                        );
@@ -395,7 +395,7 @@ class ForceDecimalSize extends Command
                                     ->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression) {
                                         foreach ($fields as $field) {
                                             $q->orWhere(
-                                                DB::raw(sprintf('CAST(piggy_bank_repetitions.%s AS %s)', $field, $cast)),
+                                                DB::raw(sprintf('CAST(piggy_bank_repetitions.%s AS %s)', $field, $cast)), // @phpstan-ignore-line
                                                 $operator,
                                                 DB::raw(sprintf($regularExpression, $currency->decimal_places))
                                             );
@@ -448,7 +448,7 @@ class ForceDecimalSize extends Command
                           ->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression) {
                               foreach ($fields as $field) {
                                   $q->orWhere(
-                                      DB::raw(sprintf('CAST(piggy_banks.%s AS %s)', $field, $cast)),
+                                      DB::raw(sprintf('CAST(piggy_banks.%s AS %s)', $field, $cast)), // @phpstan-ignore-line
                                       $operator,
                                       DB::raw(sprintf($regularExpression, $currency->decimal_places))
                                   );
@@ -489,7 +489,7 @@ class ForceDecimalSize extends Command
         // select all transactions with this currency and issue.
         /** @var Builder $query */
         $query = Transaction::where('transaction_currency_id', $currency->id)->where(
-            DB::raw(sprintf('CAST(amount as %s)', $this->cast)),
+            DB::raw(sprintf('CAST(amount as %s)', $this->cast)), // @phpstan-ignore-line
             $this->operator,
             DB::raw(sprintf($this->regularExpression, $currency->decimal_places))
         );
@@ -515,7 +515,7 @@ class ForceDecimalSize extends Command
         // select all transactions with this FOREIGN currency and issue.
         /** @var Builder $query */
         $query = Transaction::where('foreign_currency_id', $currency->id)->where(
-            DB::raw(sprintf('CAST(foreign_amount as %s)', $this->cast)),
+            DB::raw(sprintf('CAST(foreign_amount as %s)', $this->cast)), // @phpstan-ignore-line
             $this->operator,
             DB::raw(sprintf($this->regularExpression, $currency->decimal_places))
         );

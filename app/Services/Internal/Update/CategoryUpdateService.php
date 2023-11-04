@@ -29,6 +29,7 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
+use FireflyIII\User;
 
 /**
  * Class CategoryUpdateService
@@ -37,7 +38,7 @@ use FireflyIII\Models\RuleTrigger;
  */
 class CategoryUpdateService
 {
-    private $user;
+    private User $user;
 
     /**
      * Constructor.
@@ -45,7 +46,9 @@ class CategoryUpdateService
     public function __construct()
     {
         if (auth()->check()) {
-            $this->user = auth()->user();
+            /** @var User $user */
+            $user = auth()->user();
+            $this->user = $user;
         }
     }
 

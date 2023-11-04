@@ -433,7 +433,7 @@ trait AccountServiceTrait
         // if exists, update:
         $currency = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrencyByUserGroup($account->user);
+            $currency = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
 
         // simply grab the first journal and change it:

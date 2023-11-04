@@ -30,6 +30,9 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\ObjectGroup\OrganisesObjectGroups;
 use FireflyIII\Transformers\BillTransformer;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
@@ -68,7 +71,7 @@ class IndexController extends Controller
     /**
      * Show all bills.
      */
-    public function index()
+    public function index(): View | Application | Factory | \Illuminate\Contracts\Foundation\Application
     {
         $this->cleanupObjectGroups();
         $this->repository->correctOrder();

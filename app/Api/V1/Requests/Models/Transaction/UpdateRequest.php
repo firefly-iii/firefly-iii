@@ -159,12 +159,15 @@ class UpdateRequest extends FormRequest
         app('log')->debug(sprintf('Now in %s', __METHOD__));
         $return = [];
 
-        if (!is_countable($this->get('transactions'))) {
+        /** @var array|null $transactions */
+        $transactions = $this->get('transactions');
+
+        if (!is_countable($transactions)) {
             return $return;
         }
 
         /** @var array $transaction */
-        foreach ($this->get('transactions') as $transaction) {
+        foreach ($transactions as $transaction) {
             if (!is_array($transaction)) {
                 throw new FireflyException('Invalid data submitted: transaction is not array.');
             }

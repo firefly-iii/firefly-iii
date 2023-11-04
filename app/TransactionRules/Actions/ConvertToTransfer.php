@@ -157,7 +157,7 @@ class ConvertToTransfer implements ActionInterface
      */
     private function getSourceType(int $journalId): string
     {
-        /** @var TransactionJournal $journal */
+        /** @var TransactionJournal|null $journal */
         $journal = TransactionJournal::find($journalId);
         if (null === $journal) {
             app('log')->error(sprintf('Journal #%d does not exist. Cannot convert to transfer.', $journalId));

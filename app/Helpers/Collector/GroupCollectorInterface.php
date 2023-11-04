@@ -1090,7 +1090,7 @@ interface GroupCollectorInterface
     /**
      * @param bool $expandGroupSearch
      */
-    public function setExpandGroupSearch(bool $expandGroupSearch);
+    public function setExpandGroupSearch(bool $expandGroupSearch): GroupCollectorInterface;
 
     /**
      * Look for specific external ID's.

@@ -77,7 +77,7 @@ class StoreRequest extends FormRequest
      * Returns the transaction data as it is found in the submitted data. It's a complex method according to code
      * standards but it just has a lot of ??-statements because of the fields that may or may not exist.
      *
-     * @return array|null
+     * @return array
      */
     private function getTransactionData(): array
     {

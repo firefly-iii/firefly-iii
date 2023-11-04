@@ -219,11 +219,11 @@ class UpgradeLiabilitiesEight extends Command
     }
 
     /**
-     * @param $account
+     * @param Account $account
      *
      * @return int
      */
-    private function deleteTransactions($account): int
+    private function deleteTransactions(Account $account): int
     {
         $count    = 0;
         $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')

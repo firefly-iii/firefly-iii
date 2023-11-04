@@ -35,8 +35,6 @@ use Illuminate\Support\Collection;
  */
 class ExchangeRateSeeder extends Seeder
 {
-    private Collection $users;
-
     /**
      * @return void
      */

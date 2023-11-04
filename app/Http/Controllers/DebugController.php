@@ -270,7 +270,7 @@ class DebugController extends Controller
         $userAgent = request()->header('user-agent');
 
         // set languages, see what happens:
-        $original       = setlocale(LC_ALL, 0);
+        $original       = setlocale(LC_ALL, '0');
         $localeAttempts = [];
         $parts          = app('steam')->getLocaleArray(app('steam')->getLocale());
         foreach ($parts as $code) {
