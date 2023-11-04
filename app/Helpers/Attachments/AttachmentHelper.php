@@ -48,8 +48,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     protected array   $allowedMimes  = [];
     protected int     $maxUploadSize = 0;
 
-    /** @var Filesystem The disk where attachments are stored. */
-    protected $uploadDisk;
+    protected Filesystem $uploadDisk;
 
     /**
      * AttachmentHelper constructor.

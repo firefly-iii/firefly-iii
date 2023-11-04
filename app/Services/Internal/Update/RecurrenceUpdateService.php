@@ -293,7 +293,8 @@ class RecurrenceUpdateService
         if (array_key_exists('currency_id', $submitted) || array_key_exists('currency_code', $submitted)) {
             $currency = $currencyFactory->find(
                 array_key_exists('currency_id', $submitted) ? (int)$submitted['currency_id'] : null,
-                array_key_exists('currency_code', $submitted) ? $submitted['currency_code'] : null);
+                array_key_exists('currency_code', $submitted) ? $submitted['currency_code'] : null
+            );
         }
         if (null === $currency) {
             unset($submitted['currency_id'], $submitted['currency_code']);
@@ -304,7 +305,8 @@ class RecurrenceUpdateService
         if (array_key_exists('foreign_currency_id', $submitted) || array_key_exists('foreign_currency_code', $submitted)) {
             $foreignCurrency = $currencyFactory->find(
                 array_key_exists('foreign_currency_id', $submitted) ? (int)$submitted['foreign_currency_id'] : null,
-                array_key_exists('foreign_currency_code', $submitted) ? $submitted['foreign_currency_code'] : null);
+                array_key_exists('foreign_currency_code', $submitted) ? $submitted['foreign_currency_code'] : null
+            );
         }
         if (null === $foreignCurrency) {
             unset($submitted['foreign_currency_id'], $currency['foreign_currency_code']);

@@ -34,7 +34,6 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class IsTransferAccount implements ValidationRule
 {
-
     /**
      * @param string  $attribute
      * @param mixed   $value

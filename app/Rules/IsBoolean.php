@@ -32,7 +32,6 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class IsBoolean implements ValidationRule
 {
-
     /**
      * @param string  $attribute
      * @param mixed   $value

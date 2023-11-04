@@ -252,7 +252,7 @@ class MassController extends Controller
         try {
             $carbon = Carbon::parse($value[$journalId]);
         } catch (InvalidArgumentException $e) {
-            Log::warning(sprintf('Could not parse "%s" but dont mind',$value[$journalId]));
+            Log::warning(sprintf('Could not parse "%s" but dont mind', $value[$journalId]));
             Log::warning($e->getMessage());
 
             return null;

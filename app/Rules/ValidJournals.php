@@ -35,7 +35,6 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class ValidJournals implements ValidationRule
 {
-
     /**
      * @param string  $attribute
      * @param mixed   $value

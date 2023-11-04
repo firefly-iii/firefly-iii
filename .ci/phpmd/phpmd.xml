@@ -66,6 +66,8 @@ phpmd database,app,tests html /gdrive-all/development/phpmd/phpmd.xml > public/r
 	<!-- include clean code manually -->
 	<rule ref="rulesets/cleancode.xml/BooleanArgumentFlag" />
 	<rule ref="rulesets/cleancode.xml/ElseExpression" />
+    <rule ref="rulesets/cleancode.xml/MissingImport" />
+    <rule ref="rulesets/cleancode.xml/UndefinedVariable" />
 
 	<!-- no this one -->
 	<!--<rule ref="rulesets/cleancode.xml/StaticAccess" />-->

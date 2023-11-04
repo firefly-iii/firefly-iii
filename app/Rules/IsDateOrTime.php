@@ -35,7 +35,6 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class IsDateOrTime implements ValidationRule
 {
-
     /**
      * @param string  $attribute
      * @param mixed   $value
@@ -47,7 +46,8 @@ class IsDateOrTime implements ValidationRule
     {
         $value = (string)$value;
         if ('' === $value) {
-            $fail('validation.date_or_time')->translate();;
+            $fail('validation.date_or_time')->translate();
+            ;
             return;
         }
         if (10 === strlen($value)) {
@@ -57,12 +57,14 @@ class IsDateOrTime implements ValidationRule
             } catch (InvalidDateException $e) { // @phpstan-ignore-line
                 app('log')->error(sprintf('"%s" is not a valid date: %s', $value, $e->getMessage()));
 
-                $fail('validation.date_or_time')->translate();;
+                $fail('validation.date_or_time')->translate();
+                ;
                 return;
             } catch (InvalidFormatException $e) { // @phpstan-ignore-line
                 app('log')->error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
 
-                $fail('validation.date_or_time')->translate();;
+                $fail('validation.date_or_time')->translate();
+                ;
                 return;
             }
 
@@ -74,12 +76,14 @@ class IsDateOrTime implements ValidationRule
         } catch (InvalidDateException $e) { // @phpstan-ignore-line
             app('log')->error(sprintf('"%s" is not a valid date or time: %s', $value, $e->getMessage()));
 
-            $fail('validation.date_or_time')->translate();;
+            $fail('validation.date_or_time')->translate();
+            ;
             return;
         } catch (InvalidFormatException $e) {
             app('log')->error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
 
-            $fail('validation.date_or_time')->translate();;
+            $fail('validation.date_or_time')->translate();
+            ;
             return;
         }
     }

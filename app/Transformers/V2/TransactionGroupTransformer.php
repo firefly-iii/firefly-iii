@@ -43,7 +43,6 @@ use stdClass;
  */
 class TransactionGroupTransformer extends AbstractTransformer
 {
-
     private ExchangeRateConverter $converter;
     private array                 $currencies = [];
     private TransactionCurrency   $default;

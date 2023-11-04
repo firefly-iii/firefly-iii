@@ -113,7 +113,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if ($user instanceof User   ) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }

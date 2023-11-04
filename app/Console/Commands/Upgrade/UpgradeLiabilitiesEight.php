@@ -249,11 +249,11 @@ class UpgradeLiabilitiesEight extends Command
             // code is kept in place so I can revisit my reasoning.
             $delete = false;
 
-//            if ($delete) {
+            //            if ($delete) {
             $service = app(TransactionGroupDestroyService::class);
             $service->destroy($journal->transactionGroup);
             $count++;
-//            }
+            //            }
         }
 
         return $count;
