@@ -57,8 +57,8 @@ class CurrencyUpdateService
         if (array_key_exists('decimal_places', $data) && is_int($data['decimal_places'])) {
             $currency->decimal_places = (int)$data['decimal_places'];
         }
-        $currency->userEnabled = null;
-        $currency->userDefault = null;
+        unset($currency->userEnabled);
+        unset($currency->userDefault);
         $currency->save();
 
         return $currency;

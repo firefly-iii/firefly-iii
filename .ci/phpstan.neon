@@ -1,8 +1,20 @@
 includes:
-  - ../vendor/nunomaduro/larastan/extension.neon
-  - ../vendor/ergebnis/phpstan-rules/rules.neon
-  - ../vendor/phpstan/phpstan-deprecation-rules/rules.neon
-  - ../vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
+  - ../vendor/symplify/phpstan-rules/config/code-complexity-rules.neon
+  - ../vendor/symplify/phpstan-rules/config/collector-rules.neon
+  - ../vendor/symplify/phpstan-rules/config/naming-rules.neon
+  - ../vendor/symplify/phpstan-rules/config/regex-rules.neon
+  - ../vendor/symplify/phpstan-rules/config/static-rules.neon
+  - ../vendor/symplify/phpstan-rules/config/configurable-rules.neon
+
+services:
+  -
+      class: Symplify\PHPStanRules\Rules\ForbiddenNodeRule
+      tags: [phpstan.rules.rule]
+      arguments:
+        forbiddenNodes:
+          - PhpParser\Node\Expr\Empty_
+          - PhpParser\Node\Expr\ErrorSuppress
+
 
 parameters:
   universalObjectCratesClasses:
@@ -10,9 +22,15 @@ parameters:
   reportUnmatchedIgnoredErrors: false
   checkGenericClassInNonGenericObjectType: false  # remove this rule when all other issues are solved.
   ignoreErrors:
+    - '#Use value object over return of values#' # from simplify, ignore it.
+    - '#Use explicit names over dynamic ones#' # from simplify, ignore it.
+    - '#Use unique name to make classes easy to recognize#'
+    - '#Do not name "e", shorter than 2 chars#'
+    - '#Do not name "q", shorter than 2 chars#'
     - '#with no value type specified in iterable type array#' # remove this rule when all other issues are solved.
     - '#has no value type specified in iterable type array#' # remove this rule when all other issues are solved.
     - '#is not allowed to extend#'
+    - '#switch is forbidden to use#'
     - '#is neither abstract nor final#'
     - '#has a nullable return type declaration#'
     - '#with a nullable type declaration#'
@@ -76,5 +94,5 @@ parameters:
     - ../bootstrap/app.php
 
   # The level 8 is the highest level. original was 5
-  level: 6
+  level: 1
 

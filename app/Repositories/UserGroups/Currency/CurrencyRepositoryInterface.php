@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\UserGroups\Currency;
 
+use FireflyIII\Api\V1\Controllers\Data\Bulk\TransactionController;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
@@ -121,7 +122,7 @@ interface CurrencyRepositoryInterface
     /**
      * Get the user group's currencies.
      *
-     * @return Collection
+     * @return Collection<TransactionCurrency>
      */
     public function get(): Collection;
 

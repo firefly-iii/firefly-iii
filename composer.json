@@ -147,6 +147,11 @@
             "includes": [
                 "extension.neon"
             ]
+        },
+        "phpstan/extension-installer": {
+            "ignore": [
+                "symplify/phpstan-rules"
+            ]
         }
     },
     "scripts": {
