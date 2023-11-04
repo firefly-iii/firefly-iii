@@ -110,7 +110,7 @@ class Rule extends Model
      * @return Rule
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Rule
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $ruleId = (int)$value;

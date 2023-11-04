@@ -37,8 +37,8 @@ use JsonException;
  */
 class RecurrenceFactory
 {
-    use TransactionTypeTrait;
     use RecurringTransactionTrait;
+    use TransactionTypeTrait;
 
     private MessageBag $errors;
     private User       $user;

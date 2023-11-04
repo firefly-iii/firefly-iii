@@ -91,7 +91,7 @@ class LinkType extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): LinkType
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $linkTypeId = (int)$value;

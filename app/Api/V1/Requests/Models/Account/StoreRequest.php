@@ -40,9 +40,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use AppendsLocationData;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * @return array
@@ -124,7 +124,7 @@ class StoreRequest extends FormRequest
             'liability_start_date' => 'required_with:liability_amount|date',
             'liability_direction'  => 'nullable|required_if:type,liability|required_if:type,liabilities|in:credit,debit',
             'interest'             => 'between:0,100|numeric',
-            'interest_period'      => sprintf('nullable|in:%s', join(',', config('firefly.interest_periods'))),
+            'interest_period'      => sprintf('nullable|in:%s', implode(',', config('firefly.interest_periods'))),
             'notes'                => 'min:0|max:65536',
         ];
 

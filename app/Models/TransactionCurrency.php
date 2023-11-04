@@ -103,7 +103,7 @@ class TransactionCurrency extends Model
      * @return TransactionCurrency
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): TransactionCurrency
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $currencyId = (int)$value;

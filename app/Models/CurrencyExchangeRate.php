@@ -114,7 +114,7 @@ class CurrencyExchangeRate extends Model
     protected function rate(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
@@ -124,7 +124,7 @@ class CurrencyExchangeRate extends Model
     protected function userRate(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 }

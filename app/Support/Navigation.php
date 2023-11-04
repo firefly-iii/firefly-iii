@@ -91,7 +91,7 @@ class Navigation
             Log::error(sprintf(
                 'The periodicity %s is unknown. Choose one of available periodicity: %s',
                 $repeatFreq,
-                join(', ', array_keys($functionMap))
+                implode(', ', array_keys($functionMap))
             ));
             return $theDate;
         }

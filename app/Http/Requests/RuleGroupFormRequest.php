@@ -34,8 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class RuleGroupFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data for controller.

@@ -41,8 +41,8 @@ use JsonException;
  */
 class RecurrenceUpdateService
 {
-    use TransactionTypeTrait;
     use RecurringTransactionTrait;
+    use TransactionTypeTrait;
 
     private User $user;
 

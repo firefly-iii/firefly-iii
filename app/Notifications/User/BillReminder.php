@@ -105,7 +105,7 @@ class BillReminder extends Notification
         $url  = route('bills.show', [$bill->id]);
         return (new SlackMessage())
             ->warning()
-            ->attachment(function ($attachment) use ($bill, $url) {
+            ->attachment(static function ($attachment) use ($bill, $url) {
                 $attachment->title((string)trans('firefly.visit_bill', ['name' => $bill->name]), $url);
             })
             ->content($message);

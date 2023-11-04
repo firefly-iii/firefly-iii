@@ -1410,7 +1410,7 @@ class OperatorQuerySearch implements SearchInterface
         }
         app('log')->debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
         $filtered = $accounts->filter(
-            function (Account $account) use ($value, $stringMethod) {
+            static function (Account $account) use ($value, $stringMethod) {
                 return $stringMethod(strtolower($account->name), strtolower($value));
             }
         );
@@ -1490,7 +1490,7 @@ class OperatorQuerySearch implements SearchInterface
         // if found, do filter
         app('log')->debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
         $filtered = $accounts->filter(
-            function (Account $account) use ($value, $stringMethod) {
+            static function (Account $account) use ($value, $stringMethod) {
                 // either IBAN or account number
                 $ibanMatch      = $stringMethod(strtolower((string)$account->iban), strtolower((string)$value));
                 $accountNrMatch = false;

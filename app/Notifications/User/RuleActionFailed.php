@@ -88,9 +88,9 @@ class RuleActionFailed extends Notification
         $ruleTitle  = $this->ruleTitle;
         $ruleLink   = $this->ruleLink;
 
-        return (new SlackMessage())->content($this->message)->attachment(function ($attachment) use ($groupTitle, $groupLink) {
+        return (new SlackMessage())->content($this->message)->attachment(static function ($attachment) use ($groupTitle, $groupLink) {
             $attachment->title((string)trans('rules.inspect_transaction', ['title' => $groupTitle]), $groupLink);
-        })->attachment(function ($attachment) use ($ruleTitle, $ruleLink) {
+        })->attachment(static function ($attachment) use ($ruleTitle, $ruleLink) {
             $attachment->title((string)trans('rules.inspect_rule', ['title' => $ruleTitle]), $ruleLink);
         });
     }

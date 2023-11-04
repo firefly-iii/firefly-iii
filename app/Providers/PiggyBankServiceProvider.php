@@ -49,7 +49,7 @@ class PiggyBankServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             PiggyBankRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var PiggyBankRepository $repository */
                 $repository = app(PiggyBankRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
@@ -62,7 +62,7 @@ class PiggyBankServiceProvider extends ServiceProvider
 
         $this->app->bind(
             AdminPiggyBankRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var AdminPiggyBankRepository $repository */
                 $repository = app(AdminPiggyBankRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)

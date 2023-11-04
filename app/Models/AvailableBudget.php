@@ -95,7 +95,7 @@ class AvailableBudget extends Model
      * @return AvailableBudget
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): AvailableBudget
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $availableBudgetId = (int)$value;
@@ -132,7 +132,7 @@ class AvailableBudget extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 }

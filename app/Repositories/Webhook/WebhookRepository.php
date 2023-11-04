@@ -98,7 +98,7 @@ class WebhookRepository implements WebhookRepositoryInterface
                        ->where('webhook_messages.errored', 0)
                        ->get(['webhook_messages.*'])
                        ->filter(
-                           function (WebhookMessage $message) {
+                           static function (WebhookMessage $message) {
                                return $message->webhookAttempts()->count() <= 2;
                            }
                        )->splice(0, 3);

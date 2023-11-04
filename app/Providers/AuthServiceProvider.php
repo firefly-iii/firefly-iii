@@ -53,7 +53,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         Auth::provider(
             'remote_user_provider',
-            function ($app, array $config) {
+            static function ($app, array $config) {
                 return new RemoteUserProvider();
             }
         );

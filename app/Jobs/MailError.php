@@ -79,18 +79,18 @@ class MailError extends Job implements ShouldQueue
         $args['user']     = $this->userData;
         $args['ip']       = $this->ipAddress;
         $args['token']    = config('firefly.ipinfo_token');
-        if ($this->attempts() < 3 && strlen($email) > 0) {
+        if ($this->attempts() < 3 && $email !== '') {
             try {
                 Mail::send(
                     ['emails.error-html', 'emails.error-text'],
                     $args,
-                    function (Message $message) use ($email) {
+                    static function (Message $message) use ($email) {
                         if ('mail@example.com' !== $email) {
                             $message->to($email, $email)->subject((string)trans('email.error_subject'));
                         }
                     }
                 );
-            } catch (Exception | TransportException $e) { // @phpstan-ignore-line
+            } catch (Exception | TransportException $e) { /** @phpstan-ignore-line */
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
                     app('log')->warning('[Bcc] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');

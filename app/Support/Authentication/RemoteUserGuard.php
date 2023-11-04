@@ -129,7 +129,7 @@ class RemoteUserGuard implements Guard
     public function check(): bool
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
-        return !is_null($this->user());
+        return null !== $this->user();
     }
 
     /**

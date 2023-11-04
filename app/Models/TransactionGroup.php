@@ -93,7 +93,7 @@ class TransactionGroup extends Model
      * @return TransactionGroup
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): TransactionGroup
+    public static function routeBinder(string $value): self
     {
         app('log')->debug(sprintf('Now in %s("%s")', __METHOD__, $value));
         if (auth()->check()) {

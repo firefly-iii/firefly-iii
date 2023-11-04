@@ -51,7 +51,7 @@ class FireflySessionProvider extends ServiceProvider
     {
         $this->app->singleton(
             'session',
-            function ($app) {
+            static function ($app) {
                 return new SessionManager($app);
             }
         );
@@ -64,7 +64,7 @@ class FireflySessionProvider extends ServiceProvider
     {
         $this->app->singleton(
             'session.store',
-            function ($app) {
+            static function ($app) {
                 // First, we will create the session manager which is responsible for the
                 // creation of the various session drivers when they are needed by the
                 // application instance, and will resolve them on a lazy load basis.

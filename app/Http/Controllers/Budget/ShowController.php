@@ -46,8 +46,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class ShowController extends Controller
 {
-    use PeriodOverview;
     use AugumentData;
+    use PeriodOverview;
 
     protected JournalRepositoryInterface $journalRepos;
     private BudgetRepositoryInterface    $repository;

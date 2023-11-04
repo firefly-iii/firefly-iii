@@ -154,7 +154,7 @@ class Bill extends Model
      * @return Bill
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Bill
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $billId = (int)$value;
@@ -244,7 +244,7 @@ class Bill extends Model
     protected function amountMax(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
@@ -256,7 +256,7 @@ class Bill extends Model
     protected function amountMin(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 }

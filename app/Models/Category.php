@@ -101,7 +101,7 @@ class Category extends Model
      * @return Category
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Category
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $categoryId = (int)$value;

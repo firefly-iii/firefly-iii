@@ -129,7 +129,7 @@ class DebugController extends Controller
         // get latest log file:
         $logger = Log::driver();
         // PHPstan doesn't recognize the method because of its polymorphic nature.
-        $handlers   = $logger->getHandlers(); // @phpstan-ignore-line
+        $handlers   = $logger->getHandlers(); /** @phpstan-ignore-line */
         $logContent = '';
         foreach ($handlers as $handler) {
             if ($handler instanceof RotatingFileHandler) {
@@ -174,7 +174,7 @@ class DebugController extends Controller
             'db_version'      => app('fireflyconfig')->get('db_version', 1)->data,
             'php_version'     => PHP_VERSION,
             'php_os'          => PHP_OS,
-            'interface'       => PHP_SAPI,
+            'interface'       => \PHP_SAPI,
             'bcscale'         => bcscale(),
             'display_errors'  => ini_get('display_errors'),
             'error_reporting' => $this->errorReporting((int)ini_get('error_reporting')),
@@ -246,7 +246,7 @@ class DebugController extends Controller
             'default_locale'     => (string)config('firefly.default_locale'),
             'remote_header'      => $userGuard === 'remote_user_guard' ? config('auth.guard_header') : 'N/A',
             'remote_mail_header' => $userGuard === 'remote_user_guard' ? config('auth.guard_email') : 'N/A',
-            'stateful_domains'   => join(', ', config('sanctum.stateful')),
+            'stateful_domains'   => implode(', ', config('sanctum.stateful')),
 
             // the dates for the cron job are based on the recurring cron job's times.
             // any of the cron jobs will do, they always run at the same time.
@@ -339,7 +339,7 @@ class DebugController extends Controller
         if ($user->bills()->count() > 0) {
             $flags[] = '<span title="Has subscriptions">:email:</span>';
         }
-        return join(' ', $flags);
+        return implode(' ', $flags);
     }
 
     /**

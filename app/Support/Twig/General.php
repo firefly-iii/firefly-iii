@@ -357,7 +357,7 @@ class General extends AbstractExtension
     {
         return new TwigFunction(
             'formatDate',
-            function (string $date, string $format): string {
+            static function (string $date, string $format): string {
                 $carbon = new Carbon($date);
 
                 return $carbon->isoFormat($format);

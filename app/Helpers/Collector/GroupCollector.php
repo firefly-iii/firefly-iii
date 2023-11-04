@@ -52,12 +52,12 @@ use Illuminate\Support\Collection;
  */
 class GroupCollector implements GroupCollectorInterface
 {
-    use CollectorProperties;
     use AccountCollection;
     use AmountCollection;
-    use TimeCollection;
-    use MetaCollection;
     use AttachmentCollection;
+    use CollectorProperties;
+    use MetaCollection;
+    use TimeCollection;
 
     /**
      * Group collector constructor.
@@ -1077,7 +1077,7 @@ class GroupCollector implements GroupCollectorInterface
             // join source transaction.
             ->leftJoin(
                 'transactions as source',
-                function (JoinClause $join) {
+                static function (JoinClause $join) {
                     $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
                          ->where('source.amount', '<', 0);
                 }
@@ -1085,7 +1085,7 @@ class GroupCollector implements GroupCollectorInterface
             // join destination transaction
             ->leftJoin(
                 'transactions as destination',
-                function (JoinClause $join) {
+                static function (JoinClause $join) {
                     $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
                          ->where('destination.amount', '>', 0);
                 }
@@ -1135,7 +1135,7 @@ class GroupCollector implements GroupCollectorInterface
             // join source transaction.
             ->leftJoin(
                 'transactions as source',
-                function (JoinClause $join) {
+                static function (JoinClause $join) {
                     $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
                          ->where('source.amount', '<', 0);
                 }
@@ -1143,7 +1143,7 @@ class GroupCollector implements GroupCollectorInterface
             // join destination transaction
             ->leftJoin(
                 'transactions as destination',
-                function (JoinClause $join) {
+                static function (JoinClause $join) {
                     $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
                          ->where('destination.amount', '>', 0);
                 }

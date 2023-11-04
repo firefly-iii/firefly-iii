@@ -32,8 +32,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class DestroyRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.

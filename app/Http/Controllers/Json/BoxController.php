@@ -118,7 +118,7 @@ class BoxController extends Controller
             $leftToSpendAmount = bcadd($totalAvailableSum, $spentAmount);
             app('log')->debug(sprintf('So left to spend is %s', $leftToSpendAmount));
             if (1 === bccomp($leftToSpendAmount, '0')) {
-                app('log')->debug(sprintf('Left to spend is positive!'));
+                app('log')->debug('Left to spend is positive!');
                 $boxTitle         = (string)trans('firefly.left_to_spend');
                 $days             = $today->diffInDays($end) + 1;
                 $display          = 1; // not overspent
@@ -255,7 +255,7 @@ class BoxController extends Controller
 
         // filter list on preference of being included.
         $filtered = $allAccounts->filter(
-            function (Account $account) use ($accountRepository) {
+            static function (Account $account) use ($accountRepository) {
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
                 $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
                 if (false === $result) {

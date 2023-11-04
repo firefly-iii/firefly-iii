@@ -86,7 +86,7 @@ class WebhookMessage extends Model
      * @return WebhookMessage
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): WebhookMessage
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $messageId = (int)$value;
@@ -125,7 +125,7 @@ class WebhookMessage extends Model
     protected function sent(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (bool)$value,
+            get: static fn ($value) => (bool)$value,
         );
     }
 }

@@ -111,7 +111,7 @@ class Budget extends Model
      * @return Budget
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Budget
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $budgetId = (int)$value;

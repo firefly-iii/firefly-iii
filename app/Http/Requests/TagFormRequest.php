@@ -35,9 +35,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class TagFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use AppendsLocationData;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data for controller.

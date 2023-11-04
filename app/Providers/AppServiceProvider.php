@@ -42,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
-        Response::macro('api', function (array $value) {
+        Response::macro('api', static function (array $value) {
             $headers = [
                 'Cache-Control' => 'no-store',
             ];

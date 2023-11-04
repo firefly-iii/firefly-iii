@@ -103,13 +103,13 @@ class PiggyBankRepetition extends Model
     public function scopeRelevantOnDate(EloquentBuilder $query, Carbon $date)
     {
         return $query->where(
-            function (EloquentBuilder $q) use ($date) {
+            static function (EloquentBuilder $q) use ($date) {
                 $q->where('startdate', '<=', $date->format('Y-m-d 00:00:00'));
                 $q->orWhereNull('startdate');
             }
         )
                      ->where(
-                         function (EloquentBuilder $q) use ($date) {
+                         static function (EloquentBuilder $q) use ($date) {
                              $q->where('targetdate', '>=', $date->format('Y-m-d 00:00:00'));
                              $q->orWhereNull('targetdate');
                          }
@@ -133,7 +133,7 @@ class PiggyBankRepetition extends Model
     protected function currentamount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 }

@@ -40,8 +40,8 @@ use Illuminate\Validation\Validator;
  */
 class RecurrenceFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get the data required by the controller.

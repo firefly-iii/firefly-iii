@@ -44,8 +44,8 @@ use Throwable;
  */
 class EditController extends Controller
 {
-    use RuleManagement;
     use RenderPartialViews;
+    use RuleManagement;
 
     private RuleRepositoryInterface $ruleRepos;
 

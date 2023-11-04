@@ -42,8 +42,8 @@ use Illuminate\Support\Collection;
  */
 class GenericRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     private Collection $accounts;
     private Collection $bills;

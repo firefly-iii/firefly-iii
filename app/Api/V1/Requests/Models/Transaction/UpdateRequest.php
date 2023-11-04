@@ -41,10 +41,10 @@ use Illuminate\Validation\Validator;
  */
 class UpdateRequest extends FormRequest
 {
-    use TransactionValidation;
-    use GroupValidation;
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
+    use GroupValidation;
+    use TransactionValidation;
 
     private array $arrayFields;
     private array $booleanFields;

@@ -52,7 +52,7 @@ class ExtendCurrencyInfo extends Migration
         try {
             Schema::table(
                 'transaction_currencies',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->string('code', 51)->change();
                     $table->string('symbol', 51)->change();
                 }

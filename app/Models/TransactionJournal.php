@@ -123,8 +123,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class TransactionJournal extends Model
 {
-    use SoftDeletes;
     use HasFactory;
+    use SoftDeletes;
 
     /**
      * The attributes that should be casted to native types.
@@ -171,7 +171,7 @@ class TransactionJournal extends Model
      * @return TransactionJournal
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): TransactionJournal
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $journalId = (int)$value;

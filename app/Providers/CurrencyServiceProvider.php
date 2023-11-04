@@ -49,7 +49,7 @@ class CurrencyServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             CurrencyRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var CurrencyRepository $repository */
                 $repository = app(CurrencyRepository::class);
                 // phpstan does not get the reference to auth
@@ -62,7 +62,7 @@ class CurrencyServiceProvider extends ServiceProvider
         );
         $this->app->bind(
             GroupCurrencyRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var GroupCurrencyRepository $repository */
                 $repository = app(GroupCurrencyRepository::class);
                 // phpstan does not get the reference to auth

@@ -127,7 +127,7 @@ class Recurrence extends Model
      * @return Recurrence
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Recurrence
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $recurrenceId = (int)$value;

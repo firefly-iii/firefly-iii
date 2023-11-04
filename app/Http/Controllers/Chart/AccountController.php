@@ -50,9 +50,9 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class AccountController extends Controller
 {
-    use DateCalculation;
     use AugumentData;
     use ChartGeneration;
+    use DateCalculation;
 
     protected GeneratorInterface        $generator;
     private AccountRepositoryInterface  $accountRepository;

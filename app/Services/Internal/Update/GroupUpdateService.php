@@ -242,7 +242,7 @@ class GroupUpdateService
             );
         }
         $collection->each(
-            function (TransactionJournal $journal) use ($transactionGroup) {
+            static function (TransactionJournal $journal) use ($transactionGroup) {
                 $transactionGroup->transactionJournals()->save($journal);
             }
         );

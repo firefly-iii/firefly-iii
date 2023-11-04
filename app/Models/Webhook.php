@@ -179,7 +179,7 @@ class Webhook extends Model
      * @return Webhook
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Webhook
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $webhookId = (int)$value;

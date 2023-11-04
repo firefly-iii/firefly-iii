@@ -116,7 +116,7 @@ class UniqueIban implements ValidationRule
                         $value,
                         $count,
                         $type,
-                        join(', ', $this->expectedTypes)
+                        implode(', ', $this->expectedTypes)
                     )
                 );
 

@@ -72,7 +72,7 @@ class WebhookAttempt extends Model
      * @return WebhookAttempt
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): WebhookAttempt
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $attemptId = (int)$value;

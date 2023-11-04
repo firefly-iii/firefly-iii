@@ -108,8 +108,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Account extends Model
 {
-    use SoftDeletes;
     use HasFactory;
+    use SoftDeletes;
 
     /**
      * The attributes that should be casted to native types.
@@ -139,7 +139,7 @@ class Account extends Model
      * @return Account
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Account
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $accountId = (int)$value;
@@ -300,7 +300,7 @@ class Account extends Model
     protected function virtualBalance(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 }

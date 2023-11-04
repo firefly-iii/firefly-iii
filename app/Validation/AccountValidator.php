@@ -42,12 +42,12 @@ use FireflyIII\Validation\Account\WithdrawalValidation;
  */
 class AccountValidator
 {
-    use WithdrawalValidation;
     use DepositValidation;
-    use TransferValidation;
-    use ReconciliationValidation;
-    use OBValidation;
     use LiabilityValidation;
+    use OBValidation;
+    use ReconciliationValidation;
+    use TransferValidation;
+    use WithdrawalValidation;
 
     public bool                                 $createMode;
     public string                               $destError;

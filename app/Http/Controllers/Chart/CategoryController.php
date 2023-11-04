@@ -47,9 +47,9 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class CategoryController extends Controller
 {
-    use DateCalculation;
     use AugumentData;
     use ChartGeneration;
+    use DateCalculation;
 
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;

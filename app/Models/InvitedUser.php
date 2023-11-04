@@ -73,7 +73,7 @@ class InvitedUser extends Model
      *
      * @return InvitedUser
      */
-    public static function routeBinder(string $value): InvitedUser
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $attemptId = (int)$value;

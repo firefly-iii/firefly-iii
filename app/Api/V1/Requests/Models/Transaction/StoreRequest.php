@@ -42,12 +42,12 @@ use Illuminate\Validation\Validator;
  */
 class StoreRequest extends FormRequest
 {
-    use TransactionValidation;
-    use GroupValidation;
-    use CurrencyValidation;
-    use ConvertsDataTypes;
-    use ChecksLogin;
     use AppendsLocationData;
+    use ChecksLogin;
+    use ConvertsDataTypes;
+    use CurrencyValidation;
+    use GroupValidation;
+    use TransactionValidation;
 
     /**
      * Get all data. Is pretty complex because of all the ??-statements.

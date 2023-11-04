@@ -34,8 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class TestRuleFormRequest extends FormRequest
 {
-    use GetRuleConfiguration;
     use ChecksLogin;
+    use GetRuleConfiguration;
 
     /**
      * Rules for this request.

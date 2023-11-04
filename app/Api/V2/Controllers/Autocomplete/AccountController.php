@@ -123,7 +123,7 @@ class AccountController extends Controller
 
         usort(
             $allItems,
-            function (array $a, array $b): int {
+            static function (array $a, array $b): int {
                 $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
                 $pos_a = array_search($a['type'], $order, true);
                 $pos_b = array_search($b['type'], $order, true);

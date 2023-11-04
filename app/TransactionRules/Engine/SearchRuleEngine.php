@@ -290,7 +290,7 @@ class SearchRuleEngine implements RuleEngineInterface
 
         // make collection unique
         $unique = $total->unique(
-            function (array $group) {
+            static function (array $group) {
                 $str = '';
                 foreach ($group['transactions'] as $transaction) {
                     $str = sprintf('%s%d', $str, $transaction['transaction_journal_id']);

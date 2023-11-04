@@ -83,7 +83,7 @@ class TransactionType extends Model
      * @return TransactionType
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $type): TransactionType
+    public static function routeBinder(string $type): self
     {
         if (!auth()->check()) {
             throw new NotFoundHttpException();

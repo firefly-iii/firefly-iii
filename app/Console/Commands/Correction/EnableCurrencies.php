@@ -80,7 +80,7 @@ class EnableCurrencies extends Command
         $found    = array_values(
             array_filter(
                 $found,
-                function (int $currencyId) {
+                static function (int $currencyId) {
                     return $currencyId !== 0;
                 }
             )

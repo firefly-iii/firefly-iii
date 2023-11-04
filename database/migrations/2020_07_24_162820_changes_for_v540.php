@@ -152,7 +152,7 @@ class ChangesForV540 extends Migration
         try {
             Schema::table(
                 'oauth_clients',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     $table->string('secret', 100)->nullable()->change();
                 }
             );

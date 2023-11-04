@@ -41,7 +41,7 @@ return new class () extends Migration {
         try {
             Schema::table(
                 'object_groups',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     if (!Schema::hasColumn('object_groups', 'user_group_id')) {
                         $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
                         $table->foreign('user_group_id', sprintf('%s_to_ugi', 'object_groups'))->references('id')->on('user_groups')->onDelete(
@@ -64,7 +64,7 @@ return new class () extends Migration {
         try {
             Schema::table(
                 'object_groups',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     if ('sqlite' !== config('database.default')) {
                         $table->dropForeign(sprintf('%s_to_ugi', 'object_groups'));
                     }

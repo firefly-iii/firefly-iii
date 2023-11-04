@@ -62,7 +62,7 @@ class AccountServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             AccountRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var AccountRepositoryInterface $repository */
                 $repository = app(AccountRepository::class);
 
@@ -77,7 +77,7 @@ class AccountServiceProvider extends ServiceProvider
 
         $this->app->bind(
             AdminAccountRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var AdminAccountRepositoryInterface $repository */
                 $repository = app(AdminAccountRepository::class);
 
@@ -113,7 +113,7 @@ class AccountServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             AccountTaskerInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var AccountTaskerInterface $tasker */
                 $tasker = app(AccountTasker::class);
 

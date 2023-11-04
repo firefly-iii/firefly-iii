@@ -47,7 +47,7 @@ class RecurringServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             RecurringRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var RecurringRepositoryInterface $repository */
                 $repository = app(RecurringRepository::class);
 

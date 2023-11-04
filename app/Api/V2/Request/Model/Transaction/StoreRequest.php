@@ -50,13 +50,13 @@ use Illuminate\Validation\Validator;
  */
 class StoreRequest extends FormRequest
 {
-    use ChecksLogin;
-    use ConvertsDataTypes;
-
-    use TransactionValidation;
-    use GroupValidation;
-    use CurrencyValidation;
     use AppendsLocationData;
+    use ChecksLogin;
+
+    use ConvertsDataTypes;
+    use CurrencyValidation;
+    use GroupValidation;
+    use TransactionValidation;
 
     protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
 

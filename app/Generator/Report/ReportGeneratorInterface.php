@@ -45,7 +45,7 @@ interface ReportGeneratorInterface
      *
      * @return ReportGeneratorInterface
      */
-    public function setAccounts(Collection $accounts): ReportGeneratorInterface;
+    public function setAccounts(Collection $accounts): self;
 
     /**
      * Set the involved budgets.
@@ -54,7 +54,7 @@ interface ReportGeneratorInterface
      *
      * @return ReportGeneratorInterface
      */
-    public function setBudgets(Collection $budgets): ReportGeneratorInterface;
+    public function setBudgets(Collection $budgets): self;
 
     /**
      * Set the involved categories.
@@ -63,7 +63,7 @@ interface ReportGeneratorInterface
      *
      * @return ReportGeneratorInterface
      */
-    public function setCategories(Collection $categories): ReportGeneratorInterface;
+    public function setCategories(Collection $categories): self;
 
     /**
      * Set the end date.
@@ -72,7 +72,7 @@ interface ReportGeneratorInterface
      *
      * @return ReportGeneratorInterface
      */
-    public function setEndDate(Carbon $date): ReportGeneratorInterface;
+    public function setEndDate(Carbon $date): self;
 
     /**
      * Set the expense accounts.
@@ -81,7 +81,7 @@ interface ReportGeneratorInterface
      *
      * @return ReportGeneratorInterface
      */
-    public function setExpense(Collection $expense): ReportGeneratorInterface;
+    public function setExpense(Collection $expense): self;
 
     /**
      * Set the start date.
@@ -90,7 +90,7 @@ interface ReportGeneratorInterface
      *
      * @return ReportGeneratorInterface
      */
-    public function setStartDate(Carbon $date): ReportGeneratorInterface;
+    public function setStartDate(Carbon $date): self;
 
     /**
      * Set the tags.
@@ -99,5 +99,5 @@ interface ReportGeneratorInterface
      *
      * @return ReportGeneratorInterface
      */
-    public function setTags(Collection $tags): ReportGeneratorInterface;
+    public function setTags(Collection $tags): self;
 }

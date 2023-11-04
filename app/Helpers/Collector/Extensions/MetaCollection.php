@@ -915,7 +915,7 @@ trait MetaCollection
 
         // this method adds a "postFilter" to the collector.
         $list                = $tags->pluck('tag')->toArray();
-        $filter              = function (int $index, array $object) use ($list): bool {
+        $filter              = static function (int $index, array $object) use ($list): bool {
             foreach ($object['transactions'] as $transaction) {
                 foreach ($transaction['tags'] as $tag) {
                     if (in_array($tag['name'], $list, true)) {
@@ -1050,13 +1050,13 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         // TODO not sure if this will work properly.
-        $this->query->where(function (Builder $q1) { // @phpstan-ignore-line
-            $q1->where(function (Builder $q2) {
+        $this->query->where(static function (Builder $q1) { // @phpstan-ignore-line
+            $q1->where(static function (Builder $q2) {
                 $q2->where('journal_meta.name', '=', 'external_id');
                 $q2->whereNull('journal_meta.data');
-            })->orWhere(function (Builder $q3) {
+            })->orWhere(static function (Builder $q3) {
                 $q3->where('journal_meta.name', '!=', 'external_id');
-            })->orWhere(function (Builder $q4) {
+            })->orWhere(static function (Builder $q4) {
                 $q4->whereNull('journal_meta.name');
             });
         });
@@ -1071,13 +1071,13 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         // TODO not sure if this will work properly.
-        $this->query->where(function (Builder $q1) { // @phpstan-ignore-line
-            $q1->where(function (Builder $q2) {
+        $this->query->where(static function (Builder $q1) { // @phpstan-ignore-line
+            $q1->where(static function (Builder $q2) {
                 $q2->where('journal_meta.name', '=', 'external_url');
                 $q2->whereNull('journal_meta.data');
-            })->orWhere(function (Builder $q3) {
+            })->orWhere(static function (Builder $q3) {
                 $q3->where('journal_meta.name', '!=', 'external_url');
-            })->orWhere(function (Builder $q4) {
+            })->orWhere(static function (Builder $q4) {
                 $q4->whereNull('journal_meta.name');
             });
         });
@@ -1091,7 +1091,7 @@ trait MetaCollection
     public function withoutNotes(): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(function (Builder $q) { // @phpstan-ignore-line
+        $this->query->where(static function (Builder $q) { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', '');
         });

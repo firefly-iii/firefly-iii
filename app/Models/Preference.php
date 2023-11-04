@@ -77,7 +77,7 @@ class Preference extends Model
      * @return Preference
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Preference
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             /** @var User $user */
@@ -92,7 +92,7 @@ class Preference extends Model
             }
             $default = config('firefly.default_preferences');
             if (array_key_exists($value, $default)) {
-                $preference          = new Preference();
+                $preference          = new self();
                 $preference->name    = $value;
                 $preference->data    = $default[$value];
                 $preference->user_id = $user->id;

@@ -277,11 +277,11 @@ class UserGroupRepository implements UserGroupRepositoryInterface
     private function simplifyListByName(array $roles): array
     {
         if (in_array(UserRoleEnum::OWNER->value, $roles, true)) {
-            app('log')->debug(sprintf('List of roles is [%1$s] but this includes "%2$s", so return [%2$s]', join(',', $roles), UserRoleEnum::OWNER->value));
+            app('log')->debug(sprintf('List of roles is [%1$s] but this includes "%2$s", so return [%2$s]', implode(',', $roles), UserRoleEnum::OWNER->value));
             return [UserRoleEnum::OWNER->value];
         }
         if (in_array(UserRoleEnum::FULL->value, $roles, true)) {
-            app('log')->debug(sprintf('List of roles is [%1$s] but this includes "%2$s", so return [%2$s]', join(',', $roles), UserRoleEnum::FULL->value));
+            app('log')->debug(sprintf('List of roles is [%1$s] but this includes "%2$s", so return [%2$s]', implode(',', $roles), UserRoleEnum::FULL->value));
             return [UserRoleEnum::FULL->value];
         }
         return $roles;

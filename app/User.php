@@ -173,8 +173,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class User extends Authenticatable
 {
-    use Notifiable;
     use HasApiTokens;
+    use Notifiable;
 
     /**
      * The attributes that should be cast to native types.
@@ -212,7 +212,7 @@ class User extends Authenticatable
      * @return User
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): User
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $userId = (int)$value;
@@ -405,11 +405,11 @@ class User extends Authenticatable
             $roles[] = UserRoleEnum::OWNER->value;
             $roles[] = UserRoleEnum::FULL->value;
         }
-        app('log')->debug(sprintf('in hasRoleInGroup(%s)', join(', ', $roles)));
+        app('log')->debug(sprintf('in hasRoleInGroup(%s)', implode(', ', $roles)));
         /** @var Collection $dbRoles */
         $dbRoles = UserRole::whereIn('title', $roles)->get();
         if (0 === $dbRoles->count()) {
-            app('log')->error(sprintf('Could not find role(s): %s. Probably migration mishap.', join(', ', $roles)));
+            app('log')->error(sprintf('Could not find role(s): %s. Probably migration mishap.', implode(', ', $roles)));
             return false;
         }
         $dbRolesIds    = $dbRoles->pluck('id')->toArray();
@@ -424,7 +424,7 @@ class User extends Authenticatable
                 'User #%d "%s" does not have roles %s in user group #%d "%s"',
                 $this->id,
                 $this->email,
-                join(', ', $roles),
+                implode(', ', $roles),
                 $userGroup->id,
                 $userGroup->title
             ));
@@ -448,7 +448,7 @@ class User extends Authenticatable
             'User #%d "%s" does not have roles %s in user group #%d "%s"',
             $this->id,
             $this->email,
-            join(', ', $roles),
+            implode(', ', $roles),
             $userGroup->id,
             $userGroup->title
         ));

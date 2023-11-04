@@ -51,7 +51,7 @@ class CreateLocalPersonalAccessTokensTable extends Migration
     {
         if (!Schema::hasTable('personal_access_tokens')) {
             try {
-                Schema::create('personal_access_tokens', function (Blueprint $table) {
+                Schema::create('personal_access_tokens', static function (Blueprint $table) {
                     $table->bigIncrements('id');
                     $table->morphs('tokenable');
                     $table->string('name');

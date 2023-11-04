@@ -39,9 +39,9 @@ abstract class Controller extends BaseController
 {
     use AuthorizesRequests;
     use DispatchesJobs;
-    use ValidatesRequests;
     use RequestInformation;
     use UserNavigation;
+    use ValidatesRequests;
 
     protected string $dateTimeFormat;
     protected string $monthAndDayFormat;

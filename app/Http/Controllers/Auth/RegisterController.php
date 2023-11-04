@@ -51,8 +51,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class RegisterController extends Controller
 {
-    use RegistersUsers;
     use CreateStuff;
+    use RegistersUsers;
 
     /**
      * Where to redirect users after registration.

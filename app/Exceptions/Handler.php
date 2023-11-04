@@ -231,14 +231,12 @@ class Handler extends ExceptionHandler
      */
     private function shouldntReportLocal(Throwable $e): bool
     {
-        return !is_null(
-            Arr::first(
+        return null !== Arr::first(
                 $this->dontReport,
-                function ($type) use ($e) {
+                static function ($type) use ($e) {
                     return $e instanceof $type;
                 }
-            )
-        );
+            );
     }
 
     /**

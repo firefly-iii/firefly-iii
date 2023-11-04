@@ -33,8 +33,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class CategoryFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get information for the controller.

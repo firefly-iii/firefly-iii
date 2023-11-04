@@ -41,7 +41,7 @@ class NullArrayObject extends ArrayObject
      * @param array $array
      * @param null  $default
      */
-    /* @phpstan-ignore-next-line */
+    /** @phpstan-ignore-next-line */
     public function __construct(array $array, $default = null)
     {
         parent::__construct($array);

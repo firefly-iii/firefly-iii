@@ -109,7 +109,7 @@ class Attachment extends Model
      * @return Attachment
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Attachment
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $attachmentId = (int)$value;

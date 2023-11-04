@@ -36,8 +36,8 @@ use Illuminate\Validation\Validator;
  */
 class BalanceChartRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
     use ValidatesUserGroupTrait;
 
     /**
@@ -64,7 +64,7 @@ class BalanceChartRequest extends FormRequest
             'start'      => 'required|date|after:1900-01-01|before:2099-12-31',
             'end'        => 'required|date|after_or_equal:start|before:2099-12-31|after:1900-01-01',
             'accounts.*' => 'required|exists:accounts,id',
-            'period'     => sprintf('required|in:%s', join(',', config('firefly.valid_view_ranges'))),
+            'period'     => sprintf('required|in:%s', implode(',', config('firefly.valid_view_ranges'))),
         ];
     }
 
@@ -76,7 +76,7 @@ class BalanceChartRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator) {
+            static function (Validator $validator) {
                 // validate transaction query data.
                 $data = $validator->getData();
                 if (!array_key_exists('accounts', $data)) {

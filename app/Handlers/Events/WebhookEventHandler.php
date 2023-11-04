@@ -41,7 +41,7 @@ class WebhookEventHandler
         $messages = WebhookMessage::where('webhook_messages.sent', false)
                                   ->get(['webhook_messages.*'])
                                   ->filter(
-                                      function (WebhookMessage $message) {
+                                      static function (WebhookMessage $message) {
                                           return $message->webhookAttempts()->count() <= 2;
                                       }
                                   )->splice(0, 5);

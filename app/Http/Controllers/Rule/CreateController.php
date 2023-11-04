@@ -45,8 +45,8 @@ use Illuminate\View\View;
  */
 class CreateController extends Controller
 {
-    use RuleManagement;
     use ModelInformation;
+    use RuleManagement;
 
     private RuleRepositoryInterface $ruleRepos;
 

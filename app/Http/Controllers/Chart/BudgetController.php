@@ -49,8 +49,8 @@ use Illuminate\Support\Collection;
  */
 class BudgetController extends Controller
 {
-    use DateCalculation;
     use AugumentData;
+    use DateCalculation;
 
     protected GeneratorInterface            $generator;
     protected OperationsRepositoryInterface $opsRepository;

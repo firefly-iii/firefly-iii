@@ -36,8 +36,8 @@ use Illuminate\Validation\Validator;
  */
 class UserUpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Logged in + owner

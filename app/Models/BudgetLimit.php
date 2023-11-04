@@ -97,7 +97,7 @@ class BudgetLimit extends Model
      * @return BudgetLimit
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): BudgetLimit
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $budgetLimitId = (int)$value;
@@ -136,7 +136,7 @@ class BudgetLimit extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 }

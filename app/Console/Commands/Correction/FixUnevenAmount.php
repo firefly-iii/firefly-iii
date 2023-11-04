@@ -56,7 +56,7 @@ class FixUnevenAmount extends Command
         foreach ($journals as $entry) {
             $sum = (string)$entry->the_sum;
             if (!is_numeric($sum) ||
-                0 === strlen($sum) || // @phpstan-ignore-line
+                '' === $sum || // @phpstan-ignore-line
                 str_contains($sum, 'e') ||
                 str_contains($sum, ',')) {
                 $message = sprintf(

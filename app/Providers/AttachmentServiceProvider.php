@@ -47,7 +47,7 @@ class AttachmentServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             AttachmentRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var AttachmentRepositoryInterface $repository */
                 $repository = app(AttachmentRepository::class);
                 // reference to auth is not understood by phpstan.

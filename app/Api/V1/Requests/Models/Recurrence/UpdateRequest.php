@@ -40,12 +40,12 @@ use Illuminate\Validation\Validator;
  */
 class UpdateRequest extends FormRequest
 {
+    use ChecksLogin;
     use ConvertsDataTypes;
-    use RecurrenceValidation;
-    use TransactionValidation;
     use CurrencyValidation;
     use GetRecurrenceData;
-    use ChecksLogin;
+    use RecurrenceValidation;
+    use TransactionValidation;
 
     /**
      * Get all data from the request.

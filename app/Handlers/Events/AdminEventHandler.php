@@ -58,7 +58,7 @@ class AdminEventHandler
             if ($repository->hasRole($user, 'owner')) {
                 try {
                     Notification::send($user, new UserInvitation($event->invitee));
-                } catch (Exception $e) { // @phpstan-ignore-line
+                } catch (Exception $e) { /** @phpstan-ignore-line */
                     $message = $e->getMessage();
                     if (str_contains($message, 'Bcc')) {
                         app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -96,7 +96,7 @@ class AdminEventHandler
             if ($repository->hasRole($user, 'owner')) {
                 try {
                     Notification::send($user, new VersionCheckResult($event->message));
-                } catch (Exception $e) { // @phpstan-ignore-line
+                } catch (Exception $e) { /** @phpstan-ignore-line */
                     $message = $e->getMessage();
                     if (str_contains($message, 'Bcc')) {
                         app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -130,7 +130,7 @@ class AdminEventHandler
         }
         try {
             Notification::send($event->user, new TestNotification($event->user->email));
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (Exception $e) { /** @phpstan-ignore-line */
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');

@@ -321,11 +321,11 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         app('log')->debug(sprintf('Will filter getRuleGroupsWithRules on "%s".', $filter));
 
         return $groups->map(
-            function (RuleGroup $group) use ($filter) {
+            static function (RuleGroup $group) use ($filter) {
                 app('log')->debug(sprintf('Now filtering group #%d', $group->id));
                 // filter the rules in the rule group:
                 $group->rules = $group->rules->filter(
-                    function (Rule $rule) use ($filter) {
+                    static function (Rule $rule) use ($filter) {
                         app('log')->debug(sprintf('Now filtering rule #%d', $rule->id));
                         foreach ($rule->ruleTriggers as $trigger) {
                             if ('user_action' === $trigger->trigger_type && $filter === $trigger->trigger_value) {
@@ -384,11 +384,11 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         app('log')->debug(sprintf('Will filter getRuleGroupsWithRules on "%s".', $filter));
 
         return $groups->map(
-            function (RuleGroup $group) use ($filter) {
+            static function (RuleGroup $group) use ($filter) {
                 app('log')->debug(sprintf('Now filtering group #%d', $group->id));
                 // filter the rules in the rule group:
                 $group->rules = $group->rules->filter(
-                    function (Rule $rule) use ($filter) {
+                    static function (Rule $rule) use ($filter) {
                         app('log')->debug(sprintf('Now filtering rule #%d', $rule->id));
                         foreach ($rule->ruleTriggers as $trigger) {
                             if ('user_action' === $trigger->trigger_type && $filter === $trigger->trigger_value) {

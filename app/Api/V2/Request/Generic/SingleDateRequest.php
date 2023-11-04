@@ -36,8 +36,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class SingleDateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.

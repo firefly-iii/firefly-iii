@@ -100,7 +100,7 @@ class RuleGroup extends Model
      * @return RuleGroup
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): RuleGroup
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $ruleGroupId = (int)$value;

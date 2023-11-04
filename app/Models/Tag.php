@@ -111,7 +111,7 @@ class Tag extends Model
      * @return Tag
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Tag
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $tagId = (int)$value;

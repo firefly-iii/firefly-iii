@@ -38,8 +38,8 @@ use Illuminate\Validation\Validator;
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
