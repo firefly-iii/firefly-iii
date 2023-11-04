@@ -42,7 +42,7 @@ use Carbon\Carbon;
  * @property Carbon|null                                 $deleted_at
  * @property int|string                                         $recurrence_id
  * @property int|string                                         $transaction_currency_id
- * @property int|null                                    $foreign_currency_id
+ * @property int|string|null                                    $foreign_currency_id
  * @property int|string                                        $source_id
  * @property int|string                                         $destination_id
  * @property string|float                                      $amount

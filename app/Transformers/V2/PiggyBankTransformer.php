@@ -80,6 +80,7 @@ class PiggyBankTransformer extends AbstractTransformer
         $piggyBanks          = $objects->pluck('id')->toArray();
         $accountInfo         = Account::whereIn('id', $objects->pluck('account_id')->toArray())->get();
         $currencyPreferences = AccountMeta::where('name', '"currency_id"')->whereIn('account_id', $objects->pluck('account_id')->toArray())->get();
+        $currencies = [];
         /** @var Account $account */
         foreach ($accountInfo as $account) {
             $id                  = (int)$account->id;

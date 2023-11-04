@@ -541,7 +541,7 @@ class User extends Authenticatable
     public function routeNotificationFor($driver, $notification = null)
     {
         if (method_exists($this, $method = 'routeNotificationFor' . Str::studly($driver))) {
-            return $this->{$method}($notification);
+            return $this->{$method}($notification); // @phpstan-ignore-line
         }
         $email = $this->email;
         // see if user has alternative email address:

@@ -920,7 +920,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'amount_is':
                 // strip comma's, make dots.
                 app('log')->debug(sprintf('Original value "%s"', $value));
-                $value  = str_replace(',', '.', (string)$value);
+                $value  = str_replace(',', '.', $value);
                 $amount = app('steam')->positive($value);
                 app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIs($amount);
@@ -928,7 +928,7 @@ class OperatorQuerySearch implements SearchInterface
             case '-amount_is':
                 // strip comma's, make dots.
                 app('log')->debug(sprintf('Original value "%s"', $value));
-                $value  = str_replace(',', '.', (string)$value);
+                $value  = str_replace(',', '.', $value);
                 $amount = app('steam')->positive($value);
                 app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIsNot($amount);
@@ -936,7 +936,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'foreign_amount_is':
 
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string)$value);
+                $value = str_replace(',', '.', $value);
 
                 $amount = app('steam')->positive($value);
                 app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
@@ -945,7 +945,7 @@ class OperatorQuerySearch implements SearchInterface
             case '-foreign_amount_is':
 
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string)$value);
+                $value = str_replace(',', '.', $value);
 
                 $amount = app('steam')->positive($value);
                 app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
@@ -954,7 +954,7 @@ class OperatorQuerySearch implements SearchInterface
             case '-amount_more':
             case 'amount_less':
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string)$value);
+                $value = str_replace(',', '.', $value);
 
                 $amount = app('steam')->positive($value);
                 app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
@@ -963,7 +963,7 @@ class OperatorQuerySearch implements SearchInterface
             case '-foreign_amount_more':
             case 'foreign_amount_less':
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', (string)$value);
+                $value = str_replace(',', '.', $value);
 
                 $amount = app('steam')->positive($value);
                 app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
@@ -973,7 +973,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'amount_more':
                 app('log')->debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
-                $value  = str_replace(',', '.', (string)$value);
+                $value  = str_replace(',', '.', $value);
                 $amount = app('steam')->positive($value);
                 app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
@@ -982,7 +982,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'foreign_amount_more':
                 app('log')->debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
-                $value  = str_replace(',', '.', (string)$value);
+                $value  = str_replace(',', '.', $value);
                 $amount = app('steam')->positive($value);
                 app('log')->debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountMore($amount);
@@ -1492,7 +1492,7 @@ class OperatorQuerySearch implements SearchInterface
         $filtered = $accounts->filter(
             static function (Account $account) use ($value, $stringMethod) {
                 // either IBAN or account number
-                $ibanMatch      = $stringMethod(strtolower((string)$account->iban), strtolower((string)$value));
+                $ibanMatch      = $stringMethod(strtolower((string)$account->iban), strtolower($value));
                 $accountNrMatch = false;
                 /** @var AccountMeta $meta */
                 foreach ($account->accountMeta as $meta) {
@@ -1561,7 +1561,7 @@ class OperatorQuerySearch implements SearchInterface
             app('log')->debug(sprintf('Could not parse date "%s", will return empty array.', $value));
             $this->invalidOperators[] = [
                 'type'  => $type,
-                'value' => (string)$value,
+                'value' => $value,
             ];
             return [];
         }

@@ -40,8 +40,8 @@ use Carbon\Carbon;
  * @property int|string             $recurrence_id
  * @property string          $repetition_type
  * @property string          $repetition_moment
- * @property int             $repetition_skip
- * @property int             $weekend
+ * @property int|string             $repetition_skip
+ * @property int|string             $weekend
  * @property-read Recurrence $recurrence
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newQuery()

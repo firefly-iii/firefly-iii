@@ -253,7 +253,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         if (null !== $default) {
-            return (string)$default;
+            return $default;
         }
 
         return null;

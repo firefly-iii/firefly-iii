@@ -49,7 +49,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                             $first_date
  * @property Carbon|null                             $repeat_until
  * @property Carbon|null                             $latest_date
- * @property int                                     $repetitions
+ * @property int|string                                     $repetitions
  * @property bool                                    $apply_rules
  * @property bool                                    $active
  * @property-read Collection|Attachment[]            $attachments

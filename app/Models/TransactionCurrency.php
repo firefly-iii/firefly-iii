@@ -37,7 +37,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionCurrency
  *
- * @property int|string                                  $id
+ * @property int|string                           $id
  * @property Carbon|null                          $created_at
  * @property Carbon|null                          $updated_at
  * @property Carbon|null                          $deleted_at
@@ -47,7 +47,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                               $code
  * @property string                               $name
  * @property string                               $symbol
- * @property int|string                                  $decimal_places
+ * @property int|string                           $decimal_places
  * @property-read Collection|BudgetLimit[]        $budgetLimits
  * @property-read int|null                        $budget_limits_count
  * @property-read Collection|TransactionJournal[] $transactionJournals
@@ -78,6 +78,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class TransactionCurrency extends Model
 {
     use SoftDeletes;
+
+    public bool $userEnabled;
+    public bool $userDefault;
 
     /**
      * The attributes that should be casted to native types.

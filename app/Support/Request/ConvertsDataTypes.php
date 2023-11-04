@@ -355,7 +355,7 @@ trait ConvertsDataTypes
         foreach ($fields as $field => $info) {
             if ($this->has($info[0])) {
                 $method         = $info[1];
-                $return[$field] = $this->$method($info[0]);
+                $return[$field] = $this->$method($info[0]); // @phpstan-ignore-line
             }
         }
 
@@ -383,7 +383,7 @@ trait ConvertsDataTypes
     {
         $result = null;
         try {
-            $result = $this->get($field) ? new Carbon($this->get($field), config('app.timezone')) : null;
+            $result = '' !== (string) $this->get($field) ? new Carbon((string)$this->get($field), config('app.timezone')) : null;
         } catch (InvalidFormatException $e) {
             // @ignoreException
         }

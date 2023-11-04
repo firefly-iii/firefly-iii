@@ -36,7 +36,7 @@ use Carbon\Carbon;
  * @property int|string                     $id
  * @property Carbon|null             $created_at
  * @property Carbon|null             $updated_at
- * @property int                     $transaction_journal_id
+ * @property int|string                     $transaction_journal_id
  * @property string                  $name
  * @property mixed                   $data
  * @property string                  $hash
