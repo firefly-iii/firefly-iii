@@ -35,7 +35,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class WebhookAttempt
  *
- * @property int                 $id
+ * @property int|string                 $id
  * @property Carbon|null         $created_at
  * @property Carbon|null         $updated_at
  * @property string|null         $deleted_at

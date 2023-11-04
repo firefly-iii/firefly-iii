@@ -32,7 +32,7 @@ use Carbon\Carbon;
 /**
  * Class AccountMeta
  *
- * @property int          $id
+ * @property int|string          $id
  * @property Carbon|null  $created_at
  * @property Carbon|null  $updated_at
  * @property int          $account_id

@@ -37,7 +37,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * FireflyIII\Models\Transaction
  *
- * @property int                             $id
+ * @property int|string                             $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at

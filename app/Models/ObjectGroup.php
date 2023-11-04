@@ -37,8 +37,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\ObjectGroup
  *
- * @property int                         $id
- * @property int                         $user_id
+ * @property int|string                         $id
+ * @property int|string                         $user_id
  * @property Carbon|null                 $created_at
  * @property Carbon|null                 $updated_at
  * @property Carbon|null                 $deleted_at

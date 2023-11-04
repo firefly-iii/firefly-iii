@@ -34,7 +34,7 @@ use Carbon\Carbon;
 /**
  * FireflyIII\Models\Role
  *
- * @property int                    $id
+ * @property int|string                    $id
  * @property Carbon|null            $created_at
  * @property Carbon|null            $updated_at
  * @property string                 $name

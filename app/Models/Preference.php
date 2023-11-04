@@ -34,7 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Preference
  *
- * @property int                   $id
+ * @property int|string                   $id
  * @property Carbon|null           $created_at
  * @property Carbon|null           $updated_at
  * @property int                   $user_id

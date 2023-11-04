@@ -33,7 +33,7 @@ use Carbon\Carbon;
 /**
  * FireflyIII\Models\TransactionJournalMeta
  *
- * @property int                     $id
+ * @property int|string                     $id
  * @property Carbon|null             $created_at
  * @property Carbon|null             $updated_at
  * @property int                     $transaction_journal_id

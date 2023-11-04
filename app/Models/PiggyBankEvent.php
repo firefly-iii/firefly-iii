@@ -33,7 +33,7 @@ use Carbon\Carbon;
 /**
  * FireflyIII\Models\PiggyBankEvent
  *
- * @property int                          $id
+ * @property int|string                          $id
  * @property Carbon|null                  $created_at
  * @property Carbon|null                  $updated_at
  * @property int                          $piggy_bank_id

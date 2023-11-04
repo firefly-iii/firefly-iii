@@ -35,7 +35,7 @@ use Carbon\Carbon;
 /**
  * Class CurrencyExchangeRate
  *
- * @property int                      $id
+ * @property int|string                      $id
  * @property Carbon|null              $created_at
  * @property Carbon|null              $updated_at
  * @property string|null              $deleted_at

@@ -39,7 +39,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|InvitedUser newModelQuery()
  * @method static Builder|InvitedUser newQuery()
  * @method static Builder|InvitedUser query()
- * @property int         $id
+ * @property int|string         $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property int         $user_id

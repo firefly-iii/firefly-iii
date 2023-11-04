@@ -33,7 +33,7 @@ use Carbon\Carbon;
 /**
  * FireflyIII\Models\RecurrenceTransactionMeta
  *
- * @property int                        $id
+ * @property int|string                        $id
  * @property Carbon|null                $created_at
  * @property Carbon|null                $updated_at
  * @property Carbon|null                $deleted_at
