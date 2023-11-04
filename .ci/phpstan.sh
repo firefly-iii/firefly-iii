@@ -34,6 +34,7 @@ then
     ./vendor/bin/phpstan analyse -c .ci/phpstan.neon --no-progress --error-format=table > phpstan-report.txt
     EXIT_CODE=$?
     echo 'The PHPstan report can be found in phpstan-report.txt'
+fi
 
 if [[ $GITHUB_ACTIONS = "true" ]]
 then
