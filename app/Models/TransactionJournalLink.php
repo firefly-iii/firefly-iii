@@ -38,7 +38,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int|string                    $id
  * @property Carbon|null             $created_at
  * @property Carbon|null             $updated_at
- * @property int                     $link_type_id
+ * @property |stringint                     $link_type_id
  * @property int                     $source_id
  * @property int                     $destination_id
  * @property string|null             $comment

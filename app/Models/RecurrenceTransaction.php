@@ -40,13 +40,13 @@ use Carbon\Carbon;
  * @property Carbon|null                                 $created_at
  * @property Carbon|null                                 $updated_at
  * @property Carbon|null                                 $deleted_at
- * @property int                                         $recurrence_id
- * @property int                                         $transaction_currency_id
+ * @property int|string                                         $recurrence_id
+ * @property int|string                                         $transaction_currency_id
  * @property int|null                                    $foreign_currency_id
- * @property int                                         $source_id
- * @property int                                         $destination_id
- * @property string                                      $amount
- * @property string|null                                 $foreign_amount
+ * @property int|string                                        $source_id
+ * @property int|string                                         $destination_id
+ * @property string|float                                      $amount
+ * @property string|float|null                                 $foreign_amount
  * @property string                                      $description
  * @property-read Account                                $destinationAccount
  * @property-read TransactionCurrency|null               $foreignCurrency

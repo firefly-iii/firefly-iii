@@ -43,7 +43,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                 $updated_at
  * @property Carbon|null                 $deleted_at
  * @property string                      $title
- * @property int                         $order
+ * @property int|string                         $order
  * @property-read Collection|Account[]   $accounts
  * @property-read int|null               $accounts_count
  * @property-read Collection|Bill[]      $bills

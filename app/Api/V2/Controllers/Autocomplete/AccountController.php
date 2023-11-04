@@ -90,8 +90,8 @@ class AccountController extends Controller
         $date            = $this->parameters->get('date') ?? today(config('app.timezone'));
         $result          = $this->adminRepository->searchAccount((string)$query, $types, $data['limit']);
         $defaultCurrency = app('amount')->getDefaultCurrency();
-
-        $allItems = [];
+        $groupedResult   = [];
+        $allItems        = [];
         /** @var Account $account */
         foreach ($result as $account) {
             $nameWithBalance = $account->name;

@@ -37,7 +37,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int|string                   $id
  * @property Carbon|null           $created_at
  * @property Carbon|null           $updated_at
- * @property int                   $user_id
+ * @property int|string                   $user_id
  * @property string                $name
  * @property int|string|array|null $data
  * @property-read User             $user

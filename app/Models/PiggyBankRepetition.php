@@ -36,10 +36,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|string                             $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property int                             $piggy_bank_id
+ * @property int|string                             $piggy_bank_id
  * @property Carbon|null $startdate
  * @property Carbon|null $targetdate
- * @property string                          $currentamount
+ * @property string|float                          $currentamount
  * @property-read PiggyBank                  $piggyBank
  * @method static EloquentBuilder|PiggyBankRepetition newModelQuery()
  * @method static EloquentBuilder|PiggyBankRepetition newQuery()

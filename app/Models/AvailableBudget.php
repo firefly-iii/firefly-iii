@@ -40,9 +40,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null              $created_at
  * @property Carbon|null              $updated_at
  * @property Carbon|null              $deleted_at
- * @property int                      $user_id
- * @property int                      $transaction_currency_id
- * @property string                   $amount
+ * @property int|string                      $user_id
+ * @property int|string                      $transaction_currency_id
+ * @property string|float                   $amount
  * @property Carbon                   $start_date
  * @property Carbon                   $end_date
  * @property-read TransactionCurrency $transactionCurrency

@@ -47,7 +47,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                               $code
  * @property string                               $name
  * @property string                               $symbol
- * @property int                                  $decimal_places
+ * @property int|string                                  $decimal_places
  * @property-read Collection|BudgetLimit[]        $budgetLimits
  * @property-read int|null                        $budget_limits_count
  * @property-read Collection|TransactionJournal[] $transactionJournals

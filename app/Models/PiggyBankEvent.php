@@ -36,7 +36,7 @@ use Carbon\Carbon;
  * @property int|string                          $id
  * @property Carbon|null                  $created_at
  * @property Carbon|null                  $updated_at
- * @property int                          $piggy_bank_id
+ * @property int|string                         $piggy_bank_id
  * @property int|null                     $transaction_journal_id
  * @property Carbon                       $date
  * @property string                       $amount

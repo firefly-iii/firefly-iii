@@ -39,7 +39,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null         $created_at
  * @property Carbon|null         $updated_at
  * @property string|null         $deleted_at
- * @property int                 $webhook_message_id
+ * @property int|string                 $webhook_message_id
  * @property int                 $status_code
  * @property string|null         $logs
  * @property string|null         $response

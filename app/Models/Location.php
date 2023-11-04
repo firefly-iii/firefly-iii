@@ -39,7 +39,7 @@ use Carbon\Carbon;
  * @property Carbon|null               $created_at
  * @property Carbon|null               $updated_at
  * @property Carbon|null               $deleted_at
- * @property int                       $locatable_id
+ * @property int|string                       $locatable_id
  * @property string                    $locatable_type
  * @property float|null                $latitude
  * @property float|null                $longitude

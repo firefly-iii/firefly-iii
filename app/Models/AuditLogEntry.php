@@ -46,9 +46,9 @@ use Carbon\Carbon;
  * @property Carbon|null         $created_at
  * @property Carbon|null         $updated_at
  * @property Carbon|null         $deleted_at
- * @property int                 $auditable_id
+ * @property int|string                 $auditable_id
  * @property string              $auditable_type
- * @property int                 $changer_id
+ * @property int|string                 $changer_id
  * @property string              $changer_type
  * @property string              $action
  * @property array|null          $before

@@ -121,7 +121,6 @@
         "phpstan/phpstan-deprecation-rules": "^1.1",
         "phpstan/phpstan-strict-rules": "^1.4",
         "phpunit/phpunit": "^10",
-        "symplify/phpstan-rules": "^12.4",
         "thecodingmachine/phpstan-strict-rules": "^1.0"
     },
     "suggest": {

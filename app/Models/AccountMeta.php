@@ -35,7 +35,7 @@ use Carbon\Carbon;
  * @property int|string          $id
  * @property Carbon|null  $created_at
  * @property Carbon|null  $updated_at
- * @property int          $account_id
+ * @property int|string          $account_id
  * @property string       $name
  * @property mixed        $data
  * @property-read Account $account

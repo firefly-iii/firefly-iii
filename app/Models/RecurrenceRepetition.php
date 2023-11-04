@@ -37,7 +37,7 @@ use Carbon\Carbon;
  * @property Carbon|null     $created_at
  * @property Carbon|null     $updated_at
  * @property Carbon|null     $deleted_at
- * @property int             $recurrence_id
+ * @property int|string             $recurrence_id
  * @property string          $repetition_type
  * @property string          $repetition_moment
  * @property int             $repetition_skip

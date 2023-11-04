@@ -45,22 +45,22 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                          $created_at
  * @property Carbon|null                          $updated_at
  * @property Carbon|null                          $deleted_at
- * @property int                                  $user_id
+ * @property int|string                                  $user_id
  * @property int|null                             $transaction_currency_id
  * @property string                               $name
  * @property string                               $match
- * @property string                               $amount_min
- * @property string                               $amount_max
+ * @property string|float                               $amount_min
+ * @property string|float                               $amount_max
  * @property Carbon                               $date
  * @property Carbon|null                          $end_date
  * @property Carbon|null                          $extension_date
  * @property string                               $repeat_freq
- * @property int                                  $skip
+ * @property int|string                                  $skip
  * @property bool                                 $automatch
  * @property bool                                 $active
  * @property bool                                 $name_encrypted
  * @property bool                                 $match_encrypted
- * @property int                                  $order
+ * @property int|string                                  $order
  * @property-read Collection|Attachment[]         $attachments
  * @property-read int|null                        $attachments_count
  * @property-read Collection|Note[]               $notes

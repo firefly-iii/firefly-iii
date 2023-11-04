@@ -39,11 +39,11 @@ use Carbon\Carbon;
  * @property Carbon|null              $created_at
  * @property Carbon|null              $updated_at
  * @property string|null              $deleted_at
- * @property int                      $user_id
- * @property int                      $from_currency_id
- * @property int                      $to_currency_id
+ * @property int|string                      $user_id
+ * @property int|string                      $from_currency_id
+ * @property int|string                      $to_currency_id
  * @property Carbon                   $date
- * @property string                   $rate
+ * @property string|float                   $rate
  * @property string|null              $user_rate
  * @property-read TransactionCurrency $fromCurrency
  * @property-read TransactionCurrency $toCurrency

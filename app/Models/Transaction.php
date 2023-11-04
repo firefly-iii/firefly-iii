@@ -42,8 +42,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  * @property bool                            $reconciled
- * @property int                             $account_id
- * @property int                             $transaction_journal_id
+ * @property int|string                             $account_id
+ * @property int|string                             $transaction_journal_id
  * @property string|null                     $description
  * @property int|null                        $transaction_currency_id
  * @property string                          $modified

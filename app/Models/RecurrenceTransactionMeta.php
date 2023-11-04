@@ -37,7 +37,7 @@ use Carbon\Carbon;
  * @property Carbon|null                $created_at
  * @property Carbon|null                $updated_at
  * @property Carbon|null                $deleted_at
- * @property int                        $rt_id
+ * @property int|string                        $rt_id
  * @property string                     $name
  * @property mixed                      $value
  * @property-read RecurrenceTransaction $recurrenceTransaction

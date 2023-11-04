@@ -34,13 +34,13 @@ use Carbon\Carbon;
 /**
  * Class GroupMembership
  *
- * @property int            $id
+ * @property int|string            $id
  * @property Carbon|null    $created_at
  * @property Carbon|null    $updated_at
  * @property string|null    $deleted_at
- * @property int            $user_id
- * @property int            $user_group_id
- * @property int            $user_role_id
+ * @property int|string            $user_id
+ * @property int|string            $user_group_id
+ * @property int|string            $user_role_id
  * @property-read User      $user
  * @property-read UserGroup $userGroup
  * @property-read UserRole  $userRole

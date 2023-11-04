@@ -39,10 +39,10 @@ use Carbon\Carbon;
  * @property Carbon|null              $created_at
  * @property Carbon|null              $updated_at
  * @property Carbon|null              $deleted_at
- * @property int                      $budget_id
- * @property int                      $transaction_currency_id
- * @property int                      $auto_budget_type
- * @property string                   $amount
+ * @property int|string                      $budget_id
+ * @property int|string                      $transaction_currency_id
+ * @property int|string                      $auto_budget_type
+ * @property string|float                   $amount
  * @property string                   $period
  * @property-read Budget              $budget
  * @property-read TransactionCurrency $transactionCurrency

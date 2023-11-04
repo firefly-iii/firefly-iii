@@ -44,10 +44,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int|null                      $transaction_currency_id
  * @property Carbon                        $start_date
  * @property Carbon|null                   $end_date
- * @property string                        $amount
+ * @property string|float                        $amount
  * @property string                        $spent
  * @property string|null                   $period
- * @property int                           $generated
+ * @property int|string                           $generated
  * @property-read Budget                   $budget
  * @property-read TransactionCurrency|null $transactionCurrency
  * @method static Builder|BudgetLimit newModelQuery()

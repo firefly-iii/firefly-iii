@@ -35,7 +35,7 @@ use Carbon\Carbon;
  * @property int|string         $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property int         $rule_id
+ * @property int|string         $rule_id
  * @property string      $action_type
  * @property string      $action_value
  * @property int         $order

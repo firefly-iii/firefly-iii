@@ -80,7 +80,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class User.
  *
- * @property int                                                                     $id
+ * @property int|string                                                                     $id
  * @property string                                                                  $email
  * @property bool                                                                    $isAdmin
  * @property bool                                                                    $has2FA

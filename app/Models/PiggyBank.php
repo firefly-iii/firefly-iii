@@ -43,12 +43,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                           $created_at
  * @property Carbon|null                           $updated_at
  * @property Carbon|null                           $deleted_at
- * @property int                                   $account_id
+ * @property int|string                                   $account_id
  * @property string                                $name
- * @property string                                $targetamount
+ * @property string|float                                $targetamount
  * @property Carbon|null                           $startdate
  * @property Carbon|null                           $targetdate
- * @property int                                   $order
+ * @property int|string                                   $order
  * @property bool                                  $active
  * @property bool                                  $encrypted
  * @property-read Account                          $account

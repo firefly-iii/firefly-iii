@@ -41,11 +41,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                  $created_at
  * @property Carbon|null                  $updated_at
  * @property Carbon|null                  $deleted_at
- * @property int                          $user_id
- * @property int                          $rule_group_id
+ * @property int|string                          $user_id
+ * @property int|string                         $rule_group_id
  * @property string                       $title
  * @property string|null                  $description
- * @property int                          $order
+ * @property int|string                         $order
  * @property bool                         $active
  * @property bool                         $stop_processing
  * @property bool                         $strict

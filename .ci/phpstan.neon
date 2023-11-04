@@ -1,21 +1,3 @@
-includes:
-  - ../vendor/symplify/phpstan-rules/config/code-complexity-rules.neon
-  - ../vendor/symplify/phpstan-rules/config/collector-rules.neon
-  - ../vendor/symplify/phpstan-rules/config/naming-rules.neon
-  - ../vendor/symplify/phpstan-rules/config/regex-rules.neon
-  - ../vendor/symplify/phpstan-rules/config/static-rules.neon
-  - ../vendor/symplify/phpstan-rules/config/configurable-rules.neon
-
-services:
-  -
-      class: Symplify\PHPStanRules\Rules\ForbiddenNodeRule
-      tags: [phpstan.rules.rule]
-      arguments:
-        forbiddenNodes:
-          - PhpParser\Node\Expr\Empty_
-          - PhpParser\Node\Expr\ErrorSuppress
-
-
 parameters:
   universalObjectCratesClasses:
     - Illuminate\Database\Eloquent\Model

@@ -393,7 +393,7 @@ class BasicController extends Controller
          */
         foreach ($spent as $currencyId => $row) {
             app('log')->debug(sprintf('Processing spent array in currency #%d', $currencyId));
-            $currencyId  = (int)$currencyId;
+            $currencyId  = $currencyId;
             $spent       = '0';
             $spentNative = '0';
             // get the sum from the array of transactions (double loop but who cares)

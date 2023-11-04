@@ -42,8 +42,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null         $created_at
  * @property Carbon|null         $updated_at
  * @property Carbon|null         $deleted_at
- * @property int                 $user_id
- * @property int                 $attachable_id
+ * @property int|string                 $user_id
+ * @property int|string                 $attachable_id
  * @property string              $attachable_type
  * @property bool                $file_exists
  * @property string              $md5
@@ -51,7 +51,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string|null         $title
  * @property string|null         $description
  * @property string              $mime
- * @property int                 $size
+ * @property int|string                 $size
  * @property bool                $uploaded
  * @property string              $notes_text
  * @property-read Model|Eloquent $attachable

@@ -43,11 +43,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                          $created_at
  * @property Carbon|null                          $updated_at
  * @property Carbon|null                          $deleted_at
- * @property int                                  $user_id
+ * @property int|string                                  $user_id
  * @property string                               $name
  * @property bool                                 $active
  * @property bool                                 $encrypted
- * @property int                                  $order
+ * @property int|string                                  $order
  * @property-read Collection|Attachment[]         $attachments
  * @property-read int|null                        $attachments_count
  * @property-read Collection|AutoBudget[]         $autoBudgets
