@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -32,7 +33,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -46,7 +46,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int                                     $transaction_type_id
  * @property string                                  $title
  * @property string                                  $description
- * @property Carbon                                  $first_date
+ * @property Carbon|null                             $first_date
  * @property Carbon|null                             $repeat_until
  * @property Carbon|null                             $latest_date
  * @property int                                     $repetitions

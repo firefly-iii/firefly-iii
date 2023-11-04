@@ -262,13 +262,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
         if (null === $result) {
             app('log')->debug('Grabbing default currency for this user...');
+            /** @var TransactionCurrency|null $result */
             $result = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         }
 
-        if (null === $result) {
-            app('log')->debug('Grabbing EUR as fallback.');
-            $result = $this->findByCode('EUR');
-        }
         app('log')->debug(sprintf('Final result: %s', $result->code));
         if (false === $result->enabled) {
             app('log')->debug(sprintf('Also enabled currency %s', $result->code));

@@ -305,20 +305,4 @@ class Amount
 
         return $format;
     }
-
-    /**
-     * @param string $value
-     *
-     * @return string
-     */
-    private function tryDecrypt(string $value): string
-    {
-        try {
-            $value = Crypt::decrypt($value); // verified
-        } catch (DecryptException $e) {
-            // @ignoreException
-        }
-
-        return $value;
-    }
 }

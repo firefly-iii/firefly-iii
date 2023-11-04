@@ -129,7 +129,7 @@ class ValidRecurrenceRepetitionValue implements ValidationRule
         $dateString = substr($value, 7);
         try {
             Carbon::createFromFormat('Y-m-d', $dateString);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) { // @phpstan-ignore-line
             app('log')->debug(sprintf('Could not parse date %s: %s', $dateString, $e->getMessage()));
 
             return false;

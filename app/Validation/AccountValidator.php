@@ -58,8 +58,6 @@ class AccountValidator
     private array                               $combinations;
     private string                              $transactionType;
     private bool                                $useUserGroupRepository = false;
-    private User                                $user;
-    private UserGroup                           $userGroup;
     private UserGroupAccountRepositoryInterface $userGroupAccountRepository;
 
     /**
@@ -127,7 +125,6 @@ class AccountValidator
      */
     public function setUser(User $user): void
     {
-        $this->user = $user;
         $this->accountRepository->setUser($user);
         $this->useUserGroupRepository = false;
     }
@@ -139,7 +136,6 @@ class AccountValidator
      */
     public function setUserGroup(UserGroup $userGroup): void
     {
-        $this->userGroup = $userGroup;
         $this->userGroupAccountRepository->setUserGroup($userGroup);
         $this->useUserGroupRepository = true;
     }

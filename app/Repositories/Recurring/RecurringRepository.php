@@ -266,13 +266,9 @@ class RecurringRepository implements RecurringRepositoryInterface
      */
     public function getNoteText(Recurrence $recurrence): string
     {
-        /** @var Note $note */
+        /** @var Note|null $note */
         $note = $recurrence->notes()->first();
-        if (null !== $note) {
-            return (string)$note->text;
-        }
-
-        return '';
+        return (string)$note?->text;
     }
 
     /**
@@ -573,12 +569,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         /** @var RecurrenceFactory $factory */
         $factory = app(RecurrenceFactory::class);
         $factory->setUser($this->user);
-        $result = $factory->create($data);
-        if (null === $result) {
-            throw new FireflyException($factory->getErrors()->first());
-        }
-
-        return $result;
+        return $factory->create($data);
     }
 
     /**

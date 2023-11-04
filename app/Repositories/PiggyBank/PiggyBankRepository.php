@@ -300,13 +300,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getNoteText(PiggyBank $piggyBank): string
     {
-        /** @var Note $note */
+        /** @var Note|null $note */
         $note = $piggyBank->notes()->first();
-        if (null === $note) {
-            return '';
-        }
-
-        return $note->text;
+        return (string)$note?->text;
     }
 
     /**

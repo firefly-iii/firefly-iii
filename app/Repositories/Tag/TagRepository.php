@@ -161,7 +161,7 @@ class TagRepository implements TagRepositoryInterface
 
         return $set->each(
             static function (Attachment $attachment) use ($disk) {
-                /** @var Note $note */
+                /** @var Note|null $note */
                 $note = $attachment->notes()->first();
                 // only used in v1 view of tags
                 $attachment->file_exists = $disk->exists($attachment->fileName());

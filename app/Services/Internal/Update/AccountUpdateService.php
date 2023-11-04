@@ -46,7 +46,6 @@ class AccountUpdateService
     protected array                      $validCCFields;
     protected array                      $validFields;
     private array                        $canHaveOpeningBalance;
-    private array                        $canHaveVirtual;
     private User                         $user;
 
     /**
@@ -54,7 +53,6 @@ class AccountUpdateService
      */
     public function __construct()
     {
-        $this->canHaveVirtual        = config('firefly.can_have_virtual_amounts');
         $this->canHaveOpeningBalance = config('firefly.can_have_opening_balance');
         $this->validAssetFields      = config('firefly.valid_asset_fields');
         $this->validCCFields         = config('firefly.valid_cc_fields');

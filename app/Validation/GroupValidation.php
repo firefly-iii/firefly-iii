@@ -229,7 +229,7 @@ trait GroupValidation
         }
         $journalId = (int)$journalId;
         $count     = $transactionGroup->transactionJournals()->where('transaction_journals.id', $journalId)->count();
-        if (null === $journalId || 0 === $count) {
+        if (0 === $journalId || 0 === $count) {
             app('log')->warning(sprintf('Transaction group #%d has %d journals with ID %d', $transactionGroup->id, $count, $journalId));
             app('log')->warning('Invalid submission: Each split must have transaction_journal_id (either valid ID or 0).');
             $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string)trans('validation.need_id_in_edit'));

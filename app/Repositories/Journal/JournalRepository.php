@@ -198,7 +198,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getSourceAccount(TransactionJournal $journal): Account
     {
-        /** @var Transaction $transaction */
+        /** @var Transaction|null $transaction */
         $transaction = $journal->transactions()->with('account')->where('amount', '<', 0)->first();
         if (null === $transaction) {
             throw new FireflyException(sprintf('Your administration is broken. Transaction journal #%d has no source transaction.', $journal->id));
@@ -212,7 +212,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function reconcileById(int $journalId): void
     {
-        /** @var TransactionJournal $journal */
+        /** @var TransactionJournal|null $journal */
         $journal = $this->user->transactionJournals()->find($journalId);
         $journal?->transactions()->update(['reconciled' => true]);
     }
@@ -263,7 +263,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function unreconcileById(int $journalId): void
     {
-        /** @var TransactionJournal $journal */
+        /** @var TransactionJournal|null $journal */
         $journal = $this->user->transactionJournals()->find($journalId);
         $journal?->transactions()->update(['reconciled' => false]);
     }

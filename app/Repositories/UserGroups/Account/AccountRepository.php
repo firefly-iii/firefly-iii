@@ -53,7 +53,7 @@ class AccountRepository implements AccountRepositoryInterface
         app('log')->debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
 
         $query->where('accounts.name', $name);
-        /** @var Account $account */
+        /** @var Account|null $account */
         $account = $query->first(['accounts.*']);
         if (null === $account) {
             app('log')->debug(sprintf('There is no account with name "%s" of types', $name), $types);

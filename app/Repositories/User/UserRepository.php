@@ -226,7 +226,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function getRolesInGroup(User $user, int $groupId): array
     {
-        /** @var UserGroup $group */
+        /** @var UserGroup|null $group */
         $group = UserGroup::find($groupId);
         if (null === $group) {
             throw new FireflyException(sprintf('Could not find group #%d', $groupId));

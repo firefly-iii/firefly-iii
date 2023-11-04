@@ -52,7 +52,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         $memberships = $userGroup->groupMemberships()->get();
         /** @var GroupMembership $membership */
         foreach ($memberships as $membership) {
-            /** @var User $user */
+            /** @var User|null $user */
             $user = $membership->user()->first();
             if (null === $user) {
                 continue;
@@ -242,7 +242,11 @@ class UserGroupRepository implements UserGroupRepositoryInterface
                                     ->where('user_role_id', $owner->id)
                                     ->where('user_id', '!=', $user->id)->count();
             // if there are no other owners and the current users does not get or keep the owner role, refuse.
-            if (0 === $ownerCount && (0 === count($data['roles']) || (count($data['roles']) > 0 && !in_array(UserRoleEnum::OWNER->value, $data['roles'], true)))) {
+            if (
+                0 === $ownerCount &&
+                (0 === count($data['roles']) ||
+                 (count($data['roles']) > 0 && // @phpstan-ignore-line
+                  !in_array(UserRoleEnum::OWNER->value, $data['roles'], true)))) {
                 app('log')->debug('User needs to keep owner role in this group, refuse to act');
                 throw new FireflyException('The last owner in this user group must keep the "owner" role.');
             }

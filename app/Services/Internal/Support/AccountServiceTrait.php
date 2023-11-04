@@ -560,7 +560,7 @@ trait AccountServiceTrait
      */
     private function getObJournal(TransactionGroup $group): TransactionJournal
     {
-        /** @var TransactionJournal $journal */
+        /** @var TransactionJournal|null $journal */
         $journal = $group->transactionJournals()->first();
         if (null === $journal) {
             throw new FireflyException(sprintf('Group #%d has no OB journal', $group->id));
@@ -580,7 +580,7 @@ trait AccountServiceTrait
      */
     private function getOBTransaction(TransactionJournal $journal, Account $account): Transaction
     {
-        /** @var Transaction $transaction */
+        /** @var Transaction|null $transaction */
         $transaction = $journal->transactions()->where('account_id', '!=', $account->id)->first();
         if (null === $transaction) {
             throw new FireflyException(sprintf('Could not get OB transaction for journal #%d', $journal->id));
@@ -598,7 +598,7 @@ trait AccountServiceTrait
      */
     private function getNotOBTransaction(TransactionJournal $journal, Account $account): Transaction
     {
-        /** @var Transaction $transaction */
+        /** @var Transaction|null $transaction */
         $transaction = $journal->transactions()->where('account_id', $account->id)->first();
         if (null === $transaction) {
             throw new FireflyException(sprintf('Could not get non-OB transaction for journal #%d', $journal->id));

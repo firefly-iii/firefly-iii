@@ -48,7 +48,7 @@ trait LiabilityValidation
         // if the ID is not null the source account should be a dummy account of the type liability credit.
         // the ID of the destination must belong to a liability.
         if (null !== $accountId) {
-            if (AccountType::LIABILITY_CREDIT !== $this?->source?->accountType?->type) {
+            if (AccountType::LIABILITY_CREDIT !== $this->source?->accountType?->type) {
                 app('log')->error('Source account is not a liability.');
                 return false;
             }

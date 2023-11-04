@@ -116,19 +116,4 @@ class BudgetTransformer extends AbstractTransformer
         ];
     }
 
-    /**
-     * @param array $array
-     *
-     * @return array
-     */
-    private function beautify(array $array): array
-    {
-        $return = [];
-        foreach ($array as $data) {
-            $data['sum'] = number_format((float)$data['sum'], (int)$data['currency_decimal_places'], '.', '');
-            $return[]    = $data;
-        }
-
-        return $return;
-    }
 }

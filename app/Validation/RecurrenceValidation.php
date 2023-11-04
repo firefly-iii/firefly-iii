@@ -212,7 +212,6 @@ trait RecurrenceValidation
             if (null === $repetition['moment']) {
                 $repetition['moment'] = '';
             }
-            $repetition['moment'] = $repetition['moment'] ?? 'invalid';
 
             switch ($repetition['type'] ?? 'empty') {
                 default:
@@ -319,7 +318,7 @@ trait RecurrenceValidation
     {
         try {
             Carbon::createFromFormat('Y-m-d', $moment);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) { // @phpstan-ignore-line
             app('log')->debug(sprintf('Invalid argument for Carbon: %s', $e->getMessage()));
             $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
         }
@@ -337,12 +336,6 @@ trait RecurrenceValidation
         $transactions     = $this->getTransactionData();
         $submittedTrCount = count($transactions);
 
-        //$recurrence = $validator->get
-        if (null === $transactions) {
-            app('log')->warning('[a] User submitted no transactions.');
-            $validator->errors()->add('transactions', (string)trans('validation.at_least_one_transaction'));
-            return;
-        }
         if (0 === $submittedTrCount) {
             app('log')->warning('[b] User submitted no transactions.');
             $validator->errors()->add('transactions', (string)trans('validation.at_least_one_transaction'));

@@ -312,9 +312,9 @@ class Steam
                 continue;
             }
             // otherwise, convert 'amount' to the necessary currency:
-            $currencyId = (int)$transaction['transaction_currency_id'];
-            $currency   = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
-
+            $currencyId              = (int)$transaction['transaction_currency_id'];
+            $currency                = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
+            $currencies[$currencyId] = $currency;
 
             $rate              = $converter->getCurrencyRate($currency, $native, $day);
             $convertedAmount   = bcmul($transaction['amount'], $rate);
@@ -322,15 +322,15 @@ class Steam
             $balances[$format] = $currentBalance;
 
             app('log')->debug(sprintf(
-                '%s: transaction in %s(!). Conversion rate is %s. %s %s = %s %s',
-                $format,
-                $currency->code,
-                $rate,
-                $currency->code,
-                $transaction['amount'],
-                $native->code,
-                $convertedAmount
-            ));
+                                  '%s: transaction in %s(!). Conversion rate is %s. %s %s = %s %s',
+                                  $format,
+                                  $currency->code,
+                                  $rate,
+                                  $currency->code,
+                                  $transaction['amount'],
+                                  $native->code,
+                                  $convertedAmount
+                              ));
 
 
         }

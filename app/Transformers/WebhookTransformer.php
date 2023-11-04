@@ -34,8 +34,6 @@ use FireflyIII\Models\Webhook;
  */
 class WebhookTransformer extends AbstractTransformer
 {
-    private array $enums;
-
     /**
      * WebhookTransformer constructor.
      */

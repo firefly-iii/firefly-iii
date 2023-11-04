@@ -75,9 +75,9 @@ class SwitchAccounts implements ActionInterface
             return false;
         }
 
-        /** @var Transaction $sourceTransaction */
+        /** @var Transaction|null $sourceTransaction */
         $sourceTransaction = $object->transactions()->where('amount', '<', 0)->first();
-        /** @var Transaction $destTransaction */
+        /** @var Transaction|null $destTransaction */
         $destTransaction = $object->transactions()->where('amount', '>', 0)->first();
         if (null === $sourceTransaction || null === $destTransaction) {
             app('log')->error(sprintf('Journal #%d has no source or destination transaction (rule #%d), cannot switch accounts.', $journal['transaction_journal_id'], $this->action->rule_id));

@@ -52,7 +52,7 @@ class TagList implements BinderInterface
             $list = array_unique(array_map('\strtolower', explode(',', $value)));
             app('log')->debug('List of tags is', $list);
 
-            if (0 === count($list)) {
+            if (0 === count($list)) { // @phpstan-ignore-line
                 app('log')->error('Tag list is empty.');
                 throw new NotFoundHttpException();
             }

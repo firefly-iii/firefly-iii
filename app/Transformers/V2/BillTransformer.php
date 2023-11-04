@@ -31,7 +31,6 @@ use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -41,23 +40,12 @@ use Illuminate\Support\Facades\DB;
  */
 class BillTransformer extends AbstractTransformer
 {
-    private ExchangeRateConverter   $converter;
-    private array                   $currencies;
-    private TransactionCurrency     $default;
-    private array                   $groups;
-    private array                   $notes;
-    private array                   $paidDates;
-    private BillRepositoryInterface $repository;
-
-    /**
-     * BillTransformer constructor.
-     *
-
-     */
-    public function __construct()
-    {
-        $this->repository = app(BillRepositoryInterface::class);
-    }
+    private ExchangeRateConverter $converter;
+    private array                 $currencies;
+    private TransactionCurrency   $default;
+    private array                 $groups;
+    private array                 $notes;
+    private array                 $paidDates;
 
     /**
      * @inheritDoc

@@ -130,11 +130,12 @@ class CreditRecalculateService
      */
     private function getAccountByDirection(TransactionJournal $journal, string $direction): Account
     {
-        /** @var Transaction $transaction */
+        /** @var Transaction|null $transaction */
         $transaction = $journal->transactions()->where('amount', $direction, '0')->first();
         if (null === $transaction) {
             throw new FireflyException(sprintf('Cannot find "%s"-transaction of journal #%d', $direction, $journal->id));
         }
+        /** @var Account|null $foundAccount */
         $foundAccount = $transaction->account;
         if (null === $foundAccount) {
             throw new FireflyException(sprintf('Cannot find "%s"-account of transaction #%d of journal #%d', $direction, $transaction->id, $journal->id));

@@ -99,23 +99,20 @@ class ConvertToWithdrawal implements ActionInterface
 
             return $res;
         }
-        if (TransactionType::TRANSFER === $type) {
-            app('log')->debug('Going to transform a transfer to a withdrawal.');
+        // can only be transfer at this point.
+        app('log')->debug('Going to transform a transfer to a withdrawal.');
 
-            try {
-                $res = $this->convertTransferArray($object);
-            } catch (JsonException | FireflyException $e) {
-                app('log')->debug('Could not convert transfer to deposit.');
-                app('log')->error($e->getMessage());
-                event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
-                return false;
-            }
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::TRANSFER, TransactionType::WITHDRAWAL));
-
-            return $res;
+        try {
+            $res = $this->convertTransferArray($object);
+        } catch (JsonException | FireflyException $e) {
+            app('log')->debug('Could not convert transfer to deposit.');
+            app('log')->error($e->getMessage());
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
+            return false;
         }
-        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.unsupported_transaction_type_withdrawal', ['type' => $type])));
-        return false;
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::TRANSFER, TransactionType::WITHDRAWAL));
+
+        return $res;
     }
 
     /**

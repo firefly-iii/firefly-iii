@@ -134,23 +134,20 @@ class ConvertToTransfer implements ActionInterface
             }
             return $res;
         }
-        if (TransactionType::DEPOSIT === $type) {
-            app('log')->debug('Going to transform a deposit to a transfer.');
-            try {
-                $res = $this->convertDepositArray($object, $opposing);
-            } catch (FireflyException $e) {
-                app('log')->debug('Could not convert deposit to transfer.');
-                app('log')->error($e->getMessage());
-                event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
-                return false;
-            }
-            if (false !== $res) {
-                event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionType::TRANSFER));
-            }
-            return $res;
+        // can only be a deposit at this point.
+        app('log')->debug('Going to transform a deposit to a transfer.');
+        try {
+            $res = $this->convertDepositArray($object, $opposing);
+        } catch (FireflyException $e) {
+            app('log')->debug('Could not convert deposit to transfer.');
+            app('log')->error($e->getMessage());
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
+            return false;
         }
-        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.unsupported_transaction_type_transfer', ['type' => $type])));
-        return false;
+        if (false !== $res) {
+            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::DEPOSIT, TransactionType::TRANSFER));
+        }
+        return $res;
     }
 
     /**
@@ -176,7 +173,7 @@ class ConvertToTransfer implements ActionInterface
      */
     private function getDestinationType(int $journalId): string
     {
-        /** @var TransactionJournal $journal */
+        /** @var TransactionJournal|null $journal */
         $journal = TransactionJournal::find($journalId);
         if (null === $journal) {
             app('log')->error(sprintf('Journal #%d does not exist. Cannot convert to transfer.', $journalId));
