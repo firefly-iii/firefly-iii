@@ -49,9 +49,7 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress --no-scripts
 
       - name: PHPStan
-        uses: php-actions/phpstan@v3
-        with:
-          configuration: .ci/phpstan.neon
+        run: .ci/phpstan.sh
 
       - name: "Create database file"
         run: touch storage/database/database.sqlite
