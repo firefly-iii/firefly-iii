@@ -68,7 +68,6 @@ parameters:
         message: '#Either catch a more specific exception#'
         paths:
             - ../app/Support/Form/FormSupport.php
-
   paths:
     - ../app
     - ../database
@@ -77,5 +76,5 @@ parameters:
     - ../bootstrap/app.php
 
   # The level 8 is the highest level. original was 5
-  level: 7
+  level: 6
 

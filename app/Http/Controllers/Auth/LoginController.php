@@ -127,6 +127,9 @@ class LoginController extends Controller
         Log::channel('audit')->info(sprintf('Login failed. Attempt for user "%s" failed.', $request->get($this->username())));
 
         $this->sendFailedLoginResponse($request);
+
+        /** @noinspection PhpUnreachableStatementInspection */
+        return response()->json([]);
     }
 
     /**

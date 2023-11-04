@@ -56,8 +56,13 @@ class TriggerRequest extends FormRequest
      */
     private function getDate(string $field): ?Carbon
     {
-        $result = null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', substr((string)$this->query($field), 0, 10));
-        if(false === $result) {
+        $value = $this->query($field);
+        if (is_array($value)) {
+            return null;
+        }
+        $value  = (string)$value;
+        $result = null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', substr($value, 0, 10));
+        if (false === $result) {
             return null;
         }
         return $result;
