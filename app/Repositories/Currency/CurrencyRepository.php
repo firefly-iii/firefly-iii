@@ -81,7 +81,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
             return $rate;
         }
-        /** @var CurrencyExchangeRate $rate */
+        /** @var CurrencyExchangeRate|null $rate */
         $rate = $this->user->currencyExchangeRates()
                            ->where('from_currency_id', $fromCurrency->id)
                            ->where('to_currency_id', $toCurrency->id)

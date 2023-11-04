@@ -284,13 +284,10 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getNoteText(Bill $bill): string
     {
-        /** @var Note $note */
+        /** @var Note|null $note */
         $note = $bill->notes()->first();
-        if (null !== $note) {
-            return (string)$note->text;
-        }
+        return (string)$note?->text;
 
-        return '';
     }
 
     /**
@@ -452,7 +449,7 @@ class BillRepository implements BillRepositoryInterface
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            /** @var Transaction $transaction */
+            /** @var Transaction|null $transaction */
             $transaction = $journal->transactions()->where('amount', '<', 0)->first();
             if (null === $transaction) {
                 continue;

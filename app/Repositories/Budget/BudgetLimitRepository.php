@@ -401,7 +401,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
         app('log')->debug(sprintf('Found %d budget limits.', $limits));
 
         // there might be a budget limit for these dates:
-        /** @var BudgetLimit $limit */
+        /** @var BudgetLimit|null $limit */
         $limit = $budget->budgetlimits()
                         ->where('budget_limits.start_date', $start->format('Y-m-d 00:00:00'))
                         ->where('budget_limits.end_date', $end->format('Y-m-d 00:00:00'))

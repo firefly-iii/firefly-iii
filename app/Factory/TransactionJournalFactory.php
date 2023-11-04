@@ -480,8 +480,7 @@ class TransactionJournalFactory
             // return user's default:
             return app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         }
-        $result = ($preference ?? $currency)
-                  ?? app('amount')->getSystemCurrency();
+        $result = $preference ?? $currency;
         app('log')->debug(sprintf('Currency is now #%d (%s) because of account #%d (%s)', $result->id, $result->code, $account->id, $account->name));
 
         return $result;

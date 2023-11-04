@@ -39,6 +39,7 @@ use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View as IlluminateView;
 use InvalidArgumentException;
 
@@ -251,7 +252,8 @@ class MassController extends Controller
         try {
             $carbon = Carbon::parse($value[$journalId]);
         } catch (InvalidArgumentException $e) {
-            $e->getMessage();
+            Log::warning(sprintf('Could not parse "%s" but dont mind',$value[$journalId]));
+            Log::warning($e->getMessage());
 
             return null;
         }

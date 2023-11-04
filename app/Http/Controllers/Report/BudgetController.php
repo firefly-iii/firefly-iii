@@ -258,7 +258,7 @@ class BudgetController extends Controller
         // loop again to get percentages.
         foreach ($report as $budgetId => $data) {
             foreach ($data['currencies'] as $currencyId => $dataX) {
-                $sum   = $dataX['sum'] ?? '0';
+                $sum   = $dataX['sum'];
                 $total = $sums[$currencyId]['sum'] ?? '0';
                 $pct   = '0';
                 if (0 !== bccomp($sum, '0') && 0 !== bccomp($total, '9')) {

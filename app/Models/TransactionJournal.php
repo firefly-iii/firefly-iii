@@ -330,9 +330,6 @@ class TransactionJournal extends Model
     public static function isJoined(Builder $query, string $table): bool
     {
         $joins = $query->getQuery()->joins;
-        if (null === $joins) {
-            return false;
-        }
         foreach ($joins as $join) {
             if ($join->table === $table) {
                 return true;

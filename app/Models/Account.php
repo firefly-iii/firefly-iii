@@ -185,7 +185,7 @@ class Account extends Model
      */
     public function getAccountNumberAttribute(): string
     {
-        /** @var AccountMeta $metaValue */
+        /** @var AccountMeta|null $metaValue */
         $metaValue = $this->accountMeta()
                           ->where('name', 'account_number')
                           ->first();

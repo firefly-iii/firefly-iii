@@ -33,7 +33,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Transformers\TransactionGroupTransformer;
@@ -54,7 +53,6 @@ class ConvertController extends Controller
     use ModelInformation;
 
     private AccountRepositoryInterface $accountRepository;
-    private JournalRepositoryInterface $repository;
 
     /**
      * ConvertController constructor.
@@ -68,7 +66,6 @@ class ConvertController extends Controller
         // some useful repositories:
         $this->middleware(
             function ($request, $next) {
-                $this->repository        = app(JournalRepositoryInterface::class);
                 $this->accountRepository = app(AccountRepositoryInterface::class);
                 app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');

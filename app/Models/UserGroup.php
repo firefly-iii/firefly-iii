@@ -108,7 +108,7 @@ class UserGroup extends Model
             $userGroupId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var UserGroup $userGroup */
+            /** @var UserGroup|null $userGroup */
             $userGroup = UserGroup::find($userGroupId);
             if (null === $userGroup) {
                 throw new NotFoundHttpException();

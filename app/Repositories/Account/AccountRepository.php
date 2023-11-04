@@ -167,7 +167,7 @@ class AccountRepository implements AccountRepositoryInterface
         app('log')->debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
 
         $query->where('accounts.name', $name);
-        /** @var Account $account */
+        /** @var Account|null $account */
         $account = $query->first(['accounts.*']);
         if (null === $account) {
             app('log')->debug(sprintf('There is no account with name "%s" of types', $name), $types);
@@ -434,11 +434,12 @@ class AccountRepository implements AccountRepositoryInterface
 
         /** @var AccountType $type */
         $type    = AccountType::where('type', AccountType::RECONCILIATION)->first();
+
+        /** @var Account|null $current */
         $current = $this->user->accounts()->where('account_type_id', $type->id)
                               ->where('name', $name)
                               ->first();
 
-        /** @var Account $current */
         if (null !== $current) {
             return $current;
         }

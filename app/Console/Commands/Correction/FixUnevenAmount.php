@@ -55,7 +55,10 @@ class FixUnevenAmount extends Command
         /** @var stdClass $entry */
         foreach ($journals as $entry) {
             $sum = (string)$entry->the_sum;
-            if (!is_numeric($sum) || 0 === strlen($sum) || str_contains($sum, 'e') || str_contains($sum, ',')) {
+            if (!is_numeric($sum) ||
+                0 === strlen($sum) || // @phpstan-ignore-line
+                str_contains($sum, 'e') ||
+                str_contains($sum, ',')) {
                 $message = sprintf(
                     'Journal #%d has an invalid sum ("%s"). No sure what to do.',
                     $entry->transaction_journal_id,
