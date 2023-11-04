@@ -33,7 +33,7 @@ EXTRA_PARAMS=""
 
 if [[ $GITHUB_ACTIONS = "true" ]]
 then
-    OUTPUT_FORMAT=github
+    OUTPUT_FORMAT=gitlab
     EXTRA_PARAMS="--diff --dry-run"
 fi
 
