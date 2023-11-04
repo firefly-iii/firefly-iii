@@ -50,8 +50,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string                          $modified_foreign
  * @property string                          $date
  * @property string                          $max_date
- * @property string                          $amount
- * @property string|null                     $foreign_amount
+ * @property string|float                          $amount
+ * @property string|float|null                     $foreign_amount
  * @property int|null                        $foreign_currency_id
  * @property int                             $identifier
  * @property-read Account                    $account
@@ -84,7 +84,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static Builder|Transaction whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Transaction withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Transaction withoutTrashed()
- * @property int                             $the_count
+ * @property int|string                             $the_count
  * @mixin Eloquent
  */
 class Transaction extends Model

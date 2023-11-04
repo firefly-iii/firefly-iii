@@ -237,13 +237,13 @@ class ExportData extends Command
     {
         $final       = new Collection();
         $accounts    = new Collection();
-        $accountList = $this->option('accounts');
+        $accountList = (string)$this->option('accounts');
         $types       = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        if (null !== $accountList && '' !== (string)$accountList) {
+        if ('' !== $accountList) {
             $accountIds = explode(',', $accountList);
             $accounts   = $this->accountRepository->getAccountsById($accountIds);
         }
-        if (null === $accountList) {
+        if ('' === $accountList) {
             $accounts = $this->accountRepository->getAccountsByType($types);
         }
         // filter accounts,
