@@ -45,8 +45,7 @@ PHP_CS_FIXER_IGNORE_ENV=true
 ./vendor/bin/php-cs-fixer fix \
     --config $SCRIPT_DIR/php-cs-fixer/.php-cs-fixer.php \
     --format=$OUTPUT_FORMAT \
-    --allow-risky=yes \
-    $EXTRA_PARAMS
+    --allow-risky=yes $EXTRA_PARAMS \
 
 EXIT_CODE=$?
 
