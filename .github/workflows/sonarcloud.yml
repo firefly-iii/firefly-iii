@@ -51,6 +51,9 @@ jobs:
       - name: PHPStan
         run: .ci/phpstan.sh
 
+      - name: PHPMD
+        run: .ci/phpmd.sh
+
       - name: "Create database file"
         run: touch storage/database/database.sqlite
 
