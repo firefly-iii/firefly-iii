@@ -79,8 +79,8 @@ class TransactionCurrency extends Model
 {
     use SoftDeletes;
 
-    public bool $userEnabled;
-    public bool $userDefault;
+    public ?bool $userEnabled;
+    public ?bool $userDefault;
 
     /**
      * The attributes that should be casted to native types.
