@@ -147,7 +147,7 @@ class ExpenseReportController extends Controller
 
         while ($currentStart < $end) {
             $currentEnd = clone $currentStart;
-            $currentEnd = $currentEnd->$function(); // @phpstan-ignore-line
+            $currentEnd = $currentEnd->$function(); /** @phpstan-ignore-line */
 
             // get expenses grouped by opposing name:
             $expenses = $this->groupByName($this->getExpensesForOpposing($accounts, $all, $currentStart, $currentEnd));

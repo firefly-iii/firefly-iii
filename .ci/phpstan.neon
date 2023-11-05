@@ -4,8 +4,7 @@ parameters:
   reportUnmatchedIgnoredErrors: false
   checkGenericClassInNonGenericObjectType: false  # remove this rule when all other issues are solved.
   ignoreErrors:
-    - '#Use value object over return of values#' # from simplify, ignore it.
-    - '#Use explicit names over dynamic ones#' # from simplify, ignore it.
+    - '#Control structures using switch should not be used.#' # switch is fine insome cases.
     - '#Use unique name to make classes easy to recognize#'
     - '#Do not name "e", shorter than 2 chars#'
     - '#Do not name "q", shorter than 2 chars#'
@@ -28,26 +27,7 @@ parameters:
         paths:
             - ../app/Support/Authentication/RemoteUserGuard.php
     -
-        message: '#Control structures using switch should not be used.#'
-        paths:
-            - ../app/Api/V1/Controllers/Data/DestroyController.php
-            - ../app/Console/Commands/Correction/FixAccountTypes.php
-            - ../app/Console/Commands/Upgrade/OtherCurrenciesCorrections.php
-            - ../app/Exceptions/GracefulNotFoundHandler.php
-            - ../app/Generator/Webhook/StandardMessageGenerator.php
-            - ../app/Support/Amount.php
-            - ../app/Support/Navigation.php
-            - ../app/Support/ParseDateString.php
-            - ../app/Support/Search/AccountSearch.php
-            - ../app/Support/Search/OperatorQuerySearch.php
-            - ../app/Support/Twig/General.php
-            - ../app/Transformers/RecurrenceTransformer.php
-            - ../app/Validation/AccountValidator.php
-            - ../app/Validation/RecurrenceValidation.php
-            - ../app/Validation/TransactionValidation.php
-
-    -
-        message: '#Function compact\(\) should not be used#'
+        message: '#Function compact\(\) should not be used#' # too useful in template rendering.
         paths:
             - ../app/Generator/Report/Account/MonthReportGenerator.php
             - ../app/Generator/Report/Audit/MonthReportGenerator.php
