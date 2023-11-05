@@ -113,7 +113,7 @@ class CorrectOpeningBalanceCurrencies extends Command
         $transactions = $journal->transactions()->get();
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            /** @var Account $account */
+            /** @var Account|null $account */
             $account = $transaction->account()->first();
             if (null !== $account && AccountType::INITIAL_BALANCE !== $account->accountType()->first()->type) {
                 return $account;

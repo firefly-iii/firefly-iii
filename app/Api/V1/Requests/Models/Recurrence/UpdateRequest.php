@@ -73,9 +73,7 @@ class UpdateRequest extends FormRequest
         if (null !== $reps) {
             $return['repetitions'] = $reps;
         }
-        if (null !== $transactions) {
-            $return['transactions'] = $transactions;
-        }
+        $return['transactions'] = $transactions;
 
         return $return;
     }

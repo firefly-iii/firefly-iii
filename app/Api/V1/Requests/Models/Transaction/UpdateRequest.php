@@ -166,7 +166,7 @@ class UpdateRequest extends FormRequest
             return $return;
         }
 
-        /** @var array $transaction */
+        /** @var array|null $transaction */
         foreach ($transactions as $transaction) {
             if (!is_array($transaction)) {
                 throw new FireflyException('Invalid data submitted: transaction is not array.');
