@@ -33,7 +33,6 @@ use League\Fractal\Resource\Item;
  */
 class BudgetLimitTransformer extends AbstractTransformer
 {
-    /** @var string[] */
     protected array $availableIncludes
         = [
             'budget',

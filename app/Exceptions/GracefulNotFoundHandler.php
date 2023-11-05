@@ -30,12 +30,8 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -50,10 +46,10 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @param Request   $request
      * @param Throwable $e
      *
-     * @return Application|JsonResponse|\Illuminate\Http\Response|Redirector|RedirectResponse|Response
+     * @return Response
      * @throws Throwable
      */
-    public function render($request, Throwable $e)
+    public function render($request, Throwable $e): Response
     {
         $route = $request->route();
         if (null === $route) {
@@ -140,7 +136,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @return Response
      * @throws Throwable
      */
-    private function handleAccount(Request $request, Throwable $exception)
+    private function handleAccount(Request $request, Throwable $exception): Response
     {
         app('log')->debug('404 page is probably a deleted account. Redirect to overview of account types.');
         /** @var User $user */

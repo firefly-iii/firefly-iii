@@ -72,7 +72,6 @@ class CurrencyExchangeRate extends Model
 {
     use SoftDeletes;
 
-    /** @var array Convert these fields to other data types */
     protected $casts
                         = [
             'created_at'       => 'datetime',

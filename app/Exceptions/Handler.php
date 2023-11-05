@@ -31,6 +31,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
@@ -40,6 +41,7 @@ use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -75,10 +77,10 @@ class Handler extends ExceptionHandler
      * @param Request   $request
      * @param Throwable $e
      *
-     * @return mixed
+     * @return Response
      * @throws Throwable
      */
-    public function render($request, Throwable $e)
+    public function render($request, Throwable $e): Response
     {
         $expectsJson = $request->expectsJson();
         // if the user requests anything /api/, assume the user wants to see JSON.
@@ -246,9 +248,9 @@ class Handler extends ExceptionHandler
      * @param Request                    $request
      * @param LaravelValidationException $exception
      *
-     * @return Application|RedirectResponse|Redirector
+     * @return JsonResponse| RedirectResponse |\Illuminate\Http\Response
      */
-    protected function invalid($request, LaravelValidationException $exception): Application | RedirectResponse | Redirector
+    protected function invalid($request, LaravelValidationException $exception): JsonResponse| RedirectResponse |\Illuminate\Http\Response
     {
         // protect against open redirect when submitting invalid forms.
         $previous = app('steam')->getSafePreviousUrl();

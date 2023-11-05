@@ -33,7 +33,7 @@ use Twig\TwigFunction;
 class Translation extends AbstractExtension
 {
     /**
-     * @return array
+     * @inheritDoc
      */
     public function getFilters(): array
     {

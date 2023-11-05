@@ -33,7 +33,7 @@ use Twig\TwigFunction;
 class Rule extends AbstractExtension
 {
     /**
-     * @return array
+     * @inheritDoc
      */
     public function getFunctions(): array
     {

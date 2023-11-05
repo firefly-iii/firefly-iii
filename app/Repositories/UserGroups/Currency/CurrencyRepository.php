@@ -193,9 +193,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * Get the user group's currencies.
-     *
-     * @return Collection
+     * @inheritDoc
      */
     public function get(): Collection
     {
