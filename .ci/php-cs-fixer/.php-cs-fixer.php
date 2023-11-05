@@ -36,12 +36,13 @@ $finder = PhpCsFixer\Finder::create()
 
 $config = new PhpCsFixer\Config();
 return $config->setRules([
-                             '@PhpCsFixer:risky'          => true,
-                             //                             '@PSR12:risky'         => true,
-                             'declare_strict_types'       => true,
-                             'strict_param'               => true,
-                             'array_syntax'               => ['syntax' => 'short'],
-                             'native_function_invocation' => false, // annoying
+                             '@PhpCsFixer:risky'           => true,
+                             '@PSR12:risky'                => true,
+                             'declare_strict_types'        => true,
+                             'strict_param'                => true,
+                             'array_syntax'                => ['syntax' => 'short'],
+                             'native_function_invocation'  => false, // annoying
                              'php_unit_data_provider_name' => false, // bloody annoying long test names
+                             'static_lambda' => false, // breaks the Response macro for API's.
                          ])
               ->setFinder($finder);

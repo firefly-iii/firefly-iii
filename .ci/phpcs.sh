@@ -29,7 +29,7 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # cp .ci/.env.ci .env
 
 OUTPUT_FORMAT=txt
-EXTRA_PARAMS=""
+EXTRA_PARAMS="-v"
 
 if [[ $GITHUB_ACTIONS = "true" ]]
 then
