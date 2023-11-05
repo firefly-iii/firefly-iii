@@ -123,7 +123,7 @@ class PiggyBankTransformer extends AbstractTransformer
             'order'                   => (int)$piggyBank->order,
             'active'                  => true,
             'notes'                   => $notes,
-            'object_group_id'         => $objectGroupId ? (string)$objectGroupId : null,
+            'object_group_id'         => null !== $objectGroupId ? (string)$objectGroupId : null,
             'object_group_order'      => $objectGroupOrder,
             'object_group_title'      => $objectGroupTitle,
             'links'                   => [

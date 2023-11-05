@@ -335,7 +335,7 @@ class UserRepository implements UserRepositoryInterface
     public function redeemCode(string $code): void
     {
         $obj = InvitedUser::where('invite_code', $code)->where('redeemed', 0)->first();
-        if ($obj) {
+        if (null !== $obj) {
             $obj->redeemed = true;
             $obj->save();
         }

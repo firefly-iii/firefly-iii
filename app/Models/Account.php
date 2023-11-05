@@ -190,7 +190,7 @@ class Account extends Model
                           ->where('name', 'account_number')
                           ->first();
 
-        return $metaValue ? $metaValue->data : '';
+        return null !== $metaValue ? $metaValue->data : '';
     }
 
     /**

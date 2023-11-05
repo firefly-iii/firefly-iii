@@ -23,22 +23,22 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\TransactionJournalLink
  *
- * @property int|string                    $id
+ * @property int|string              $id
  * @property Carbon|null             $created_at
  * @property Carbon|null             $updated_at
- * @property |stringint                     $link_type_id
+ * @property string|int              $link_type_id
  * @property int                     $source_id
  * @property int                     $destination_id
  * @property string|null             $comment

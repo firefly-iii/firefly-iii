@@ -103,7 +103,7 @@ class EditController extends Controller
             'notes'                   => $this->repository->getNoteText($bill),
             'transaction_currency_id' => $bill->transaction_currency_id,
             'active'                  => $hasOldInput ? (bool)$request->old('active') : $bill->active,
-            'object_group'            => $bill->objectGroups->first() ? $bill->objectGroups->first()->title : '',
+            'object_group'            => null !== $bill->objectGroups->first() ? $bill->objectGroups->first()->title : '',
         ];
 
         $request->session()->flash('preFilled', $preFilled);

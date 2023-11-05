@@ -100,7 +100,7 @@ class EditController extends Controller
             'active'                  => $hasOldInput ? (bool)$request->old('active') : $budget->active,
             'auto_budget_currency_id' => $hasOldInput ? (int)$request->old('auto_budget_currency_id') : $currency->id,
         ];
-        if ($autoBudget) {
+        if (null !== $autoBudget) {
             $amount                          = $hasOldInput ? $request->old('auto_budget_amount') : $autoBudget->amount;
             $preFilled['auto_budget_amount'] = app('steam')->bcround($amount, $autoBudget->transactionCurrency->decimal_places);
         }

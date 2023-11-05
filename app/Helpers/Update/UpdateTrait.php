@@ -48,7 +48,7 @@ trait UpdateTrait
         /** @var UpdateRequestInterface $checker */
         $checker       = app(UpdateRequestInterface::class);
         $channelConfig = app('fireflyconfig')->get('update_channel', 'stable');
-        $channel       = $channelConfig ? $channelConfig->data : 'stable';
+        $channel       = (string)$channelConfig->data;
 
         return $checker->getUpdateInformation($channel);
     }

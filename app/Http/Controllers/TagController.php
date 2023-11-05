@@ -129,9 +129,9 @@ class TagController extends Controller
         $subTitleIcon = 'fa-tag';
 
         $location    = $this->repository->getLocation($tag);
-        $latitude    = $location ? $location->latitude : config('firefly.default_location.latitude');
-        $longitude   = $location ? $location->longitude : config('firefly.default_location.longitude');
-        $zoomLevel   = $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
+        $latitude    = null !== $location ? $location->latitude : config('firefly.default_location.latitude');
+        $longitude   = null !== $location ? $location->longitude : config('firefly.default_location.longitude');
+        $zoomLevel   = null !== $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
         $hasLocation = null !== $location;
         $locations   = [
             'location' => [

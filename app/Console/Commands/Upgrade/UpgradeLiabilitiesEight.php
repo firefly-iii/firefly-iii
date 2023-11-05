@@ -205,7 +205,7 @@ class UpgradeLiabilitiesEight extends Command
         $source = $openingJournal->transactions()->where('amount', '<', 0)->first();
         /** @var Transaction|null $dest */
         $dest = $openingJournal->transactions()->where('amount', '>', 0)->first();
-        if ($source && $dest) {
+        if (null !== $source && null !== $dest) {
             $sourceId           = $source->account_id;
             $destId             = $dest->account_id;
             $dest->account_id   = $sourceId;

@@ -96,7 +96,7 @@ class IndexController extends Controller
         if (null === $end) {
             // get last transaction ever?
             $last = $this->repository->getLast();
-            $end  = $last ? $last->date : session('end');
+            $end  = null !== $last ? $last->date : session('end');
         }
 
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
@@ -147,7 +147,7 @@ class IndexController extends Controller
         $first        = $this->repository->firstNull();
         $start        = null === $first ? new Carbon() : $first->date;
         $last         = $this->repository->getLast();
-        $end          = $last ? $last->date : today(config('app.timezone'));
+        $end          = null !== $last ? $last->date : today(config('app.timezone'));
         $subTitle     = (string)trans('firefly.all_' . $objectType);
 
         /** @var GroupCollectorInterface $collector */

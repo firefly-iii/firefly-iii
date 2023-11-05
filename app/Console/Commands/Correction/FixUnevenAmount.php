@@ -95,7 +95,7 @@ class FixUnevenAmount extends Command
     {
         // one of the transactions is bad.
         $journal = TransactionJournal::find($param);
-        if (!$journal) {
+        if (null === $journal) {
             return;
         }
         /** @var Transaction|null $source */

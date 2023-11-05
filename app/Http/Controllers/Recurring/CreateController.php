@@ -163,9 +163,9 @@ class CreateController extends Controller
         $source = $journal->transactions()->where('amount', '<', 0)->first();
         /** @var Transaction $dest */
         $dest        = $journal->transactions()->where('amount', '>', 0)->first();
-        $category    = $journal->categories()->first() ? $journal->categories()->first()->name : '';
-        $budget      = $journal->budgets()->first() ? $journal->budgets()->first()->id : 0;
-        $bill        = $journal->bill ? $journal->bill->id : 0;
+        $category    = null !== $journal->categories()->first() ? $journal->categories()->first()->name : '';
+        $budget      = null !== $journal->budgets()->first() ? $journal->budgets()->first()->id : 0;
+        $bill        = null !== $journal->bill ? $journal->bill->id : 0;
         $hasOldInput = null !== $request->old('_token'); // flash some data
         $preFilled   = [];
         if (true === $hasOldInput) {

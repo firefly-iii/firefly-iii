@@ -199,7 +199,7 @@ class BillRepository implements BillRepositoryInterface
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes_text       = $notes ? $notes->text : '';
+                $attachment->notes_text  = null !== $notes ? $notes->text : '';
 
                 return $attachment;
             }
@@ -373,12 +373,12 @@ class BillRepository implements BillRepositoryInterface
 
         return $bill->transactionJournals()
                     ->before($end)->after($start)->get(
-                        [
+                [
                     'transaction_journals.id',
                     'transaction_journals.date',
                     'transaction_journals.transaction_group_id',
                 ]
-                    );
+            );
     }
 
     /**

@@ -123,7 +123,7 @@ class BillTransformer extends AbstractTransformer
             'active'                   => $bill->active,
             'order'                    => (int)$bill->order,
             'notes'                    => $notes,
-            'object_group_id'          => $objectGroupId ? (string)$objectGroupId : null,
+            'object_group_id'          => null !== $objectGroupId ? (string)$objectGroupId : null,
             'object_group_order'       => $objectGroupOrder,
             'object_group_title'       => $objectGroupTitle,
 

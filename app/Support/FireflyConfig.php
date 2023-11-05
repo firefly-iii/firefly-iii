@@ -136,7 +136,7 @@ class FireflyConfig
     public function getFresh(string $name, $default = null): ?Configuration
     {
         $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        if ($config) {
+        if (null !== $config) {
             return $config;
         }
         // no preference found and default is null:

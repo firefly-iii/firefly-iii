@@ -106,7 +106,7 @@ class CreateController extends Controller
         }
 
         // restore actions and triggers from old input:
-        if ($request->old()) {
+        if (null !== $request->old()) {
             $oldTriggers = $this->getPreviousTriggers($request);
             $oldActions  = $this->getPreviousActions($request);
         }
@@ -163,7 +163,7 @@ class CreateController extends Controller
         $oldActions  = $this->getActionsForBill($bill);
 
         // restore actions and triggers from old input:
-        if ($request->old()) {
+        if (null !== $request->old()) {
             $oldTriggers = $this->getPreviousTriggers($request);
             $oldActions  = $this->getPreviousActions($request);
         }
@@ -172,7 +172,7 @@ class CreateController extends Controller
         $actionCount  = count($oldActions);
         $subTitleIcon = 'fa-clone';
 
-        // title depends on whether or not there is a rule group:
+        // title depends on whether there is a rule group:
         $subTitle = (string)trans('firefly.make_new_rule_no_group');
 
         // flash old data
@@ -218,7 +218,7 @@ class CreateController extends Controller
         ];
 
         // restore actions and triggers from old input:
-        if ($request->old()) {
+        if (null !== $request->old()) {
             $oldTriggers = $this->getPreviousTriggers($request);
             $oldActions  = $this->getPreviousActions($request);
         }

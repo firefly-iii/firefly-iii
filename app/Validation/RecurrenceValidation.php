@@ -61,7 +61,7 @@ trait RecurrenceValidation
                 /** @var RecurrenceTransaction|null $first */
                 $first = $recurrence->recurrenceTransactions()->first();
                 if (null !== $first) {
-                    $transactionType = $first->transactionType ? $first->transactionType->type : 'withdrawal';
+                    $transactionType = null !== $first->transactionType ? $first->transactionType->type : 'withdrawal';
                     app('log')->debug(sprintf('Determined type to be %s.', $transactionType));
                 }
                 if (null === $first) {

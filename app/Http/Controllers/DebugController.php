@@ -314,7 +314,7 @@ class DebugController extends Controller
 
         // has stored reconciliations
         $type = TransactionType::whereType(TransactionType::RECONCILIATION)->first();
-        if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count()) {
+        if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count() > 0) {
             $flags[] = '<span title="Has reconciled">:ledger:</span>';
         }
 

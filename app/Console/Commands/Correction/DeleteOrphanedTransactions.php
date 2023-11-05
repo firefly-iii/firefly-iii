@@ -145,7 +145,7 @@ class DeleteOrphanedTransactions extends Command
         foreach ($set as $transaction) {
             // delete journals
             $journal = TransactionJournal::find((int)$transaction->transaction_journal_id);
-            if ($journal) {
+            if (null !== $journal) {
                 $journal->delete();
             }
             Transaction::where('transaction_journal_id', (int)$transaction->transaction_journal_id)->delete();

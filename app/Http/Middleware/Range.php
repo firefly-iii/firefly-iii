@@ -47,7 +47,7 @@ class Range
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->user()) {
+        if (null !== $request->user()) {
             // set start, end and finish:
             $this->setRange();
 

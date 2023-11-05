@@ -134,7 +134,7 @@ trait AppendsLocationData
                 return true;
             }
             // if is POST and route does not contain API, must also have "has_location" = true
-            if ('POST' === $this->method() && $this->routeIs('*.store') && !$this->routeIs('api.v1.*') && $hasLocationKey) {
+            if ('POST' === $this->method() && $this->routeIs('*.store') && !$this->routeIs('api.v1.*') && '' !== $hasLocationKey) {
                 app('log')->debug('Is POST + store route.');
                 $hasLocation = $this->boolean($hasLocationKey);
                 if (true === $hasLocation) {
@@ -205,7 +205,7 @@ trait AppendsLocationData
             }
             // if POST and not API route, must also have "has_location"
             // if is POST and route does not contain API, must also have "has_location" = true
-            if ('POST' === $this->method() && $this->routeIs('*.update') && !$this->routeIs('api.v1.*') && $hasLocationKey) {
+            if ('POST' === $this->method() && $this->routeIs('*.update') && !$this->routeIs('api.v1.*') && '' !== $hasLocationKey) {
                 app('log')->debug('Is POST + store route.');
                 $hasLocation = $this->boolean($hasLocationKey);
                 if (true === $hasLocation) {

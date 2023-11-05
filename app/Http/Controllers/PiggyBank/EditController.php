@@ -93,7 +93,7 @@ class EditController extends Controller
             'targetamount' => app('steam')->bcround($piggyBank->targetamount, $currency->decimal_places),
             'targetdate'   => $targetDate,
             'startdate'    => $startDate,
-            'object_group' => $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
+            'object_group' => null !== $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
             'notes'        => null === $note ? '' : $note->text,
         ];
         if (0 === bccomp($piggyBank->targetamount, '0')) {

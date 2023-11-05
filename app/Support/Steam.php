@@ -117,7 +117,7 @@ class Steam
         $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('balance-in-range');
-        $cache->addProperty($currency ? $currency->id : 0);
+        $cache->addProperty(null !== $currency ? $currency->id : 0);
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
@@ -204,7 +204,7 @@ class Steam
         $cache->addProperty($account->id);
         $cache->addProperty('balance');
         $cache->addProperty($date);
-        $cache->addProperty($currency ? $currency->id : 0);
+        $cache->addProperty(null !== $currency ? $currency->id : 0);
         if ($cache->has()) {
             return $cache->get();
         }

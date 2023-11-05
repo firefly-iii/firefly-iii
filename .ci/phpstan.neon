@@ -4,10 +4,8 @@ parameters:
   reportUnmatchedIgnoredErrors: false
   checkGenericClassInNonGenericObjectType: false  # remove this rule when all other issues are solved.
   ignoreErrors:
+    - '#Dynamic call to static method#' # all the Laravel ORM things depend on this.
     - '#Control structures using switch should not be used.#' # switch is fine insome cases.
-    - '#Use unique name to make classes easy to recognize#'
-    - '#Do not name "e", shorter than 2 chars#'
-    - '#Do not name "q", shorter than 2 chars#'
     - '#with no value type specified in iterable type array#' # remove this rule when all other issues are solved.
     - '#has no value type specified in iterable type array#' # remove this rule when all other issues are solved.
     - '#is not allowed to extend#'
@@ -16,7 +14,6 @@ parameters:
     - '#has a nullable return type declaration#'
     - '#with a nullable type declaration#'
     - '#with null as default value#'
-    - '#is not covariant with PHPDoc type array#'
     -
         message: '#Constructor in [a-zA-Z0-9\\_]+ has parameter \$[a-zA-Z0-9\\_]+ with default value#'
         paths:
@@ -56,5 +53,5 @@ parameters:
     - ../bootstrap/app.php
 
   # The level 8 is the highest level. original was 5
-  level: 1
+  level: 2
 
