@@ -67,7 +67,7 @@ class RuleTransformer extends AbstractTransformer
             'rule_group_title' => (string)$rule->ruleGroup->title,
             'title'            => $rule->title,
             'description'      => $rule->description,
-            'order'            => (int)$rule->order,
+            'order'            => $rule->order,
             'active'           => $rule->active,
             'strict'           => $rule->strict,
             'stop_processing'  => $rule->stop_processing,

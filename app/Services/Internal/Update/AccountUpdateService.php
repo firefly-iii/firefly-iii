@@ -207,7 +207,7 @@ class AccountUpdateService
             return $account;
         }
         // get account type ID's because a join and an update is hard:
-        $oldOrder = (int)$account->order;
+        $oldOrder = $account->order;
         $newOrder = $data['order'];
         app('log')->debug(sprintf('Order is set to be updated from %s to %s', $oldOrder, $newOrder));
         $list = $this->getTypeIds([AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT]);

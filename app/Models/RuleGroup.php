@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,7 +46,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property int        $user_id
  * @property string|null       $title
  * @property string|null       $description
- * @property int|string        $order
+ * @property int        $order
  * @property bool              $active
  * @property bool              $stop_processing
  * @property Collection|Rule[] $rules
@@ -128,5 +129,15 @@ class RuleGroup extends Model
     public function rules(): HasMany
     {
         return $this->hasMany(Rule::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

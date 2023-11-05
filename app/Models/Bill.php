@@ -62,7 +62,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property bool                                 $active
  * @property bool                                 $name_encrypted
  * @property bool                                 $match_encrypted
- * @property int|string                           $order
+ * @property int                           $order
  * @property-read Collection|Attachment[]         $attachments
  * @property-read int|null                        $attachments_count
  * @property-read Collection|Note[]               $notes
@@ -263,6 +263,16 @@ class Bill extends Model
      * @return Attribute
      */
     protected function transactionCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
     {
         return Attribute::make(
             get: static fn($value) => (int)$value,

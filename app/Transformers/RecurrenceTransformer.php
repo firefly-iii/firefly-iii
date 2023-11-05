@@ -184,7 +184,7 @@ class RecurrenceTransformer extends AbstractTransformer
             $sourceIban = null;
             if (null !== $sourceAccount) {
                 $sourceName = $sourceAccount->name;
-                $sourceId   = (int)$sourceAccount->id;
+                $sourceId   = $sourceAccount->id;
                 $sourceType = $sourceAccount->accountType->type;
                 $sourceIban = $sourceAccount->iban;
             }
@@ -194,7 +194,7 @@ class RecurrenceTransformer extends AbstractTransformer
             $destinationIban = null;
             if (null !== $destinationAccount) {
                 $destinationName = $destinationAccount->name;
-                $destinationId   = (int)$destinationAccount->id;
+                $destinationId   = $destinationAccount->id;
                 $destinationType = $destinationAccount->accountType->type;
                 $destinationIban = $destinationAccount->iban;
             }

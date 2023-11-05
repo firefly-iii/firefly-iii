@@ -105,7 +105,7 @@ class BillTransformer extends AbstractTransformer
         unset($temp, $temp2);
 
         return [
-            'id'                       => (int)$bill->id,
+            'id'                       => $bill->id,
             'created_at'               => $bill->created_at->toAtomString(),
             'updated_at'               => $bill->updated_at->toAtomString(),
             'currency_id'              => (string)$bill->transaction_currency_id,
@@ -121,7 +121,7 @@ class BillTransformer extends AbstractTransformer
             'repeat_freq'              => $bill->repeat_freq,
             'skip'                     => (int)$bill->skip,
             'active'                   => $bill->active,
-            'order'                    => (int)$bill->order,
+            'order'                    => $bill->order,
             'notes'                    => $notes,
             'object_group_id'          => null !== $objectGroupId ? (string)$objectGroupId : null,
             'object_group_order'       => $objectGroupOrder,

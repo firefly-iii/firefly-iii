@@ -48,7 +48,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property string                                $targetamount
  * @property Carbon|null                           $startdate
  * @property Carbon|null                           $targetdate
- * @property int|string                            $order
+ * @property int                            $order
  * @property bool                                  $active
  * @property bool                                  $encrypted
  * @property-read Account                          $account
@@ -203,4 +203,15 @@ class PiggyBank extends Model
             get: static fn($value) => (int)$value,
         );
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
 }

@@ -178,7 +178,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $index   = 1;
         /** @var RuleAction $action */
         foreach ($actions as $action) {
-            if ((int)$action->order !== $index) {
+            if ($action->order !== $index) {
                 $action->order = $index;
                 $action->save();
                 app('log')->debug(sprintf('Rule action #%d was on spot %d but must be on spot %d', $action->id, $action->order, $index));
@@ -200,7 +200,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $index    = 1;
         /** @var RuleTrigger $trigger */
         foreach ($triggers as $trigger) {
-            $order = (int)$trigger->order;
+            $order = $trigger->order;
             if ($order !== $index) {
                 $trigger->order = $index;
                 $trigger->save();
@@ -483,7 +483,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function setOrder(RuleGroup $ruleGroup, int $newOrder): void
     {
-        $oldOrder = (int)$ruleGroup->order;
+        $oldOrder = $ruleGroup->order;
 
         if ($newOrder > $oldOrder) {
             $this->user->ruleGroups()->where('rule_groups.order', '<=', $newOrder)->where('rule_groups.order', '>', $oldOrder)

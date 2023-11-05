@@ -85,7 +85,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $notes = Note::whereNoteableType(TransactionJournal::class)->whereIn('noteable_id', array_keys($journals))->get();
         /** @var Note $note */
         foreach ($notes as $note) {
-            $id               = (int)$note->noteable_id;
+            $id               = $note->noteable_id;
             $this->notes[$id] = $note;
         }
 

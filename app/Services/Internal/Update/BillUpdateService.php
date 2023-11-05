@@ -87,7 +87,7 @@ class BillUpdateService
         // update order.
         if (array_key_exists('order', $data)) {
             // update the order of the piggy bank:
-            $oldOrder = (int)$bill->order;
+            $oldOrder = $bill->order;
             $newOrder = (int)($data['order'] ?? $oldOrder);
             if ($oldOrder !== $newOrder) {
                 $this->updateOrder($bill, $oldOrder, $newOrder);

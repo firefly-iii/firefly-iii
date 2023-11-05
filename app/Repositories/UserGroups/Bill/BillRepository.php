@@ -49,7 +49,7 @@ class BillRepository implements BillRepositoryInterface
         $set     = $this->userGroup->bills()->orderBy('order', 'ASC')->get();
         $current = 1;
         foreach ($set as $bill) {
-            if ((int)$bill->order !== $current) {
+            if ($bill->order !== $current) {
                 $bill->order = $current;
                 $bill->save();
             }

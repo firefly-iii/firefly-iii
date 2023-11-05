@@ -91,7 +91,7 @@ class PiggyBankTransformer extends AbstractTransformer
         /** @var AccountMeta $preference */
         foreach ($currencyPreferences as $preference) {
             $currencyId                   = (int)$preference->data;
-            $accountId                    = (int)$preference->account_id;
+            $accountId                    = $preference->account_id;
             $currencies[$currencyId]      = $currencies[$currencyId] ?? TransactionJournal::find($currencyId);
             $this->currencies[$accountId] = $currencies[$currencyId];
         }
@@ -105,7 +105,7 @@ class PiggyBankTransformer extends AbstractTransformer
         foreach ($set as $entry) {
             $piggyBankId                = (int)$entry->object_groupable_id;
             $id                         = (int)$entry->object_group_id;
-            $order                      = (int)$entry->order;
+            $order                      = $entry->order;
             $this->groups[$piggyBankId] = [
                 'object_group_id'    => $id,
                 'object_group_title' => $entry->title,
@@ -118,7 +118,7 @@ class PiggyBankTransformer extends AbstractTransformer
         $repetitions = PiggyBankRepetition::whereIn('piggy_bank_id', $piggyBanks)->get();
         /** @var PiggyBankRepetition $repetition */
         foreach ($repetitions as $repetition) {
-            $this->repetitions[(int)$repetition->piggy_bank_id] = [
+            $this->repetitions[$repetition->piggy_bank_id] = [
                 'amount' => $repetition->currentamount,
             ];
         }
@@ -128,7 +128,7 @@ class PiggyBankTransformer extends AbstractTransformer
         $notes = Note::whereNoteableType(PiggyBank::class)->whereIn('noteable_id', array_keys($piggyBanks))->get();
         /** @var Note $note */
         foreach ($notes as $note) {
-            $id               = (int)$note->noteable_id;
+            $id               = $note->noteable_id;
             $this->notes[$id] = $note;
         }
 
@@ -180,15 +180,15 @@ class PiggyBankTransformer extends AbstractTransformer
         $nativeSavePerMonth  = null;
         $startDate           = $piggyBank->startdate?->format('Y-m-d');
         $targetDate          = $piggyBank->targetdate?->format('Y-m-d');
-        $accountId           = (int)$piggyBank->account_id;
+        $accountId           = $piggyBank->account_id;
         $accountName         = $this->accounts[$accountId]['name'] ?? null;
         $currency            = $this->currencies[$accountId] ?? $this->default;
-        $currentAmount       = app('steam')->bcround($this->repetitions[(int)$piggyBank->id]['amount'] ?? '0', $currency->decimal_places);
+        $currentAmount       = app('steam')->bcround($this->repetitions[$piggyBank->id]['amount'] ?? '0', $currency->decimal_places);
         $nativeCurrentAmount = $this->converter->convert($this->default, $currency, today(), $currentAmount);
         $targetAmount        = $piggyBank->targetamount;
         $nativeTargetAmount  = $this->converter->convert($this->default, $currency, today(), $targetAmount);
-        $note                = $this->notes[(int)$piggyBank->id] ?? null;
-        $group               = $this->groups[(int)$piggyBank->id] ?? null;
+        $note                = $this->notes[$piggyBank->id] ?? null;
+        $group               = $this->groups[$piggyBank->id] ?? null;
 
         if (0 !== bccomp($targetAmount, '0')) { // target amount is not 0.00
             $leftToSave         = bcsub($targetAmount, $currentAmount);
@@ -224,7 +224,7 @@ class PiggyBankTransformer extends AbstractTransformer
             'native_save_per_month'          => $nativeSavePerMonth,
             'start_date'                     => $startDate,
             'target_date'                    => $targetDate,
-            'order'                          => (int)$piggyBank->order,
+            'order'                          => $piggyBank->order,
             'active'                         => $piggyBank->active,
             'notes'                          => $note,
             'object_group_id'                => $group ? $group['object_group_id'] : null,

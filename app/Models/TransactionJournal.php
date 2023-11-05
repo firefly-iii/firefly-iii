@@ -404,4 +404,13 @@ class TransactionJournal extends Model
             get: static fn($value) => (int)$value,
         );
     }
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
 }

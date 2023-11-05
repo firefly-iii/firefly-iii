@@ -55,7 +55,7 @@ class TagTransformer extends AbstractTransformer
         }
 
         return [
-            'id'          => (int)$tag->id,
+            'id'          => $tag->id,
             'created_at'  => $tag->created_at->toAtomString(),
             'updated_at'  => $tag->updated_at->toAtomString(),
             'tag'         => $tag->tag,

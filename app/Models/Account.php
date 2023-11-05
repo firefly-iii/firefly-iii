@@ -55,7 +55,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string|null                   $iban
  * @property bool                          $active
  * @property bool                          $encrypted
- * @property int|string                    $order
+ * @property int                    $order
  * @property-read Collection|AccountMeta[] $accountMeta
  * @property-read int|null                 $account_meta_count
  * @property AccountType                   $accountType
@@ -318,6 +318,16 @@ class Account extends Model
      * @return Attribute
      */
     protected function accountId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
     {
         return Attribute::make(
             get: static fn($value) => (int)$value,

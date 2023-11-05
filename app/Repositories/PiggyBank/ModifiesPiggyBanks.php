@@ -297,7 +297,7 @@ trait ModifiesPiggyBanks
         $set     = $this->user->piggyBanks()->orderBy('piggy_banks.order', 'ASC')->get(['piggy_banks.*']);
         $current = 1;
         foreach ($set as $piggyBank) {
-            if ((int)$piggyBank->order !== $current) {
+            if ($piggyBank->order !== $current) {
                 app('log')->debug(sprintf('Piggy bank #%d ("%s") was at place %d but should be on %d', $piggyBank->id, $piggyBank->name, $piggyBank->order, $current));
                 $piggyBank->order = $current;
                 $piggyBank->save();
@@ -311,7 +311,7 @@ trait ModifiesPiggyBanks
      */
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool
     {
-        $oldOrder = (int)$piggyBank->order;
+        $oldOrder = $piggyBank->order;
         //app('log')->debug(sprintf('Will move piggy bank #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
         if ($newOrder > $oldOrder) {
             $this->user->piggyBanks()->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
@@ -373,7 +373,7 @@ trait ModifiesPiggyBanks
         }
 
         // update the order of the piggy bank:
-        $oldOrder = (int)$piggyBank->order;
+        $oldOrder = $piggyBank->order;
         $newOrder = (int)($data['order'] ?? $oldOrder);
         if ($oldOrder !== $newOrder) {
             $this->setOrder($piggyBank, $newOrder);

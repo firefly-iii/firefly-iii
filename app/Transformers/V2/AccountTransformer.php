@@ -74,7 +74,7 @@ class AccountTransformer extends AbstractTransformer
             $this->currencies[$id] = $currency;
         }
         foreach ($meta as $entry) {
-            $id                                   = (int)$entry->account_id;
+            $id                                   = $entry->account_id;
             $this->accountMeta[$id][$entry->name] = $entry->data;
         }
         // get account types:
@@ -84,7 +84,7 @@ class AccountTransformer extends AbstractTransformer
                                    ->get(['accounts.id', 'account_types.type']);
         /** @var AccountType $row */
         foreach ($accountTypes as $row) {
-            $this->accountTypes[(int)$row->id] = (string)config(sprintf('firefly.shortNamesByFullName.%s', $row->type));
+            $this->accountTypes[$row->id] = (string)config(sprintf('firefly.shortNamesByFullName.%s', $row->type));
         }
     }
 
@@ -115,7 +115,7 @@ class AccountTransformer extends AbstractTransformer
         // various meta
         $accountRole = $this->accountMeta[$id]['account_role'] ?? null;
         $accountType = $this->accountTypes[$id];
-        $order       = (int)$account->order;
+        $order       = $account->order;
 
         // no currency? use default
         $currency = $this->default;

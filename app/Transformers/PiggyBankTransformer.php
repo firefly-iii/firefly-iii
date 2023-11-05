@@ -79,8 +79,8 @@ class PiggyBankTransformer extends AbstractTransformer
         /** @var ObjectGroup|null $objectGroup */
         $objectGroup = $piggyBank->objectGroups->first();
         if (null !== $objectGroup) {
-            $objectGroupId    = (int)$objectGroup->id;
-            $objectGroupOrder = (int)$objectGroup->order;
+            $objectGroupId    = $objectGroup->id;
+            $objectGroupOrder = $objectGroup->order;
             $objectGroupTitle = $objectGroup->title;
         }
 
@@ -120,7 +120,7 @@ class PiggyBankTransformer extends AbstractTransformer
             'save_per_month'          => $savePerMonth,
             'start_date'              => $startDate,
             'target_date'             => $targetDate,
-            'order'                   => (int)$piggyBank->order,
+            'order'                   => $piggyBank->order,
             'active'                  => true,
             'notes'                   => $notes,
             'object_group_id'         => null !== $objectGroupId ? (string)$objectGroupId : null,

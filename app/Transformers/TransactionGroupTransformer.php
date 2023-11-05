@@ -329,10 +329,10 @@ class TransactionGroupTransformer extends AbstractTransformer
     {
         try {
             $result = [
-                'id'           => (int)$group->id,
+                'id'           => $group->id,
                 'created_at'   => $group->created_at->toAtomString(),
                 'updated_at'   => $group->updated_at->toAtomString(),
-                'user'         => (int)$group->user_id,
+                'user'         => $group->user_id,
                 'group_title'  => $group->title,
                 'transactions' => $this->transformJournals($group->transactionJournals),
                 'links'        => [
@@ -383,7 +383,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $type            = $journal->transactionType->type;
         $currency        = $source->transactionCurrency;
         $amount          = app('steam')->bcround($this->getAmount($type, $source->amount), $currency->decimal_places ?? 0);
-        $foreignAmount   = $this->getForeignAmount($type, null === $source->foreign_amount ? null : (string)$source->foreign_amount);
+        $foreignAmount   = $this->getForeignAmount($type, null === $source->foreign_amount ? null : $source->foreign_amount);
         $metaFieldData   = $this->groupRepos->getMetaFields($journal->id, $this->metaFields);
         $metaDates       = $this->getDates($this->groupRepos->getMetaDateFields($journal->id, $this->metaDateFields));
         $foreignCurrency = $this->getForeignCurrency($source->foreignCurrency);
@@ -406,7 +406,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         return [
-            'user'                   => (int)$journal->user_id,
+            'user'                   => $journal->user_id,
             'transaction_journal_id' => $journal->id,
             'type'                   => strtolower($type),
             'date'                   => $journal->date->toAtomString(),

@@ -28,6 +28,7 @@ use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,7 +50,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                               $name
  * @property bool                                 $active
  * @property bool                                 $encrypted
- * @property int|string                           $order
+ * @property int                           $order
  * @property-read Collection|Attachment[]         $attachments
  * @property-read int|null                        $attachments_count
  * @property-read Collection|AutoBudget[]         $autoBudgets
@@ -180,6 +181,14 @@ class Budget extends Model
     {
         return $this->belongsToMany(Transaction::class, 'budget_transaction', 'budget_id');
     }
-
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
 
 }

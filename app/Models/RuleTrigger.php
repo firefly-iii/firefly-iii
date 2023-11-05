@@ -39,7 +39,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property int  $rule_id
  * @property string|null $trigger_type
  * @property string|null $trigger_value
- * @property int|string  $order
+ * @property int  $order
  * @property bool        $active
  * @property bool        $stop_processing
  * @property-read Rule   $rule
@@ -90,4 +90,15 @@ class RuleTrigger extends Model
             get: static fn($value) => (int)$value,
         );
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
 }
