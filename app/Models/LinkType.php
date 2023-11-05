@@ -66,11 +66,7 @@ class LinkType extends Model
 {
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -79,7 +75,7 @@ class LinkType extends Model
             'editable'   => 'boolean',
         ];
 
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['name', 'inward', 'outward', 'editable'];
 
     /**

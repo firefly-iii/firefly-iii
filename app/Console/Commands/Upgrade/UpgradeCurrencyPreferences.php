@@ -41,17 +41,9 @@ class UpgradeCurrencyPreferences extends Command
     use ShowsFriendlyMessages;
 
     public const CONFIG_NAME = '610_upgrade_currency_prefs';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Upgrade user currency preferences';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:upgrade-currency-preferences {--F|force : Force the execution of this command.}';
 
     /**

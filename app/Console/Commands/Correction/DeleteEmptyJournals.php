@@ -37,17 +37,8 @@ class DeleteEmptyJournals extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Delete empty and uneven transaction journals.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:delete-empty-journals';
 
     /**

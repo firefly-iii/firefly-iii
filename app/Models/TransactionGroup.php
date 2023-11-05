@@ -67,11 +67,7 @@ class TransactionGroup extends Model
 {
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'id'         => 'integer',
@@ -82,7 +78,7 @@ class TransactionGroup extends Model
             'date'       => 'datetime',
         ];
 
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['user_id', 'user_group_id', 'title'];
 
     /**

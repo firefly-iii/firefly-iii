@@ -38,17 +38,9 @@ class MigrateJournalNotes extends Command
     use ShowsFriendlyMessages;
 
     public const CONFIG_NAME = '480_migrate_notes';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Migrate notes for transaction journals.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:migrate-notes {--F|force : Force the execution of this command.}';
 
     /**

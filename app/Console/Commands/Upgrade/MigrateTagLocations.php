@@ -39,17 +39,9 @@ class MigrateTagLocations extends Command
     use ShowsFriendlyMessages;
 
     public const CONFIG_NAME = '500_migrate_tag_locations';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Migrate tag locations.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:migrate-tag-locations {--F|force : Force the execution of this command.}';
 
     /**

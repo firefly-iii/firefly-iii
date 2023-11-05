@@ -46,17 +46,9 @@ class ApplyRules extends Command
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'This command will apply your rules and rule groups on a selection of your transactions.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature
         = 'firefly-iii:apply-rules
                             {--user=1 : The user ID.}

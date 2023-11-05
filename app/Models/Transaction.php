@@ -92,11 +92,7 @@ class Transaction extends Model
     use HasFactory;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at'          => 'datetime',
@@ -107,7 +103,7 @@ class Transaction extends Model
             'bill_name_encrypted' => 'boolean',
             'reconciled'          => 'boolean',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable
         = [
             'account_id',
@@ -120,7 +116,7 @@ class Transaction extends Model
             'foreign_amount',
             'reconciled',
         ];
-    /** @var array Hidden from view */
+
     protected $hidden = ['encrypted'];
 
     /**

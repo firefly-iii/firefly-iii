@@ -60,11 +60,7 @@ class RecurrenceTransactionMeta extends Model
 {
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -73,7 +69,7 @@ class RecurrenceTransactionMeta extends Model
             'name'       => 'string',
             'value'      => 'string',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['rt_id', 'name', 'value'];
     /** @var string The table to store the data in */
     protected $table = 'rt_meta';

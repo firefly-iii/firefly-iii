@@ -52,17 +52,13 @@ use Carbon\Carbon;
  */
 class AccountMeta extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['account_id', 'name', 'data'];
     /** @var string The table to store the data in */
     protected $table = 'account_meta';

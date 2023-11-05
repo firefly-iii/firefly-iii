@@ -60,11 +60,7 @@ class RecurrenceMeta extends Model
 {
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -73,7 +69,7 @@ class RecurrenceMeta extends Model
             'name'       => 'string',
             'value'      => 'string',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['recurrence_id', 'name', 'value'];
     /** @var string The table to store the data in */
     protected $table = 'recurrences_meta';

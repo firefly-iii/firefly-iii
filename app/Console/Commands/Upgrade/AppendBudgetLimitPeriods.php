@@ -37,17 +37,9 @@ class AppendBudgetLimitPeriods extends Command
     use ShowsFriendlyMessages;
 
     public const CONFIG_NAME = '550_budget_limit_periods';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Append budget limits with their (estimated) timeframe.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:budget-limit-periods {--F|force : Force the execution of this command.}';
 
     /**

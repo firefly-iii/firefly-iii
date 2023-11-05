@@ -83,11 +83,7 @@ class Tag extends Model
 {
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -98,7 +94,7 @@ class Tag extends Model
             'latitude'   => 'float',
             'longitude'  => 'float',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['user_id', 'user_group_id', 'tag', 'date', 'description', 'tagMode'];
 
     protected $hidden = ['zoomLevel', 'latitude', 'longitude'];

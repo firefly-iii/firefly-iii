@@ -63,11 +63,7 @@ use Carbon\Carbon;
  */
 class Location extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -77,7 +73,7 @@ class Location extends Model
             'latitude'   => 'float',
             'longitude'  => 'float',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['locatable_id', 'locatable_type', 'latitude', 'longitude', 'zoom_level'];
 
     /**

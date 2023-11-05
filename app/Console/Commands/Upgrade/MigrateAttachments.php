@@ -39,17 +39,9 @@ class MigrateAttachments extends Command
     use ShowsFriendlyMessages;
 
     public const CONFIG_NAME = '480_migrate_attachments';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Migrates attachment meta-data.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:migrate-attachments {--F|force : Force the execution of this command.}';
 
     /**

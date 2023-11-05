@@ -69,11 +69,7 @@ class RecurrenceRepetition extends Model
     public const WEEKEND_TO_FRIDAY     = 3;
     public const WEEKEND_TO_MONDAY     = 4;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at'        => 'datetime',
@@ -84,7 +80,7 @@ class RecurrenceRepetition extends Model
             'repetition_skip'   => 'int',
             'weekend'           => 'int',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['recurrence_id', 'weekend', 'repetition_type', 'repetition_moment', 'repetition_skip'];
     /** @var string The table to store the data in */
     protected $table = 'recurrences_repetitions';

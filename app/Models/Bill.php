@@ -105,11 +105,7 @@ class Bill extends Model
 {
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at'      => 'datetime',
@@ -125,7 +121,7 @@ class Bill extends Model
             'match_encrypted' => 'boolean',
         ];
 
-    /** @var array Fields that can be filled */
+
     protected $fillable
         = [
             'name',
@@ -143,7 +139,7 @@ class Bill extends Model
             'end_date',
             'extension_date',
         ];
-    /** @var array Hidden from view */
+
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
 
     /**

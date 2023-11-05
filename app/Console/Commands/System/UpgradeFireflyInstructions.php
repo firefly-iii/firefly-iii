@@ -35,17 +35,9 @@ class UpgradeFireflyInstructions extends Command
 {
     use GeneratesInstallationId;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Instructions in case of upgrade trouble.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly:instructions {task}';
 
     /**

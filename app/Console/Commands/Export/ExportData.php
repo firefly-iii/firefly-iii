@@ -48,17 +48,9 @@ class ExportData extends Command
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Command to export data from Firefly III.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:export-data
     {--user=1 : The user ID that the export should run for.}
     {--token= : The user\'s access token.}

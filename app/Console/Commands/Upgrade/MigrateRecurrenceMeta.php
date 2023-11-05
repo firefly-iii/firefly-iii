@@ -41,17 +41,9 @@ class MigrateRecurrenceMeta extends Command
     use ShowsFriendlyMessages;
 
     public const CONFIG_NAME = '481_migrate_recurrence_meta';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Migrate recurrence meta data';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:migrate-recurrence-meta {--F|force : Force the execution of this command.}';
 
     /**

@@ -83,11 +83,7 @@ class Rule extends Model
 {
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at'      => 'datetime',
@@ -99,7 +95,7 @@ class Rule extends Model
             'id'              => 'int',
             'strict'          => 'boolean',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id', 'strict'];
 
     /**

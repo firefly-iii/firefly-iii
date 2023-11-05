@@ -76,11 +76,7 @@ class Category extends Model
 {
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -88,9 +84,9 @@ class Category extends Model
             'deleted_at' => 'datetime',
             'encrypted'  => 'boolean',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['user_id', 'user_group_id', 'name'];
-    /** @var array Hidden from view */
+
     protected $hidden = ['encrypted'];
 
     /**

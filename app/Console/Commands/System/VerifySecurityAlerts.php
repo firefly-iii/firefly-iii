@@ -39,17 +39,9 @@ class VerifySecurityAlerts extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Verify security alerts';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:verify-security-alerts';
 
     /**

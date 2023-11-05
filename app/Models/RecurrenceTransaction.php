@@ -82,11 +82,7 @@ class RecurrenceTransaction extends Model
 {
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at'     => 'datetime',
@@ -96,7 +92,7 @@ class RecurrenceTransaction extends Model
             'foreign_amount' => 'string',
             'description'    => 'string',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable
         = [
             'recurrence_id',

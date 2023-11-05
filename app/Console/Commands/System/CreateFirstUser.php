@@ -39,17 +39,9 @@ class CreateFirstUser extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Creates a new user and gives admin rights. Outputs the password on the command line. Strictly for testing.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:create-first-user {email}';
     private UserRepositoryInterface $repository;
 

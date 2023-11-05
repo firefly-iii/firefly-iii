@@ -40,17 +40,9 @@ class MigrateRecurrenceType extends Command
     use ShowsFriendlyMessages;
 
     public const CONFIG_NAME = '550_migrate_recurrence_type';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Migrate transaction type of recurring transaction.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:migrate-recurrence-type {--F|force : Force the execution of this command.}';
 
     /**

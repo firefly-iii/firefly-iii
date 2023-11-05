@@ -62,18 +62,14 @@ class Note extends Model
 {
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['title', 'text', 'noteable_id', 'noteable_type'];
 
     /**

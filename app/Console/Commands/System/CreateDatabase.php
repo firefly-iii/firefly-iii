@@ -36,17 +36,9 @@ class CreateDatabase extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Tries to create the database if it doesn\'t exist yet.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:create-database';
 
     /**

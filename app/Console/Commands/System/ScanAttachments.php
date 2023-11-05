@@ -39,18 +39,10 @@ class ScanAttachments extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Rescan all attachments and re-set the correct MD5 hash and mime.';
 
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:scan-attachments';
 
     /**

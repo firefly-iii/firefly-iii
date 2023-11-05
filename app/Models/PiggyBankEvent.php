@@ -56,20 +56,16 @@ use Carbon\Carbon;
  */
 class PiggyBankEvent extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'date'       => 'date',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
-    /** @var array Hidden from view */
+
     protected $hidden = ['amount_encrypted'];
 
     /**

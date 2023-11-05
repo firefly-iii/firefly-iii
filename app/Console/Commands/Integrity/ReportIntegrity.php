@@ -36,17 +36,9 @@ class ReportIntegrity extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Will report on the integrity of your database.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:report-integrity';
 
     /**

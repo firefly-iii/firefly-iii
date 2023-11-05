@@ -111,11 +111,7 @@ class Account extends Model
     use HasFactory;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -125,9 +121,9 @@ class Account extends Model
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
-    /** @var array Hidden from view */
+
     protected $hidden             = ['encrypted'];
     private bool $joinedAccountTypes = false;
 

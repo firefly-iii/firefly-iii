@@ -45,17 +45,9 @@ class MigrateToRules extends Command
     use ShowsFriendlyMessages;
 
     public const CONFIG_NAME = '480_bills_to_rules';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Migrate bills to rules.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:bills-to-rules {--F|force : Force the execution of this command.}';
     private BillRepositoryInterface      $billRepository;
     private int                          $count;

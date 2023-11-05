@@ -35,17 +35,9 @@ class FixPostgresSequences extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Fixes issues with PostgreSQL sequences.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:fix-pgsql-sequences';
 
     /**

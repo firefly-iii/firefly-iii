@@ -37,17 +37,8 @@ class DeleteOrphanedTransactions extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Deletes orphaned transactions.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:delete-orphaned-transactions';
 
     /**

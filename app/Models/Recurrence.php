@@ -93,11 +93,7 @@ class Recurrence extends Model
 {
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at'   => 'datetime',
@@ -113,7 +109,7 @@ class Recurrence extends Model
             'active'       => 'bool',
             'apply_rules'  => 'bool',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable
         = ['user_id', 'transaction_type_id', 'title', 'description', 'first_date', 'repeat_until', 'latest_date', 'repetitions', 'apply_rules', 'active'];
     /** @var string The table to store the data in */

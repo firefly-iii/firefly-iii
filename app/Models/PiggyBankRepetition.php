@@ -57,11 +57,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class PiggyBankRepetition extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -69,7 +65,7 @@ class PiggyBankRepetition extends Model
             'startdate'  => 'date',
             'targetdate' => 'date',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
 
     /**

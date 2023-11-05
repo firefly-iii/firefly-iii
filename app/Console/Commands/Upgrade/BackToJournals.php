@@ -42,17 +42,9 @@ class BackToJournals extends Command
     use ShowsFriendlyMessages;
 
     public const CONFIG_NAME = '480_back_to_journals';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Move meta data back to journals, not individual transactions.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:back-to-journals {--F|force : Force the execution of this command.}';
 
     /**

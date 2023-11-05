@@ -66,17 +66,13 @@ class AccountType extends Model
     public const REVENUE          = 'Revenue account';
 
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['type'];
 
     /**

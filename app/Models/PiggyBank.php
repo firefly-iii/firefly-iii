@@ -102,9 +102,9 @@ class PiggyBank extends Model
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate', 'active'];
-    /** @var array Hidden from view */
+
     protected $hidden = ['targetamount_encrypted', 'encrypted'];
 
     /**

@@ -63,11 +63,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class TransactionJournalLink extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',

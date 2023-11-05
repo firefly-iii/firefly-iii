@@ -58,11 +58,7 @@ use Carbon\Carbon;
  */
 class RuleTrigger extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at'      => 'datetime',
@@ -72,7 +68,7 @@ class RuleTrigger extends Model
             'stop_processing' => 'boolean',
         ];
 
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['rule_id', 'trigger_type', 'trigger_value', 'order', 'active', 'stop_processing'];
 
     /**

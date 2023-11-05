@@ -38,17 +38,9 @@ class BudgetLimitCurrency extends Command
     use ShowsFriendlyMessages;
 
     public const CONFIG_NAME = '480_bl_currency';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Give budget limits a currency';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:bl-currency {--F|force : Force the execution of this command.}';
 
     /**
