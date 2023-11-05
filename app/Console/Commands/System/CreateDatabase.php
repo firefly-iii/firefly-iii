@@ -54,7 +54,6 @@ class CreateDatabase extends Command
             return 0;
         }
         // try to set up a raw connection:
-        $pdo     = false;
         $exists  = false;
         $checked = false; // checked for existence of DB?
         $dsn     = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', env('DB_HOST', 'localhost'), env('DB_PORT', '3306'));
@@ -79,26 +78,23 @@ class CreateDatabase extends Command
         }
 
         // only continue when no error.
-        if (false !== $pdo) {
-            // with PDO, try to list DB's (
-            $stmt    = $pdo->query('SHOW DATABASES;');
-            $checked = true;
-            // slightly more complex but less error prone.
-            foreach ($stmt as $row) {
-                $name = $row['Database'] ?? false;
-                if ($name === env('DB_DATABASE')) {
-                    $exists = true;
-                }
+        // with PDO, try to list DB's (
+        $stmt    = $pdo->query('SHOW DATABASES;');
+        // slightly more complex but less error-prone.
+        foreach ($stmt as $row) {
+            $name = $row['Database'] ?? false;
+            if ($name === env('DB_DATABASE')) {
+                $exists = true;
             }
         }
-        if (false === $exists && true === $checked) {
+        if (false === $exists) {
             $this->friendlyError(sprintf('Database "%s" does not exist.', env('DB_DATABASE')));
 
             // try to create it.
             $pdo->exec(sprintf('CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;', env('DB_DATABASE')));
             $this->friendlyInfo(sprintf('Created database "%s"', env('DB_DATABASE')));
         }
-        if (true === $exists && true === $checked) {
+        if (true === $exists) {
             $this->friendlyInfo(sprintf('Database "%s" exists.', env('DB_DATABASE')));
         }
 

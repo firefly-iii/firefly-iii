@@ -25,7 +25,9 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\User;
 use Illuminate\Console\Command;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -65,8 +67,10 @@ class BudgetLimitCurrency extends Command
         /** @var BudgetLimit $budgetLimit */
         foreach ($budgetLimits as $budgetLimit) {
             if (null === $budgetLimit->transaction_currency_id) {
+                /** @var Budget|null $budget */
                 $budget = $budgetLimit->budget;
                 if (null !== $budget) {
+                    /** @var User|null $user */
                     $user = $budget->user;
                     if (null !== $user) {
                         $currency                             = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);

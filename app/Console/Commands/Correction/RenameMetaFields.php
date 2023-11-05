@@ -37,7 +37,7 @@ class RenameMetaFields extends Command
     protected $description = 'Rename changed meta fields.';
     protected $signature   = 'firefly-iii:rename-meta-fields';
 
-    private int $count;
+    private int $count = 0;
 
     /**
      * Execute the console command.
@@ -46,8 +46,6 @@ class RenameMetaFields extends Command
      */
     public function handle(): int
     {
-        $this->count = 0;
-
         $changes = [
             'original-source' => 'original_source',
             'importHash'      => 'import_hash',
