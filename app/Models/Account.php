@@ -141,7 +141,7 @@ class Account extends Model
             $accountId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Account $account */
+            /** @var Account|null $account */
             $account = $user->accounts()->with(['accountType'])->find($accountId);
             if (null !== $account) {
                 return $account;

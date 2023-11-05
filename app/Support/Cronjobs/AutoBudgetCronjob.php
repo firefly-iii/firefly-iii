@@ -55,11 +55,7 @@ class AutoBudgetCronjob extends AbstractCronjob
 
                 return;
             }
-
-            // fire job regardless.
-            if (true === $this->force) {
-                app('log')->info('Execution of the auto budget cron-job has been FORCED.');
-            }
+            app('log')->info('Execution of the auto budget cron-job has been FORCED.');
         }
 
         if ($lastTime > 0 && $diff > 43200) {

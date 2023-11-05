@@ -59,7 +59,7 @@ trait GroupValidation
             'source_number',
             'destination_number',
         ];
-        /** @var array $transaction */
+        /** @var array|null $transaction */
         foreach ($transactions as $index => $transaction) {
             if (!is_array($transaction)) {
                 throw new FireflyException('Invalid data submitted: transaction is not array.');

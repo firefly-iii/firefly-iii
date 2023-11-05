@@ -347,7 +347,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      */
     public function switchLinkById(int $linkId): bool
     {
-        /** @var TransactionJournalLink $link */
+        /** @var TransactionJournalLink|null $link */
         $link = TransactionJournalLink::find($linkId);
         if (null !== $link && $link->source->user->id === $this->user->id) {
             $this->switchLink($link);

@@ -105,7 +105,7 @@ class GroupCloneService
 
         // add relation.
         // TODO clone ALL linked piggy banks
-        /** @var PiggyBankEvent $event */
+        /** @var PiggyBankEvent|null $event */
         $event = $journal->piggyBankEvents()->first();
         if (null !== $event) {
             $piggyBank = $event->piggyBank;

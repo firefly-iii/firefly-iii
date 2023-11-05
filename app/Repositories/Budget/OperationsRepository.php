@@ -146,7 +146,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $budgets && $budgets->count() > 0) {
             $collector->setBudgets($budgets);
         }
-        if (null === $budgets || (null !== $budgets && 0 === $budgets->count())) {
+        if (null === $budgets || 0 === $budgets->count()) {
             $collector->setBudgets($this->getBudgets());
         }
         $collector->withBudgetInformation()->withAccountInformation()->withCategoryInformation();

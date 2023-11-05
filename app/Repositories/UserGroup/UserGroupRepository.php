@@ -104,7 +104,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         $memberships = $this->user->groupMemberships()->get();
         /** @var GroupMembership $membership */
         foreach ($memberships as $membership) {
-            /** @var UserGroup $group */
+            /** @var UserGroup|null $group */
             $group = $membership->userGroup()->first();
             if (null !== $group) {
                 $collection->push($group);
@@ -131,6 +131,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
             $existingGroup = $this->findByName($groupName);
             if (null === $existingGroup) {
                 $exists        = false;
+                /** @var UserGroup|null $existingGroup */
                 $existingGroup = $this->store(['user' => $user, 'title' => $groupName]);
             }
             if (null !== $existingGroup) {

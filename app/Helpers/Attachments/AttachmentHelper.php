@@ -206,7 +206,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
         if (is_array($files)) {
             Log::debug('$files is an array.');
-            /** @var UploadedFile $entry */
+            /** @var UploadedFile|null $entry */
             foreach ($files as $entry) {
                 if (null !== $entry) {
                     $this->processFile($entry, $model);

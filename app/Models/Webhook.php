@@ -185,7 +185,7 @@ class Webhook extends Model
             $webhookId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Webhook $webhook */
+            /** @var Webhook|null $webhook */
             $webhook = $user->webhooks()->find($webhookId);
             if (null !== $webhook) {
                 return $webhook;

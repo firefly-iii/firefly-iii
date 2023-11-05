@@ -64,7 +64,7 @@ class TagFormRequest extends FormRequest
     {
         $idRule = '';
 
-        /** @var Tag $tag */
+        /** @var Tag|null $tag */
         $tag     = $this->route()->parameter('tag');
         $tagRule = 'required|max:1024|min:1|uniqueObjectForUser:tags,tag';
         if (null !== $tag) {

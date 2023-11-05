@@ -97,7 +97,7 @@ class AvailableBudget extends Model
             $availableBudgetId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var AvailableBudget $availableBudget */
+            /** @var AvailableBudget|null $availableBudget */
             $availableBudget = $user->availableBudgets()->find($availableBudgetId);
             if (null !== $availableBudget) {
                 return $availableBudget;

@@ -63,7 +63,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
@@ -159,7 +159,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation();
@@ -223,7 +223,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
@@ -288,7 +288,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
@@ -361,7 +361,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
@@ -405,7 +405,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
@@ -448,7 +448,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);

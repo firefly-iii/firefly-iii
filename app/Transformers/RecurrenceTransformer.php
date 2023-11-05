@@ -26,6 +26,7 @@ namespace FireflyIII\Transformers;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
@@ -161,7 +162,9 @@ class RecurrenceTransformer extends AbstractTransformer
         // get all transactions:
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions()->get() as $transaction) {
+            /** @var Account|null $sourceAccount */
             $sourceAccount         = $transaction->sourceAccount;
+            /** @var Account|null $destinationAccount */
             $destinationAccount    = $transaction->destinationAccount;
             $foreignCurrencyCode   = null;
             $foreignCurrencySymbol = null;

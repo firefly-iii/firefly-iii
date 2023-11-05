@@ -54,7 +54,7 @@ class CategoryFactory
         }
         // first by ID:
         if ($categoryId > 0) {
-            /** @var Category $category */
+            /** @var Category|null $category */
             $category = $this->user->categories()->find($categoryId);
             if (null !== $category) {
                 return $category;

@@ -129,7 +129,7 @@ class Recurrence extends Model
             $recurrenceId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Recurrence $recurrence */
+            /** @var Recurrence|null $recurrence */
             $recurrence = $user->recurrences()->find($recurrenceId);
             if (null !== $recurrence) {
                 return $recurrence;

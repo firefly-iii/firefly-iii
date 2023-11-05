@@ -497,9 +497,9 @@ class JournalUpdateService
     {
         $type = $this->transactionJournal->transactionType->type;
         if ((
-            array_key_exists('bill_id', $this->data)
+                array_key_exists('bill_id', $this->data)
                 || array_key_exists('bill_name', $this->data)
-        )
+            )
             && TransactionType::WITHDRAWAL === $type
         ) {
             $billId                            = (int)($this->data['bill_id'] ?? 0);
@@ -690,24 +690,22 @@ class JournalUpdateService
         $currencyId   = $this->data['currency_id'] ?? null;
         $currencyCode = $this->data['currency_code'] ?? null;
         $currency     = $this->currencyRepository->findCurrency($currencyId, $currencyCode);
-        if (null !== $currency) {
-            // update currency everywhere.
-            $this->transactionJournal->transaction_currency_id = $currency->id;
-            $this->transactionJournal->save();
+        // update currency everywhere.
+        $this->transactionJournal->transaction_currency_id = $currency->id;
+        $this->transactionJournal->save();
 
-            $source                          = $this->getSourceTransaction();
-            $source->transaction_currency_id = $currency->id;
-            $source->save();
+        $source                          = $this->getSourceTransaction();
+        $source->transaction_currency_id = $currency->id;
+        $source->save();
 
-            $dest                          = $this->getDestinationTransaction();
-            $dest->transaction_currency_id = $currency->id;
-            $dest->save();
+        $dest                          = $this->getDestinationTransaction();
+        $dest->transaction_currency_id = $currency->id;
+        $dest->save();
 
-            // refresh transactions.
-            $this->sourceTransaction->refresh();
-            $this->destinationTransaction->refresh();
-            app('log')->debug(sprintf('Updated currency to #%d (%s)', $currency->id, $currency->code));
-        }
+        // refresh transactions.
+        $this->sourceTransaction->refresh();
+        $this->destinationTransaction->refresh();
+        app('log')->debug(sprintf('Updated currency to #%d (%s)', $currency->id, $currency->code));
     }
 
     /**

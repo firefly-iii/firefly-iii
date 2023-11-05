@@ -43,7 +43,7 @@ class TagTransformer extends AbstractTransformer
     public function transform(Tag $tag): array
     {
         $date = $tag->date?->format('Y-m-d');
-        /** @var Location $location */
+        /** @var Location|null $location */
         $location  = $tag->locations()->first();
         $latitude  = null;
         $longitude = null;

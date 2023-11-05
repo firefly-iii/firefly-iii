@@ -161,7 +161,7 @@ class AccountDestroyService
         /** @var Transaction $transaction */
         foreach ($account->transactions()->get() as $transaction) {
             app('log')->debug('Now at transaction #' . $transaction->id);
-            /** @var TransactionJournal $journal */
+            /** @var TransactionJournal|null $journal */
             $journal = $transaction->transactionJournal()->first();
             if (null !== $journal) {
                 app('log')->debug('Call for deletion of journal #' . $journal->id);

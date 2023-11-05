@@ -113,7 +113,7 @@ class Tag extends Model
             $tagId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Tag $tag */
+            /** @var Tag|null $tag */
             $tag = $user->tags()->find($tagId);
             if (null !== $tag) {
                 return $tag;

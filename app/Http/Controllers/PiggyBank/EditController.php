@@ -127,7 +127,7 @@ class EditController extends Controller
         app('preferences')->mark();
 
         // store new attachment(s):
-        /** @var array $files */
+        /** @var array|null $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($piggyBank, $files);

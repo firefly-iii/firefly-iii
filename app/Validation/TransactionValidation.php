@@ -61,7 +61,7 @@ trait TransactionValidation
 
         app('log')->debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
         /**
-         * @var int   $index
+         * @var int|null   $index
          * @var array $transaction
          */
         foreach ($transactions as $index => $transaction) {
@@ -84,19 +84,13 @@ trait TransactionValidation
         app('log')->debug('Now in getTransactionsArray');
         $data         = $validator->getData();
         $transactions = [];
-        if (is_array($data) && array_key_exists('transactions', $data) && is_array($data['transactions'])) {
+        if (array_key_exists('transactions', $data) && is_array($data['transactions'])) {
             app('log')->debug('Transactions key exists and is array.');
             $transactions = $data['transactions'];
         }
-        if (is_array($data) && array_key_exists('transactions', $data) && !is_array($data['transactions'])) {
+        if (array_key_exists('transactions', $data) && !is_array($data['transactions'])) {
             app('log')->debug(sprintf('Transactions key exists but is NOT array,  its a %s', gettype($data['transactions'])));
         }
-        // should be impossible to hit this:
-        if (!is_countable($transactions)) {
-            app('log')->error(sprintf('Transactions array is not countable, because its a %s', gettype($transactions)));
-            return [];
-        }
-        //app('log')->debug('Returning transactions.', $transactions);
 
         return $transactions;
     }
@@ -383,7 +377,7 @@ trait TransactionValidation
         $transactions = $this->getTransactionsArray($validator);
 
         /**
-         * @var int   $index
+         * @var int|null   $index
          * @var array $transaction
          */
         foreach ($transactions as $index => $transaction) {
@@ -783,13 +777,13 @@ trait TransactionValidation
         if (0 === $journalId) {
             return $return;
         }
-        /** @var Transaction $source */
+        /** @var Transaction|null $source */
         $source = Transaction::where('transaction_journal_id', $journalId)->where('amount', '<', 0)->with(['account'])->first();
         if (null !== $source) {
             $return['source_id']   = $source->account_id;
             $return['source_name'] = $source->account->name;
         }
-        /** @var Transaction $destination */
+        /** @var Transaction|null $destination */
         $destination = Transaction::where('transaction_journal_id', $journalId)->where('amount', '>', 0)->with(['account'])->first();
         if (null !== $source) {
             $return['destination_id']   = $destination->account_id;

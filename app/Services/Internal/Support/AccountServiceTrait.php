@@ -137,7 +137,7 @@ trait AccountServiceTrait
             $data['account_role'] = '';
         }
 
-        if ($account->accountType->type === AccountType::ASSET && array_key_exists('account_role', $data) && 'ccAsset' === $data['account_role']) {
+        if ($account->accountType->type === AccountType::ASSET && 'ccAsset' === $data['account_role']) {
             $fields = $this->validCCFields;
         }
         /** @var AccountMetaFactory $factory */

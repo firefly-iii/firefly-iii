@@ -259,7 +259,7 @@ class RecurrenceFormRequest extends FormRequest
         }
 
         // update some rules in case the user is editing a post:
-        /** @var Recurrence $recurrence */
+        /** @var Recurrence|null $recurrence */
         $recurrence = $this->route()->parameter('recurrence');
         if ($recurrence instanceof Recurrence) {
             $rules['id']         = 'required|numeric|exists:recurrences,id';

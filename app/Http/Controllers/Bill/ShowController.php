@@ -90,11 +90,7 @@ class ShowController extends Controller
 
             return redirect(route('bills.show', [$bill->id]));
         }
-        $set = new Collection();
-        if (true === $bill->active) {
-            $set   = $this->repository->getRulesForBill($bill);
-            $total = 0;
-        }
+        $set   = $this->repository->getRulesForBill($bill);
         if (0 === $set->count()) {
             $request->session()->flash('error', (string)trans('firefly.no_rules_for_bill'));
 

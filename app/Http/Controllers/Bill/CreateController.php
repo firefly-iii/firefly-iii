@@ -114,7 +114,7 @@ class CreateController extends Controller
         $request->session()->flash('success', (string)trans('firefly.stored_new_bill', ['name' => $bill->name]));
         app('preferences')->mark();
 
-        /** @var array $files */
+        /** @var array|null $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($bill, $files);

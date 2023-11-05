@@ -113,10 +113,8 @@ class BillUpdateService
                 return $bill;
             }
             // remove if name is empty. Should be overruled by ID.
-            if ('' === $objectGroupTitle) {
-                $bill->objectGroups()->sync([]);
-                $bill->save();
-            }
+            $bill->objectGroups()->sync([]);
+            $bill->save();
         }
         if (array_key_exists('object_group_id', $data)) {
             // try also with ID:
@@ -130,10 +128,8 @@ class BillUpdateService
 
                 return $bill;
             }
-            if (0 === $objectGroupId) {
-                $bill->objectGroups()->sync([]);
-                $bill->save();
-            }
+            $bill->objectGroups()->sync([]);
+            $bill->save();
         }
 
         return $bill;

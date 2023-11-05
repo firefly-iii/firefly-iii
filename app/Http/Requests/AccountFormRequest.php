@@ -122,7 +122,7 @@ class AccountFormRequest extends FormRequest
         ];
         $rules          = Location::requestRules($rules);
 
-        /** @var Account $account */
+        /** @var Account|null $account */
         $account = $this->route()->parameter('account');
         if (null !== $account) {
             // add rules:

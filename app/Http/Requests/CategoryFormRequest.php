@@ -57,7 +57,7 @@ class CategoryFormRequest extends FormRequest
     public function rules(): array
     {
         $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name';
-        /** @var Category $category */
+        /** @var Category|null $category */
         $category = $this->route()->parameter('category');
 
         if (null !== $category) {

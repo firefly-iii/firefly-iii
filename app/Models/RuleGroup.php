@@ -102,7 +102,7 @@ class RuleGroup extends Model
             $ruleGroupId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var RuleGroup $ruleGroup */
+            /** @var RuleGroup|null $ruleGroup */
             $ruleGroup = $user->ruleGroups()->find($ruleGroupId);
             if (null !== $ruleGroup) {
                 return $ruleGroup;

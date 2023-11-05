@@ -68,7 +68,7 @@ class CurrencyFormRequest extends FormRequest
             'enabled'        => 'in:0,1',
         ];
 
-        /** @var TransactionCurrency $currency */
+        /** @var TransactionCurrency|null $currency */
         $currency = $this->route()->parameter('currency');
 
         if (null !== $currency) {

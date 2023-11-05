@@ -76,7 +76,7 @@ class PiggyBankTransformer extends AbstractTransformer
         $objectGroupId    = null;
         $objectGroupOrder = null;
         $objectGroupTitle = null;
-        /** @var ObjectGroup $objectGroup */
+        /** @var ObjectGroup|null $objectGroup */
         $objectGroup = $piggyBank->objectGroups->first();
         if (null !== $objectGroup) {
             $objectGroupId    = (int)$objectGroup->id;

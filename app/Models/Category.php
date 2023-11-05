@@ -103,7 +103,7 @@ class Category extends Model
             $categoryId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Category $category */
+            /** @var Category|null $category */
             $category = $user->categories()->find($categoryId);
             if (null !== $category) {
                 return $category;

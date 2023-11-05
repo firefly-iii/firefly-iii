@@ -404,11 +404,8 @@ trait ModifiesPiggyBanks
 
                 return $piggyBank;
             }
-            // remove if name is empty. Should be overruled by ID.
-            if ('' === $objectGroupTitle) {
-                $piggyBank->objectGroups()->sync([]);
-                $piggyBank->save();
-            }
+            $piggyBank->objectGroups()->sync([]);
+            $piggyBank->save();
         }
 
         // try also with ID:

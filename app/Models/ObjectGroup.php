@@ -89,7 +89,7 @@ class ObjectGroup extends Model
     {
         if (auth()->check()) {
             $objectGroupId = (int)$value;
-            /** @var ObjectGroup $objectGroup */
+            /** @var ObjectGroup|null $objectGroup */
             $objectGroup = self::where('object_groups.id', $objectGroupId)
                                ->where('object_groups.user_id', auth()->user()->id)->first();
             if (null !== $objectGroup) {

@@ -68,7 +68,7 @@ class BillTransformer extends AbstractTransformer
         $objectGroupId    = null;
         $objectGroupOrder = null;
         $objectGroupTitle = null;
-        /** @var ObjectGroup $objectGroup */
+        /** @var ObjectGroup|null $objectGroup */
         $objectGroup = $bill->objectGroups->first();
         if (null !== $objectGroup) {
             $objectGroupId    = (int)$objectGroup->id;

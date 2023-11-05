@@ -173,7 +173,7 @@ class TransactionJournal extends Model
             $journalId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var TransactionJournal $journal */
+            /** @var TransactionJournal|null $journal */
             $journal = $user->transactionJournals()->where('transaction_journals.id', $journalId)->first(['transaction_journals.*']);
             if (null !== $journal) {
                 return $journal;

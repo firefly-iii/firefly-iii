@@ -156,7 +156,7 @@ class Bill extends Model
             $billId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Bill $bill */
+            /** @var Bill|null $bill */
             $bill = $user->bills()->find($billId);
             if (null !== $bill) {
                 return $bill;

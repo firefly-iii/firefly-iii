@@ -53,7 +53,7 @@ trait RecurrenceValidation
         // grab model from parameter and try to set the transaction type from it
         if ('invalid' === $transactionType) {
             app('log')->debug('Type is invalid but we will search for it.');
-            /** @var Recurrence $recurrence */
+            /** @var Recurrence|null $recurrence */
             $recurrence = $this->route()->parameter('recurrence');
             if (null !== $recurrence) {
                 app('log')->debug('There is a recurrence in the route.');

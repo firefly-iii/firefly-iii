@@ -104,7 +104,7 @@ trait FormSupport
     protected function getHolderClasses(string $name): string
     {
         // Get errors from session:
-        /** @var MessageBag $errors */
+        /** @var MessageBag|null $errors */
         $errors  = session('errors');
         $classes = 'form-group';
 

@@ -327,7 +327,7 @@ class TagController extends Controller
         app('preferences')->mark();
 
         // store attachment(s):
-        /** @var array $files */
+        /** @var array|null $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachmentsHelper->saveAttachmentsForModel($result, $files);
@@ -366,7 +366,7 @@ class TagController extends Controller
         app('preferences')->mark();
 
         // store new attachment(s):
-        /** @var array $files */
+        /** @var array|null $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachmentsHelper->saveAttachmentsForModel($tag, $files);

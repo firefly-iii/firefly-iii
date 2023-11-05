@@ -55,7 +55,7 @@ class ObjectGroupFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        /** @var ObjectGroup $objectGroup */
+        /** @var ObjectGroup|null $objectGroup */
         $objectGroup = $this->route()->parameter('objectGroup');
         $titleRule   = 'required|between:1,255|uniqueObjectGroup';
 

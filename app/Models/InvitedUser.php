@@ -77,7 +77,7 @@ class InvitedUser extends Model
     {
         if (auth()->check()) {
             $attemptId = (int)$value;
-            /** @var InvitedUser $attempt */
+            /** @var InvitedUser|null $attempt */
             $attempt = self::find($attemptId);
             if (null !== $attempt) {
                 return $attempt;

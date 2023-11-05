@@ -78,7 +78,7 @@ class WebhookAttempt extends Model
             $attemptId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var WebhookAttempt $attempt */
+            /** @var WebhookAttempt|null $attempt */
             $attempt = self::find($attemptId);
             if (null !== $attempt && $attempt->webhookMessage->webhook->user_id === $user->id) {
                 return $attempt;

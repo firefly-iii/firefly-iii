@@ -67,7 +67,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $tags && $tags->count() > 0) {
             $collector->setTags($tags);
         }
-        if (null === $tags || (null !== $tags && 0 === $tags->count())) {
+        if (null === $tags || 0 === $tags->count()) {
             $collector->setTags($this->getTags());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation()->withTagInformation();
@@ -166,7 +166,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $tags && $tags->count() > 0) {
             $collector->setTags($tags);
         }
-        if (null === $tags || (null !== $tags && 0 === $tags->count())) {
+        if (null === $tags || 0 === $tags->count()) {
             $collector->setTags($this->getTags());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation()->withTagInformation();

@@ -89,7 +89,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function firstNull(): ?TransactionJournal
     {
-        /** @var TransactionJournal $entry */
+        /** @var TransactionJournal|null $entry */
         $entry  = $this->user->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
         $result = null;
         if (null !== $entry) {

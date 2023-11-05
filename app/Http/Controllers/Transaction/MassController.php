@@ -106,7 +106,7 @@ class MassController extends Controller
             /** @var string $journalId */
             foreach ($ids as $journalId) {
                 app('log')->debug(sprintf('Searching for ID #%d', $journalId));
-                /** @var TransactionJournal $journal */
+                /** @var TransactionJournal|null $journal */
                 $journal = $this->repository->find((int)$journalId);
                 if (null !== $journal && (int)$journalId === (int)$journal->id) {
                     $this->repository->destroyJournal($journal);

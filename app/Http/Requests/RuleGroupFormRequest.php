@@ -65,7 +65,7 @@ class RuleGroupFormRequest extends FormRequest
     {
         $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
 
-        /** @var RuleGroup $ruleGroup */
+        /** @var RuleGroup|null $ruleGroup */
         $ruleGroup = $this->route()->parameter('ruleGroup');
 
         if (null !== $ruleGroup) {

@@ -164,7 +164,7 @@ class RuleFormRequest extends FormRequest
             'strict'           => 'in:0,1',
         ];
 
-        /** @var Rule $rule */
+        /** @var Rule|null $rule */
         $rule = $this->route()->parameter('rule');
 
         if (null !== $rule) {

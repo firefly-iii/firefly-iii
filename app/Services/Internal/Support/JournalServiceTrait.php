@@ -461,10 +461,8 @@ trait JournalServiceTrait
 
             return;
         }
-        if ('' === $notes && null !== $note) {
-            // try to delete existing notes.
-            $note->delete();
-        }
+        // try to delete existing notes.
+        $note?->delete();
     }
 
     /**
