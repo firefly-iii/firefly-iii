@@ -75,8 +75,8 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 class RuleGroup extends Model
 {
     use ReturnsIntegerIdTrait;
-    use SoftDeletes;
     use ReturnsIntegerUserIdTrait;
+    use SoftDeletes;
 
 
     protected $casts

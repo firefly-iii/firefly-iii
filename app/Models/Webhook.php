@@ -81,8 +81,8 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 class Webhook extends Model
 {
     use ReturnsIntegerIdTrait;
-    use SoftDeletes;
     use ReturnsIntegerUserIdTrait;
+    use SoftDeletes;
 
     protected $casts
                         = [

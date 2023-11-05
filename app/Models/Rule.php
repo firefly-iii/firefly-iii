@@ -84,8 +84,8 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 class Rule extends Model
 {
     use ReturnsIntegerIdTrait;
-    use SoftDeletes;
     use ReturnsIntegerUserIdTrait;
+    use SoftDeletes;
 
 
     protected $casts

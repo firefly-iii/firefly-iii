@@ -106,8 +106,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Bill extends Model
 {
     use ReturnsIntegerIdTrait;
-    use SoftDeletes;
     use ReturnsIntegerUserIdTrait;
+    use SoftDeletes;
 
     protected $casts
         = [

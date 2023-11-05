@@ -94,8 +94,8 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 class Recurrence extends Model
 {
     use ReturnsIntegerIdTrait;
-    use SoftDeletes;
     use ReturnsIntegerUserIdTrait;
+    use SoftDeletes;
 
 
     protected $casts

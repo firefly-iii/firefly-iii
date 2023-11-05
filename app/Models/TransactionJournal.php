@@ -127,8 +127,8 @@ class TransactionJournal extends Model
 {
     use HasFactory;
     use ReturnsIntegerIdTrait;
-    use SoftDeletes;
     use ReturnsIntegerUserIdTrait;
+    use SoftDeletes;
 
 
     protected $casts

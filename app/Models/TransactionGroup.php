@@ -67,8 +67,8 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 class TransactionGroup extends Model
 {
     use ReturnsIntegerIdTrait;
-    use SoftDeletes;
     use ReturnsIntegerUserIdTrait;
+    use SoftDeletes;
 
 
     protected $casts

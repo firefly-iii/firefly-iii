@@ -87,8 +87,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Budget extends Model
 {
     use ReturnsIntegerIdTrait;
-    use SoftDeletes;
     use ReturnsIntegerUserIdTrait;
+    use SoftDeletes;
 
     protected $casts
         = [
