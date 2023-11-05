@@ -191,9 +191,7 @@ class LoginController extends Controller
 
         $request->session()->regenerateToken();
 
-        if ($response = $this->loggedOut($request)) {
-            return $response;
-        }
+        $this->loggedOut($request);
 
         return $request->wantsJson()
             ? new Response('', 204)

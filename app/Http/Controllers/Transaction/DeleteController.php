@@ -117,10 +117,10 @@ class DeleteController extends Controller
 
         // grab asset account(s) from group:
         $accounts = [];
-        /** @var TransactionJournal $journal */
-        foreach ($group->transactionJournals as $journal) {
+        /** @var TransactionJournal $currentJournal */
+        foreach ($group->transactionJournals as $currentJournal) {
             /** @var Transaction $transaction */
-            foreach ($journal->transactions as $transaction) {
+            foreach ($currentJournal->transactions as $transaction) {
                 $type = $transaction->account->accountType->type;
                 // if is valid liability, trigger event!
                 if (in_array($type, config('firefly.valid_liabilities'), true)) {

@@ -353,7 +353,7 @@ trait ConvertsDataTypes
     {
         $return = [];
         foreach ($fields as $field => $info) {
-            if ($this->has($info[0])) {
+            if (true === $this->has($info[0])) {
                 $method         = $info[1];
                 $return[$field] = $this->$method($info[0]); // @phpstan-ignore-line
             }
@@ -422,7 +422,7 @@ trait ConvertsDataTypes
      */
     protected function nullableInteger(string $field): ?int
     {
-        if (!$this->has($field)) {
+        if (false === $this->has($field)) {
             return null;
         }
 

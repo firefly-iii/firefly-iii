@@ -46,8 +46,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|string                             $transaction_journal_id
  * @property string|null                     $description
  * @property int|null                        $transaction_currency_id
- * @property string                          $modified
- * @property string                          $modified_foreign
+ * @property string|null                          $modified
+ * @property string|null                          $modified_foreign
  * @property string                          $date
  * @property string                          $max_date
  * @property string|float                          $amount

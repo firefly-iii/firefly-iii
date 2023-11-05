@@ -97,7 +97,7 @@ class SelectController extends Controller
         $newRuleEngine->fire();
         $resultCount = $newRuleEngine->getResults();
 
-        session()->flash('success', (string)trans_choice('firefly.applied_rule_selection', $resultCount, ['title' => $rule->title]));
+        session()->flash('success', trans_choice('firefly.applied_rule_selection', $resultCount, ['title' => $rule->title]));
 
         return redirect()->route('rules.index');
     }

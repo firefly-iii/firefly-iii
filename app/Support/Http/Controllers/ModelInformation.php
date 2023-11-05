@@ -249,7 +249,7 @@ trait ModelInformation
             $values[$index]          = $notes->text;
         }
 
-        foreach ($journalTriggers as $index => $trigger) {
+        foreach ($journalTriggers as $ii => $trigger) {
             try {
                 $string = view(
                     'rules.partials.trigger',
@@ -257,14 +257,13 @@ trait ModelInformation
                         'oldTrigger' => $trigger,
                         'oldValue'   => $values[$index],
                         'oldChecked' => false,
-                        'count'      => $index + 1,
+                        'count'      => $ii + 1,
                         'triggers'   => $triggers,
                     ]
                 )->render();
             } catch (Throwable $e) {
                 app('log')->debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
                 app('log')->debug($e->getTraceAsString());
-                $string = '';
                 throw new FireflyException('Could not render trigger', 0, $e);
             }
             if ('' !== $string) {

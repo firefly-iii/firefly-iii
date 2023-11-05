@@ -137,7 +137,7 @@ class BillRepository implements BillRepositoryInterface
     public function findBill(?int $billId, ?string $billName): ?Bill
     {
         if (null !== $billId) {
-            $searchResult = $this->find((int)$billId);
+            $searchResult = $this->find($billId);
             if (null !== $searchResult) {
                 app('log')->debug(sprintf('Found bill based on #%d, will return it.', $billId));
 
@@ -145,7 +145,7 @@ class BillRepository implements BillRepositoryInterface
             }
         }
         if (null !== $billName) {
-            $searchResult = $this->findByName((string)$billName);
+            $searchResult = $this->findByName($billName);
             if (null !== $searchResult) {
                 app('log')->debug(sprintf('Found bill based on "%s", will return it.', $billName));
 

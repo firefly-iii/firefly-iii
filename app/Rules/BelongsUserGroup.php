@@ -64,7 +64,6 @@ class BelongsUserGroup implements ValidationRule
             $fail('validation.belongs_user_or_user_group')->translate();
             return;
         }
-        $attribute = (string)$attribute;
         app('log')->debug(sprintf('Group: Going to validate "%s"', $attribute));
 
         $result = match ($attribute) {
@@ -150,7 +149,7 @@ class BelongsUserGroup implements ValidationRule
         }
         $count = 0;
         foreach ($objects as $object) {
-            $objectValue = trim((string)$object->$field);
+            $objectValue = trim((string)$object->$field); // @phpstan-ignore-line
             app('log')->debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));
             if ($objectValue === $value) {
                 $count++;

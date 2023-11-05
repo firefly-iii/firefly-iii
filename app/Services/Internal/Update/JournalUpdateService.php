@@ -536,12 +536,12 @@ class JournalUpdateService
                     $this->transactionJournal->user,
                     $this->transactionJournal,
                     sprintf('update_%s', $fieldName),
-                    $this->transactionJournal->$fieldName,
+                    $this->transactionJournal->$fieldName, // @phpstan-ignore-line
                     $value
                 )
             );
 
-            $this->transactionJournal->$fieldName = $value;
+            $this->transactionJournal->$fieldName = $value;// @phpstan-ignore-line
             app('log')->debug(sprintf('Updated %s', $fieldName));
         }
     }

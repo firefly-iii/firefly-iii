@@ -196,7 +196,7 @@ trait RecurringTransactionTrait
         $repository->setUser($this->user);
 
         // if user has submitted an account ID, search for it.
-        $result = $repository->find((int)$accountId);
+        $result = $repository->find($accountId);
         if (null !== $result) {
             return $result;
         }

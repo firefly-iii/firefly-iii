@@ -41,16 +41,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionJournal
  *
- * @property int|string                                      $id
+ * @property int|string                               $id
  * @property Carbon|null                              $created_at
  * @property Carbon|null                              $updated_at
  * @property Carbon|null                              $deleted_at
- * @property int|string                                      $user_id
- * @property int |string                                     $transaction_type_id
- * @property int|null                                 $transaction_group_id
- * @property int|null                                 $bill_id
- * @property int|null                                 $transaction_currency_id
- * @property string                                   $description
+ * @property int|string                               $user_id
+ * @property int |string                              $transaction_type_id
+ * @property int|string|null                                 $transaction_group_id
+ * @property int|string|null                                 $bill_id
+ * @property int|string|null                                 $transaction_currency_id
+ * @property string|null                                   $description
  * @property Carbon                                   $date
  * @property Carbon|null                              $interest_date
  * @property Carbon|null                              $book_date
@@ -114,7 +114,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withoutTrashed()
  * @property-read Collection|Location[]               $locations
  * @property-read int|null                            $locations_count
- * @property int                                      $the_count
+ * @property int|string                                      $the_count
  * @property int|null                                 $user_group_id
  * @method static EloquentBuilder|TransactionJournal whereUserGroupId($value)
  * @property-read Collection<int, AuditLogEntry>      $auditLogEntries

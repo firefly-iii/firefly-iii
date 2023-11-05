@@ -46,7 +46,7 @@ class Navigation
      */
     public function __construct(Calculator $calculator = null)
     {
-        $this->calculator = ($calculator instanceof Calculator) ?: new Calculator();
+        $this->calculator = $calculator instanceof Calculator ? $calculator : new Calculator();
     }
 
     /**
@@ -213,7 +213,7 @@ class Navigation
         ];
         if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
-            $date->$function();
+            $date->$function(); // @phpstan-ignore-line
 
             return $date;
         }
@@ -325,7 +325,7 @@ class Navigation
         $function = $functionMap[$repeatFreq];
 
         if (array_key_exists($repeatFreq, $modifierMap)) {
-            $currentEnd->$function($modifierMap[$repeatFreq]);
+            $currentEnd->$function($modifierMap[$repeatFreq]); // @phpstan-ignore-line
             if (in_array($repeatFreq, $subDay, true)) {
                 $currentEnd->subDay();
             }
@@ -333,7 +333,7 @@ class Navigation
 
             return $currentEnd;
         }
-        $currentEnd->$function();
+        $currentEnd->$function(); // @phpstan-ignore-line
         $currentEnd->endOfDay();
         if (in_array($repeatFreq, $subDay, true)) {
             $currentEnd->subDay();
@@ -372,7 +372,7 @@ class Navigation
         }
         $func = $map[$period];
         // first do the diff
-        $floatDiff = $beginning->$func($end);
+        $floatDiff = $beginning->$func($end); // @phpstan-ignore-line
 
 
         // then correct for quarterly or half-year
@@ -434,7 +434,7 @@ class Navigation
 
         if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
-            $currentEnd->$function();
+            $currentEnd->$function(); // @phpstan-ignore-line
         }
 
         if (null !== $maxDate && $currentEnd > $maxDate) {
@@ -508,7 +508,7 @@ class Navigation
             $formatted           = $begin->format($format);
             $displayed           = $begin->isoFormat($displayFormat);
             $entries[$formatted] = $displayed;
-            $begin->$increment();
+            $begin->$increment(); // @phpstan-ignore-line
         }
 
         return $entries;
@@ -563,7 +563,7 @@ class Navigation
         ];
 
         if (array_key_exists($repeatFrequency, $formatMap)) {
-            return $date->isoFormat((string)$formatMap[$repeatFrequency]);
+            return $date->isoFormat($formatMap[$repeatFrequency]);
         }
         if ('3M' === $repeatFrequency || 'quarter' === $repeatFrequency) {
             $quarter = ceil($theDate->month / 3);
@@ -726,7 +726,7 @@ class Navigation
         ];
         if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
-            $date->$function($subtract);
+            $date->$function($subtract); // @phpstan-ignore-line
 
             return $date;
         }
@@ -801,7 +801,7 @@ class Navigation
 
         if (array_key_exists($range, $functionMap)) {
             $function = $functionMap[$range];
-            $end->$function();
+            $end->$function(); // @phpstan-ignore-line
 
             return $end;
         }
@@ -862,7 +862,7 @@ class Navigation
         ];
         if (array_key_exists($range, $functionMap)) {
             $function = $functionMap[$range];
-            $start->$function();
+            $start->$function(); // @phpstan-ignore-line
 
             return $start;
         }

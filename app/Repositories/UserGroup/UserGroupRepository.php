@@ -85,7 +85,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
                     'recurrences', 'rules', 'ruleGroups', 'tags', 'transactionGroups', 'transactionJournals', 'piggyBanks', 'accounts', 'webhooks',
         ];
         foreach ($objects as $object) {
-            foreach ($userGroup->$object()->get() as $item) {
+            foreach ($userGroup->$object()->get() as $item) { // @phpstan-ignore-line
                 $item->delete();
             }
         }
@@ -135,7 +135,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
             }
             if (null !== $existingGroup) {
                 // group already exists
-                $groupName = sprintf('%s-%s', $user->email, substr(sha1((string)(rand(1000, 9999) . microtime())), 0, 4));
+                $groupName = sprintf('%s-%s', $user->email, substr(sha1((rand(1000, 9999) . microtime())), 0, 4));
             }
             $loop++;
         }

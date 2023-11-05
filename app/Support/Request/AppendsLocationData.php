@@ -117,9 +117,9 @@ trait AppendsLocationData
      *
      * @return bool
      */
-    private function isValidPOST(?string $prefix): bool
+    private function isValidPost(?string $prefix): bool
     {
-        app('log')->debug('Now in isValidPOST()');
+        app('log')->debug('Now in isValidPost()');
         $longitudeKey   = $this->getLocationKey($prefix, 'longitude');
         $latitudeKey    = $this->getLocationKey($prefix, 'latitude');
         $zoomLevelKey   = $this->getLocationKey($prefix, 'zoom_level');

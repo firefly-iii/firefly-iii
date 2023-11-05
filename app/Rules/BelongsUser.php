@@ -49,7 +49,6 @@ class BelongsUser implements ValidationRule
             $fail('validation.belongs_user')->translate();
             return;
         }
-        $attribute = (string)$attribute;
         app('log')->debug(sprintf('Going to validate %s', $attribute));
 
         $result = match ($attribute) {
@@ -135,7 +134,7 @@ class BelongsUser implements ValidationRule
         }
         $count = 0;
         foreach ($objects as $object) {
-            $objectValue = trim((string)$object->$field);
+            $objectValue = trim((string)$object->$field); // @phpstan-ignore-line
             app('log')->debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));
             if ($objectValue === $value) {
                 $count++;

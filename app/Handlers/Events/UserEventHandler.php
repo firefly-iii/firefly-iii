@@ -228,7 +228,7 @@ class UserEventHandler
      */
     public function sendAdminRegistrationNotification(RegisteredUser $event): void
     {
-        $sendMail = app('fireflyconfig')->get('notification_admin_new_reg', true)->data;
+        $sendMail = (bool) app('fireflyconfig')->get('notification_admin_new_reg', true)->data;
         if ($sendMail) {
             /** @var UserRepositoryInterface $repository */
             $repository = app(UserRepositoryInterface::class);
@@ -358,7 +358,7 @@ class UserEventHandler
      */
     public function sendRegistrationMail(RegisteredUser $event): void
     {
-        $sendMail = app('fireflyconfig')->get('notification_user_new_reg', true)->data;
+        $sendMail = (bool) app('fireflyconfig')->get('notification_user_new_reg', true)->data;
         if ($sendMail) {
             try {
                 Notification::send($event->user, new UserRegistrationNotification());

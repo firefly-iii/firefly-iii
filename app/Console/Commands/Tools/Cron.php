@@ -74,7 +74,7 @@ class Cron extends Command
         } catch (InvalidArgumentException $e) {
             $this->friendlyError(sprintf('"%s" is not a valid date', $this->option('date')));
         }
-        $force = (bool) $this->option('force');
+        $force = (bool) $this->option('force'); // @phpstan-ignore-line
 
         /*
          * Fire exchange rates cron job.

@@ -201,7 +201,7 @@ class ParseDateString
             }
             $func = $functions[$direction][$period];
             app('log')->debug(sprintf('Will now do %s(%d) on %s', $func, $number, $today->format('Y-m-d')));
-            $today->$func($number);
+            $today->$func($number); // @phpstan-ignore-line
             app('log')->debug(sprintf('Resulting date is %s', $today->format('Y-m-d')));
         }
 

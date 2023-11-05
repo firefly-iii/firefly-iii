@@ -60,7 +60,8 @@ use TypeError;
 /**
  * Class OperatorQuerySearch
  */
-class OperatorQuerySearch implements SearchInterface
+class
+OperatorQuerySearch implements SearchInterface
 {
     protected Carbon                    $date;
     private AccountRepositoryInterface  $accountRepository;
@@ -1422,7 +1423,7 @@ class OperatorQuerySearch implements SearchInterface
             return;
         }
         app('log')->debug(sprintf('Left with %d, set as %s().', $filtered->count(), $collectorMethod));
-        $this->collector->$collectorMethod($filtered);
+        $this->collector->$collectorMethod($filtered); // @phpstan-ignore-line
     }
 
     /**
@@ -1512,7 +1513,7 @@ class OperatorQuerySearch implements SearchInterface
             return;
         }
         app('log')->debug(sprintf('Left with %d, set as %s().', $filtered->count(), $collectorMethod));
-        $this->collector->$collectorMethod($filtered);
+        $this->collector->$collectorMethod($filtered);// @phpstan-ignore-line
     }
 
     /**

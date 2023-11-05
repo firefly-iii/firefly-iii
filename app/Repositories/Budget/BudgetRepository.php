@@ -530,7 +530,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $result = $this->find((int)$budgetId);
         if (null === $result && null !== $budgetName && '' !== $budgetName) {
             app('log')->debug(sprintf('Searching for budget with name %s...', $budgetName));
-            $result = $this->findByName((string)$budgetName);
+            $result = $this->findByName($budgetName);
         }
         if (null !== $result) {
             app('log')->debug(sprintf('Found budget #%d: %s', $result->id, $result->name));

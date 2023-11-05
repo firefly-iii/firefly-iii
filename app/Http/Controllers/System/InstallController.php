@@ -56,6 +56,7 @@ class InstallController extends Controller
      */
     public function __construct()
     {
+        parent::__construct();
         // empty on purpose.
         $this->upgradeCommands = [
             // there are 5 initial commands

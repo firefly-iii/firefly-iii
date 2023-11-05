@@ -44,7 +44,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int|string               $user_id
  * @property string|null            $title
  * @property string|null       $description
- * @property int               $order
+ * @property int|string               $order
  * @property bool              $active
  * @property bool              $stop_processing
  * @property Collection|Rule[] $rules

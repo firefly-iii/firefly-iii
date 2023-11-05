@@ -26,6 +26,7 @@ namespace FireflyIII\Exceptions;
 
 use ErrorException;
 use FireflyIII\Jobs\MailError;
+use FireflyIII\Models\ObjectGroup;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\QueryException;
@@ -124,7 +125,7 @@ class Handler extends ExceptionHandler
             $errorCode = 500;
             $errorCode = $e instanceof MethodNotAllowedHttpException ? 405 : $errorCode;
 
-            $isDebug = config('app.debug', false);
+            $isDebug = (bool) config('app.debug', false);
             if ($isDebug) {
                 app('log')->debug(sprintf('Return JSON %s with debug.', get_class($e)));
                 return response()->json(
@@ -183,7 +184,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $e)
     {
-        $doMailError = config('firefly.send_error_message');
+        $doMailError = (bool) config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
             parent::report($e);
 

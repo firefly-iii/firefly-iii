@@ -107,7 +107,7 @@ class IsValidAttachmentModel implements ValidationRule
         }
         $method = $methods[$this->model];
 
-        $result =  $this->$method((int)$value);
+        $result =  $this->$method((int)$value); // @phpstan-ignore-line
         if(false === $result) {
             $fail('validation.model_id_invalid')->translate();
         }
@@ -221,6 +221,6 @@ class IsValidAttachmentModel implements ValidationRule
         $repository = app(JournalAPIRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
-        return null !== $repository->findTransaction((int)$value);
+        return null !== $repository->findTransaction($value);
     }
 }

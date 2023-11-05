@@ -49,7 +49,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int|string                             $user_id
  * @property int|string                             $account_type_id
  * @property string                          $name
- * @property string|null                     $virtual_balance
+ * @property string|float|null                     $virtual_balance
  * @property string|null                     $iban
  * @property bool                            $active
  * @property bool                            $encrypted

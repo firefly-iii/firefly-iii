@@ -38,7 +38,7 @@ use Carbon\Carbon;
  * @property int|string         $rule_id
  * @property string|null      $trigger_type
  * @property string|null      $trigger_value
- * @property int         $order
+ * @property int|string         $order
  * @property bool        $active
  * @property bool        $stop_processing
  * @property-read Rule   $rule

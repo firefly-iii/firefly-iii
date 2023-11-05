@@ -82,7 +82,7 @@ class TransactionCurrencyFactory
      */
     public function find(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
-        $currencyCode = (string)e($currencyCode);
+        $currencyCode = e($currencyCode);
         $currencyId   = (int)$currencyId;
 
         if ('' === $currencyCode && 0 === $currencyId) {

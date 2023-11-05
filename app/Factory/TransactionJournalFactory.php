@@ -368,10 +368,10 @@ class TransactionJournalFactory
 
         // validate source account.
         $array       = [
-            'id'     => $data['source_id'] ? (int)$data['source_id'] : null,
-            'name'   => $data['source_name'] ? (string)$data['source_name'] : null,
-            'iban'   => $data['source_iban'] ? (string)$data['source_iban'] : null,
-            'number' => $data['source_number'] ? (string)$data['source_number'] : null,
+            'id'     => null !== $data['source_id'] ? (int)$data['source_id'] : null,
+            'name'   => null !== $data['source_name'] ? (string)$data['source_name'] : null,
+            'iban'   => null !== $data['source_iban'] ? (string)$data['source_iban'] : null,
+            'number' => null !== $data['source_number'] ? (string)$data['source_number'] : null,
         ];
         $validSource = $this->accountValidator->validateSource($array);
 
@@ -383,10 +383,10 @@ class TransactionJournalFactory
 
         // validate destination account
         $array = [
-            'id'     => $data['destination_id'] ? (int)$data['destination_id'] : null,
-            'name'   => $data['destination_name'] ? (string)$data['destination_name'] : null,
-            'iban'   => $data['destination_iban'] ? (string)$data['destination_iban'] : null,
-            'number' => $data['destination_number'] ? (string)$data['destination_number'] : null,
+            'id'     => null !== $data['destination_id'] ? (int)$data['destination_id'] : null,
+            'name'   => null !== $data['destination_name'] ? (string)$data['destination_name'] : null,
+            'iban'   => null !== $data['destination_iban'] ? (string)$data['destination_iban'] : null,
+            'number' => null !== $data['destination_number'] ? (string)$data['destination_number'] : null,
         ];
 
         $validDestination = $this->accountValidator->validateDestination($array);

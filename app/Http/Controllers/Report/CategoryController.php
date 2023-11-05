@@ -674,7 +674,7 @@ class CategoryController extends Controller
 
 
         try {
-            $result = (string)view('reports.partials.categories', compact('report'))->render();
+            $result = view('reports.partials.categories', compact('report'))->render();
             $cache->store($result);
         } catch (Throwable $e) {
             app('log')->error(sprintf('Could not render category::expenses: %s', $e->getMessage()));

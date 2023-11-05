@@ -112,7 +112,7 @@ class ShowController extends Controller
         // file the rule(s)
         $ruleEngine->fire();
 
-        $request->session()->flash('success', (string)trans_choice('firefly.rescanned_bill', $total));
+        $request->session()->flash('success', trans_choice('firefly.rescanned_bill', $total));
         app('preferences')->mark();
 
         return redirect(route('bills.show', [$bill->id]));

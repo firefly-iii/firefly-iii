@@ -68,7 +68,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         app('log')->debug('Searching for piggy information.');
 
         if (null !== $piggyBankId) {
-            $searchResult = $this->find((int)$piggyBankId);
+            $searchResult = $this->find($piggyBankId);
             if (null !== $searchResult) {
                 app('log')->debug(sprintf('Found piggy based on #%d, will return it.', $piggyBankId));
 
@@ -76,7 +76,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             }
         }
         if (null !== $piggyBankName) {
-            $searchResult = $this->findByName((string)$piggyBankName);
+            $searchResult = $this->findByName($piggyBankName);
             if (null !== $searchResult) {
                 app('log')->debug(sprintf('Found piggy based on "%s", will return it.', $piggyBankName));
 
@@ -227,11 +227,11 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $amount = null;
         if ((int)$source->transaction_currency_id === (int)$currency->id) {
             app('log')->debug('Use normal amount');
-            $amount = app('steam')->$operator($source->amount);
+            $amount = app('steam')->$operator($source->amount); // @phpstan-ignore-line
         }
         if ((int)$source->foreign_currency_id === (int)$currency->id) {
             app('log')->debug('Use foreign amount');
-            $amount = app('steam')->$operator($source->foreign_amount);
+            $amount = app('steam')->$operator($source->foreign_amount); // @phpstan-ignore-line
         }
         if (null === $amount) {
             app('log')->debug('No match on currency, so amount remains null, return "0".');

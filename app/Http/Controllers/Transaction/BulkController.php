@@ -127,7 +127,7 @@ class BulkController extends Controller
         }
 
         app('preferences')->mark();
-        $request->session()->flash('success', (string)trans_choice('firefly.mass_edited_transactions_success', $count));
+        $request->session()->flash('success', trans_choice('firefly.mass_edited_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUrl('transactions.bulk-edit.url'));

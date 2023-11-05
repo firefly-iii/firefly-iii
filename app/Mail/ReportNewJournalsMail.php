@@ -67,7 +67,7 @@ class ReportNewJournalsMail extends Mailable
 
         return $this
             ->markdown('emails.report-new-journals')
-            ->subject((string)trans_choice('email.new_journals_subject', $this->groups->count()));
+            ->subject(trans_choice('email.new_journals_subject', $this->groups->count()));
     }
 
     /**

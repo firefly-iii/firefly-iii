@@ -213,7 +213,7 @@ class DecryptDatabase extends Command
         }
 
         /** @var Preference $object */
-        $object = Preference::find((int)$id);
+        $object = Preference::find($id);
         if (null !== $object) {
             $object->data = $newValue;
             $object->save();
