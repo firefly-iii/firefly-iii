@@ -95,7 +95,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function getAttachmentLocation(Attachment $attachment): string
     {
-        return sprintf('%sat-%d.data', \DIRECTORY_SEPARATOR, (int)$attachment->id);
+        return sprintf('%sat-%d.data', \DIRECTORY_SEPARATOR, $attachment->id);
     }
 
     /**

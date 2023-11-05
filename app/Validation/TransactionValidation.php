@@ -268,7 +268,7 @@ trait TransactionValidation
             $foreignCurrencyCode = $transaction['foreign_currency_code'] ?? false;
             $foreignCurrencyId   = (int)($transaction['foreign_currency_id'] ?? 0);
             app('log')->debug(sprintf('Foreign currency code seems to be #%d "%s"', $foreignCurrencyId, $foreignCurrencyCode), $transaction);
-            if ($foreignCurrencyCode !== $sourceCurrency->code && $foreignCurrencyId !== (int)$sourceCurrency->id) {
+            if ($foreignCurrencyCode !== $sourceCurrency->code && $foreignCurrencyId !== $sourceCurrency->id) {
                 $validator->errors()->add(sprintf('transactions.%d.foreign_currency_code', $index), (string)trans('validation.require_foreign_src'));
                 return;
             }
@@ -293,7 +293,7 @@ trait TransactionValidation
             $foreignCurrencyCode = $transaction['foreign_currency_code'] ?? false;
             $foreignCurrencyId   = (int)($transaction['foreign_currency_id'] ?? 0);
             app('log')->debug(sprintf('Foreign currency code seems to be #%d "%s"', $foreignCurrencyId, $foreignCurrencyCode), $transaction);
-            if ($foreignCurrencyCode !== $destinationCurrency->code && $foreignCurrencyId !== (int)$destinationCurrency->id) {
+            if ($foreignCurrencyCode !== $destinationCurrency->code && $foreignCurrencyId !== $destinationCurrency->id) {
                 app('log')->debug(sprintf('No match on code, "%s" vs "%s"', $foreignCurrencyCode, $destinationCurrency->code));
                 app('log')->debug(sprintf('No match on ID, #%d vs #%d', $foreignCurrencyId, $destinationCurrency->id));
                 $validator->errors()->add(sprintf('transactions.%d.foreign_amount', $index), (string)trans('validation.require_foreign_dest'));
@@ -507,7 +507,7 @@ trait TransactionValidation
         /** @var TransactionJournal $journal */
         foreach ($transactionGroup->transactionJournals as $journal) {
             $journalId = (int)($transaction['transaction_journal_id'] ?? 0);
-            if ((int)$journal->id === $journalId) {
+            if ($journal->id === $journalId) {
                 return $journal->transactions()->where('amount', '<', 0)->first()->account;
             }
         }

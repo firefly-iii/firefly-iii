@@ -335,7 +335,7 @@ class MigrateToGroups extends Command
         if (null !== $budget) {
             app('log')->debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $left->id));
 
-            return (int)$budget->id;
+            return $budget->id;
         }
 
         // try to get a budget ID from the right transaction:
@@ -344,7 +344,7 @@ class MigrateToGroups extends Command
         if (null !== $budget) {
             app('log')->debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $right->id));
 
-            return (int)$budget->id;
+            return $budget->id;
         }
         app('log')->debug('Neither left or right have a budget, return NULL');
 
@@ -368,7 +368,7 @@ class MigrateToGroups extends Command
         if (null !== $category) {
             app('log')->debug(sprintf('Return category #%d, from transaction #%d', $category->id, $left->id));
 
-            return (int)$category->id;
+            return $category->id;
         }
 
         // try to get a category ID from the left transaction:
@@ -377,7 +377,7 @@ class MigrateToGroups extends Command
         if (null !== $category) {
             app('log')->debug(sprintf('Return category #%d, from transaction #%d', $category->id, $category->id));
 
-            return (int)$category->id;
+            return $category->id;
         }
         app('log')->debug('Neither left or right have a category, return NULL');
 

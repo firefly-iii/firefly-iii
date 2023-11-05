@@ -225,7 +225,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
 
         // if it's 1:
         if (1 === $membershipCount) {
-            $lastUserId = (int)$userGroup->groupMemberships()->distinct()->first(['group_memberships.user_id'])->user_id;
+            $lastUserId = $userGroup->groupMemberships()->distinct()->first(['group_memberships.user_id'])->user_id;
             // if this is also the user we're editing right now, and we remove all of their roles:
             if ($lastUserId === (int)$user->id && 0 === count($data['roles'])) {
                 app('log')->debug('User is last in this group, refuse to act');

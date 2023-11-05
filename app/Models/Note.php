@@ -23,21 +23,22 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\Note
  *
- * @property int|string                 $id
+ * @property int                 $id
  * @property Carbon|null         $created_at
  * @property Carbon|null         $updated_at
  * @property Carbon|null         $deleted_at
- * @property int|string                 $noteable_id
+ * @property int          $noteable_id
  * @property string              $noteable_type
  * @property string|null         $title
  * @property string|null         $text
@@ -60,6 +61,7 @@ use Carbon\Carbon;
  */
 class Note extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
 
@@ -80,4 +82,16 @@ class Note extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function noteableId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+
 }

@@ -136,7 +136,7 @@ class Steam
             $repository->setUser($account->user);
             $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
-        $currencyId = (int)$currency->id;
+        $currencyId = $currency->id;
 
         $start->addDay();
 
@@ -229,7 +229,7 @@ class Steam
                                   ->get(['transactions.foreign_amount'])->toArray();
         $foreignBalance = $this->sumTransactions($transactions, 'foreign_amount');
         $balance        = bcadd($nativeBalance, $foreignBalance);
-        $virtual        = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
+        $virtual        = null === $account->virtual_balance ? '0' : $account->virtual_balance;
         $balance        = bcadd($balance, $virtual);
 
         $cache->store($balance);
@@ -297,7 +297,7 @@ class Steam
             $day    = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date'], config('app.timezone'));
             $format = $day->format('Y-m-d');
             // if the transaction is in the expected currency, change nothing.
-            if ((int)$transaction['transaction_currency_id'] === (int)$native->id) {
+            if ((int)$transaction['transaction_currency_id'] === $native->id) {
                 // change the current balance, set it to today, continue the loop.
                 $currentBalance    = bcadd($currentBalance, $transaction['amount']);
                 $balances[$format] = $currentBalance;
@@ -305,7 +305,7 @@ class Steam
                 continue;
             }
             // if foreign currency is in the expected currency, do nothing:
-            if ((int)$transaction['foreign_currency_id'] === (int)$native->id) {
+            if ((int)$transaction['foreign_currency_id'] === $native->id) {
                 $currentBalance    = bcadd($currentBalance, $transaction['foreign_amount']);
                 $balances[$format] = $currentBalance;
                 app('log')->debug(sprintf('%s: transaction in %s (foreign), new balance is %s.', $format, $native->code, $currentBalance));
@@ -369,7 +369,7 @@ class Steam
         if (null === $currency) {
             throw new FireflyException('Cannot get converted account balance: no currency found for account.');
         }
-        if ((int)$native->id === (int)$currency->id) {
+        if ($native->id === $currency->id) {
             return $this->balance($account, $date);
         }
         /**
@@ -466,7 +466,7 @@ class Steam
         }
 
         // add virtual balance (also needs conversion)
-        $virtual = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
+        $virtual = null === $account->virtual_balance ? '0' : $account->virtual_balance;
         $virtual = $converter->convert($currency, $native, $account->created_at, $virtual);
         $balance = bcadd($balance, $virtual);
 
@@ -535,7 +535,7 @@ class Steam
         /** @var Account $account */
         foreach ($accounts as $account) {
             $default = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
-            $result[(int)$account->id]
+            $result[$account->id]
                      = [
                 'balance'        => $this->balance($account, $date),
                 'native_balance' => $this->balanceConverted($account, $date, $default),
@@ -735,10 +735,11 @@ class Steam
                      ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
                      ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]);
 
+        /** @var Transaction $entry */
         foreach ($set as $entry) {
             $date = new Carbon($entry->max_date, config('app.timezone'));
             $date->setTimezone(config('app.timezone'));
-            $list[(int)$entry->account_id] = $date;
+            $list[$entry->account_id] = $date;
         }
 
         return $list;

@@ -133,7 +133,7 @@ class CorrectOpeningBalanceCurrencies extends Command
     {
         $currency = $this->getCurrency($account);
         $count    = 0;
-        if ((int)$journal->transaction_currency_id !== (int)$currency->id) {
+        if ((int)$journal->transaction_currency_id !== $currency->id) {
             $journal->transaction_currency_id = $currency->id;
             $journal->save();
             $count = 1;
@@ -141,7 +141,7 @@ class CorrectOpeningBalanceCurrencies extends Command
 
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {
-            if ((int)$transaction->transaction_currency_id !== (int)$currency->id) {
+            if ($transaction->transaction_currency_id !== $currency->id) {
                 $transaction->transaction_currency_id = $currency->id;
                 $transaction->save();
                 $count = 1;

@@ -29,18 +29,18 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\PiggyBankRepetition
  *
- * @property int|string                             $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property int|string                             $piggy_bank_id
- * @property Carbon|null $startdate
- * @property Carbon|null $targetdate
- * @property string|float                          $currentamount
- * @property-read PiggyBank                  $piggyBank
+ * @property int            $id
+ * @property Carbon|null    $created_at
+ * @property Carbon|null    $updated_at
+ * @property int     $piggy_bank_id
+ * @property Carbon|null    $startdate
+ * @property Carbon|null    $targetdate
+ * @property string         $currentamount
+ * @property-read PiggyBank $piggyBank
  * @method static EloquentBuilder|PiggyBankRepetition newModelQuery()
  * @method static EloquentBuilder|PiggyBankRepetition newQuery()
  * @method static EloquentBuilder|PiggyBankRepetition onDates(Carbon $start, Carbon $target)
@@ -57,6 +57,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class PiggyBankRepetition extends Model
 {
+    use ReturnsIntegerIdTrait;
 
     protected $casts
         = [
@@ -130,6 +131,16 @@ class PiggyBankRepetition extends Model
     {
         return Attribute::make(
             get: static fn ($value) => (string)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function piggyBankId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
         );
     }
 }

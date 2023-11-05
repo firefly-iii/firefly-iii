@@ -70,7 +70,7 @@ class CategoryTransformer extends AbstractTransformer
         $notes = $this->repository->getNoteText($category);
 
         return [
-            'id'         => (int)$category->id,
+            'id'         => $category->id,
             'created_at' => $category->created_at->toAtomString(),
             'updated_at' => $category->updated_at->toAtomString(),
             'name'       => $category->name,

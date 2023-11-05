@@ -75,7 +75,7 @@ class ConvertToTransfer implements ActionInterface
 
         $type      = $object->transactionType->type;
         $user      = $object->user;
-        $journalId = (int)$object->id;
+        $journalId = $object->id;
         if (TransactionType::TRANSFER === $type) {
             app('log')->error(
                 sprintf('Journal #%d is already a transfer so cannot be converted (rule #%d).', $object->id, $this->action->rule_id)
@@ -196,7 +196,7 @@ class ConvertToTransfer implements ActionInterface
     private function convertWithdrawalArray(TransactionJournal $journal, Account $opposing): bool
     {
         $sourceAccount = $this->getSourceAccount($journal);
-        if ((int)$sourceAccount->id === (int)$opposing->id) {
+        if ($sourceAccount->id === $opposing->id) {
             app('log')->error(
                 vsprintf(
                     'Journal #%d has already has "%s" as a source asset. ConvertToTransfer failed. (rule #%d).',
@@ -255,7 +255,7 @@ class ConvertToTransfer implements ActionInterface
     private function convertDepositArray(TransactionJournal $journal, Account $opposing): bool
     {
         $destAccount = $this->getDestinationAccount($journal);
-        if ((int)$destAccount->id === (int)$opposing->id) {
+        if ($destAccount->id === $opposing->id) {
             app('log')->error(
                 vsprintf(
                     'Journal #%d has already has "%s" as a destination asset. ConvertToTransfer failed. (rule #%d).',

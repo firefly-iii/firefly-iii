@@ -73,7 +73,7 @@ class EnableCurrencies extends Command
         // get all from budget limits
         $limits = BudgetLimit::groupBy('transaction_currency_id')->get(['transaction_currency_id']);
         foreach ($limits as $entry) {
-            $found[] = (int)$entry->transaction_currency_id;
+            $found[] = $entry->transaction_currency_id;
         }
 
         $found    = array_values(array_unique($found));

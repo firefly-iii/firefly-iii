@@ -102,7 +102,7 @@ class BoxController extends Controller
         // spent in this period, in budgets, for default currency.
         // also calculate spent per day.
         $spent       = $opsRepository->sumExpenses($start, $end, null, null, $currency);
-        $spentAmount = $spent[(int)$currency->id]['sum'] ?? '0';
+        $spentAmount = $spent[$currency->id]['sum'] ?? '0';
         app('log')->debug(sprintf('Spent for default currency for all budgets in this period: %s', $spentAmount));
 
         $days = $today->between($start, $end) ? $today->diffInDays($start) + 1 : $end->diffInDays($start) + 1;

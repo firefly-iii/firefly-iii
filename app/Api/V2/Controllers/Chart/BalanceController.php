@@ -81,7 +81,7 @@ class BalanceController extends Controller
         /** @var TransactionCurrency $default */
         $default    = app('amount')->getDefaultCurrency();
         $converter  = new ExchangeRateConverter();
-        $currencies = [(int)$default->id => $default,]; // currency cache
+        $currencies = [$default->id => $default,]; // currency cache
         $data       = [];
         $chartData  = [];
 
@@ -94,7 +94,7 @@ class BalanceController extends Controller
         $journals = $collector->getExtractedJournals();
 
         // set array for default currency (even if unused later on)
-        $defaultCurrencyId        = (int)$default->id;
+        $defaultCurrencyId        = $default->id;
         $data[$defaultCurrencyId] = [
             'currency_id'             => (string)$defaultCurrencyId,
             'currency_symbol'         => $default->symbol,
@@ -168,7 +168,7 @@ class BalanceController extends Controller
             $amountConverted = bcmul($amount, $rate);
 
             // perhaps transaction already has the foreign amount in the native currency.
-            if ((int)$journal['foreign_currency_id'] === (int)$default->id) {
+            if ((int)$journal['foreign_currency_id'] === $default->id) {
                 $amountConverted = $journal['foreign_amount'] ?? '0';
                 $amountConverted = 'earned' === $key ? app('steam')->positive($amountConverted) : app('steam')->negative($amountConverted);
             }

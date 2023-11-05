@@ -81,7 +81,7 @@ class AccountDestroyService
                        ->where('transaction_types.type', TransactionType::OPENING_BALANCE)
                        ->get(['transactions.transaction_journal_id']);
         if ($set->count() > 0) {
-            $journalId = (int)$set->first()->transaction_journal_id;
+            $journalId = $set->first()->transaction_journal_id;
             app('log')->debug(sprintf('Found opening balance journal with ID #%d', $journalId));
 
             // get transactions with this journal (should be just one):
@@ -129,7 +129,7 @@ class AccountDestroyService
         /** @var stdClass $row */
         foreach ($collection as $row) {
             if ((int)$row->the_count > 1) {
-                $journalId = (int)$row->transaction_journal_id;
+                $journalId = $row->transaction_journal_id;
                 $journal   = $user->transactionJournals()->find($journalId);
                 if (null !== $journal) {
                     app('log')->debug(sprintf('Deleted journal #%d because it has the same source as destination.', $journal->id));

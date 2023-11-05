@@ -169,7 +169,7 @@ class BackToJournals extends Command
         // both have a budget, but they don't match.
         if (null !== $budget && null !== $journalBudget && $budget->id !== $journalBudget->id) {
             // sync to journal:
-            $journal->budgets()->sync([(int)$budget->id]);
+            $journal->budgets()->sync([$budget->id]);
 
             return;
         }
@@ -177,7 +177,7 @@ class BackToJournals extends Command
         // transaction has a budget, but the journal doesn't.
         if (null !== $budget && null === $journalBudget) {
             // sync to journal:
-            $journal->budgets()->sync([(int)$budget->id]);
+            $journal->budgets()->sync([$budget->id]);
         }
     }
 
@@ -241,12 +241,12 @@ class BackToJournals extends Command
         // both have a category, but they don't match.
         if (null !== $category && null !== $journalCategory && $category->id !== $journalCategory->id) {
             // sync to journal:
-            $journal->categories()->sync([(int)$category->id]);
+            $journal->categories()->sync([$category->id]);
         }
 
         // transaction has a category, but the journal doesn't.
         if (null !== $category && null === $journalCategory) {
-            $journal->categories()->sync([(int)$category->id]);
+            $journal->categories()->sync([$category->id]);
         }
     }
 

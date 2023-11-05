@@ -28,6 +28,7 @@ use Eloquent;
 use FireflyIII\Events\Model\BudgetLimit\Created;
 use FireflyIII\Events\Model\BudgetLimit\Deleted;
 use FireflyIII\Events\Model\BudgetLimit\Updated;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -37,17 +38,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\BudgetLimit
  *
- * @property int|string                           $id
+ * @property int                           $id
  * @property Carbon|null                   $created_at
  * @property Carbon|null                   $updated_at
- * @property int|string                           $budget_id
- * @property int|null                      $transaction_currency_id
+ * @property int                    $budget_id
+ * @property int                      $transaction_currency_id
  * @property Carbon                        $start_date
  * @property Carbon|null                   $end_date
- * @property string|float                        $amount
+ * @property string                        $amount
  * @property string                        $spent
  * @property string|null                   $period
- * @property int|string                           $generated
+ * @property int|string                    $generated
  * @property-read Budget                   $budget
  * @property-read TransactionCurrency|null $transactionCurrency
  * @method static Builder|BudgetLimit newModelQuery()
@@ -67,6 +68,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class BudgetLimit extends Model
 {
+    use ReturnsIntegerIdTrait;
 
     protected $casts
         = [
@@ -135,4 +137,26 @@ class BudgetLimit extends Model
             get: static fn ($value) => (string)$value,
         );
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function budgetId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function transactionCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+
 }

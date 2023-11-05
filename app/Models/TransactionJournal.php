@@ -25,9 +25,11 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,20 +39,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\TransactionJournal
  *
- * @property int|string                               $id
+ * @property int                                      $id
  * @property Carbon|null                              $created_at
  * @property Carbon|null                              $updated_at
  * @property Carbon|null                              $deleted_at
- * @property int|string                               $user_id
- * @property int |string                              $transaction_type_id
- * @property int|string|null                                 $transaction_group_id
- * @property int|string|null                                 $bill_id
- * @property int|string|null                                 $transaction_currency_id
- * @property string|null                                   $description
+ * @property int                               $user_id
+ * @property int                              $transaction_type_id
+ * @property int|string|null                          $transaction_group_id
+ * @property int|string|null                          $bill_id
+ * @property int|string|null                          $transaction_currency_id
+ * @property string|null                              $description
  * @property Carbon                                   $date
  * @property Carbon|null                              $interest_date
  * @property Carbon|null                              $book_date
@@ -114,8 +116,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withoutTrashed()
  * @property-read Collection|Location[]               $locations
  * @property-read int|null                            $locations_count
- * @property int|string                                      $the_count
- * @property int|null                                 $user_group_id
+ * @property int|string                               $the_count
+ * @property int                                 $user_group_id
  * @method static EloquentBuilder|TransactionJournal whereUserGroupId($value)
  * @property-read Collection<int, AuditLogEntry>      $auditLogEntries
  * @property-read int|null                            $audit_log_entries_count
@@ -124,7 +126,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class TransactionJournal extends Model
 {
     use HasFactory;
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
+    use ReturnsIntegerUserIdTrait;
 
 
     protected $casts
@@ -389,5 +393,15 @@ class TransactionJournal extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function transactionTypeId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

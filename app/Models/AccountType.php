@@ -23,17 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Carbon\Carbon;
 
 /**
  * FireflyIII\Models\AccountType
  *
- * @property int|string                       $id
+ * @property int                       $id
  * @property Carbon|null               $created_at
  * @property Carbon|null               $updated_at
  * @property string                    $type
@@ -50,6 +51,8 @@ use Carbon\Carbon;
  */
 class AccountType extends Model
 {
+    use ReturnsIntegerIdTrait;
+
     public const ASSET            = 'Asset account';
     public const BENEFICIARY      = 'Beneficiary account';
     public const CASH             = 'Cash account';
@@ -64,7 +67,6 @@ class AccountType extends Model
     public const MORTGAGE         = 'Mortgage';
     public const RECONCILIATION   = 'Reconciliation account';
     public const REVENUE          = 'Revenue account';
-
 
 
     protected $casts
@@ -82,4 +84,6 @@ class AccountType extends Model
     {
         return $this->hasMany(Account::class);
     }
+
+
 }

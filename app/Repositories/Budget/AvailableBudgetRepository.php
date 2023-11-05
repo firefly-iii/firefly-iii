@@ -134,12 +134,13 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string
     {
         $amount          = '0';
+        /** @var AvailableBudget|null $availableBudget */
         $availableBudget = $this->user->availableBudgets()
                                       ->where('transaction_currency_id', $currency->id)
                                       ->where('start_date', $start->format('Y-m-d'))
                                       ->where('end_date', $end->format('Y-m-d'))->first();
         if (null !== $availableBudget) {
-            $amount = (string)$availableBudget->amount;
+            $amount = $availableBudget->amount;
         }
 
         return $amount;

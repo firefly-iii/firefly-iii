@@ -149,9 +149,9 @@ class UpgradeLiabilities extends Command
             return;
         }
         // source MUST be the liability.
-        if ((int)$destination->account_id === (int)$account->id) {
+        if ($destination->account_id === $account->id) {
             // so if not, switch things around:
-            $sourceAccountId         = (int)$source->account_id;
+            $sourceAccountId         = $source->account_id;
             $source->account_id      = $destination->account_id;
             $destination->account_id = $sourceAccountId;
             $source->save();

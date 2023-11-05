@@ -94,7 +94,7 @@ class SetSourceAccount implements ActionInterface
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_destination_transaction_account')));
             return false;
         }
-        if (null !== $newAccount && (int)$newAccount->id === (int)$destination->account_id) {
+        if (null !== $newAccount && $newAccount->id === $destination->account_id) {
             app('log')->error(
                 sprintf(
                     'New source account ID #%d and current destination account ID #%d are the same. Do nothing.',

@@ -49,7 +49,7 @@ class GroupCloneService
         $newGroup = $group->replicate();
         $newGroup->save();
         foreach ($group->transactionJournals as $journal) {
-            $this->cloneJournal($journal, $newGroup, (int)$group->id);
+            $this->cloneJournal($journal, $newGroup, $group->id);
         }
 
         return $newGroup;

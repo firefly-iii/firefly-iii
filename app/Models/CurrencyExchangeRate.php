@@ -22,8 +22,9 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -35,16 +36,16 @@ use Carbon\Carbon;
 /**
  * Class CurrencyExchangeRate
  *
- * @property int|string                      $id
+ * @property int                      $id
  * @property Carbon|null              $created_at
  * @property Carbon|null              $updated_at
  * @property string|null              $deleted_at
- * @property int|string                      $user_id
- * @property int|string                      $from_currency_id
- * @property int|string                      $to_currency_id
+ * @property int               $user_id
+ * @property int               $from_currency_id
+ * @property int               $to_currency_id
  * @property Carbon                   $date
- * @property string|float                   $rate
- * @property string|null              $user_rate
+ * @property string                   $rate
+ * @property string                   $user_rate
  * @property-read TransactionCurrency $fromCurrency
  * @property-read TransactionCurrency $toCurrency
  * @property-read User                $user
@@ -61,7 +62,7 @@ use Carbon\Carbon;
  * @method static Builder|CurrencyExchangeRate whereUpdatedAt($value)
  * @method static Builder|CurrencyExchangeRate whereUserId($value)
  * @method static Builder|CurrencyExchangeRate whereUserRate($value)
- * @property int|null                 $user_group_id
+ * @property int                 $user_group_id
  * @method static Builder|CurrencyExchangeRate whereUserGroupId($value)
  * @method static Builder|CurrencyExchangeRate onlyTrashed()
  * @method static Builder|CurrencyExchangeRate withTrashed()
@@ -70,7 +71,10 @@ use Carbon\Carbon;
  */
 class CurrencyExchangeRate extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
+    use ReturnsIntegerUserIdTrait;
+
 
     protected $casts
                         = [
@@ -126,4 +130,26 @@ class CurrencyExchangeRate extends Model
             get: static fn ($value) => (string)$value,
         );
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function fromCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function toCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+
 }

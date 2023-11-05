@@ -238,10 +238,10 @@ class UpgradeLiabilitiesEight extends Command
 
             // if source is this liability and destination is expense, remove transaction.
             // if source is revenue and destination is liability, remove transaction.
-            if ((int)$source->account_id === (int)$account->id && $dest->account->accountType->type === AccountType::EXPENSE) {
+            if ($source->account_id === $account->id && $dest->account->accountType->type === AccountType::EXPENSE) {
                 $delete = true;
             }
-            if ((int)$dest->account_id === (int)$account->id && $source->account->accountType->type === AccountType::REVENUE) {
+            if ($dest->account_id === $account->id && $source->account->accountType->type === AccountType::REVENUE) {
                 $delete = true;
             }
 

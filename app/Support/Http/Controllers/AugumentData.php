@@ -220,7 +220,7 @@ trait AugumentData
             $currentStart = clone $entry->start_date;
             $currentEnd   = clone $entry->end_date;
             $expenses     = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $currency);
-            $spent        = $expenses[(int)$currency->id]['sum'] ?? '0';
+            $spent        = $expenses[$currency->id]['sum'] ?? '0';
             $entry->spent = $spent;
 
             $limits->push($entry);

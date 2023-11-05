@@ -168,7 +168,7 @@ class BudgetReportGenerator
      */
     private function processBudget(Budget $budget): void
     {
-        $budgetId                           = (int)$budget->id;
+        $budgetId                           = $budget->id;
         $this->report['budgets'][$budgetId] = $this->report['budgets'][$budgetId] ?? [
             'budget_id'     => $budgetId,
             'budget_name'   => $budget->name,
@@ -192,10 +192,10 @@ class BudgetReportGenerator
      */
     private function processLimit(Budget $budget, BudgetLimit $limit): void
     {
-        $budgetId      = (int)$budget->id;
-        $limitId       = (int)$limit->id;
+        $budgetId      = $budget->id;
+        $limitId       = $limit->id;
         $limitCurrency = $limit->transactionCurrency ?? $this->currency;
-        $currencyId    = (int)$limitCurrency->id;
+        $currencyId    = $limitCurrency->id;
         $expenses      = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, $this->accounts, new Collection([$budget]));
         $spent         = $expenses[$currencyId]['sum'] ?? '0';
         $left          = -1 === bccomp(bcadd($limit->amount, $spent), '0') ? '0' : bcadd($limit->amount, $spent);

@@ -23,22 +23,23 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\RuleTrigger
  *
- * @property int|string         $id
+ * @property int         $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property int|string         $rule_id
- * @property string|null      $trigger_type
- * @property string|null      $trigger_value
- * @property int|string         $order
+ * @property int  $rule_id
+ * @property string|null $trigger_type
+ * @property string|null $trigger_value
+ * @property int|string  $order
  * @property bool        $active
  * @property bool        $stop_processing
  * @property-read Rule   $rule
@@ -58,6 +59,7 @@ use Carbon\Carbon;
  */
 class RuleTrigger extends Model
 {
+    use ReturnsIntegerIdTrait;
 
     protected $casts
         = [
@@ -77,5 +79,15 @@ class RuleTrigger extends Model
     public function rule(): BelongsTo
     {
         return $this->belongsTo(Rule::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function ruleId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

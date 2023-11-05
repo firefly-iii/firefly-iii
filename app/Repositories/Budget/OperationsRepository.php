@@ -58,7 +58,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         foreach ($budget->budgetlimits as $limit) {
             $diff   = $limit->start_date->diffInDays($limit->end_date);
             $diff   = 0 === $diff ? 1 : $diff;
-            $amount = (string)$limit->amount;
+            $amount = $limit->amount;
             $perDay = bcdiv($amount, (string)$diff);
             $total  = bcadd($total, $perDay);
             $count++;

@@ -300,7 +300,7 @@ class RecurrenceUpdateService
             unset($submitted['currency_id'], $submitted['currency_code']);
         }
         if (null !== $currency) {
-            $submitted['currency_id'] = (int)$currency->id;
+            $submitted['currency_id'] = $currency->id;
         }
         if (array_key_exists('foreign_currency_id', $submitted) || array_key_exists('foreign_currency_code', $submitted)) {
             $foreignCurrency = $currencyFactory->find(
@@ -312,7 +312,7 @@ class RecurrenceUpdateService
             unset($submitted['foreign_currency_id'], $currency['foreign_currency_code']);
         }
         if (null !== $foreignCurrency) {
-            $submitted['foreign_currency_id'] = (int)$foreignCurrency->id;
+            $submitted['foreign_currency_id'] = $foreignCurrency->id;
         }
 
         // update fields that are part of the recurring transaction itself.

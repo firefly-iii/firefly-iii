@@ -33,11 +33,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\TransactionCurrency
  *
- * @property int|string                           $id
+ * @property int                                  $id
  * @property Carbon|null                          $created_at
  * @property Carbon|null                          $updated_at
  * @property Carbon|null                          $deleted_at
@@ -77,12 +77,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class TransactionCurrency extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    public ?bool $userEnabled;
     public ?bool $userDefault;
-
-
+    public ?bool $userEnabled;
     protected $casts
         = [
             'created_at'     => 'datetime',
@@ -124,7 +123,7 @@ class TransactionCurrency extends Model
     {
         $current           = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
         $default           = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
-        $this->userDefault = (int)$default->id === (int)$this->id;
+        $this->userDefault = $default->id === $this->id;
         $this->userEnabled = null !== $current;
     }
 

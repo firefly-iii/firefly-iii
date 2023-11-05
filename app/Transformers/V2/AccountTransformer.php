@@ -70,7 +70,7 @@ class AccountTransformer extends AbstractTransformer
 
         $currencies = $repository->getByIds($currencyIds);
         foreach ($currencies as $currency) {
-            $id                    = (int)$currency->id;
+            $id                    = $currency->id;
             $this->currencies[$id] = $currency;
         }
         foreach ($meta as $entry) {
@@ -110,7 +110,7 @@ class AccountTransformer extends AbstractTransformer
      */
     public function transform(Account $account): array
     {
-        $id = (int)$account->id;
+        $id = $account->id;
 
         // various meta
         $accountRole = $this->accountMeta[$id]['account_role'] ?? null;

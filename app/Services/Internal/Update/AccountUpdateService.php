@@ -250,7 +250,7 @@ class AccountUpdateService
         foreach ($array as $type) {
             /** @var AccountType $type */
             $type     = AccountType::whereType($type)->first();
-            $return[] = (int)$type->id;
+            $return[] = $type->id;
         }
 
         return $return;
@@ -340,7 +340,7 @@ class AccountUpdateService
         $array = $preference->data;
         app('log')->debug('Old array is: ', $array);
         app('log')->debug(sprintf('Must remove : %d', $account->id));
-        $removeAccountId = (int)$account->id;
+        $removeAccountId = $account->id;
         $new             = [];
         foreach ($array as $value) {
             if ((int)$value !== $removeAccountId) {

@@ -23,10 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\Enums\WebhookDelivery;
 use FireflyIII\Enums\WebhookResponse;
 use FireflyIII\Enums\WebhookTrigger;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -34,17 +36,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\Webhook
  *
- * @property int|string                              $id
+ * @property int                              $id
  * @property Carbon|null                      $created_at
  * @property Carbon|null                      $updated_at
  * @property Carbon|null                      $deleted_at
- * @property int|string                              $user_id
+ * @property int                       $user_id
  * @property bool                             $active
  * @property int                              $trigger
  * @property int                              $response
@@ -73,13 +74,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                           $secret
  * @method static Builder|Webhook whereSecret($value)
  * @method static Builder|Webhook whereTitle($value)
- * @property int|null                         $user_group_id
+ * @property int                         $user_group_id
  * @method static Builder|Webhook whereUserGroupId($value)
  * @mixin Eloquent
  */
 class Webhook extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
+    use ReturnsIntegerUserIdTrait;
 
     protected $casts
                         = [

@@ -490,7 +490,7 @@ trait JournalServiceTrait
             if ('' !== $string) {
                 $tag = $this->tagFactory->findOrCreate($string);
                 if (null !== $tag) {
-                    $set[] = (int)$tag->id;
+                    $set[] = $tag->id;
                 }
             }
         }

@@ -23,21 +23,22 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\Preference
  *
- * @property int|string                   $id
+ * @property int                   $id
  * @property Carbon|null           $created_at
  * @property Carbon|null           $updated_at
- * @property int|string                   $user_id
+ * @property int            $user_id
  * @property string                $name
  * @property int|string|array|null $data
  * @property-read User             $user
@@ -54,6 +55,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Preference extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
 
     protected $casts
         = [

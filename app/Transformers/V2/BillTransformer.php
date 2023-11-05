@@ -111,13 +111,13 @@ class BillTransformer extends AbstractTransformer
             $transactions = [];
             /** @var Transaction $transaction */
             foreach ($set as $transaction) {
-                $journalId                = (int)$transaction->transaction_journal_id;
+                $journalId                = $transaction->transaction_journal_id;
                 $transactions[$journalId] = $transaction->toArray();
             }
             /** @var TransactionJournal $journal */
             foreach ($journals as $journal) {
                 app('log')->debug(sprintf('Processing journal #%d', $journal->id));
-                $transaction             = $transactions[(int)$journal->id] ?? [];
+                $transaction             = $transactions[$journal->id] ?? [];
                 $billId                  = (int)$journal->bill_id;
                 $currencyId              = (int)($transaction['transaction_currency_id'] ?? 0);
                 $currencies[$currencyId] = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
@@ -183,7 +183,7 @@ class BillTransformer extends AbstractTransformer
         $paidData          = $this->paidDates[(int)$bill->id] ?? [];
         $nextExpectedMatch = $this->nextExpectedMatch($bill, $this->paidDates[(int)$bill->id] ?? []);
         $payDates          = $this->payDates($bill);
-        $currency          = $this->currencies[(int)$bill->transaction_currency_id];
+        $currency          = $this->currencies[$bill->transaction_currency_id];
         $group             = $this->groups[(int)$bill->id] ?? null;
 
         // date for currency conversion

@@ -125,7 +125,7 @@ class BudgetLimitHandler
 
                 // no need to calculate if period is equal.
                 if ($currentPeriod->equals($limitPeriod)) {
-                    $amount = 0 === (int)$budgetLimit->id ? '0' : $budgetLimit->amount;
+                    $amount = 0 === $budgetLimit->id ? '0' : $budgetLimit->amount;
                 }
                 if (0 === bccomp($amount, '0')) {
                     app('log')->debug('Amount is zero, will not create AB.');
@@ -227,7 +227,7 @@ class BudgetLimitHandler
      */
     private function getDailyAmount(BudgetLimit $budgetLimit): string
     {
-        if (0 === (int)$budgetLimit->id) {
+        if (0 === $budgetLimit->id) {
             return '0';
         }
         $limitPeriod = Period::make(
@@ -237,7 +237,7 @@ class BudgetLimitHandler
             boundaries: Boundaries::EXCLUDE_NONE()
         );
         $days        = $limitPeriod->length();
-        $amount      = bcdiv((string)$budgetLimit->amount, (string)$days, 12);
+        $amount      = bcdiv($budgetLimit->amount, (string)$days, 12);
         app('log')->debug(
             sprintf('Total amount for budget limit #%d is %s. Nr. of days is %d. Amount per day is %s', $budgetLimit->id, $budgetLimit->amount, $days, $amount)
         );

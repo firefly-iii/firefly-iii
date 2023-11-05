@@ -85,12 +85,12 @@ class NetWorth implements NetWorthInterface
             'native' => [
                 'balance'                 => '0',
                 'native_balance'          => '0',
-                'currency_id'             => (int)$default->id,
+                'currency_id'             => $default->id,
                 'currency_code'           => $default->code,
                 'currency_name'           => $default->name,
                 'currency_symbol'         => $default->symbol,
                 'currency_decimal_places' => (int)$default->decimal_places,
-                'native_id'               => (int)$default->id,
+                'native_id'               => $default->id,
                 'native_code'             => $default->code,
                 'native_name'             => $default->name,
                 'native_symbol'           => $default->symbol,
@@ -103,16 +103,16 @@ class NetWorth implements NetWorthInterface
         foreach ($accounts as $account) {
             app('log')->debug(sprintf('Now at account #%d ("%s")', $account->id, $account->name));
             $currency      = $this->getRepository()->getAccountCurrency($account);
-            $currencyId    = (int)$currency->id;
+            $currencyId    = $currency->id;
             $balance       = '0';
             $nativeBalance = '0';
-            if (array_key_exists((int)$account->id, $balances)) {
-                $balance       = $balances[(int)$account->id]['balance'] ?? '0';
-                $nativeBalance = $balances[(int)$account->id]['native_balance'] ?? '0';
+            if (array_key_exists($account->id, $balances)) {
+                $balance       = $balances[$account->id]['balance'] ?? '0';
+                $nativeBalance = $balances[$account->id]['native_balance'] ?? '0';
             }
             app('log')->debug(sprintf('Balance is %s, native balance is %s', $balance, $nativeBalance));
             // always subtract virtual balance
-            $virtualBalance = (string)$account->virtual_balance;
+            $virtualBalance = $account->virtual_balance;
             if ('' !== $virtualBalance) {
                 $balance              = bcsub($balance, $virtualBalance);
                 $nativeVirtualBalance = $converter->convert($default, $currency, $account->created_at, $virtualBalance);
@@ -126,7 +126,7 @@ class NetWorth implements NetWorthInterface
                 'currency_name'           => $currency->name,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => (int)$currency->decimal_places,
-                'native_id'               => (int)$default->id,
+                'native_id'               => $default->id,
                 'native_code'             => $default->code,
                 'native_name'             => $default->name,
                 'native_symbol'           => $default->symbol,
@@ -200,7 +200,7 @@ class NetWorth implements NetWorthInterface
             $balance  = $balances[$account->id] ?? '0';
 
             // always subtract virtual balance.
-            $virtualBalance = (string)$account->virtual_balance;
+            $virtualBalance = $account->virtual_balance;
             if ('' !== $virtualBalance) {
                 $balance = bcsub($balance, $virtualBalance);
             }

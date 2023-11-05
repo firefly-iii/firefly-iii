@@ -77,7 +77,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $meta = TransactionJournalMeta::whereIn('transaction_journal_id', array_keys($journals))->get();
         /** @var TransactionJournalMeta $entry */
         foreach ($meta as $entry) {
-            $id                            = (int)$entry->transaction_journal_id;
+            $id                            = $entry->transaction_journal_id;
             $this->meta[$id][$entry->name] = $entry->data;
         }
 

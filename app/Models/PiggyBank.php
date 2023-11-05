@@ -35,20 +35,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\PiggyBank
  *
- * @property int|string                                   $id
+ * @property int                                   $id
  * @property Carbon|null                           $created_at
  * @property Carbon|null                           $updated_at
  * @property Carbon|null                           $deleted_at
- * @property int|string                                   $account_id
+ * @property int                            $account_id
  * @property string                                $name
- * @property string|float                                $targetamount
+ * @property string                                $targetamount
  * @property Carbon|null                           $startdate
  * @property Carbon|null                           $targetdate
- * @property int|string                                   $order
+ * @property int|string                            $order
  * @property bool                                  $active
  * @property bool                                  $encrypted
  * @property-read Account                          $account
@@ -84,6 +84,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class PiggyBank extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
     protected $casts
@@ -190,6 +191,16 @@ class PiggyBank extends Model
     {
         return Attribute::make(
             get: static fn ($value) => (string)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function accountId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
         );
     }
 }

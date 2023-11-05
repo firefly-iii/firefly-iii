@@ -113,7 +113,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         // is being used in accounts (as integer)
         $meta = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
                            ->whereNull('accounts.deleted_at')
-                           ->where('account_meta.name', 'currency_id')->where('account_meta.data', json_encode((int)$currency->id))->count();
+                           ->where('account_meta.name', 'currency_id')->where('account_meta.data', json_encode($currency->id))->count();
         if ($meta > 0) {
             app('log')->info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -181,10 +181,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $local = $this->get();
         return $all->map(static function (TransactionCurrency $current) use ($local) {
             $hasId                = $local->contains(static function (TransactionCurrency $entry) use ($current) {
-                return (int)$entry->id === (int)$current->id;
+                return $entry->id === $current->id;
             });
             $isDefault            = $local->contains(static function (TransactionCurrency $entry) use ($current) {
-                return 1 === (int)$entry->pivot->group_default && (int)$entry->id === (int)$current->id;
+                return 1 === (int)$entry->pivot->group_default && $entry->id === $current->id;
             });
             $current->userEnabled = $hasId;
             $current->userDefault = $isDefault;

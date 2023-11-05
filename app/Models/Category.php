@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -34,15 +35,15 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\Category
  *
- * @property int|string                                  $id
- * @property Carbon|null      $created_at
- * @property Carbon|null      $updated_at
- * @property Carbon|null      $deleted_at
- * @property int|string                                  $user_id
+ * @property int                                  $id
+ * @property Carbon|null                          $created_at
+ * @property Carbon|null                          $updated_at
+ * @property Carbon|null                          $deleted_at
+ * @property int                           $user_id
  * @property string                               $name
  * @property Carbon                               $lastActivity
  * @property bool                                 $encrypted
@@ -68,14 +69,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUserId($value)
  * @method static Builder|Category withTrashed()
  * @method static Builder|Category withoutTrashed()
- * @property int|null                             $user_group_id
+ * @property int                             $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUserGroupId($value)
  * @mixin Eloquent
  */
 class Category extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
-
+    use ReturnsIntegerUserIdTrait;
 
     protected $casts
         = [
@@ -151,4 +153,5 @@ class Category extends Model
     {
         return $this->belongsToMany(Transaction::class, 'category_transaction', 'category_id');
     }
+
 }

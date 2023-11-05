@@ -24,12 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Carbon\Carbon;
 
 /**
  * Class AuditLogEntry
@@ -42,13 +44,13 @@ use Carbon\Carbon;
  * @method static Builder|AuditLogEntry query()
  * @method static \Illuminate\Database\Query\Builder|AuditLogEntry withTrashed()
  * @method static \Illuminate\Database\Query\Builder|AuditLogEntry withoutTrashed()
- * @property int|string                 $id
+ * @property int                 $id
  * @property Carbon|null         $created_at
  * @property Carbon|null         $updated_at
  * @property Carbon|null         $deleted_at
- * @property int|string                 $auditable_id
+ * @property int          $auditable_id
  * @property string              $auditable_type
- * @property int|string                 $changer_id
+ * @property int          $changer_id
  * @property string              $changer_type
  * @property string              $action
  * @property array|null          $before
@@ -68,6 +70,7 @@ use Carbon\Carbon;
  */
 class AuditLogEntry extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
     protected $casts
@@ -92,4 +95,26 @@ class AuditLogEntry extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function auditableId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function changerId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+
 }

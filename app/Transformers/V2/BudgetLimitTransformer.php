@@ -80,7 +80,7 @@ class BudgetLimitTransformer extends AbstractTransformer
         $currencySymbol        = null;
         if (null !== $currency) {
             $amount                = $budgetLimit->amount;
-            $currencyId            = (int)$currency->id;
+            $currencyId            = $currency->id;
             $currencyName          = $currency->name;
             $currencyCode          = $currency->code;
             $currencySymbol        = $currency->symbol;

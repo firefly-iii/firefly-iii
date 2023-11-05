@@ -26,12 +26,13 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * Class InvitedUser
  *
@@ -39,10 +40,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|InvitedUser newModelQuery()
  * @method static Builder|InvitedUser newQuery()
  * @method static Builder|InvitedUser query()
- * @property int|string         $id
+ * @property int         $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property int|string         $user_id
+ * @property int  $user_id
  * @property string      $email
  * @property string      $invite_code
  * @property Carbon      $expires
@@ -59,6 +60,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class InvitedUser extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
+
     protected $casts
                         = [
             'expires'  => 'datetime',
@@ -93,4 +97,6 @@ class InvitedUser extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+
 }

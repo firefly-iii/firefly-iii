@@ -23,8 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,18 +36,17 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\Attachment
  *
- * @property int|string                 $id
+ * @property int                 $id
  * @property Carbon|null         $created_at
  * @property Carbon|null         $updated_at
  * @property Carbon|null         $deleted_at
- * @property int|string                 $user_id
- * @property int|string                 $attachable_id
+ * @property int          $user_id
+ * @property int          $attachable_id
  * @property string              $attachable_type
  * @property bool                $file_exists
  * @property string              $md5
@@ -51,7 +54,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string|null         $title
  * @property string|null         $description
  * @property string              $mime
- * @property int|string                 $size
+ * @property int|string          $size
  * @property bool                $uploaded
  * @property string              $notes_text
  * @property-read Model|Eloquent $attachable
@@ -78,14 +81,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUserId($value)
  * @method static Builder|Attachment withTrashed()
  * @method static Builder|Attachment withoutTrashed()
- * @property int|null            $user_group_id
+ * @property int            $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUserGroupId($value)
  * @mixin Eloquent
  */
 class Attachment extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
-
+    use ReturnsIntegerUserIdTrait;
 
     protected $casts
         = [
@@ -156,4 +160,15 @@ class Attachment extends Model
     {
         return $this->morphMany(Note::class, 'noteable');
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function attachableId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
 }

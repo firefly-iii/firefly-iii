@@ -69,14 +69,14 @@ class DeleteEmptyJournals extends Command
             if (1 === $count % 2) {
                 // uneven number, delete journal and transactions:
                 try {
-                    TransactionJournal::find((int)$row->transaction_journal_id)->delete();
+                    TransactionJournal::find($row->transaction_journal_id)->delete();
                 } catch (QueryException $e) {
                     app('log')->info(sprintf('Could not delete journal: %s', $e->getMessage()));
                     app('log')->error($e->getTraceAsString());
                 }
 
 
-                Transaction::where('transaction_journal_id', (int)$row->transaction_journal_id)->delete();
+                Transaction::where('transaction_journal_id', $row->transaction_journal_id)->delete();
                 $this->friendlyWarning(
                     sprintf('Deleted transaction journal #%d because it had an uneven number of transactions.', $row->transaction_journal_id)
                 );

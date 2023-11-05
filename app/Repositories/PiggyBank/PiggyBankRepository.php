@@ -146,7 +146,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
             return '0';
         }
 
-        return (string)$rep->currentamount;
+        return $rep->currentamount;
     }
 
     /**
@@ -225,11 +225,11 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         // currency of the account + the piggy bank currency are almost the same.
         // which amount from the transaction matches?
         $amount = null;
-        if ((int)$source->transaction_currency_id === (int)$currency->id) {
+        if ((int)$source->transaction_currency_id === $currency->id) {
             app('log')->debug('Use normal amount');
             $amount = app('steam')->$operator($source->amount); // @phpstan-ignore-line
         }
-        if ((int)$source->foreign_currency_id === (int)$currency->id) {
+        if ((int)$source->foreign_currency_id === $currency->id) {
             app('log')->debug('Use foreign amount');
             $amount = app('steam')->$operator($source->foreign_amount); // @phpstan-ignore-line
         }
@@ -240,10 +240,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         app('log')->debug(sprintf('The currency is %s and the amount is %s', $currency->code, $amount));
-        $room    = bcsub((string)$piggyBank->targetamount, (string)$repetition->currentamount);
+        $room    = bcsub($piggyBank->targetamount, $repetition->currentamount);
         $compare = bcmul($repetition->currentamount, '-1');
 
-        if (bccomp((string)$piggyBank->targetamount, '0') === 0) {
+        if (bccomp($piggyBank->targetamount, '0') === 0) {
             // amount is zero? then the "room" is positive amount of we wish to add or remove.
             $room = app('steam')->positive($amount);
             app('log')->debug(sprintf('Room is now %s', $room));

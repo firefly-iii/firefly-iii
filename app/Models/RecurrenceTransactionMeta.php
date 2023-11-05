@@ -23,21 +23,22 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\RecurrenceTransactionMeta
  *
- * @property int|string                        $id
+ * @property int                        $id
  * @property Carbon|null                $created_at
  * @property Carbon|null                $updated_at
  * @property Carbon|null                $deleted_at
- * @property int|string                        $rt_id
+ * @property int|string                 $rt_id
  * @property string                     $name
  * @property mixed                      $value
  * @property-read RecurrenceTransaction $recurrenceTransaction
@@ -58,6 +59,7 @@ use Carbon\Carbon;
  */
 class RecurrenceTransactionMeta extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
 
@@ -80,5 +82,15 @@ class RecurrenceTransactionMeta extends Model
     public function recurrenceTransaction(): BelongsTo
     {
         return $this->belongsTo(RecurrenceTransaction::class, 'rt_id');
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function rtId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

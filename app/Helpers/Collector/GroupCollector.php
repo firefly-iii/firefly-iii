@@ -563,8 +563,8 @@ class GroupCollector implements GroupCollectorInterface
                 $parsedGroup = $this->parseAugmentedJournal($augumentedJournal);
                 $groupArray  = [
                     'id'               => (int)$augumentedJournal->transaction_group_id,
-                    'user_id'          => (int)$augumentedJournal->user_id,
-                    'user_group_id'    => (int)$augumentedJournal->user_group_id,
+                    'user_id'          => $augumentedJournal->user_id,
+                    'user_group_id'    => $augumentedJournal->user_group_id,
                     // Field transaction_group_title was added by the query.
                     'title'            => $augumentedJournal->transaction_group_title, // @phpstan-ignore-line
                     'transaction_type' => $parsedGroup['transaction_type_type'],

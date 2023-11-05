@@ -23,19 +23,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\LinkType
  *
- * @property int|string                                      $id
+ * @property int                                      $id
  * @property Carbon|null                              $created_at
  * @property Carbon|null                              $updated_at
  * @property Carbon|null                              $deleted_at
@@ -64,6 +64,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class LinkType extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
 
@@ -106,4 +107,6 @@ class LinkType extends Model
     {
         return $this->hasMany(TransactionJournalLink::class);
     }
+
+
 }

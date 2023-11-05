@@ -159,7 +159,7 @@ class FrontpageChartGenerator
         /** @var array $entry */
         foreach ($spent as $entry) {
             // only spent the entry where the entry's currency matches the budget limit's currency
-            if ($entry['currency_id'] === (int)$limit->transaction_currency_id) {
+            if ($entry['currency_id'] === $limit->transaction_currency_id) {
                 $data = $this->processRow($data, $budget, $limit, $entry);
             }
         }

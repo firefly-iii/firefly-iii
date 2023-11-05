@@ -104,7 +104,7 @@ class CategoryController extends Controller
             $amount                  = app('steam')->positive($journal['amount']);
             $nativeAmount            = $converter->convert($default, $currency, $journal['date'], $amount);
             $key                     = sprintf('%s-%s', $categoryName, $currency->code);
-            if ((int)$journal['foreign_currency_id'] === (int)$default->id) {
+            if ((int)$journal['foreign_currency_id'] === $default->id) {
                 $nativeAmount = app('steam')->positive($journal['foreign_amount']);
             }
             // create arrays

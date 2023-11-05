@@ -23,20 +23,21 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\TransactionJournalMeta
  *
- * @property int|string                     $id
+ * @property int                     $id
  * @property Carbon|null             $created_at
  * @property Carbon|null             $updated_at
- * @property int|string                     $transaction_journal_id
+ * @property int              $transaction_journal_id
  * @property string                  $name
  * @property mixed                   $data
  * @property string                  $hash
@@ -60,6 +61,7 @@ use Carbon\Carbon;
  */
 class TransactionJournalMeta extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
 
@@ -102,5 +104,14 @@ class TransactionJournalMeta extends Model
     public function transactionJournal(): BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class);
+    }
+    /**
+     * @return Attribute
+     */
+    protected function transactionJournalId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

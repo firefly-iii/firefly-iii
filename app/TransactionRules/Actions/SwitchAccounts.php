@@ -84,7 +84,7 @@ class SwitchAccounts implements ActionInterface
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_accounts')));
             return false;
         }
-        $sourceAccountId               = (int)$sourceTransaction->account_id;
+        $sourceAccountId               = $sourceTransaction->account_id;
         $destinationAccountId          = $destTransaction->account_id;
         $sourceTransaction->account_id = $destinationAccountId;
         $destTransaction->account_id   = $sourceAccountId;

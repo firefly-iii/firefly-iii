@@ -114,7 +114,7 @@ class FixAccountTypes extends Command
             $this->friendlyLine(sprintf('Found %d journals that need to be fixed.', $resultSet->count()));
             foreach ($resultSet as $entry) {
                 app('log')->debug(sprintf('Now fixing journal #%d', $entry->id));
-                $journal = TransactionJournal::find((int)$entry->id);
+                $journal = TransactionJournal::find($entry->id);
                 if (null !== $journal) {
                     $this->inspectJournal($journal);
                 }

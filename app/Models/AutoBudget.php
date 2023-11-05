@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,14 +36,14 @@ use Carbon\Carbon;
 /**
  * FireflyIII\Models\AutoBudget
  *
- * @property int|string                      $id
+ * @property int                      $id
  * @property Carbon|null              $created_at
  * @property Carbon|null              $updated_at
  * @property Carbon|null              $deleted_at
- * @property int|string                      $budget_id
- * @property int|string                      $transaction_currency_id
- * @property int|string                      $auto_budget_type
- * @property string|float                   $amount
+ * @property int               $budget_id
+ * @property int               $transaction_currency_id
+ * @property int|string               $auto_budget_type
+ * @property string                   $amount
  * @property string                   $period
  * @property-read Budget              $budget
  * @property-read TransactionCurrency $transactionCurrency
@@ -65,6 +66,7 @@ use Carbon\Carbon;
  */
 class AutoBudget extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
     public const AUTO_BUDGET_ADJUSTED = 3;
@@ -97,4 +99,25 @@ class AutoBudget extends Model
             get: static fn ($value) => (string)$value,
         );
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function budgetId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function transactionCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
 }

@@ -23,19 +23,20 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 
 /**
  * Class AccountMeta
  *
- * @property int|string          $id
+ * @property int          $id
  * @property Carbon|null  $created_at
  * @property Carbon|null  $updated_at
- * @property int|string          $account_id
+ * @property int   $account_id
  * @property string       $name
  * @property mixed        $data
  * @property-read Account $account
@@ -52,6 +53,7 @@ use Carbon\Carbon;
  */
 class AccountMeta extends Model
 {
+    use ReturnsIntegerIdTrait;
 
     protected $casts
         = [
@@ -88,4 +90,5 @@ class AccountMeta extends Model
     {
         $this->attributes['data'] = json_encode($value);
     }
+
 }

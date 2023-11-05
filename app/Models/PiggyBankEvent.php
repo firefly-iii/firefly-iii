@@ -29,14 +29,14 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\PiggyBankEvent
  *
- * @property int|string                          $id
+ * @property int                          $id
  * @property Carbon|null                  $created_at
  * @property Carbon|null                  $updated_at
- * @property int|string                         $piggy_bank_id
+ * @property int                   $piggy_bank_id
  * @property int|null                     $transaction_journal_id
  * @property Carbon                       $date
  * @property string                       $amount
@@ -56,6 +56,7 @@ use Carbon\Carbon;
  */
 class PiggyBankEvent extends Model
 {
+    use ReturnsIntegerIdTrait;
 
     protected $casts
         = [
@@ -102,6 +103,16 @@ class PiggyBankEvent extends Model
     {
         return Attribute::make(
             get: static fn ($value) => (string)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function piggyBankId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
         );
     }
 }

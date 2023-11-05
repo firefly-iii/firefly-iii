@@ -23,25 +23,26 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\RecurrenceRepetition
  *
- * @property int|string             $id
+ * @property int             $id
  * @property Carbon|null     $created_at
  * @property Carbon|null     $updated_at
  * @property Carbon|null     $deleted_at
- * @property int|string             $recurrence_id
+ * @property int      $recurrence_id
  * @property string          $repetition_type
  * @property string          $repetition_moment
- * @property int|string             $repetition_skip
- * @property int|string             $weekend
+ * @property int|string      $repetition_skip
+ * @property int|string      $weekend
  * @property-read Recurrence $recurrence
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newQuery()
@@ -62,6 +63,7 @@ use Carbon\Carbon;
  */
 class RecurrenceRepetition extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
     public const WEEKEND_DO_NOTHING    = 1;
@@ -91,5 +93,15 @@ class RecurrenceRepetition extends Model
     public function recurrence(): BelongsTo
     {
         return $this->belongsTo(Recurrence::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function recurrenceId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

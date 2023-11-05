@@ -376,8 +376,8 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function setOrder(Rule $rule, int $newOrder): void
     {
-        $oldOrder = (int)$rule->order;
-        $groupId  = (int)$rule->rule_group_id;
+        $oldOrder = $rule->order;
+        $groupId  = $rule->rule_group_id;
         $maxOrder = $this->maxOrder($rule->ruleGroup);
         $newOrder = $newOrder > $maxOrder ? $maxOrder + 1 : $newOrder;
         app('log')->debug(sprintf('New order will be %d', $newOrder));

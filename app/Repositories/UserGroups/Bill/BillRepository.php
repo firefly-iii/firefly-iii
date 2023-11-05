@@ -81,7 +81,7 @@ class BillRepository implements BillRepositoryInterface
             /** @var Collection $set */
             $set        = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
             $currency   = $bill->transactionCurrency;
-            $currencyId = (int)$bill->transaction_currency_id;
+            $currencyId = $bill->transaction_currency_id;
 
             $return[$currencyId] = $return[$currencyId] ?? [
                 'currency_id'             => (string)$currency->id,
@@ -103,18 +103,18 @@ class BillRepository implements BillRepositoryInterface
                 /** @var Transaction|null $sourceTransaction */
                 $sourceTransaction = $transactionJournal->transactions()->where('amount', '<', 0)->first();
                 if (null !== $sourceTransaction) {
-                    $amount = (string)$sourceTransaction->amount;
-                    if ((int)$sourceTransaction->foreign_currency_id === (int)$currency->id) {
+                    $amount = $sourceTransaction->amount;
+                    if ((int)$sourceTransaction->foreign_currency_id === $currency->id) {
                         // use foreign amount instead!
                         $amount = (string)$sourceTransaction->foreign_amount;
                     }
                     // convert to native currency
                     $nativeAmount = $amount;
-                    if ($currencyId !== (int)$default->id) {
+                    if ($currencyId !== $default->id) {
                         // get rate and convert.
                         $nativeAmount = $converter->convert($currency, $default, $transactionJournal->date, $amount);
                     }
-                    if ((int)$sourceTransaction->foreign_currency_id === (int)$default->id) {
+                    if ((int)$sourceTransaction->foreign_currency_id === $default->id) {
                         // ignore conversion, use foreign amount
                         $nativeAmount = (string)$sourceTransaction->foreign_amount;
                     }
@@ -154,7 +154,7 @@ class BillRepository implements BillRepositoryInterface
 
             if ($total > 0) {
                 $currency                          = $bill->transactionCurrency;
-                $currencyId                        = (int)$bill->transaction_currency_id;
+                $currencyId                        = $bill->transaction_currency_id;
                 $average                           = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
                 $nativeAverage                     = $converter->convert($currency, $default, $start, $average);
                 $return[$currencyId]               = $return[$currencyId] ?? [

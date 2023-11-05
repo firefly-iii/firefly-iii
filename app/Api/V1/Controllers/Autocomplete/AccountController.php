@@ -120,8 +120,8 @@ class AccountController extends Controller
             $return,
             static function (array $left, array $right) {
                 $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
-                $posA  = array_search($left['type'], $order, true);
-                $posB  = array_search($right['type'], $order, true);
+                $posA  = (int) array_search($left['type'], $order, true);
+                $posB  = (int) array_search($right['type'], $order, true);
 
                 return $posA - $posB;
             }

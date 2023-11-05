@@ -501,7 +501,7 @@ class ForceDecimalSize extends Command
 
         /** @var Transaction $item */
         foreach ($result as $item) {
-            $value = (string)$item->amount;
+            $value = $item->amount;
             if ('' === $value) {
                 continue;
             }

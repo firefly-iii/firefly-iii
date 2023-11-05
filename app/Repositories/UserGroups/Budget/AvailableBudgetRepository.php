@@ -53,7 +53,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
                                             ->where('end_date', $end->format('Y-m-d'))->get();
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {
-            $currencyId                           = (int)$availableBudget->transaction_currency_id;
+            $currencyId                           = $availableBudget->transaction_currency_id;
             $return[$currencyId]                  = $return[$currencyId] ?? [
                 'currency_id'             => $currencyId,
                 'currency_code'           => $availableBudget->transactionCurrency->code,

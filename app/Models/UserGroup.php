@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\User;
@@ -33,13 +34,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * Class UserGroup
  *
- * @property int|string                                        $id
+ * @property int                                        $id
  * @property Carbon|null                                $created_at
  * @property Carbon|null                                $updated_at
  * @property string|null                                $deleted_at
@@ -92,6 +92,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class UserGroup extends Model
 {
+    use ReturnsIntegerIdTrait;
+
     protected $fillable = ['title'];
 
     /**

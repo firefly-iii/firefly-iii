@@ -119,7 +119,7 @@ trait ModifiesPiggyBanks
     {
         $today         = today(config('app.timezone'));
         $leftOnAccount = $this->leftOnAccount($piggyBank, $today);
-        $savedSoFar    = (string)$this->getRepetition($piggyBank)->currentamount;
+        $savedSoFar    = $this->getRepetition($piggyBank)->currentamount;
         $maxAmount     = $leftOnAccount;
         $leftToSave    = null;
         if (0 !== bccomp($piggyBank->targetamount, '0')) {

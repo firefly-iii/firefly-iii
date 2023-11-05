@@ -633,8 +633,8 @@ class BillRepository implements BillRepositoryInterface
                 /** @var Transaction|null $sourceTransaction */
                 $sourceTransaction = $transactionJournal->transactions()->where('amount', '<', 0)->first();
                 if (null !== $sourceTransaction) {
-                    $amount = (string)$sourceTransaction->amount;
-                    if ((int)$sourceTransaction->foreign_currency_id === (int)$currency->id) {
+                    $amount = $sourceTransaction->amount;
+                    if ((int)$sourceTransaction->foreign_currency_id === $currency->id) {
                         // use foreign amount instead!
                         $amount = (string)$sourceTransaction->foreign_amount;
                     }

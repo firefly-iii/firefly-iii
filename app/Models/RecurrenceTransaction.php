@@ -32,21 +32,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Carbon\Carbon;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\RecurrenceTransaction
  *
- * @property int|string                                         $id
+ * @property int                                         $id
  * @property Carbon|null                                 $created_at
  * @property Carbon|null                                 $updated_at
  * @property Carbon|null                                 $deleted_at
- * @property int|string                                         $recurrence_id
- * @property int|string                                         $transaction_currency_id
- * @property int|string|null                                    $foreign_currency_id
- * @property int|string                                        $source_id
- * @property int|string                                         $destination_id
- * @property string|float                                      $amount
- * @property string|float|null                                 $foreign_amount
+ * @property int                                  $recurrence_id
+ * @property int                                  $transaction_currency_id
+ * @property int|string|null                             $foreign_currency_id
+ * @property int                                  $source_id
+ * @property int                                  $destination_id
+ * @property string                                      $amount
+ * @property string                                      $foreign_amount
  * @property string                                      $description
  * @property-read Account                                $destinationAccount
  * @property-read TransactionCurrency|null               $foreignCurrency
@@ -80,6 +80,7 @@ use Carbon\Carbon;
  */
 class RecurrenceTransaction extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
 
@@ -180,6 +181,57 @@ class RecurrenceTransaction extends Model
     {
         return Attribute::make(
             get: static fn ($value) => (string)$value,
+        );
+
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function recurrenceId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function transactionCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function sourceId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function destinationId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function userId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
         );
     }
 }

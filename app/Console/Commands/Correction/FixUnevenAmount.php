@@ -77,7 +77,7 @@ class FixUnevenAmount extends Command
                 );
                 $this->friendlyWarning($message);
                 app('log')->warning($message);
-                $this->fixJournal((int)$entry->transaction_journal_id);
+                $this->fixJournal($entry->transaction_journal_id);
                 $count++;
             }
         }
@@ -115,7 +115,7 @@ class FixUnevenAmount extends Command
             return;
         }
 
-        $amount = bcmul('-1', (string)$source->amount);
+        $amount = bcmul('-1', $source->amount);
 
         // fix amount of destination:
         /** @var Transaction|null $destination */

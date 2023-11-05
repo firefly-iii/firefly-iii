@@ -151,7 +151,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
         $count = 1;
         /** @var Rule $entry */
         foreach ($set as $entry) {
-            if ((int)$entry->order !== $count) {
+            if ($entry->order !== $count) {
                 app('log')->debug(sprintf('Rule #%d was on spot %d but must be on spot %d', $entry->id, $entry->order, $count));
                 $entry->order = $count;
                 $entry->save();

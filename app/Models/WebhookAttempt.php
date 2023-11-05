@@ -23,24 +23,25 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * Class WebhookAttempt
  *
- * @property int|string                 $id
+ * @property int                 $id
  * @property Carbon|null         $created_at
  * @property Carbon|null         $updated_at
  * @property string|null         $deleted_at
- * @property int|string                 $webhook_message_id
- * @property int|string                 $status_code
+ * @property int          $webhook_message_id
+ * @property int|string          $status_code
  * @property string|null         $logs
  * @property string|null         $response
  * @property-read WebhookMessage $webhookMessage
@@ -62,6 +63,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class WebhookAttempt extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
     /**
@@ -93,5 +95,15 @@ class WebhookAttempt extends Model
     public function webhookMessage(): BelongsTo
     {
         return $this->belongsTo(WebhookMessage::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function webhookMessageId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

@@ -48,7 +48,7 @@ class CurrencyTransformer extends AbstractTransformer
     public function transform(TransactionCurrency $currency): array
     {
         return [
-            'id'             => (int)$currency->id,
+            'id'             => $currency->id,
             'created_at'     => $currency->created_at->toAtomString(),
             'updated_at'     => $currency->updated_at->toAtomString(),
             'default'        => $currency->userDefault,

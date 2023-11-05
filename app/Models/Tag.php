@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -32,17 +34,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\Tag
  *
- * @property int|string                                  $id
+ * @property int                                  $id
  * @property Carbon|null                          $created_at
  * @property Carbon|null                          $updated_at
  * @property Carbon|null                          $deleted_at
- * @property int|string                                  $user_id
+ * @property int                           $user_id
  * @property string                               $tag
  * @property string                               $tagMode
  * @property Carbon|null                          $date
@@ -75,13 +76,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereZoomLevel($value)
  * @method static Builder|Tag withTrashed()
  * @method static Builder|Tag withoutTrashed()
- * @property int|null                             $user_group_id
+ * @property int                             $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUserGroupId($value)
  * @mixin Eloquent
  */
 class Tag extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
+    use ReturnsIntegerUserIdTrait;
 
 
     protected $casts

@@ -382,7 +382,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $destination     = $this->getDestinationTransaction($journal);
         $type            = $journal->transactionType->type;
         $currency        = $source->transactionCurrency;
-        $amount          = app('steam')->bcround($this->getAmount($type, (string)$source->amount), $currency->decimal_places ?? 0);
+        $amount          = app('steam')->bcround($this->getAmount($type, $source->amount), $currency->decimal_places ?? 0);
         $foreignAmount   = $this->getForeignAmount($type, null === $source->foreign_amount ? null : (string)$source->foreign_amount);
         $metaFieldData   = $this->groupRepos->getMetaFields($journal->id, $this->metaFields);
         $metaDates       = $this->getDates($this->groupRepos->getMetaDateFields($journal->id, $this->metaDateFields));
@@ -407,12 +407,12 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         return [
             'user'                   => (int)$journal->user_id,
-            'transaction_journal_id' => (int)$journal->id,
+            'transaction_journal_id' => $journal->id,
             'type'                   => strtolower($type),
             'date'                   => $journal->date->toAtomString(),
             'order'                  => $journal->order,
 
-            'currency_id'             => (int)$currency->id,
+            'currency_id'             => $currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
             'currency_decimal_places' => (int)$currency->decimal_places,
@@ -427,12 +427,12 @@ class TransactionGroupTransformer extends AbstractTransformer
 
             'description' => $journal->description,
 
-            'source_id'   => (int)$source->account_id,
+            'source_id'   => $source->account_id,
             'source_name' => $source->account->name,
             'source_iban' => $source->account->iban,
             'source_type' => $source->account->accountType->type,
 
-            'destination_id'   => (int)$destination->account_id,
+            'destination_id'   => $destination->account_id,
             'destination_name' => $destination->account->name,
             'destination_iban' => $destination->account->iban,
             'destination_type' => $destination->account->accountType->type,
@@ -589,7 +589,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null === $currency) {
             return $array;
         }
-        $array['id']             = (int)$currency->id;
+        $array['id']             = $currency->id;
         $array['code']           = $currency->code;
         $array['symbol']         = $currency->symbol;
         $array['decimal_places'] = (int)$currency->decimal_places;
@@ -611,7 +611,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null === $budget) {
             return $array;
         }
-        $array['id']   = (int)$budget->id;
+        $array['id']   = $budget->id;
         $array['name'] = $budget->name;
 
         return $array;
@@ -631,7 +631,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null === $category) {
             return $array;
         }
-        $array['id']   = (int)$category->id;
+        $array['id']   = $category->id;
         $array['name'] = $category->name;
 
         return $array;

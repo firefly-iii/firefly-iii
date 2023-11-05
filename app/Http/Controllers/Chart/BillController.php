@@ -164,7 +164,7 @@ class BillController extends Controller
                 'entries'         => [],
             ],
         ];
-        $currencyId = (int)$bill->transaction_currency_id;
+        $currencyId = $bill->transaction_currency_id;
         foreach ($journals as $journal) {
             $date                           = $journal['date']->isoFormat((string)trans('config.month_and_day_js', [], $locale));
             $chartData[0]['entries'][$date] = $bill->amount_min; // minimum amount of bill

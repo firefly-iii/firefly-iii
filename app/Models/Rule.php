@@ -23,29 +23,31 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\Rule
  *
- * @property int|string                          $id
+ * @property int                          $id
  * @property Carbon|null                  $created_at
  * @property Carbon|null                  $updated_at
  * @property Carbon|null                  $deleted_at
- * @property int|string                          $user_id
- * @property int|string                         $rule_group_id
+ * @property int                   $user_id
+ * @property int                   $rule_group_id
  * @property string                       $title
  * @property string|null                  $description
- * @property int|string                         $order
+ * @property int                   $order
  * @property bool                         $active
  * @property bool                         $stop_processing
  * @property bool                         $strict
@@ -74,14 +76,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserId($value)
  * @method static Builder|Rule withTrashed()
  * @method static Builder|Rule withoutTrashed()
- * @property int|null                     $user_group_id
+ * @property int                     $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserGroupId($value)
  * @property-read UserGroup|null          $userGroup
  * @mixin Eloquent
  */
 class Rule extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
+    use ReturnsIntegerUserIdTrait;
 
 
     protected $casts
@@ -169,5 +173,25 @@ class Rule extends Model
     public function userGroup(): BelongsTo
     {
         return $this->belongsTo(UserGroup::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function ruleGroupId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

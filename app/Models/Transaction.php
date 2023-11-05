@@ -33,35 +33,35 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\Transaction
  *
- * @property int|string                             $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property bool                            $reconciled
- * @property int|string                             $account_id
- * @property int|string                             $transaction_journal_id
- * @property string|null                     $description
- * @property int|null                        $transaction_currency_id
- * @property string|null                          $modified
- * @property string|null                          $modified_foreign
- * @property string                          $date
- * @property string                          $max_date
- * @property string|float                          $amount
- * @property string|float|null                     $foreign_amount
- * @property int|null                        $foreign_currency_id
- * @property int                             $identifier
- * @property-read Account                    $account
- * @property-read Collection|Budget[]        $budgets
- * @property-read int|null                   $budgets_count
- * @property-read Collection|Category[]      $categories
- * @property-read int|null                   $categories_count
- * @property-read TransactionCurrency|null   $foreignCurrency
- * @property-read TransactionCurrency|null   $transactionCurrency
- * @property-read TransactionJournal         $transactionJournal
+ * @property int                           $id
+ * @property Carbon|null                   $created_at
+ * @property Carbon|null                   $updated_at
+ * @property Carbon|null                   $deleted_at
+ * @property bool                          $reconciled
+ * @property int                    $account_id
+ * @property int                    $transaction_journal_id
+ * @property string|null                   $description
+ * @property int|null                      $transaction_currency_id
+ * @property string|null                   $modified
+ * @property string|null                   $modified_foreign
+ * @property string                        $date
+ * @property string                        $max_date
+ * @property string                        $amount
+ * @property string|null                   $foreign_amount
+ * @property int|null                      $foreign_currency_id
+ * @property int                           $identifier
+ * @property-read Account                  $account
+ * @property-read Collection|Budget[]      $budgets
+ * @property-read int|null                 $budgets_count
+ * @property-read Collection|Category[]    $categories
+ * @property-read int|null                 $categories_count
+ * @property-read TransactionCurrency|null $foreignCurrency
+ * @property-read TransactionCurrency|null $transactionCurrency
+ * @property-read TransactionJournal       $transactionJournal
  * @method static Builder|Transaction after(Carbon $date)
  * @method static Builder|Transaction before(Carbon $date)
  * @method static Builder|Transaction newModelQuery()
@@ -84,12 +84,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static Builder|Transaction whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Transaction withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Transaction withoutTrashed()
- * @property int|string                             $the_count
+ * @property int|string                    $the_count
  * @mixin Eloquent
  */
 class Transaction extends Model
 {
     use HasFactory;
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
 
@@ -273,6 +274,25 @@ class Transaction extends Model
     {
         return Attribute::make(
             get: static fn ($value) => (string)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function accountId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+    /**
+     * @return Attribute
+     */
+    protected function transactionJournalId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
         );
     }
 }

@@ -108,7 +108,7 @@ class MassController extends Controller
                 app('log')->debug(sprintf('Searching for ID #%d', $journalId));
                 /** @var TransactionJournal|null $journal */
                 $journal = $this->repository->find((int)$journalId);
-                if (null !== $journal && (int)$journalId === (int)$journal->id) {
+                if (null !== $journal && (int)$journalId === $journal->id) {
                     $this->repository->destroyJournal($journal);
                     ++$count;
                     app('log')->debug(sprintf('Deleted transaction journal #%d', $journalId));

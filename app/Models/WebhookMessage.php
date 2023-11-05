@@ -33,15 +33,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\WebhookMessage
  *
- * @property int|string                              $id
+ * @property int                              $id
  * @property Carbon|null                      $created_at
  * @property Carbon|null                      $updated_at
  * @property string|null                      $deleted_at
- * @property int|string                              $webhook_id
+ * @property int                       $webhook_id
  * @property bool                             $sent
  * @property bool                             $errored
  * @property int                              $attempts
@@ -69,6 +69,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class WebhookMessage extends Model
 {
+    use ReturnsIntegerIdTrait;
+
     protected $casts
         = [
             'sent'    => 'boolean',
@@ -126,6 +128,16 @@ class WebhookMessage extends Model
     {
         return Attribute::make(
             get: static fn ($value) => (bool)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function webhookId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
         );
     }
 }

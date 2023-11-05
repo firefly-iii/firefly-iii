@@ -99,7 +99,7 @@ class MigrateRecurrenceType extends Command
      */
     private function migrateRecurrence(Recurrence $recurrence): void
     {
-        $originalType                    = (int)$recurrence->transaction_type_id;
+        $originalType                    = $recurrence->transaction_type_id;
         $newType                         = $this->getInvalidType();
         $recurrence->transaction_type_id = $newType->id;
         $recurrence->save();

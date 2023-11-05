@@ -288,7 +288,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $repository = app(OperationsRepositoryInterface::class);
         $repository->setUser($autoBudget->budget->user);
         $spent       = $repository->sumExpenses($previousStart, $previousEnd, null, new Collection([$autoBudget->budget]), $autoBudget->transactionCurrency);
-        $currencyId  = (int)$autoBudget->transaction_currency_id;
+        $currencyId  = $autoBudget->transaction_currency_id;
         $spentAmount = $spent[$currencyId]['sum'] ?? '0';
         app('log')->debug(sprintf('Spent in previous budget period (%s-%s) is %s', $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d'), $spentAmount));
 
@@ -352,7 +352,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $repository = app(OperationsRepositoryInterface::class);
         $repository->setUser($autoBudget->budget->user);
         $spent       = $repository->sumExpenses($previousStart, $previousEnd, null, new Collection([$autoBudget->budget]), $autoBudget->transactionCurrency);
-        $currencyId  = (int)$autoBudget->transaction_currency_id;
+        $currencyId  = $autoBudget->transaction_currency_id;
         $spentAmount = $spent[$currencyId]['sum'] ?? '0';
         app('log')->debug(sprintf('Spent in previous budget period (%s-%s) is %s', $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d'), $spentAmount));
 

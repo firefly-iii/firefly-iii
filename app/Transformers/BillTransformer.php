@@ -71,8 +71,8 @@ class BillTransformer extends AbstractTransformer
         /** @var ObjectGroup|null $objectGroup */
         $objectGroup = $bill->objectGroups->first();
         if (null !== $objectGroup) {
-            $objectGroupId    = (int)$objectGroup->id;
-            $objectGroupOrder = (int)$objectGroup->order;
+            $objectGroupId    = $objectGroup->id;
+            $objectGroupOrder = $objectGroup->order;
             $objectGroupTitle = $objectGroup->title;
         }
 
@@ -190,7 +190,7 @@ class BillTransformer extends AbstractTransformer
         foreach ($set as $entry) {
             $result[] = [
                 'transaction_group_id'   => (int)$entry->transaction_group_id,
-                'transaction_journal_id' => (int)$entry->id,
+                'transaction_journal_id' => $entry->id,
                 'date'                   => $entry->date->format('Y-m-d'),
             ];
         }

@@ -25,7 +25,9 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,22 +36,22 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\Recurrence
  *
- * @property int|string                                     $id
+ * @property int                                     $id
  * @property Carbon|null                             $created_at
  * @property Carbon|null                             $updated_at
  * @property Carbon|null                             $deleted_at
- * @property int|string                                     $user_id
- * @property int|string                                     $transaction_type_id
+ * @property int                              $user_id
+ * @property int                              $transaction_type_id
  * @property string                                  $title
  * @property string                                  $description
  * @property Carbon|null                             $first_date
  * @property Carbon|null                             $repeat_until
  * @property Carbon|null                             $latest_date
- * @property int|string                                     $repetitions
+ * @property int|string                              $repetitions
  * @property bool                                    $apply_rules
  * @property bool                                    $active
  * @property-read Collection|Attachment[]            $attachments
@@ -85,13 +87,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereUserId($value)
  * @method static Builder|Recurrence withTrashed()
  * @method static Builder|Recurrence withoutTrashed()
- * @property int|null                                $user_group_id
+ * @property int                                $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereUserGroupId($value)
  * @mixin Eloquent
  */
 class Recurrence extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
+    use ReturnsIntegerUserIdTrait;
 
 
     protected $casts
@@ -200,5 +204,15 @@ class Recurrence extends Model
     public function transactionType(): BelongsTo
     {
         return $this->belongsTo(TransactionType::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function transactionTypeId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

@@ -23,18 +23,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Carbon\Carbon;
 
 /**
  * FireflyIII\Models\Role
  *
- * @property int|string                    $id
+ * @property int                    $id
  * @property Carbon|null            $created_at
  * @property Carbon|null            $updated_at
  * @property string                 $name
@@ -55,6 +56,7 @@ use Carbon\Carbon;
  */
 class Role extends Model
 {
+    use ReturnsIntegerIdTrait;
 
     protected $casts
         = [

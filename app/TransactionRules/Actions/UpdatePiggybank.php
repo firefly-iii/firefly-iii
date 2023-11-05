@@ -62,7 +62,6 @@ class UpdatePiggybank implements ActionInterface
         $user = User::find($journal['user_id']);
         /** @var TransactionJournal $journalObj */
         $journalObj = $user->transactionJournals()->find($journal['transaction_journal_id']);
-        $type       = TransactionType::find((int)$journalObj->transaction_type_id);
 
         $piggyBank = $this->findPiggyBank($user);
         if (null === $piggyBank) {
@@ -80,7 +79,7 @@ class UpdatePiggybank implements ActionInterface
         /** @var Transaction $destination */
         $destination = $journalObj->transactions()->where('amount', '>', 0)->first();
 
-        if ((int)$source->account_id === (int)$piggyBank->account_id) {
+        if ($source->account_id === $piggyBank->account_id) {
             app('log')->debug('Piggy bank account is linked to source, so remove amount from piggy bank.');
             $this->removeAmount($piggyBank, $journalObj, $destination->amount);
 
@@ -101,7 +100,7 @@ class UpdatePiggybank implements ActionInterface
 
             return true;
         }
-        if ((int)$destination->account_id === (int)$piggyBank->account_id) {
+        if ($destination->account_id === $piggyBank->account_id) {
             app('log')->debug('Piggy bank account is linked to source, so add amount to piggy bank.');
             $this->addAmount($piggyBank, $journalObj, $destination->amount);
 

@@ -26,19 +26,20 @@ namespace FireflyIII\Models;
 use Carbon\Carbon;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 /**
  * FireflyIII\Models\TransactionJournalLink
  *
- * @property int|string              $id
+ * @property int                     $id
  * @property Carbon|null             $created_at
  * @property Carbon|null             $updated_at
- * @property string|int              $link_type_id
+ * @property int              $link_type_id
  * @property int                     $source_id
  * @property int                     $destination_id
  * @property string|null             $comment
@@ -63,6 +64,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class TransactionJournalLink extends Model
 {
+    use ReturnsIntegerIdTrait;
 
     protected $casts
         = [
@@ -128,5 +130,33 @@ class TransactionJournalLink extends Model
     public function source(): BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class, 'source_id');
+    }
+    /**
+     * @return Attribute
+     */
+    protected function linkTypeId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function sourceId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+    /**
+     * @return Attribute
+     */
+    protected function destinationId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

@@ -181,7 +181,7 @@ class BudgetController extends Controller
         while ($start <= $end) {
             $current          = clone $start;
             $expenses         = $this->opsRepository->sumExpenses($current, $current, null, $budgetCollection, $currency);
-            $spent            = $expenses[(int)$currency->id]['sum'] ?? '0';
+            $spent            = $expenses[$currency->id]['sum'] ?? '0';
             $amount           = bcadd($amount, $spent);
             $format           = $start->isoFormat((string)trans('config.month_and_day_js', [], $locale));
             $entries[$format] = $amount;

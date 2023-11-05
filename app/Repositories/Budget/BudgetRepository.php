@@ -114,24 +114,24 @@ class BudgetRepository implements BudgetRepositoryInterface
                 ];
                 // same period
                 if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)) {
-                    $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string)$limit->amount);
+                    $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $limit->amount);
                     app('log')->debug(sprintf('Add full amount [1]: %s', $limit->amount));
                     continue;
                 }
                 // limit is inside of date range
                 if ($start->lte($limit->start_date) && $end->gte($limit->end_date)) {
-                    $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string)$limit->amount);
+                    $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $limit->amount);
                     app('log')->debug(sprintf('Add full amount [2]: %s', $limit->amount));
                     continue;
                 }
                 $total                        = $limit->start_date->diffInDays($limit->end_date) + 1; // include the day itself.
                 $days                         = $this->daysInOverlap($limit, $start, $end);
-                $amount                       = bcmul(bcdiv((string)$limit->amount, (string)$total), (string)$days);
+                $amount                       = bcmul(bcdiv($limit->amount, (string)$total), (string)$days);
                 $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
                 app('log')->debug(
                     sprintf(
                         'Amount per day: %s (%s over %d days). Total amount for %d days: %s',
-                        bcdiv((string)$limit->amount, (string)$total),
+                        bcdiv($limit->amount, (string)$total),
                         $limit->amount,
                         $total,
                         $days,
@@ -230,24 +230,24 @@ class BudgetRepository implements BudgetRepositoryInterface
             ];
             // same period
             if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)) {
-                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string)$limit->amount);
+                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $limit->amount);
                 app('log')->debug(sprintf('Add full amount [1]: %s', $limit->amount));
                 continue;
             }
             // limit is inside of date range
             if ($start->lte($limit->start_date) && $end->gte($limit->end_date)) {
-                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string)$limit->amount);
+                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $limit->amount);
                 app('log')->debug(sprintf('Add full amount [2]: %s', $limit->amount));
                 continue;
             }
             $total                        = $limit->start_date->diffInDays($limit->end_date) + 1; // include the day itself.
             $days                         = $this->daysInOverlap($limit, $start, $end);
-            $amount                       = bcmul(bcdiv((string)$limit->amount, (string)$total), (string)$days);
+            $amount                       = bcmul(bcdiv($limit->amount, (string)$total), (string)$days);
             $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
             app('log')->debug(
                 sprintf(
                     'Amount per day: %s (%s over %d days). Total amount for %d days: %s',
-                    bcdiv((string)$limit->amount, (string)$total),
+                    bcdiv($limit->amount, (string)$total),
                     $limit->amount,
                     $total,
                     $days,
@@ -489,8 +489,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         $budgets = $this->getBudgets();
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            DB::table('budget_transaction')->where('budget_id', (int)$budget->id)->delete();
-            DB::table('budget_transaction_journal')->where('budget_id', (int)$budget->id)->delete();
+            DB::table('budget_transaction')->where('budget_id', $budget->id)->delete();
+            DB::table('budget_transaction_journal')->where('budget_id', $budget->id)->delete();
             RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', (string)$budget->id)->delete();
             RuleAction::where('action_type', 'set_budget')->where('action_value', (string)$budget->id)->delete();
             $budget->delete();

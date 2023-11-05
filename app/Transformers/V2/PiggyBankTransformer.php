@@ -83,7 +83,7 @@ class PiggyBankTransformer extends AbstractTransformer
         $currencies = [];
         /** @var Account $account */
         foreach ($accountInfo as $account) {
-            $id                  = (int)$account->id;
+            $id                  = $account->id;
             $this->accounts[$id] = [
                 'name' => $account->name,
             ];

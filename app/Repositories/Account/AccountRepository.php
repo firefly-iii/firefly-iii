@@ -363,7 +363,7 @@ class AccountRepository implements AccountRepositoryInterface
             return null;
         }
 
-        return (string)$transaction->amount;
+        return $transaction->amount;
     }
 
     /**
@@ -635,6 +635,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function oldestJournal(Account $account): ?TransactionJournal
     {
+        /** @var TransactionJournal|null $first */
         $first = $account->transactions()
                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                          ->orderBy('transaction_journals.date', 'ASC')
@@ -643,7 +644,7 @@ class AccountRepository implements AccountRepositoryInterface
                          ->orderBy('transaction_journals.id', 'ASC')
                          ->first(['transaction_journals.id']);
         if (null !== $first) {
-            return TransactionJournal::find((int)$first->id);
+            return TransactionJournal::find($first->id);
         }
 
         return null;

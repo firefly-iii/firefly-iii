@@ -175,7 +175,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $result = [];
         /** @var Attachment $attachment */
         foreach ($set as $attachment) {
-            $journalId              = (int)$attachment->attachable_id;
+            $journalId              = $attachment->attachable_id;
             $result[$journalId]     = $result[$journalId] ?? [];
             $current                = $attachment->toArray();
             $current['file_exists'] = true;
@@ -417,7 +417,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             if (null !== $currencyPreference) {
                 $currency = TransactionCurrency::where('id', $currencyPreference->data)->first();
             }
-            $journalId          = (int)$row->transaction_journal_id;
+            $journalId          = $row->transaction_journal_id;
             $return[$journalId] = $return[$journalId] ?? [];
 
             $return[$journalId][] = [

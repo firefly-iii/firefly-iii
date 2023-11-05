@@ -90,7 +90,7 @@ class FixIbans extends Command
         $set = [];
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $userId       = (int)$account->user_id;
+            $userId       = $account->user_id;
             $set[$userId] = $set[$userId] ?? [];
             $iban         = (string)$account->iban;
             if ('' === $iban) {

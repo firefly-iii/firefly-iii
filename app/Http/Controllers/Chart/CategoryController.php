@@ -193,7 +193,7 @@ class CategoryController extends Controller
         if (null !== $category) {
             /** @var OperationsRepositoryInterface $opsRepository */
             $opsRepository = app(OperationsRepositoryInterface::class);
-            $categoryId    = (int)$category->id;
+            $categoryId    = $category->id;
             // this gives us all currencies
             $collection = new Collection([$category]);
             $expenses   = $opsRepository->listExpenses($start, $end, null, $collection);

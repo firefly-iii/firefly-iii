@@ -238,7 +238,7 @@ class CreditRecalculateService
         $source = $openingBalance->transactions()->where('amount', '<', 0)->first();
         /** @var Transaction $dest */
         $dest = $openingBalance->transactions()->where('amount', '>', 0)->first();
-        if ((int)$source->account_id !== $account->id) {
+        if ($source->account_id !== $account->id) {
             app('log')->info(sprintf('Liability #%d has a reversed opening balance. Will fix this now.', $account->id));
             app('log')->debug(sprintf('Source amount "%s" is now "%s"', $source->amount, app('steam')->positive($source->amount)));
             app('log')->debug(sprintf('Destination amount "%s" is now "%s"', $dest->amount, app('steam')->negative($dest->amount)));
@@ -307,7 +307,7 @@ class CreditRecalculateService
         // because we're lending person X more money
         if (
             $type === TransactionType::WITHDRAWAL
-            && (int)$account->id === (int)$transaction->account_id
+            && $account->id === $transaction->account_id
             && 1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
@@ -323,7 +323,7 @@ class CreditRecalculateService
         // because we're sending money away from the loan (like loan forgiveness)
         if (
             $type === TransactionType::WITHDRAWAL
-            && (int)$account->id === (int)$sourceTransaction->account_id
+            && $account->id === $sourceTransaction->account_id
             && -1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
@@ -339,7 +339,7 @@ class CreditRecalculateService
         // because the person is paying us back.
         if (
             $type === TransactionType::DEPOSIT
-            && (int)$account->id === (int)$transaction->account_id
+            && $account->id === $transaction->account_id
             && -1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
@@ -355,7 +355,7 @@ class CreditRecalculateService
         // because the person is having to pay more money.
         if (
             $type === TransactionType::DEPOSIT
-            && (int)$account->id === (int)$destTransaction->account_id
+            && $account->id === $destTransaction->account_id
             && 1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
@@ -369,7 +369,7 @@ class CreditRecalculateService
         // because the person has to pay more back.
         if (
             $type === TransactionType::TRANSFER
-            && (int)$account->id === (int)$destTransaction->account_id
+            && $account->id === $destTransaction->account_id
             && 1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
@@ -384,7 +384,7 @@ class CreditRecalculateService
         // because we're paying off the debt
         if (
             $type === TransactionType::WITHDRAWAL
-            && (int)$account->id === (int)$transaction->account_id
+            && $account->id === $transaction->account_id
             && 1 === bccomp($usedAmount, '0')
             && 'debit' === $direction
         ) {
@@ -399,7 +399,7 @@ class CreditRecalculateService
         // because we are borrowing more money.
         if (
             $type === TransactionType::DEPOSIT
-            && (int)$account->id === (int)$transaction->account_id
+            && $account->id === $transaction->account_id
             && -1 === bccomp($usedAmount, '0')
             && 'debit' === $direction
         ) {
@@ -414,7 +414,7 @@ class CreditRecalculateService
         // because we are paying interest.
         if (
             $type === TransactionType::WITHDRAWAL
-            && (int)$account->id === (int)$transaction->account_id
+            && $account->id === $transaction->account_id
             && -1 === bccomp($usedAmount, '0')
             && 'debit' === $direction
         ) {

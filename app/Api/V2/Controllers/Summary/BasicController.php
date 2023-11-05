@@ -163,7 +163,7 @@ class BasicController extends Controller
             $currency                = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
             $currencies[$currencyId] = $currency;
             $nativeAmount            = $converter->convert($currency, $default, $transactionJournal['date'], $amount);
-            if ((int)$transactionJournal['foreign_currency_id'] === (int)$default->id) {
+            if ((int)$transactionJournal['foreign_currency_id'] === $default->id) {
                 // use foreign amount instead
                 $nativeAmount = $transactionJournal['foreign_amount'];
             }
@@ -201,7 +201,7 @@ class BasicController extends Controller
             $currency                = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
             $currencies[$currencyId] = $currency;
             $nativeAmount            = $converter->convert($currency, $default, $transactionJournal['date'], $amount);
-            if ((int)$transactionJournal['foreign_currency_id'] === (int)$default->id) {
+            if ((int)$transactionJournal['foreign_currency_id'] === $default->id) {
                 // use foreign amount instead
                 $nativeAmount = $transactionJournal['foreign_amount'];
             }
@@ -407,7 +407,7 @@ class BasicController extends Controller
                     $currencies[$currencyId] = $currency;
                     $amount                  = app('steam')->negative($journal['amount']);
                     $amountNative            = $converter->convert($default, $currency, $start, $amount);
-                    if ((int)$journal['foreign_currency_id'] === (int)$default->id) {
+                    if ((int)$journal['foreign_currency_id'] === $default->id) {
                         $amountNative = $journal['foreign_amount'];
                     }
                     $spent       = bcadd($spent, $amount);
