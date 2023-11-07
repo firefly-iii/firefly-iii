@@ -28,7 +28,9 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use stdClass;
+use ValueError;
 
 /**
  * Class FixUnevenAmount
@@ -69,7 +71,15 @@ class FixUnevenAmount extends Command
                 $count++;
                 continue;
             }
-            if (0 !== bccomp((string)$entry->the_sum, '0')) {
+            $res = -1;
+            try {
+                $res = bccomp($sum, '0');
+            } catch (ValueError $e) {
+                $this->friendlyError(sprintf('Could not bccomp("%s", "0").', $sum));
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
+            }
+            if (0 !== $res) {
                 $message = sprintf(
                     'Sum of journal #%d is %s instead of zero.',
                     $entry->transaction_journal_id,

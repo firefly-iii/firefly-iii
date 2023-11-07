@@ -356,7 +356,7 @@ class BillTransformer extends AbstractTransformer
         $steps  = app('navigation')->diffInPeriods($bill->repeat_freq, $bill->skip, $start, $date);
         $result = clone $start;
         if ($steps > 0) {
-            $steps = $steps - 1;
+            $steps -= 1;
             app('log')->debug(sprintf('Steps is %d, because addPeriod already adds 1.', $steps));
             $result = app('navigation')->addPeriod($start, $bill->repeat_freq, $steps);
         }

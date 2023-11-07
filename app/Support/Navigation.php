@@ -378,11 +378,11 @@ class Navigation
         // then correct for quarterly or half-year
         if ('quarterly' === $period) {
             Log::debug(sprintf('Q: Corrected %f to %f', $floatDiff, $floatDiff / 3));
-            $floatDiff = $floatDiff / 3;
+            $floatDiff /= 3;
         }
         if ('half-year' === $period) {
             Log::debug(sprintf('H: Corrected %f to %f', $floatDiff, $floatDiff / 6));
-            $floatDiff = $floatDiff / 6;
+            $floatDiff /= 6;
         }
 
         // then do ceil()
