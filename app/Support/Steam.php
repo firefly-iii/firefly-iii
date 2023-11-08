@@ -164,8 +164,8 @@ class Steam
         /** @var Transaction $entry */
         foreach ($set as $entry) {
             // normal amount and foreign amount
-            $modified        = (string) (null === $entry->modified ? '0' : $entry->modified);
-            $foreignModified = (string) (null === $entry->modified_foreign ? '0' :$entry->modified_foreign);
+            $modified        = (string)(null === $entry->modified ? '0' : $entry->modified);
+            $foreignModified = (string)(null === $entry->modified_foreign ? '0' : $entry->modified_foreign);
             $amount          = '0';
             if ($currencyId === (int)$entry->transaction_currency_id || 0 === $currencyId) {
                 // use normal amount:
@@ -322,15 +322,15 @@ class Steam
             $balances[$format] = $currentBalance;
 
             app('log')->debug(sprintf(
-                '%s: transaction in %s(!). Conversion rate is %s. %s %s = %s %s',
-                $format,
-                $currency->code,
-                $rate,
-                $currency->code,
-                $transaction['amount'],
-                $native->code,
-                $convertedAmount
-            ));
+                                  '%s: transaction in %s(!). Conversion rate is %s. %s %s = %s %s',
+                                  $format,
+                                  $currency->code,
+                                  $rate,
+                                  $currency->code,
+                                  $transaction['amount'],
+                                  $native->code,
+                                  $convertedAmount
+                              ));
 
 
         }
@@ -361,14 +361,12 @@ class Steam
         $cache->addProperty($date);
         $cache->addProperty($native->id);
         if ($cache->has()) {
-            // return $cache->get();
+            return $cache->get();
         }
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $currency   = $repository->getAccountCurrency($account);
-        if (null === $currency) {
-            throw new FireflyException('Cannot get converted account balance: no currency found for account.');
-        }
+        $currency   = null === $currency ? \FireflyIII\Support\Facades\Amount::getDefaultCurrency() : $currency;
         if ($native->id === $currency->id) {
             return $this->balance($account, $date);
         }

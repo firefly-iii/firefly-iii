@@ -46,8 +46,8 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property int                    $transaction_journal_id
  * @property string|null                   $description
  * @property int|null                      $transaction_currency_id
- * @property string|null                   $modified
- * @property string|null                   $modified_foreign
+ * @property string|int|null                   $modified
+ * @property string|int|null                   $modified_foreign
  * @property string                        $date
  * @property string                        $max_date
  * @property string                        $amount

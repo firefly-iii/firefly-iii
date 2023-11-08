@@ -148,8 +148,7 @@ trait ModelInformation
             } catch (Throwable $e) {
                 app('log')->debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
                 app('log')->debug($e->getTraceAsString());
-                $string = '';
-                throw new FireflyException('Could not render trigger', 0, $e);
+                throw new FireflyException(sprintf('Could not render trigger: %s', $e->getMessage()), 0, $e);
             }
             if ('' !== $string) {
                 $result[] = $string;
@@ -264,7 +263,7 @@ trait ModelInformation
             } catch (Throwable $e) {
                 app('log')->debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
                 app('log')->debug($e->getTraceAsString());
-                throw new FireflyException('Could not render trigger', 0, $e);
+                throw new FireflyException(sprintf('Could not render trigger: %s', $e->getMessage()), 0, $e);
             }
             if ('' !== $string) {
                 $result[] = $string;
