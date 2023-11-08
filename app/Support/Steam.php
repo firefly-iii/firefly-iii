@@ -164,8 +164,8 @@ class Steam
         /** @var Transaction $entry */
         foreach ($set as $entry) {
             // normal amount and foreign amount
-            $modified        = null === $entry->modified ? '0' : $entry->modified;
-            $foreignModified = null === $entry->modified_foreign ? '0' :$entry->modified_foreign;
+            $modified        = (string) (null === $entry->modified ? '0' : $entry->modified);
+            $foreignModified = (string) (null === $entry->modified_foreign ? '0' :$entry->modified_foreign);
             $amount          = '0';
             if ($currencyId === (int)$entry->transaction_currency_id || 0 === $currencyId) {
                 // use normal amount:
