@@ -366,7 +366,7 @@ class Steam
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $currency   = $repository->getAccountCurrency($account);
-        $currency   = null === $currency ? \FireflyIII\Support\Facades\Amount::getDefaultCurrency() : $currency;
+        $currency   = null === $currency ? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup) : $currency;
         if ($native->id === $currency->id) {
             return $this->balance($account, $date);
         }
