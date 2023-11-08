@@ -33,6 +33,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -175,7 +176,7 @@ class Steam
                 // use foreign amount:
                 $amount = $foreignModified;
             }
-
+            Log::debug(sprintf('Trying to add %s and %s.', var_export($currentBalance, true), var_export($amount, true)));
             $currentBalance  = bcadd($currentBalance, $amount);
             $carbon          = new Carbon($entry->date, config('app.timezone'));
             $date            = $carbon->format('Y-m-d');
