@@ -54,7 +54,7 @@ return [
     'accounts'         => 'Számlák',
     'changePassword'   => 'Jelszó módosítása',
     'change_email'     => 'Email cím módosítása',
-    'bills'            => 'Számlák',
+    'bills'            => 'Fizetendő számlák',
     'newBill'          => 'Új számla',
     'edit_bill'        => '":name" számla szerkesztése',
     'delete_bill'      => '":name" számla törlése',

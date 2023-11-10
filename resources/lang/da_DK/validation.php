@@ -44,6 +44,7 @@ return [
     'invalid_query_currency'         => 'Din forespørgsel indeholder konti, der har forskellige valutaindstillinger, hvilket ikke er tilladt.',
     'iban'                           => 'Dette er ikke et gyldig IBAN.',
     'zero_or_more'                   => 'Denne værdi kan ikke være negativ.',
+    'no_asset_account'               => 'This is not an asset account.',
     'date_or_time'                   => 'Værdien skal være en gyldig dato eller tids værdi (ISO 8601).',
     'source_equals_destination'      => 'Kildekontoen er den samme som modtagerkontoen.',
     'unique_account_number_for_user' => 'Det ser ud som om dette kontonummer allerede er i brug.',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

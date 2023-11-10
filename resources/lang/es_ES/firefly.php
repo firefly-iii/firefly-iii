@@ -43,7 +43,7 @@ return [
     'split'                                => 'Separar',
     'single_split'                         => 'División',
     'clone'                                => 'Duplicar',
-    'clone_and_edit'                       => 'Clone and edit',
+    'clone_and_edit'                       => 'Clonar y editar',
     'confirm_action'                       => 'Confirmar acción',
     'last_seven_days'                      => 'Últimos siete días',
     'last_thirty_days'                     => 'Últimos treinta días',
@@ -1566,7 +1566,7 @@ return [
     'list_all_attachments'                      => 'Listado de documentos adjuntos',
 
     // transaction index
-    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
+    'is_reconciled_fields_dropped'              => 'Debido a que esta transacción está reconciliada, no podrá actualizar las cuentas, ni las cantidades.',
     'title_expenses'                            => 'Gastos',
     'title_withdrawal'                          => 'Gastos',
     'title_revenue'                             => 'Ingresos / salarios',
@@ -1634,8 +1634,8 @@ return [
     'create_currency'                           => 'Crear nueva moneda',
     'store_currency'                            => 'Crear moneda',
     'update_currency'                           => 'Actualizar moneda',
-    'new_default_currency'                      => '":name" is now the default currency.',
-    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
+    'new_default_currency'                      => '":name" es ahora la moneda predeterminada.',
+    'default_currency_failed'                   => 'No se pudo establecer ":name" como moneda predeterminada. Por favor, compruebe los registros.',
     'cannot_delete_currency'                    => 'No puede eliminar :name porque todavía esta en uso.',
     'cannot_delete_fallback_currency'           => ':name es la moneda de reserva del sistema y no se puede eliminar.',
     'cannot_disable_currency_journals'          => 'No se puede desactivar :name porque las transacciones siguen utilizándola.',
@@ -1661,9 +1661,9 @@ return [
     'disable_currency'                          => 'Desactivar',
     'currencies_default_disabled'               => 'La mayoría de estas monedas están desactivadas por defecto. Para usarlas, debes activarlas primero.',
     'currency_is_now_enabled'                   => 'Moneda ":name" ha sido activada',
-    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
+    'could_not_enable_currency'                 => 'No se pudo habilitar la moneda ":name". Por favor, revise los registros.',
     'currency_is_now_disabled'                  => 'Moneda ":name" ha sido desactivada',
-    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
+    'could_not_disable_currency'                => 'No se pudo deshabilitar la moneda ":name". ¿Tal vez todavía esté en uso?',
 
     // forms:
     'mandatoryFields'                           => 'Campos obligatorios',
@@ -1949,7 +1949,7 @@ return [
 
 
     // transactions:
-    'unreconcile'                               => 'Undo reconciliation',
+    'unreconcile'                               => 'Deshacer reconciliación',
     'update_withdrawal'                         => 'Actualización de gasto',
     'update_deposit'                            => 'Actualizar ingreso',
     'update_transaction'                        => 'Actualizar transacción',
@@ -2769,3 +2769,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

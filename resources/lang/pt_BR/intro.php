@@ -57,7 +57,7 @@ return [
     'accounts_create_asset_virtual'         => 'Às vezes, ajuda a dar à sua conta um saldo virtual: um valor extra sempre adicionado ou removido do saldo real.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Os orçamentos são usados ​​para gerenciar suas finanças e formar uma das principais funções do Firefly III.',
+    'budgets_index_intro'                   => "Os orçamentos são usados \u{200b}\u{200b}para gerenciar suas finanças e formar uma das principais funções do Firefly III.",
     'budgets_index_set_budget'              => 'Defina seu orçamento total para todos os períodos, de modo que o Firefly III possa lhe dizer se você orçou todo o dinheiro disponível.',
     'budgets_index_see_expenses_bar'        => 'Gastar dinheiro vai preencher lentamente esta barra.',
     'budgets_index_navigate_periods'        => 'Navegue por períodos para definir os orçamentos facilmente antes do tempo.',
@@ -138,7 +138,7 @@ return [
     // bill index
     'bills_index_rules'                                       => 'Aqui você visualiza quais regras se aplicam a esta fatura',
     'bills_index_paid_in_period'                              => 'Este campo indica quando a fatura foi paga pela última vez.',
-    'bills_index_expected_in_period'                          => 'Este campo indica para cada fatura se e quando a próxima é esperada.',
+    'bills_index_expected_in_period'                          => 'Este campo indica, para cada conta, se e quando a próxima conta é esperada.',
 
     // show bill
     'bills_show_billInfo'                                     => 'Esta tabela mostra algumas informações gerais sobre esta fatura.',
@@ -201,3 +201,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

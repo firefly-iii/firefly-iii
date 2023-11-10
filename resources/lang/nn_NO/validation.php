@@ -44,6 +44,7 @@ return [
     'invalid_query_currency'         => 'Søket inneheld kontoar som har ulike valuta-innstillingar, det er ikkje tillatt.',
     'iban'                           => 'Dette er ikkje ein gyldig IBAN.',
     'zero_or_more'                   => 'Verdien kan ikkje vera negativ.',
+    'no_asset_account'               => 'This is not an asset account.',
     'date_or_time'                   => 'Verdien må vera eit gyldig dato- eller klokkeslettformat (ISO 8601).',
     'source_equals_destination'      => 'Kjeldekontoen er lik destinasjonskonto.',
     'unique_account_number_for_user' => 'Det ser ut som dette kontonummeret er allereie i bruk.',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

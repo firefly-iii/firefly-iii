@@ -44,6 +44,7 @@ return [
     'invalid_query_currency'         => 'Truy vấn của bạn chứa các tài khoản có cài đặt tiền tệ khác nhau, điều này không được phép.',
     'iban'                           => 'Đây không phải là một IBAN hợp lệ.',
     'zero_or_more'                   => 'Giá trị không thể âm.',
+    'no_asset_account'               => 'This is not an asset account.',
     'date_or_time'                   => 'Giá trị phải là giá trị ngày hoặc thời gian hợp lệ (ISO 8601).',
     'source_equals_destination'      => 'Tài khoản nguồn bằng với tài khoản đích.',
     'unique_account_number_for_user' => 'Có vẻ như số tài khoản này đã được sử dụng.',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

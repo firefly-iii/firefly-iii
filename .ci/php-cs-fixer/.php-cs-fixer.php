@@ -27,7 +27,7 @@ $paths = [
     $current . '/../../database',
     $current . '/../../routes',
     $current . '/../../tests',
-    $current . '/../../resources/lang/en_US',
+    $current . '/../../resources/lang',
 ];
 
 $finder = PhpCsFixer\Finder::create()

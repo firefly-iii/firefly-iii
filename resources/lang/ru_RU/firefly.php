@@ -43,7 +43,7 @@ return [
     'split'                                => 'Разделить',
     'single_split'                         => 'Разделённая транзакция',
     'clone'                                => 'Клонировать',
-    'clone_and_edit'                       => 'Clone and edit',
+    'clone_and_edit'                       => 'Клонировать и редактировать',
     'confirm_action'                       => 'Подтвердите действие',
     'last_seven_days'                      => 'Последние 7 дней',
     'last_thirty_days'                     => 'Последние 30 дней',
@@ -279,7 +279,7 @@ return [
     'logs'                                 => 'Логи',
     'response'                             => 'Ответ',
     'visit_webhook_url'                    => 'Посетить URL вебхука',
-    'reset_webhook_secret'                 => 'Reset webhook secret',
+    'reset_webhook_secret'                 => 'Сбросить секрет webhook',
     'webhook_stored_link'                  => '<a href="webhooks/show/{ID}">Webhook #{ID} ("{title}")</a> has been stored.',
     'webhook_updated_link'                 => '<a href="webhooks/show/{ID}">Webhook #{ID}</a> ("{title}") has been updated.',
 
@@ -395,10 +395,10 @@ return [
     'search_modifier_has_no_bill'                         => 'Транзакция не должна иметь счёта',
     'search_modifier_not_has_no_bill'                     => 'The transaction must have a (any) bill',
     'search_modifier_has_any_bill'                        => 'Транзакция должна иметь (любой) счет',
-    'search_modifier_not_has_any_bill'                    => 'The transaction must have no bill',
+    'search_modifier_not_has_any_bill'                    => 'Транзакция не должна иметь счета',
     'search_modifier_has_no_tag'                          => 'У транзакции не должно быть меток',
-    'search_modifier_not_has_any_tag'                     => 'The transaction must have no tags',
-    'search_modifier_not_has_no_tag'                      => 'The transaction must have a (any) tag',
+    'search_modifier_not_has_any_tag'                     => 'У транзакции не должно быть меток',
+    'search_modifier_not_has_no_tag'                      => 'Транзакция должна иметь (любую) метку',
     'search_modifier_has_any_tag'                         => 'Транзакция должна иметь (любую) метку',
     'search_modifier_notes_contains'                      => 'Заметка к транзакции содержит ":value"',
     'search_modifier_not_notes_contains'                  => 'The transaction notes do not contain ":value"',
@@ -409,9 +409,9 @@ return [
     'search_modifier_notes_is'                            => 'Заметка к транзакции в точности совпадает с ":value"',
     'search_modifier_not_notes_is'                        => 'The transaction notes are exactly not ":value"',
     'search_modifier_no_notes'                            => 'Транзакция не содержит заметок',
-    'search_modifier_not_no_notes'                        => 'The transaction must have notes',
+    'search_modifier_not_no_notes'                        => 'Транзакция должна иметь заметки',
     'search_modifier_any_notes'                           => 'Транзакция должна содержать заметки',
-    'search_modifier_not_any_notes'                       => 'The transaction has no notes',
+    'search_modifier_not_any_notes'                       => 'У транзакции нет заметок',
     'search_modifier_amount_is'                           => 'Сумма в точности равна :value',
     'search_modifier_not_amount_is'                       => 'Сумма не равна :value',
     'search_modifier_amount_less'                         => 'Сумма меньше или равна :value',
@@ -1566,7 +1566,7 @@ return [
     'list_all_attachments'                      => 'Список всех вложений',
 
     // transaction index
-    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
+    'is_reconciled_fields_dropped'              => 'Поскольку эта транзакция сверена, вы не сможете обновить счета, ни сумму(ы).',
     'title_expenses'                            => 'Расходы',
     'title_withdrawal'                          => 'Расходы',
     'title_revenue'                             => 'Доход',
@@ -1634,8 +1634,8 @@ return [
     'create_currency'                           => 'Создать новую валюту',
     'store_currency'                            => 'Сохранить новую валюту',
     'update_currency'                           => 'Обновить валюту',
-    'new_default_currency'                      => '":name" is now the default currency.',
-    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
+    'new_default_currency'                      => '":name" сейчас валюта по умолчанию.',
+    'default_currency_failed'                   => 'Не удалось сделать ":name" валютой по умолчанию. Пожалуйста, проверьте журналы (логи).',
     'cannot_delete_currency'                    => 'Невозможно удалить валюту :name, поскольку она используется.',
     'cannot_delete_fallback_currency'           => ':name - это системная резервная валюта, она не может быть удалена.',
     'cannot_disable_currency_journals'          => 'Не удается отключить валюту :name, потому что она была использована в транзакциях.',
@@ -1661,9 +1661,9 @@ return [
     'disable_currency'                          => 'Отключить',
     'currencies_default_disabled'               => 'Большинство этих валют по умолчанию отключены. Для использования, сначала включите их.',
     'currency_is_now_enabled'                   => 'Валюта ":name" была включена',
-    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
+    'could_not_enable_currency'                 => 'Не удалось включить валюту ":name". Пожалуйста, просмотрите журналы.',
     'currency_is_now_disabled'                  => 'Валюта ":name" была отключена',
-    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
+    'could_not_disable_currency'                => 'Не удалось отключить валюту ":name". Возможно, она все еще используется?',
 
     // forms:
     'mandatoryFields'                           => 'Обязательные поля',
@@ -1949,7 +1949,7 @@ return [
 
 
     // transactions:
-    'unreconcile'                               => 'Undo reconciliation',
+    'unreconcile'                               => 'Отменить сверку',
     'update_withdrawal'                         => 'Обновить расход',
     'update_deposit'                            => 'Обновить доход',
     'update_transaction'                        => 'Обновить транзакцию',
@@ -2114,9 +2114,9 @@ return [
     'Expense account'                           => 'Счета расходов',
     'Revenue account'                           => 'Счета доходов',
     'Initial balance account'                   => 'Начальный баланс для счёта',
-    'account_type_Asset account'                => 'Asset account',
-    'account_type_Expense account'              => 'Expense account',
-    'account_type_Revenue account'              => 'Revenue account',
+    'account_type_Asset account'                => 'Счет активов',
+    'account_type_Expense account'              => 'Счета расходов',
+    'account_type_Revenue account'              => 'Счет доходов',
     'account_type_Debt'                         => 'Дебит',
     'account_type_Loan'                         => 'Заём',
     'account_type_Mortgage'                     => 'Ипотека',
@@ -2321,7 +2321,7 @@ return [
     'journal-amount'                            => 'Запись текущего счёта на оплату',
     'name'                                      => 'Название',
     'date'                                      => 'Дата',
-    'date_and_time'                             => 'Дата и время',
+    'date_and_time'                             => "Дата и\u{a0}время",
     'time'                                      => 'Время',
     'paid'                                      => 'Оплачено',
     'unpaid'                                    => 'Не оплачено',
@@ -2769,3 +2769,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

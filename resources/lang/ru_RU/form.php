@@ -147,7 +147,7 @@ return [
     'start_date'                  => 'Начало диапазона',
     'end_date'                    => 'Конец диапазона',
     'enddate'                     => 'Дата окончания',
-    'move_rules_before_delete'    => 'Rule group',
+    'move_rules_before_delete'    => 'Группа правил',
     'start'                       => 'Начало диапазона',
     'end'                         => 'Конец диапазона',
     'delete_account'              => 'Удалить счёт ":name"',
@@ -314,3 +314,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

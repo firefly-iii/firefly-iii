@@ -43,7 +43,7 @@ return [
     'split'                                => 'Podziel',
     'single_split'                         => 'Podział',
     'clone'                                => 'Sklonuj',
-    'clone_and_edit'                       => 'Clone and edit',
+    'clone_and_edit'                       => 'Sklonuj i edytuj',
     'confirm_action'                       => 'Potwierdź akcję',
     'last_seven_days'                      => 'Ostatnie 7 dni',
     'last_thirty_days'                     => 'Ostanie 30 dni',
@@ -578,8 +578,8 @@ return [
     'search_modifier_book_date_on_month'                  => 'Data księgowania transakcji jest w miesiącu ":value"',
     'search_modifier_book_date_on_day'                    => 'Data księgowania transakcji przypada w dniu miesiąca ":value"',
     'search_modifier_not_book_date_on_year'               => 'Data księgowania transakcji nie jest w roku ":value"',
-    'search_modifier_not_book_date_on_month'              => 'Transaction book date is not in month ":value"',
-    'search_modifier_not_book_date_on_day'                => 'Transaction book date is not on day of month ":value"',
+    'search_modifier_not_book_date_on_month'              => 'Data księgowania transakcji nie jest w miesiącu ":value"',
+    'search_modifier_not_book_date_on_day'                => 'Data księgowania transakcji nie przypada w dniu miesiąca ":value"',
     'search_modifier_book_date_before_year'               => 'Transaction book date is before or in year ":value"',
     'search_modifier_book_date_before_month'              => 'Transaction book date is before or in month ":value"',
     'search_modifier_book_date_before_day'                => 'Transaction book date is before or on day of month ":value"',
@@ -1566,7 +1566,7 @@ return [
     'list_all_attachments'                      => 'Lista wszystkich załączników',
 
     // transaction index
-    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
+    'is_reconciled_fields_dropped'              => 'Ponieważ ta transakcja jest uzgodniona, nie będziesz w stanie zaktualizować ani kont, ani kwot.',
     'title_expenses'                            => 'Wydatki',
     'title_withdrawal'                          => 'Wydatki',
     'title_revenue'                             => 'Przychód / dochód',
@@ -1634,8 +1634,8 @@ return [
     'create_currency'                           => 'Utwórz nową walutę',
     'store_currency'                            => 'Zapisz nową walutę',
     'update_currency'                           => 'Modyfikuj walutę',
-    'new_default_currency'                      => '":name" is now the default currency.',
-    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
+    'new_default_currency'                      => '":name" jest teraz domyślną walutą.',
+    'default_currency_failed'                   => 'Nie można ustawić ":name" jako domyślnej waluty. Proszę sprawdź dziennik zdarzeń.',
     'cannot_delete_currency'                    => 'Nie można usunąć waluty :name, ponieważ jest ona nadal używana.',
     'cannot_delete_fallback_currency'           => ':name jest walutą rezerwową systemu i nie można jej usunąć.',
     'cannot_disable_currency_journals'          => 'Nie można wyłączyć :name ponieważ istnieją powiązane transakcje.',
@@ -1661,9 +1661,9 @@ return [
     'disable_currency'                          => 'Deaktywuj',
     'currencies_default_disabled'               => 'Większość z tych walut jest domyślnie wyłączona. Aby móc z nich korzystać, należy je wcześniej aktywować.',
     'currency_is_now_enabled'                   => 'Waluta ":name" została aktywowana',
-    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
+    'could_not_enable_currency'                 => 'Nie można włączyć waluty ":name". Sprawdź dziennik zdarzeń.',
     'currency_is_now_disabled'                  => 'Waluta ":name" została deaktywowana',
-    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
+    'could_not_disable_currency'                => 'Nie można wyłączyć waluty ":name". Być może jest w użyciu?',
 
     // forms:
     'mandatoryFields'                           => 'Pola wymagane',
@@ -1949,7 +1949,7 @@ return [
 
 
     // transactions:
-    'unreconcile'                               => 'Undo reconciliation',
+    'unreconcile'                               => 'Cofnij uzgodnienie',
     'update_withdrawal'                         => 'Modyfikuj wypłatę',
     'update_deposit'                            => 'Modyfikuj wpłatę',
     'update_transaction'                        => 'Zaktualizuj transakcję',
@@ -2769,3 +2769,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

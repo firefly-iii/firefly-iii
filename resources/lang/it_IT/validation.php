@@ -44,11 +44,12 @@ return [
     'invalid_query_currency'         => 'La tua interrogazione contiene conti con valute diverse, che non è consentito.',
     'iban'                           => 'Questo non è un IBAN valido.',
     'zero_or_more'                   => 'Il valore non può essere negativo.',
+    'no_asset_account'               => 'This is not an asset account.',
     'date_or_time'                   => 'Il valore deve essere un valore valido per una data o per un orario (ISO 8601).',
     'source_equals_destination'      => 'Il conto di origine è uguale al conto di destinazione.',
     'unique_account_number_for_user' => 'Sembra che questo numero di conto sia già in uso.',
     'unique_iban_for_user'           => 'Sembra che questo IBAN sia già in uso.',
-    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
+    'reconciled_forbidden_field'     => 'Questa transazione è già riconciliata, non è possibile modificare il campo ":field"',
     'deleted_user'                   => 'A causa dei vincoli di sicurezza, non è possibile registrarsi utilizzando questo indirizzo email.',
     'rule_trigger_value'             => 'Questo valore non è valido per il trigger selezionato.',
     'rule_action_value'              => 'Questo valore non è valido per l\'azione selezionata.',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

@@ -88,7 +88,7 @@ return [
 
 
     'targetamount'                => 'Valor alvo',
-    'account_role'                => 'Função de conta',
+    'account_role'                => 'Tipo de conta',
     'opening_balance_date'        => 'Data do saldo inicial',
     'cc_type'                     => 'Plano de pagamento do Cartão de Crédito',
     'cc_monthly_payment_date'     => 'Data do pagamento mensal do Cartão de Crédito',
@@ -131,7 +131,7 @@ return [
     'symbol'                      => 'Símbolo',
     'code'                        => 'Código',
     'iban'                        => 'IBAN',
-    'account_number'              => 'Número de conta',
+    'account_number'              => 'Número da conta',
     'creditCardNumber'            => 'Número do cartão de crédito',
     'has_headers'                 => 'Cabeçalhos',
     'date_format'                 => 'Formato da Data',
@@ -169,12 +169,12 @@ return [
     'account_areYouSure_js'       => 'Tem certeza que deseja excluir a conta "{name}"?',
     'bill_areYouSure'             => 'Você tem certeza que quer apagar a fatura ":name"?',
     'rule_areYouSure'             => 'Tem certeza que deseja excluir a regra intitulada ":title"?',
-    'object_group_areYouSure'     => 'Você tem certeza que deseja excluir a regra intitulada ":title"?',
+    'object_group_areYouSure'     => 'Você tem certeza que deseja excluir a regra ":title"?',
     'ruleGroup_areYouSure'        => 'Tem certeza que deseja excluir o grupo de regras intitulado ":title"?',
     'budget_areYouSure'           => 'Tem certeza que deseja excluir o orçamento chamado ":name"?',
     'webhook_areYouSure'          => 'Você tem certeza que quer excluir o webhook ":title"?',
     'category_areYouSure'         => 'Tem certeza que deseja excluir a categoria com o nome ":name"?',
-    'recurring_areYouSure'        => 'Tem certeza que deseja excluir o grupo de regras intitulado ":title"?',
+    'recurring_areYouSure'        => 'Tem certeza que deseja excluir o grupo de regras ":title"?',
     'currency_areYouSure'         => 'Tem certeza que deseja excluir a moeda chamada ":name"?',
     'piggyBank_areYouSure'        => 'Tem certeza que deseja excluir o cofrinho chamado ":name"?',
     'journal_areYouSure'          => 'Tem certeza que deseja excluir a transação descrita ":description"?',
@@ -194,7 +194,7 @@ return [
 
     'tag_areYouSure'              => 'Você tem certeza que quer apagar a tag ":tag"?',
     'journal_link_areYouSure'     => 'Tem certeza que deseja excluir o vínculo entre <a href=":source_link">:source</a> e <a href=":destination_link">:destination</a>?',
-    'linkType_areYouSure'         => 'Tem certeza que deseja excluir o tipo de link ":name" (":inward" / ":outward")?',
+    'linkType_areYouSure'         => 'Tem certeza que deseja excluir o tipo de vínculo ":name" (":inward" / ":outward")?',
     'permDeleteWarning'           => 'Exclusão de dados do Firefly III são permanentes e não podem ser desfeitos.',
     'mass_make_selection'         => 'Você ainda pode evitar que itens sejam excluídos, removendo a caixa de seleção.',
     'delete_all_permanently'      => 'Exclua os selecionados permanentemente',
@@ -225,7 +225,7 @@ return [
     'bill_end_date'               => 'Data final',
 
     // import
-    'apply_rules'                 => 'Aplicar Regras',
+    'apply_rules'                 => 'Aplicar regras',
     'artist'                      => 'Artista',
     'album'                       => 'Álbum',
     'song'                        => 'Música',
@@ -314,3 +314,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+
