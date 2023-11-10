@@ -44,7 +44,7 @@ return [
     'invalid_query_currency'         => 'Sua consulta contém contas que têm diferentes configurações de moeda, o que não é permitido.',
     'iban'                           => 'Este não é um válido IBAN.',
     'zero_or_more'                   => 'O valor não pode ser negativo.',
-    'no_asset_account'               => 'This is not an asset account.',
+    'no_asset_account'               => 'Esta não é uma conta de ativo.',
     'date_or_time'                   => 'O valor deve ser uma data válida (ISO 8601).',
     'source_equals_destination'      => 'A conta de origem é igual à conta de destino.',
     'unique_account_number_for_user' => 'Parece que este número de conta já está em uso.',
