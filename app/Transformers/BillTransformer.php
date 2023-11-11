@@ -189,8 +189,8 @@ class BillTransformer extends AbstractTransformer
         $result = [];
         foreach ($set as $entry) {
             $result[] = [
-                'transaction_group_id'   => (int)$entry->transaction_group_id,
-                'transaction_journal_id' => $entry->id,
+                'transaction_group_id'   => (string)$entry->transaction_group_id,
+                'transaction_journal_id' => (string)$entry->id,
                 'date'                   => $entry->date->format('Y-m-d'),
             ];
         }
