@@ -142,7 +142,7 @@ return [
 
     // show bill
     'bills_show_billInfo'                                     => 'Ta tabela prikazuje nekaj splošnih informacij o tem računu.',
-    'bills_show_billButtons'                                  => 'Uporabite ta gumb za ponovno skeniranje starih transakcij, da se bodo ujemale s tem računom.',
+    'bills_show_billButtons'                                  => 'Uporabite ta gumb za ponovni pregled starih transakcij, da se bodo ujemale s tem računom.',
     'bills_show_billChart'                                    => 'Ta grafikon prikazuje transakcije, povezane s tem računom.',
 
     // create bill
@@ -157,7 +157,7 @@ return [
     'rules_index_intro'                                       => 'Firefly III vam omogoča upravljanje pravil, ki bodo samodejno uporabljena za vsako transakcijo, ki jo ustvarite ali uredite.',
     'rules_index_new_rule_group'                              => 'Za lažje upravljanje lahko pravila združite v skupine.',
     'rules_index_new_rule'                                    => 'Ustvarite poljubno število pravil.',
-    'rules_index_prio_buttons'                                => 'Naročite jih tako, kot se vam zdi primerno.',
+    'rules_index_prio_buttons'                                => 'Razvrstite jih tako, kot se vam zdi primerno.',
     'rules_index_test_buttons'                                => 'Svoja pravila lahko preizkusite ali jih uporabite za obstoječe transakcije.',
     'rules_index_rule-triggers'                               => 'Pravila imajo "sprožilce" in "dejanja", ki jih lahko razvrstite tako, da jih povlečete in spustite.',
     'rules_index_outro'                                       => 'Ne pozabite preveriti strani s pomočjo z ikono (?) zgoraj desno!',

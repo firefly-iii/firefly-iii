@@ -99,7 +99,7 @@ return [
     'description'                 => 'Описание',
     'expense_account'             => 'Счет расходов',
     'revenue_account'             => 'Доходный счет',
-    'decimal_places'              => 'Количество цифр после точки',
+    'decimal_places'              => 'Количество знаков после запятой',
     'destination_amount'          => 'Сумма (назначение)',
     'new_email_address'           => 'Новый адрес электронной почты',
     'verification'                => 'Проверка',

@@ -44,7 +44,7 @@ return [
     'invalid_query_currency'         => 'Twoje zapytanie zawiera konta, które mają różne ustawienia walutowe, co jest niedozwolone.',
     'iban'                           => 'To nie jest prawidłowy IBAN.',
     'zero_or_more'                   => 'Wartość nie może być ujemna.',
-    'no_asset_account'               => 'This is not an asset account.',
+    'no_asset_account'               => 'To nie jest konto aktywów.',
     'date_or_time'                   => 'Wartość musi być prawidłową datą lub czasem (ISO 8601).',
     'source_equals_destination'      => 'Konto źródłowe jest równe kontu docelowemu.',
     'unique_account_number_for_user' => 'Wygląda na to, że ten numer konta jest już w użyciu.',

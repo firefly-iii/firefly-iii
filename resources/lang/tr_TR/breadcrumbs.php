@@ -56,7 +56,7 @@ return [
     'change_email'     => 'E-posta adresini değiştir',
     'bills'            => 'Fatura',
     'newBill'          => 'Yeni Fatura',
-    'edit_bill'        => 'Faturayı düzenle ":name"',
+    'edit_bill'        => '":name" faturasını düzenle',
     'delete_bill'      => '":name" faturasını sil',
     'reports'          => 'Raporlar',
     'search_result'    => '":query" için arama sonuçları',

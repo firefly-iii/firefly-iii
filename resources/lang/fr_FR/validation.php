@@ -47,7 +47,7 @@ return [
     'no_asset_account'               => 'Ce n\'est pas un compte d\'actif.',
     'date_or_time'                   => 'La valeur doit être une date ou une heure valide (ISO 8601).',
     'source_equals_destination'      => 'Le compte source est identique au compte de destination.',
-    'unique_account_number_for_user' => 'Il semble que ce numéro de compte est déjà utilisé.',
+    'unique_account_number_for_user' => 'Il semble que ce numéro de compte soit déjà utilisé.',
     'unique_iban_for_user'           => 'Il semble que cet IBAN soit déjà utilisé.',
     'reconciled_forbidden_field'     => 'Cette opération est déjà rappochée, vous ne pouvez pas modifier «:field»',
     'deleted_user'                   => 'Compte tenu des contraintes de sécurité, vous ne pouvez pas vous inscrire en utilisant cette adresse e-mail.',

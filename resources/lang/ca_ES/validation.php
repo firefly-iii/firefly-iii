@@ -44,7 +44,7 @@ return [
     'invalid_query_currency'         => 'La consulta conté comptes amb diferents preferències de moneda, cosa que no és permesa.',
     'iban'                           => 'Aquest IBAN no és vàlid.',
     'zero_or_more'                   => 'El valor no pot ser negatiu.',
-    'no_asset_account'               => 'This is not an asset account.',
+    'no_asset_account'               => 'Aquest no és un compte d\'actius.',
     'date_or_time'                   => 'El valor ha de ser una data o hora vàlida (ISO 8601).',
     'source_equals_destination'      => 'El compte d\'origen és el mateix que el compte de destí.',
     'unique_account_number_for_user' => 'Sembla que el número de compte ja està en ús.',

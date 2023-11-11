@@ -44,7 +44,7 @@ return [
     'invalid_query_currency'         => 'Vaša poizvedba vsebuje račune, ki imajo različne nastavitve valute, kar ni dovoljeno.',
     'iban'                           => 'To ni veljaven IBAN.',
     'zero_or_more'                   => 'Vrednost ne more biti negativna.',
-    'no_asset_account'               => 'This is not an asset account.',
+    'no_asset_account'               => 'To ni račun sredstev.',
     'date_or_time'                   => 'Vrednost mora biti veljavna vrednost datuma ali časa (ISO 8601).',
     'source_equals_destination'      => 'Izvorni račun je enak ciljnemu računu.',
     'unique_account_number_for_user' => 'Kaže, da je ta številka računa že v uporabi.',

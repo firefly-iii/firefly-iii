@@ -88,7 +88,7 @@ return [
     'delete_journal'         => 'Supprimer l\'opération ":description"',
     'delete_group'           => 'Supprimer l\'opération ":description"',
     'tags'                   => 'Tags',
-    'createTag'              => 'Créer un nouveau mot-clé',
+    'createTag'              => 'Créer un nouveau tag',
     'edit_tag'               => 'Modifier le tag ":tag"',
     'delete_tag'             => 'Supprimer le tag ":tag"',
     'delete_journal_link'    => 'Supprimer le lien entre les opérations',

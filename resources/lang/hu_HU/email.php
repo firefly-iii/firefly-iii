@@ -37,7 +37,7 @@ declare(strict_types=1);
 return [
     // common items
     'greeting'                                => 'Üdv!',
-    'closing'                                 => 'Beep boop,',
+    'closing'                                 => 'Leállás...',
     'signature'                               => 'Firefly III levelző robot',
     'footer_ps'                               => 'UI: Ezt az üzenet azért küldtük, mert kérés érkezett rá a :ipAddress IP címről.',
 
