@@ -30,7 +30,7 @@
         "submit": "\u9001\u4fe1",
         "amount": "\u91d1\u984d",
         "date": "\u65e5\u4ed8",
-        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
+        "is_reconciled_fields_dropped": "\u3053\u306e\u53d6\u5f15\u306f\u7167\u5408\u6e08\u307f\u306e\u305f\u3081\u3001\u53e3\u5ea7\u3084\u91d1\u984d\u3092\u66f4\u65b0\u3059\u308b\u3053\u3068\u306f\u3067\u304d\u307e\u305b\u3093\u3002",
         "tags": "\u30bf\u30b0",
         "no_budget": "(\u4e88\u7b97\u306a\u3057)",
         "no_bill": "(\u8acb\u6c42\u306a\u3057)",

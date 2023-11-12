@@ -2,7 +2,7 @@
     "firefly": {
         "welcome_back": "\u00bfQu\u00e9 est\u00e1 pasando?",
         "flash_error": "\u00a1Error!",
-        "flash_warning": "\u00a1Atenci\u00f3n!",
+        "flash_warning": "\u00a1Advertencia!",
         "flash_success": "\u00a1Operaci\u00f3n correcta!",
         "close": "Cerrar",
         "split_transaction_title": "Descripci\u00f3n de la transacci\u00f3n dividida",
@@ -30,7 +30,7 @@
         "submit": "Enviar",
         "amount": "Cantidad",
         "date": "Fecha",
-        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
+        "is_reconciled_fields_dropped": "Debido a que esta transacci\u00f3n est\u00e1 reconciliada, no podr\u00e1 actualizar las cuentas, ni las cantidades.",
         "tags": "Etiquetas",
         "no_budget": "(sin presupuesto)",
         "no_bill": "(sin factura)",

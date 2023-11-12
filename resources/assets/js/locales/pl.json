@@ -30,7 +30,7 @@
         "submit": "Prze\u015blij",
         "amount": "Kwota",
         "date": "Data",
-        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
+        "is_reconciled_fields_dropped": "Poniewa\u017c ta transakcja jest uzgodniona, nie b\u0119dziesz w stanie zaktualizowa\u0107 ani kont, ani kwot.",
         "tags": "Tagi",
         "no_budget": "(brak bud\u017cetu)",
         "no_bill": "(brak rachunku)",
