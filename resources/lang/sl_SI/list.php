@@ -120,7 +120,7 @@ return [
     'attachments_count'       => 'Število prilog',
     'bills_count'             => 'Število računov',
     'categories_count'        => 'Število kategorij',
-    'budget_count'            => 'Število budžetov',
+    'budget_count'            => 'Število proračunov',
     'rule_and_groups_count'   => 'Število pravil in skupin pravil',
     'tags_count'              => 'Število značk',
     'tags'                    => 'Oznake',
