@@ -40,5 +40,5 @@ return [
     'token'    => 'Žeton za ponastavitev gesla ni veljaven.',
     'sent'     => 'Poslali smo vam povezavo za ponastavitev gesla!',
     'reset'    => 'Vaše geslo je bilo ponastavljeno!',
-    'blocked'  => 'Dober poskus...',
+    'blocked'  => 'Ampak dober poskus.',
 ];

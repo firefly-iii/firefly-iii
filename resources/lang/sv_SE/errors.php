@@ -45,7 +45,7 @@ return [
     'be_right_back'           => 'Strax tillbaka!',
     'check_back'              => 'Firefly III är nere för nödvändigt underhåll. Vänligen kom tillbaka om en liten stund.',
     'error_occurred'          => 'Hoppsan! Ett fel uppstod.',
-    'db_error_occurred'       => 'Whoops! A database error occurred.',
+    'db_error_occurred'       => 'Hoppsan! Ett databasfel inträffade.',
     'error_not_recoverable'   => 'Oturligt nog har ett återkalligt fel skett :(. Firefly III har gått sönder. Felet är:',
     'error'                   => 'Fel',
     'error_location'          => 'Detta fel inträffade i filen <span style="font-family: monospace;">:file</span> på rad :line med kod :code.',

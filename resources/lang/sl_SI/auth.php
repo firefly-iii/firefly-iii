@@ -37,5 +37,5 @@ declare(strict_types=1);
 
 return [
     'failed'   => 'Podatki se ne ujemajo s podatki v naši bazi.',
-    'throttle' => 'Prevečkrat ste se poskusili prijaviti. Poskusite ponovno čez :seconds sekunde.',
+    'throttle' => 'Prevečkrat ste se poskusili prijaviti. Poskusite ponovno čez :seconds sekund.',
 ];

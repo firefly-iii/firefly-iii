@@ -42,11 +42,11 @@ return [
 Računi prihodkov so računi iz katerih dobivate denar, kot npr. vaš delodajalec, država in drugi viri vaših prihodkov.
 Računi obveznosti so vaši dolgovi in krediti, kot na primer dolg na kreditni kartici in študentsko posojilo. Na tej strani lahko račune urejate ali jih odstranite.',
     'budgets-index'          => 'Na tej strani najdete pregled nad vašimi proračuni. Zgornji kazalec prikazuje vsoto ki je na razpolago za ta proračun. To lahko nastavljate za katerokoli obdobje, tako da kliknete na vsoto na desni. Vsota, ki ste jo dejansko porabili je prikazana na spodnjem kazalcu. Spodaj so prikazani vaši stroški razporejeni po budžetih.',
-    'reports-index-start'    => 'Firefly III podpira mnogo različnih poročil. Preberi več s klikom na ikono <i class="fa fa-question-circle"></i> v zgorjnem desnem kotu.',
+    'reports-index-start'    => 'Firefly III podpira mnogo različnih poročil. Preberi več s klikom na ikono <i class="fa fa-question-circle"></i> v zgornjem desnem kotu.',
     'reports-index-examples' => 'Poglej si še ostale primere: <a href=":one"> mesečni finančni pregled</a>, <a href=":two">letni finančni pregled</a> in <a href=":three">pregled proračuna</a>.',
-    'currencies-index'       => 'Firefly III podpira mnogo valut. Čeprav je privzet Evro, je možno nastaviti USD in ostale valute. Nekaj valut je že vključenih, po želji pa lahko dodaš svoje. Sprememba privzete valute ne bo spremenila valute na obstoječih transakcijah, Firefly III pa podpira uporabo več valut istočasno.',
+    'currencies-index'       => 'Firefly III podpira več valut. Čeprav je privzet Evro, je možno nastaviti USD in ostale valute. Nekaj valut je že vključenih, po želji pa lahko dodate svoje. Sprememba privzete valute ne bo spremenila valute na obstoječih transakcijah, Firefly III pa podpira uporabo več valut istočasno.',
     'transactions-index'     => 'Ti stroški, prihodki in prenosi niso pretirano domiselni. Ustvarjeni so bili samodejno.',
-    'piggy-banks-index'      => 'Obstajajo trije pujski. Uporabi gumba plus in minus da vplivaš na količino denarja v vsakem. Klikni na ime pujska za več informacij.',
+    'piggy-banks-index'      => 'Obstajajo trije hranilniki. Uporabite gumba plus in minus da vplivate na količino denarja v vsakem. Kliknite na ime hranilnika za več informacij.',
     'profile-index'          => 'Demo spletno mesto se ponastavi vsake štiri ure. Dostop lahko izgubiš v vsakem trenutku. Ta proces je samodejen in ne gre za "bug".',
 ];
 

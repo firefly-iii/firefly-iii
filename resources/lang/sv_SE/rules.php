@@ -39,7 +39,7 @@ return [
     'is_already_withdrawal'                       => 'This transaction is already a withdrawal',
     'is_already_deposit'                          => 'This transaction is already a deposit',
     'is_already_transfer'                         => 'This transaction is already a transfer',
-    'is_not_transfer'                             => 'This transaction is not a transfer',
+    'is_not_transfer'                             => 'Denna transaktion är inte en överföring',
     'complex_error'                               => 'Something complicated went wrong. Sorry about that. Please inspect the logs of Firefly III',
     'no_valid_opposing'                           => 'Conversion failed because there is no valid account named ":account"',
     'new_notes_empty'                             => 'The notes to be set are empty',

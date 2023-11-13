@@ -36,13 +36,13 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Dobrodošli na osnovni strani Firefly III. Vzemi si čas za sprehod skozi ta uvod, da dobiš občutek, kako Firefly III deluje.',
-    'index_accounts-chart'                  => 'Ta diagram prikazuje trenutno stanje tvojih računov sredstev. V nastavitvah lahko izbereš račune, ki so vidni tukaj.',
-    'index_box_out_holder'                  => 'To polje in polja poleg tega ti bodo omogočila hiter pregled tvoje finančne situacije.',
-    'index_help'                            => 'Če potrebuješ pomoč na strani ali obrazcu, pritisni ta gumb.',
-    'index_outro'                           => 'Večina strani Firefly III se bo začela z malo predstavitvijo, kot je ta. Če imaš vprašanja ali pripombe, se obrni name. Uživaj!',
-    'index_sidebar-toggle'                  => 'Za ustvarjanje novih transakcij, računov ali drugih stvari uporabi meni pod to ikono.',
-    'index_cash_account'                    => 'To so računi, ki so bili ustvarjeni do sedaj. Lahko uporabiš gotovinski račun za sledenje gotovinskih stroškov, vendar to ni obvezno.',
+    'index_intro'                           => 'Dobrodošli na osnovni strani Firefly III. Vzemite si čas za sprehod skozi ta uvod, da dobite občutek, kako Firefly III deluje.',
+    'index_accounts-chart'                  => 'Ta diagram prikazuje trenutno stanje vaših računov sredstev. V nastavitvah lahko izberete račune, ki so vidni tukaj.',
+    'index_box_out_holder'                  => 'To polje in polja poleg tega vam bodo omogočila hiter pregled vaše finančne situacije.',
+    'index_help'                            => 'Če potrebujete pomoč na strani ali obrazcu, pritisnite ta gumb.',
+    'index_outro'                           => 'Večina strani Firefly III se bo začela z malo predstavitvijo, kot je ta. Če imate vprašanja ali pripombe, se obrnite name. Uživaj!',
+    'index_sidebar-toggle'                  => 'Za ustvarjanje novih transakcij, računov ali drugih stvari uporabite meni pod to ikono.',
+    'index_cash_account'                    => 'To so računi, ki so bili ustvarjeni do sedaj. Lahko uporabite gotovinski račun za sledenje gotovinskih stroškov, vendar to ni obvezno.',
 
     // transactions
     'transactions_create_basic_info'        => 'Vnesite osnovne podatke o transakciji. Vir, destinacija, datum in opis.',
@@ -51,19 +51,19 @@ return [
     'transactions_create_split'             => 'Če želite razdeliti transakcijo, dodajte več delitev s tem gumbom',
 
     // create account:
-    'accounts_create_iban'                  => 'Svojim računom dodeli veljaven IBAN. To lahko zelo olajša uvoz podatkov v prihodnosti.',
+    'accounts_create_iban'                  => 'Vašim računom dodelite veljaven IBAN. To lahko zelo olajša uvoz podatkov v prihodnosti.',
     'accounts_create_asset_opening_balance' => 'Računi sredstev imajo lahko "začetno stanje", kar označuje začetek zgodovine tega računa v Firefly III.',
-    'accounts_create_asset_currency'        => 'Firefly III podpira več valut. Računi sredstev imajo eno glavno valuto, ki jo nastaviš tukaj.',
-    'accounts_create_asset_virtual'         => 'Včasih lahko računu nastaviš virtualno stanje: dodaten znesek, ki se vedno doda ali odstrani od dejanskega stanja.',
+    'accounts_create_asset_currency'        => 'Firefly III podpira več valut. Računi sredstev imajo eno glavno valuto, ki jo nastavite tukaj.',
+    'accounts_create_asset_virtual'         => 'Včasih lahko računu nastavite virtualno stanje: dodaten znesek, ki se vedno doda ali odstrani od dejanskega stanja.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Proračuni se uporabljajo za upravljanje tvojih financ in tvorijo eno od ključnih funkcij Firefly III.',
-    'budgets_index_set_budget'              => 'Določi svoj celotni proračun za vsako obdobje, tako da ti lahko Firefly III pove, če si predvideli vsa razpoložljiva sredstva.',
+    'budgets_index_intro'                   => 'Proračuni se uporabljajo za upravljanje vaših financ in tvorijo eno od ključnih funkcij Firefly III.',
+    'budgets_index_set_budget'              => 'Določite svoj celotni proračun za vsako obdobje, tako da vam lahko Firefly III pove, če ste predvideli vsa razpoložljiva sredstva.',
     'budgets_index_see_expenses_bar'        => 'Poraba denarja bo počasi zapolnila to vrstico.',
     'budgets_index_navigate_periods'        => 'Krmarjenje po obdobjih omogoča preprosto predčasno nastavitev proračunov.',
-    'budgets_index_new_budget'              => 'Ustvari nove proračune, kot se ti zdi primerno.',
-    'budgets_index_list_of_budgets'         => 'S to tabelo določi zneske za vsak proračun in si oglej, kako napreduješ.',
-    'budgets_index_outro'                   => 'Če želiš izvedeti več o pripravi proračuna, preveri ikono pomoči v zgornjem desnem kotu.',
+    'budgets_index_new_budget'              => 'Ustvarite nove proračune, kot se vam zdi primerno.',
+    'budgets_index_list_of_budgets'         => 'S to tabelo določite zneske za vsak proračun in si oglejte, kako napredujete.',
+    'budgets_index_outro'                   => 'Če želite izvedeti več o pripravi proračuna, preverite ikono pomoči v zgornjem desnem kotu.',
 
 /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
@@ -78,11 +78,11 @@ return [
 
 
     // reports (index)
-    'reports_index_intro'                   => 'S temi poročili dobiš podroben vpogled v svoje finance.',
-    'reports_index_inputReportType'         => 'Izberi vrsto poročila. Oglej si strani za pomoč, če želiš videti, kaj ti vsako poročilo prikazuje.',
-    'reports_index_inputAccountsSelect'     => 'Račune sredstev lahko izključiš ali vključiš, kot se ti zdi primerno.',
-    'reports_index_inputDateRange'          => 'Izbrano časovno obdobje je v celoti odvisno od tebe: od enega dneva do 10 let.',
-    'reports_index_extra-options-box'       => 'Glede na izbrano poročilo lahko tukaj izbereš dodatne filtre in možnosti. Opazuj polje, ko spreminjaš vrste poročil.',
+    'reports_index_intro'                   => 'S temi poročili dobite podroben vpogled v vaše finance.',
+    'reports_index_inputReportType'         => 'Izberite vrsto poročila. Oglejte si strani za pomoč, če želite videti, kaj vam vsako poročilo prikazuje.',
+    'reports_index_inputAccountsSelect'     => 'Račune sredstev lahko izključite ali vključite, kot se vam to zdi primerno.',
+    'reports_index_inputDateRange'          => 'Izbrano časovno obdobje je v celoti odvisno od vas: od enega dneva do 10 let.',
+    'reports_index_extra-options-box'       => 'Glede na izbrano poročilo lahko tukaj izberete dodatne filtre in možnosti. Opazujte polje, ko spreminjate vrste poročil.',
 
     // reports (reports)
     'reports_report_default_intro'          => 'To poročilo vam bo dalo hiter in celovit pregled vaših financ. Če želite videti še kaj drugega, me prosim kontaktirajte!',
@@ -138,7 +138,7 @@ return [
     // bill index
     'bills_index_rules'                                       => 'Tukaj vidite, katera pravila bodo preverila, ali je to željen račun',
     'bills_index_paid_in_period'                              => 'V tem polju je navedeno, kdaj je bil račun nazadnje plačan.',
-    'bills_index_expected_in_period'                          => 'To polje označuje za vsak račun, če in kdaj se pričakuje naslednji račun.',
+    'bills_index_expected_in_period'                          => 'To polje označuje za vsak račun, če in kdaj se pričakuje da bo izdan naslednji račun.',
 
     // show bill
     'bills_show_billInfo'                                     => 'Ta tabela prikazuje nekaj splošnih informacij o tem računu.',

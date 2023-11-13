@@ -37,7 +37,7 @@ declare(strict_types=1);
 return [
     '404_header'              => 'Firefly III ne najde te strani.',
     '404_page_does_not_exist' => 'Stran, ki ste jo zahtevali, ne obstaja. Preverite, ali niste vnesli napačnega URL-ja. Ste se morda zmotili?',
-    '404_send_error'          => 'Če ste bili samodejno preusmerjeni na to stran, sprejmite moje opravičilo. Ta napaka je omenjena v vaših dnevniških datotekah in hvaležen vam bom, če mi pošljete napako.',
+    '404_send_error'          => 'Če ste bili samodejno preusmerjeni na to stran, sprejmite moje opravičilo. Ta napaka je omenjena v vaših dnevniških datotekah in hvaležen vam bom, če mi to napako pošljete.',
     '404_github_link'         => 'Če ste prepričani, da bi ta stran morala obstajati, odprite težavo na <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub-u</a></strong>.',
     'whoops'                  => 'Ups!',
     'fatal_error'             => 'Prišlo je do usodne napake. Preverite dnevniške datoteke v "storage/logs" ali uporabite "docker logs -f [container]", da vidite, kaj se dogaja.',
@@ -66,11 +66,11 @@ return [
 
     'collect_info'        => 'Zberite več informacij v imeniku <code>storage/logs</code>, kjer boste našli dnevniške datoteke. Če uporabljate Docker, uporabite <code>docker logs -f [container]</code>.',
     'collect_info_more'   => 'Več o zbiranju informacij o napakah lahko preberete v <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">pogostih vprašanjih</a>.',
-    'github_help'         => 'Pridobi pomoč na GitHub-u',
+    'github_help'         => 'Pridobite pomoč na GitHub-u',
     'github_instructions' => 'Vabimo vas, da odprete novo težavo <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">na GitHub-u</a></strong>.',
-    'use_search'          => 'Uporabi iskanje!',
+    'use_search'          => 'Uporabite iskanje!',
     'include_info'        => 'Vključite informacije <a href=":link">s te strani za odpravljanje napak</a>.',
-    'tell_more'           => 'Povejte nam kaj več kot "pravijo Ups!"',
+    'tell_more'           => 'Povejte nam kaj več kot "pravi Ups!"',
     'include_logs'        => 'Vključite dnevnike napak (glejte zgoraj).',
     'what_did_you_do'     => 'Povejte nam, kaj ste počeli.',
     'offline_header'      => 'Verjetno ste brez povezave',
