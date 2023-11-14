@@ -218,7 +218,7 @@ class CreateController extends Controller
         ];
 
         // restore actions and triggers from old input:
-        if (null !== $request->old()) {
+        if (null !== $request->old() && count($request->old()) > 0) {
             $oldTriggers = $this->getPreviousTriggers($request);
             $oldActions  = $this->getPreviousActions($request);
         }

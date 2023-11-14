@@ -166,7 +166,7 @@ trait ModelInformation
      */
     private function getTriggersForJournal(TransactionJournal $journal): array
     {
-        // See reference nr. 40
+        // TODO duplicated code.
         $operators = config('search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {
@@ -250,16 +250,14 @@ trait ModelInformation
 
         foreach ($journalTriggers as $ii => $trigger) {
             try {
-                $string = view(
-                    'rules.partials.trigger',
-                    [
-                        'oldTrigger' => $trigger,
-                        'oldValue'   => $values[$index],
-                        'oldChecked' => false,
-                        'count'      => $ii + 1,
-                        'triggers'   => $triggers,
-                    ]
-                )->render();
+                $renderInfo = [
+                    'oldTrigger' => $trigger,
+                    'oldValue'   => $values[$ii],
+                    'oldChecked' => false,
+                    'count'      => $ii + 1,
+                    'triggers'   => $triggers,
+                ];
+                $string = view('rules.partials.trigger', $renderInfo)->render();
             } catch (Throwable $e) {
                 app('log')->debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
                 app('log')->debug($e->getTraceAsString());
@@ -269,7 +267,6 @@ trait ModelInformation
                 $result[] = $string;
             }
         }
-
         return $result;
     }
 }
