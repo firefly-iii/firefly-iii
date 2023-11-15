@@ -127,7 +127,7 @@ return [
 
     // reset password
     'reset_pw_subject'                        => 'Seu pedido de redefinição de senha',
-    'reset_pw_instructions'                   => 'Alguém tentou redefinir sua senha. Se foi você, por favor, siga o link abaixo para fazê-lo.',
+    'reset_pw_instructions'                   => 'Alguém tentou redefinir sua senha. Se foi você, por favor, siga o link abaixo para continuar.',
     'reset_pw_warning'                        => '**POR FAVOR**, confirme que o link realmente direciona você para o Firefly III que você espera!',
 
     // error

@@ -206,7 +206,7 @@ return [
     'also_delete_piggyBanks'      => 'O único cofrinho vinculado a essa conta será excluído também.|Todos os :count cofrinhos vinculados a esta conta serão excluídos também.',
     'also_delete_piggyBanks_js'   => 'Sem cofrinhos|O único cofrinho conectado a esta conta também será excluído.|Todos os {count} cofrinhos conectados a esta conta também serão excluídos.',
     'not_delete_piggy_banks'      => 'O cofrinho conectado a este grupo não será excluído.|Os :count cofrinhos conectados a este grupo não serão excluídos.',
-    'bill_keep_transactions'      => 'A única transação conectada a esta conta não será excluída.|Todas as :count transações conectadas a esta conta não serão excluídas.',
+    'bill_keep_transactions'      => 'A única transação conectada a esta fatura não será excluída.|Todas as :count transações conectadas a esta fatura não serão excluídas.',
     'budget_keep_transactions'    => 'A única transação conectada a este orçamento não será excluída.|Todas as :count transações conectadas a este orçamento não serão excluídas.',
     'category_keep_transactions'  => 'A única transação conectada a esta categoria não será excluída.|Todas as :count transações conectadas a esta categoria não serão excluídas.',
     'recurring_keep_transactions' => 'A única transação criada por esta transação recorrente não será excluída.|Todas as :count transações criadas por esta transação recorrente não serão excluídas.',

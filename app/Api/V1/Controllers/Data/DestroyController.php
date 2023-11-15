@@ -289,7 +289,7 @@ class DestroyController extends Controller
     }
 
     /**
-     * @param array $types<int, string>
+     * @param array $types <int, string>
      */
     private function destroyAccounts(array $types): void
     {
@@ -314,7 +314,7 @@ class DestroyController extends Controller
     }
 
     /**
-     * @param array $types<int, string>
+     * @param array $types <int, string>
      */
     private function destroyTransactions(array $types): void
     {

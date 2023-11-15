@@ -63,7 +63,7 @@ return [
     'cannot_find_destination_transaction'         => 'O Firefly III não pode encontrar a transação destino',
     'cannot_find_source_transaction_account'      => 'O Firefly III não pode encontrar a conta origem da transação',
     'cannot_find_destination_transaction_account' => 'O Firefly III não pode encontrar a conta destino da transação',
-    'cannot_find_piggy'                           => 'O Firefly III não pode encontrar um cofrinho chamdo ":name"',
+    'cannot_find_piggy'                           => 'O Firefly III não pode encontrar um cofrinho chamado ":name"',
     'no_link_piggy'                               => 'As contas da transação não estão vinculada ao cofrinho, então nenhuma ação será tomada',
     'cannot_unlink_tag'                           => 'A tag ":tag" não está vinculada a esta transação',
     'cannot_find_budget'                          => 'O Firefly III não pode encontrar o orçamento ":name"',

@@ -108,10 +108,10 @@ class Controller extends BaseController
             }
             if (null !== $date) {
                 try {
-                    $obj = Carbon::parse((string) $date, config('app.timezone'));
+                    $obj = Carbon::parse((string)$date, config('app.timezone'));
                 } catch (InvalidDateException | InvalidFormatException $e) {
                     // don't care
-                    app('log')->warning(sprintf('Ignored invalid date "%s" in API v2 controller parameter check: %s', substr((string) $date, 0, 20), $e->getMessage()));
+                    app('log')->warning(sprintf('Ignored invalid date "%s" in API v2 controller parameter check: %s', substr((string)$date, 0, 20), $e->getMessage()));
                 }
                 // out of range? set to null.
                 if (null !== $obj && ($obj->year <= 1900 || $obj->year > 2099)) {

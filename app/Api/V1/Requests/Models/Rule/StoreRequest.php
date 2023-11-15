@@ -197,7 +197,7 @@ class StoreRequest extends FormRequest
      */
     protected function atLeastOneActiveTrigger(Validator $validator): void
     {
-        $data     = $validator->getData();
+        $data = $validator->getData();
         /** @var string|int|array|null $triggers */
         $triggers = $data['triggers'] ?? [];
         // need at least one trigger
@@ -227,7 +227,7 @@ class StoreRequest extends FormRequest
      */
     protected function atLeastOneActiveAction(Validator $validator): void
     {
-        $data    = $validator->getData();
+        $data = $validator->getData();
         /** @var string|int|array|null $actions */
         $actions = $data['actions'] ?? [];
         // need at least one trigger

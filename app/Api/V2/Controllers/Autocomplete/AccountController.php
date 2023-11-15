@@ -125,8 +125,8 @@ class AccountController extends Controller
             $allItems,
             static function (array $a, array $b): int {
                 $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
-                $pos_a = (int) array_search($a['type'], $order, true);
-                $pos_b = (int) array_search($b['type'], $order, true);
+                $pos_a = (int)array_search($a['type'], $order, true);
+                $pos_b = (int)array_search($b['type'], $order, true);
 
                 return $pos_a - $pos_b;
             }

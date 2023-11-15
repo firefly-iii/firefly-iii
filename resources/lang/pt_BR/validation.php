@@ -50,7 +50,7 @@ return [
     'unique_account_number_for_user' => 'Parece que este número de conta já está em uso.',
     'unique_iban_for_user'           => 'Parece que este IBAN já está em uso.',
     'reconciled_forbidden_field'     => 'Esta transação já está reconciliada, você não pode mudar o campo ":field"',
-    'deleted_user'                   => 'Devido a restrições de segurança, você não pode registrar usando este endereço de e-mail.',
+    'deleted_user'                   => 'Devido a restrições de segurança, você não pode se registrar usando este endereço de e-mail.',
     'rule_trigger_value'             => 'Este valor é inválido para o disparo selecionado.',
     'rule_action_value'              => 'Este valor é inválido para a ação selecionada.',
     'file_already_attached'          => 'Arquivo ":name" carregado já está anexado para este objeto.',

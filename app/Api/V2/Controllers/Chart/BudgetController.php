@@ -170,7 +170,7 @@ class BudgetController extends Controller
      */
     private function noBudgetLimits(Budget $budget, Carbon $start, Carbon $end): array
     {
-        $spent    = $this->opsRepository->listExpenses($start, $end, null, new Collection([$budget]));
+        $spent = $this->opsRepository->listExpenses($start, $end, null, new Collection([$budget]));
         return $this->processExpenses($budget->id, $spent, $start, $end);
     }
 
@@ -274,7 +274,7 @@ class BudgetController extends Controller
      */
     private function processLimit(Budget $budget, BudgetLimit $limit): array
     {
-        $end      = clone $limit->end_date;
+        $end = clone $limit->end_date;
         $end->endOfDay();
         $spent                = $this->opsRepository->listExpenses($limit->start_date, $end, null, new Collection([$budget]));
         $limitCurrencyId      = $limit->transaction_currency_id;
