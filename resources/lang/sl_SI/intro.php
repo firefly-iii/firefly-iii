@@ -48,7 +48,7 @@ return [
     'transactions_create_basic_info'        => 'Vnesite osnovne podatke o transakciji. Vir, destinacija, datum in opis.',
     'transactions_create_amount_info'       => 'Vnesite znesek transakcije. Po potrebi se bodo polja samodejno posodobila za podatke o znesku v tujini.',
     'transactions_create_optional_info'     => 'Vsa ta polja so neobvezna. Če sem dodate metapodatke, bodo vaše transakcije bolje organizirane.',
-    'transactions_create_split'             => 'Če želite razdeliti transakcijo, dodajte več delitev s tem gumbom',
+    'transactions_create_split'             => 'Če želite razdeliti transakcijo, dodajte več razdelitev s tem gumbom',
 
     // create account:
     'accounts_create_iban'                  => 'Vašim računom dodelite veljaven IBAN. To lahko zelo olajša uvoz podatkov v prihodnosti.',

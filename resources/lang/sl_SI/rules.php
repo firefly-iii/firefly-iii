@@ -35,7 +35,7 @@ return [
     'journal_already_no_category'                 => 'Ta transakcija ni imela kategorije, zato je ni mogoče odstraniti',
     'journal_already_no_notes'                    => 'Ta transakcija ni imela opomb, zato jih ni mogoče odstraniti',
     'journal_not_found'                           => 'Firefly III ne najde zahtevane transakcije',
-    'split_group'                                 => 'Firefly III ne more izvesti tega dejanja na transakciji z več delitvami',
+    'split_group'                                 => 'Firefly III ne more izvesti tega dejanja na transakciji z več razdelitvami',
     'is_already_withdrawal'                       => 'Ta transakcija je že dvig',
     'is_already_deposit'                          => 'Ta transakcija je že depozit',
     'is_already_transfer'                         => 'Ta transakcija je že prenos',

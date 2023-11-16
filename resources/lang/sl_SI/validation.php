@@ -58,7 +58,7 @@ return [
     'must_exist'                     => 'ID v polju :attribute ne obstaja v bazi podatkov.',
     'all_accounts_equal'             => 'Vsi računi v tem polju morajo biti enaki.',
     'group_title_mandatory'          => 'Naslov skupine je obvezen, če obstaja več kot ena transakcija.',
-    'transaction_types_equal'        => 'Vse delitve morajo biti iste vrste.',
+    'transaction_types_equal'        => 'Vse razdelitve morajo biti iste vrste.',
     'invalid_transaction_type'       => 'Neveljavna vrsta transakcije.',
     'invalid_selection'              => 'Vaša izbira je neveljavna.',
     'belongs_user'                   => 'Ta vrednost je povezana z objektom, za katerega se zdi, da ne obstaja.',
@@ -270,7 +270,7 @@ return [
     'transfer_source_bad_data'  => '[c] Ni bilo mogoče najti veljavnega izvornega računa pri iskanju ID-ja ":id" ali imena ":name".',
     'transfer_dest_need_data'   => '[c] Za nadaljevanje potrebujete veljaven ID ciljnega računa in/ali veljavno ime ciljnega računa.',
     'transfer_dest_bad_data'    => 'Pri iskanju ID-ja ":id" ali imena ":name" ni bilo mogoče najti veljavnega ciljnega računa.',
-    'need_id_in_edit'           => 'Vsaka delitev mora imeti transaction_journal_id (bodisi veljaven ID ali 0).',
+    'need_id_in_edit'           => 'Vsaka razdelitev mora imeti transaction_journal_id (bodisi veljaven ID ali 0).',
 
     'ob_source_need_data'           => 'Za nadaljevanje morate pridobiti veljaven ID izvornega računa in/ali veljavno ime izvornega računa.',
     'lc_source_need_data'           => 'Za nadaljevanje morate pridobiti veljaven ID izvornega računa.',

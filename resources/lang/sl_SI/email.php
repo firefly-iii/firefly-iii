@@ -42,7 +42,7 @@ return [
     'footer_ps'                               => 'PS: To sporočilo je bilo poslano, ker ga je sprožila zahteva iz naslova IP :ipAddress.',
 
     // admin test
-    'admin_test_subject'                      => 'Testno sporočilo Vaše Firefly III namestitve',
+    'admin_test_subject'                      => 'Testno sporočilo vaše Firefly III namestitve',
     'admin_test_body'                         => 'To je testno sporočilo iz vašega primerka Firefly III. Poslano je bilo na elektronski naslov :email.',
 
 /*
