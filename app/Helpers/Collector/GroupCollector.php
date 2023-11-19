@@ -782,6 +782,9 @@ class GroupCollector implements GroupCollectorInterface
             /** @var array $transaction */
             foreach ($group['transactions'] as $transaction) {
                 $currencyId = (int)$transaction['currency_id'];
+                if(null === $transaction['amount']) {
+                    throw new FireflyException(sprintf('Amount is NULL for a transaction in group #%d, please investigate.', $groudId));
+                }
 
                 // set default:
                 if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {

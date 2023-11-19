@@ -97,7 +97,7 @@ return [
     'logout_others'          => 'Odjavi druge seje',
     'asset_accounts'         => 'Premoženjski računi',
     'expense_accounts'       => 'Računi stroškov',
-    'revenue_accounts'       => 'Račun dohodkov',
+    'revenue_accounts'       => 'Računi prihodkov',
     'liabilities_accounts'   => 'Obveznosti',
     'placeholder'            => '[Placeholder]',
 ];

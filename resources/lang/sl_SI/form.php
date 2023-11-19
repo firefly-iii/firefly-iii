@@ -209,7 +209,7 @@ return [
     'bill_keep_transactions'      => 'Edina transakcija, ki je povezana s tem računom, ne izbrisana.|Vseh :count transakcij, povezanih s tem računom, ne bo izbrisanih.',
     'budget_keep_transactions'    => 'Edina transakcija, povezana s tem proračunom, ne izbrisana.|Vseh :count transakcij, povezanih s tem proračunom, bo ohranjenih.',
     'category_keep_transactions'  => 'Edina transakcija, povezana s to kategorijo, ne bo izbrisana.|Vseh :count transakcij, povezanih s to kategorijo bo ohranjenih.',
-    'recurring_keep_transactions' => 'Edina transakcija, ustvarjeno s to ponavljajočo transakcijo, ne izbrisana.|Vseh :count transakcij, ustvarjenih s to ponavljajočo transakcijo bo ohranjenih.',
+    'recurring_keep_transactions' => 'Edina transakcija, ustvarjena s to ponavljajočo transakcijo, ne izbrisana.|Vseh :count transakcij, ustvarjenih s to ponavljajočo transakcijo bo ohranjenih.',
     'tag_keep_transactions'       => 'Edina transakcija, povezana s to oznako, ne bo izbrisana.|Vseh :count transakcij, povezanih s to oznako bo ohranjenih.',
     'check_for_updates'           => 'Preveri za posodobitve',
     'liability_direction'         => 'Odgovornost not/ven',

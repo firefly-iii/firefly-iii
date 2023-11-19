@@ -44,7 +44,7 @@ return [
     'invalid_query_currency'         => 'クエリには異なる通貨設定の口座を含めることはできません。',
     'iban'                           => '無効なIBANです。',
     'zero_or_more'                   => '数値はマイナスにできません。',
-    'no_asset_account'               => 'This is not an asset account.',
+    'no_asset_account'               => 'これは資産口座ではありません。',
     'date_or_time'                   => '数値はISO 8601 準拠の有効な日付や時刻である必要があります。',
     'source_equals_destination'      => '引き出し口座と預け入れ口座が同じです。',
     'unique_account_number_for_user' => 'この口座番号は既に使われているようです。',

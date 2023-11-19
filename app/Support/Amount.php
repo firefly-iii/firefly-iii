@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use NumberFormatter;
 
@@ -151,6 +150,7 @@ class Amount
         $default = $userGroup->currencies()->where('group_default', true)->first();
         if (null === $default) {
             $default = $this->getSystemCurrency();
+            // could be the user group has no default right now.
             $userGroup->currencies()->sync([$default->id => ['group_default' => true]]);
         }
         $cache->store($default);
