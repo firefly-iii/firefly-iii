@@ -90,7 +90,7 @@ class ShowController extends Controller
 
             return redirect(route('bills.show', [$bill->id]));
         }
-        $set   = $this->repository->getRulesForBill($bill);
+        $set = $this->repository->getRulesForBill($bill);
         if (0 === $set->count()) {
             $request->session()->flash('error', (string)trans('firefly.no_rules_for_bill'));
 
@@ -141,6 +141,10 @@ class ShowController extends Controller
         $manager        = new Manager();
         $manager->setSerializer(new DataArraySerializer());
         $manager->parseIncludes(['attachments', 'notes']);
+
+        // add another period to end, could fix 8163
+        $range = app('navigation')->getViewRange(true);
+        $end   = app('navigation')->addPeriod($end, $range);
 
         // Make a resource out of the data and
         $parameters = new ParameterBag();
