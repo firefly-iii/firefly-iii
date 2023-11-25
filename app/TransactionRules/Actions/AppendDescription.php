@@ -50,7 +50,7 @@ class AppendDescription implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        $description = sprintf('%s%s', $journal['description'], $this->action->action_value);
+        $description = sprintf('%s %s', $journal['description'], $this->action->action_value);
         DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $description]);
 
         // event for audit log entry
