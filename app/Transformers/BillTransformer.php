@@ -86,24 +86,37 @@ class BillTransformer extends AbstractTransformer
         foreach ($payDates as $string) {
             $payDatesFormatted[] = Carbon::createFromFormat('!Y-m-d', $string, config('app.timezone'))->toAtomString();
         }
-        $nextExpectedMatch = null;
-        if (null !== ($payDates[0] ?? null)) {
-            $nextExpectedMatch = Carbon::createFromFormat('!Y-m-d', $payDates[0], config('app.timezone'))->toAtomString();
+        // next expected match
+        $nem          = null;
+        $nemDate      = null;
+        $nemDiff      = trans('firefly.not_expected_period');
+        $firstPayDate = $payDates[0] ?? null;
+
+        if (null !== $firstPayDate) {
+            $nemDate = Carbon::createFromFormat('!Y-m-d', $firstPayDate, config('app.timezone'));
+            $nem     = $nemDate->toAtomString();
+
+            // nullify again when it's outside the current view range.
+            if ($nemDate->lt($this->parameters->get('start')) || $nemDate->gt($this->parameters->get('end'))) {
+                $nem          = null;
+                $nemDate      = null;
+                $firstPayDate = null;
+            }
         }
-        $nextExpectedMatchDiff = trans('firefly.not_expected_period');
+
         // converting back and forth is bad code but OK.
-        $temp = new Carbon($nextExpectedMatch);
-        if ($temp->isToday()) {
-            $nextExpectedMatchDiff = trans('firefly.today');
-        }
+        if (null !== $nemDate) {
+            if ($nemDate->isToday()) {
+                $nemDiff = trans('firefly.today');
+            }
 
-        $current = $payDatesFormatted[0] ?? null;
-        if (null !== $current && !$temp->isToday()) {
-            $temp2                 = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
-            $nextExpectedMatchDiff = $temp2->diffForHumans(today(config('app.timezone')), CarbonInterface::DIFF_RELATIVE_TO_NOW);
+            $current = $payDatesFormatted[0] ?? null;
+            if (null !== $current && !$nemDate->isToday()) {
+                $temp2   = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
+                $nemDiff = trans('firefly.bill_expected_date', ['date' => $temp2->diffForHumans(today(config('app.timezone')), CarbonInterface::DIFF_RELATIVE_TO_NOW)]);
+            }
+            unset($temp2);
         }
-        unset($temp, $temp2);
-
         return [
             'id'                       => $bill->id,
             'created_at'               => $bill->created_at->toAtomString(),
@@ -128,8 +141,8 @@ class BillTransformer extends AbstractTransformer
             'object_group_title'       => $objectGroupTitle,
 
             // these fields need work:
-            'next_expected_match'      => $nextExpectedMatch,
-            'next_expected_match_diff' => $nextExpectedMatchDiff,
+            'next_expected_match'      => $nem,
+            'next_expected_match_diff' => $nemDiff,
             'pay_dates'                => $payDatesFormatted,
             'paid_dates'               => $paidDataFormatted,
             'links'                    => [
@@ -299,7 +312,14 @@ class BillTransformer extends AbstractTransformer
             // If nextExpectedMatch is after end, we continue:
             if ($nextExpectedMatch > $this->parameters->get('end')) {
                 app('log')->debug('Next expected match is after END, so stop looking');
-                break;
+                //break;
+                if ($set->count() > 0) {
+                    app('log')->debug(sprintf('Already have %d date(s), so break.', $set->count()));
+                    break;
+                }
+                app('log')->debug('Add date to set anyway.');
+                $set->push(clone $nextExpectedMatch);
+                continue;
             }
             app('log')->debug(sprintf('Next expected match is %s', $nextExpectedMatch->format('Y-m-d')));
             // add to set, if the date is ON or after the start parameter
