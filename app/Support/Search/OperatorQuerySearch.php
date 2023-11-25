@@ -60,8 +60,7 @@ use TypeError;
 /**
  * Class OperatorQuerySearch
  */
-class
-OperatorQuerySearch implements SearchInterface
+class OperatorQuerySearch implements SearchInterface
 {
     protected Carbon                    $date;
     private AccountRepositoryInterface  $accountRepository;
@@ -212,8 +211,14 @@ OperatorQuerySearch implements SearchInterface
                 $context    = config(sprintf('search.operators.%s.needs_context', $operator));
 
                 // is an operator that needs no context, and value is false, then prohibited = true.
-                if ('false' === $value && in_array($operator, $this->validOperators, true) && false === $context) {
+                if ('false' === $value && in_array($operator, $this->validOperators, true) && false === $context && !$prohibited) {
                     $prohibited = true;
+                    $value = 'true';
+                }
+                // if the operator is prohibited, but the value is false, do an uno reverse
+                if ('false' === $value && $prohibited && in_array($operator, $this->validOperators, true) && false === $context) {
+                    $prohibited = false;
+                    $value = 'true';
                 }
 
                 // must be valid operator:

@@ -138,12 +138,14 @@ trait RuleManagement
 
         $index = 0;
         foreach ($submittedOperators as $operator) {
+            $rootOperator = OperatorQuerySearch::getRootOperator($operator['type']);
+            $needsContext = (bool) config(sprintf('search.operators.%s.needs_context',$rootOperator));
             try {
                 $renderedEntries[] = view(
                     'rules.partials.trigger',
                     [
-                        'oldTrigger'    => OperatorQuerySearch::getRootOperator($operator['type']),
-                        'oldValue'      => $operator['value'],
+                        'oldTrigger'    => $rootOperator,
+                        'oldValue'      => $needsContext ? $operator['value'] : '',
                         'oldChecked'    => false,
                         'oldProhibited' => $operator['prohibited'] ?? false,
                         'count'         => $index + 1,

@@ -100,13 +100,15 @@ class CreateController extends Controller
                 session()->flash('warning', trans('firefly.rule_from_search_words', ['string' => $words]));
                 $operators[] = [
                     'type'  => 'description_contains',
-                    'value' => $words];
+                    'value' => $words
+                ];
             }
             $oldTriggers = $this->parseFromOperators($operators);
         }
+        //var_dump($oldTriggers);exit;
 
         // restore actions and triggers from old input:
-        if (null !== $request->old()) {
+        if (is_array($request->old()) && count($request->old()) > 0) {
             $oldTriggers = $this->getPreviousTriggers($request);
             $oldActions  = $this->getPreviousActions($request);
         }

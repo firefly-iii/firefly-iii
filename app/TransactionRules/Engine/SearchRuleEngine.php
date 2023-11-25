@@ -115,13 +115,13 @@ class SearchRuleEngine implements RuleEngineInterface
             }
 
             // if needs no context, value is different:
-            $needsContext = config(sprintf('search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
+            $needsContext = (bool) config(sprintf('search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true;
             if (false === $needsContext) {
-                app('log')->debug(sprintf('SearchRuleEngine:: add a rule trigger: %s:true', $ruleTrigger->trigger_type));
+                app('log')->debug(sprintf('SearchRuleEngine:: add a rule trigger (no context): %s:true', $ruleTrigger->trigger_type));
                 $searchArray[$ruleTrigger->trigger_type][] = 'true';
             }
             if (true === $needsContext) {
-                app('log')->debug(sprintf('SearchRuleEngine:: add a rule trigger: %s:"%s"', $ruleTrigger->trigger_type, $ruleTrigger->trigger_value));
+                app('log')->debug(sprintf('SearchRuleEngine:: add a rule trigger (context): %s:"%s"', $ruleTrigger->trigger_type, $ruleTrigger->trigger_value));
                 $searchArray[$ruleTrigger->trigger_type][] = sprintf('"%s"', $ruleTrigger->trigger_value);
             }
         }
@@ -136,6 +136,7 @@ class SearchRuleEngine implements RuleEngineInterface
         if ($this->hasSpecificJournalTrigger($searchArray)) {
             $date = $this->setDateFromJournalTrigger($searchArray);
         }
+
         // build and run the search engine.
         $searchEngine = app(SearchInterface::class);
         $searchEngine->setUser($this->user);
@@ -145,7 +146,9 @@ class SearchRuleEngine implements RuleEngineInterface
 
         foreach ($searchArray as $type => $searches) {
             foreach ($searches as $value) {
-                $searchEngine->parseQuery(sprintf('%s:%s', $type, $value));
+                $query = sprintf('%s:%s', $type, $value);
+                app('log')->debug(sprintf('SearchRuleEngine:: add query "%s"', $query));
+                $searchEngine->parseQuery($query);
             }
         }
 
