@@ -42,13 +42,12 @@ class CronController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/about/getCron
      *
      * @param CronRequest $request
-     * @param string      $token
      *
      * @return JsonResponse
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function cron(CronRequest $request, string $token): JsonResponse
+    public function cron(CronRequest $request): JsonResponse
     {
         $config = $request->getAll();
 

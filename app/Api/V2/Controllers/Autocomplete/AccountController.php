@@ -123,12 +123,12 @@ class AccountController extends Controller
 
         usort(
             $allItems,
-            static function (array $a, array $b): int {
+            static function (array $left, array $right): int {
                 $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
-                $pos_a = (int)array_search($a['type'], $order, true);
-                $pos_b = (int)array_search($b['type'], $order, true);
+                $posLeft = (int)array_search($left['type'], $order, true);
+                $posRight = (int)array_search($right['type'], $order, true);
 
-                return $pos_a - $pos_b;
+                return $posLeft - $posRight;
             }
         );
         return response()->json($allItems);

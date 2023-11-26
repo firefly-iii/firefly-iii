@@ -54,7 +54,7 @@ class CLIToken implements BinderInterface
         foreach ($users as $user) {
             $accessToken = app('preferences')->getForUser($user, 'access_token');
             if (null !== $accessToken && $accessToken->data === $value) {
-                app('log')->info(sprintf('Recognized user #%d (%s) from his acccess token.', $user->id, $user->email));
+                app('log')->info(sprintf('Recognized user #%d (%s) from his access token.', $user->id, $user->email));
 
                 return $value;
             }

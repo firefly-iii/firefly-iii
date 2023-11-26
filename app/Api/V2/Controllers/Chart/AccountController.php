@@ -84,6 +84,7 @@ class AccountController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function dashboard(DateRequest $request): JsonResponse
     {

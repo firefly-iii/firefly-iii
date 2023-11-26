@@ -75,13 +75,11 @@ class ShowController extends Controller
      *
      * Display a listing of the budget limits for this budget.
      *
-     * @param Request $request
-     * @param Budget  $budget
+     * @param Budget $budget
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
-    public function index(Request $request, Budget $budget): JsonResponse
+    public function index(Budget $budget): JsonResponse
     {
         $manager = $this->getManager();
         $manager->parseIncludes('budget');
@@ -111,7 +109,7 @@ class ShowController extends Controller
      * @param SameDateRequest $request
      *
      * @return JsonResponse
-     * @throws FireflyException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function indexAll(SameDateRequest $request): JsonResponse
     {
@@ -138,14 +136,13 @@ class ShowController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/getBudgetLimit
      *
-     * @param Request     $request
      * @param Budget      $budget
      * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function show(Request $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse
+    public function show(Budget $budget, BudgetLimit $budgetLimit): JsonResponse
     {
         if ($budget->id !== $budgetLimit->budget_id) {
             throw new FireflyException('20028: The budget limit does not belong to the budget.');

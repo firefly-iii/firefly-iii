@@ -69,12 +69,9 @@ class ShowController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
-     * @throws FireflyException
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         $manager = $this->getManager();
 

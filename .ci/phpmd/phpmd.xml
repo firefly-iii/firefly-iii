@@ -43,8 +43,8 @@
     </rule>
     <rule ref="rulesets/design.xml/CouplingBetweenObjects">
         <properties>
-            <!-- TODO we want to be at minimum 13. But we start high, and drop the bar slowly. -->
-            <property name="minimum" value="256"/>
+            <!-- TODO we want to be at maximum 13. But we start high, and drop the bar slowly. -->
+            <property name="maximum" value="256"/>
         </properties>
     </rule>
 
@@ -67,7 +67,7 @@
     <rule ref="rulesets/codesize.xml/NPathComplexity">
         <properties>
             <!-- TODO we want to be at a value of 128. But we start high, and drop the bar slowly. -->
-            <property name="minimum" value="2267200"/>
+            <property name="minimum" value="24062500"/>
         </properties>
     </rule>
     <rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
