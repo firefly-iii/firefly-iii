@@ -51,7 +51,7 @@ class Amount
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
     {
-        return $this->formatFlat($format->symbol, (int)$format->decimal_places, $amount, $coloured);
+        return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
     }
 
     /**

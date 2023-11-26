@@ -59,7 +59,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
                 'currency_code'           => $availableBudget->transactionCurrency->code,
                 'currency_symbol'         => $availableBudget->transactionCurrency->symbol,
                 'currency_name'           => $availableBudget->transactionCurrency->name,
-                'currency_decimal_places' => (int)$availableBudget->transactionCurrency->decimal_places,
+                'currency_decimal_places' => $availableBudget->transactionCurrency->decimal_places,
                 'native_id'               => $default->id,
                 'native_code'             => $default->code,
                 'native_symbol'           => $default->symbol,

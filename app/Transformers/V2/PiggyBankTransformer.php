@@ -212,7 +212,7 @@ class PiggyBankTransformer extends AbstractTransformer
             'native_currency_id'             => (string)$this->default->id,
             'native_currency_code'           => $this->default->code,
             'native_currency_symbol'         => $this->default->symbol,
-            'native_currency_decimal_places' => (int)$this->default->decimal_places,
+            'native_currency_decimal_places' => $this->default->decimal_places,
             'current_amount'                 => $currentAmount,
             'native_current_amount'          => $nativeCurrentAmount,
             'target_amount'                  => $targetAmount,

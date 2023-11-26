@@ -174,7 +174,7 @@ class RecurrenceTransformer extends AbstractTransformer
                 $foreignCurrencyId     = (int)$transaction->foreign_currency_id;
                 $foreignCurrencyCode   = $transaction->foreignCurrency->code;
                 $foreignCurrencySymbol = $transaction->foreignCurrency->symbol;
-                $foreignCurrencyDp     = (int)$transaction->foreignCurrency->decimal_places;
+                $foreignCurrencyDp     = $transaction->foreignCurrency->decimal_places;
             }
 
             // source info:
@@ -208,7 +208,7 @@ class RecurrenceTransformer extends AbstractTransformer
                 'currency_id'                     => (string)$transaction->transaction_currency_id,
                 'currency_code'                   => $transaction->transactionCurrency->code,
                 'currency_symbol'                 => $transaction->transactionCurrency->symbol,
-                'currency_decimal_places'         => (int)$transaction->transactionCurrency->decimal_places,
+                'currency_decimal_places'         => $transaction->transactionCurrency->decimal_places,
                 'foreign_currency_id'             => null === $foreignCurrencyId ? null : (string)$foreignCurrencyId,
                 'foreign_currency_code'           => $foreignCurrencyCode,
                 'foreign_currency_symbol'         => $foreignCurrencySymbol,

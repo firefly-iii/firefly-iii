@@ -136,7 +136,7 @@ class BillTransformer extends AbstractTransformer
                     $foreignCurrencyCode            = $currencies[$foreignCurrencyId]->code;
                     $foreignCurrencyName            = $currencies[$foreignCurrencyId]->name;
                     $foreignCurrencySymbol          = $currencies[$foreignCurrencyId]->symbol;
-                    $foreignCurrencyDp              = (int)$currencies[$foreignCurrencyId]->decimal_places;
+                    $foreignCurrencyDp              = $currencies[$foreignCurrencyId]->decimal_places;
                 }
 
                 $this->paidDates[$billId][] = [
@@ -147,11 +147,11 @@ class BillTransformer extends AbstractTransformer
                     'currency_code'                   => $currencies[$currencyId]->code,
                     'currency_name'                   => $currencies[$currencyId]->name,
                     'currency_symbol'                 => $currencies[$currencyId]->symbol,
-                    'currency_decimal_places'         => (int)$currencies[$currencyId]->decimal_places,
+                    'currency_decimal_places'         => $currencies[$currencyId]->decimal_places,
                     'native_currency_id'              => $currencies[$currencyId]->id,
                     'native_currency_code'            => $currencies[$currencyId]->code,
                     'native_currency_symbol'          => $currencies[$currencyId]->symbol,
-                    'native_currency_decimal_places'  => (int)$currencies[$currencyId]->decimal_places,
+                    'native_currency_decimal_places'  => $currencies[$currencyId]->decimal_places,
                     'foreign_currency_id'             => $foreignCurrencyId,
                     'foreign_currency_code'           => $foreignCurrencyCode,
                     'foreign_currency_name'           => $foreignCurrencyName,
@@ -212,7 +212,7 @@ class BillTransformer extends AbstractTransformer
             'native_currency_code'           => $this->default->code,
             'native_currency_name'           => $this->default->name,
             'native_currency_symbol'         => $this->default->symbol,
-            'native_currency_decimal_places' => (int)$this->default->decimal_places,
+            'native_currency_decimal_places' => $this->default->decimal_places,
             'date'                           => $bill->date->toAtomString(),
             'end_date'                       => $bill->end_date?->toAtomString(),
             'extension_date'                 => $bill->extension_date?->toAtomString(),

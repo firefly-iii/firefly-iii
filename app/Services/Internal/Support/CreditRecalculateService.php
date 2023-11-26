@@ -197,7 +197,7 @@ class CreditRecalculateService
         $startOfDebt = $this->repository->getOpeningBalanceAmount($account) ?? '0';
         $leftOfDebt  = app('steam')->positive($startOfDebt);
         $currency    = $this->repository->getAccountCurrency($account);
-        $decimals    = (int)($currency?->decimal_places ?? 2);
+        $decimals    = $currency?->decimal_places ?? 2;
         app('log')->debug(sprintf('Start of debt is "%s", so initial left of debt is "%s"', app('steam')->bcround($startOfDebt, $decimals), app('steam')->bcround($leftOfDebt, $decimals)));
 
         /** @var AccountMetaFactory $factory */
@@ -274,7 +274,7 @@ class CreditRecalculateService
         $foreignCurrency = $transaction->foreignCurrency;
         $accountCurrency = $this->repository->getAccountCurrency($account);
         $groupId         = $journal->transaction_group_id;
-        $decimals        = (int)$accountCurrency->decimal_places;
+        $decimals        = $accountCurrency->decimal_places;
         $type            = $journal->transactionType->type;
         /** @var Transaction $destTransaction */
         $destTransaction = $journal->transactions()->where('amount', '>', '0')->first();
