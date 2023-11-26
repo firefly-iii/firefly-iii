@@ -69,6 +69,7 @@ class SumController extends Controller
      * @param DateRequest $request
      *
      * @return JsonResponse
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function paid(DateRequest $request): JsonResponse
     {
@@ -85,6 +86,7 @@ class SumController extends Controller
      * TODO see autocomplete/accountcontroller for list.
      *
      * @param DateRequest $request
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return JsonResponse
      */

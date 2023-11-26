@@ -40,7 +40,7 @@ class ShowController extends Controller
     /**
      * TODO this endpoint is not yet reachable.
      */
-    public function show(Request $request, Account $account): JsonResponse
+    public function show(Account $account): JsonResponse
     {
         $transformer = new AccountTransformer();
         $transformer->setParameters($this->parameters);

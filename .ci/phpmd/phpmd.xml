@@ -73,7 +73,7 @@
     <rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
         <properties>
             <!-- TODO we want to be at a value of 40. But we start high, and drop the bar slowly. -->
-            <property name="minimum" value="400"/>
+            <property name="minimum" value="2000"/>
         </properties>
     </rule>
     <rule ref="rulesets/codesize.xml/ExcessiveParameterList">

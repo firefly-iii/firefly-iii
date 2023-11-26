@@ -54,11 +54,10 @@ class IndexController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/budgets/listBudgets
      *
-     * @param Request $request
      *
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         $pageSize   = $this->parameters->get('limit');
         $collection = $this->repository->getActiveBudgets();

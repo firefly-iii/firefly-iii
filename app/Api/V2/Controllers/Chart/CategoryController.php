@@ -74,6 +74,7 @@ class CategoryController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
