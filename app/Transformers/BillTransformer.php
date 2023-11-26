@@ -29,6 +29,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Models\BillDateCalculator;
 use Illuminate\Support\Collection;
 
 /**
@@ -37,6 +38,7 @@ use Illuminate\Support\Collection;
 class BillTransformer extends AbstractTransformer
 {
     private BillRepositoryInterface $repository;
+    private BillDateCalculator      $calculator;
 
     /**
      * BillTransformer constructor.
@@ -46,6 +48,7 @@ class BillTransformer extends AbstractTransformer
     public function __construct()
     {
         $this->repository = app(BillRepositoryInterface::class);
+        $this->calculator = app(BillDateCalculator::class);
     }
 
     /**
@@ -59,7 +62,8 @@ class BillTransformer extends AbstractTransformer
     {
         $paidData     = $this->paidData($bill);
         $lastPaidDate = $this->getLastPaidDate($paidData);
-        $payDates     = $this->payDates($bill, $lastPaidDate);
+        //$payDates     = $this->payDates($bill, $lastPaidDate);
+        $payDates     = $this->calculator->getPayDates($this->parameters->get('start'), $this->parameters->get('end'), $bill->date, $bill->repeat_freq, $bill->skip, $lastPaidDate);
         $currency     = $bill->transactionCurrency;
         $notes        = $this->repository->getNoteText($bill);
         $notes        = '' === $notes ? null : $notes;
@@ -78,7 +82,7 @@ class BillTransformer extends AbstractTransformer
 
         $paidDataFormatted = [];
         $payDatesFormatted = [];
-        foreach ($paidData['paid_dates'] as $object) {
+        foreach ($paidData as $object) {
             $object['date']      = Carbon::createFromFormat('!Y-m-d', $object['date'], config('app.timezone'))->toAtomString();
             $paidDataFormatted[] = $object;
         }
@@ -167,10 +171,7 @@ class BillTransformer extends AbstractTransformer
         if (null === $this->parameters->get('start') || null === $this->parameters->get('end')) {
             app('log')->debug('parameters are NULL, return empty array');
 
-            return [
-                'paid_dates'          => [],
-                'next_expected_match' => null,
-            ];
+            return [];
         }
         // 2023-07-1 sub one day from the start date to fix a possible bug (see #7704)
         // 2023-07-18 this particular date is used to search for the last paid date.
@@ -205,12 +206,11 @@ class BillTransformer extends AbstractTransformer
                 'transaction_group_id'   => (string)$entry->transaction_group_id,
                 'transaction_journal_id' => (string)$entry->id,
                 'date'                   => $entry->date->format('Y-m-d'),
+                'date_object'            => $entry->date,
             ];
         }
 
-        return [
-            'paid_dates' => $result,
-        ];
+        return $result;
     }
 
     /**
@@ -246,16 +246,18 @@ class BillTransformer extends AbstractTransformer
     {
         app('log')->debug('getLastPaidDate()');
         $return = null;
-        foreach ($paidData['paid_dates'] as $entry) {
+        foreach ($paidData as $entry) {
             if (null !== $return) {
-                $current = Carbon::createFromFormat('!Y-m-d', $entry['date'], config('app.timezone'));
+                /** @var Carbon $current */
+                $current = $entry['date_object'];
                 if ($current->gt($return)) {
                     $return = clone $current;
                 }
                 app('log')->debug(sprintf('Last paid date is: %s', $return->format('Y-m-d')));
             }
             if (null === $return) {
-                $return = Carbon::createFromFormat('!Y-m-d', $entry['date'], config('app.timezone'));
+                /** @var Carbon $return */
+                $return = $entry['date_object'];
                 app('log')->debug(sprintf('Last paid date is: %s', $return->format('Y-m-d')));
             }
         }

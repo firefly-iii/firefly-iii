@@ -43,6 +43,9 @@ class NavigationEndOfPeriodTest extends TestCase
         $this->navigation = new Navigation();
     }
 
+    /**
+     * @return iterable
+     */
     public static function provideDates(): iterable
     {
         return [
