@@ -79,6 +79,7 @@ class CreateDatabase extends Command
 
         // only continue when no error.
         // with PDO, try to list DB's (
+        /** @var array $stmt */
         $stmt    = $pdo->query('SHOW DATABASES;');
         // slightly more complex but less error-prone.
         foreach ($stmt as $row) {

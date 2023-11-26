@@ -138,6 +138,11 @@ class BudgetLimitController extends Controller
         }
         $start  = Carbon::createFromFormat('Y-m-d', $request->get('start'));
         $end    = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+
+        if (false === $start || false === $end) {
+            return response()->json([]);
+        }
+
         $amount = (string)$request->get('amount');
         $start->startOfDay();
         $end->startOfDay();

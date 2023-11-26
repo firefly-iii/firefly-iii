@@ -25,7 +25,9 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -33,7 +35,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\TransactionCurrency
  *
@@ -47,7 +49,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property string                               $code
  * @property string                               $name
  * @property string                               $symbol
- * @property int|string                           $decimal_places
+ * @property int                                  $decimal_places
  * @property-read Collection|BudgetLimit[]        $budgetLimits
  * @property-read int|null                        $budget_limits_count
  * @property-read Collection|TransactionJournal[] $transactionJournals
@@ -82,7 +84,7 @@ class TransactionCurrency extends Model
 
     public ?bool $userDefault;
     public ?bool $userEnabled;
-    protected $casts
+    protected    $casts
         = [
             'created_at'     => 'datetime',
             'updated_at'     => 'datetime',
@@ -169,5 +171,15 @@ class TransactionCurrency extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class)->withTimestamps()->withPivot('user_default');
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function decimalPlaces(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

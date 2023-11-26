@@ -45,7 +45,14 @@ class BillDateCalculatorTest extends TestCase
         // Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid
         return [
             // basic monthly bill.
-            '1M' => ['earliest' => Carbon::parse('2023-11-01'), 'latest' => Carbon::parse('2023-11-30'), 'billStart' => Carbon::parse('2023-01-01'), 'period' => 'monthly', 'skip' => 0, 'lastPaid' => null, 'expected' => ['2023-11-01']],
+            '1Ma' => ['earliest' => Carbon::parse('2023-11-01'), 'latest' => Carbon::parse('2023-11-30'), 'billStart' => Carbon::parse('2023-01-01'), 'period' => 'monthly', 'skip' => 0, 'lastPaid' => null, 'expected' => ['2023-11-01']],
+            // already paid on the first, expect it next month.
+            '1Mb' => ['earliest' => Carbon::parse('2023-11-01'), 'latest' => Carbon::parse('2023-11-30'), 'billStart' => Carbon::parse('2023-01-01'), 'period' => 'monthly', 'skip' => 0, 'lastPaid' => Carbon::parse('2023-11-01'), 'expected' => ['2023-12-01']],
+            // already paid on the 12th, expect it next month.
+            '1Mc' => ['earliest' => Carbon::parse('2023-11-01'), 'latest' => Carbon::parse('2023-11-30'), 'billStart' => Carbon::parse('2023-01-01'), 'period' => 'monthly', 'skip' => 0, 'lastPaid' => Carbon::parse('2023-11-12'), 'expected' => ['2023-12-01']],
+
+            // yearly not due this month. Should jump to next year.
+            '1Ya' => ['earliest' => Carbon::parse('2023-11-01'), 'latest' => Carbon::parse('2023-11-30'), 'billStart' => Carbon::parse('2021-05-01'), 'period' => 'yearly', 'skip' => 0, 'lastPaid' => Carbon::parse('2023-05-02'), 'expected' => ['2024-05-01']],
         ];
     }
 

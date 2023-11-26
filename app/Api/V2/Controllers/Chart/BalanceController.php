@@ -100,12 +100,12 @@ class BalanceController extends Controller
             'currency_symbol'         => $default->symbol,
             'currency_code'           => $default->code,
             'currency_name'           => $default->name,
-            'currency_decimal_places' => (int)$default->decimal_places,
+            'currency_decimal_places' => $default->decimal_places,
             'native_id'               => (string)$defaultCurrencyId,
             'native_symbol'           => $default->symbol,
             'native_code'             => $default->code,
             'native_name'             => $default->name,
-            'native_decimal_places'   => (int)$default->decimal_places,
+            'native_decimal_places'   => $default->decimal_places,
         ];
 
 
@@ -131,7 +131,7 @@ class BalanceController extends Controller
                 'native_id'               => (string)$default->id,
                 'native_code'             => $default->code,
                 'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => (int)$default->decimal_places,
+                'native_decimal_places'   => $default->decimal_places,
             ];
 
             // set the array (in monetary info) with spent/earned in this $period, if it does not exist.

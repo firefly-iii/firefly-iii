@@ -80,6 +80,10 @@ class FiscalHelper implements FiscalHelperInterface
         $startDate = clone $date;
         if (true === $this->useCustomFiscalYear) {
             $prefStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
+            if(is_array($prefStartStr)) {
+                $prefStartStr = '01-01';
+            }
+            $prefStartStr = (string) $prefStartStr;
             [$mth, $day] = explode('-', $prefStartStr);
             $startDate->day((int)$day)->month((int)$mth);
 

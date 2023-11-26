@@ -51,7 +51,7 @@ class ExportData extends Command
 
     protected $description = 'Command to export data from Firefly III.';
 
-    protected $signature = 'firefly-iii:export-data
+    protected                          $signature = 'firefly-iii:export-data
     {--user=1 : The user ID that the export should run for.}
     {--token= : The user\'s access token.}
     {--start= : First transaction to export. Defaults to your very first transaction. Only applies to transaction export.}
@@ -190,13 +190,22 @@ class ExportData extends Command
     {
         $date  = today(config('app.timezone'))->subYear();
         $error = false;
-        if (null !== $this->option($field)) {
+
+        if (!in_array($field, ['start', 'end'], true)) {
+            throw new FireflyException(sprintf('Invalid field "%s" given, can only be "start" or "end".', $field));
+        }
+
+        if (is_string($this->option($field))) {
             try {
                 $date = Carbon::createFromFormat('!Y-m-d', $this->option($field));
             } catch (InvalidArgumentException $e) {
                 app('log')->error($e->getMessage());
                 $this->friendlyError(sprintf('%s date "%s" must be formatted YYYY-MM-DD. Field will be ignored.', $field, $this->option('start')));
                 $error = true;
+            }
+            if (false === $date) {
+                $this->friendlyError(sprintf('%s date "%s" must be formatted YYYY-MM-DD.', $field, $this->option('start')));
+                throw new FireflyException(sprintf('%s date "%s" must be formatted YYYY-MM-DD.', $field, $this->option('start')));
             }
         }
         if (null === $this->option($field)) {
@@ -208,12 +217,15 @@ class ExportData extends Command
             $journal = $this->journalRepository->firstNull();
             $date    = null === $journal ? today(config('app.timezone'))->subYear() : $journal->date;
             $date->startOfDay();
+            return $date;
         }
-
-        if (true === $error && 'end' === $field) {
+        // field can only be 'end' at this point, so no need to include it in the check.
+        if (true === $error) {
             $date = today(config('app.timezone'));
             $date->endOfDay();
+            return $date;
         }
+
         if ('end' === $field) {
             $date->endOfDay();
         }

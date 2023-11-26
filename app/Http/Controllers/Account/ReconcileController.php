@@ -207,14 +207,14 @@ class ReconcileController extends Controller
      * @param Carbon  $end
      * @param string  $difference
      *
-     * @return RedirectResponse|Redirector|string
+     * @return string
      * @throws DuplicateTransactionException
      * @throws JsonException
      */
-    private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference)
+    private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference): string
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account);
+            return 'not-editable';
         }
 
         $reconciliation = $this->accountRepos->getReconciliation($account);

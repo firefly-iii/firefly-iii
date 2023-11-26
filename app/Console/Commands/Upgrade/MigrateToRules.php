@@ -48,7 +48,7 @@ class MigrateToRules extends Command
 
     protected $description = 'Migrate bills to rules.';
 
-    protected $signature = 'firefly-iii:bills-to-rules {--F|force : Force the execution of this command.}';
+    protected                            $signature = 'firefly-iii:bills-to-rules {--F|force : Force the execution of this command.}';
     private BillRepositoryInterface      $billRepository;
     private int                          $count;
     private RuleGroupRepositoryInterface $ruleGroupRepository;
@@ -138,14 +138,15 @@ class MigrateToRules extends Command
 
         /** @var Preference $lang */
         $lang       = app('preferences')->getForUser($user, 'language', 'en_US');
-        $groupTitle = (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data);
+        $language   = null !== $lang->data && !is_array($lang->data) ? (string)$lang->data : 'en_US';
+        $groupTitle = (string)trans('firefly.rulegroup_for_bills_title', [], $language);
         $ruleGroup  = $this->ruleGroupRepository->findByTitle($groupTitle);
 
         if (null === $ruleGroup) {
             $ruleGroup = $this->ruleGroupRepository->store(
                 [
-                    'title'       => (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data),
-                    'description' => (string)trans('firefly.rulegroup_for_bills_description', [], $lang->data),
+                    'title'       => (string)trans('firefly.rulegroup_for_bills_title', [], $language),
+                    'description' => (string)trans('firefly.rulegroup_for_bills_description', [], $language),
                     'active'      => true,
                 ]
             );
@@ -168,6 +169,7 @@ class MigrateToRules extends Command
         if ('MIGRATED_TO_RULES' === $bill->match) {
             return;
         }
+        $languageString   = null !== $language->data && !is_array($language->data) ? (string)$language->data : 'en_US';
 
         // get match thing:
         $match   = implode(' ', explode(',', $bill->match));
@@ -176,8 +178,8 @@ class MigrateToRules extends Command
             'active'          => true,
             'strict'          => false,
             'stop_processing' => false, // field is no longer used.
-            'title'           => (string)trans('firefly.rule_for_bill_title', ['name' => $bill->name], $language->data),
-            'description'     => (string)trans('firefly.rule_for_bill_description', ['name' => $bill->name], $language->data),
+            'title'           => (string)trans('firefly.rule_for_bill_title', ['name' => $bill->name], $languageString),
+            'description'     => (string)trans('firefly.rule_for_bill_description', ['name' => $bill->name], $languageString),
             'trigger'         => 'store-journal',
             'triggers'        => [
                 [

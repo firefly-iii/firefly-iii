@@ -37,6 +37,7 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ApplyRules
@@ -295,6 +296,10 @@ class ApplyRules extends Command
         $endString = $this->option('end_date');
         if (null !== $endString && '' !== $endString) {
             $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
+        }
+        if(false === $inputEnd || false === $inputStart) {
+            Log::error('Could not parse start or end date in verifyInputDate().');
+            return;
         }
 
         if ($inputStart > $inputEnd) {

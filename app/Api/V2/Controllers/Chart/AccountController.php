@@ -125,7 +125,7 @@ class AccountController extends Controller
                 'native_id'               => (string)$default->id,
                 'native_code'             => $default->code,
                 'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => (int)$default->decimal_places,
+                'native_decimal_places'   => $default->decimal_places,
                 'start'                   => $start->toAtomString(),
                 'end'                     => $end->toAtomString(),
                 'period'                  => '1D',

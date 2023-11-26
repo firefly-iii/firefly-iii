@@ -64,7 +64,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
                 'native_code'             => $default->code,
                 'native_symbol'           => $default->symbol,
                 'native_name'             => $default->name,
-                'native_decimal_places'   => (int)$default->decimal_places,
+                'native_decimal_places'   => $default->decimal_places,
                 'amount'                  => '0',
                 'native_amount'           => '0',
             ];

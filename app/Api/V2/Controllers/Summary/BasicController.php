@@ -376,7 +376,7 @@ class BasicController extends Controller
             'currency_id'             => (string)$default->id,
             'currency_code'           => $default->code,
             'currency_symbol'         => $default->symbol,
-            'currency_decimal_places' => (int)$default->decimal_places,
+            'currency_decimal_places' => $default->decimal_places,
         ];
         $nativePerDay = [
             'key'                     => 'left-per-day-to-spend-in-native',
@@ -384,7 +384,7 @@ class BasicController extends Controller
             'currency_id'             => (string)$default->id,
             'currency_code'           => $default->code,
             'currency_symbol'         => $default->symbol,
-            'currency_decimal_places' => (int)$default->decimal_places,
+            'currency_decimal_places' => $default->decimal_places,
         ];
 
         /**

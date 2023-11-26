@@ -474,7 +474,7 @@ class TransactionJournalFactory
     private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
     {
         app('log')->debug('Now in getCurrency()');
-        /** @var Preference|null $preference */
+        /** @var TransactionCurrency|null $preference */
         $preference = $this->accountRepository->getAccountCurrency($account);
         if (null === $preference && null === $currency) {
             // return user's default:

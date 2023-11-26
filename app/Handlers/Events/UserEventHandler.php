@@ -197,6 +197,9 @@ class UserEventHandler
         }
 
         $list = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
+        if(!is_array($list)) {
+            $list = [];
+        }
 
         /** @var array $entry */
         foreach ($list as $index => $entry) {
@@ -415,7 +418,7 @@ class UserEventHandler
             }
             // clean up old entries (6 months)
             $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $preference[$index]['time']);
-            if ($carbon->diffInMonths(today()) > 6) {
+            if (false !== $carbon && $carbon->diffInMonths(today()) > 6) {
                 app('log')->debug(sprintf('Entry for %s is very old, remove it.', $row['ip']));
                 unset($preference[$index]);
             }

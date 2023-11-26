@@ -89,12 +89,12 @@ class NetWorth implements NetWorthInterface
                 'currency_code'           => $default->code,
                 'currency_name'           => $default->name,
                 'currency_symbol'         => $default->symbol,
-                'currency_decimal_places' => (int)$default->decimal_places,
+                'currency_decimal_places' => $default->decimal_places,
                 'native_id'               => $default->id,
                 'native_code'             => $default->code,
                 'native_name'             => $default->name,
                 'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => (int)$default->decimal_places,
+                'native_decimal_places'   => $default->decimal_places,
             ],
         ];
         $balances = app('steam')->balancesByAccountsConverted($accounts, $date);
@@ -125,12 +125,12 @@ class NetWorth implements NetWorthInterface
                 'currency_code'           => $currency->code,
                 'currency_name'           => $currency->name,
                 'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => (int)$currency->decimal_places,
+                'currency_decimal_places' => $currency->decimal_places,
                 'native_id'               => $default->id,
                 'native_code'             => $default->code,
                 'native_name'             => $default->name,
                 'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => (int)$default->decimal_places,
+                'native_decimal_places'   => $default->decimal_places,
             ];
 
             $netWorth[$currencyId]['balance']        = bcadd($balance, $netWorth[$currencyId]['balance']);

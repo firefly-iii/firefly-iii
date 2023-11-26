@@ -207,7 +207,7 @@ class BillTransformer extends AbstractTransformer
             'currency_code'                  => $currency->code,
             'currency_name'                  => $currency->name,
             'currency_symbol'                => $currency->symbol,
-            'currency_decimal_places'        => (int)$currency->decimal_places,
+            'currency_decimal_places'        => $currency->decimal_places,
             'native_currency_id'             => $this->default->id,
             'native_currency_code'           => $this->default->code,
             'native_currency_name'           => $this->default->name,

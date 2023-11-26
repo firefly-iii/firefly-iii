@@ -144,7 +144,7 @@ class AccountTransformer extends AbstractTransformer
             'currency_id'             => (string)$currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int)$currency->decimal_places,
+            'currency_decimal_places' => $currency->decimal_places,
 
             'native_currency_id'             => (string)$this->default->id,
             'native_currency_code'           => $this->default->code,

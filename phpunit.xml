@@ -14,6 +14,7 @@
          stopOnFailure="true">
     <php>
         <env name="APP_ENV" value="testing"/>
+        <env name="APP_LOG_ENV" value="notice"/>
         <ini name="xdebug.mode" value="coverage"/>
     </php>
     <testsuites>

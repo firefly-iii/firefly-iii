@@ -155,13 +155,18 @@ class AttachmentHelper implements AttachmentHelperInterface
         $path = stream_get_meta_data($resource)['uri'];
         Log::debug(sprintf('Path is %s', $path));
         $result = fwrite($resource, $content);
-        if(false === $result) {
+        if (false === $result) {
             Log::error('Could not write temp file.');
             return false;
         }
         Log::debug(sprintf('Wrote %d bytes to temp file.', $result));
-        $finfo       = finfo_open(FILEINFO_MIME_TYPE);
-        $mime        = finfo_file($finfo, $path);
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        if (false === $finfo) {
+            Log::error('Could not open finfo.');
+            fclose($resource);
+            return false;
+        }
+        $mime        = (string) finfo_file($finfo, $path);
         $allowedMime = config('firefly.allowedMimes');
         if (!in_array($mime, $allowedMime, true)) {
             Log::error(sprintf('Mime type %s is not allowed for API file upload.', $mime));
@@ -177,7 +182,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $this->uploadDisk->put($file, $content);
 
         // update attachment.
-        $attachment->md5      = md5_file($path);
+        $attachment->md5      = (string) md5_file($path);
         $attachment->mime     = $mime;
         $attachment->size     = strlen($content);
         $attachment->uploaded = true;
@@ -246,7 +251,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             $attachment = new Attachment(); // create Attachment object.
             $attachment->user()->associate($user);
             $attachment->attachable()->associate($model);
-            $attachment->md5      = md5_file($file->getRealPath());
+            $attachment->md5      = (string) md5_file($file->getRealPath());
             $attachment->filename = $file->getClientOriginalName();
             $attachment->mime     = $file->getMimeType();
             $attachment->size     = $file->getSize();
@@ -261,7 +266,7 @@ class AttachmentHelper implements AttachmentHelperInterface
                 throw new FireflyException('Cannot upload empty or non-existent file.');
             }
 
-            $content = $fileObject->fread($file->getSize());
+            $content = (string) $fileObject->fread($file->getSize());
             Log::debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
 
             // store it without encryption.

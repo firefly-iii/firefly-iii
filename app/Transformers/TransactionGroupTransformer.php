@@ -415,7 +415,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'currency_id'             => $currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int)$currency->decimal_places,
+            'currency_decimal_places' => $currency->decimal_places,
 
             'foreign_currency_id'             => $foreignCurrency['id'],
             'foreign_currency_code'           => $foreignCurrency['code'],
@@ -592,7 +592,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $array['id']             = $currency->id;
         $array['code']           = $currency->code;
         $array['symbol']         = $currency->symbol;
-        $array['decimal_places'] = (int)$currency->decimal_places;
+        $array['decimal_places'] = $currency->decimal_places;
 
         return $array;
     }

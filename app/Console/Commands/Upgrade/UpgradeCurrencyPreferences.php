@@ -150,7 +150,7 @@ class UpgradeCurrencyPreferences extends Command
     {
         $preference = Preference::where('user_id', $user->id)->where('name', 'currencyPreference')->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at']);
 
-        if (null !== $preference) {
+        if (null !== $preference->data && !is_array($preference->data)) {
             return (string)$preference->data;
         }
         return 'EUR';

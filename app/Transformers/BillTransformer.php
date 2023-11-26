@@ -128,7 +128,7 @@ class BillTransformer extends AbstractTransformer
             'currency_id'              => (string)$bill->transaction_currency_id,
             'currency_code'            => $currency->code,
             'currency_symbol'          => $currency->symbol,
-            'currency_decimal_places'  => (int)$currency->decimal_places,
+            'currency_decimal_places'  => $currency->decimal_places,
             'name'                     => $bill->name,
             'amount_min'               => app('steam')->bcround($bill->amount_min, $currency->decimal_places),
             'amount_max'               => app('steam')->bcround($bill->amount_max, $currency->decimal_places),

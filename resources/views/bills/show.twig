@@ -46,8 +46,9 @@
                         <tr>
                             <td>{{ 'next_expected_match'|_ }}</td>
                             <td>
-                                {% if object.data.next_expected_match|length > 0 %}
-                                    {{ formatDate(object.data.next_expected_match, monthAndDayFormat) }}
+
+                                {% if object.data.pay_dates|length > 0 %}
+                                    {{ formatDate(object.data.pay_dates[0], monthAndDayFormat) }}
                                 {% else %}
                                     {{ 'unknown'|_ }}
                                 {% endif %}

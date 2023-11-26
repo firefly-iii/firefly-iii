@@ -209,7 +209,7 @@ class BudgetController extends Controller
                 'native_code'             => $this->currency->code,
                 'native_name'             => $this->currency->name,
                 'native_symbol'           => $this->currency->symbol,
-                'native_decimal_places'   => (int)$this->currency->decimal_places,
+                'native_decimal_places'   => $this->currency->decimal_places,
                 'start'                   => $start->toAtomString(),
                 'end'                     => $end->toAtomString(),
                 'spent'                   => '0',

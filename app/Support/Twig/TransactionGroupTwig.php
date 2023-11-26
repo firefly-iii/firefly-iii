@@ -200,7 +200,7 @@ class TransactionGroupTwig extends AbstractExtension
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($currency->symbol, (int)$currency->decimal_places, $amount, $colored);
+        $result = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -243,7 +243,7 @@ class TransactionGroupTwig extends AbstractExtension
         if ($type === TransactionType::TRANSFER) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($currency->symbol, (int)$currency->decimal_places, $amount, $colored);
+        $result = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }

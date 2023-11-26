@@ -67,11 +67,13 @@ class ScanAttachments extends Command
                 $decryptedContent = $encryptedContent;
             }
             $tempFileName = tempnam(sys_get_temp_dir(), 'FireflyIII');
+            if(false === $tempFileName) {
+                app('log')->error(sprintf('Could not create temporary file for attachment #%d', $attachment->id));
+                exit(1);
+            }
             file_put_contents($tempFileName, $decryptedContent);
-            $md5              = md5_file($tempFileName);
-            $mime             = mime_content_type($tempFileName);
-            $attachment->md5  = $md5;
-            $attachment->mime = $mime;
+            $attachment->md5  = (string) md5_file($tempFileName);
+            $attachment->mime = (string) mime_content_type($tempFileName);
             $attachment->save();
             $this->friendlyInfo(sprintf('Fixed attachment #%d', $attachment->id));
         }

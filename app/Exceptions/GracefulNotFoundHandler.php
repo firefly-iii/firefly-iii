@@ -143,10 +143,11 @@ class GracefulNotFoundHandler extends ExceptionHandler
         $user  = auth()->user();
         $route = $request->route();
         $param = $route->parameter('account');
+        $accountId = 0;
         if ($param instanceof Account) {
             $accountId = $param->id;
         }
-        if (!($param instanceof Account)) {
+        if (!($param instanceof Account) && !is_object($param)) {
             $accountId = (int)$param;
         }
         /** @var Account|null $account */
@@ -176,7 +177,8 @@ class GracefulNotFoundHandler extends ExceptionHandler
         /** @var User $user */
         $user    = auth()->user();
         $route   = $request->route();
-        $groupId = (int)$route->parameter('transactionGroup');
+        $param   = $route->parameter('transactionGroup');
+        $groupId = !is_object($param) ? (int)$param : 0;
 
         /** @var TransactionGroup|null $group */
         $group = $user->transactionGroups()->withTrashed()->find($groupId);
@@ -215,7 +217,8 @@ class GracefulNotFoundHandler extends ExceptionHandler
         /** @var User $user */
         $user         = auth()->user();
         $route        = $request->route();
-        $attachmentId = (int)$route->parameter('attachment');
+        $param        = $route->parameter('attachment');
+        $attachmentId = is_object($param) ? 0 : (int)$param;
         /** @var Attachment|null $attachment */
         $attachment = $user->attachments()->withTrashed()->find($attachmentId);
         if (null === $attachment) {

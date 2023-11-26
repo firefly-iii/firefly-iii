@@ -48,7 +48,7 @@ class CurrencyTransformer extends AbstractTransformer
             'name'           => $currency->name,
             'code'           => $currency->code,
             'symbol'         => $currency->symbol,
-            'decimal_places' => (int)$currency->decimal_places,
+            'decimal_places' => $currency->decimal_places,
             'links'          => [
                 [
                     'rel' => 'self',

@@ -92,6 +92,11 @@ class BudgetLimitHandler
             app('log')->error($e->getMessage());
             $viewRange = '1M';
         }
+        // safety catch
+        if(null === $viewRange || is_array($viewRange)){
+            $viewRange = '1M';
+        }
+        $viewRange = (string)$viewRange;
 
         $start = app('navigation')->startOfPeriod($budgetLimit->start_date, $viewRange);
         $end   = app('navigation')->startOfPeriod($budgetLimit->end_date, $viewRange);
