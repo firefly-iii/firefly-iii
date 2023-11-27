@@ -32,7 +32,7 @@
                     <canvas id="budgets-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('budgets.index', null,false) }}" class="btn btn-default button-sm">
+                    <a href="{{ route('budgets.index') }}" class="btn btn-default button-sm">
                         <span class="fa fa-pie-chart"></span>
                         <span>{{ 'go_to_budgets'|_ }}</span>
                     </a>
@@ -41,7 +41,7 @@
             {# CATEGORIES #}
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><a href="{{ route('categories.index', null,false) }}"
+                    <h3 class="box-title"><a href="{{ route('categories.index') }}"
                                              title="{{ 'categories'|_ }}">{{ 'categories'|_ }}</a></h3>
 
                 </div>
