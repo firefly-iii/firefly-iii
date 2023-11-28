@@ -100,6 +100,7 @@ class BasicController extends Controller
      *
      * @return JsonResponse
      * @throws Exception
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function basic(DateRequest $request): JsonResponse
     {

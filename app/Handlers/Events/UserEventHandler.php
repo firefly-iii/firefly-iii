@@ -45,7 +45,6 @@ use FireflyIII\Notifications\User\UserLogin;
 use FireflyIII\Notifications\User\UserNewPassword;
 use FireflyIII\Notifications\User\UserRegistration as UserRegistrationNotification;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Notification;
@@ -109,6 +108,7 @@ class UserEventHandler
 
     /**
      * @param RegisteredUser $event
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createExchangeRates(RegisteredUser $event): void
     {
@@ -131,7 +131,8 @@ class UserEventHandler
         $group = null;
 
         // create a new group.
-        while (true === $groupExists) { /** @phpstan-ignore-line */
+        while (true === $groupExists) {
+            /** @phpstan-ignore-line */
             $groupExists = UserGroup::where('title', $groupTitle)->count() > 0;
             if (false === $groupExists) {
                 $group = UserGroup::create(['title' => $groupTitle]);
@@ -189,7 +190,6 @@ class UserEventHandler
     public function notifyNewIPAddress(DetectedNewIPAddress $event): void
     {
         $user      = $event->user;
-        $email     = $user->email;
         $ipAddress = $event->ipAddress;
 
         if ($user->hasRole('demo')) {
@@ -197,7 +197,7 @@ class UserEventHandler
         }
 
         $list = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
-        if(!is_array($list)) {
+        if (!is_array($list)) {
             $list = [];
         }
 
@@ -206,7 +206,8 @@ class UserEventHandler
             if (false === $entry['notified']) {
                 try {
                     Notification::send($user, new UserLogin($ipAddress));
-                } catch (Exception $e) { /** @phpstan-ignore-line */
+                } catch (Exception $e) {
+                    /** @phpstan-ignore-line */
                     $message = $e->getMessage();
                     if (str_contains($message, 'Bcc')) {
                         app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -231,7 +232,7 @@ class UserEventHandler
      */
     public function sendAdminRegistrationNotification(RegisteredUser $event): void
     {
-        $sendMail = (bool) app('fireflyconfig')->get('notification_admin_new_reg', true)->data;
+        $sendMail = (bool)app('fireflyconfig')->get('notification_admin_new_reg', true)->data;
         if ($sendMail) {
             /** @var UserRepositoryInterface $repository */
             $repository = app(UserRepositoryInterface::class);
@@ -240,7 +241,8 @@ class UserEventHandler
                 if ($repository->hasRole($user, 'owner')) {
                     try {
                         Notification::send($user, new AdminRegistrationNotification($event->user));
-                    } catch (Exception $e) { /** @phpstan-ignore-line */
+                    } catch (Exception $e) {
+                        /** @phpstan-ignore-line */
                         $message = $e->getMessage();
                         if (str_contains($message, 'Bcc')) {
                             app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -317,7 +319,8 @@ class UserEventHandler
     {
         try {
             Notification::send($event->user, new UserNewPassword(route('password.reset', [$event->token])));
-        } catch (Exception $e) { /** @phpstan-ignore-line */
+        } catch (Exception $e) {
+            /** @phpstan-ignore-line */
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
@@ -361,11 +364,12 @@ class UserEventHandler
      */
     public function sendRegistrationMail(RegisteredUser $event): void
     {
-        $sendMail = (bool) app('fireflyconfig')->get('notification_user_new_reg', true)->data;
+        $sendMail = (bool)app('fireflyconfig')->get('notification_user_new_reg', true)->data;
         if ($sendMail) {
             try {
                 Notification::send($event->user, new UserRegistrationNotification());
-            } catch (Exception $e) { /** @phpstan-ignore-line */
+            } catch (Exception $e) {
+                /** @phpstan-ignore-line */
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
                     app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');

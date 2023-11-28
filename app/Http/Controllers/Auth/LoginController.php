@@ -148,7 +148,7 @@ class LoginController extends Controller
      * @param Request $request
      *
      * @return void
-     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @throws ValidationException
      */
     protected function sendFailedLoginResponse(Request $request)

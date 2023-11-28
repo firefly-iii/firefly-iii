@@ -111,11 +111,9 @@ class HomeController extends Controller
     /**
      * Send a test message to the admin.
      *
-     * @param Request $request
-     *
      * @return RedirectResponse|Redirector
      */
-    public function testMessage(Request $request)
+    public function testMessage()
     {
         Log::channel('audit')->info('User sends test message.');
         /** @var User $user */

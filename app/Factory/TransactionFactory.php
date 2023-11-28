@@ -254,8 +254,7 @@ class TransactionFactory
 
     /**
      * @param User $user
-     *
-
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function setUser(User $user): void
     {

@@ -55,8 +55,6 @@ class AutocompleteRequest extends FormRequest
 
         // remove 'initial balance' and another from allowed types. its internal
         $array = array_diff($array, [AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION]);
-        /** @var User $user */
-        $user = auth()->user();
 
         return [
             'types' => $array,

@@ -55,7 +55,6 @@ class CreateDatabase extends Command
         }
         // try to set up a raw connection:
         $exists  = false;
-        $checked = false; // checked for existence of DB?
         $dsn     = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', env('DB_HOST', 'localhost'), env('DB_PORT', '3306'));
 
         if ('' !== env('DB_SOCKET', '')) {

@@ -209,14 +209,13 @@ class AttachmentController extends Controller
     /**
      * View attachment in browser.
      *
-     * @param Request    $request
      * @param Attachment $attachment
      *
      * @return LaravelResponse
      * @throws FireflyException
      * @throws BindingResolutionException
      */
-    public function view(Request $request, Attachment $attachment): LaravelResponse
+    public function view(Attachment $attachment): LaravelResponse
     {
         if ($this->repository->exists($attachment)) {
             $content = $this->repository->getContent($attachment);

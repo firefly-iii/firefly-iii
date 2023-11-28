@@ -53,6 +53,7 @@ class TestNotification extends Notification
      * Get the array representation of the notification.
      *
      * @param mixed $notifiable
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return array
      */
@@ -67,6 +68,7 @@ class TestNotification extends Notification
      * Get the mail representation of the notification.
      *
      * @param mixed $notifiable
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return MailMessage
      */
@@ -81,6 +83,7 @@ class TestNotification extends Notification
      * Get the Slack representation of the notification.
      *
      * @param mixed $notifiable
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return SlackMessage
      */
@@ -91,6 +94,7 @@ class TestNotification extends Notification
 
     /**
      * Get the notification's delivery channels.
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @param mixed $notifiable
      *

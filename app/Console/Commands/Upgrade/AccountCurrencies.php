@@ -110,19 +110,17 @@ class AccountCurrencies extends Command
     private function updateAccountCurrencies(): void
     {
         $users               = $this->userRepos->all();
-        $defaultCurrencyCode = (string)config('firefly.default_currency', 'EUR');
         foreach ($users as $user) {
-            $this->updateCurrenciesForUser($user, $defaultCurrencyCode);
+            $this->updateCurrenciesForUser($user);
         }
     }
 
     /**
      * @param User   $user
-     * @param string $systemCurrencyCode
      *
      * @throws FireflyException
      */
-    private function updateCurrenciesForUser(User $user, string $systemCurrencyCode): void
+    private function updateCurrenciesForUser(User $user): void
     {
         $this->accountRepos->setUser($user);
         $accounts = $this->accountRepos->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);

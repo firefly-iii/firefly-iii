@@ -782,7 +782,7 @@ class GroupCollector implements GroupCollectorInterface
             /** @var array $transaction */
             foreach ($group['transactions'] as $transaction) {
                 $currencyId = (int)$transaction['currency_id'];
-                if(null === $transaction['amount']) {
+                if (null === $transaction['amount']) {
                     throw new FireflyException(sprintf('Amount is NULL for a transaction in group #%d, please investigate.', $groudId));
                 }
 
@@ -835,8 +835,8 @@ class GroupCollector implements GroupCollectorInterface
              * @var int   $ii
              * @var array $item
              */
-            foreach ($currentCollection as $ii => $item) {
-                $result = $function($ii, $item);
+            foreach ($currentCollection as $item) {
+                $result = $function($item);
                 if (false === $result) {
                     // skip other filters, continue to next item.
                     continue;

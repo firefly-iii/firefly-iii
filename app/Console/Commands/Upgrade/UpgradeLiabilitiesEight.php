@@ -26,7 +26,6 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -230,24 +229,26 @@ class UpgradeLiabilitiesEight extends Command
                                       ->where('transactions.account_id', $account->id)->get(['transaction_journals.*']);
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            $delete = false;
-            /** @var Transaction $source */
-            $source = $journal->transactions()->where('amount', '<', 0)->first();
-            /** @var Transaction $dest */
-            $dest = $journal->transactions()->where('amount', '>', 0)->first();
+//            $delete = false;
+//            /** @var Transaction $source */
+//            $source = $journal->transactions()->where('amount', '<', 0)->first();
+//            /** @var Transaction $dest */
+//            $dest = $journal->transactions()->where('amount', '>', 0)->first();
 
-            // if source is this liability and destination is expense, remove transaction.
-            // if source is revenue and destination is liability, remove transaction.
-            if ($source->account_id === $account->id && $dest->account->accountType->type === AccountType::EXPENSE) {
-                $delete = true;
-            }
-            if ($dest->account_id === $account->id && $source->account->accountType->type === AccountType::REVENUE) {
-                $delete = true;
-            }
-
-            // overruled. No transaction will be deleted, ever.
-            // code is kept in place so I can revisit my reasoning.
-            $delete = false;
+            /**
+             * // if source is this liability and destination is expense, remove transaction.
+             * // if source is revenue and destination is liability, remove transaction.
+             * if ($source->account_id === $account->id && $dest->account->accountType->type === AccountType::EXPENSE) {
+             * $delete = true;
+             * }
+             * if ($dest->account_id === $account->id && $source->account->accountType->type === AccountType::REVENUE) {
+             * $delete = true;
+             * }
+             *
+             * // overruled. No transaction will be deleted, ever.
+             * // code is kept in place, so I can revisit my reasoning.
+             * $delete = false;
+             */
 
             //            if ($delete) {
             $service = app(TransactionGroupDestroyService::class);

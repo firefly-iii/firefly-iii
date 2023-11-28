@@ -60,13 +60,11 @@ class IndexController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * TODO see autocomplete/accountcontroller for list.
      *
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         $piggies     = $this->repository->getPiggyBanks();
         $pageSize    = $this->parameters->get('limit');

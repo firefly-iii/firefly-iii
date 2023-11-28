@@ -57,12 +57,11 @@ class DestroyController extends Controller
     }
 
     /**
-     * @param Request   $request
      * @param UserGroup $userGroup
      *
      * @return JsonResponse
      */
-    public function destroy(Request $request, UserGroup $userGroup): JsonResponse
+    public function destroy(UserGroup $userGroup): JsonResponse
     {
         /** @var User $user */
         $user = auth()->user();

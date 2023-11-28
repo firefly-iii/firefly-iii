@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use const DIRECTORY_SEPARATOR;
 
 /**
  * Class AttachmentHelper.
@@ -95,7 +96,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function getAttachmentLocation(Attachment $attachment): string
     {
-        return sprintf('%sat-%d.data', \DIRECTORY_SEPARATOR, $attachment->id);
+        return sprintf('%sat-%d.data', DIRECTORY_SEPARATOR, $attachment->id);
     }
 
     /**
@@ -166,7 +167,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             fclose($resource);
             return false;
         }
-        $mime        = (string) finfo_file($finfo, $path);
+        $mime        = (string)finfo_file($finfo, $path);
         $allowedMime = config('firefly.allowedMimes');
         if (!in_array($mime, $allowedMime, true)) {
             Log::error(sprintf('Mime type %s is not allowed for API file upload.', $mime));
@@ -182,7 +183,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $this->uploadDisk->put($file, $content);
 
         // update attachment.
-        $attachment->md5      = (string) md5_file($path);
+        $attachment->md5      = (string)md5_file($path);
         $attachment->mime     = $mime;
         $attachment->size     = strlen($content);
         $attachment->uploaded = true;
@@ -251,7 +252,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             $attachment = new Attachment(); // create Attachment object.
             $attachment->user()->associate($user);
             $attachment->attachable()->associate($model);
-            $attachment->md5      = (string) md5_file($file->getRealPath());
+            $attachment->md5      = (string)md5_file($file->getRealPath());
             $attachment->filename = $file->getClientOriginalName();
             $attachment->mime     = $file->getMimeType();
             $attachment->size     = $file->getSize();
@@ -266,7 +267,7 @@ class AttachmentHelper implements AttachmentHelperInterface
                 throw new FireflyException('Cannot upload empty or non-existent file.');
             }
 
-            $content = (string) $fileObject->fread($file->getSize());
+            $content = (string)$fileObject->fread($file->getSize());
             Log::debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
 
             // store it without encryption.

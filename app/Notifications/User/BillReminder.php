@@ -61,6 +61,7 @@ class BillReminder extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
@@ -75,6 +76,7 @@ class BillReminder extends Notification
      * @param mixed $notifiable
      *
      * @return MailMessage
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail($notifiable)
     {
@@ -94,6 +96,7 @@ class BillReminder extends Notification
      * @param mixed $notifiable
      *
      * @return SlackMessage
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack($notifiable)
     {
@@ -117,6 +120,7 @@ class BillReminder extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
     {
@@ -126,7 +130,7 @@ class BillReminder extends Notification
         if (is_array($slackUrl)) {
             $slackUrl = '';
         }
-        if (UrlValidator::isValidWebhookURL((string) $slackUrl)) {
+        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
             return ['mail', 'slack'];
         }
         return ['mail'];

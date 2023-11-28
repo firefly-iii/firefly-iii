@@ -57,6 +57,7 @@ class UserLogin extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
@@ -71,6 +72,7 @@ class UserLogin extends Notification
      * @param mixed $notifiable
      *
      * @return MailMessage
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail($notifiable)
     {
@@ -97,6 +99,7 @@ class UserLogin extends Notification
      * @param mixed $notifiable
      *
      * @return SlackMessage
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack($notifiable)
     {
@@ -120,6 +123,7 @@ class UserLogin extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
     {
@@ -129,7 +133,7 @@ class UserLogin extends Notification
         if (is_array($slackUrl)) {
             $slackUrl = '';
         }
-        if (UrlValidator::isValidWebhookURL((string) $slackUrl)) {
+        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
             return ['mail', 'slack'];
         }
         return ['mail'];

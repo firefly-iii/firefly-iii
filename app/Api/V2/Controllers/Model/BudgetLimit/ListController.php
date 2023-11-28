@@ -51,8 +51,9 @@ class ListController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/budgets/listBudgetLimitByBudget
+     * // DateRequest $request, Budget $budget
      */
-    public function index(DateRequest $request, Budget $budget): JsonResponse
+    public function index(): JsonResponse
     {
         return response()->json([]);
         //        throw new FireflyException('Needs refactoring, move to IndexController.');
