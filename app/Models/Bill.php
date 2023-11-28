@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
@@ -33,11 +34,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -47,8 +46,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                          $created_at
  * @property Carbon|null                          $updated_at
  * @property Carbon|null                          $deleted_at
- * @property int                           $user_id
- * @property int                             $transaction_currency_id
+ * @property int                                  $user_id
+ * @property int                                  $transaction_currency_id
  * @property string                               $name
  * @property string                               $match
  * @property string                               $amount_min
@@ -57,12 +56,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                          $end_date
  * @property Carbon|null                          $extension_date
  * @property string                               $repeat_freq
- * @property int|string                           $skip
+ * @property int                                  $skip
  * @property bool                                 $automatch
  * @property bool                                 $active
  * @property bool                                 $name_encrypted
  * @property bool                                 $match_encrypted
- * @property int                           $order
+ * @property int                                  $order
  * @property-read Collection|Attachment[]         $attachments
  * @property-read int|null                        $attachments_count
  * @property-read Collection|Note[]               $notes
@@ -99,7 +98,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereUserId($value)
  * @method static Builder|Bill withTrashed()
  * @method static Builder|Bill withoutTrashed()
- * @property int                             $user_group_id
+ * @property int                                  $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereUserGroupId($value)
  * @mixin Eloquent
  */
@@ -248,6 +247,18 @@ class Bill extends Model
     }
 
     /**
+     * Get the skip
+     *
+     * @return Attribute
+     */
+    protected function skip(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
+    }
+
+    /**
      * Get the min amount
      *
      * @return Attribute
@@ -265,7 +276,7 @@ class Bill extends Model
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
@@ -275,7 +286,7 @@ class Bill extends Model
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 

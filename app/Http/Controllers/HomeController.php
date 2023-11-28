@@ -31,7 +31,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Middleware\Installer;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\User;
@@ -69,7 +68,7 @@ class HomeController extends Controller
     public function dateRange(Request $request): JsonResponse
     {
         $stringStart = '';
-        $stringEnd = '';
+        $stringEnd   = '';
         try {
             $stringStart = e((string)$request->get('start'));
             $start       = Carbon::createFromFormat('Y-m-d', $stringStart);
@@ -84,6 +83,13 @@ class HomeController extends Controller
             app('log')->error(sprintf('End could not parse date string "%s" so ignore it.', $stringEnd));
             $end = Carbon::now()->endOfMonth();
         }
+        if (false === $start) {
+            $start = Carbon::now()->startOfMonth();
+        }
+        if (false === $end) {
+            $end = Carbon::now()->endOfMonth();
+        }
+
         $label         = $request->get('label');
         $isCustomRange = false;
 
@@ -128,20 +134,26 @@ class HomeController extends Controller
         if (0 === $count) {
             return redirect(route('new-user.index'));
         }
-        $subTitle     = (string)trans('firefly.welcome_back');
-        $transactions = [];
-        $frontPage    = app('preferences')->getFresh('frontPageAccounts', $repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray());
+        $subTitle       = (string)trans('firefly.welcome_back');
+        $transactions   = [];
+        $frontPage      = app('preferences')->getFresh('frontPageAccounts', $repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray());
+        $frontPageArray = $frontPage->data;
+        if (!is_array($frontPageArray)) {
+            $frontPageArray = [];
+        }
+
+
         /** @var Carbon $start */
         $start = session('start', today(config('app.timezone'))->startOfMonth());
         /** @var Carbon $end */
         $end      = session('end', today(config('app.timezone'))->endOfMonth());
-        $accounts = $repository->getAccountsById($frontPage->data);
+        $accounts = $repository->getAccountsById($frontPageArray);
         $today    = today(config('app.timezone'));
 
         // sort frontpage accounts by order
         $accounts = $accounts->sortBy('order');
 
-        app('log')->debug('Frontpage accounts are ', $frontPage->data);
+        app('log')->debug('Frontpage accounts are ', $frontPageArray);
 
         /** @var BillRepositoryInterface $billRepository */
         $billRepository = app(BillRepositoryInterface::class);

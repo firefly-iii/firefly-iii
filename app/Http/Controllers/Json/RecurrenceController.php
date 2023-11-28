@@ -79,6 +79,11 @@ class RecurrenceController extends Controller
         $repetitionType   = explode(',', $request->get('type'))[0];
         $repetitions      = (int)$request->get('reps');
         $repetitionMoment = '';
+
+        if(false === $start || false === $end || false === $firstDate || false === $endDate) {
+            return response()->json();
+        }
+
         $start->startOfDay();
 
         // if $firstDate is beyond $end, simply return an empty array.
@@ -148,10 +153,14 @@ class RecurrenceController extends Controller
         $string = '' === (string)$request->get('date') ? date('Y-m-d') : (string)$request->get('date');
         $today  = today(config('app.timezone'))->startOfDay();
         try {
-            $date = Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'))->startOfDay();
+            $date = Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
         } catch (InvalidFormatException $e) {
             $date = Carbon::today(config('app.timezone'));
         }
+        if(false === $date) {
+            return response()->json();
+        }
+        $date->startOfDay();
         $preSelected = (string)$request->get('pre_select');
         $locale      = app('steam')->getLocale();
 

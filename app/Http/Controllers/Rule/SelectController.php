@@ -137,6 +137,7 @@ class SelectController extends Controller
     {
         // build fake rule
         $rule         = new Rule();
+        /** @var \Illuminate\Database\Eloquent\Collection<int, RuleTrigger> $triggers */
         $triggers     = new Collection();
         $rule->strict = '1' === $request->get('strict');
 

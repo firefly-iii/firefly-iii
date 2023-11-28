@@ -99,9 +99,9 @@ class DeleteController extends Controller
      *
      * @param TransactionGroup $group
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|Redirector
      */
-    public function destroy(TransactionGroup $group): RedirectResponse
+    public function destroy(TransactionGroup $group): RedirectResponse|Redirector
     {
         app('log')->debug(sprintf('Now in %s(#%d).', __METHOD__, $group->id));
         if (!$this->isEditableGroup($group)) {

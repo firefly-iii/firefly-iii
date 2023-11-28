@@ -36,7 +36,6 @@ use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\User;
 use Google2FA;
@@ -129,6 +128,9 @@ class ProfileController extends Controller
             // get secret from session and flash
             $secret = $secretPreference->data;
         }
+        if (is_array($secret)) {
+            $secret = '';
+        }
 
         // generate recovery codes if not in session:
         $recoveryCodes = '';
@@ -144,10 +146,13 @@ class ProfileController extends Controller
         if (null !== $codesPreference) {
             $recoveryCodes = $codesPreference->data;
         }
+        if (!is_array($recoveryCodes)) {
+            $recoveryCodes = [];
+        }
 
         $codes = implode("\r\n", $recoveryCodes);
 
-        $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
+        $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, (string)$secret);
 
         return view('profile.code', compact('image', 'secret', 'codes'));
     }
@@ -283,7 +288,11 @@ class ProfileController extends Controller
         $subTitle       = $user->email;
         $userId         = $user->id;
         $enabled2FA     = null !== $user->mfa_secret;
-        $mfaBackupCount = count(app('preferences')->get('mfa_recovery', [])->data);
+        $recoveryData   = app('preferences')->get('mfa_recovery', [])->data;
+        if (!is_array($recoveryData)) {
+            $recoveryData = [];
+        }
+        $mfaBackupCount = count($recoveryData);
         $this->createOAuthKeys();
 
         if (0 === $count) {
@@ -499,6 +508,12 @@ class ProfileController extends Controller
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $secret     = app('preferences')->get('temp-mfa-secret')?->data;
+        if (is_array($secret)) {
+            $secret = null;
+        }
+        if (is_int($secret)) {
+            $secret = (string)$secret;
+        }
 
         $repository->setMFACode($user, $secret);
 

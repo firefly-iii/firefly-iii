@@ -94,7 +94,7 @@ class Preference extends Model
                 $preference          = new self();
                 $preference->name    = $value;
                 $preference->data    = $default[$value];
-                $preference->user_id = $user->id;
+                $preference->user_id = (int) $user->id;
                 $preference->save();
 
                 return $preference;

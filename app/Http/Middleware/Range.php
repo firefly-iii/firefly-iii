@@ -69,6 +69,10 @@ class Range
         // ignore preference. set the range to be the current month:
         if (!app('session')->has('start') && !app('session')->has('end')) {
             $viewRange = app('preferences')->get('viewRange', '1M')->data;
+            if(is_array($viewRange)) {
+                $viewRange = '1M';
+            }
+
             $today     = today(config('app.timezone'));
             $start     = app('navigation')->updateStartDate($viewRange, $today);
             $end       = app('navigation')->updateEndDate($viewRange, $start);

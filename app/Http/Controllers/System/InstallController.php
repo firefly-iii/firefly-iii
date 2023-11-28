@@ -117,7 +117,7 @@ class InstallController extends Controller
             } catch (FireflyException $e) {
                 app('log')->error($e->getMessage());
                 app('log')->error($e->getTraceAsString());
-                if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
+                if (str_contains($e->getMessage(), 'open_basedir restriction in effect')) {
                     $this->lastError = self::BASEDIR_ERROR;
                 }
                 $result          = false;

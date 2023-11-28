@@ -151,7 +151,7 @@ class ReportFormRequest extends FormRequest
             // validate as date
             // if regex for YYYY-MM-DD:
             $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
-            if (preg_match($pattern, $string)) {
+            if (false !== preg_match($pattern, $string)) {
                 try {
                     $date = new Carbon($parts[1]);
                 } catch (Exception $e) { // intentional generic exception
@@ -186,7 +186,7 @@ class ReportFormRequest extends FormRequest
             // validate as date
             // if regex for YYYY-MM-DD:
             $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
-            if (preg_match($pattern, $string)) {
+            if (false !== preg_match($pattern, $string)) {
                 try {
                     $date = new Carbon($parts[0]);
                 } catch (Exception $e) { // intentional generic exception

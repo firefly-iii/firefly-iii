@@ -49,12 +49,8 @@ use Psr\Container\NotFoundExceptionInterface;
 class ReportController extends Controller
 {
     use RenderPartialViews;
-
-    /** @var ReportHelperInterface Helper interface. */
-    protected $helper;
-
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
+    protected ReportHelperInterface $helper;
+    private BudgetRepositoryInterface $repository;
 
     /**
      * ReportController constructor.
@@ -291,7 +287,7 @@ class ReportController extends Controller
             if ('opt_group_' === $role) {
                 $role = 'opt_group_defaultAsset';
             }
-            $groupedAccounts[trans(sprintf('firefly.%s', $role))][$account->id] = $account;
+            $groupedAccounts[(string)trans(sprintf('firefly.%s', $role))][$account->id] = $account;
         }
         ksort($groupedAccounts);
 

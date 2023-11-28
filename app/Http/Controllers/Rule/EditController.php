@@ -100,7 +100,7 @@ class EditController extends Controller
             $oldTriggers = $this->parseFromOperators($operators);
         }
         // has old input?
-        if (count($request->old()) > 0) {
+        if (null !== $request->old() && is_array($request->old()) && count($request->old()) > 0) {
             $oldTriggers = $this->getPreviousTriggers($request);
             $oldActions  = $this->getPreviousActions($request);
         }
