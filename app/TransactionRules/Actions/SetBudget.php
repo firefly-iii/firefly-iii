@@ -53,6 +53,7 @@ class SetBudget implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        /** @var User $user */
         $user   = User::find($journal['user_id']);
         $search = $this->action->action_value;
 

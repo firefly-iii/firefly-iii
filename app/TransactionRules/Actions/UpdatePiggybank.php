@@ -59,6 +59,7 @@ class UpdatePiggybank implements ActionInterface
         app('log')->debug(sprintf('Triggered rule action UpdatePiggybank on journal #%d', $journal['transaction_journal_id']));
 
         // refresh the transaction type.
+        /** @var User $user */
         $user = User::find($journal['user_id']);
         /** @var TransactionJournal $journalObj */
         $journalObj = $user->transactionJournals()->find($journal['transaction_journal_id']);

@@ -604,7 +604,7 @@ class Steam
                             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                             ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
                             ->groupBy('transactions.transaction_currency_id');
-        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]); // @phpstan-ignore-line
+        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]); /** @phpstan-ignore-line */
         $return   = [];
         /** @var stdClass $entry */
         foreach ($balances as $entry) {

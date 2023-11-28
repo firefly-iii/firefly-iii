@@ -28,6 +28,7 @@ use DB;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -278,6 +279,7 @@ class TransactionGroupTwig extends AbstractExtension
         return new TwigFunction(
             'journalGetMetaDate',
             static function (int $journalId, string $metaField) {
+                /** @var TransactionJournalMeta|null $entry */
                 $entry = DB::table('journal_meta')
                            ->where('name', $metaField)
                            ->where('transaction_journal_id', $journalId)
@@ -300,6 +302,7 @@ class TransactionGroupTwig extends AbstractExtension
         return new TwigFunction(
             'journalGetMetaField',
             static function (int $journalId, string $metaField) {
+                /** @var TransactionJournalMeta|null $entry */
                 $entry = DB::table('journal_meta')
                            ->where('name', $metaField)
                            ->where('transaction_journal_id', $journalId)

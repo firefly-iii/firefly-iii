@@ -56,7 +56,9 @@ class AddTag implements ActionInterface
         // journal has this tag maybe?
         /** @var TagFactory $factory */
         $factory = app(TagFactory::class);
-        $factory->setUser(User::find($journal['user_id']));
+        /** @var User $user */
+        $user = User::find($journal['user_id']);
+        $factory->setUser($user);
         $tag = $factory->findOrCreate($this->action->action_value);
 
         if (null === $tag) {
@@ -74,6 +76,7 @@ class AddTag implements ActionInterface
             // add to journal:
             DB::table('tag_transaction_journal')->insert(['tag_id' => $tag->id, 'transaction_journal_id' => $journal['transaction_journal_id']]);
             app('log')->debug(sprintf('RuleAction AddTag. Added tag #%d ("%s") to journal %d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
+            /** @var TransactionJournal $object */
             $object = TransactionJournal::find($journal['transaction_journal_id']);
 
             // event for audit log entry

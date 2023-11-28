@@ -55,6 +55,7 @@ class LinkToBill implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        /** @var User $user */
         $user = User::find($journal['user_id']);
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
@@ -85,6 +86,7 @@ class LinkToBill implements ActionInterface
                 sprintf('RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").', $journal['transaction_journal_id'], $bill->id, $bill->name)
             );
 
+            /** @var TransactionJournal $object */
             $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
             event(new TriggeredAuditLog($this->action->rule, $object, 'set_bill', null, $bill->name));
 

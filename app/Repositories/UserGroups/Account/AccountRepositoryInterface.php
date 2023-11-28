@@ -44,6 +44,22 @@ interface AccountRepositoryInterface
     public function setUserGroup(UserGroup $userGroup): void;
 
     /**
+     * @param string $iban
+     * @param array  $types
+     *
+     * @return Account|null
+     */
+    public function findByIbanNull(string $iban, array $types): ?Account;
+
+    /**
+     * @param string $number
+     * @param array  $types
+     *
+     * @return Account|null
+     */
+    public function findByAccountNumber(string $number, array $types): ?Account;
+
+    /**
      * @param User $user
      *
      * @return void

@@ -26,7 +26,9 @@ namespace FireflyIII\TransactionRules\Actions;
 use DB;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 
 /**
@@ -51,7 +53,9 @@ class ClearNotes implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        /** @var Note|null $notes */
         $notes  = $object->notes()->first();
         if (null === $notes) {
             app('log')->debug(sprintf('RuleAction ClearNotes, journal #%d has no notes.', $journal['transaction_journal_id']));

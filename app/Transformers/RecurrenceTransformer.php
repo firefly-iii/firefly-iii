@@ -130,8 +130,8 @@ class RecurrenceTransformer extends AbstractTransformer
                 'updated_at'  => $repetition->updated_at->toAtomString(),
                 'type'        => $repetition->repetition_type,
                 'moment'      => $repetition->repetition_moment,
-                'skip'        => (int)$repetition->repetition_skip,
-                'weekend'     => (int)$repetition->weekend,
+                'skip'        => $repetition->repetition_skip,
+                'weekend'     => $repetition->weekend,
                 'description' => $this->repository->repetitionDescription($repetition),
                 'occurrences' => [],
             ];

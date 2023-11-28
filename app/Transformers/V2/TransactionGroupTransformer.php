@@ -301,16 +301,28 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
         //        app('log')->debug(sprintf('Now in date("%s")', $string));
         if (10 === strlen($string)) {
-            return Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
+            $res = Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
+            if(false === $res) {
+                return null;
+            }
+            return $res;
         }
         if (25 === strlen($string)) {
             return Carbon::parse($string, config('app.timezone'));
         }
         if (19 === strlen($string) && str_contains($string, 'T')) {
-            return Carbon::createFromFormat('Y-m-d\TH:i:s', substr($string, 0, 19), config('app.timezone'));
+            $res = Carbon::createFromFormat('Y-m-d\TH:i:s', substr($string, 0, 19), config('app.timezone'));
+            if(false === $res) {
+                return null;
+            }
+            return $res;
         }
 
         // 2022-01-01 01:01:01
-        return Carbon::createFromFormat('Y-m-d H:i:s', substr($string, 0, 19), config('app.timezone'));
+        $res = Carbon::createFromFormat('Y-m-d H:i:s', substr($string, 0, 19), config('app.timezone'));
+        if(false === $res) {
+            return null;
+        }
+        return $res;
     }
 }

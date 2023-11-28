@@ -53,6 +53,7 @@ class SetCategory implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        /** @var User|null $user */
         $user   = User::find($journal['user_id']);
         $search = $this->action->action_value;
         if (null === $user) {

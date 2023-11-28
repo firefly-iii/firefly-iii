@@ -217,7 +217,7 @@ class BillTransformer extends AbstractTransformer
             'end_date'                       => $bill->end_date?->toAtomString(),
             'extension_date'                 => $bill->extension_date?->toAtomString(),
             'repeat_freq'                    => $bill->repeat_freq,
-            'skip'                           => (int)$bill->skip,
+            'skip'                           => $bill->skip,
             'active'                         => $bill->active,
             'order'                          => $bill->order,
             'notes'                          => $this->notes[$bill->id] ?? null,

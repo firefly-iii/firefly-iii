@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII;
 
+use Carbon\Carbon;
 use Eloquent;
 use Exception;
 use FireflyIII\Enums\UserRoleEnum;
@@ -66,7 +67,6 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
-use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laravel\Passport\Client;
@@ -80,7 +80,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class User.
  *
- * @property int|string                                                                     $id
+ * @property int|string                                                              $id
  * @property string                                                                  $email
  * @property bool                                                                    $isAdmin
  * @property bool                                                                    $has2FA
@@ -177,14 +177,14 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $casts
-        = [
+                        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'blocked'    => 'boolean',
         ];
     protected $fillable = ['email', 'password', 'blocked', 'blocked_code'];
-    protected $hidden = ['password', 'remember_token'];
-    protected $table = 'users';
+    protected $hidden   = ['password', 'remember_token'];
+    protected $table    = 'users';
 
     /**
      * @param string $value
@@ -401,37 +401,37 @@ class User extends Authenticatable
                                  ->where('user_group_id', $userGroup->id)->get();
         if (0 === $groupMemberships->count()) {
             app('log')->error(sprintf(
-                'User #%d "%s" does not have roles %s in user group #%d "%s"',
-                $this->id,
-                $this->email,
-                implode(', ', $roles),
-                $userGroup->id,
-                $userGroup->title
-            ));
+                                  'User #%d "%s" does not have roles %s in user group #%d "%s"',
+                                  $this->id,
+                                  $this->email,
+                                  implode(', ', $roles),
+                                  $userGroup->id,
+                                  $userGroup->title
+                              ));
             return false;
         }
         foreach ($groupMemberships as $membership) {
             app('log')->debug(sprintf(
-                'User #%d "%s" has role "%s" in user group #%d "%s"',
-                $this->id,
-                $this->email,
-                $membership->userRole->title,
-                $userGroup->id,
-                $userGroup->title
-            ));
+                                  'User #%d "%s" has role "%s" in user group #%d "%s"',
+                                  $this->id,
+                                  $this->email,
+                                  $membership->userRole->title,
+                                  $userGroup->id,
+                                  $userGroup->title
+                              ));
             if (in_array($membership->userRole->title, $dbRolesTitles, true)) {
                 app('log')->debug(sprintf('Return true, found role "%s"', $membership->userRole->title));
                 return true;
             }
         }
         app('log')->error(sprintf(
-            'User #%d "%s" does not have roles %s in user group #%d "%s"',
-            $this->id,
-            $this->email,
-            implode(', ', $roles),
-            $userGroup->id,
-            $userGroup->title
-        ));
+                              'User #%d "%s" does not have roles %s in user group #%d "%s"',
+                              $this->id,
+                              $this->email,
+                              implode(', ', $roles),
+                              $userGroup->id,
+                              $userGroup->title
+                          ));
         return false;
         //        // not necessary, should always return true:
         //        $result = $groupMembership->userRole->title === $role->value;
@@ -554,20 +554,28 @@ class User extends Authenticatable
     public function routeNotificationForSlack(Notification $notification): string
     {
         // this check does not validate if the user is owner, Should be done by notification itself.
+        $res = app('fireflyconfig')->get('slack_webhook_url', '')->data;
+        if (is_array($res)) {
+            $res = '';
+        }
+        $res = (string)$res;
         if ($notification instanceof TestNotification) {
-            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
+            return $res;
         }
         if ($notification instanceof UserInvitation) {
-            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
+            return $res;
         }
         if ($notification instanceof UserRegistration) {
-            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
+            return $res;
         }
         if ($notification instanceof VersionCheckResult) {
-            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
+            return $res;
         }
-
-        return app('preferences')->getForUser($this, 'slack_webhook_url', '')->data;
+        $pref = app('preferences')->getForUser($this, 'slack_webhook_url', '')->data;
+        if (is_array($pref)) {
+            return '';
+        }
+        return (string)$pref;
     }
 
     /**
@@ -676,7 +684,7 @@ class User extends Authenticatable
      */
     public function userGroup(): BelongsTo
     {
-        return $this->belongsTo(UserGroup::class, );
+        return $this->belongsTo(UserGroup::class,);
     }
 
     /**

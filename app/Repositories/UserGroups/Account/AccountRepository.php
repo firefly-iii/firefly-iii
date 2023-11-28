@@ -30,6 +30,7 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
 
 /**
@@ -63,6 +64,31 @@ class AccountRepository implements AccountRepositoryInterface
         app('log')->debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
 
         return $account;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findByAccountNumber(string $number, array $types): ?Account
+    {
+        $dbQuery = $this->userGroup
+            ->accounts()
+            ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
+            ->where('accounts.active', true)
+            ->where(
+                static function (EloquentBuilder $q1) use ($number) { /** @phpstan-ignore-line */
+                    $json = json_encode($number);
+                    $q1->where('account_meta.name', '=', 'account_number');
+                    $q1->where('account_meta.data', '=', $json);
+                }
+            );
+
+        if (0 !== count($types)) {
+            $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $dbQuery->whereIn('account_types.type', $types);
+        }
+        /** @var Account|null */
+        return $dbQuery->first(['accounts.*']);
     }
 
     /**
@@ -218,5 +244,23 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $dbQuery->take($limit)->get(['accounts.*']);
+    }
+    /**
+     * @param string $iban
+     * @param array  $types
+     *
+     * @return Account|null
+     */
+    public function findByIbanNull(string $iban, array $types): ?Account
+    {
+        $query = $this->userGroup->accounts()->where('iban', '!=', '')->whereNotNull('iban');
+
+        if (0 !== count($types)) {
+            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
+            $query->whereIn('account_types.type', $types);
+        }
+
+        /** @var Account|null */
+        return $query->where('iban', $iban)->first(['accounts.*']);
     }
 }

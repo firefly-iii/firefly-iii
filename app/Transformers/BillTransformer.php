@@ -62,7 +62,6 @@ class BillTransformer extends AbstractTransformer
     {
         $paidData     = $this->paidData($bill);
         $lastPaidDate = $this->getLastPaidDate($paidData);
-        //$payDates     = $this->payDates($bill, $lastPaidDate);
         $payDates     = $this->calculator->getPayDates($this->parameters->get('start'), $this->parameters->get('end'), $bill->date, $bill->repeat_freq, $bill->skip, $lastPaidDate);
         $currency     = $bill->transactionCurrency;
         $notes        = $this->repository->getNoteText($bill);
@@ -83,12 +82,20 @@ class BillTransformer extends AbstractTransformer
         $paidDataFormatted = [];
         $payDatesFormatted = [];
         foreach ($paidData as $object) {
-            $object['date']      = Carbon::createFromFormat('!Y-m-d', $object['date'], config('app.timezone'))->toAtomString();
+            $date = Carbon::createFromFormat('!Y-m-d', $object['date'], config('app.timezone'));
+            if (false === $date) {
+                $date = today(config('app.timezone'));
+            }
+            $object['date']      = $date->toAtomString();
             $paidDataFormatted[] = $object;
         }
 
         foreach ($payDates as $string) {
-            $payDatesFormatted[] = Carbon::createFromFormat('!Y-m-d', $string, config('app.timezone'))->toAtomString();
+            $date = Carbon::createFromFormat('!Y-m-d', $string, config('app.timezone'));
+            if (false === $date) {
+                $date = today(config('app.timezone'));
+            }
+            $payDatesFormatted[] = $date->toAtomString();
         }
         // next expected match
         $nem          = null;
@@ -98,6 +105,9 @@ class BillTransformer extends AbstractTransformer
 
         if (null !== $firstPayDate) {
             $nemDate = Carbon::createFromFormat('!Y-m-d', $firstPayDate, config('app.timezone'));
+            if(false === $nemDate) {
+                $nemDate = today(config('app.timezone'));
+            }
             $nem     = $nemDate->toAtomString();
 
             // nullify again when it's outside the current view range.
@@ -117,6 +127,9 @@ class BillTransformer extends AbstractTransformer
             $current = $payDatesFormatted[0] ?? null;
             if (null !== $current && !$nemDate->isToday()) {
                 $temp2   = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
+                if(false === $temp2) {
+                    $temp2 = today(config('app.timezone'));
+                }
                 $nemDiff = trans('firefly.bill_expected_date', ['date' => $temp2->diffForHumans(today(config('app.timezone')), CarbonInterface::DIFF_RELATIVE_TO_NOW)]);
             }
             unset($temp2);
@@ -136,7 +149,7 @@ class BillTransformer extends AbstractTransformer
             'end_date'                 => $bill->end_date?->toAtomString(),
             'extension_date'           => $bill->extension_date?->toAtomString(),
             'repeat_freq'              => $bill->repeat_freq,
-            'skip'                     => (int)$bill->skip,
+            'skip'                     => $bill->skip,
             'active'                   => $bill->active,
             'order'                    => $bill->order,
             'notes'                    => $notes,
@@ -265,124 +278,4 @@ class BillTransformer extends AbstractTransformer
         return $return;
     }
 
-    /**
-     * @param Bill   $bill
-     * @param Carbon $lastPaidDate
-     *
-     * @return array
-     */
-    protected function payDates(Bill $bill, ?Carbon $lastPaidDate): array
-    {
-        app('log')->debug(sprintf('Now in payDates(#%d, "%s")', $bill->id, $lastPaidDate?->format('Y-m-d')));
-        if (null === $this->parameters->get('start') || null === $this->parameters->get('end')) {
-            app('log')->debug('No start or end date, give empty array.');
-
-            return [];
-        }
-        app('log')->debug(sprintf('Start: %s, end: %s', $this->parameters->get('start')->format('Y-m-d'), $this->parameters->get('end')->format('Y-m-d')));
-        $set          = new Collection();
-        $currentStart = clone $this->parameters->get('start');
-        // 2023-06-23 subDay to fix 7655
-        $currentStart->subDay();
-        $loop = 0;
-        app('log')->debug('start of loop');
-        /*
-         * De eerste dag van de bill telt sowieso. Vanaf daarna gaan we door tellen.
-         * Weekly die start op 01-10
-         * 01-10: dit is hem dus.
-         * alle
-         */
-
-
-        /*
-         * In de eerste week blijft aantal steps hangen op 0.
-         * Dus dan krijg je:
-         * 1 okt: 0
-         * 2 okt: 0
-         * 3 okt 0
-         * en daarna pas begint-ie te lopen.
-         * maar je moet sowieso een periode verder kijken.
-         *
-         * dus stel je begint op 1 oktober monthly.
-         * dan is de eerste hit (want subday) vanaf 30 sept gerekend.
-         */
-        while ($currentStart <= $this->parameters->get('end')) {
-            app('log')->debug(sprintf('Current start is %s', $currentStart->format('Y-m-d')));
-            $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
-
-
-            // If nextExpectedMatch is after end, we continue:
-            if ($nextExpectedMatch > $this->parameters->get('end')) {
-                app('log')->debug('Next expected match is after END, so stop looking');
-                //break;
-                if ($set->count() > 0) {
-                    app('log')->debug(sprintf('Already have %d date(s), so break.', $set->count()));
-                    break;
-                }
-                app('log')->debug('Add date to set anyway.');
-                $set->push(clone $nextExpectedMatch);
-                continue;
-            }
-            app('log')->debug(sprintf('Next expected match is %s', $nextExpectedMatch->format('Y-m-d')));
-            // add to set, if the date is ON or after the start parameter
-            // AND date is after last paid date
-            if ($nextExpectedMatch->gte($this->parameters->get('start'))
-                && (null === $lastPaidDate || $nextExpectedMatch->gt($lastPaidDate))
-            ) {
-                app('log')->debug('Add date to set.');
-                $set->push(clone $nextExpectedMatch);
-            }
-
-            // 2023-10
-            // for the next loop, go to end of period, THEN add day.
-            //$nextExpectedMatch = app('navigation')->endOfPeriod($nextExpectedMatch, $bill->repeat_freq);
-            $nextExpectedMatch->addDay();
-            $currentStart = clone $nextExpectedMatch;
-
-
-            $loop++;
-            if ($loop > 12) {
-                break;
-            }
-        }
-        app('log')->debug('end of loop');
-        $simple = $set->map(
-            static function (Carbon $date) {
-                return $date->format('Y-m-d');
-            }
-        );
-        app('log')->debug(sprintf('Found %d pay dates', $set->count()), $simple->toArray());
-
-        return $simple->toArray();
-    }
-
-    /**
-     * Given a bill and a date, this method will tell you at which moment this bill expects its next
-     * transaction. That date must be AFTER $date as a sanity check.
-     *
-     * @param Bill   $bill
-     * @param Carbon $date
-     *
-     * @return Carbon
-     */
-    protected function nextDateMatch(Bill $bill, Carbon $date): Carbon
-    {
-        app('log')->debug(sprintf('Now in nextDateMatch(#%d, %s)', $bill->id, $date->format('Y-m-d')));
-        $start = clone $bill->date;
-        app('log')->debug(sprintf('Bill start date is %s', $start->format('Y-m-d')));
-        if ($start->gt($date)) {
-            app('log')->debug('Start is after bill start, just return bill start date.');
-            return clone $start;
-        }
-
-        $steps  = app('navigation')->diffInPeriods($bill->repeat_freq, $bill->skip, $start, $date);
-        $result = clone $start;
-        if ($steps > 0) {
-            $steps -= 1;
-            app('log')->debug(sprintf('Steps is %d, because addPeriod already adds 1.', $steps));
-            $result = app('navigation')->addPeriod($start, $bill->repeat_freq, $steps);
-        }
-        app('log')->debug(sprintf('Number of steps is %d, added to %s, result is %s', $steps, $start->format('Y-m-d'), $result->format('Y-m-d')));
-        return $result;
-    }
 }

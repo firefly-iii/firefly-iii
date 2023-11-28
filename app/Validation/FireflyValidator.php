@@ -73,8 +73,11 @@ class FireflyValidator extends Validator
         }
         $secretPreference = app('preferences')->get('temp-mfa-secret');
         $secret           = $secretPreference?->data ?? '';
+        if(is_array($secret)) {
+            $secret = '';
+        }
 
-        return Google2FA::verifyKey($secret, $value);
+        return (bool) Google2FA::verifyKey((string) $secret, $value);
     }
 
     /**
@@ -183,7 +186,7 @@ class FireflyValidator extends Validator
         $value   = strtoupper($value);
 
         // replace characters outside of ASCI range.
-        $value   = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
+        $value   = (string) iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
         $search  = [' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
         $replace = [
             '',
@@ -509,7 +512,8 @@ class FireflyValidator extends Validator
         if (!array_key_exists('user_id', $this->data)) {
             return false;
         }
-
+        
+        /** @var User $user */
         $user  = User::find($this->data['user_id']);
         $type  = AccountType::find($this->data['account_type_id'])->first();
         $value = $this->data['name'];
