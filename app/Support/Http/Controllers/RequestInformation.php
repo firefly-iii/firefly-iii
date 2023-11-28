@@ -55,7 +55,7 @@ trait RequestInformation
         $url   = url()->to('/');
         $parts = parse_url($url);
 
-        return $parts['host'];
+        return $parts['host'] ?? '';
     }
 
     /**
@@ -129,7 +129,9 @@ trait RequestInformation
      */
     final protected function getSpecificPageName(): string // get request info
     {
-        return null === RouteFacade::current()->parameter('objectType') ? '' : '_' . RouteFacade::current()->parameter('objectType');
+        /** @var string|null $param */
+        $param = RouteFacade::current()->parameter('objectType');
+        return null === $param ? '' : sprintf('_%s', $param);
     }
 
     /**
@@ -170,20 +172,25 @@ trait RequestInformation
         $attributes['location'] = $attributes['location'] ?? '';
         $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get', '', []));
         try {
-            $attributes['startDate'] = Carbon::createFromFormat('Ymd', $attributes['startDate'])->startOfDay();
+            $date = Carbon::createFromFormat('Ymd', $attributes['startDate']);
         } catch (InvalidArgumentException $e) {
             app('log')->debug(sprintf('Not important error message: %s', $e->getMessage()));
-            $date                    = today(config('app.timezone'))->startOfMonth();
-            $attributes['startDate'] = $date;
+            $date = today(config('app.timezone'));
+
         }
+        $date->startOfMonth();
+        $attributes['startDate'] = $date;
+        unset($date);
 
         try {
-            $attributes['endDate'] = Carbon::createFromFormat('Ymd', $attributes['endDate'])->endOfDay();
+            $date2 = Carbon::createFromFormat('Ymd', $attributes['endDate']);
         } catch (InvalidArgumentException $e) {
             app('log')->debug(sprintf('Not important error message: %s', $e->getMessage()));
-            $date                  = today(config('app.timezone'))->startOfMonth();
-            $attributes['endDate'] = $date;
+            $date2 = today(config('app.timezone'));
         }
+        $date2->endOfDay();
+        $attributes['endDate'] = $date2;
+
 
         return $attributes;
     }

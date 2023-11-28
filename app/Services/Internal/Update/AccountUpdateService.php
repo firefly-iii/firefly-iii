@@ -338,6 +338,9 @@ class AccountUpdateService
             return;
         }
         $array = $preference->data;
+        if(!is_array($array)) {
+            $array = [$array];
+        }
         app('log')->debug('Old array is: ', $array);
         app('log')->debug(sprintf('Must remove : %d', $account->id));
         $removeAccountId = $account->id;

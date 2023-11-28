@@ -206,12 +206,15 @@ class UserGroupRepository implements UserGroupRepositoryInterface
     {
         $owner = UserRole::whereTitle(UserRoleEnum::OWNER)->first();
         app('log')->debug('in update membership');
+        /** @var User|null $user */
         $user = null;
         if (array_key_exists('id', $data)) {
+            /** @var User|null $user */
             $user = User::find($data['id']);
             app('log')->debug('Found user by ID');
         }
         if (array_key_exists('email', $data) && '' !== (string)$data['email']) {
+            /** @var User|null $user */
             $user = User::whereEmail($data['email'])->first();
             app('log')->debug('Found user by email');
         }

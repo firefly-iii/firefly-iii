@@ -224,7 +224,11 @@ trait AccountServiceTrait
     protected function createOBGroup(Account $account, array $data): TransactionGroup
     {
         app('log')->debug('Now going to create an OB group.');
-        $language   = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
+        $language = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
+        if (is_array($language)) {
+            $language = 'en_US';
+        }
+        $language   = (string)$language;
         $sourceId   = null;
         $sourceName = null;
         $destId     = null;
@@ -478,6 +482,10 @@ trait AccountServiceTrait
         }
 
         $language = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
+        if (is_array($language)) {
+            $language = 'en_US';
+        }
+        $language = (string)$language;
 
         // set source and/or destination based on whether the amount is positive or negative.
         // first, assume the amount is positive and go from there:
@@ -686,6 +694,10 @@ trait AccountServiceTrait
     {
         app('log')->debug('Now going to create an OB group.');
         $language   = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
+        if (is_array($language)) {
+            $language = 'en_US';
+        }
+        $language= (string)$language;
         $sourceId   = null;
         $sourceName = null;
         $destId     = null;

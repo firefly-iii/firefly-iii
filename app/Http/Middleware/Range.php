@@ -74,8 +74,8 @@ class Range
             }
 
             $today     = today(config('app.timezone'));
-            $start     = app('navigation')->updateStartDate($viewRange, $today);
-            $end       = app('navigation')->updateEndDate($viewRange, $start);
+            $start     = app('navigation')->updateStartDate((string) $viewRange, $today);
+            $end       = app('navigation')->updateEndDate((string) $viewRange, $start);
 
             app('session')->put('start', $start);
             app('session')->put('end', $end);

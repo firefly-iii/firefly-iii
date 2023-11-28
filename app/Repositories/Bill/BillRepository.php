@@ -653,7 +653,7 @@ class BillRepository implements BillRepositoryInterface
         return $this->user->bills()
                           ->where('active', true)
                           ->orderBy('bills.name', 'ASC')
-                          ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),]);
+                          ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),]); // @phpstan-ignore-line
     }
 
     /**

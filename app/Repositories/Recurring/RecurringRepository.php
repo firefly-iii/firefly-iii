@@ -69,9 +69,9 @@ class RecurringRepository implements RecurringRepositoryInterface
         // if not, loop set and try to read the recurrence_date. If it matches start or end, return it as well.
         $set
             = TransactionJournalMeta::where(static function (Builder $q1) use ($recurrence) {
-                $q1->where('name', 'recurrence_id');
-                $q1->where('data', json_encode((string)$recurrence->id));
-            })->get(['journal_meta.transaction_journal_id']);
+            $q1->where('name', 'recurrence_id');
+            $q1->where('data', json_encode((string)$recurrence->id));
+        })->get(['journal_meta.transaction_journal_id']);
 
         // there are X journals made for this recurrence. Any of them meant for today?
         foreach ($set as $journalMeta) {
@@ -495,6 +495,10 @@ class RecurringRepository implements RecurringRepositoryInterface
         /** @var Preference $pref */
         $pref     = app('preferences')->getForUser($this->user, 'language', config('firefly.default_language', 'en_US'));
         $language = $pref->data;
+        if (is_array($language)) {
+            $language = 'en_US';
+        }
+        $language = (string)$language;
         if ('daily' === $repetition->repetition_type) {
             return (string)trans('firefly.recurring_daily', [], $language);
         }
@@ -532,6 +536,9 @@ class RecurringRepository implements RecurringRepositoryInterface
             //
             $today       = today(config('app.timezone'))->endOfYear();
             $repDate     = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
+            if(false === $repDate) {
+                $repDate = clone $today;
+            }
             $diffInYears = $today->diffInYears($repDate);
             $repDate->addYears($diffInYears); // technically not necessary.
             $string = $repDate->isoFormat((string)trans('config.month_and_day_no_year_js'));

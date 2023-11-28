@@ -123,10 +123,15 @@ class UpdateRequest implements UpdateRequestInterface
         }
 
         // parse response a bit. No message yet.
-        $response          = $json['firefly_iii'][$channel];
+        $response = $json['firefly_iii'][$channel];
+        $date     = Carbon::createFromFormat('Y-m-d', $response['date']);
+        if (false === $date) {
+            $date = today(config('app.timezone'));
+        }
         $return['version'] = $response['version'];
         $return['level']   = 'success';
-        $return['date']    = Carbon::createFromFormat('Y-m-d', $response['date'])->startOfDay();
+        $return['date']    = $date->startOfDay();
+
         app('log')->info('Response from update server', $response);
 
         return $return;
