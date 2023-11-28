@@ -89,10 +89,10 @@ class Navigation
 
         if (!array_key_exists($repeatFreq, $functionMap)) {
             Log::error(sprintf(
-                'The periodicity %s is unknown. Choose one of available periodicity: %s',
-                $repeatFreq,
-                implode(', ', array_keys($functionMap))
-            ));
+                           'The periodicity %s is unknown. Choose one of available periodicity: %s',
+                           $repeatFreq,
+                           implode(', ', array_keys($functionMap))
+                       ));
             return $theDate;
         }
 
@@ -352,12 +352,12 @@ class Navigation
     public function diffInPeriods(string $period, int $skip, Carbon $beginning, Carbon $end): int
     {
         Log::debug(sprintf(
-            'diffInPeriods: %s (skip: %d), between %s and %s.',
-            $period,
-            $skip,
-            $beginning->format('Y-m-d'),
-            $end->format('Y-m-d')
-        ));
+                       'diffInPeriods: %s (skip: %d), between %s and %s.',
+                       $period,
+                       $skip,
+                       $beginning->format('Y-m-d'),
+                       $end->format('Y-m-d')
+                   ));
         $map = [
             'daily'     => 'floatDiffInDays',
             'weekly'    => 'floatDiffInWeeks',
@@ -394,11 +394,11 @@ class Navigation
             $parameter = $skip + 1;
             $diff      = ceil($diff / $parameter) * $parameter;
             Log::debug(sprintf(
-                'diffInPeriods: skip is %d, so param is %d, and diff becomes %d',
-                $skip,
-                $parameter,
-                $diff
-            ));
+                           'diffInPeriods: skip is %d, so param is %d, and diff becomes %d',
+                           $skip,
+                           $parameter,
+                           $diff
+                       ));
         }
 
         return (int)$diff;
@@ -456,7 +456,11 @@ class Navigation
      */
     public function getViewRange(bool $correct): string
     {
-        $range = (string)app('preferences')->get('viewRange', '1M')?->data ?? '1M';
+        $range = app('preferences')->get('viewRange', '1M')?->data ?? '1M';
+        if (is_array($range)) {
+            $range = '1M';
+        }
+        $range = (string)$range;
         if (!$correct) {
             return $range;
         }

@@ -152,7 +152,7 @@ class Steam
                        ->orderBy('transaction_journals.date', 'ASC')
                        ->whereNull('transaction_journals.deleted_at')
                        ->get(
-                           [
+                           [ // @phpstan-ignore-line
                                'transaction_journals.date',
                                'transactions.transaction_currency_id',
                                DB::raw('SUM(transactions.amount) AS modified'),
@@ -295,7 +295,10 @@ class Steam
         $currentBalance = $startBalance;
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
-            $day    = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date'], config('app.timezone'));
+            $day = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date'], config('app.timezone'));
+            if (false === $day) {
+                $day = today(config('app.timezone'));
+            }
             $format = $day->format('Y-m-d');
             // if the transaction is in the expected currency, change nothing.
             if ((int)$transaction['transaction_currency_id'] === $native->id) {
@@ -449,6 +452,9 @@ class Steam
         foreach ($new as $index => $set) {
             foreach ($set as $transaction) {
                 $date            = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date']);
+                if(false === $date) {
+                    $date = today(config('app.timezone'));
+                }
                 $rate            = $converter->getCurrencyRate($currency, $native, $date);
                 $convertedAmount = bcmul($transaction['amount'], $rate);
                 $balance         = bcadd($balance, $convertedAmount);
@@ -598,7 +604,7 @@ class Steam
                             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                             ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
                             ->groupBy('transactions.transaction_currency_id');
-        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]);
+        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]); // @phpstan-ignore-line
         $return   = [];
         /** @var stdClass $entry */
         foreach ($balances as $entry) {
@@ -717,7 +723,7 @@ class Steam
         } catch (Exception $e) { // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);
         }
-        return $hostName;
+        return (string)$hostName;
     }
 
     /**
@@ -732,7 +738,7 @@ class Steam
         $set = auth()->user()->transactions()
                      ->whereIn('transactions.account_id', $accounts)
                      ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
-                     ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]);
+                     ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]); // @phpstan-ignore-line
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
@@ -755,9 +761,14 @@ class Steam
     public function getLocale(): string // get preference
     {
         $locale = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
+        if (is_array($locale)) {
+            $locale = 'equal';
+        }
         if ('equal' === $locale) {
             $locale = $this->getLanguage();
         }
+        $locale = (string)$locale;
+
 
         // Check for Windows to replace the locale correctly.
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
@@ -879,10 +890,10 @@ class Steam
             return $value;
         }
 
-        $number = substr($value, 0, strpos($value, 'E'));
+        $number = substr($value, 0, (int) strpos($value, 'E'));
         if (str_contains($number, '.')) {
-            $post   = strlen(substr($number, strpos($number, '.') + 1));
-            $mantis = substr($value, strpos($value, 'E') + 1);
+            $post   = strlen(substr($number, (int) strpos($number, '.') + 1));
+            $mantis = substr($value, (int) strpos($value, 'E') + 1);
             if ($mantis < 0) {
                 $post += abs((int)$mantis);
             }

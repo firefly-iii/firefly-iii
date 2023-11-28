@@ -168,7 +168,7 @@ class Preferences
         }
         if (null === $pref) {
             $pref          = new Preference();
-            $pref->user_id = $user->id;
+            $pref->user_id = (int) $user->id;
             $pref->name    = $name;
         }
         $pref->data = $value;
@@ -286,7 +286,7 @@ class Preferences
             $lastActivity = implode(',', $lastActivity);
         }
 
-        return hash('sha256', $lastActivity);
+        return hash('sha256', (string) $lastActivity);
     }
 
     /**

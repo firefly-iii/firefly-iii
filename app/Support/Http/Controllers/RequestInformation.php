@@ -34,7 +34,6 @@ use Hash;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Validator;
-use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Route as RouteFacade;
@@ -171,21 +170,15 @@ trait RequestInformation
     {
         $attributes['location'] = $attributes['location'] ?? '';
         $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get', '', []));
-        try {
-            $date = Carbon::createFromFormat('Ymd', $attributes['startDate']);
-        } catch (InvalidArgumentException $e) {
-            app('log')->debug(sprintf('Not important error message: %s', $e->getMessage()));
+        $date                   = Carbon::createFromFormat('Ymd', $attributes['startDate']);
+        if (false === $date) {
             $date = today(config('app.timezone'));
-
         }
         $date->startOfMonth();
         $attributes['startDate'] = $date;
-        unset($date);
 
-        try {
-            $date2 = Carbon::createFromFormat('Ymd', $attributes['endDate']);
-        } catch (InvalidArgumentException $e) {
-            app('log')->debug(sprintf('Not important error message: %s', $e->getMessage()));
+        $date2 = Carbon::createFromFormat('Ymd', $attributes['endDate']);
+        if (false === $date2) {
             $date2 = today(config('app.timezone'));
         }
         $date2->endOfDay();
