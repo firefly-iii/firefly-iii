@@ -53,13 +53,9 @@ class IndexController extends Controller
     }
 
     /**
-     * Show debug info.
-     *
-     * @param Request $request
-     *
      * @return Factory|View
      */
-    public function index(Request $request)
+    public function index()
     {
         return view('webhooks.index');
     }

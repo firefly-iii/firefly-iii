@@ -74,13 +74,11 @@ class IndexController extends Controller
      *
      * TODO very complicated function.
      *
-     * @param Request $request
-     *
      * @return Factory|View
      * @throws FireflyException
      * @throws JsonException
      */
-    public function index(Request $request)
+    public function index()
     {
         $this->cleanupObjectGroups();
         $this->piggyRepos->resetOrder();

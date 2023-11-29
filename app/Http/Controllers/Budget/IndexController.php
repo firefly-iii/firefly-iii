@@ -87,8 +87,6 @@ class IndexController extends Controller
     /**
      * Show all budgets.
      *
-     * @param Request     $request
-     *
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
@@ -98,7 +96,7 @@ class IndexController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function index(Request $request, Carbon $start = null, Carbon $end = null)
+    public function index(Carbon $start = null, Carbon $end = null)
     {
         $this->abRepository->cleanup();
         app('log')->debug(sprintf('Start of IndexController::index("%s", "%s")', $start?->format('Y-m-d'), $end?->format('Y-m-d')));
@@ -137,7 +135,7 @@ class IndexController extends Controller
 
         // get budgeted for default currency:
         if (0 === count($availableBudgets)) {
-            $budgeted = $this->blRepository->budgeted($start, $end, $defaultCurrency, );
+            $budgeted = $this->blRepository->budgeted($start, $end, $defaultCurrency,);
             $spentArr = $this->opsRepository->sumExpenses($start, $end, null, null, $defaultCurrency);
             $spent    = $spentArr[$defaultCurrency->id]['sum'] ?? '0';
             unset($spentArr);
@@ -196,7 +194,7 @@ class IndexController extends Controller
             $array['spent'] = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
 
             // budgeted in period:
-            $budgeted           = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency, );
+            $budgeted           = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency,);
             $array['budgeted']  = $budgeted;
             $availableBudgets[] = $array;
             unset($spentArr);
@@ -320,10 +318,9 @@ class IndexController extends Controller
         }
         // final calculation for 'left':
         /**
-         * @var int   $currencyId
-         * @var array $info
+         * @var int $currencyId
          */
-        foreach ($sums['budgeted'] as $currencyId => $info) {
+        foreach (array_keys($sums['budgeted']) as $currencyId) {
             $spent                               = $sums['spent'][$currencyId]['amount'] ?? '0';
             $budgeted                            = $sums['budgeted'][$currencyId]['amount'] ?? '0';
             $sums['left'][$currencyId]['amount'] = bcadd($spent, $budgeted);

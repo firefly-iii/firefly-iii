@@ -36,7 +36,6 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Services\Password\Verifier;
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\TransactionRules\Triggers\TriggerInterface;
 use FireflyIII\User;
@@ -49,6 +48,7 @@ use ValueError;
 
 /**
  * Class FireflyValidator.
+ * TODO all of these validations must become separate classes.
  */
 class FireflyValidator extends Validator
 {
@@ -60,6 +60,7 @@ class FireflyValidator extends Validator
      * @throws IncompatibleWithGoogleAuthenticatorException
      * @throws InvalidCharactersException
      * @throws SecretKeyTooShortException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function validate2faCode($attribute, $value): bool
     {
@@ -73,18 +74,18 @@ class FireflyValidator extends Validator
         }
         $secretPreference = app('preferences')->get('temp-mfa-secret');
         $secret           = $secretPreference?->data ?? '';
-        if(is_array($secret)) {
+        if (is_array($secret)) {
             $secret = '';
         }
 
-        return (bool) Google2FA::verifyKey((string) $secret, $value);
+        return (bool)Google2FA::verifyKey((string)$secret, $value);
     }
 
     /**
      * @param mixed $attribute
      * @param mixed $value
      * @param mixed $parameters
-     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @return bool
      */
     public function validateBelongsToUser($attribute, $value, $parameters): bool
@@ -102,7 +103,7 @@ class FireflyValidator extends Validator
     /**
      * @param mixed $attribute
      * @param mixed $value
-     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @return bool
      */
     public function validateBic($attribute, $value): bool
@@ -122,7 +123,7 @@ class FireflyValidator extends Validator
     /**
      * @param mixed $attribute
      * @param mixed $value
-     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @return bool
      */
     public function validateIban(mixed $attribute, mixed $value): bool
@@ -186,7 +187,7 @@ class FireflyValidator extends Validator
         $value   = strtoupper($value);
 
         // replace characters outside of ASCI range.
-        $value   = (string) iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
+        $value   = (string)iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
         $search  = [' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
         $replace = [
             '',
@@ -228,7 +229,8 @@ class FireflyValidator extends Validator
         }
         try {
             $checksum = bcmod($iban, '97');
-        } catch (ValueError $e) { /** @phpstan-ignore-line */
+        } catch (ValueError $e) {
+            /** @phpstan-ignore-line */
             $message = sprintf('Could not validate IBAN check value "%s" (IBAN "%s")', $iban, $value);
             app('log')->error($message);
             app('log')->error($e->getTraceAsString());
@@ -243,7 +245,7 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      * @param mixed $parameters
-     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @return bool
      */
     public function validateLess($attribute, $value, $parameters): bool
@@ -258,7 +260,7 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      * @param mixed $parameters
-     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @return bool
      */
     public function validateMore($attribute, $value, $parameters): bool
@@ -273,7 +275,7 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      * @param mixed $parameters
-     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @return bool
      */
     public function validateMustExist($attribute, $value, $parameters): bool
@@ -444,7 +446,7 @@ class FireflyValidator extends Validator
     /**
      * @param mixed $attribute
      * @param mixed $value
-     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @return bool
      */
     public function validateSecurePassword($attribute, $value): bool
@@ -467,6 +469,7 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      * @param mixed $parameters
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -512,7 +515,7 @@ class FireflyValidator extends Validator
         if (!array_key_exists('user_id', $this->data)) {
             return false;
         }
-        
+
         /** @var User $user */
         $user  = User::find($this->data['user_id']);
         $type  = AccountType::find($this->data['account_type_id'])->first();
@@ -624,6 +627,7 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      * @param mixed $parameters
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -676,10 +680,11 @@ class FireflyValidator extends Validator
     /**
      * @param string|null $attribute
      * @param string|null $value
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
-    public function validateUniqueCurrencyCode(string|null $attribute, string|null $value): bool
+    public function validateUniqueCurrencyCode(string | null $attribute, string | null $value): bool
     {
         return $this->validateUniqueCurrency('code', (string)$attribute, (string)$value);
     }
@@ -688,6 +693,7 @@ class FireflyValidator extends Validator
      * @param string $field
      * @param string $attribute
      * @param string $value
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -702,7 +708,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateUniqueCurrencyName(string|null $attribute, string|null $value): bool
+    public function validateUniqueCurrencyName(string | null $attribute, string | null $value): bool
     {
         return $this->validateUniqueCurrency('name', (string)$attribute, (string)$value);
     }
@@ -713,7 +719,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateUniqueCurrencySymbol(string|null $attribute, string|null $value): bool
+    public function validateUniqueCurrencySymbol(string | null $attribute, string | null $value): bool
     {
         return $this->validateUniqueCurrency('symbol', (string)$attribute, (string)$value);
     }
@@ -722,6 +728,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      * @param mixed $something
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -777,6 +784,7 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      * @param mixed $parameters
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -809,6 +817,7 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      * @param mixed $parameters
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -830,6 +839,7 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      * @param mixed $parameters
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */
@@ -849,6 +859,7 @@ class FireflyValidator extends Validator
     /**
      * @param mixed $value
      * @param mixed $parameters
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      */

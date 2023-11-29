@@ -324,21 +324,4 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $array;
     }
 
-    /**
-     * For now, simply refer to whichever repository holds this function.
-     * TODO perhaps better in the future.
-     *
-     * @param Budget      $budget
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
-     * @return Collection
-     */
-    private function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection
-    {
-        /** @var BudgetLimitRepositoryInterface $blRepository */
-        $blRepository = app(BudgetLimitRepositoryInterface::class);
-
-        return $blRepository->getBudgetLimits($budget, $start, $end);
-    }
 }

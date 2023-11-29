@@ -488,7 +488,7 @@ trait TransactionValidation
      */
     private function getTransactionType(TransactionGroup $group, array $transactions): string
     {
-        return $transactions[0]['type'] ?? strtolower($group->transactionJournals()->first()->transactionType->type);
+        return $transactions[0]['type'] ?? strtolower((string) $group->transactionJournals()->first()?->transactionType->type);
     }
 
     /**
@@ -502,13 +502,13 @@ trait TransactionValidation
         if (1 === $transactionGroup->transactionJournals->count()) {
             $journal = $transactionGroup->transactionJournals->first();
 
-            return $journal->transactions()->where('amount', '<', 0)->first()->account;
+            return $journal?->transactions()->where('amount', '<', 0)->first()?->account;
         }
         /** @var TransactionJournal $journal */
         foreach ($transactionGroup->transactionJournals as $journal) {
             $journalId = (int)($transaction['transaction_journal_id'] ?? 0);
             if ($journal->id === $journalId) {
-                return $journal->transactions()->where('amount', '<', 0)->first()->account;
+                return $journal->transactions()->where('amount', '<', 0)->first()?->account;
             }
         }
 
@@ -785,7 +785,7 @@ trait TransactionValidation
         }
         /** @var Transaction|null $destination */
         $destination = Transaction::where('transaction_journal_id', $journalId)->where('amount', '>', 0)->with(['account'])->first();
-        if (null !== $source) {
+        if (null !== $destination) {
             $return['destination_id']   = $destination->account_id;
             $return['destination_name'] = $destination->account->name;
         }

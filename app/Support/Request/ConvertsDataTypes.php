@@ -70,7 +70,7 @@ trait ConvertsDataTypes
         if (!is_scalar($entry)) {
             return '';
         }
-        return $this->clearString((string)$entry, false);
+        return (string) $this->clearString((string)$entry, false);
     }
 
     /**
@@ -199,7 +199,7 @@ trait ConvertsDataTypes
      */
     public function stringWithNewlines(string $field): string
     {
-        return $this->clearString((string)($this->get($field) ?? ''));
+        return (string) $this->clearString((string)($this->get($field) ?? ''));
     }
 
     /**
@@ -255,7 +255,7 @@ trait ConvertsDataTypes
      */
     protected function convertDateTime(?string $string): ?Carbon
     {
-        $value = $this->get($string);
+        $value = $this->get((string)$string);
         if (null === $value) {
             return null;
         }

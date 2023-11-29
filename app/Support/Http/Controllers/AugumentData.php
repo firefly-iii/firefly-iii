@@ -36,6 +36,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Support\Collection;
 
 /**
@@ -216,9 +217,20 @@ trait AugumentData
         /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
             $currency = $entry->transactionCurrency;
+
+            if(null === $currency) {
+                $currency = app('amount')->getDefaultCurrency();
+            }
+
             // clone because these objects change each other.
             $currentStart = clone $entry->start_date;
-            $currentEnd   = clone $entry->end_date;
+            $currentEnd   = null === $entry->end_date ? null : clone $entry->end_date;
+
+            if(null === $currentEnd) {
+                $currentEnd = clone $currentStart;
+                $currentEnd->addMonth();
+            }
+
             $expenses     = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $currency);
             $spent        = $expenses[$currency->id]['sum'] ?? '0';
             $entry->spent = $spent;

@@ -79,6 +79,7 @@ trait ModelInformation
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         // types of liability:
+        /** @var AccountType $debt */
         $debt           = $repository->getAccountTypeByType(AccountType::DEBT);
         $loan           = $repository->getAccountTypeByType(AccountType::LOAN);
         $mortgage       = $repository->getAccountTypeByType(AccountType::MORTGAGE);

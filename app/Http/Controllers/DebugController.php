@@ -115,12 +115,10 @@ class DebugController extends Controller
     /**
      * Show debug info.
      *
-     * @param Request $request
-     *
      * @return Factory|View
      * @throws FireflyException
      */
-    public function index(Request $request)
+    public function index()
     {
         $table = $this->generateTable();
         $table = str_replace(["\n", "\t", '  '], '', $table);

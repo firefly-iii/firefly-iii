@@ -106,12 +106,11 @@ class BudgetLimitController extends Controller
     }
 
     /**
-     * @param Request     $request
      * @param BudgetLimit $budgetLimit
      *
      * @return RedirectResponse|Redirector
      */
-    public function delete(Request $request, BudgetLimit $budgetLimit)
+    public function delete(BudgetLimit $budgetLimit)
     {
         $this->blRepository->destroyBudgetLimit($budgetLimit);
         session()->flash('success', trans('firefly.deleted_bl'));
