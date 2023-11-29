@@ -45,7 +45,7 @@ trait OBValidation
         app('log')->debug('Now in validateOBDestination', $array);
 
         // source can be any of the following types.
-        $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
+        $validTypes = $this->combinations[$this->transactionType][$this->source?->accountType->type] ?? [];
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the destination of a deposit can't be created.
@@ -138,6 +138,7 @@ trait OBValidation
 
             // set the source to be a (dummy) initial balance account.
             $account              = new Account();
+            /** @var AccountType $accountType */
             $accountType          = AccountType::whereType(AccountType::INITIAL_BALANCE)->first();
             $account->accountType = $accountType;
             $this->setSource($account);

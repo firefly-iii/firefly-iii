@@ -81,7 +81,9 @@ trait ModelInformation
         // types of liability:
         /** @var AccountType $debt */
         $debt           = $repository->getAccountTypeByType(AccountType::DEBT);
+        /** @var AccountType $loan */
         $loan           = $repository->getAccountTypeByType(AccountType::LOAN);
+        /** @var AccountType $mortgage */
         $mortgage       = $repository->getAccountTypeByType(AccountType::MORTGAGE);
         $liabilityTypes = [
             $debt->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
@@ -129,7 +131,7 @@ trait ModelInformation
         $result       = [];
         $billTriggers = ['currency_is', 'amount_more', 'amount_less', 'description_contains'];
         $values       = [
-            $bill->transactionCurrency()->first()->name,
+            $bill->transactionCurrency()->first()?->name,
             $bill->amount_min,
             $bill->amount_max,
             $bill->name,
@@ -197,7 +199,7 @@ trait ModelInformation
 
         // currency
         $journalTriggers[$index] = 'currency_is';
-        $values[$index]          = sprintf('%s (%s)', $journal->transactionCurrency->name, $journal->transactionCurrency->code);
+        $values[$index]          = sprintf('%s (%s)', $journal->transactionCurrency?->name, $journal->transactionCurrency?->code);
         $index++;
 
         // amount_exactly:
