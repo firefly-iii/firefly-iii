@@ -42,6 +42,7 @@ class TriggeredAuditLog extends Event
 
     /**
      * Create a new event instance.
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(Model $changer, Model $auditable, string $field, mixed $before, mixed $after)
     {

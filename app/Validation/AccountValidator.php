@@ -265,6 +265,7 @@ class AccountValidator
      * @param bool  $inverse
      *
      * @return Account|null
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     protected function findExistingAccount(array $validTypes, array $data, bool $inverse = false): ?Account
     {

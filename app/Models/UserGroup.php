@@ -117,7 +117,8 @@ class UserGroup extends Model
             }
             // need at least ready only to be aware of the user group's existence,
             // but owner/full role (in the group) or global owner role may overrule this.
-            if ($user->hasRoleInGroup($userGroup, UserRoleEnum::READ_ONLY, true, true)) {
+            $access = $user->hasRoleInGroupOrOwner($userGroup, UserRoleEnum::READ_ONLY) || $user->hasRole('owner');
+            if ($access) {
                 return $userGroup;
             }
         }

@@ -42,7 +42,7 @@ class DropTeleTable extends Migration
 
     /**
      * Run the migrations.
-     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      * @return void
      */
     public function up(): void

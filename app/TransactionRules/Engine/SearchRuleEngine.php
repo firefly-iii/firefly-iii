@@ -510,15 +510,11 @@ class SearchRuleEngine implements RuleEngineInterface
      */
     private function fireGroup(RuleGroup $group): void
     {
-        $all = false;
         app('log')->debug(sprintf('Going to fire group #%d with %d rule(s)', $group->id, $group->rules->count()));
         /** @var Rule $rule */
         foreach ($group->rules as $rule) {
             app('log')->debug(sprintf('Going to fire rule #%d from group #%d', $rule->id, $group->id));
             $result = $this->fireRule($rule);
-            if (true === $result) {
-                $all = true;
-            }
             if (true === $result && true === $rule->stop_processing) {
                 app('log')->debug(sprintf('The rule was triggered and rule->stop_processing = true, so group #%d will stop processing further rules.', $group->id));
 

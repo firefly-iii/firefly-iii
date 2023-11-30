@@ -215,7 +215,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->stringFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->clearString((string)$transaction[$fieldName], false);
+                $current[$fieldName] = $this->clearString((string)$transaction[$fieldName]);
             }
         }
 
@@ -232,7 +232,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->textareaFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->clearString((string)$transaction[$fieldName]);
+                $current[$fieldName] = $this->clearStringKeepNewlines((string)$transaction[$fieldName]); // keep newlines
             }
         }
 

@@ -40,6 +40,8 @@ class IsTransferAccount implements ValidationRule
      * @param Closure $fail
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -59,7 +61,7 @@ class IsTransferAccount implements ValidationRule
         $validAccount = $validator->validateSource(['id' => (int)$value,]);
         app('log')->debug(sprintf('Search by id (%d), result is %s.', (int)$value, var_export($validAccount, true)));
 
-        if(false === $validAccount) {
+        if (false === $validAccount) {
             $fail('validation.not_transfer_account')->translate();
         }
     }

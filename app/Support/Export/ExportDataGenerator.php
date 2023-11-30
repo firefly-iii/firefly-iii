@@ -935,7 +935,7 @@ class ExportDataGenerator
                 $journal['budget_name'],
                 $journal['bill_name'],
                 $this->mergeTags($journal['tags']),
-                $this->clearString($journal['notes'], true),
+                $this->clearStringKeepNewlines($journal['notes']),
 
                 // export also the optional fields (ALL)
 

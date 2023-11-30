@@ -200,7 +200,7 @@ export default {
       this.getCurrencies(1);
     },
     getCurrencies: function(page) {
-      console.log('loadCurrencies on page ' + page);
+      // console.log('loadCurrencies on page ' + page);
       let url = document.getElementsByTagName('base')[0].href + "api/v1/currencies?page=" + page;
       axios.get(url, {}).then((res) => {
 

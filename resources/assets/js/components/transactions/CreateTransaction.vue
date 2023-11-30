@@ -863,7 +863,10 @@ export default {
                 // console.log('Length == 1, set date to today.');
                 // set first date.
                 let today = new Date();
-                this.transactions[0].date = today.getFullYear() + '-' + ("0" + (today.getMonth() + 1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2);
+                this.transactions[0].date = today.getFullYear() + '-' + ("0" + (today.getMonth() + 1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2)
+                + 'T00:00';
+                //console.log(this.transactions[0].date);
+
                 // call for extra clear thing:
                 // this.clearSource(0);
                 //this.clearDestination(0);

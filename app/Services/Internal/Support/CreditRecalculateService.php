@@ -273,7 +273,6 @@ class CreditRecalculateService
         $journal         = $transaction->transactionJournal;
         $foreignCurrency = $transaction->foreignCurrency;
         $accountCurrency = $this->repository->getAccountCurrency($account);
-        $groupId         = $journal->transaction_group_id;
         $decimals        = $accountCurrency->decimal_places;
         $type            = $journal->transactionType->type;
         /** @var Transaction $destTransaction */

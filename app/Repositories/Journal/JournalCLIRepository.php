@@ -120,7 +120,6 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
         $cache->addProperty($field);
 
         if ($cache->has()) {
-            $result = null;
             return new Carbon($cache->get());
         }
 

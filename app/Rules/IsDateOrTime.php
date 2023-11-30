@@ -41,6 +41,8 @@ class IsDateOrTime implements ValidationRule
      * @param Closure $fail
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {

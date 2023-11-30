@@ -65,8 +65,8 @@ class BudgetTransformer extends AbstractTransformer
     public function transform(Budget $budget): array
     {
         //$this->opsRepository->setUser($budget->user);
-        $start = $this->parameters->get('start');
-        $end   = $this->parameters->get('end');
+        //$start = $this->parameters->get('start');
+        //$end   = $this->parameters->get('end');
         //$autoBudget = $this->repository->getAutoBudget($budget);
         //        $spent      = [];
         //        if (null !== $start && null !== $end) {

@@ -178,6 +178,7 @@ trait AppendsLocationData
      * @param bool $default
      *
      * @return mixed
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     abstract public function boolean($key = null, $default = false);
 

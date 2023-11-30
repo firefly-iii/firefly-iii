@@ -32,7 +32,7 @@ trait ReturnsIntegerIdTrait
 {
     /**
      * Get the ID
-     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      * @return Attribute
      */
     protected function id(): Attribute

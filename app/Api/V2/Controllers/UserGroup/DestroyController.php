@@ -65,8 +65,9 @@ class DestroyController extends Controller
     {
         /** @var User $user */
         $user = auth()->user();
+        // to access this function: must be group owner or sysadmin.
         // need owner role or system owner role to delete user group.
-        $access = $user->hasRoleInGroup($userGroup, UserRoleEnum::OWNER, false, true);
+        $access = $user->hasSpecificRoleInGroup($userGroup, UserRoleEnum::OWNER) || $user->hasRole('owner');
         if (false === $access) {
             throw new NotFoundHttpException();
         }

@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class () extends Migration {
     /**
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      * Run the migrations.
      */
     public function up(): void

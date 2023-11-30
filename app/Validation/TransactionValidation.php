@@ -563,7 +563,7 @@ trait TransactionValidation
             return;
         }
         $transactions = $this->getTransactionsArray($validator);
-        foreach ($transactions as $key => $value) {
+        foreach (array_keys($transactions) as $key) {
             if (!is_int($key)) {
                 $validator->errors()->add('transactions.0.description', (string)trans('validation.at_least_one_transaction'));
                 app('log')->debug('Added error: at_least_one_transaction.');

@@ -27,6 +27,8 @@ namespace FireflyIII\Api\V1\Controllers;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
+use FireflyIII\Models\Preference;
+use FireflyIII\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -141,7 +143,10 @@ abstract class Controller extends BaseController
                 'limit' === $integer && // @phpstan-ignore-line
                 auth()->check()) {
                 // set default for user:
-                $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+                /** @var User $user */
+                $user = auth()->user();
+                /** @var Preference $pageSize */
+                $pageSize = (int)app('preferences')->getForUser($user, 'listPageSize', 50)->data;
                 $bag->set($integer, $pageSize);
             }
         }

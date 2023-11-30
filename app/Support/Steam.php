@@ -449,7 +449,7 @@ class Steam
         // but we need to convert each transaction separately because the date difference may
         // incur huge currency changes.
         $converter = new ExchangeRateConverter();
-        foreach ($new as $index => $set) {
+        foreach ($new as $set) {
             foreach ($set as $transaction) {
                 $date            = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date']);
                 if(false === $date) {

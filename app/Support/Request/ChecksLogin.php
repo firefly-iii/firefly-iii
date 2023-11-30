@@ -60,7 +60,8 @@ trait ChecksLogin
         /** @var UserRoleEnum $role */
         foreach ($this->acceptedRoles as $role) {
             // system owner cannot overrule this, MUST be member of the group.
-            if ($user->hasRoleInGroup($userGroup, $role, true, false)) {
+            $access = $user->hasRoleInGroupOrOwner($userGroup, $role);
+            if ($access) {
                 return true;
             }
         }

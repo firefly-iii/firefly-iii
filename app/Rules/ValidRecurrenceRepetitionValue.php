@@ -41,6 +41,8 @@ class ValidRecurrenceRepetitionValue implements ValidationRule
      * @param Closure $fail
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -62,12 +64,12 @@ class ValidRecurrenceRepetitionValue implements ValidationRule
 
         // Value is like: weekly,7
         if (str_starts_with($value, 'weekly') && $this->validateWeekly($value)) {
-            return ;
+            return;
         }
 
         // Value is like: yearly,2018-01-01
         if (str_starts_with($value, 'yearly') && $this->validateYearly($value)) {
-            return ;
+            return;
         }
 
         $fail('validation.valid_recurrence_rep_type')->translate();

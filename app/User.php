@@ -360,32 +360,47 @@ class User extends Authenticatable
         return 'objectguid';
     }
 
-
     /**
      * Does the user have role X in group Y?
+     *
+     * @param UserGroup    $userGroup
+     * @param UserRoleEnum $role
+     *
+     * @return bool
+     */
+    public function hasSpecificRoleInGroup(UserGroup $userGroup, UserRoleEnum $role): bool
+    {
+        return $this->hasAnyRoleInGroup($userGroup, [$role]);
+    }
+
+    /**
+     * Does the user have role X in group Y, or is the user the group owner of has full rights to the group?
      *
      * If $allowOverride is set to true, then the roles FULL or OWNER will also be checked,
      * which means that in most cases the user DOES have access, regardless of the original role submitted in $role.
      *
      * @param UserGroup    $userGroup
      * @param UserRoleEnum $role
-     * @param bool         $allowGroupOverride
-     * @param bool         $allowSystemOverride
      *
      * @return bool
      */
-    public function hasRoleInGroup(UserGroup $userGroup, UserRoleEnum $role, bool $allowGroupOverride = false, bool $allowSystemOverride = false): bool
+    public function hasRoleInGroupOrOwner(UserGroup $userGroup, UserRoleEnum $role): bool
     {
-        if ($allowSystemOverride && $this->hasRole('owner')) {
-            app('log')->debug(sprintf('hasRoleInGroup: user "#%d %s" is system owner and allowSystemOverride = true, return true', $this->id, $this->email));
-            return true;
-        }
-        $roles = [$role->value];
-        if ($allowGroupOverride) {
-            $roles[] = UserRoleEnum::OWNER->value;
-            $roles[] = UserRoleEnum::FULL->value;
-        }
-        app('log')->debug(sprintf('in hasRoleInGroup(%s)', implode(', ', $roles)));
+        $roles = [$role->value, UserRoleEnum::OWNER->value, UserRoleEnum::FULL->value];
+        return $this->hasAnyRoleInGroup($userGroup, $roles);
+    }
+
+    /**
+     * Does the user have role X, Y or Z in group A?
+     *
+     * @param UserGroup $userGroup
+     * @param array     $roles
+     *
+     * @return bool
+     */
+    private function hasAnyRoleInGroup(UserGroup $userGroup, array $roles): bool
+    {
+        app('log')->debug(sprintf('in hasAnyRoleInGroup(%s)', implode(', ', $roles)));
         /** @var Collection $dbRoles */
         $dbRoles = UserRole::whereIn('title', $roles)->get();
         if (0 === $dbRoles->count()) {
@@ -401,47 +416,44 @@ class User extends Authenticatable
                                  ->where('user_group_id', $userGroup->id)->get();
         if (0 === $groupMemberships->count()) {
             app('log')->error(sprintf(
-                                  'User #%d "%s" does not have roles %s in user group #%d "%s"',
-                                  $this->id,
-                                  $this->email,
-                                  implode(', ', $roles),
-                                  $userGroup->id,
-                                  $userGroup->title
-                              ));
+                'User #%d "%s" does not have roles %s in user group #%d "%s"',
+                $this->id,
+                $this->email,
+                implode(', ', $roles),
+                $userGroup->id,
+                $userGroup->title
+            ));
             return false;
         }
         foreach ($groupMemberships as $membership) {
             app('log')->debug(sprintf(
-                                  'User #%d "%s" has role "%s" in user group #%d "%s"',
-                                  $this->id,
-                                  $this->email,
-                                  $membership->userRole->title,
-                                  $userGroup->id,
-                                  $userGroup->title
-                              ));
+                'User #%d "%s" has role "%s" in user group #%d "%s"',
+                $this->id,
+                $this->email,
+                $membership->userRole->title,
+                $userGroup->id,
+                $userGroup->title
+            ));
             if (in_array($membership->userRole->title, $dbRolesTitles, true)) {
                 app('log')->debug(sprintf('Return true, found role "%s"', $membership->userRole->title));
                 return true;
             }
         }
         app('log')->error(sprintf(
-                              'User #%d "%s" does not have roles %s in user group #%d "%s"',
-                              $this->id,
-                              $this->email,
-                              implode(', ', $roles),
-                              $userGroup->id,
-                              $userGroup->title
-                          ));
+            'User #%d "%s" does not have roles %s in user group #%d "%s"',
+            $this->id,
+            $this->email,
+            implode(', ', $roles),
+            $userGroup->id,
+            $userGroup->title
+        ));
         return false;
-        //        // not necessary, should always return true:
-        //        $result = $groupMembership->userRole->title === $role->value;
-        //        app('log')->error(sprintf('Does user #%d "%s" have role "%s" in user group #%d "%s"? %s',
-        //                                  $this->id, $this->email,
-        //                                  $role->value, $userGroup->id, $userGroup->title, var_export($result, true)));
-        //        return $result;
+
     }
 
     /**
+     * This method refers to the "global" role a user can have, outside of any group they may be part of.
+     *
      * @param string $role
      *
      * @return bool
@@ -684,7 +696,7 @@ class User extends Authenticatable
      */
     public function userGroup(): BelongsTo
     {
-        return $this->belongsTo(UserGroup::class,);
+        return $this->belongsTo(UserGroup::class, );
     }
 
     /**

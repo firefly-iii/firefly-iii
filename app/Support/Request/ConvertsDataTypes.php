@@ -34,60 +34,8 @@ use Illuminate\Support\Collection;
  */
 trait ConvertsDataTypes
 {
-    /**
-     * Return integer value.
-     *
-     * @param string $field
-     *
-     * @return int
-     */
-    public function convertInteger(string $field): int
-    {
-        return (int)$this->get($field);
-    }
-
-    /**
-     * Abstract method that always exists in the Request classes that use this
-     * trait, OR a stub needs to be added by any other class that uses this train.
-     *
-     * @param string     $key
-     * @param mixed|null $default
-     *
-     * @return mixed
-     */
-    abstract public function get(string $key, mixed $default = null): mixed;
-
-    /**
-     * Return string value.
-     *
-     * @param string $field
-     *
-     * @return string
-     */
-    public function convertString(string $field): string
-    {
-        $entry = $this->get($field);
-        if (!is_scalar($entry)) {
-            return '';
-        }
-        return (string) $this->clearString((string)$entry, false);
-    }
-
-    /**
-     * @param string|null $string
-     * @param bool        $keepNewlines
-     *
-     * @return string|null
-     */
-    public function clearString(?string $string, bool $keepNewlines = true): ?string
-    {
-        if (null === $string) {
-            return null;
-        }
-        if ('' === $string) {
-            return '';
-        }
-        $search  = [
+    private array $characters
+        = [
             "\0", // NUL
             "\f", // form feed
             "\v", // vertical tab
@@ -136,22 +84,89 @@ trait ConvertsDataTypes
             "\u{202F}", // narrow no-break space
             "\u{3000}", // ideographic space
             "\u{FEFF}", // zero width no -break space
+            "\r", // carriage return
         ];
-        $replace = "\x20"; // plain old normal space
-        $string  = str_replace($search, $replace, $string);
 
-        $secondSearch = $keepNewlines ? ["\r"] : ["\r", "\n", "\t", "\036", "\025"];
-        $string       = str_replace($secondSearch, '', $string);
+    /**
+     * Return integer value.
+     *
+     * @param string $field
+     *
+     * @return int
+     */
+    public function convertInteger(string $field): int
+    {
+        return (int)$this->get($field);
+    }
 
-        // clear zalgo text (TODO also in API v2)
-        $string = preg_replace('/(\pM{2})\pM+/u', '\1', $string);
+    /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     *
+     * @param string     $key
+     * @param mixed|null $default
+     *
+     * @return mixed
+     */
+    abstract public function get(string $key, mixed $default = null): mixed;
+
+    /**
+     * Return string value.
+     *
+     * @param string $field
+     *
+     * @return string
+     */
+    public function convertString(string $field): string
+    {
+        $entry = $this->get($field);
+        if (!is_scalar($entry)) {
+            return '';
+        }
+        return (string)$this->clearString((string)$entry);
+    }
+
+    /**
+     * @param string|null $string
+     *
+     * @return string|null
+     */
+    public function clearString(?string $string): ?string
+    {
+        $string = $this->clearStringKeepNewlines($string);
+
         if (null === $string) {
             return null;
         }
         if ('' === $string) {
             return '';
         }
+
+        // then remove newlines too:
+        $string = str_replace(["\r", "\n", "\t", "\036", "\025"], '', $string);
+
         return trim($string);
+    }
+
+    /**
+     * @param string|null $string
+     *
+     * @return string|null
+     */
+    public function clearStringKeepNewlines(?string $string): ?string
+    {
+        if (null === $string) {
+            return null;
+        }
+        if ('' === $string) {
+            return '';
+        }
+        $string = str_replace($this->characters, "\x20", $string);
+
+        // clear zalgo text (TODO also in API v2)
+        $string = preg_replace('/(\pM{2})\pM+/u', '\1', $string);
+
+        return trim((string)$string);
     }
 
     /**
@@ -166,7 +181,8 @@ trait ConvertsDataTypes
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
 
-        if (method_exists($this, 'validateUserGroup')) { /** @phpstan-ignore-line */
+        if (method_exists($this, 'validateUserGroup')) {
+            /** @phpstan-ignore-line */
             $userGroup = $this->validateUserGroup($this);
             if (null !== $userGroup) {
                 $repository->setUserGroup($userGroup);
@@ -199,7 +215,7 @@ trait ConvertsDataTypes
      */
     public function stringWithNewlines(string $field): string
     {
-        return (string) $this->clearString((string)($this->get($field) ?? ''));
+        return (string)$this->clearStringKeepNewlines((string)($this->get($field) ?? ''));
     }
 
     /**
@@ -274,7 +290,7 @@ trait ConvertsDataTypes
 
                 return null;
             }
-            if(false === $carbon) {
+            if (false === $carbon) {
                 app('log')->error(sprintf('[2] "%s" is of an invalid format.', $value));
                 return null;
             }
@@ -383,7 +399,7 @@ trait ConvertsDataTypes
     {
         $result = null;
         try {
-            $result = '' !== (string) $this->get($field) ? new Carbon((string)$this->get($field), config('app.timezone')) : null;
+            $result = '' !== (string)$this->get($field) ? new Carbon((string)$this->get($field), config('app.timezone')) : null;
         } catch (InvalidFormatException $e) {
             // @ignoreException
         }

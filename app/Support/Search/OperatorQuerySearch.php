@@ -1363,6 +1363,7 @@ class OperatorQuerySearch implements SearchInterface
      * @param int    $searchDirection
      * @param int    $stringPosition
      * @param bool   $prohibited
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     private function searchAccount(string $value, int $searchDirection, int $stringPosition, bool $prohibited = false): void
     {
@@ -1432,6 +1433,7 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
+     * TODO make enums
      * searchDirection: 1 = source (default), 2 = destination, 3 = both
      * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
      *
@@ -1439,6 +1441,7 @@ class OperatorQuerySearch implements SearchInterface
      * @param int    $searchDirection
      * @param int    $stringPosition
      * @param bool   $prohibited
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     private function searchAccountNr(string $value, int $searchDirection, int $stringPosition, bool $prohibited = false): void
     {
@@ -1580,6 +1583,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      *
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     private function setExactDateParams(array $range, bool $prohibited = false): void
     {
@@ -1654,6 +1658,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      *
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     private function setDateBeforeParams(array $range, bool $prohibited = false): void
     {
@@ -1700,6 +1705,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      *
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     private function setDateAfterParams(array $range, bool $prohibited = false): void
     {
@@ -1745,6 +1751,7 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     private function setExactMetaDateParams(string $field, array $range, bool $prohibited = false): void
     {
@@ -1820,6 +1827,7 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     private function setMetaDateBeforeParams(string $field, array $range, bool $prohibited = false): void
     {
@@ -1865,6 +1873,7 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     private function setMetaDateAfterParams(string $field, array $range, bool $prohibited = false): void
     {
@@ -1910,6 +1919,7 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     private function setExactObjectDateParams(string $field, array $range, bool $prohibited = false): void
     {
@@ -1985,6 +1995,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      *
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     private function setObjectDateBeforeParams(string $field, array $range, bool $prohibited = false): void
     {
@@ -2031,6 +2042,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      *
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     private function setObjectDateAfterParams(string $field, array $range, bool $prohibited = false): void
     {

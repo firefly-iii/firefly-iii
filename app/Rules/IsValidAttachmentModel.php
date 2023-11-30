@@ -82,6 +82,8 @@ class IsValidAttachmentModel implements ValidationRule
      * @param Closure $fail
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -89,26 +91,19 @@ class IsValidAttachmentModel implements ValidationRule
             $fail('validation.model_id_invalid')->translate();
             return;
         }
-        $methods = [
-            Account::class            => 'validateAccount',
-            Bill::class               => 'validateBill',
-            Budget::class             => 'validateBudget',
-            Category::class           => 'validateCategory',
-            PiggyBank::class          => 'validatePiggyBank',
-            Tag::class                => 'validateTag',
-            Transaction::class        => 'validateTransaction',
-            TransactionJournal::class => 'validateJournal',
-        ];
-        if (!array_key_exists($this->model, $methods)) {
-            app('log')->error(sprintf('Cannot validate model "%s" in %s.', substr($this->model, 0, 20), __METHOD__));
+        $result = match ($this->model) {
+            Account::class            => $this->validateAccount((int)$value),
+            Bill::class               => $this->validateBill((int)$value),
+            Budget::class             => $this->validateBudget((int)$value),
+            Category::class           => $this->validateCategory((int)$value),
+            PiggyBank::class          => $this->validatePiggyBank((int)$value),
+            Tag::class                => $this->validateTag((int)$value),
+            Transaction::class        => $this->validateTransaction((int)$value),
+            TransactionJournal::class => $this->validateJournal((int)$value),
+            default                   => false,
+        };
 
-            $fail('validation.model_id_invalid')->translate();
-            return;
-        }
-        $method = $methods[$this->model];
-
-        $result =  $this->$method((int)$value); // @phpstan-ignore-line
-        if(false === $result) {
+        if (false === $result) {
             $fail('validation.model_id_invalid')->translate();
         }
     }

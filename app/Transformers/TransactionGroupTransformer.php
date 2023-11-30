@@ -382,8 +382,8 @@ class TransactionGroupTransformer extends AbstractTransformer
         $destination     = $this->getDestinationTransaction($journal);
         $type            = $journal->transactionType->type;
         $currency        = $source->transactionCurrency;
-        $amount          = app('steam')->bcround($this->getAmount($type, $source->amount), $currency->decimal_places ?? 0);
-        $foreignAmount   = $this->getForeignAmount($type, null === $source->foreign_amount ? null : $source->foreign_amount);
+        $amount          = app('steam')->bcround($this->getAmount($source->amount), $currency->decimal_places ?? 0);
+        $foreignAmount   = $this->getForeignAmount(null === $source->foreign_amount ? null : $source->foreign_amount);
         $metaFieldData   = $this->groupRepos->getMetaFields($journal->id, $this->metaFields);
         $metaDates       = $this->getDates($this->groupRepos->getMetaDateFields($journal->id, $this->metaDateFields));
         $foreignCurrency = $this->getForeignCurrency($source->foreignCurrency);
@@ -521,23 +521,21 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param string $type
      * @param string $amount
      *
      * @return string
      */
-    private function getAmount(string $type, string $amount): string
+    private function getAmount(string $amount): string
     {
         return app('steam')->positive($amount);
     }
 
     /**
-     * @param string      $type
      * @param string|null $foreignAmount
      *
      * @return string|null
      */
-    private function getForeignAmount(string $type, ?string $foreignAmount): ?string
+    private function getForeignAmount(?string $foreignAmount): ?string
     {
         $result = null;
         if (null !== $foreignAmount && '' !== $foreignAmount && bccomp('0', $foreignAmount) !== 0) {
