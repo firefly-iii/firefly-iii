@@ -28,7 +28,7 @@ namespace FireflyIII\Enums;
  *
  * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
  */
-enum StringPosition: int
+enum StringPosition
 {
     case         STARTS;
     case         ENDS;

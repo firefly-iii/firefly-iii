@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Enums;
 
-enum SearchDirection: int
+enum SearchDirection
 {
     case SOURCE;
     case DESTINATION;
