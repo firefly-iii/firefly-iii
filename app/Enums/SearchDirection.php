@@ -25,8 +25,8 @@ namespace FireflyIII\Enums;
 
 enum SearchDirection: int
 {
-    case SOURCE      = 1;
-    case DESTINATION = 2;
-    case BOTH        = 3;
+    case SOURCE;
+    case DESTINATION;
+    case BOTH;
 
 }
