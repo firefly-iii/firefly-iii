@@ -1256,6 +1256,15 @@ interface GroupCollectorInterface
     public function setSearchWords(array $array): GroupCollectorInterface;
 
     /**
+     * Use regexs to filter descriptions.
+     *
+     * @param array $array
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setRegexs(array $array): GroupCollectorInterface;
+
+    /**
      * @param string $sepaCT
      *
      * @return GroupCollectorInterface

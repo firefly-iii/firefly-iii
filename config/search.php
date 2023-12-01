@@ -39,6 +39,7 @@ return [
         'description_contains'            => ['alias' => false, 'needs_context' => true,],
         'description_ends'                => ['alias' => false, 'needs_context' => true,],
         'description_starts'              => ['alias' => false, 'needs_context' => true,],
+        'description_regex'               => ['alias' => false, 'needs_context' => true,],
         'notes_is'                        => ['alias' => false, 'needs_context' => true,],
         'notes_are'                       => ['alias' => true, 'alias_for' => 'notes_is', 'needs_context' => true,],
         'notes_contains'                  => ['alias' => false, 'needs_context' => true,],
@@ -234,6 +235,5 @@ return [
         'sepa_ct_is'                      => ['alias' => false, 'needs_context' => true],
         'no_external_id'                  => ['alias' => false, 'needs_context' => false],
         'any_external_id'                 => ['alias' => false, 'needs_context' => false],
-
     ],
 ];

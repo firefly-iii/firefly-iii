@@ -1018,6 +1018,42 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Use regexs to filter descriptions.
+     *
+     * @param array $array
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setRegexs(array $array): GroupCollectorInterface
+    {
+        if (0 === count($array)) {
+            return $this;
+        }
+        $this->query->where(
+            static function (EloquentBuilder $q) use ($array) {
+                $q->where(
+                    static function (EloquentBuilder $q1) use ($array) {
+                        foreach ($array as $word) {
+                            $keyword = sprintf('%s', $word);
+                            $q1->where('transaction_journals.description', 'regexp', $keyword);
+                        }
+                    }
+                );
+                $q->orWhere(
+                    static function (EloquentBuilder $q2) use ($array) {
+                        foreach ($array as $word) {
+                            $keyword = sprintf('%s', $word);
+                            $q2->where('transaction_groups.title', 'regexp', $keyword);
+                        }
+                    }
+                );
+            }
+        );
+
+        return $this;
+    }
+
+    /**
      * Limit the search to one specific transaction group.
      *
      * @param TransactionGroup $transactionGroup

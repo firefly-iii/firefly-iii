@@ -879,6 +879,7 @@ return [
     'rule_trigger_description_contains'                   => 'La descripció conté ":trigger_value"',
     'rule_trigger_description_is_choice'                  => 'La descripció és..',
     'rule_trigger_description_is'                         => 'La descripció és ":trigger_value"',
+    'rule_trigger_description_regex'                      => 'La descripció compleix l\'expressió regular ":trigger_value"',
     'rule_trigger_date_on_choice'                         => 'La data de la transacció és..',
     'rule_trigger_date_on'                                => 'La data de la transacció és ":trigger_value"',
     'rule_trigger_date_before_choice'                     => 'La data de la transacció és anterior a..',

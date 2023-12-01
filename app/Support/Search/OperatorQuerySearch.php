@@ -79,6 +79,7 @@ class OperatorQuerySearch implements SearchInterface
     private TagRepositoryInterface      $tagRepository;
     private array                       $validOperators;
     private array                       $words;
+    private array                       $regexs;
 
     /**
      * OperatorQuerySearch constructor.
@@ -91,6 +92,7 @@ class OperatorQuerySearch implements SearchInterface
         $this->operators          = new Collection();
         $this->page               = 1;
         $this->words              = [];
+        $this->regexs              = [];
         $this->prohibitedWords    = [];
         $this->invalidOperators   = [];
         $this->limit              = 25;
@@ -168,6 +170,7 @@ class OperatorQuerySearch implements SearchInterface
 
         $this->collector->setSearchWords($this->words);
         $this->collector->excludeSearchWords($this->prohibitedWords);
+        $this->collector->setRegexs($this->regexs);
     }
 
     /**
@@ -552,6 +555,9 @@ class OperatorQuerySearch implements SearchInterface
                 break;
             case '-description_is':
                 $this->collector->descriptionIsNot($value);
+                break;
+            case 'description_regex':
+                $this->regexs[] = $value;
                 break;
                 //
                 // currency

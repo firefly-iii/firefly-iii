@@ -879,6 +879,7 @@ return [
     'rule_trigger_description_contains'                   => 'Description contains ":trigger_value"',
     'rule_trigger_description_is_choice'                  => 'Description is..',
     'rule_trigger_description_is'                         => 'Description is ":trigger_value"',
+    'rule_trigger_description_regex'                      => 'Descriptions validates regexp ":trigger_value"',
     'rule_trigger_date_on_choice'                         => 'Transaction date is..',
     'rule_trigger_date_on'                                => 'Transaction date is ":trigger_value"',
     'rule_trigger_date_before_choice'                     => 'Transaction date is before..',
