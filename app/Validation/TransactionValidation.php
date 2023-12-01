@@ -61,8 +61,8 @@ trait TransactionValidation
 
         app('log')->debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
         /**
-         * @var int|null   $index
-         * @var array $transaction
+         * @var int|null $index
+         * @var array    $transaction
          */
         foreach ($transactions as $index => $transaction) {
             $transaction['user']       = $user;
@@ -169,6 +169,7 @@ trait TransactionValidation
      * @param array     $destination
      *
      * @return void
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     protected function sanityCheckReconciliation(Validator $validator, string $transactionType, int $index, array $source, array $destination): void
     {
@@ -204,6 +205,7 @@ trait TransactionValidation
      * @param int              $index
      *
      * @return void
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     private function sanityCheckForeignCurrency(
         Validator        $validator,
@@ -211,7 +213,8 @@ trait TransactionValidation
         array            $transaction,
         string           $transactionType,
         int              $index
-    ): void {
+    ): void
+    {
         app('log')->debug('Now in sanityCheckForeignCurrency()');
         if (0 !== $validator->errors()->count()) {
             app('log')->debug('Already have errors, return');
@@ -377,8 +380,8 @@ trait TransactionValidation
         $transactions = $this->getTransactionsArray($validator);
 
         /**
-         * @var int|null   $index
-         * @var array $transaction
+         * @var int|null $index
+         * @var array    $transaction
          */
         foreach ($transactions as $index => $transaction) {
             if (!is_int($index)) {
@@ -488,7 +491,7 @@ trait TransactionValidation
      */
     private function getTransactionType(TransactionGroup $group, array $transactions): string
     {
-        return $transactions[0]['type'] ?? strtolower((string) $group->transactionJournals()->first()?->transactionType->type);
+        return $transactions[0]['type'] ?? strtolower((string)$group->transactionJournals()->first()?->transactionType->type);
     }
 
     /**

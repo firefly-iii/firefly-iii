@@ -72,6 +72,7 @@ trait CalculateXOccurrencesSince
      * @param string $moment
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     protected function getXMonthlyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
@@ -115,6 +116,7 @@ trait CalculateXOccurrencesSince
      * @param string $moment
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     protected function getXNDomOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
@@ -155,6 +157,7 @@ trait CalculateXOccurrencesSince
      * @param string $moment
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     protected function getXWeeklyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
@@ -200,6 +203,7 @@ trait CalculateXOccurrencesSince
      * @param string $moment
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     protected function getXYearlyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {

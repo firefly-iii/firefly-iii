@@ -27,12 +27,12 @@
     <description>Firefly III ruleset.</description>
     <!-- Import the entire controversial code rule set -->
     <rule ref="rulesets/controversial.xml">
-        <exclude name="CamelCasePropertyName" />
+        <exclude name="CamelCasePropertyName"/>
     </rule>
 
     <!-- clean code -->
     <!-- <rule ref="rulesets/codesize.xml" /> -->
-    <rule ref="rulesets/unusedcode.xml" />
+    <rule ref="rulesets/unusedcode.xml"/>
 
 
     <rule ref="rulesets/design.xml/NumberOfChildren">
@@ -49,11 +49,9 @@
     </rule>
 
 
-
     <rule ref="rulesets/naming.xml/ShortMethodName">
         <properties>
-            <!-- TODO we want to be at minimum 3. But we start low, and raise the bar slowly. -->
-            <property name="minimum" value="1"/>
+            <property name="minimum" value="3"/>
         </properties>
     </rule>
 
@@ -73,22 +71,22 @@
     <rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
         <properties>
             <!-- TODO we want to be at a value of 40. But we start high, and drop the bar slowly. -->
-            <property name="minimum" value="2000"/>
+            <property name="minimum" value="1000"/>
         </properties>
     </rule>
     <rule ref="rulesets/codesize.xml/ExcessiveParameterList">
         <properties>
-            <!-- TODO we want to be at a value of 4. But we start high, and drop the bar slowly. -->
-            <property name="minimum" value="12"/>
+            <!-- 5 is fine. 6 is excessive, but I have just one of those. At the end of the day, I still need all params. -->
+            <property name="minimum" value="5"/>
         </properties>
     </rule>
 
     <!-- include clean code manually -->
-    <rule ref="rulesets/cleancode.xml/BooleanArgumentFlag" />
-    <rule ref="rulesets/cleancode.xml/ElseExpression" />
-    <rule ref="rulesets/cleancode.xml/MissingImport" />
-    <rule ref="rulesets/cleancode.xml/UndefinedVariable" />
-    <rule ref="rulesets/cleancode.xml/IfStatementAssignment" />
-    <rule ref="rulesets/cleancode.xml/DuplicatedArrayKey" />
-    <rule ref="rulesets/cleancode.xml/ErrorControlOperator" />
+    <rule ref="rulesets/cleancode.xml/BooleanArgumentFlag"/>
+    <rule ref="rulesets/cleancode.xml/ElseExpression"/>
+    <rule ref="rulesets/cleancode.xml/MissingImport"/>
+    <rule ref="rulesets/cleancode.xml/UndefinedVariable"/>
+    <rule ref="rulesets/cleancode.xml/IfStatementAssignment"/>
+    <rule ref="rulesets/cleancode.xml/DuplicatedArrayKey"/>
+    <rule ref="rulesets/cleancode.xml/ErrorControlOperator"/>
 </ruleset>

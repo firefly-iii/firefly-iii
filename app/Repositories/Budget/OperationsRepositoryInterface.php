@@ -81,8 +81,9 @@ interface OperationsRepositoryInterface
      * @param Collection|null          $accounts
      * @param Collection|null          $budgets
      * @param TransactionCurrency|null $currency
-     * @return array
      *
+     * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumExpenses(
         Carbon               $start,

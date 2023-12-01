@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Search;
 
 use Carbon\Carbon;
+use FireflyIII\Enums\SearchDirection;
+use FireflyIII\Enums\StringPosition;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
@@ -55,6 +57,7 @@ use Gdbots\QueryParser\QueryParser;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use LogicException;
+use PragmaRX\Random\Generators\StringGenerator;
 use TypeError;
 
 /**
@@ -247,6 +250,7 @@ class OperatorQuerySearch implements SearchInterface
     /**
      *
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function updateCollector(string $operator, string $value, bool $prohibited): bool
     {
@@ -273,100 +277,100 @@ class OperatorQuerySearch implements SearchInterface
             // all account related searches:
             //
             case 'account_is':
-                $this->searchAccount($value, 3, 4);
+                $this->searchAccount($value, SearchDirection::BOTH, StringPosition::IS);
                 break;
             case '-account_is':
-                $this->searchAccount($value, 3, 4, true);
+                $this->searchAccount($value, SearchDirection::BOTH, StringPosition::IS, true);
                 break;
             case 'account_contains':
-                $this->searchAccount($value, 3, 3);
+                $this->searchAccount($value, SearchDirection::BOTH, StringPosition::CONTAINS);
                 break;
             case '-account_contains':
-                $this->searchAccount($value, 3, 3, true);
+                $this->searchAccount($value, SearchDirection::BOTH, StringPosition::CONTAINS, true);
                 break;
             case 'account_ends':
-                $this->searchAccount($value, 3, 2);
+                $this->searchAccount($value, SearchDirection::BOTH, StringPosition::ENDS);
                 break;
             case '-account_ends':
-                $this->searchAccount($value, 3, 2, true);
+                $this->searchAccount($value, SearchDirection::BOTH, StringPosition::ENDS, true);
                 break;
             case 'account_starts':
-                $this->searchAccount($value, 3, 1);
+                $this->searchAccount($value, SearchDirection::BOTH, StringPosition::STARTS);
                 break;
             case '-account_starts':
-                $this->searchAccount($value, 3, 1, true);
+                $this->searchAccount($value, SearchDirection::BOTH, StringPosition::STARTS, true);
                 break;
             case 'account_nr_is':
-                $this->searchAccountNr($value, 3, 4);
+                $this->searchAccountNr($value, SearchDirection::BOTH, StringPosition::IS);
                 break;
             case '-account_nr_is':
-                $this->searchAccountNr($value, 3, 4, true);
+                $this->searchAccountNr($value, SearchDirection::BOTH, StringPosition::IS, true);
                 break;
             case 'account_nr_contains':
-                $this->searchAccountNr($value, 3, 3);
+                $this->searchAccountNr($value, SearchDirection::BOTH, StringPosition::CONTAINS);
                 break;
             case '-account_nr_contains':
-                $this->searchAccountNr($value, 3, 3, true);
+                $this->searchAccountNr($value, SearchDirection::BOTH, StringPosition::CONTAINS, true);
                 break;
             case 'account_nr_ends':
-                $this->searchAccountNr($value, 3, 2);
+                $this->searchAccountNr($value, SearchDirection::BOTH, StringPosition::ENDS);
                 break;
             case '-account_nr_ends':
-                $this->searchAccountNr($value, 3, 2, true);
+                $this->searchAccountNr($value, SearchDirection::BOTH, StringPosition::ENDS, true);
                 break;
             case 'account_nr_starts':
-                $this->searchAccountNr($value, 3, 1);
+                $this->searchAccountNr($value, SearchDirection::BOTH, StringPosition::STARTS);
                 break;
             case '-account_nr_starts':
-                $this->searchAccountNr($value, 3, 1, true);
+                $this->searchAccountNr($value, SearchDirection::BOTH, StringPosition::STARTS, true);
                 break;
             case 'source_account_starts':
-                $this->searchAccount($value, 1, 1);
+                $this->searchAccount($value, SearchDirection::SOURCE, StringPosition::STARTS);
                 break;
             case '-source_account_starts':
-                $this->searchAccount($value, 1, 1, true);
+                $this->searchAccount($value, SearchDirection::SOURCE, StringPosition::STARTS, true);
                 break;
             case 'source_account_ends':
-                $this->searchAccount($value, 1, 2);
+                $this->searchAccount($value, SearchDirection::SOURCE, StringPosition::ENDS);
                 break;
             case '-source_account_ends':
-                $this->searchAccount($value, 1, 2, true);
+                $this->searchAccount($value, SearchDirection::SOURCE, StringPosition::ENDS, true);
                 break;
             case 'source_account_is':
-                $this->searchAccount($value, 1, 4);
+                $this->searchAccount($value, SearchDirection::SOURCE, StringPosition::IS);
                 break;
             case '-source_account_is':
-                $this->searchAccount($value, 1, 4, true);
+                $this->searchAccount($value, SearchDirection::SOURCE, StringPosition::IS, true);
                 break;
             case 'source_account_nr_starts':
-                $this->searchAccountNr($value, 1, 1);
+                $this->searchAccountNr($value, SearchDirection::SOURCE, StringPosition::STARTS);
                 break;
             case '-source_account_nr_starts':
-                $this->searchAccountNr($value, 1, 1, true);
+                $this->searchAccountNr($value, SearchDirection::SOURCE, StringPosition::STARTS, true);
                 break;
             case 'source_account_nr_ends':
-                $this->searchAccountNr($value, 1, 2);
+                $this->searchAccountNr($value, SearchDirection::SOURCE, StringPosition::ENDS);
                 break;
             case '-source_account_nr_ends':
-                $this->searchAccountNr($value, 1, 2, true);
+                $this->searchAccountNr($value, SearchDirection::SOURCE, StringPosition::ENDS, true);
                 break;
             case 'source_account_nr_is':
-                $this->searchAccountNr($value, 1, 4);
+                $this->searchAccountNr($value, SearchDirection::SOURCE, StringPosition::IS);
                 break;
             case '-source_account_nr_is':
-                $this->searchAccountNr($value, 1, 4, true);
+                $this->searchAccountNr($value, SearchDirection::SOURCE, StringPosition::IS, true);
                 break;
             case 'source_account_nr_contains':
-                $this->searchAccountNr($value, 1, 3);
+                $this->searchAccountNr($value, SearchDirection::SOURCE, StringPosition::CONTAINS);
                 break;
             case '-source_account_nr_contains':
-                $this->searchAccountNr($value, 1, 3, true);
+                $this->searchAccountNr($value, SearchDirection::SOURCE, StringPosition::CONTAINS, true);
                 break;
             case 'source_account_contains':
-                $this->searchAccount($value, 1, 3);
+                $this->searchAccount($value, SearchDirection::SOURCE, StringPosition::CONTAINS);
                 break;
             case '-source_account_contains':
-                $this->searchAccount($value, 1, 3, true);
+                $this->searchAccount($value, SearchDirection::SOURCE, StringPosition::CONTAINS, true);
                 break;
             case 'source_account_id':
                 $account = $this->accountRepository->find((int)$value);
@@ -405,52 +409,52 @@ class OperatorQuerySearch implements SearchInterface
                 $this->collector->excludeIds($parts);
                 break;
             case 'destination_account_starts':
-                $this->searchAccount($value, 2, 1);
+                $this->searchAccount($value, SearchDirection::DESTINATION, StringPosition::STARTS);
                 break;
             case '-destination_account_starts':
-                $this->searchAccount($value, 2, 1, true);
+                $this->searchAccount($value, SearchDirection::DESTINATION, StringPosition::STARTS, true);
                 break;
             case 'destination_account_ends':
-                $this->searchAccount($value, 2, 2);
+                $this->searchAccount($value, SearchDirection::DESTINATION, StringPosition::ENDS);
                 break;
             case '-destination_account_ends':
-                $this->searchAccount($value, 2, 2, true);
+                $this->searchAccount($value, SearchDirection::DESTINATION, StringPosition::ENDS, true);
                 break;
             case 'destination_account_nr_starts':
-                $this->searchAccountNr($value, 2, 1);
+                $this->searchAccountNr($value, SearchDirection::DESTINATION, StringPosition::STARTS);
                 break;
             case '-destination_account_nr_starts':
-                $this->searchAccountNr($value, 2, 1, true);
+                $this->searchAccountNr($value, SearchDirection::DESTINATION, StringPosition::STARTS, true);
                 break;
             case 'destination_account_nr_ends':
-                $this->searchAccountNr($value, 2, 2);
+                $this->searchAccountNr($value, SearchDirection::DESTINATION, StringPosition::ENDS);
                 break;
             case '-destination_account_nr_ends':
-                $this->searchAccountNr($value, 2, 2, true);
+                $this->searchAccountNr($value, SearchDirection::DESTINATION, StringPosition::ENDS, true);
                 break;
             case 'destination_account_nr_is':
-                $this->searchAccountNr($value, 2, 4);
+                $this->searchAccountNr($value, SearchDirection::DESTINATION, StringPosition::IS);
                 break;
             case '-destination_account_nr_is':
-                $this->searchAccountNr($value, 2, 4, true);
+                $this->searchAccountNr($value, SearchDirection::DESTINATION, StringPosition::IS, true);
                 break;
             case 'destination_account_is':
-                $this->searchAccount($value, 2, 4);
+                $this->searchAccount($value, SearchDirection::DESTINATION, StringPosition::IS);
                 break;
             case '-destination_account_is':
-                $this->searchAccount($value, 2, 4, true);
+                $this->searchAccount($value, SearchDirection::DESTINATION, StringPosition::IS, true);
                 break;
             case 'destination_account_nr_contains':
-                $this->searchAccountNr($value, 2, 3);
+                $this->searchAccountNr($value, SearchDirection::DESTINATION, StringPosition::CONTAINS);
                 break;
             case '-destination_account_nr_contains':
-                $this->searchAccountNr($value, 2, 3, true);
+                $this->searchAccountNr($value, SearchDirection::DESTINATION, StringPosition::CONTAINS, true);
                 break;
             case 'destination_account_contains':
-                $this->searchAccount($value, 2, 3);
+                $this->searchAccount($value, SearchDirection::DESTINATION, StringPosition::CONTAINS);
                 break;
             case '-destination_account_contains':
-                $this->searchAccount($value, 2, 3, true);
+                $this->searchAccount($value, SearchDirection::DESTINATION, StringPosition::CONTAINS, true);
                 break;
             case 'destination_account_id':
                 $account = $this->accountRepository->find((int)$value);
@@ -1359,13 +1363,13 @@ class OperatorQuerySearch implements SearchInterface
      * searchDirection: 1 = source (default), 2 = destination, 3 = both
      * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
      *
-     * @param string $value
-     * @param int    $searchDirection
-     * @param int    $stringPosition
-     * @param bool   $prohibited
+     * @param string          $value
+     * @param SearchDirection $searchDirection
+     * @param StringPosition  $stringPosition
+     * @param bool            $prohibited
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
-    private function searchAccount(string $value, int $searchDirection, int $stringPosition, bool $prohibited = false): void
+    private function searchAccount(string $value, SearchDirection $searchDirection, StringPosition $stringPosition, bool $prohibited = false): void
     {
         app('log')->debug(sprintf('searchAccount("%s", %d, %d)', $value, $stringPosition, $searchDirection));
 
@@ -1377,7 +1381,7 @@ class OperatorQuerySearch implements SearchInterface
         }
 
         // search direction: for destination accounts
-        if (2 === $searchDirection) {
+        if (SearchDirection::DESTINATION === $searchDirection) { // destination
             // destination can be
             $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
             $collectorMethod = 'setDestinationAccounts';
@@ -1386,7 +1390,7 @@ class OperatorQuerySearch implements SearchInterface
             }
         }
         // either account could be:
-        if (3 === $searchDirection) {
+        if (SearchDirection::BOTH === $searchDirection) {
             $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE, AccountType::REVENUE];
             $collectorMethod = 'setAccounts';
             if ($prohibited) {
@@ -1397,13 +1401,13 @@ class OperatorQuerySearch implements SearchInterface
         $stringMethod = 'str_starts_with';
 
         // string position: ends with:
-        if (2 === $stringPosition) {
+        if (StringPosition::ENDS === $stringPosition) {
             $stringMethod = 'str_ends_with';
         }
-        if (3 === $stringPosition) {
+        if (StringPosition::CONTAINS === $stringPosition) {
             $stringMethod = 'str_contains';
         }
-        if (4 === $stringPosition) {
+        if (StringPosition::IS === $stringPosition) {
             $stringMethod = 'stringIsEqual';
         }
 
@@ -1437,13 +1441,13 @@ class OperatorQuerySearch implements SearchInterface
      * searchDirection: 1 = source (default), 2 = destination, 3 = both
      * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
      *
-     * @param string $value
-     * @param int    $searchDirection
-     * @param int    $stringPosition
-     * @param bool   $prohibited
+     * @param string          $value
+     * @param SearchDirection $searchDirection
+     * @param StringPosition             $stringPosition
+     * @param bool            $prohibited
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
-    private function searchAccountNr(string $value, int $searchDirection, int $stringPosition, bool $prohibited = false): void
+    private function searchAccountNr(string $value, SearchDirection $searchDirection, StringPosition $stringPosition, bool $prohibited = false): void
     {
         app('log')->debug(sprintf('searchAccountNr(%s, %d, %d)', $value, $searchDirection, $stringPosition));
 
@@ -1455,7 +1459,7 @@ class OperatorQuerySearch implements SearchInterface
         }
 
         // search direction: for destination accounts
-        if (2 === $searchDirection) {
+        if (SearchDirection::DESTINATION === $searchDirection) {
             // destination can be
             $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
             $collectorMethod = 'setDestinationAccounts';
@@ -1465,7 +1469,7 @@ class OperatorQuerySearch implements SearchInterface
         }
 
         // either account could be:
-        if (3 === $searchDirection) {
+        if (SearchDirection::BOTH === $searchDirection) {
             $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE, AccountType::REVENUE];
             $collectorMethod = 'setAccounts';
             if (true === $prohibited) {
@@ -1477,13 +1481,13 @@ class OperatorQuerySearch implements SearchInterface
         $stringMethod = 'str_starts_with';
 
         // string position: ends with:
-        if (2 === $stringPosition) {
+        if (StringPosition::ENDS === $stringPosition) {
             $stringMethod = 'str_ends_with';
         }
-        if (3 === $stringPosition) {
+        if (StringPosition::CONTAINS === $stringPosition) {
             $stringMethod = 'str_contains';
         }
-        if (4 === $stringPosition) {
+        if (StringPosition::IS === $stringPosition) {
             $stringMethod = 'stringIsEqual';
         }
 

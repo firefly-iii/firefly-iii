@@ -429,6 +429,9 @@ class BudgetController extends Controller
     /**
      * Shows a budget overview chart (spent and budgeted).
      *
+     * Suppress warning because this method will be replaced by API calls.
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     *
      * @param Budget              $budget
      * @param TransactionCurrency $currency
      * @param Collection          $accounts

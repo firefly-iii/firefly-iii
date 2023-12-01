@@ -75,6 +75,7 @@ interface OperationsRepositoryInterface
      * @param TransactionCurrency|null $currency
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumExpenses(
         Carbon               $start,
@@ -95,6 +96,7 @@ interface OperationsRepositoryInterface
      * @param TransactionCurrency|null $currency
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumExpensesByDestination(
         Carbon               $start,
@@ -115,6 +117,7 @@ interface OperationsRepositoryInterface
      * @param TransactionCurrency|null $currency
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumExpensesBySource(
         Carbon               $start,
@@ -134,6 +137,7 @@ interface OperationsRepositoryInterface
      * @param TransactionCurrency|null $currency
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumIncome(
         Carbon               $start,
@@ -154,6 +158,7 @@ interface OperationsRepositoryInterface
      * @param TransactionCurrency|null $currency
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumIncomeByDestination(
         Carbon               $start,
@@ -174,6 +179,7 @@ interface OperationsRepositoryInterface
      * @param TransactionCurrency|null $currency
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumIncomeBySource(
         Carbon               $start,

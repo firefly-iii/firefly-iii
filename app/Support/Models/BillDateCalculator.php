@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Models;
 
 use Carbon\Carbon;
-use FireflyIII\Models\Bill;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -36,9 +35,12 @@ class BillDateCalculator
      * @param Carbon      $earliest
      * @param Carbon      $latest
      * @param Carbon      $billStart
+     * @param string      $period
+     * @param int         $skip
      * @param Carbon|null $lastPaid
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function getPayDates(Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid): array
     {

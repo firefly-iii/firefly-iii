@@ -228,6 +228,7 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @param TransactionCurrency|null $currency
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumExpenses(
         Carbon               $start,
@@ -235,7 +236,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?Collection          $accounts = null,
         ?Collection          $budgets = null,
         ?TransactionCurrency $currency = null
-    ): array {
+    ): array
+    {
         //app('log')->debug(sprintf('Now in %s', __METHOD__));
         $start->startOfDay();
         $end->endOfDay();
