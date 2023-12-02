@@ -39,7 +39,7 @@ class BudgetLimitCurrency extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_bl_currency';
+    public const string CONFIG_NAME = '480_bl_currency';
 
     protected $description = 'Give budget limits a currency';
 

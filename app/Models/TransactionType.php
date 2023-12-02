@@ -60,13 +60,13 @@ class TransactionType extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    public const DEPOSIT          = 'Deposit';
-    public const INVALID          = 'Invalid';
-    public const LIABILITY_CREDIT = 'Liability credit';
-    public const OPENING_BALANCE  = 'Opening balance';
-    public const RECONCILIATION   = 'Reconciliation';
-    public const TRANSFER         = 'Transfer';
-    public const WITHDRAWAL       = 'Withdrawal';
+    public const string DEPOSIT          = 'Deposit';
+    public const string INVALID          = 'Invalid';
+    public const string LIABILITY_CREDIT = 'Liability credit';
+    public const string OPENING_BALANCE  = 'Opening balance';
+    public const string RECONCILIATION   = 'Reconciliation';
+    public const string TRANSFER         = 'Transfer';
+    public const string WITHDRAWAL       = 'Withdrawal';
 
     protected $casts
                         = [

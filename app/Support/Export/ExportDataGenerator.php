@@ -66,8 +66,8 @@ class ExportDataGenerator
 {
     use ConvertsDataTypes;
 
-    private const ADD_RECORD_ERR = 'Could not add record to set: %s';
-    private const EXPORT_ERR     = 'Could not export to string: %s';
+    private const string ADD_RECORD_ERR = 'Could not add record to set: %s';
+    private const string EXPORT_ERR     = 'Could not export to string: %s';
     private Collection $accounts;
     private Carbon     $end;
     private bool       $exportAccounts;

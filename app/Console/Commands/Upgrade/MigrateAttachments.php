@@ -38,7 +38,7 @@ class MigrateAttachments extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_migrate_attachments';
+    public const string CONFIG_NAME = '480_migrate_attachments';
 
     protected $description = 'Migrates attachment meta-data.';
 

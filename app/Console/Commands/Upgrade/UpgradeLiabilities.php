@@ -43,7 +43,7 @@ class UpgradeLiabilities extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '560_upgrade_liabilities';
+    public const string CONFIG_NAME = '560_upgrade_liabilities';
     protected $description = 'Upgrade liabilities to new 5.6.0 structure.';
     protected $signature   = 'firefly-iii:upgrade-liabilities {--F|force : Force the execution of this command.}';
 

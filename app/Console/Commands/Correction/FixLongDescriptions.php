@@ -36,7 +36,7 @@ class FixLongDescriptions extends Command
 {
     use ShowsFriendlyMessages;
 
-    private const MAX_LENGTH = 1000;
+    private const int MAX_LENGTH = 1000;
     protected $description = 'Fixes long descriptions in journals and groups.';
     protected $signature   = 'firefly-iii:fix-long-descriptions';
 

@@ -29,7 +29,7 @@ namespace FireflyIII\Enums;
  */
 class ClauseType
 {
-    public const TRANSACTION = 'transaction';
-    public const UPDATE      = 'update';
-    public const WHERE       = 'where';
+    public const string TRANSACTION = 'transaction';
+    public const string UPDATE      = 'update';
+    public const string WHERE       = 'where';
 }

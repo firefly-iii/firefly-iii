@@ -44,7 +44,7 @@ class AccountCurrencies extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_account_currencies';
+    public const string CONFIG_NAME = '480_account_currencies';
 
     protected $description = 'Give all accounts proper currency info.';
     protected $signature   = 'firefly-iii:account-currencies {--F|force : Force the execution of this command.}';

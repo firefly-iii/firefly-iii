@@ -65,7 +65,7 @@
         }
     ],
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.3",
         "ext-bcmath": "*",
         "ext-curl": "*",
         "ext-fileinfo": "*",
@@ -186,9 +186,6 @@
         ]
     },
     "config": {
-        "platform": {
-            "php": "8.2"
-        },
         "preferred-install": "dist",
         "sort-packages": true,
         "optimize-autoloader": true,

@@ -30,7 +30,7 @@ namespace FireflyIII\Support\Calendar\Periodicity;
  */
 abstract class Interval implements Interspacable
 {
-    public const INTERVAL = 1;
+    public const int INTERVAL = 1;
 
     /**
      * @param int $skip

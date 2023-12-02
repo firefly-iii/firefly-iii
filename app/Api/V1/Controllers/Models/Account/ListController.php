@@ -47,7 +47,7 @@ class ListController extends Controller
 {
     use TransactionFilter;
 
-    public const RESOURCE_KEY = 'accounts';
+    public const string RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
 

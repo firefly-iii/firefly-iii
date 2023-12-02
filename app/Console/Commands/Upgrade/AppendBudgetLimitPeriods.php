@@ -36,7 +36,7 @@ class AppendBudgetLimitPeriods extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '550_budget_limit_periods';
+    public const string CONFIG_NAME = '550_budget_limit_periods';
 
     protected $description = 'Append budget limits with their (estimated) timeframe.';
 

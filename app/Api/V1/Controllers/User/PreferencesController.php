@@ -41,8 +41,8 @@ use League\Fractal\Resource\Item;
  */
 class PreferencesController extends Controller
 {
-    public const DATE_FORMAT  = 'Y-m-d';
-    public const RESOURCE_KEY = 'preferences';
+    public const string DATE_FORMAT  = 'Y-m-d';
+    public const string RESOURCE_KEY = 'preferences';
 
     /**
      * This endpoint is documented at:

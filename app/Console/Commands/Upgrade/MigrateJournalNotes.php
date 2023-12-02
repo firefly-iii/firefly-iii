@@ -37,7 +37,7 @@ class MigrateJournalNotes extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_migrate_notes';
+    public const string CONFIG_NAME = '480_migrate_notes';
 
     protected $description = 'Migrate notes for transaction journals.';
 

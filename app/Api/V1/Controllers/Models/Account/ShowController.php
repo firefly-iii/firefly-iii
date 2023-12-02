@@ -43,7 +43,7 @@ class ShowController extends Controller
 {
     use AccountFilter;
 
-    public const RESOURCE_KEY = 'accounts';
+    public const string RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
 

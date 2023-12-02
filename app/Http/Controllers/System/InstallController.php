@@ -45,9 +45,9 @@ class InstallController extends Controller
 {
     use GetConfigurationData;
 
-    public const BASEDIR_ERROR   = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
-    public const FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
-    public const OTHER_ERROR     = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
+    public const string BASEDIR_ERROR   = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
+    public const string FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
+    public const string OTHER_ERROR     = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
     private string $lastError;
     private array  $upgradeCommands;
 

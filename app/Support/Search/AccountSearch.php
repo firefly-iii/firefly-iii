@@ -35,15 +35,15 @@ use Illuminate\Support\Collection;
 class AccountSearch implements GenericSearchInterface
 {
     /** @var string */
-    public const SEARCH_ALL = 'all';
+    public const string SEARCH_ALL = 'all';
     /** @var string */
-    public const SEARCH_IBAN = 'iban';
+    public const string SEARCH_IBAN = 'iban';
     /** @var string */
-    public const SEARCH_ID = 'id';
+    public const string SEARCH_ID = 'id';
     /** @var string */
-    public const SEARCH_NAME = 'name';
+    public const string SEARCH_NAME = 'name';
     /** @var string */
-    public const SEARCH_NUMBER = 'number';
+    public const string SEARCH_NUMBER = 'number';
     private string $field;
     private string $query;
     private array  $types;

@@ -37,8 +37,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class OAuthKeys
 {
-    private const PRIVATE_KEY = 'oauth_private_key';
-    private const PUBLIC_KEY  = 'oauth_public_key';
+    private const string PRIVATE_KEY = 'oauth_private_key';
+    private const string PUBLIC_KEY  = 'oauth_public_key';
 
     /**
      *

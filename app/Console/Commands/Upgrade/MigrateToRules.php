@@ -44,7 +44,7 @@ class MigrateToRules extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_bills_to_rules';
+    public const string CONFIG_NAME = '480_bills_to_rules';
 
     protected $description = 'Migrate bills to rules.';
 

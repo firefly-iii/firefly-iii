@@ -50,7 +50,7 @@ class MigrateToGroups extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_migrated_to_groups';
+    public const string CONFIG_NAME = '480_migrated_to_groups';
     protected $description = 'Migrates a pre-4.7.8 transaction structure to the 4.7.8+ transaction structure.';
     protected $signature   = 'firefly-iii:migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
     private JournalCLIRepositoryInterface $cliRepository;

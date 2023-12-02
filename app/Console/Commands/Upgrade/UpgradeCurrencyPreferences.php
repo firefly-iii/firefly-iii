@@ -40,7 +40,7 @@ class UpgradeCurrencyPreferences extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '610_upgrade_currency_prefs';
+    public const string CONFIG_NAME = '610_upgrade_currency_prefs';
 
     protected $description = 'Upgrade user currency preferences';
 

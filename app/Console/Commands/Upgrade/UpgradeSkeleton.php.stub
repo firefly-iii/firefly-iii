@@ -11,7 +11,7 @@ use Illuminate\Console\Command;
 class UpgradeSkeleton extends Command
 {
     use ShowsFriendlyMessages;
-    public const CONFIG_NAME = '480_some_name';
+    public const string CONFIG_NAME = '480_some_name';
 
     protected $description = 'SOME DESCRIPTION';
 
