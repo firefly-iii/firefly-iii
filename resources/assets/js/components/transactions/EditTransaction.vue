@@ -665,7 +665,7 @@ export default {
                 sourceId = null;
             }
 
-            // parse amount if has exactly one comma:
+            // parse amount, if amount has exactly one comma:
             // solves issues with some locales.
             if (1 === (String(row.amount).match(/\,/g) || []).length) {
                 row.amount = String(row.amount).replace(',', '.');
@@ -721,7 +721,7 @@ export default {
             if (parseInt(row.piggy_bank) > 0) {
                 currentArray.piggy_bank_id = parseInt(row.piggy_bank);
             }
-            if(this.isReconciled) {
+            if(this.isReconciled && !this.storeAsNew) {
                 // drop content from array:
                 delete currentArray.source_id;
                 delete currentArray.source_name;
