@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V2\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
+use FireflyIII\Api\V2\Request\Chart\DashboardChartRequest;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -35,6 +36,7 @@ use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -78,7 +80,7 @@ class AccountController extends Controller
      *
      * TODO validate and set user_group_id from request
      *
-     * @param DateRequest $request
+     * @param DashboardChartRequest $request
      *
      * @return JsonResponse
      * @throws ContainerExceptionInterface
@@ -86,7 +88,7 @@ class AccountController extends Controller
      * @throws FireflyException
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function dashboard(DateRequest $request): JsonResponse
+    public function dashboard(DashboardChartRequest $request): JsonResponse
     {
         /** @var Carbon $start */
         $start = $this->parameters->get('start');
@@ -94,19 +96,25 @@ class AccountController extends Controller
         $end = $this->parameters->get('end');
         $end->endOfDay();
 
-        // user's preferences
-        $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT])->pluck('id')->toArray();
-        $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
-
-        if (!(is_array($frontPage->data) && count($frontPage->data) > 0)) {
-            $frontPage->data = $defaultSet;
-            $frontPage->save();
-        }
-
         /** @var TransactionCurrency $default */
-        $default   = app('amount')->getDefaultCurrency();
-        $accounts  = $this->repository->getAccountsById($frontPage->data);
+        $default = app('amount')->getDefaultCurrency();
+        $params  = $request->getAll();
+        /** @var Collection $preSet */
+        $accounts = $params['accounts'];
         $chartData = [];
+
+        // user's preferences
+        if (0 === $accounts->count()) {
+            $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT])->pluck('id')->toArray();
+            $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
+
+            if (!(is_array($frontPage->data) && count($frontPage->data) > 0)) {
+                $frontPage->data = $defaultSet;
+                $frontPage->save();
+            }
+
+            $accounts = $this->repository->getAccountsById($frontPage->data);
+        }
 
         /** @var Account $account */
         foreach ($accounts as $account) {
