@@ -71,7 +71,8 @@
     <rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
         <properties>
             <!-- TODO we want to be at a value of 40. But we start high, and drop the bar slowly. -->
-            <property name="minimum" value="1000"/>
+            <property name="minimum" value="100"/>
+            <property name="ignore-whitespace" value="true"/>
         </properties>
     </rule>
     <rule ref="rulesets/codesize.xml/ExcessiveParameterList">

@@ -272,8 +272,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'currency_code'           => $journal['currency_code'],
                 'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->$direction($journal['amount']));
-            /** @phpstan-ignore-line */
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->$direction($journal['amount']));// @phpstan-ignore-line
 
             // also do foreign amount:
             $foreignId = (int)$journal['foreign_currency_id'];

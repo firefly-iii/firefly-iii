@@ -98,7 +98,7 @@ class StoreRequest extends FormRequest
                 'foreign_amount'        => $this->clearString((string)$object['foreign_amount']),
 
                 // description.
-                'description'           => $this->clearString($object['description'], false),
+                'description'           => $this->clearString($object['description']),
 
                 // source of transaction. If everything is null, assume cash account.
                 'source_id'             => $this->integerFromValue((string)$object['source_id']),

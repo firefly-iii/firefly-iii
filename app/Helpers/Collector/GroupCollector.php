@@ -832,7 +832,6 @@ class GroupCollector implements GroupCollectorInterface
             // and save it (or not) in the new collection.
             // that new collection is the next current collection
             /**
-             * @var int   $ii
              * @var array $item
              */
             foreach ($currentCollection as $item) {

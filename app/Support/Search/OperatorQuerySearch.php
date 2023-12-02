@@ -1449,7 +1449,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     private function searchAccountNr(string $value, SearchDirection $searchDirection, StringPosition $stringPosition, bool $prohibited = false): void
     {
-        app('log')->debug(sprintf('searchAccountNr(%s, %d, %d)', $value, $searchDirection, $stringPosition));
+        app('log')->debug(sprintf('searchAccountNr(%s, %d, %d)', $value, $searchDirection->name, $stringPosition->name));
 
         // search direction (default): for source accounts
         $searchTypes     = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
