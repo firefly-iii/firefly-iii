@@ -239,6 +239,8 @@ function updateActionInput(selectList) {
         case 'move_notes_to_descr':
         case 'clear_notes':
         case 'delete_transaction':
+        case 'set_source_to_cash':
+        case 'set_destination_to_cash':
         case 'remove_all_tags':
             console.log('Select list value is ' + selectList.val() + ', so input needs to be disabled.');
             inputResult.prop('disabled', true);

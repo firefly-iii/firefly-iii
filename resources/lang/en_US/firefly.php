@@ -1238,6 +1238,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Append notes to description',
     'rule_action_move_descr_to_notes'                     => 'Replace notes with description',
     'rule_action_move_notes_to_descr'                     => 'Replace description with notes',
+    'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
+    'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => 'Rule group for bills',
     'rulegroup_for_bills_description'                     => 'A special rule group for all the rules that involve bills.',
     'rule_for_bill_title'                                 => 'Auto-generated rule for bill ":name"',
