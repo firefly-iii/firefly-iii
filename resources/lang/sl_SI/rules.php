@@ -56,6 +56,8 @@ return [
     'cannot_find_subscription'                    => 'Firefly III ne najde naročnine ":name"',
     'no_notes_to_move'                            => 'Transakcija nima nobenih opomb, ki bi jih bilo treba premakniti v polje opisa',
     'no_tags_to_remove'                           => 'Transakcija nima oznak za odstranitev',
+    'not_withdrawal'                              => 'The transaction is not a withdrawal',
+    'not_deposit'                                 => 'The transaction is not a deposit',
     'cannot_find_tag'                             => 'Firefly III ne najde oznake ":tag"',
     'cannot_find_asset'                           => 'Firefly III ne najde računa sredstev ":name"',
     'cannot_find_accounts'                        => 'Firefly III ne najde izvornega ali ciljnega računa',

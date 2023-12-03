@@ -10,15 +10,15 @@
         "split": "Chia ra",
         "single_split": "Chia ra",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Giao d\u1ecbch #{ID} (\"{title}\")<\/a> \u0111\u00e3 \u0111\u01b0\u1ee3c l\u01b0u tr\u1eef.",
-        "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> has been stored.",
-        "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") has been updated.",
+        "webhook_stored_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID} (\"{title}\")<\/a> \u0111\u00e3 \u0111\u01b0\u1ee3c l\u01b0u tr\u1eef.",
+        "webhook_updated_link": "<a href=\"webhooks\/show\/{ID}\">Webhook #{ID}<\/a> (\"{title}\") \u0111\u00e3 \u0111\u01b0\u1ee3c c\u1eadp nh\u1eadt.",
         "transaction_updated_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID}<\/a> (\"{title}\") has been updated.",
         "transaction_new_stored_link": "<a href=\"transactions\/show\/{ID}\"> Giao d\u1ecbch #{ID}<\/a> \u0111\u00e3 \u0111\u01b0\u1ee3c l\u01b0u tr\u1eef.",
         "transaction_journal_information": "Th\u00f4ng tin giao d\u1ecbch",
         "submission_options": "Submission options",
         "apply_rules_checkbox": "Apply rules",
         "fire_webhooks_checkbox": "Fire webhooks",
-        "no_budget_pointer": "You seem to have no budgets yet. You should create some on the <a href=\"budgets\">budgets<\/a>-page. Budgets can help you keep track of expenses.",
+        "no_budget_pointer": "D\u01b0\u1eddng nh\u01b0 b\u1ea1n ch\u01b0a c\u00f3 ng\u00e2n s\u00e1ch. B\u1ea1n n\u00ean t\u1ea1o v\u00e0i c\u00e1i t\u1ea1i trang <a href=\"budgets\">ng\u00e2n s\u00e1ch<\/a>-. Ng\u00e2n s\u00e1ch c\u00f3 th\u1ec3 gi\u00fap b\u1ea1n theo d\u00f5i chi ti\u00eau.",
         "no_bill_pointer": "You seem to have no bills yet. You should create some on the <a href=\"bills\">bills<\/a>-page. Bills can help you keep track of expenses.",
         "source_account": "Ngu\u1ed3n t\u00e0i kho\u1ea3n",
         "hidden_fields_preferences": "You can enable more transaction options in your <a href=\"preferences\">preferences<\/a>.",
@@ -94,12 +94,12 @@
         "multi_account_warning_withdrawal": "Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.",
         "multi_account_warning_deposit": "Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.",
         "multi_account_warning_transfer": "Keep in mind that the source + destination account of subsequent splits will be overruled by whatever is defined in the first split of the transfer.",
-        "webhook_trigger_STORE_TRANSACTION": "After transaction creation",
-        "webhook_trigger_UPDATE_TRANSACTION": "After transaction update",
-        "webhook_trigger_DESTROY_TRANSACTION": "After transaction delete",
-        "webhook_response_TRANSACTIONS": "Transaction details",
-        "webhook_response_ACCOUNTS": "Account details",
-        "webhook_response_none_NONE": "No details",
+        "webhook_trigger_STORE_TRANSACTION": "Sau khi t\u1ea1o giao d\u1ecbch",
+        "webhook_trigger_UPDATE_TRANSACTION": "Sau khi c\u1eadp nh\u1eadt giao d\u1ecbch",
+        "webhook_trigger_DESTROY_TRANSACTION": "Sau khi x\u00f3a giao d\u1ecbch",
+        "webhook_response_TRANSACTIONS": "Chi ti\u1ebft giao d\u1ecbch",
+        "webhook_response_ACCOUNTS": "Chi ti\u1ebft t\u00e0i kho\u1ea3n",
+        "webhook_response_none_NONE": "Kh\u00f4ng c\u00f3 chi ti\u1ebft",
         "webhook_delivery_JSON": "JSON",
         "actions": "H\u00e0nh \u0111\u1ed9ng",
         "meta_data": "Meta data",
@@ -107,7 +107,7 @@
         "inactive": "Kh\u00f4ng ho\u1ea1t \u0111\u1ed9ng",
         "no_webhook_messages": "There are no webhook messages",
         "inspect": "Inspect",
-        "create_new_webhook": "Create new webhook",
+        "create_new_webhook": "T\u1ea1o webhook m\u1edbi",
         "webhooks": "Webhooks",
         "webhook_trigger_form_help": "Indicate on what event the webhook will trigger",
         "webhook_response_form_help": "Indicate what the webhook must submit to the URL.",
@@ -126,7 +126,7 @@
         "logs": "Logs",
         "response": "Response",
         "visit_webhook_url": "Visit webhook URL",
-        "reset_webhook_secret": "Reset webhook secret"
+        "reset_webhook_secret": "C\u00e0i l\u1ea1i kh\u00f3a webhook"
     },
     "form": {
         "url": "URL",
@@ -146,14 +146,14 @@
     },
     "list": {
         "active": "\u0110ang ho\u1ea1t \u0111\u1ed9ng?",
-        "trigger": "Trigger",
-        "response": "Response",
-        "delivery": "Delivery",
+        "trigger": "K\u00edch ho\u1ea1t",
+        "response": "\u0110\u00e1p l\u1ea1i",
+        "delivery": "Ph\u00e2n ph\u1ed1i",
         "url": "URL",
-        "secret": "Secret"
+        "secret": "M\u00e3 b\u00ed m\u1eadt"
     },
     "config": {
         "html_language": "vi",
-        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
+        "date_time_fns": "d MMMM yyyy @ HH:mm:ss"
     }
 }

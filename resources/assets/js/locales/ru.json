@@ -122,7 +122,7 @@
         "attempt_content_title": "Webhook attempts",
         "attempt_content_help": "These are all the unsuccessful attempts of this webhook message to submit to the configured URL. After some time, Firefly III will stop trying.",
         "no_attempts": "There are no unsuccessful attempts. That's a good thing!",
-        "webhook_attempt_at": "Attempt at {moment}",
+        "webhook_attempt_at": "\u041f\u043e\u043f\u044b\u0442\u043a\u0430 \u0432 {moment}",
         "logs": "\u041b\u043e\u0433\u0438",
         "response": "\u041e\u0442\u0432\u0435\u0442",
         "visit_webhook_url": "\u041f\u043e\u0441\u0435\u0442\u0438\u0442\u044c URL \u0432\u0435\u0431\u0445\u0443\u043a\u0430",

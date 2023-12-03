@@ -56,6 +56,8 @@ return [
     'cannot_find_subscription'                    => 'O Firefly III não pode encontrar a assinatura ":name"',
     'no_notes_to_move'                            => 'A transação não tem notas para mover para o campo descrição',
     'no_tags_to_remove'                           => 'A transação não tem tags para remover',
+    'not_withdrawal'                              => 'The transaction is not a withdrawal',
+    'not_deposit'                                 => 'The transaction is not a deposit',
     'cannot_find_tag'                             => 'O Firefly III não pode encontrar a tag ":tag"',
     'cannot_find_asset'                           => 'O Firefly III não pode encontrar a conta de ativos ":name"',
     'cannot_find_accounts'                        => 'O Firefly III não pode encontrar a conta destino ou origem',

@@ -44,7 +44,7 @@ return [
     'invalid_query_currency'         => 'Ваш запрос содержит счета с разными валютами, что недопустимо.',
     'iban'                           => 'Это некорректный IBAN.',
     'zero_or_more'                   => 'Это значение не может быть отрицательным.',
-    'no_asset_account'               => 'This is not an asset account.',
+    'no_asset_account'               => 'Это не счет активов.',
     'date_or_time'                   => 'Значение должно быть корректной датой или временем (ISO 8601).',
     'source_equals_destination'      => 'Счёт источник и счёт назначения совпадают.',
     'unique_account_number_for_user' => 'Этот номер счёта уже используется.',

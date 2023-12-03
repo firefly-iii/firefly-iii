@@ -133,7 +133,7 @@ return [
     // show piggy
     'piggy-banks_show_piggyChart'                             => 'Ta grafikon bo prikazal zgodovino tega hranilnika.',
     'piggy-banks_show_piggyDetails'                           => 'Nekaj podrobnosti o vašem hranilniku',
-    'piggy-banks_show_piggyEvents'                            => 'Tukaj so navedeni tudi vsa dodajanja ali odstranitve.',
+    'piggy-banks_show_piggyEvents'                            => 'Tukaj so navedena tudi vsa dodajanja ali odstranitve.',
 
     // bill index
     'bills_index_rules'                                       => 'Tukaj vidite, katera pravila bodo preverila, ali je to željen račun',

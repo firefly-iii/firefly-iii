@@ -56,6 +56,8 @@ return [
     'cannot_find_subscription'                    => 'Firefly III kan ikke finne abonnementet ":name"',
     'no_notes_to_move'                            => 'Transaksjonen har ingen notater å flytte til beskrivelsesfeltet',
     'no_tags_to_remove'                           => 'Transaksjonen har ingen merker å fjerne',
+    'not_withdrawal'                              => 'The transaction is not a withdrawal',
+    'not_deposit'                                 => 'The transaction is not a deposit',
     'cannot_find_tag'                             => 'Firefly III kan ikke finne merket ":tag"',
     'cannot_find_asset'                           => 'Firefly III kan ikke finne eiendelskontoen ":name"',
     'cannot_find_accounts'                        => 'Firefly III kan ikke finne kilde- eller destinasjonskontoen',

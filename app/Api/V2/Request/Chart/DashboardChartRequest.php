@@ -61,7 +61,7 @@ class DashboardChartRequest extends FormRequest
         return [
             'start'       => 'required|date|after:1900-01-01|before:2099-12-31',
             'end'         => 'required|date|after_or_equal:start|before:2099-12-31|after:1900-01-01',
-            'preselected' => sprintf('in:%s', join(',', config('firefly.preselected_accounts'))),
+            'preselected' => sprintf('in:%s', implode(',', config('firefly.preselected_accounts'))),
             'accounts.*'  => 'exists:accounts,id',
         ];
     }
