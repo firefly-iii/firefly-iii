@@ -917,6 +917,7 @@ trait MetaCollection
         $list                = $tags->pluck('tag')->toArray();
         $filter              = static function (array $object) use ($list): bool {
             foreach ($object['transactions'] as $transaction) {
+                app('log')->debug(sprintf('Transaction has %d tag(s)', count($transaction['tags'])));
                 foreach ($transaction['tags'] as $tag) {
                     if (in_array($tag['name'], $list, true)) {
                         return false;

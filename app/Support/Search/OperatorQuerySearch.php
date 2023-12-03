@@ -57,7 +57,6 @@ use Gdbots\QueryParser\QueryParser;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use LogicException;
-use PragmaRX\Random\Generators\StringGenerator;
 use TypeError;
 
 /**
@@ -82,6 +81,9 @@ class OperatorQuerySearch implements SearchInterface
     private array                       $validOperators;
     private array                       $words;
 
+    private array $excludeTags;
+    private array $includeTags;
+
     /**
      * OperatorQuerySearch constructor.
      *
@@ -93,6 +95,8 @@ class OperatorQuerySearch implements SearchInterface
         $this->operators          = new Collection();
         $this->page               = 1;
         $this->words              = [];
+        $this->excludeTags        = [];
+        $this->includeTags        = [];
         $this->prohibitedWords    = [];
         $this->invalidOperators   = [];
         $this->limit              = 25;
@@ -167,6 +171,8 @@ class OperatorQuerySearch implements SearchInterface
         foreach ($query1->getNodes() as $searchNode) {
             $this->handleSearchNode($searchNode);
         }
+        $this->parseTagInstructions();
+
 
         $this->collector->setSearchWords($this->words);
         $this->collector->excludeSearchWords($this->prohibitedWords);
@@ -868,7 +874,8 @@ class OperatorQuerySearch implements SearchInterface
             case 'tag_is':
                 $result = $this->tagRepository->findByTag($value);
                 if (null !== $result) {
-                    $this->collector->setTags(new Collection([$result]));
+                    $this->includeTags[] = $result->id;
+                    $this->includeTags   = array_unique($this->includeTags);
                 }
                 // no tags found means search must result in nothing.
                 if (null === $result) {
@@ -876,11 +883,79 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 break;
+            case 'tag_contains':
+                $tags = $this->tagRepository->searchTag($value);
+                if (0 === $tags->count()) {
+                    app('log')->info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
+                    $this->collector->findNothing();
+                }
+                if ($tags->count() > 0) {
+                    $ids               = array_values($tags->pluck('id')->toArray());
+                    $this->includeTags = array_unique(array_merge($this->includeTags, $ids));
+                }
+                break;
+            case 'tag_starts':
+                $tags = $this->tagRepository->tagStartsWith($value);
+                if (0 === $tags->count()) {
+                    app('log')->info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
+                    $this->collector->findNothing();
+                }
+                if ($tags->count() > 0) {
+                    $ids               = array_values($tags->pluck('id')->toArray());
+                    $this->includeTags = array_unique(array_merge($this->includeTags, $ids));
+                }
+                break;
+            case '-tag_starts':
+                $tags = $this->tagRepository->tagStartsWith($value);
+                if (0 === $tags->count()) {
+                    app('log')->info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
+                    $this->collector->findNothing();
+                }
+                if ($tags->count() > 0) {
+                    $ids               = array_values($tags->pluck('id')->toArray());
+                    $this->excludeTags = array_unique(array_merge($this->includeTags, $ids));
+                }
+                break;
+            case 'tag_ends':
+                $tags = $this->tagRepository->tagEndsWith($value);
+                if (0 === $tags->count()) {
+                    app('log')->info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
+                    $this->collector->findNothing();
+                }
+                if ($tags->count() > 0) {
+                    $ids               = array_values($tags->pluck('id')->toArray());
+                    $this->includeTags = array_unique(array_merge($this->includeTags, $ids));
+                }
+                break;
+            case '-tag_ends':
+                $tags = $this->tagRepository->tagEndsWith($value);
+                if (0 === $tags->count()) {
+                    app('log')->info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
+                    $this->collector->findNothing();
+                }
+                if ($tags->count() > 0) {
+                    $ids               = array_values($tags->pluck('id')->toArray());
+                    $this->excludeTags = array_unique(array_merge($this->includeTags, $ids));
+                }
+                break;
+            case '-tag_contains':
+                $tags = $this->tagRepository->searchTag($value)->keyBy('id');
+
+                if (0 === $tags->count()) {
+                    app('log')->info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
+                    $this->collector->findNothing();
+                }
+                if ($tags->count() > 0) {
+                    $ids               = array_values($tags->pluck('id')->toArray());
+                    $this->excludeTags = array_unique(array_merge($this->excludeTags, $ids));
+                }
+                break;
             case '-tag_is':
             case 'tag_is_not':
                 $result = $this->tagRepository->searchTag($value);
                 if ($result->count() > 0) {
-                    $this->collector->setWithoutSpecificTags($result);
+                    $this->excludeTags[] = $result->id;
+                    $this->excludeTags   = array_unique($this->excludeTags);
                 }
                 break;
             //
@@ -1443,7 +1518,7 @@ class OperatorQuerySearch implements SearchInterface
      *
      * @param string          $value
      * @param SearchDirection $searchDirection
-     * @param StringPosition             $stringPosition
+     * @param StringPosition  $stringPosition
      * @param bool            $prohibited
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
@@ -2159,5 +2234,43 @@ class OperatorQuerySearch implements SearchInterface
     {
         $this->limit = $limit;
         $this->collector->setLimit($this->limit);
+    }
+
+    /**
+     * @return void
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    private function parseTagInstructions(): void
+    {
+        app('log')->debug('Now in parseTagInstructions()');
+        // if exclude tags, remove excluded tags.
+        if (count($this->excludeTags) > 0) {
+            app('log')->debug(sprintf('%d exclude tag(s)', count($this->excludeTags)));
+            $collection = new Collection;
+            foreach ($this->excludeTags as $tagId) {
+                $tag = $this->tagRepository->find($tagId);
+                if (null !== $tag) {
+                    app('log')->debug(sprintf('Exclude tag "%s"', $tag->tag));
+                    $collection->push($tag);
+                }
+            }
+            app('log')->debug(sprintf('Selecting all tags except %d excluded tag(s).', $collection->count()));
+            $this->collector->setWithoutSpecificTags($collection);
+        }
+        // if include tags, include them:
+        if (count($this->includeTags) > 0) {
+            app('log')->debug(sprintf('%d include tag(s)', count($this->includeTags)));
+            $collection = new Collection;
+            foreach ($this->includeTags as $tagId) {
+                $tag = $this->tagRepository->find($tagId);
+                if (null !== $tag) {
+                    app('log')->debug(sprintf('Include tag "%s"', $tag->tag));
+                    $collection->push($tag);
+                }
+            }
+            $this->collector->setTags($collection);
+        }
+
     }
 }

@@ -515,7 +515,6 @@ class GroupCollector implements GroupCollectorInterface
             // add to query:
             $this->query->orWhereIn('transaction_journals.transaction_group_id', $groupIds);
         }
-
         $result = $this->query->get($this->fields);
 
         // now to parse this into an array.
@@ -823,10 +822,15 @@ class GroupCollector implements GroupCollectorInterface
     private function postFilterCollection(Collection $collection): Collection
     {
         $currentCollection = $collection;
+
+        app('log')->debug(sprintf('GroupCollector: postFilterCollection has %d filter(s) and %d transaction(s).', count($this->postFilters), count($currentCollection)));
+
+
         /**
          * @var Closure $function
          */
         foreach ($this->postFilters as $function) {
+            app('log')->debug('Applying filter...');
             $nextCollection = new Collection();
             // loop everything in the current collection
             // and save it (or not) in the new collection.
@@ -843,6 +847,7 @@ class GroupCollector implements GroupCollectorInterface
                 $nextCollection->push($item);
             }
             $currentCollection = $nextCollection;
+            app('log')->debug(sprintf('GroupCollector: postFilterCollection has %d transaction(s) left.', count($currentCollection)));
         }
         return $currentCollection;
     }

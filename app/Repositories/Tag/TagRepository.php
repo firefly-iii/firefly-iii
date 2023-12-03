@@ -87,7 +87,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function get(): Collection
     {
-        return $this->user->tags()->orderBy('tag', 'ASC')->get();
+        return $this->user->tags()->orderBy('tag', 'ASC')->get(['tags.*']);
     }
 
     /**
@@ -453,5 +453,25 @@ class TagRepository implements TagRepositoryInterface
     {
         /** @var Location|null */
         return $tag->locations()->first();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function tagStartsWith(string $query): Collection
+    {
+        $search = sprintf('%s%%', $query);
+
+        return $this->user->tags()->where('tag', 'LIKE', $search)->get(['tags.*']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function tagEndsWith(string $query): Collection
+    {
+        $search = sprintf('%%%s', $query);
+
+        return $this->user->tags()->where('tag', 'LIKE', $search)->get(['tags.*']);
     }
 }
