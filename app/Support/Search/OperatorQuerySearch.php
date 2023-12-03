@@ -952,8 +952,8 @@ class OperatorQuerySearch implements SearchInterface
                 break;
             case '-tag_is':
             case 'tag_is_not':
-                $result = $this->tagRepository->searchTag($value);
-                if ($result->count() > 0) {
+                $result = $this->tagRepository->findByTag($value);
+                if (null !== $result) {
                     $this->excludeTags[] = $result->id;
                     $this->excludeTags   = array_unique($this->excludeTags);
                 }

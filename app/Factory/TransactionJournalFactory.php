@@ -426,20 +426,20 @@ class TransactionJournalFactory
             app('log')->debug('Both accounts exist, simply return them.');
             return [$sourceAccount, $destinationAccount];
         }
-        if (null !== $sourceAccount && null === $destinationAccount) {
+        if (null === $destinationAccount) { // @phpstan-ignore-line
             app('log')->debug('Destination account is NULL, source account is not.');
             $account = $this->accountRepository->getReconciliation($sourceAccount);
             app('log')->debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
             return [$sourceAccount, $account];
         }
 
-        if (null === $sourceAccount && null !== $destinationAccount) {
+        if (null === $sourceAccount) { // @phpstan-ignore-line
             app('log')->debug('Source account is NULL, destination account is not.');
             $account = $this->accountRepository->getReconciliation($destinationAccount);
             app('log')->debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
             return [$account, $destinationAccount];
         }
-        app('log')->debug('Unused fallback');
+        app('log')->debug('Unused fallback');  // @phpstan-ignore-line
         return [$sourceAccount, $destinationAccount];
     }
 

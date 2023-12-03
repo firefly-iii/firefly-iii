@@ -99,7 +99,7 @@ class AccountController extends Controller
         /** @var TransactionCurrency $default */
         $default = app('amount')->getDefaultCurrency();
         $params  = $request->getAll();
-        /** @var Collection $preSet */
+        /** @var Collection $accounts */
         $accounts = $params['accounts'];
         $chartData = [];
 

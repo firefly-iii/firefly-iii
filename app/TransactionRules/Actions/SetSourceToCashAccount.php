@@ -52,7 +52,7 @@ class SetSourceToCashAccount implements ActionInterface
     /**
      * @inheritDoc
      */
-    #[\Override] public function actOnArray(array $journal): bool
+    public function actOnArray(array $journal): bool
     {
         /** @var User $user */
         $user = User::find($journal['user_id']);
@@ -90,7 +90,7 @@ class SetSourceToCashAccount implements ActionInterface
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_destination_transaction_account')));
             return false;
         }
-        if (null !== $cashAccount && $cashAccount->id === $destination->account_id) {
+        if ($cashAccount->id === $destination->account_id) {
             app('log')->error(
                 sprintf(
                     'New source account ID #%d and current destination account ID #%d are the same. Do nothing.',
