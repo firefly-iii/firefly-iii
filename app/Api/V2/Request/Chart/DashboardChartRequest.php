@@ -30,9 +30,9 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 /**
-* Class DashboardChartRequest
+ * Class DashboardChartRequest
  */
-class DashboardChartRequest  extends FormRequest
+class DashboardChartRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
@@ -46,7 +46,8 @@ class DashboardChartRequest  extends FormRequest
     public function getAll(): array
     {
         return [
-            'accounts' => $this->getAccountList(),
+            'accounts'    => $this->getAccountList(),
+            'preselected' => $this->convertString('preselected'),
         ];
     }
 
@@ -58,9 +59,10 @@ class DashboardChartRequest  extends FormRequest
     public function rules(): array
     {
         return [
-            'start'      => 'required|date|after:1900-01-01|before:2099-12-31',
-            'end'        => 'required|date|after_or_equal:start|before:2099-12-31|after:1900-01-01',
-            'accounts.*' => 'exists:accounts,id',
+            'start'       => 'required|date|after:1900-01-01|before:2099-12-31',
+            'end'         => 'required|date|after_or_equal:start|before:2099-12-31|after:1900-01-01',
+            'preselected' => sprintf('in:%s', join(',', config('firefly.preselected_accounts'))),
+            'accounts.*'  => 'exists:accounts,id',
         ];
     }
 

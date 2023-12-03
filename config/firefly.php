@@ -912,4 +912,7 @@ return [
 
     // only used in v1
     'allowed_sort_parameters'   => ['order', 'name', 'iban'],
+
+    // preselected account lists possibilities:
+    'preselected_accounts' => ['all','assets','liabilities'],
 ];

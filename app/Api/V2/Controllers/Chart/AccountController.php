@@ -116,6 +116,17 @@ class AccountController extends Controller
             $accounts = $this->repository->getAccountsById($frontPage->data);
         }
 
+        // both options are overruled by "preselected"
+        if('all' === $params['preselected']) {
+            $accounts = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        }
+        if('assets' === $params['preselected']) {
+            $accounts = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        }
+        if('liabilities' === $params['preselected']) {
+            $accounts = $this->repository->getAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        }
+
         /** @var Account $account */
         foreach ($accounts as $account) {
             $currency = $this->repository->getAccountCurrency($account);
