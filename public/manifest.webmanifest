@@ -70,7 +70,8 @@
             "src": "/maskable192.png",
             "sizes": "192x192",
             "type": "image/png",
-            "scope": "maskable"
+            "scope": "maskable",
+            "purpose": "maskable any"
         },
         {
             "src": "/maskable384.png",
