@@ -103,6 +103,9 @@ class NetWorth implements NetWorthInterface
         foreach ($accounts as $account) {
             app('log')->debug(sprintf('Now at account #%d ("%s")', $account->id, $account->name));
             $currency      = $this->getRepository()->getAccountCurrency($account);
+            if(null === $currency) {
+                $currency = app('amount')->getDefaultCurrency();
+            }
             $currencyId    = $currency->id;
             $balance       = '0';
             $nativeBalance = '0';

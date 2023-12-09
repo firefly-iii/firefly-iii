@@ -25,7 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Exceptions\FireflyException;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ParseDateString
@@ -151,8 +153,13 @@ class ParseDateString
      */
     protected function parseDefaultDate(string $date): Carbon
     {
-        $result = Carbon::createFromFormat('Y-m-d', $date);
-        if(false === $result) {
+        $result = false;
+        try {
+            $result = Carbon::createFromFormat('Y-m-d', $date);
+        } catch (InvalidFormatException $e) {
+            Log::error(sprintf('parseDefaultDate("%s") ran into an error, but dont mind: %s', $date, $e->getMessage()));
+        }
+        if (false === $result) {
             $result = today(config('app.timezone'))->startOfDay();
         }
         return $result;

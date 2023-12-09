@@ -62,10 +62,14 @@ class BillTransformer extends AbstractTransformer
     {
         $paidData     = $this->paidData($bill);
         $lastPaidDate = $this->getLastPaidDate($paidData);
-        $payDates     = $this->calculator->getPayDates($this->parameters->get('start'), $this->parameters->get('end'), $bill->date, $bill->repeat_freq, $bill->skip, $lastPaidDate);
-        $currency     = $bill->transactionCurrency;
-        $notes        = $this->repository->getNoteText($bill);
-        $notes        = '' === $notes ? null : $notes;
+
+        // both params can be NULL, so just in case they are, add some wide margins:
+        $start    = $this->parameters->get('start') ?? today()->subYears(10);
+        $end      = $this->parameters->get('end') ?? today()->addYears(10);
+        $payDates = $this->calculator->getPayDates($start, $end, $bill->date, $bill->repeat_freq, $bill->skip, $lastPaidDate);
+        $currency = $bill->transactionCurrency;
+        $notes    = $this->repository->getNoteText($bill);
+        $notes    = '' === $notes ? null : $notes;
         $this->repository->setUser($bill->user);
 
         $objectGroupId    = null;
@@ -105,10 +109,10 @@ class BillTransformer extends AbstractTransformer
 
         if (null !== $firstPayDate) {
             $nemDate = Carbon::createFromFormat('!Y-m-d', $firstPayDate, config('app.timezone'));
-            if(false === $nemDate) {
+            if (false === $nemDate) {
                 $nemDate = today(config('app.timezone'));
             }
-            $nem     = $nemDate->toAtomString();
+            $nem = $nemDate->toAtomString();
 
             // nullify again when it's outside the current view range.
             if ($nemDate->lt($this->parameters->get('start')) || $nemDate->gt($this->parameters->get('end'))) {
@@ -126,8 +130,8 @@ class BillTransformer extends AbstractTransformer
 
             $current = $payDatesFormatted[0] ?? null;
             if (null !== $current && !$nemDate->isToday()) {
-                $temp2   = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
-                if(false === $temp2) {
+                $temp2 = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
+                if (false === $temp2) {
                     $temp2 = today(config('app.timezone'));
                 }
                 $nemDiff = trans('firefly.bill_expected_date', ['date' => $temp2->diffForHumans(today(config('app.timezone')), CarbonInterface::DIFF_RELATIVE_TO_NOW)]);
