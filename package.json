@@ -9,7 +9,7 @@
         "axios": "^1.6.1",
         "laravel-vite-plugin": "^0.8.1",
         "sass": "^1.69.4",
-        "vite": "^4.0.0",
+        "vite": "^5.0.4",
         "vite-plugin-manifest-sri": "^0.2.0"
     },
     "dependencies": {

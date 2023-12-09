@@ -105,8 +105,8 @@
         "spatie/laravel-html": "^3.2",
         "spatie/laravel-ignition": "^2",
         "spatie/period": "^2.4",
-        "symfony/http-client": "^6.3",
-        "symfony/mailgun-mailer": "^6.3",
+        "symfony/http-client": "^7.0",
+        "symfony/mailgun-mailer": "^7.0",
         "therobfonz/laravel-mandrill-driver": "^5.0"
     },
     "require-dev": {

@@ -7,79 +7,78 @@
             "src": "/maskable72.png",
             "sizes": "72x72",
             "type": "image/png",
-            "scope": "maskable"
+            "scope": "maskable",
+            "purpose": "maskable any"
         },
         {
             "src": "/maskable76.png",
             "sizes": "76x76",
             "type": "image/png",
-            "scope": "maskable"
+            "scope": "maskable",
+            "purpose": "maskable any"
         },
         {
             "src": "/maskable96.png",
             "sizes": "96x96",
             "type": "image/png",
-            "scope": "maskable"
+            "scope": "maskable",
+            "purpose": "maskable any"
         },
         {
             "src": "/maskable120.png",
             "sizes": "120x120",
             "type": "image/png",
-            "scope": "maskable"
+            "scope": "maskable",
+            "purpose": "maskable any"
         },
         {
             "src": "/maskable128.png",
             "sizes": "128x128",
             "type": "image/png",
-            "scope": "maskable"
+            "scope": "maskable",
+            "purpose": "maskable any"
         },
         {
             "src": "/maskable144.png",
             "sizes": "144x144",
             "type": "image/png",
-            "scope": "maskable"
+            "scope": "maskable",
+            "purpose": "maskable any"
         },
         {
             "src": "/maskable152.png",
             "sizes": "152x152",
             "type": "image/png",
-            "scope": "maskable"
+            "scope": "maskable",
+            "purpose": "maskable any"
         },
         {
             "src": "/maskable180.png",
             "sizes": "180x180",
             "type": "image/png",
-            "scope": "maskable"
-        },
-        {
-            "src": "/android-chrome-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "scope": "any"
+            "scope": "maskable",
+            "purpose": "maskable any"
         },
         {
             "src": "/maskable192.png",
             "sizes": "192x192",
             "type": "image/png",
-            "scope": "maskable"
+            "scope": "maskable",
+            "purpose": "maskable any"
         },
         {
             "src": "/maskable384.png",
             "sizes": "384x384",
             "type": "image/png",
-            "scope": "maskable"
-        },
-        {
-            "src": "/android-chrome-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "scope": "any"
+            "scope": "maskable",
+            "purpose": "maskable any"
         },
         {
             "src": "/maskable512.png",
             "sizes": "512x512",
             "type": "image/png",
-            "scope": "maskable"
+            "scope": "maskable",
+            "purpose": "maskable any"
         }
     ],
     "theme_color": "#1e6581",
