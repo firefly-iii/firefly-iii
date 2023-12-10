@@ -311,7 +311,7 @@ class BillRepository implements BillRepositoryInterface
             $transaction                = $journal->transactions()->where('amount', '<', 0)->first();
             $currencyId                 = (int)$journal->transaction_currency_id;
             $currency                   = $journal->transactionCurrency;
-            $result[$currencyId] ??= [
+            $result[$currencyId]        ??= [
                 'sum'                     => '0',
                 'count'                   => 0,
                 'avg'                     => '0',
@@ -373,12 +373,12 @@ class BillRepository implements BillRepositoryInterface
 
         return $bill->transactionJournals()
                     ->before($end)->after($start)->get(
-                        [
+                [
                     'transaction_journals.id',
                     'transaction_journals.date',
                     'transaction_journals.transaction_group_id',
                 ]
-                    );
+            );
     }
 
     /**
@@ -416,7 +416,7 @@ class BillRepository implements BillRepositoryInterface
         $array = [];
         /** @var Rule $rule */
         foreach ($rules as $rule) {
-            $array[$rule->action_value] ??= [];
+            $array[$rule->action_value]   ??= [];
             $array[$rule->action_value][] = ['id' => $rule->id, 'title' => $rule->title, 'active' => $rule->active];
         }
         $return = [];
@@ -456,7 +456,7 @@ class BillRepository implements BillRepositoryInterface
             }
             $currencyId                 = (int)$journal->transaction_currency_id;
             $currency                   = $journal->transactionCurrency;
-            $result[$currencyId] ??= [
+            $result[$currencyId]        ??= [
                 'sum'                     => '0',
                 'count'                   => 0,
                 'avg'                     => '0',
@@ -676,7 +676,7 @@ class BillRepository implements BillRepositoryInterface
             if ($total > 0) {
                 $currency                     = $bill->transactionCurrency;
                 $average                      = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
-                $return[$currency->id] ??= [
+                $return[$currency->id]        ??= [
                     'id'             => (string)$currency->id,
                     'name'           => $currency->name,
                     'symbol'         => $currency->symbol,

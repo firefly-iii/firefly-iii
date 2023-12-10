@@ -132,7 +132,7 @@ class AccountForm
      */
     public function assetAccountCheckList(string $name, array $options = null): string
     {
-        $options ??= [];
+        $options  ??= [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);

@@ -42,6 +42,7 @@ use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use const PHP_SAPI;
 
 /**
  * Class DebugController
@@ -127,7 +128,7 @@ class DebugController extends Controller
         // get latest log file:
         $logger = Log::driver();
         // PHPstan doesn't recognize the method because of its polymorphic nature.
-        $handlers   = $logger->getHandlers(); /** @phpstan-ignore-line */
+        $handlers = $logger->getHandlers(); // @phpstan-ignore-line
         $logContent = '';
         foreach ($handlers as $handler) {
             if ($handler instanceof RotatingFileHandler) {
@@ -172,7 +173,7 @@ class DebugController extends Controller
             'db_version'      => app('fireflyconfig')->get('db_version', 1)->data,
             'php_version'     => PHP_VERSION,
             'php_os'          => PHP_OS,
-            'interface'       => \PHP_SAPI,
+            'interface'       => PHP_SAPI,
             'bcscale'         => bcscale(),
             'display_errors'  => ini_get('display_errors'),
             'error_reporting' => $this->errorReporting((int)ini_get('error_reporting')),
@@ -277,7 +278,7 @@ class DebugController extends Controller
             $result                = setlocale(LC_ALL, $code);
             $localeAttempts[$code] = $result === $code;
         }
-        setlocale(LC_ALL, (string) $original);
+        setlocale(LC_ALL, (string)$original);
 
         return [
             'user_id'         => auth()->user()->id,

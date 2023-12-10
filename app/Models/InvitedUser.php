@@ -26,13 +26,14 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * Class InvitedUser
  *
@@ -43,7 +44,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property int         $id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property int  $user_id
+ * @property int         $user_id
  * @property string      $email
  * @property string      $invite_code
  * @property Carbon      $expires

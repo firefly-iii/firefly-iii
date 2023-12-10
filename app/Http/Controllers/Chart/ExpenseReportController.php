@@ -147,7 +147,7 @@ class ExpenseReportController extends Controller
 
         while ($currentStart < $end) {
             $currentEnd = clone $currentStart;
-            $currentEnd = $currentEnd->$function(); /** @phpstan-ignore-line */
+            $currentEnd = $currentEnd->$function(); // @phpstan-ignore-line
 
             // get expenses grouped by opposing name:
             $expenses = $this->groupByName($this->getExpensesForOpposing($accounts, $all, $currentStart, $currentEnd));
@@ -166,7 +166,7 @@ class ExpenseReportController extends Controller
                 $currentExpense = $expenses[$name] ?? '0';
 
                 // add to sum:
-                $sumOfIncome[$exp->id] ??= '0';
+                $sumOfIncome[$exp->id]  ??= '0';
                 $sumOfExpense[$exp->id] ??= '0';
                 $sumOfIncome[$exp->id]  = bcadd($sumOfIncome[$exp->id], $currentIncome);
                 $sumOfExpense[$exp->id] = bcadd($sumOfExpense[$exp->id], $currentExpense);

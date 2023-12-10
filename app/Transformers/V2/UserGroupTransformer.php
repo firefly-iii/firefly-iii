@@ -58,7 +58,7 @@ class UserGroupTransformer extends AbstractTransformer
             /** @var UserGroup $userGroup */
             foreach ($objects as $userGroup) {
                 $userGroupId = $userGroup->id;
-                $access = $user->hasRoleInGroupOrOwner($userGroup, UserRoleEnum::VIEW_MEMBERSHIPS) || $user->hasRole('owner');
+                $access      = $user->hasRoleInGroupOrOwner($userGroup, UserRoleEnum::VIEW_MEMBERSHIPS) || $user->hasRole('owner');
                 if ($access) {
                     $groupMemberships = $userGroup->groupMemberships()->get();
                     /** @var GroupMembership $groupMembership */

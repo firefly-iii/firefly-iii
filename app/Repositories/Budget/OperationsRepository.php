@@ -105,7 +105,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             $currencyId = (int)$journal['currency_id'];
             $key        = sprintf('%d-%d', $budgetId, $currencyId);
 
-            $data[$key] ??= [
+            $data[$key]                   ??= [
                 'id'                      => $budgetId,
                 'name'                    => sprintf('%s (%s)', $budgetName, $journal['currency_name']),
                 'sum'                     => '0',
@@ -298,7 +298,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId] ??= [
+            $array[$currencyId]        ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -311,7 +311,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             // also do foreign amount:
             $foreignId = (int)$journal['foreign_currency_id'];
             if (0 !== $foreignId) {
-                $array[$foreignId] ??= [
+                $array[$foreignId]        ??= [
                     'sum'                     => '0',
                     'currency_id'             => $foreignId,
                     'currency_name'           => $journal['foreign_currency_name'],

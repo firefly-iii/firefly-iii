@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Exception;
-use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Message;
 use Illuminate\Queue\InteractsWithQueue;
@@ -90,7 +89,7 @@ class MailError extends Job implements ShouldQueue
                         }
                     }
                 );
-            } catch (Exception | TransportException $e) { /** @phpstan-ignore-line */
+            } catch (Exception | TransportException $e) { // @phpstan-ignore-line
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
                     app('log')->warning('[Bcc] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');

@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\UserGroups\Currency;
 
-use FireflyIII\Api\V1\Controllers\Data\Bulk\TransactionController;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
@@ -33,12 +32,6 @@ use Illuminate\Support\Collection;
 
 interface CurrencyRepositoryInterface
 {
-    /**
-     * @param User $user
-     *
-     * @return void
-     */
-    public function setUser(User $user): void;
     /**
      * @param TransactionCurrency $currency
      *
@@ -161,6 +154,13 @@ interface CurrencyRepositoryInterface
      * @return Collection
      */
     public function searchCurrency(string $search, int $limit): Collection;
+
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
+    public function setUser(User $user): void;
 
     /**
      * @param array $data

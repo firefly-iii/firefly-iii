@@ -64,7 +64,7 @@ trait RenderPartialViews
         $accountRepos = app(AccountRepositoryInterface::class);
         $account      = $accountRepos->find((int)$attributes['accountId']);
 
-        if(null === $budget || null === $account) {
+        if (null === $budget || null === $account) {
             throw new FireflyException('Could not render popup.report.balance-amount because budget or account is null.');
         }
 
@@ -334,7 +334,7 @@ trait RenderPartialViews
             if ('user_action' !== $entry->trigger_type) {
                 $count = ($index + 1);
                 try {
-                    $rootOperator = OperatorQuerySearch::getRootOperator((string) $entry->trigger_type);
+                    $rootOperator = OperatorQuerySearch::getRootOperator((string)$entry->trigger_type);
                     if (str_starts_with($rootOperator, '-')) {
                         $rootOperator = substr($rootOperator, 1);
                     }
@@ -344,7 +344,7 @@ trait RenderPartialViews
                             'oldTrigger'    => $rootOperator,
                             'oldValue'      => $entry->trigger_value,
                             'oldChecked'    => $entry->stop_processing,
-                            'oldProhibited' => str_starts_with((string) $entry->trigger_type, '-'),
+                            'oldProhibited' => str_starts_with((string)$entry->trigger_type, '-'),
                             'count'         => $count,
                             'triggers'      => $triggers,
                         ]

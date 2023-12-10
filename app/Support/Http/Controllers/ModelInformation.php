@@ -80,9 +80,9 @@ trait ModelInformation
         $repository = app(AccountRepositoryInterface::class);
         // types of liability:
         /** @var AccountType $debt */
-        $debt           = $repository->getAccountTypeByType(AccountType::DEBT);
+        $debt = $repository->getAccountTypeByType(AccountType::DEBT);
         /** @var AccountType $loan */
-        $loan           = $repository->getAccountTypeByType(AccountType::LOAN);
+        $loan = $repository->getAccountTypeByType(AccountType::LOAN);
         /** @var AccountType $mortgage */
         $mortgage       = $repository->getAccountTypeByType(AccountType::MORTGAGE);
         $liabilityTypes = [
@@ -260,7 +260,7 @@ trait ModelInformation
                     'count'      => $ii + 1,
                     'triggers'   => $triggers,
                 ];
-                $string = view('rules.partials.trigger', $renderInfo)->render();
+                $string     = view('rules.partials.trigger', $renderInfo)->render();
             } catch (Throwable $e) {
                 app('log')->debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
                 app('log')->debug($e->getTraceAsString());

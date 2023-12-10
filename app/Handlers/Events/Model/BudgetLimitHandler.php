@@ -93,7 +93,7 @@ class BudgetLimitHandler
             $viewRange = '1M';
         }
         // safety catch
-        if(null === $viewRange || is_array($viewRange)){
+        if (null === $viewRange || is_array($viewRange)) {
             $viewRange = '1M';
         }
         $viewRange = (string)$viewRange;
@@ -190,8 +190,8 @@ class BudgetLimitHandler
             );
             // overlap in days:
             $limitPeriod = Period::make(
-                $budgetLimit->start_date,
-                $budgetLimit->end_date,
+                            $budgetLimit->start_date,
+                            $budgetLimit->end_date,
                 precision : Precision::DAY(),
                 boundaries: Boundaries::EXCLUDE_NONE()
             );
@@ -236,8 +236,8 @@ class BudgetLimitHandler
             return '0';
         }
         $limitPeriod = Period::make(
-            $budgetLimit->start_date,
-            $budgetLimit->end_date,
+                        $budgetLimit->start_date,
+                        $budgetLimit->end_date,
             precision : Precision::DAY(),
             boundaries: Boundaries::EXCLUDE_NONE()
         );

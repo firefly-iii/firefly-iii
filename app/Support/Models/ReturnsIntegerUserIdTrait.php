@@ -26,14 +26,16 @@ namespace FireflyIII\Support\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
-* Trait ReturnsIntegerUserIdTrait
+ * Trait ReturnsIntegerUserIdTrait
  */
 trait ReturnsIntegerUserIdTrait
 {
     /**
+     * Get the user group ID
+     *
      * @return Attribute
      */
-    protected function userId(): Attribute
+    protected function userGroupId(): Attribute
     {
         return Attribute::make(
             get: static fn($value) => (int)$value,
@@ -41,11 +43,9 @@ trait ReturnsIntegerUserIdTrait
     }
 
     /**
-     * Get the user group ID
-     *
      * @return Attribute
      */
-    protected function userGroupId(): Attribute
+    protected function userId(): Attribute
     {
         return Attribute::make(
             get: static fn($value) => (int)$value,

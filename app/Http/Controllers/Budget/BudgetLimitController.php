@@ -135,8 +135,8 @@ class BudgetLimitController extends Controller
         if (null === $currency || null === $budget) {
             throw new FireflyException('No valid currency or budget.');
         }
-        $start  = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $end    = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+        $start = Carbon::createFromFormat('Y-m-d', $request->get('start'));
+        $end   = Carbon::createFromFormat('Y-m-d', $request->get('end'));
 
         if (false === $start || false === $end) {
             return response()->json([]);

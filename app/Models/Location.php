@@ -26,13 +26,14 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\Location
  *
@@ -40,7 +41,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null               $created_at
  * @property Carbon|null               $updated_at
  * @property Carbon|null               $deleted_at
- * @property int                $locatable_id
+ * @property int                       $locatable_id
  * @property string                    $locatable_type
  * @property float|null                $latitude
  * @property float|null                $longitude

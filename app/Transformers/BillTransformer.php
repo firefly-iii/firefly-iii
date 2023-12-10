@@ -37,8 +37,8 @@ use Illuminate\Support\Collection;
  */
 class BillTransformer extends AbstractTransformer
 {
-    private BillRepositoryInterface $repository;
     private BillDateCalculator      $calculator;
+    private BillRepositoryInterface $repository;
 
     /**
      * BillTransformer constructor.

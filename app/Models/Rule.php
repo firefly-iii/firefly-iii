@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -35,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\Rule
  *
@@ -43,11 +44,11 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null                  $created_at
  * @property Carbon|null                  $updated_at
  * @property Carbon|null                  $deleted_at
- * @property int                   $user_id
- * @property int                   $rule_group_id
+ * @property int                          $user_id
+ * @property int                          $rule_group_id
  * @property string                       $title
  * @property string|null                  $description
- * @property int                   $order
+ * @property int                          $order
  * @property bool                         $active
  * @property bool                         $stop_processing
  * @property bool                         $strict
@@ -76,7 +77,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserId($value)
  * @method static Builder|Rule withTrashed()
  * @method static Builder|Rule withoutTrashed()
- * @property int                     $user_group_id
+ * @property int                          $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserGroupId($value)
  * @property-read UserGroup|null          $userGroup
  * @mixin Eloquent
@@ -178,7 +179,7 @@ class Rule extends Model
     /**
      * @return Attribute
      */
-    protected function ruleGroupId(): Attribute
+    protected function order(): Attribute
     {
         return Attribute::make(
             get: static fn($value) => (int)$value,
@@ -188,7 +189,7 @@ class Rule extends Model
     /**
      * @return Attribute
      */
-    protected function order(): Attribute
+    protected function ruleGroupId(): Attribute
     {
         return Attribute::make(
             get: static fn($value) => (int)$value,

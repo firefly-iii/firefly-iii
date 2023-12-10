@@ -249,7 +249,7 @@ class IndexController extends Controller
              * @var array $entry
              */
             foreach ($array as $currencyId => $entry) {
-                $totals[$currencyId] ??= [
+                $totals[$currencyId]               ??= [
                     'currency_id'             => $currencyId,
                     'currency_code'           => $entry['currency_code'],
                     'currency_name'           => $entry['currency_name'],

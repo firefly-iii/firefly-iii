@@ -98,8 +98,8 @@ class PreferencesController extends Controller
         /** @var array<int, int> $accountIds */
         $accountIds            = $accounts->pluck('id')->toArray();
         $viewRange             = app('navigation')->getViewRange(false);
-        $frontPageAccountsPref     = app('preferences')->get('frontPageAccounts', $accountIds);
-        $frontPageAccounts = $frontPageAccountsPref->data;
+        $frontPageAccountsPref = app('preferences')->get('frontPageAccounts', $accountIds);
+        $frontPageAccounts     = $frontPageAccountsPref->data;
         if (!is_array($frontPageAccounts)) {
             $frontPageAccounts = $accountIds;
         }

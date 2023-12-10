@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -34,7 +35,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\TransactionGroup
  *
@@ -42,7 +43,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null                          $created_at
  * @property Carbon|null                          $updated_at
  * @property Carbon|null                          $deleted_at
- * @property int                           $user_id
+ * @property int                                  $user_id
  * @property string|null                          $title
  * @property-read Collection|TransactionJournal[] $transactionJournals
  * @property-read int|null                        $transaction_journals_count
@@ -59,7 +60,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereUserId($value)
  * @method static Builder|TransactionGroup withTrashed()
  * @method static Builder|TransactionGroup withoutTrashed()
- * @property int                             $user_group_id
+ * @property int                                  $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereUserGroupId($value)
  * @property-read UserGroup|null                  $userGroup
  * @mixin Eloquent

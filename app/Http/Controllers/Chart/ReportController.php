@@ -182,7 +182,7 @@ class ReportController extends Controller
         foreach ($journals as $journal) {
             $period                     = $journal['date']->format($format);
             $currencyId                 = (int)$journal['currency_id'];
-            $data[$currencyId] ??= [
+            $data[$currencyId]          ??= [
                 'currency_id'             => $currencyId,
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],

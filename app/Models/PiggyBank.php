@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -33,9 +35,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\PiggyBank
  *
@@ -43,12 +44,12 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null                           $created_at
  * @property Carbon|null                           $updated_at
  * @property Carbon|null                           $deleted_at
- * @property int                            $account_id
+ * @property int                                   $account_id
  * @property string                                $name
  * @property string                                $targetamount
  * @property Carbon|null                           $startdate
  * @property Carbon|null                           $targetdate
- * @property int                            $order
+ * @property int                                   $order
  * @property bool                                  $active
  * @property bool                                  $encrypted
  * @property-read Account                          $account
@@ -183,18 +184,6 @@ class PiggyBank extends Model
     }
 
     /**
-     * Get the max amount
-     *
-     * @return Attribute
-     */
-    protected function targetamount(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (string)$value,
-        );
-    }
-
-    /**
      * @return Attribute
      */
     protected function accountId(): Attribute
@@ -211,6 +200,18 @@ class PiggyBank extends Model
     {
         return Attribute::make(
             get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * Get the max amount
+     *
+     * @return Attribute
+     */
+    protected function targetamount(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (string)$value,
         );
     }
 

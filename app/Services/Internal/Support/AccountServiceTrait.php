@@ -693,11 +693,11 @@ trait AccountServiceTrait
     protected function createOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
         app('log')->debug('Now going to create an OB group.');
-        $language   = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
+        $language = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
         if (is_array($language)) {
             $language = 'en_US';
         }
-        $language= (string)$language;
+        $language   = (string)$language;
         $sourceId   = null;
         $sourceName = null;
         $destId     = null;

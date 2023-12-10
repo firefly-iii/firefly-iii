@@ -45,8 +45,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null         $created_at
  * @property Carbon|null         $updated_at
  * @property Carbon|null         $deleted_at
- * @property int          $user_id
- * @property int          $attachable_id
+ * @property int                 $user_id
+ * @property int                 $attachable_id
  * @property string              $attachable_type
  * @property bool                $file_exists
  * @property string              $md5
@@ -81,7 +81,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUserId($value)
  * @method static Builder|Attachment withTrashed()
  * @method static Builder|Attachment withoutTrashed()
- * @property int            $user_group_id
+ * @property int                 $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUserGroupId($value)
  * @mixin Eloquent
  */

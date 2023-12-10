@@ -94,7 +94,7 @@ class EditController extends Controller
         $hasLocation    = null !== $location;
         $locations      = [
             'location' => [
-                'latitude'     => null !== old('location_latitude') ? old('location_latitude'): $latitude,
+                'latitude'     => null !== old('location_latitude') ? old('location_latitude') : $latitude,
                 'longitude'    => null !== old('location_longitude') ? old('location_longitude') : $longitude,
                 'zoom_level'   => null !== old('location_zoom_level') ? old('location_zoom_level') : $zoomLevel,
                 'has_location' => $hasLocation || 'true' === old('location_has_location'),

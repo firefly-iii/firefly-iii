@@ -67,7 +67,7 @@ class RuleForm
      */
     public function ruleGroupListWithEmpty(string $name, $value = null, array $options = null): string
     {
-        $options ??= [];
+        $options          ??= [];
         $options['class'] = 'form-control';
         /** @var RuleGroupRepositoryInterface $groupRepos */
         $groupRepos = app(RuleGroupRepositoryInterface::class);

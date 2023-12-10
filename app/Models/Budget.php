@@ -46,11 +46,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                          $created_at
  * @property Carbon|null                          $updated_at
  * @property Carbon|null                          $deleted_at
- * @property int                           $user_id
+ * @property int                                  $user_id
  * @property string                               $name
  * @property bool                                 $active
  * @property bool                                 $encrypted
- * @property int                           $order
+ * @property int                                  $order
  * @property-read Collection|Attachment[]         $attachments
  * @property-read int|null                        $attachments_count
  * @property-read Collection|AutoBudget[]         $autoBudgets
@@ -78,7 +78,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Budget withTrashed()
  * @method static Builder|Budget withoutTrashed()
  * @property string                               $email
- * @property int                             $user_group_id
+ * @property int                                  $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereUserGroupId($value)
  * @property-read Collection|Note[]               $notes
  * @property-read int|null                        $notes_count
@@ -181,6 +181,7 @@ class Budget extends Model
     {
         return $this->belongsToMany(Transaction::class, 'budget_transaction', 'budget_id');
     }
+
     /**
      * @return Attribute
      */

@@ -76,14 +76,14 @@ class Preferences
     }
 
     /**
-     * @param User            $user
-     * @param string          $name
+     * @param User                       $user
+     * @param string                     $name
      * @param null|string|int|bool|array $default
      *
      * @return Preference|null
      * @throws FireflyException
      */
-    public function getForUser(User $user, string $name, string|int|bool|null|array $default = null): ?Preference
+    public function getForUser(User $user, string $name, string | int | bool | null | array $default = null): ?Preference
     {
         if ('currencyPreference' === $name) {
             throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
@@ -168,7 +168,7 @@ class Preferences
         }
         if (null === $pref) {
             $pref          = new Preference();
-            $pref->user_id = (int) $user->id;
+            $pref->user_id = (int)$user->id;
             $pref->name    = $name;
         }
         $pref->data = $value;
@@ -286,7 +286,7 @@ class Preferences
             $lastActivity = implode(',', $lastActivity);
         }
 
-        return hash('sha256', (string) $lastActivity);
+        return hash('sha256', (string)$lastActivity);
     }
 
     /**

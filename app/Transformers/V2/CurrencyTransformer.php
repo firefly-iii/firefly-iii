@@ -34,9 +34,7 @@ class CurrencyTransformer extends AbstractTransformer
     /**
      * @inheritDoc
      */
-    public function collectMetaData(Collection $objects): void
-    {
-    }
+    public function collectMetaData(Collection $objects): void {}
 
     /**
      * Transform the currency.

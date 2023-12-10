@@ -196,7 +196,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 }
                 $listedJournals[] = $journalId;
 
-                $array[$currencyId]['tags'][$tagId] ??= [
+                $array[$currencyId]['tags'][$tagId]                                     ??= [
                     'id'                   => $tagId,
                     'name'                 => $tagName,
                     'transaction_journals' => [],

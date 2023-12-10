@@ -77,7 +77,7 @@ class AccountSearch implements GenericSearchInterface
                 );
                 // meta data:
                 $searchQuery->orWhere(
-                    static function (Builder $q) use ($originalQuery) { /** @phpstan-ignore-line */
+                    static function (Builder $q) use ($originalQuery) { // @phpstan-ignore-line
                         $json = json_encode($originalQuery, JSON_THROW_ON_ERROR);
                         $q->where('account_meta.name', '=', 'account_number');
                         $q->where('account_meta.data', 'LIKE', $json);
@@ -96,7 +96,7 @@ class AccountSearch implements GenericSearchInterface
             case self::SEARCH_NUMBER:
                 // meta data:
                 $searchQuery->Where(
-                    static function (Builder $q) use ($originalQuery) { /** @phpstan-ignore-line */
+                    static function (Builder $q) use ($originalQuery) { // @phpstan-ignore-line
                         $json = json_encode($originalQuery, JSON_THROW_ON_ERROR);
                         $q->where('account_meta.name', 'account_number');
                         $q->where('account_meta.data', $json);

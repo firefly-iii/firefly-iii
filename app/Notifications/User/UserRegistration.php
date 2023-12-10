@@ -40,9 +40,7 @@ class UserRegistration extends Notification
      *
      * @return void
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Get the array representation of the notification.

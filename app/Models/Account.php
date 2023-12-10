@@ -49,13 +49,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                   $updated_at
  * @property Carbon|null                   $deleted_at
  * @property int                           $user_id
- * @property int                    $account_type_id
+ * @property int                           $account_type_id
  * @property string                        $name
  * @property string                        $virtual_balance
  * @property string|null                   $iban
  * @property bool                          $active
  * @property bool                          $encrypted
- * @property int                    $order
+ * @property int                           $order
  * @property-read Collection|AccountMeta[] $accountMeta
  * @property-read int|null                 $account_meta_count
  * @property AccountType                   $accountType
@@ -103,7 +103,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Location                      $location
  * @property string                        $liability_direction
  * @property string                        $current_debt
- * @property int                      $user_group_id
+ * @property int                           $user_group_id
  * @method static EloquentBuilder|Account whereUserGroupId($value)
  * @property-read UserGroup|null           $userGroup
  * @mixin Eloquent
@@ -127,7 +127,7 @@ class Account extends Model
 
     protected $fillable = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
 
-    protected $hidden             = ['encrypted'];
+    protected    $hidden             = ['encrypted'];
     private bool $joinedAccountTypes = false;
 
     /**
@@ -292,16 +292,15 @@ class Account extends Model
     }
 
     /**
-     * Get the virtual balance
-     *
      * @return Attribute
      */
-    protected function virtualBalance(): Attribute
+    protected function accountId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (string)$value,
+            get: static fn($value) => (int)$value,
         );
     }
+
     /**
      * Get the user ID
      *
@@ -317,7 +316,7 @@ class Account extends Model
     /**
      * @return Attribute
      */
-    protected function accountId(): Attribute
+    protected function order(): Attribute
     {
         return Attribute::make(
             get: static fn($value) => (int)$value,
@@ -325,12 +324,14 @@ class Account extends Model
     }
 
     /**
+     * Get the virtual balance
+     *
      * @return Attribute
      */
-    protected function order(): Attribute
+    protected function virtualBalance(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn($value) => (string)$value,
         );
     }
 

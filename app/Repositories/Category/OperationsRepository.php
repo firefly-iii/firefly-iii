@@ -371,7 +371,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId] ??= [
+            $array[$currencyId]        ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -414,7 +414,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId] ??= [
+            $array[$currencyId]        ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -457,7 +457,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId] ??= [
+            $array[$currencyId]        ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],

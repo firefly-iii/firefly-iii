@@ -57,6 +57,8 @@ use Gdbots\QueryParser\QueryParser;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use LogicException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use TypeError;
 
 /**
@@ -71,6 +73,8 @@ class OperatorQuerySearch implements SearchInterface
     private CategoryRepositoryInterface $categoryRepository;
     private GroupCollectorInterface     $collector;
     private CurrencyRepositoryInterface $currencyRepository;
+    private array $excludeTags;
+    private array $includeTags;
     private array                       $invalidOperators;
     private int                         $limit;
     private Collection                  $operators;
@@ -80,9 +84,6 @@ class OperatorQuerySearch implements SearchInterface
     private TagRepositoryInterface      $tagRepository;
     private array                       $validOperators;
     private array                       $words;
-
-    private array $excludeTags;
-    private array $includeTags;
 
     /**
      * OperatorQuerySearch constructor.
@@ -2166,6 +2167,44 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function parseTagInstructions(): void
+    {
+        app('log')->debug('Now in parseTagInstructions()');
+        // if exclude tags, remove excluded tags.
+        if (count($this->excludeTags) > 0) {
+            app('log')->debug(sprintf('%d exclude tag(s)', count($this->excludeTags)));
+            $collection = new Collection;
+            foreach ($this->excludeTags as $tagId) {
+                $tag = $this->tagRepository->find($tagId);
+                if (null !== $tag) {
+                    app('log')->debug(sprintf('Exclude tag "%s"', $tag->tag));
+                    $collection->push($tag);
+                }
+            }
+            app('log')->debug(sprintf('Selecting all tags except %d excluded tag(s).', $collection->count()));
+            $this->collector->setWithoutSpecificTags($collection);
+        }
+        // if include tags, include them:
+        if (count($this->includeTags) > 0) {
+            app('log')->debug(sprintf('%d include tag(s)', count($this->includeTags)));
+            $collection = new Collection;
+            foreach ($this->includeTags as $tagId) {
+                $tag = $this->tagRepository->find($tagId);
+                if (null !== $tag) {
+                    app('log')->debug(sprintf('Include tag "%s"', $tag->tag));
+                    $collection->push($tag);
+                }
+            }
+            $this->collector->setTags($collection);
+        }
+
+    }
+
+    /**
      * @inheritDoc
      */
     public function searchTime(): float
@@ -2234,43 +2273,5 @@ class OperatorQuerySearch implements SearchInterface
     {
         $this->limit = $limit;
         $this->collector->setLimit($this->limit);
-    }
-
-    /**
-     * @return void
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     */
-    private function parseTagInstructions(): void
-    {
-        app('log')->debug('Now in parseTagInstructions()');
-        // if exclude tags, remove excluded tags.
-        if (count($this->excludeTags) > 0) {
-            app('log')->debug(sprintf('%d exclude tag(s)', count($this->excludeTags)));
-            $collection = new Collection;
-            foreach ($this->excludeTags as $tagId) {
-                $tag = $this->tagRepository->find($tagId);
-                if (null !== $tag) {
-                    app('log')->debug(sprintf('Exclude tag "%s"', $tag->tag));
-                    $collection->push($tag);
-                }
-            }
-            app('log')->debug(sprintf('Selecting all tags except %d excluded tag(s).', $collection->count()));
-            $this->collector->setWithoutSpecificTags($collection);
-        }
-        // if include tags, include them:
-        if (count($this->includeTags) > 0) {
-            app('log')->debug(sprintf('%d include tag(s)', count($this->includeTags)));
-            $collection = new Collection;
-            foreach ($this->includeTags as $tagId) {
-                $tag = $this->tagRepository->find($tagId);
-                if (null !== $tag) {
-                    app('log')->debug(sprintf('Include tag "%s"', $tag->tag));
-                    $collection->push($tag);
-                }
-            }
-            $this->collector->setTags($collection);
-        }
-
     }
 }

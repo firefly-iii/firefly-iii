@@ -102,8 +102,8 @@ class NetWorth implements NetWorthInterface
         /** @var Account $account */
         foreach ($accounts as $account) {
             app('log')->debug(sprintf('Now at account #%d ("%s")', $account->id, $account->name));
-            $currency      = $this->getRepository()->getAccountCurrency($account);
-            if(null === $currency) {
+            $currency = $this->getRepository()->getAccountCurrency($account);
+            if (null === $currency) {
                 $currency = app('amount')->getDefaultCurrency();
             }
             $currencyId    = $currency->id;
@@ -208,7 +208,7 @@ class NetWorth implements NetWorthInterface
                 $balance = bcsub($balance, $virtualBalance);
             }
 
-            $return[$currency->id] ??= [
+            $return[$currency->id]        ??= [
                 'id'             => (string)$currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,

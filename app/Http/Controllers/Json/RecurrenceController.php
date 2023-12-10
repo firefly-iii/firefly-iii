@@ -80,7 +80,7 @@ class RecurrenceController extends Controller
         $repetitions      = (int)$request->get('reps');
         $repetitionMoment = '';
 
-        if(false === $start || false === $end || false === $firstDate || false === $endDate) {
+        if (false === $start || false === $end || false === $firstDate || false === $endDate) {
             return response()->json();
         }
 
@@ -157,7 +157,7 @@ class RecurrenceController extends Controller
         } catch (InvalidFormatException $e) {
             $date = Carbon::today(config('app.timezone'));
         }
-        if(false === $date) {
+        if (false === $date) {
             return response()->json();
         }
         $date->startOfDay();

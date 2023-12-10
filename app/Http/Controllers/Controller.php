@@ -57,7 +57,7 @@ abstract class Controller extends BaseController
     {
         // is site a demo site?
         $isDemoSiteConfig = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site', false));
-        $isDemoSite       = (bool) $isDemoSiteConfig->data;
+        $isDemoSite       = (bool)$isDemoSiteConfig->data;
         app('view')->share('IS_DEMO_SITE', $isDemoSite);
         app('view')->share('DEMO_USERNAME', config('firefly.demo_username'));
         app('view')->share('DEMO_PASSWORD', config('firefly.demo_password'));

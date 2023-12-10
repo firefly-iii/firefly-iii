@@ -47,7 +47,7 @@ class JavascriptController extends Controller
     /**
      * Show info about accounts.
      *
-     * @param AccountRepositoryInterface  $repository
+     * @param AccountRepositoryInterface $repository
      *
      * @return Response
      * @throws ContainerExceptionInterface
@@ -101,8 +101,8 @@ class JavascriptController extends Controller
     /**
      * Show some common variables to be used in scripts.
      *
-     * @param Request                     $request
-     * @param AccountRepositoryInterface  $repository
+     * @param Request                    $request
+     * @param AccountRepositoryInterface $repository
      *
      * @return Response
      * @throws FireflyException

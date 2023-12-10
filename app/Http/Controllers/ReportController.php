@@ -49,7 +49,8 @@ use Psr\Container\NotFoundExceptionInterface;
 class ReportController extends Controller
 {
     use RenderPartialViews;
-    protected ReportHelperInterface $helper;
+
+    protected ReportHelperInterface   $helper;
     private BudgetRepositoryInterface $repository;
 
     /**
@@ -328,7 +329,7 @@ class ReportController extends Controller
      * @throws FireflyException
      *
      */
-    public function postIndex(ReportFormRequest $request): RedirectResponse|Redirector|View
+    public function postIndex(ReportFormRequest $request): RedirectResponse | Redirector | View
     {
         // report type:
         $reportType = $request->get('report_type');

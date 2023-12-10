@@ -37,9 +37,7 @@ class WebhookTransformer extends AbstractTransformer
     /**
      * WebhookTransformer constructor.
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Transform webhook.

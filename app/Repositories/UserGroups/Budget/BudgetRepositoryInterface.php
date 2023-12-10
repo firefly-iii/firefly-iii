@@ -35,6 +35,11 @@ use Illuminate\Support\Collection;
 interface BudgetRepositoryInterface
 {
     /**
+     * @return Collection
+     */
+    public function getActiveBudgets(): Collection;
+
+    /**
      * @param User $user
      *
      * @return void
@@ -47,8 +52,4 @@ interface BudgetRepositoryInterface
      * @return void
      */
     public function setUserGroup(UserGroup $userGroup): void;
-    /**
-     * @return Collection
-     */
-    public function getActiveBudgets(): Collection;
 }

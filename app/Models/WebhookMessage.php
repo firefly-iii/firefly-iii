@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -31,9 +33,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\WebhookMessage
  *
@@ -41,7 +42,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null                      $created_at
  * @property Carbon|null                      $updated_at
  * @property string|null                      $deleted_at
- * @property int                       $webhook_id
+ * @property int                              $webhook_id
  * @property bool                             $sent
  * @property bool                             $errored
  * @property int                              $attempts
@@ -127,7 +128,7 @@ class WebhookMessage extends Model
     protected function sent(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (bool)$value,
+            get: static fn($value) => (bool)$value,
         );
     }
 

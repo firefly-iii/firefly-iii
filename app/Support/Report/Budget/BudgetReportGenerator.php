@@ -285,8 +285,8 @@ class BudgetReportGenerator
 
             // append other sums because they might be missing:
             $this->report['sums'][$nbCurrencyId]['overspent'] ??= '0';
-            $this->report['sums'][$nbCurrencyId]['left'] ??= '0';
-            $this->report['sums'][$nbCurrencyId]['budgeted'] ??= '0';
+            $this->report['sums'][$nbCurrencyId]['left']      ??= '0';
+            $this->report['sums'][$nbCurrencyId]['budgeted']  ??= '0';
         }
     }
 
@@ -314,7 +314,7 @@ class BudgetReportGenerator
                 if (0 !== bccomp($budgeted, '0') && 0 !== bccomp($totalBudgeted, '0')) {
                     $budgetedPct = round((float)bcmul(bcdiv($budgeted, $totalBudgeted), '100'));
                 }
-                $this->report['sums'][$currencyId]['budgeted'] ??= '0';
+                $this->report['sums'][$currencyId]['budgeted']                                 ??= '0';
                 $this->report['budgets'][$budgetId]['budget_limits'][$limitId]['spent_pct']    = $spentPct;
                 $this->report['budgets'][$budgetId]['budget_limits'][$limitId]['budgeted_pct'] = $budgetedPct;
             }

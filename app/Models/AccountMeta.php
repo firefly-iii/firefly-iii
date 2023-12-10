@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int          $id
  * @property Carbon|null  $created_at
  * @property Carbon|null  $updated_at
- * @property int   $account_id
+ * @property int          $account_id
  * @property string       $name
  * @property mixed        $data
  * @property-read Account $account

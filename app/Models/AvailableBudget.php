@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
@@ -32,7 +33,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -42,8 +42,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null              $created_at
  * @property Carbon|null              $updated_at
  * @property Carbon|null              $deleted_at
- * @property int               $user_id
- * @property int               $transaction_currency_id
+ * @property int                      $user_id
+ * @property int                      $transaction_currency_id
  * @property string                   $amount
  * @property Carbon                   $start_date
  * @property Carbon                   $end_date
@@ -64,7 +64,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUserId($value)
  * @method static Builder|AvailableBudget withTrashed()
  * @method static Builder|AvailableBudget withoutTrashed()
- * @property int                 $user_group_id
+ * @property int                      $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUserGroupId($value)
  * @mixin Eloquent
  */
@@ -131,9 +131,10 @@ class AvailableBudget extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
+
     /**
      * @return Attribute
      */

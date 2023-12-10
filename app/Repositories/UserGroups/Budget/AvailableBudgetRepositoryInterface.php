@@ -34,17 +34,18 @@ use FireflyIII\User;
 interface AvailableBudgetRepositoryInterface
 {
     /**
-     * @param User $user
-     *
-     * @return void
-     */
-    public function setUser(User $user): void;
-    /**
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return array
      */
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
+
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
+    public function setUser(User $user): void;
 
 }

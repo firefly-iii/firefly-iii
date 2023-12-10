@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -32,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * Class WebhookAttempt
  *
@@ -40,7 +41,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null         $created_at
  * @property Carbon|null         $updated_at
  * @property string|null         $deleted_at
- * @property int          $webhook_message_id
+ * @property int                 $webhook_message_id
  * @property int|string          $status_code
  * @property string|null         $logs
  * @property string|null         $response

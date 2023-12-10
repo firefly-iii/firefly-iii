@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -31,8 +33,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Carbon\Carbon;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\RecurrenceTransaction
  *
@@ -40,11 +41,11 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null                                 $created_at
  * @property Carbon|null                                 $updated_at
  * @property Carbon|null                                 $deleted_at
- * @property int                                  $recurrence_id
- * @property int                                  $transaction_currency_id
+ * @property int                                         $recurrence_id
+ * @property int                                         $transaction_currency_id
  * @property int|string|null                             $foreign_currency_id
- * @property int                                  $source_id
- * @property int                                  $destination_id
+ * @property int                                         $source_id
+ * @property int                                         $destination_id
  * @property string                                      $amount
  * @property string                                      $foreign_amount
  * @property string                                      $description
@@ -170,25 +171,14 @@ class RecurrenceTransaction extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
 
     /**
      * @return Attribute
      */
-    protected function foreignAmount(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (string)$value,
-        );
-
-    }
-
-    /**
-     * @return Attribute
-     */
-    protected function recurrenceId(): Attribute
+    protected function destinationId(): Attribute
     {
         return Attribute::make(
             get: static fn($value) => (int)$value,
@@ -198,7 +188,18 @@ class RecurrenceTransaction extends Model
     /**
      * @return Attribute
      */
-    protected function transactionCurrencyId(): Attribute
+    protected function foreignAmount(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (string)$value,
+        );
+
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function recurrenceId(): Attribute
     {
         return Attribute::make(
             get: static fn($value) => (int)$value,
@@ -218,7 +219,7 @@ class RecurrenceTransaction extends Model
     /**
      * @return Attribute
      */
-    protected function destinationId(): Attribute
+    protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
             get: static fn($value) => (int)$value,

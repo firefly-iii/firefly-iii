@@ -361,19 +361,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Does the user have role X in group Y?
-     *
-     * @param UserGroup    $userGroup
-     * @param UserRoleEnum $role
-     *
-     * @return bool
-     */
-    public function hasSpecificRoleInGroup(UserGroup $userGroup, UserRoleEnum $role): bool
-    {
-        return $this->hasAnyRoleInGroup($userGroup, [$role]);
-    }
-
-    /**
      * Does the user have role X in group Y, or is the user the group owner of has full rights to the group?
      *
      * If $allowOverride is set to true, then the roles FULL or OWNER will also be checked,
@@ -388,6 +375,19 @@ class User extends Authenticatable
     {
         $roles = [$role->value, UserRoleEnum::OWNER->value, UserRoleEnum::FULL->value];
         return $this->hasAnyRoleInGroup($userGroup, $roles);
+    }
+
+    /**
+     * Does the user have role X in group Y?
+     *
+     * @param UserGroup    $userGroup
+     * @param UserRoleEnum $role
+     *
+     * @return bool
+     */
+    public function hasSpecificRoleInGroup(UserGroup $userGroup, UserRoleEnum $role): bool
+    {
+        return $this->hasAnyRoleInGroup($userGroup, [$role]);
     }
 
     /**
@@ -416,61 +416,39 @@ class User extends Authenticatable
                                  ->where('user_group_id', $userGroup->id)->get();
         if (0 === $groupMemberships->count()) {
             app('log')->error(sprintf(
-                'User #%d "%s" does not have roles %s in user group #%d "%s"',
-                $this->id,
-                $this->email,
-                implode(', ', $roles),
-                $userGroup->id,
-                $userGroup->title
-            ));
+                                  'User #%d "%s" does not have roles %s in user group #%d "%s"',
+                                  $this->id,
+                                  $this->email,
+                                  implode(', ', $roles),
+                                  $userGroup->id,
+                                  $userGroup->title
+                              ));
             return false;
         }
         foreach ($groupMemberships as $membership) {
             app('log')->debug(sprintf(
-                'User #%d "%s" has role "%s" in user group #%d "%s"',
-                $this->id,
-                $this->email,
-                $membership->userRole->title,
-                $userGroup->id,
-                $userGroup->title
-            ));
+                                  'User #%d "%s" has role "%s" in user group #%d "%s"',
+                                  $this->id,
+                                  $this->email,
+                                  $membership->userRole->title,
+                                  $userGroup->id,
+                                  $userGroup->title
+                              ));
             if (in_array($membership->userRole->title, $dbRolesTitles, true)) {
                 app('log')->debug(sprintf('Return true, found role "%s"', $membership->userRole->title));
                 return true;
             }
         }
         app('log')->error(sprintf(
-            'User #%d "%s" does not have roles %s in user group #%d "%s"',
-            $this->id,
-            $this->email,
-            implode(', ', $roles),
-            $userGroup->id,
-            $userGroup->title
-        ));
+                              'User #%d "%s" does not have roles %s in user group #%d "%s"',
+                              $this->id,
+                              $this->email,
+                              implode(', ', $roles),
+                              $userGroup->id,
+                              $userGroup->title
+                          ));
         return false;
 
-    }
-
-    /**
-     * This method refers to the "global" role a user can have, outside of any group they may be part of.
-     *
-     * @param string $role
-     *
-     * @return bool
-     */
-    public function hasRole(string $role): bool
-    {
-        return $this->roles()->where('name', $role)->count() === 1;
-    }
-
-    /**
-     * Link to roles.
-     *
-     * @return BelongsToMany
-     */
-    public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class);
     }
 
     /**
@@ -552,6 +530,28 @@ class User extends Authenticatable
             'mail'     => $email,
             default    => null,
         };
+    }
+
+    /**
+     * This method refers to the "global" role a user can have, outside of any group they may be part of.
+     *
+     * @param string $role
+     *
+     * @return bool
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->roles()->where('name', $role)->count() === 1;
+    }
+
+    /**
+     * Link to roles.
+     *
+     * @return BelongsToMany
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
     }
 
     /**
@@ -696,7 +696,7 @@ class User extends Authenticatable
      */
     public function userGroup(): BelongsTo
     {
-        return $this->belongsTo(UserGroup::class, );
+        return $this->belongsTo(UserGroup::class,);
     }
 
     /**

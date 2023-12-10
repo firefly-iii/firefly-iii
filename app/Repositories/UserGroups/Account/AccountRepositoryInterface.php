@@ -37,19 +37,11 @@ use Illuminate\Support\Collection;
 interface AccountRepositoryInterface
 {
     /**
-     * @param UserGroup $userGroup
-     *
-     * @return void
-     */
-    public function setUserGroup(UserGroup $userGroup): void;
-
-    /**
-     * @param string $iban
-     * @param array  $types
+     * @param int $accountId
      *
      * @return Account|null
      */
-    public function findByIbanNull(string $iban, array $types): ?Account;
+    public function find(int $accountId): ?Account;
 
     /**
      * @param string $number
@@ -60,18 +52,12 @@ interface AccountRepositoryInterface
     public function findByAccountNumber(string $number, array $types): ?Account;
 
     /**
-     * @param User $user
-     *
-     * @return void
-     */
-    public function setUser(User $user): void;
-
-    /**
-     * @param int $accountId
+     * @param string $iban
+     * @param array  $types
      *
      * @return Account|null
      */
-    public function find(int $accountId): ?Account;
+    public function findByIbanNull(string $iban, array $types): ?Account;
 
     /**
      * @param string $name
@@ -128,6 +114,20 @@ interface AccountRepositoryInterface
      * @return Collection
      */
     public function searchAccount(string $query, array $types, int $limit): Collection;
+
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
+    public function setUser(User $user): void;
+
+    /**
+     * @param UserGroup $userGroup
+     *
+     * @return void
+     */
+    public function setUserGroup(UserGroup $userGroup): void;
 
 
 }

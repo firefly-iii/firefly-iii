@@ -153,11 +153,11 @@ class Steam
                        ->whereNull('transaction_journals.deleted_at')
                        ->get(
                            [ // @phpstan-ignore-line
-                               'transaction_journals.date',
-                               'transactions.transaction_currency_id',
-                               DB::raw('SUM(transactions.amount) AS modified'),
-                               'transactions.foreign_currency_id',
-                               DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
+                             'transaction_journals.date',
+                             'transactions.transaction_currency_id',
+                             DB::raw('SUM(transactions.amount) AS modified'),
+                             'transactions.foreign_currency_id',
+                             DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
                            ]
                        );
 
@@ -326,15 +326,15 @@ class Steam
             $balances[$format] = $currentBalance;
 
             app('log')->debug(sprintf(
-                '%s: transaction in %s(!). Conversion rate is %s. %s %s = %s %s',
-                $format,
-                $currency->code,
-                $rate,
-                $currency->code,
-                $transaction['amount'],
-                $native->code,
-                $convertedAmount
-            ));
+                                  '%s: transaction in %s(!). Conversion rate is %s. %s %s = %s %s',
+                                  $format,
+                                  $currency->code,
+                                  $rate,
+                                  $currency->code,
+                                  $transaction['amount'],
+                                  $native->code,
+                                  $convertedAmount
+                              ));
 
 
         }
@@ -451,8 +451,8 @@ class Steam
         $converter = new ExchangeRateConverter();
         foreach ($new as $set) {
             foreach ($set as $transaction) {
-                $date            = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date']);
-                if(false === $date) {
+                $date = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date']);
+                if (false === $date) {
                     $date = today(config('app.timezone'));
                 }
                 $rate            = $converter->getCurrencyRate($currency, $native, $date);
@@ -604,8 +604,8 @@ class Steam
                             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                             ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
                             ->groupBy('transactions.transaction_currency_id');
-        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]); /** @phpstan-ignore-line */
-        $return   = [];
+        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]); // @phpstan-ignore-line
+        $return = [];
         /** @var stdClass $entry */
         foreach ($balances as $entry) {
             $return[(int)$entry->transaction_currency_id] = (string)$entry->sum_for_currency;
@@ -890,10 +890,10 @@ class Steam
             return $value;
         }
 
-        $number = substr($value, 0, (int) strpos($value, 'E'));
+        $number = substr($value, 0, (int)strpos($value, 'E'));
         if (str_contains($number, '.')) {
-            $post   = strlen(substr($number, (int) strpos($number, '.') + 1));
-            $mantis = substr($value, (int) strpos($value, 'E') + 1);
+            $post   = strlen(substr($number, (int)strpos($number, '.') + 1));
+            $mantis = substr($value, (int)strpos($value, 'E') + 1);
             if ($mantis < 0) {
                 $post += abs((int)$mantis);
             }

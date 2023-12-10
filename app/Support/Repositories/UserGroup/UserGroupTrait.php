@@ -68,8 +68,8 @@ trait UserGroupTrait
     public function setUser(Authenticatable | User | null $user): void
     {
         if ($user instanceof User) {
-            $this->user      = $user;
-            if(null === $user->userGroup) {
+            $this->user = $user;
+            if (null === $user->userGroup) {
                 throw new FireflyException(sprintf('User #%d has no user group.', $user->id));
             }
             $this->userGroup = $user->userGroup;

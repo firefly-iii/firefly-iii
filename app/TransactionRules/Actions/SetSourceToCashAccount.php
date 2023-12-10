@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use DB;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
@@ -31,14 +32,13 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
-use DB;
 
 /**
-* Class SetSourceToCashAccount
+ * Class SetSourceToCashAccount
  */
 class SetSourceToCashAccount implements ActionInterface
 {
-    private RuleAction                 $action;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.
@@ -49,6 +49,7 @@ class SetSourceToCashAccount implements ActionInterface
     {
         $this->action = $action;
     }
+
     /**
      * @inheritDoc
      */
@@ -66,7 +67,7 @@ class SetSourceToCashAccount implements ActionInterface
             return false;
         }
         $type = $object->transactionType->type;
-        if(TransactionType::DEPOSIT !== $type) {
+        if (TransactionType::DEPOSIT !== $type) {
             app('log')->error('Transaction must be deposit.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.not_deposit')));
             return false;

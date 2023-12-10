@@ -154,24 +154,6 @@ interface TagRepositoryInterface
     public function searchTag(string $query): Collection;
 
     /**
-     * Find one or more tags that start with the string in the query
-     *
-     * @param string $query
-     *
-     * @return Collection
-     */
-    public function tagStartsWith(string $query): Collection;
-
-    /**
-     * Find one or more tags that start with the string in the query
-     *
-     * @param string $query
-     *
-     * @return Collection
-     */
-    public function tagEndsWith(string $query): Collection;
-
-    /**
      * Search the users tags.
      *
      * @param string $query
@@ -205,6 +187,24 @@ interface TagRepositoryInterface
      * @return array
      */
     public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array;
+
+    /**
+     * Find one or more tags that start with the string in the query
+     *
+     * @param string $query
+     *
+     * @return Collection
+     */
+    public function tagEndsWith(string $query): Collection;
+
+    /**
+     * Find one or more tags that start with the string in the query
+     *
+     * @param string $query
+     *
+     * @return Collection
+     */
+    public function tagStartsWith(string $query): Collection;
 
     /**
      * @param Tag    $tag

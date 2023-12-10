@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -39,7 +40,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\TransactionJournal
  *
@@ -47,8 +48,8 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null                              $created_at
  * @property Carbon|null                              $updated_at
  * @property Carbon|null                              $deleted_at
- * @property int                               $user_id
- * @property int                              $transaction_type_id
+ * @property int                                      $user_id
+ * @property int                                      $transaction_type_id
  * @property int|string|null                          $transaction_group_id
  * @property int|string|null                          $bill_id
  * @property int|string|null                          $transaction_currency_id
@@ -117,7 +118,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property-read Collection|Location[]               $locations
  * @property-read int|null                            $locations_count
  * @property int|string                               $the_count
- * @property int                                 $user_group_id
+ * @property int                                      $user_group_id
  * @method static EloquentBuilder|TransactionJournal whereUserGroupId($value)
  * @property-read Collection<int, AuditLogEntry>      $auditLogEntries
  * @property-read int|null                            $audit_log_entries_count
@@ -398,16 +399,17 @@ class TransactionJournal extends Model
     /**
      * @return Attribute
      */
-    protected function transactionTypeId(): Attribute
+    protected function order(): Attribute
     {
         return Attribute::make(
             get: static fn($value) => (int)$value,
         );
     }
+
     /**
      * @return Attribute
      */
-    protected function order(): Attribute
+    protected function transactionTypeId(): Attribute
     {
         return Attribute::make(
             get: static fn($value) => (int)$value,

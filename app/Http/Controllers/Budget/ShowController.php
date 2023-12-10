@@ -90,7 +90,7 @@ class ShowController extends Controller
         /** @var Carbon $start */
         $start ??= session('start');
         /** @var Carbon $end */
-        $end ??= session('end');
+        $end      ??= session('end');
         $subTitle = trans(
             'firefly.without_budget_between',
             ['start' => $start->isoFormat($this->monthAndDayFormat), 'end' => $end->isoFormat($this->monthAndDayFormat)]

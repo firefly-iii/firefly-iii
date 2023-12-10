@@ -135,7 +135,8 @@ class GroupUpdateService
         TransactionGroup   $transactionGroup,
         TransactionJournal $journal,
         array              $data
-    ): void {
+    ): void
+    {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
         if (0 === count($data)) {
             return;

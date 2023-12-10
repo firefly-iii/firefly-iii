@@ -86,6 +86,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return bool
      */
     public function validateBelongsToUser($attribute, $value, $parameters): bool
@@ -104,6 +105,7 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return bool
      */
     public function validateBic($attribute, $value): bool
@@ -124,6 +126,7 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return bool
      */
     public function validateIban(mixed $attribute, mixed $value): bool
@@ -229,7 +232,7 @@ class FireflyValidator extends Validator
         }
         try {
             $checksum = bcmod($iban, '97');
-        } catch (ValueError $e) { /** @phpstan-ignore-line */
+        } catch (ValueError $e) { // @phpstan-ignore-line
             $message = sprintf('Could not validate IBAN check value "%s" (IBAN "%s")', $iban, $value);
             app('log')->error($message);
             app('log')->error($e->getTraceAsString());
@@ -245,6 +248,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return bool
      */
     public function validateLess($attribute, $value, $parameters): bool
@@ -260,6 +264,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return bool
      */
     public function validateMore($attribute, $value, $parameters): bool
@@ -275,6 +280,7 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return bool
      */
     public function validateMustExist($attribute, $value, $parameters): bool
@@ -446,6 +452,7 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return bool
      */
     public function validateSecurePassword($attribute, $value): bool

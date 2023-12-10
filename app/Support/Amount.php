@@ -77,7 +77,7 @@ class Amount
         $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result = (string) $fmt->format((float)$rounded); // intentional float
+        $result = (string)$fmt->format((float)$rounded); // intentional float
 
         if (true === $coloured) {
             if (1 === bccomp($rounded, '0')) {
@@ -124,17 +124,6 @@ class Amount
     }
 
     /**
-     * @param User $user
-     *
-     * @return TransactionCurrency
-     * @deprecated use getDefaultCurrencyByUserGroup instead.
-     */
-    public function getDefaultCurrencyByUser(User $user): TransactionCurrency
-    {
-        return $this->getDefaultCurrencyByUserGroup($user->userGroup);
-    }
-
-    /**
      * @param UserGroup $userGroup
      *
      * @return TransactionCurrency
@@ -164,6 +153,17 @@ class Amount
     public function getSystemCurrency(): TransactionCurrency
     {
         return TransactionCurrency::where('code', 'EUR')->first();
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return TransactionCurrency
+     * @deprecated use getDefaultCurrencyByUserGroup instead.
+     */
+    public function getDefaultCurrencyByUser(User $user): TransactionCurrency
+    {
+        return $this->getDefaultCurrencyByUserGroup($user->userGroup);
     }
 
     /**

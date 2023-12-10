@@ -26,6 +26,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -35,17 +36,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\ObjectGroup
  *
  * @property int                         $id
- * @property int                  $user_id
+ * @property int                         $user_id
  * @property Carbon|null                 $created_at
  * @property Carbon|null                 $updated_at
  * @property Carbon|null                 $deleted_at
  * @property string                      $title
- * @property int                  $order
+ * @property int                         $order
  * @property-read Collection|Account[]   $accounts
  * @property-read int|null               $accounts_count
  * @property-read Collection|Bill[]      $bills
@@ -63,7 +64,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @method static Builder|ObjectGroup whereTitle($value)
  * @method static Builder|ObjectGroup whereUpdatedAt($value)
  * @method static Builder|ObjectGroup whereUserId($value)
- * @property int                    $user_group_id
+ * @property int                         $user_group_id
  * @method static Builder|ObjectGroup whereUserGroupId($value)
  * @mixin Eloquent
  */

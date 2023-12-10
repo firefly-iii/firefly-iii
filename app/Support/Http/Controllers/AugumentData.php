@@ -36,7 +36,6 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use FireflyIII\Support\Facades\Amount;
 use Illuminate\Support\Collection;
 
 /**
@@ -218,7 +217,7 @@ trait AugumentData
         foreach ($set as $entry) {
             $currency = $entry->transactionCurrency;
 
-            if(null === $currency) {
+            if (null === $currency) {
                 $currency = app('amount')->getDefaultCurrency();
             }
 
@@ -226,7 +225,7 @@ trait AugumentData
             $currentStart = clone $entry->start_date;
             $currentEnd   = null === $entry->end_date ? null : clone $entry->end_date;
 
-            if(null === $currentEnd) {
+            if (null === $currentEnd) {
                 $currentEnd = clone $currentStart;
                 $currentEnd->addMonth();
             }

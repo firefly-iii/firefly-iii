@@ -26,7 +26,6 @@ namespace FireflyIII\Http\Controllers\Admin;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
-use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Notifications\UrlValidator;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;

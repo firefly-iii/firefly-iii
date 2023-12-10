@@ -237,7 +237,7 @@ class BudgetController extends Controller
         // group by asset account ID:
         foreach ($journals as $journal) {
             $key                    = sprintf('%d-%d', (int)$journal['source_account_id'], $journal['currency_id']);
-            $result[$key] ??= [
+            $result[$key]           ??= [
                 'amount'          => '0',
                 'currency_symbol' => $journal['currency_symbol'],
                 'currency_code'   => $journal['currency_code'],
@@ -302,7 +302,7 @@ class BudgetController extends Controller
         $chartData = [];
         foreach ($journals as $journal) {
             $key                    = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
-            $result[$key] ??= [
+            $result[$key]           ??= [
                 'amount'          => '0',
                 'currency_symbol' => $journal['currency_symbol'],
                 'currency_code'   => $journal['currency_code'],
@@ -367,7 +367,7 @@ class BudgetController extends Controller
         /** @var array $journal */
         foreach ($journals as $journal) {
             $key                    = sprintf('%d-%d', $journal['destination_account_id'], $journal['currency_id']);
-            $result[$key] ??= [
+            $result[$key]           ??= [
                 'amount'          => '0',
                 'currency_symbol' => $journal['currency_symbol'],
                 'currency_code'   => $journal['currency_code'],

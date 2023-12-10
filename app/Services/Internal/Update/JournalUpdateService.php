@@ -497,9 +497,9 @@ class JournalUpdateService
     {
         $type = $this->transactionJournal->transactionType->type;
         if ((
-            array_key_exists('bill_id', $this->data)
+                array_key_exists('bill_id', $this->data)
                 || array_key_exists('bill_name', $this->data)
-        )
+            )
             && TransactionType::WITHDRAWAL === $type
         ) {
             $billId                            = (int)($this->data['bill_id'] ?? 0);

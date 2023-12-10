@@ -176,7 +176,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         /** @var Attachment $attachment */
         foreach ($set as $attachment) {
             $journalId              = $attachment->attachable_id;
-            $result[$journalId] ??= [];
+            $result[$journalId]     ??= [];
             $current                = $attachment->toArray();
             $current['file_exists'] = true;
             $current['notes']       = $repository->getNoteText($attachment);

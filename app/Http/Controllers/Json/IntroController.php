@@ -46,7 +46,7 @@ class IntroController extends Controller
     public function getIntroSteps(string $route, string $specificPage = null): JsonResponse
     {
         app('log')->debug(sprintf('getIntroSteps for route "%s" and page "%s"', $route, $specificPage));
-        $specificPage ??= '';
+        $specificPage  ??= '';
         $steps         = $this->getBasicSteps($route);
         $specificSteps = $this->getSpecificSteps($route, $specificPage);
         if (0 === count($specificSteps)) {

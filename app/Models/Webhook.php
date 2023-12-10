@@ -28,6 +28,7 @@ use Eloquent;
 use FireflyIII\Enums\WebhookDelivery;
 use FireflyIII\Enums\WebhookResponse;
 use FireflyIII\Enums\WebhookTrigger;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -37,7 +38,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\Webhook
  *
@@ -45,7 +46,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null                      $created_at
  * @property Carbon|null                      $updated_at
  * @property Carbon|null                      $deleted_at
- * @property int                       $user_id
+ * @property int                              $user_id
  * @property bool                             $active
  * @property int                              $trigger
  * @property int                              $response
@@ -74,7 +75,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property string                           $secret
  * @method static Builder|Webhook whereSecret($value)
  * @method static Builder|Webhook whereTitle($value)
- * @property int                         $user_group_id
+ * @property int                              $user_group_id
  * @method static Builder|Webhook whereUserGroupId($value)
  * @mixin Eloquent
  */

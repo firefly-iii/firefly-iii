@@ -130,7 +130,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         while ($exists && $loop < 10) {
             $existingGroup = $this->findByName($groupName);
             if (null === $existingGroup) {
-                $exists        = false;
+                $exists = false;
                 /** @var UserGroup|null $existingGroup */
                 $existingGroup = $this->store(['user' => $user, 'title' => $groupName]);
             }

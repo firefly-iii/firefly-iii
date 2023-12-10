@@ -26,13 +26,14 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * Class GroupMembership
  *
@@ -40,9 +41,9 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null    $created_at
  * @property Carbon|null    $updated_at
  * @property string|null    $deleted_at
- * @property int     $user_id
- * @property int     $user_group_id
- * @property int     $user_role_id
+ * @property int            $user_id
+ * @property int            $user_group_id
+ * @property int            $user_role_id
  * @property-read User      $user
  * @property-read UserGroup $userGroup
  * @property-read UserRole  $userRole

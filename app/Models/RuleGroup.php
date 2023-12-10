@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -35,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\RuleGroup
  *
@@ -43,10 +44,10 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null       $created_at
  * @property Carbon|null       $updated_at
  * @property Carbon|null       $deleted_at
- * @property int        $user_id
+ * @property int               $user_id
  * @property string|null       $title
  * @property string|null       $description
- * @property int        $order
+ * @property int               $order
  * @property bool              $active
  * @property bool              $stop_processing
  * @property Collection|Rule[] $rules
@@ -68,7 +69,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUserId($value)
  * @method static Builder|RuleGroup withTrashed()
  * @method static Builder|RuleGroup withoutTrashed()
- * @property int          $user_group_id
+ * @property int               $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUserGroupId($value)
  * @mixin Eloquent
  */

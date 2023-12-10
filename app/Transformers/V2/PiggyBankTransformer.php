@@ -80,7 +80,7 @@ class PiggyBankTransformer extends AbstractTransformer
         $piggyBanks          = $objects->pluck('id')->toArray();
         $accountInfo         = Account::whereIn('id', $objects->pluck('account_id')->toArray())->get();
         $currencyPreferences = AccountMeta::where('name', '"currency_id"')->whereIn('account_id', $objects->pluck('account_id')->toArray())->get();
-        $currencies = [];
+        $currencies          = [];
         /** @var Account $account */
         foreach ($accountInfo as $account) {
             $id                  = $account->id;
@@ -92,7 +92,7 @@ class PiggyBankTransformer extends AbstractTransformer
         foreach ($currencyPreferences as $preference) {
             $currencyId                   = (int)$preference->data;
             $accountId                    = $preference->account_id;
-            $currencies[$currencyId] ??= TransactionJournal::find($currencyId);
+            $currencies[$currencyId]      ??= TransactionJournal::find($currencyId);
             $this->currencies[$accountId] = $currencies[$currencyId];
         }
 

@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -36,7 +37,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\Recurrence
  *
@@ -44,8 +45,8 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null                             $created_at
  * @property Carbon|null                             $updated_at
  * @property Carbon|null                             $deleted_at
- * @property int                              $user_id
- * @property int                              $transaction_type_id
+ * @property int                                     $user_id
+ * @property int                                     $transaction_type_id
  * @property string                                  $title
  * @property string                                  $description
  * @property Carbon|null                             $first_date
@@ -87,7 +88,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereUserId($value)
  * @method static Builder|Recurrence withTrashed()
  * @method static Builder|Recurrence withoutTrashed()
- * @property int                                $user_group_id
+ * @property int                                     $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereUserGroupId($value)
  * @mixin Eloquent
  */

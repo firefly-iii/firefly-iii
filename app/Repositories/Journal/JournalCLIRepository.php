@@ -198,9 +198,9 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
      */
     public function getSplitJournals(): Collection
     {
-        $query      = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                        ->groupBy('transaction_journals.id');
-        $result     = $query->get(['transaction_journals.id as id', DB::raw('count(transactions.id) as transaction_count')]); /** @phpstan-ignore-line */
+        $query  = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                    ->groupBy('transaction_journals.id');
+        $result = $query->get(['transaction_journals.id as id', DB::raw('count(transactions.id) as transaction_count')]); // @phpstan-ignore-line
         $journalIds = [];
         /** @var stdClass $row */
         foreach ($result as $row) {

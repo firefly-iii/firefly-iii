@@ -162,7 +162,7 @@ class OperationsController extends Controller
         /** @var int $currencyId */
         foreach ($keys as $currencyId) {
             $currencyInfo             = $incomes['sums'][$currencyId] ?? $expenses['sums'][$currencyId];
-            $sums[$currencyId] ??= [
+            $sums[$currencyId]        ??= [
                 'currency_id'             => $currencyId,
                 'currency_name'           => $currencyInfo['currency_name'],
                 'currency_code'           => $currencyInfo['currency_code'],

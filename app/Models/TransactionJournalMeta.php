@@ -25,19 +25,20 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\TransactionJournalMeta
  *
  * @property int                     $id
  * @property Carbon|null             $created_at
  * @property Carbon|null             $updated_at
- * @property int              $transaction_journal_id
+ * @property int                     $transaction_journal_id
  * @property string                  $name
  * @property mixed                   $data
  * @property string                  $hash
@@ -95,7 +96,7 @@ class TransactionJournalMeta extends Model
     {
         $data                     = json_encode($value);
         $this->attributes['data'] = $data;
-        $this->attributes['hash'] = hash('sha256', (string)  $data);
+        $this->attributes['hash'] = hash('sha256', (string)$data);
     }
 
     /**
@@ -105,6 +106,7 @@ class TransactionJournalMeta extends Model
     {
         return $this->belongsTo(TransactionJournal::class);
     }
+
     /**
      * @return Attribute
      */

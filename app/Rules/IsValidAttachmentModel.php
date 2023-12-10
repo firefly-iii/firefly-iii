@@ -169,19 +169,6 @@ class IsValidAttachmentModel implements ValidationRule
      *
      * @return bool
      */
-    private function validateJournal(int $value): bool
-    {
-        $repository = app(JournalRepositoryInterface::class);
-        $repository->setUser(auth()->user());
-
-        return null !== $repository->find($value);
-    }
-
-    /**
-     * @param int $value
-     *
-     * @return bool
-     */
     private function validatePiggyBank(int $value): bool
     {
         /** @var PiggyBankRepositoryInterface $repository */
@@ -217,5 +204,18 @@ class IsValidAttachmentModel implements ValidationRule
         $repository->setUser(auth()->user());
 
         return null !== $repository->findTransaction($value);
+    }
+
+    /**
+     * @param int $value
+     *
+     * @return bool
+     */
+    private function validateJournal(int $value): bool
+    {
+        $repository = app(JournalRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+
+        return null !== $repository->find($value);
     }
 }

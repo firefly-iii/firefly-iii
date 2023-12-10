@@ -242,19 +242,7 @@ class Bill extends Model
     protected function amountMax(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
-        );
-    }
-
-    /**
-     * Get the skip
-     *
-     * @return Attribute
-     */
-    protected function skip(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn($value) => (string)$value,
         );
     }
 
@@ -266,17 +254,7 @@ class Bill extends Model
     protected function amountMin(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
-        );
-    }
-
-    /**
-     * @return Attribute
-     */
-    protected function transactionCurrencyId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn($value) => (string)$value,
         );
     }
 
@@ -286,7 +264,29 @@ class Bill extends Model
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * Get the skip
+     *
+     * @return Attribute
+     */
+    protected function skip(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function transactionCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
         );
     }
 

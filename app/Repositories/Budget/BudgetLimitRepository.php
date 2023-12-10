@@ -60,32 +60,32 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 
             // same complex where query as below.
                             ->where(
-                                static function (Builder $q5) use ($start, $end) {
-                                    $q5->where(
-                                        static function (Builder $q1) use ($start, $end) {
-                                            $q1->where(
-                                                static function (Builder $q2) use ($start, $end) {
-                                                    $q2->where('budget_limits.end_date', '>=', $start->format('Y-m-d'));
-                                                    $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d'));
-                                                }
-                                            )
-                                               ->orWhere(
-                                                   static function (Builder $q3) use ($start, $end) {
-                                                       $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d'));
-                                                       $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d'));
-                                                   }
-                                               );
-                                        }
-                                    )
-                                       ->orWhere(
-                                           static function (Builder $q4) use ($start, $end) {
-                                               // or start is before start AND end is after end.
-                                               $q4->where('budget_limits.start_date', '<=', $start->format('Y-m-d'));
-                                               $q4->where('budget_limits.end_date', '>=', $end->format('Y-m-d'));
-                                           }
-                                       );
+                static function (Builder $q5) use ($start, $end) {
+                    $q5->where(
+                        static function (Builder $q1) use ($start, $end) {
+                            $q1->where(
+                                static function (Builder $q2) use ($start, $end) {
+                                    $q2->where('budget_limits.end_date', '>=', $start->format('Y-m-d'));
+                                    $q2->where('budget_limits.end_date', '<=', $end->format('Y-m-d'));
                                 }
                             )
+                               ->orWhere(
+                                   static function (Builder $q3) use ($start, $end) {
+                                       $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d'));
+                                       $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d'));
+                                   }
+                               );
+                        }
+                    )
+                       ->orWhere(
+                           static function (Builder $q4) use ($start, $end) {
+                               // or start is before start AND end is after end.
+                               $q4->where('budget_limits.start_date', '<=', $start->format('Y-m-d'));
+                               $q4->where('budget_limits.end_date', '>=', $end->format('Y-m-d'));
+                           }
+                       );
+                }
+            )
                             ->where('budget_limits.transaction_currency_id', $currency->id)
                             ->whereNull('budgets.deleted_at')
                             ->where('budgets.active', true)
@@ -252,11 +252,11 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
                                       )
                                           // budget limit start within period
                                          ->orWhere(
-                                             static function (Builder $q3) use ($start, $end) {
-                                                 $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
-                                                 $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 23:59:59'));
-                                             }
-                                         );
+                                              static function (Builder $q3) use ($start, $end) {
+                                                  $q3->where('budget_limits.start_date', '>=', $start->format('Y-m-d 00:00:00'));
+                                                  $q3->where('budget_limits.start_date', '<=', $end->format('Y-m-d 23:59:59'));
+                                              }
+                                          );
                                   }
                               )
                                  ->orWhere(

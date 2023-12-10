@@ -86,7 +86,7 @@ class NoCategoryController extends Controller
         /** @var Carbon $start */
         $start ??= session('start');
         /** @var Carbon $end */
-        $end ??= session('end');
+        $end      ??= session('end');
         $page     = (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
         $subTitle = trans(

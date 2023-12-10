@@ -264,7 +264,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId] ??= [
+            $array[$currencyId]        ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -272,12 +272,12 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'currency_code'           => $journal['currency_code'],
                 'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->$direction($journal['amount']));/** @phpstan-ignore-line */
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->$direction($journal['amount'])); // @phpstan-ignore-line
 
             // also do foreign amount:
             $foreignId = (int)$journal['foreign_currency_id'];
             if (0 !== $foreignId) {
-                $array[$foreignId] ??= [
+                $array[$foreignId]        ??= [
                     'sum'                     => '0',
                     'currency_id'             => $foreignId,
                     'currency_name'           => $journal['foreign_currency_name'],
@@ -324,7 +324,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $key                = sprintf('%s-%s', $journal[$idKey], $journal['currency_id']);
-            $array[$key] ??= [
+            $array[$key]        ??= [
                 'id'                      => $journal[$idKey],
                 'name'                    => $journal[$nameKey],
                 'sum'                     => '0',
@@ -339,7 +339,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             // also do foreign amount:
             if (0 !== (int)$journal['foreign_currency_id']) {
                 $key                = sprintf('%s-%s', $journal[$idKey], $journal['foreign_currency_id']);
-                $array[$key] ??= [
+                $array[$key]        ??= [
                     'id'                      => $journal[$idKey],
                     'name'                    => $journal[$nameKey],
                     'sum'                     => '0',

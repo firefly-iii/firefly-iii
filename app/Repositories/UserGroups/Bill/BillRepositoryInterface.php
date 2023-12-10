@@ -36,13 +36,6 @@ use Illuminate\Support\Collection;
 interface BillRepositoryInterface
 {
     /**
-     * @param User $user
-     *
-     * @return void
-     */
-    public function setUser(User $user): void;
-
-    /**
      * TODO duplicate of other repos
      * Add correct order to bills.
      */
@@ -83,6 +76,13 @@ interface BillRepositoryInterface
      * @return Carbon
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon;
+
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
+    public function setUser(User $user): void;
 
     /**
      * Collect multi-currency of sum of bills already paid.

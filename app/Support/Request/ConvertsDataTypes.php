@@ -181,7 +181,7 @@ trait ConvertsDataTypes
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
 
-        if (method_exists($this, 'validateUserGroup')) { /** @phpstan-ignore-line */
+        if (method_exists($this, 'validateUserGroup')) { // @phpstan-ignore-line
             $userGroup = $this->validateUserGroup($this);
             if (null !== $userGroup) {
                 $repository->setUserGroup($userGroup);

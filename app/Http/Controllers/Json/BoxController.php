@@ -86,12 +86,12 @@ class BoxController extends Controller
             static function (AvailableBudget $availableBudget) use ($currency) { // @phpstan-ignore-line
                 if ($availableBudget->transaction_currency_id === $currency->id) {
                     app('log')->debug(sprintf(
-                        'Will include AB #%d: from %s-%s amount %s',
-                        $availableBudget->id,
-                        $availableBudget->start_date->format('Y-m-d'),
-                        $availableBudget->end_date->format('Y-m-d'),
-                        $availableBudget->amount
-                    ));
+                                          'Will include AB #%d: from %s-%s amount %s',
+                                          $availableBudget->id,
+                                          $availableBudget->start_date->format('Y-m-d'),
+                                          $availableBudget->end_date->format('Y-m-d'),
+                                          $availableBudget->amount
+                                      ));
                     return $availableBudget;
                 }
 
@@ -181,7 +181,7 @@ class BoxController extends Controller
             $amount               = $journal['amount'] ?? '0';
             $incomes[$currencyId] ??= '0';
             $incomes[$currencyId] = bcadd($incomes[$currencyId], app('steam')->positive($amount));
-            $sums[$currencyId] ??= '0';
+            $sums[$currencyId]    ??= '0';
             $sums[$currencyId]    = bcadd($sums[$currencyId], app('steam')->positive($amount));
         }
 
@@ -196,7 +196,7 @@ class BoxController extends Controller
             $currencyId            = (int)$journal['currency_id'];
             $expenses[$currencyId] ??= '0';
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $journal['amount'] ?? '0');
-            $sums[$currencyId] ??= '0';
+            $sums[$currencyId]     ??= '0';
             $sums[$currencyId]     = bcadd($sums[$currencyId], $journal['amount']);
         }
 

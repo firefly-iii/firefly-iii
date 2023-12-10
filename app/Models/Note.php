@@ -25,12 +25,13 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\Note
  *
@@ -38,7 +39,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null         $created_at
  * @property Carbon|null         $updated_at
  * @property Carbon|null         $deleted_at
- * @property int          $noteable_id
+ * @property int                 $noteable_id
  * @property string              $noteable_type
  * @property string|null         $title
  * @property string|null         $text

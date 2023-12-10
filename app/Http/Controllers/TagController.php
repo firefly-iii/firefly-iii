@@ -243,8 +243,8 @@ class TagController extends Controller
         $subTitleIcon = 'fa-tag';
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $start ??= session('start');
-        $end ??= session('end');
+        $start        ??= session('start');
+        $end          ??= session('end');
         $location     = $this->repository->getLocation($tag);
         $attachments  = $this->repository->getAttachments($tag);
         $subTitle     = trans(

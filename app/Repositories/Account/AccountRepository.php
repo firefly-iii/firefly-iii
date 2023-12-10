@@ -116,7 +116,7 @@ class AccountRepository implements AccountRepositoryInterface
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('accounts.active', true)
             ->where(
-                static function (EloquentBuilder $q1) use ($number) { /** @phpstan-ignore-line */
+                static function (EloquentBuilder $q1) use ($number) { // @phpstan-ignore-line
                     $json = json_encode($number);
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
@@ -433,7 +433,7 @@ class AccountRepository implements AccountRepositoryInterface
         $name     = trans('firefly.reconciliation_account_name', ['name' => $account->name, 'currency' => $currency->code]);
 
         /** @var AccountType $type */
-        $type    = AccountType::where('type', AccountType::RECONCILIATION)->first();
+        $type = AccountType::where('type', AccountType::RECONCILIATION)->first();
 
         /** @var Account|null $current */
         $current = $this->user->accounts()->where('account_type_id', $type->id)

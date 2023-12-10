@@ -107,13 +107,11 @@ class CategoryController extends Controller
                     ];
 
                     $report[$sourceAccountId]['currencies'][$currencyId]['categories'][$category['id']]
-                                                                                                                 ??= 
-                                                                                                                   
-                                                                                                                   [
-                                                                                                                       'spent'  => '0',
-                                                                                                                       'earned' => '0',
-                                                                                                                       'sum'    => '0',
-                                                                                                                   ];
+                                                                                                                 ??= [
+                        'spent'  => '0',
+                        'earned' => '0',
+                        'sum'    => '0',
+                    ];
                     $report[$sourceAccountId]['currencies'][$currencyId]['categories'][$category['id']]['spent'] = bcadd(
                         $report[$sourceAccountId]['currencies'][$currencyId]['categories'][$category['id']]['spent'],
                         $journal['amount']
@@ -134,22 +132,19 @@ class CategoryController extends Controller
                 foreach ($category['transaction_journals'] as $journal) {
                     $destinationId                                                                              = $journal['destination_account_id'];
                     $report[$destinationId]['currencies'][$currencyId]
-                                                                                                                ??= 
-                                                                                                                   [
-                                                                                                                      'currency_id'             => $currency['currency_id'],
-                                                                                                                      'currency_symbol'         => $currency['currency_symbol'],
-                                                                                                                      'currency_name'           => $currency['currency_name'],
-                                                                                                                      'currency_decimal_places' => $currency['currency_decimal_places'],
-                                                                                                                      'categories'              => [],
-                                                                                                                  ];
+                                                                                                                ??= [
+                        'currency_id'             => $currency['currency_id'],
+                        'currency_symbol'         => $currency['currency_symbol'],
+                        'currency_name'           => $currency['currency_name'],
+                        'currency_decimal_places' => $currency['currency_decimal_places'],
+                        'categories'              => [],
+                    ];
                     $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']]
-                                                                                                                ??= 
-                                                                                                                  
-                                                                                                                  [
-                                                                                                                      'spent'  => '0',
-                                                                                                                      'earned' => '0',
-                                                                                                                      'sum'    => '0',
-                                                                                                                  ];
+                                                                                                                ??= [
+                        'spent'  => '0',
+                        'earned' => '0',
+                        'sum'    => '0',
+                    ];
                     $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']]['earned'] = bcadd(
                         $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']]['earned'],
                         $journal['amount']
@@ -205,7 +200,7 @@ class CategoryController extends Controller
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
                     $sourceAccountId                                              = $journal['source_account_id'];
-                    $report[$sourceAccountId]['currencies'][$currencyId] ??= [
+                    $report[$sourceAccountId]['currencies'][$currencyId]          ??= [
                         'currency_id'             => $currency['currency_id'],
                         'currency_symbol'         => $currency['currency_symbol'],
                         'currency_name'           => $currency['currency_name'],
@@ -243,7 +238,7 @@ class CategoryController extends Controller
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
                     $destinationAccountId                                               = $journal['destination_account_id'];
-                    $report[$destinationAccountId]['currencies'][$currencyId] ??= [
+                    $report[$destinationAccountId]['currencies'][$currencyId]           ??= [
                         'currency_id'             => $currency['currency_id'],
                         'currency_symbol'         => $currency['currency_symbol'],
                         'currency_name'           => $currency['currency_name'],
@@ -287,7 +282,7 @@ class CategoryController extends Controller
                 foreach ($category['transaction_journals'] as $journal) {
                     $destinationId = $journal['destination_account_id'];
                     $key           = sprintf('%d-%d', $destinationId, $currency['currency_id']);
-                    $result[$key] ??= [
+                    $result[$key]  ??= [
                         'transactions'             => 0,
                         'sum'                      => '0',
                         'avg'                      => '0',
@@ -415,7 +410,7 @@ class CategoryController extends Controller
 
                 foreach ($category['transaction_journals'] as $journal) {
                     // add currency info to report array:
-                    $report[$categoryId]['currencies'][$currencyId] ??= [
+                    $report[$categoryId]['currencies'][$currencyId]          ??= [
                         'spent'                   => '0',
                         'earned'                  => '0',
                         'sum'                     => '0',
@@ -456,7 +451,7 @@ class CategoryController extends Controller
 
                 foreach ($category['transaction_journals'] as $journal) {
                     // add currency info to report array:
-                    $report[$categoryId]['currencies'][$currencyId] ??= [
+                    $report[$categoryId]['currencies'][$currencyId]           ??= [
                         'spent'                   => '0',
                         'earned'                  => '0',
                         'sum'                     => '0',

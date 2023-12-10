@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -33,7 +34,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\Transaction
  *
@@ -42,12 +43,12 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null                   $updated_at
  * @property Carbon|null                   $deleted_at
  * @property bool                          $reconciled
- * @property int                    $account_id
- * @property int                    $transaction_journal_id
+ * @property int                           $account_id
+ * @property int                           $transaction_journal_id
  * @property string|null                   $description
  * @property int|null                      $transaction_currency_id
- * @property string|int|null                   $modified
- * @property string|int|null                   $modified_foreign
+ * @property string|int|null               $modified
+ * @property string|int|null               $modified_foreign
  * @property string                        $date
  * @property string                        $max_date
  * @property string                        $amount
@@ -254,6 +255,16 @@ class Transaction extends Model
     }
 
     /**
+     * @return Attribute
+     */
+    protected function accountId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
      * Get the amount
      *
      * @return Attribute
@@ -261,7 +272,7 @@ class Transaction extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
 
@@ -273,19 +284,10 @@ class Transaction extends Model
     protected function foreignAmount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
 
-    /**
-     * @return Attribute
-     */
-    protected function accountId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn($value) => (int)$value,
-        );
-    }
     /**
      * @return Attribute
      */

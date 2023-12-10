@@ -130,7 +130,7 @@ class BudgetController extends Controller
             foreach ($currency['budgets'] as $budget) {
                 foreach ($budget['transaction_journals'] as $journal) {
                     $sourceAccountId                                            = $journal['source_account_id'];
-                    $report[$sourceAccountId]['currencies'][$currencyId] ??= [
+                    $report[$sourceAccountId]['currencies'][$currencyId]        ??= [
                         'currency_id'             => $currency['currency_id'],
                         'currency_symbol'         => $currency['currency_symbol'],
                         'currency_name'           => $currency['currency_name'],
@@ -167,7 +167,7 @@ class BudgetController extends Controller
                 foreach ($budget['transaction_journals'] as $journal) {
                     $destinationId = $journal['destination_account_id'];
                     $key           = sprintf('%d-%d', $destinationId, $currency['currency_id']);
-                    $result[$key] ??= [
+                    $result[$key]  ??= [
                         'transactions'             => 0,
                         'sum'                      => '0',
                         'avg'                      => '0',
@@ -240,7 +240,7 @@ class BudgetController extends Controller
 
                 foreach ($budget['transaction_journals'] as $journal) {
                     // add currency info to report array:
-                    $report[$budgetId]['currencies'][$currencyId] ??= [
+                    $report[$budgetId]['currencies'][$currencyId]        ??= [
                         'sum'                     => '0',
                         'sum_pct'                 => '0',
                         'currency_id'             => $currency['currency_id'],
@@ -332,7 +332,7 @@ class BudgetController extends Controller
                     $count++;
                     $key                               = sprintf('%d-%d', $budget['id'], $currency['currency_id']);
                     $dateKey                           = $journal['date']->format($keyFormat);
-                    $report[$key] ??= [
+                    $report[$key]                      ??= [
                         'id'                      => $budget['id'],
                         'name'                    => sprintf('%s (%s)', $budget['name'], $currency['currency_name']),
                         'sum'                     => '0',

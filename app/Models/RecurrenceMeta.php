@@ -25,12 +25,13 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\RecurrenceMeta
  *
@@ -38,7 +39,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
  * @property Carbon|null     $created_at
  * @property Carbon|null     $updated_at
  * @property Carbon|null     $deleted_at
- * @property int      $recurrence_id
+ * @property int             $recurrence_id
  * @property string          $name
  * @property mixed           $value
  * @property-read Recurrence $recurrence

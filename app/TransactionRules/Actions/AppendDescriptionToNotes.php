@@ -56,7 +56,7 @@ class AppendDescriptionToNotes implements ActionInterface
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             app('log')->error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
-            event(new RuleActionFailedOnArray($this->action, $journal, (string) trans('rules.journal_other_user')));
+            event(new RuleActionFailedOnArray($this->action, $journal, (string)trans('rules.journal_other_user')));
             return false;
         }
         $note = $object->notes()->first();

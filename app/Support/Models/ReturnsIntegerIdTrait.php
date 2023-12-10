@@ -26,13 +26,14 @@ namespace FireflyIII\Support\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 /**
-* Trait ReturnsIntegerIdTrait
+ * Trait ReturnsIntegerIdTrait
  */
 trait ReturnsIntegerIdTrait
 {
     /**
      * Get the ID
      * @SuppressWarnings(PHPMD.ShortMethodName)
+     *
      * @return Attribute
      */
     protected function id(): Attribute

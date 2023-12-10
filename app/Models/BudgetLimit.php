@@ -41,8 +41,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int                           $id
  * @property Carbon|null                   $created_at
  * @property Carbon|null                   $updated_at
- * @property int                    $budget_id
- * @property int                      $transaction_currency_id
+ * @property int                           $budget_id
+ * @property int                           $transaction_currency_id
  * @property Carbon                        $start_date
  * @property Carbon|null                   $end_date
  * @property string                        $amount
@@ -134,7 +134,7 @@ class BudgetLimit extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
 

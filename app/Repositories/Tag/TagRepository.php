@@ -375,6 +375,26 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function tagEndsWith(string $query): Collection
+    {
+        $search = sprintf('%%%s', $query);
+
+        return $this->user->tags()->where('tag', 'LIKE', $search)->get(['tags.*']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function tagStartsWith(string $query): Collection
+    {
+        $search = sprintf('%s%%', $query);
+
+        return $this->user->tags()->where('tag', 'LIKE', $search)->get(['tags.*']);
+    }
+
+    /**
      * @param Tag    $tag
      * @param Carbon $start
      * @param Carbon $end
@@ -453,25 +473,5 @@ class TagRepository implements TagRepositoryInterface
     {
         /** @var Location|null */
         return $tag->locations()->first();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function tagStartsWith(string $query): Collection
-    {
-        $search = sprintf('%s%%', $query);
-
-        return $this->user->tags()->where('tag', 'LIKE', $search)->get(['tags.*']);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function tagEndsWith(string $query): Collection
-    {
-        $search = sprintf('%%%s', $query);
-
-        return $this->user->tags()->where('tag', 'LIKE', $search)->get(['tags.*']);
     }
 }

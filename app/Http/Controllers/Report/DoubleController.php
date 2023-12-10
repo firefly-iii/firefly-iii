@@ -141,7 +141,7 @@ class DoubleController extends Controller
             foreach ($currency['transaction_journals'] as $journal) {
                 $destinationId = $journal['destination_account_id'];
                 $key           = sprintf('%d-%d', $destinationId, $currency['currency_id']);
-                $result[$key] ??= [
+                $result[$key]  ??= [
                     'transactions'             => 0,
                     'sum'                      => '0',
                     'avg'                      => '0',

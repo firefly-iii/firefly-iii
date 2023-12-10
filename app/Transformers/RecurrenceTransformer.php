@@ -163,7 +163,7 @@ class RecurrenceTransformer extends AbstractTransformer
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions()->get() as $transaction) {
             /** @var Account|null $sourceAccount */
-            $sourceAccount         = $transaction->sourceAccount;
+            $sourceAccount = $transaction->sourceAccount;
             /** @var Account|null $destinationAccount */
             $destinationAccount    = $transaction->destinationAccount;
             $foreignCurrencyCode   = null;

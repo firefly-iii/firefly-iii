@@ -170,7 +170,7 @@ class TwoFactorController extends Controller
     private function isBackupCode(string $mfaCode): bool
     {
         $list = app('preferences')->get('mfa_recovery', [])->data;
-        if(!is_array($list)) {
+        if (!is_array($list)) {
             $list = [];
         }
         if (in_array($mfaCode, $list, true)) {
@@ -187,8 +187,8 @@ class TwoFactorController extends Controller
      */
     private function removeFromBackupCodes(string $mfaCode): void
     {
-        $list    = app('preferences')->get('mfa_recovery', [])->data;
-        if(!is_array($list)) {
+        $list = app('preferences')->get('mfa_recovery', [])->data;
+        if (!is_array($list)) {
             $list = [];
         }
         $newList = array_values(array_diff($list, [$mfaCode]));

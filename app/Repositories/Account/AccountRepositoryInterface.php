@@ -123,8 +123,8 @@ interface AccountRepositoryInterface
     public function getAccountsById(array $accountIds): Collection;
 
     /**
-     * @param array<int, int|string>      $types
-     * @param array|null $sort
+     * @param array<int, int|string> $types
+     * @param array|null             $sort
      *
      * @return Collection
      */

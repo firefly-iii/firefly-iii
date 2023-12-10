@@ -25,20 +25,21 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\Preference
  *
  * @property int                   $id
  * @property Carbon|null           $created_at
  * @property Carbon|null           $updated_at
- * @property int            $user_id
+ * @property int                   $user_id
  * @property string                $name
  * @property int|string|array|null $data
  * @property-read User             $user
@@ -94,7 +95,7 @@ class Preference extends Model
                 $preference          = new self();
                 $preference->name    = $value;
                 $preference->data    = $default[$value];
-                $preference->user_id = (int) $user->id;
+                $preference->user_id = (int)$user->id;
                 $preference->save();
 
                 return $preference;

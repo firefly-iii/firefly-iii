@@ -31,7 +31,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Collection;
@@ -302,7 +301,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         //        app('log')->debug(sprintf('Now in date("%s")', $string));
         if (10 === strlen($string)) {
             $res = Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
-            if(false === $res) {
+            if (false === $res) {
                 return null;
             }
             return $res;
@@ -312,7 +311,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
         if (19 === strlen($string) && str_contains($string, 'T')) {
             $res = Carbon::createFromFormat('Y-m-d\TH:i:s', substr($string, 0, 19), config('app.timezone'));
-            if(false === $res) {
+            if (false === $res) {
                 return null;
             }
             return $res;
@@ -320,7 +319,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         // 2022-01-01 01:01:01
         $res = Carbon::createFromFormat('Y-m-d H:i:s', substr($string, 0, 19), config('app.timezone'));
-        if(false === $res) {
+        if (false === $res) {
             return null;
         }
         return $res;

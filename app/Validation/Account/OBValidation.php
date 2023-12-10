@@ -137,7 +137,7 @@ trait OBValidation
             $result = true;
 
             // set the source to be a (dummy) initial balance account.
-            $account              = new Account();
+            $account = new Account();
             /** @var AccountType $accountType */
             $accountType          = AccountType::whereType(AccountType::INITIAL_BALANCE)->first();
             $account->accountType = $accountType;

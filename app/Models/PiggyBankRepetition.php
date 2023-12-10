@@ -25,18 +25,19 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+
 /**
  * FireflyIII\Models\PiggyBankRepetition
  *
  * @property int            $id
  * @property Carbon|null    $created_at
  * @property Carbon|null    $updated_at
- * @property int     $piggy_bank_id
+ * @property int            $piggy_bank_id
  * @property Carbon|null    $startdate
  * @property Carbon|null    $targetdate
  * @property string         $currentamount
@@ -130,7 +131,7 @@ class PiggyBankRepetition extends Model
     protected function currentamount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
 

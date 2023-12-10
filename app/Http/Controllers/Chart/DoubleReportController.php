@@ -85,7 +85,7 @@ class DoubleReportController extends Controller
             foreach ($currency['transaction_journals'] as $journal) {
                 $categoryName             = $journal['budget_name'] ?? trans('firefly.no_budget');
                 $title                    = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
-                $result[$title] ??= [
+                $result[$title]           ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
                     'currency_code'   => $currency['currency_code'],
@@ -120,7 +120,7 @@ class DoubleReportController extends Controller
             foreach ($currency['transaction_journals'] as $journal) {
                 $categoryName             = $journal['category_name'] ?? trans('firefly.no_category');
                 $title                    = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
-                $result[$title] ??= [
+                $result[$title]           ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
                     'currency_code'   => $currency['currency_code'],
@@ -155,7 +155,7 @@ class DoubleReportController extends Controller
             foreach ($currency['transaction_journals'] as $journal) {
                 $categoryName             = $journal['category_name'] ?? trans('firefly.no_category');
                 $title                    = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
-                $result[$title] ??= [
+                $result[$title]           ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
                     'currency_code'   => $currency['currency_code'],
@@ -323,7 +323,7 @@ class DoubleReportController extends Controller
                     // do something
                     $tagName                  = trans('firefly.no_tags');
                     $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
-                    $result[$title] ??= [
+                    $result[$title]           ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -341,7 +341,7 @@ class DoubleReportController extends Controller
                     // do something
                     $tagName                  = $tag['name'];
                     $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
-                    $result[$title] ??= [
+                    $result[$title]           ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -383,7 +383,7 @@ class DoubleReportController extends Controller
                     // do something
                     $tagName                  = trans('firefly.no_tags');
                     $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
-                    $result[$title] ??= [
+                    $result[$title]           ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -401,7 +401,7 @@ class DoubleReportController extends Controller
                     // do something
                     $tagName                  = $tag['name'];
                     $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
-                    $result[$title] ??= [
+                    $result[$title]           ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],

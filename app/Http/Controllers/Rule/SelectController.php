@@ -109,7 +109,7 @@ class SelectController extends Controller
      *
      * @return Factory|View|RedirectResponse
      */
-    public function selectTransactions(Rule $rule): Factory|View|RedirectResponse
+    public function selectTransactions(Rule $rule): Factory | View | RedirectResponse
     {
         if (false === $rule->active) {
             session()->flash('warning', trans('firefly.cannot_fire_inactive_rules'));
@@ -136,7 +136,7 @@ class SelectController extends Controller
     public function testTriggers(TestRuleFormRequest $request): JsonResponse
     {
         // build fake rule
-        $rule         = new Rule();
+        $rule = new Rule();
         /** @var \Illuminate\Database\Eloquent\Collection<int, RuleTrigger> $triggers */
         $triggers     = new Collection();
         $rule->strict = '1' === $request->get('strict');

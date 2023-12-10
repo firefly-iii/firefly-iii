@@ -47,7 +47,7 @@ class CategoryUpdateService
     {
         if (auth()->check()) {
             /** @var User $user */
-            $user = auth()->user();
+            $user       = auth()->user();
             $this->user = $user;
         }
     }
