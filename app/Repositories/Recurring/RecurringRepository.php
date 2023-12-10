@@ -47,7 +47,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**
@@ -69,23 +68,23 @@ class RecurringRepository implements RecurringRepositoryInterface
     {
         // if not, loop set and try to read the recurrence_date. If it matches start or end, return it as well.
         $set
-            = TransactionJournalMeta::where(function (Builder $q1) use ($recurrence) {
-                $q1->where('name', 'recurrence_id');
-                $q1->where('data', json_encode((string)$recurrence->id));
-            })->get(['journal_meta.transaction_journal_id']);
+            = TransactionJournalMeta::where(static function (Builder $q1) use ($recurrence) {
+            $q1->where('name', 'recurrence_id');
+            $q1->where('data', json_encode((string)$recurrence->id));
+        })->get(['journal_meta.transaction_journal_id']);
 
         // there are X journals made for this recurrence. Any of them meant for today?
         foreach ($set as $journalMeta) {
-            $count = TransactionJournalMeta::where(function (Builder $q2) use ($date) {
+            $count = TransactionJournalMeta::where(static function (Builder $q2) use ($date) {
                 $string = (string)$date;
-                Log::debug(sprintf('Search for date: %s', json_encode($string)));
+                app('log')->debug(sprintf('Search for date: %s', json_encode($string)));
                 $q2->where('name', 'recurrence_date');
                 $q2->where('data', json_encode($string));
             })
                                            ->where('transaction_journal_id', $journalMeta->transaction_journal_id)
                                            ->count();
             if ($count > 0) {
-                Log::debug(sprintf('Looks like journal #%d was already created', $journalMeta->transaction_journal_id));
+                app('log')->debug(sprintf('Looks like journal #%d was already created', $journalMeta->transaction_journal_id));
                 return true;
             }
         }
@@ -239,7 +238,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         if (null !== $end) {
             $query->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'));
         }
-        return $query->count(['transaction_journals.id']);
+        return $query->count('transaction_journals.id');
     }
 
     /**
@@ -267,13 +266,9 @@ class RecurringRepository implements RecurringRepositoryInterface
      */
     public function getNoteText(Recurrence $recurrence): string
     {
-        /** @var Note $note */
+        /** @var Note|null $note */
         $note = $recurrence->notes()->first();
-        if (null !== $note) {
-            return (string)$note->text;
-        }
-
-        return '';
+        return (string)$note?->text;
     }
 
     /**
@@ -350,7 +345,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
@@ -437,7 +432,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      */
     public function getXOccurrencesSince(RecurrenceRepetition $repetition, Carbon $date, Carbon $afterDate, int $count): array
     {
-        Log::debug('Now in getXOccurrencesSince()');
+        app('log')->debug('Now in getXOccurrencesSince()');
         $skipMod     = $repetition->repetition_skip + 1;
         $occurrences = [];
         if ('daily' === $repetition->repetition_type) {
@@ -496,10 +491,14 @@ class RecurringRepository implements RecurringRepositoryInterface
      */
     public function repetitionDescription(RecurrenceRepetition $repetition): string
     {
-        Log::debug('Now in repetitionDescription()');
+        app('log')->debug('Now in repetitionDescription()');
         /** @var Preference $pref */
         $pref     = app('preferences')->getForUser($this->user, 'language', config('firefly.default_language', 'en_US'));
         $language = $pref->data;
+        if (is_array($language)) {
+            $language = 'en_US';
+        }
+        $language = (string)$language;
         if ('daily' === $repetition->repetition_type) {
             return (string)trans('firefly.recurring_daily', [], $language);
         }
@@ -535,8 +534,11 @@ class RecurringRepository implements RecurringRepositoryInterface
         }
         if ('yearly' === $repetition->repetition_type) {
             //
-            $today       = today(config('app.timezone'))->endOfYear();
-            $repDate     = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
+            $today   = today(config('app.timezone'))->endOfYear();
+            $repDate = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
+            if (false === $repDate) {
+                $repDate = clone $today;
+            }
             $diffInYears = $today->diffInYears($repDate);
             $repDate->addYears($diffInYears); // technically not necessary.
             $string = $repDate->isoFormat((string)trans('config.month_and_day_no_year_js'));
@@ -574,12 +576,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         /** @var RecurrenceFactory $factory */
         $factory = app(RecurrenceFactory::class);
         $factory->setUser($this->user);
-        $result = $factory->create($data);
-        if (null === $result) {
-            throw new FireflyException($factory->getErrors()->first());
-        }
-
-        return $result;
+        return $factory->create($data);
     }
 
     /**
@@ -622,8 +619,8 @@ class RecurringRepository implements RecurringRepositoryInterface
         $mutator     = clone $start;
         $mutator->startOfDay();
         $skipMod = $repetition->repetition_skip + 1;
-        Log::debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
-        Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
+        app('log')->debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
+        app('log')->debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
 
         if ('daily' === $repetition->repetition_type) {
             $occurrences = $this->getDailyInRange($mutator, $end, $skipMod);

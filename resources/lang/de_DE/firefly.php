@@ -43,7 +43,7 @@ return [
     'split'                                => 'Teilen',
     'single_split'                         => 'Teilen',
     'clone'                                => 'Duplizieren',
-    'clone_and_edit'                       => 'Clone and edit',
+    'clone_and_edit'                       => 'Duplizieren und Bearbeiten',
     'confirm_action'                       => 'Aktion bestätigen',
     'last_seven_days'                      => 'Letzte sieben Tage',
     'last_thirty_days'                     => 'Letzte 30 Tage',
@@ -469,6 +469,10 @@ return [
     'search_modifier_transaction_type'                    => 'Buchungstyp ist „:value”',
     'search_modifier_not_transaction_type'                => 'Buchungstyp ist nicht „:value”',
     'search_modifier_tag_is'                              => 'Schlagwort ist „:value”',
+    'search_modifier_tag_contains'                        => 'Tag contains ":value"',
+    'search_modifier_not_tag_contains'                    => 'Tag does not contain ":value"',
+    'search_modifier_tag_ends'                            => 'Tag ends with ":value"',
+    'search_modifier_tag_starts'                          => 'Tag starts with ":value"',
     'search_modifier_not_tag_is'                          => 'Kein Schlagwort lautet ":value"',
     'search_modifier_date_on_year'                        => 'Buchung im Jahr „:value”',
     'search_modifier_not_date_on_year'                    => 'Buchung ist nicht im Jahr ":value"',
@@ -1236,7 +1240,7 @@ return [
     'rule_action_set_description'                         => 'Beschreibung setzen für ":action_value"',
     'rule_action_append_description'                      => '":action_value" an Beschreibung anfügen',
     'rule_action_prepend_description'                     => '":action_value" vor Beschreibung einfügen',
-    'rule_action_set_category_choice'                     => 'Kategorie zuweisen ...',
+    'rule_action_set_category_choice'                     => "Kategorie zuweisen\u{a0}...",
     'rule_action_clear_category_choice'                   => 'Bereinige jede Kategorie',
     'rule_action_set_budget_choice'                       => 'Setze Budget auf ..',
     'rule_action_clear_budget_choice'                     => 'Alle Budgets leeren',
@@ -1278,6 +1282,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Notizen an die Beschreibung anhängen',
     'rule_action_move_descr_to_notes'                     => 'Notizen durch die Beschreibung ersetzen',
     'rule_action_move_notes_to_descr'                     => 'Beschreibung durch die Notizen ersetzen',
+    'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
+    'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => 'Regelgruppe für Rechnungen',
     'rulegroup_for_bills_description'                     => 'Eine spezielle Regelgruppe für alle Regeln, die Rechnungen betreffen.',
     'rule_for_bill_title'                                 => 'Automatisch generierte Regel für die Rechnung ":name"',
@@ -1328,7 +1334,7 @@ return [
     'pref_1Y'                                   => 'Ein Jahr',
     'pref_last365'                              => 'Letztes Jahr',
     'pref_last90'                               => 'Letzte 90 Tage',
-    'pref_last30'                               => 'Letzte 30 Tage',
+    'pref_last30'                               => "Letzte 30\u{a0}Tage",
     'pref_last7'                                => 'Letzte 7 Tage',
     'pref_YTD'                                  => 'Jahr bis heute',
     'pref_QTD'                                  => 'Quartal bis heute',
@@ -1566,7 +1572,7 @@ return [
     'list_all_attachments'                      => 'Liste aller Anhänge',
 
     // transaction index
-    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
+    'is_reconciled_fields_dropped'              => 'Da diese Buchung abgeglichen ist, können Sie weder die Konten noch den/die Betrag/Beträge aktualisieren.',
     'title_expenses'                            => 'Ausgaben',
     'title_withdrawal'                          => 'Ausgaben',
     'title_revenue'                             => 'Einnahmen / Einkommen',
@@ -1634,8 +1640,8 @@ return [
     'create_currency'                           => 'Eine neue Währung erstellen',
     'store_currency'                            => 'Neue Währung speichern',
     'update_currency'                           => 'Währung aktualisieren',
-    'new_default_currency'                      => '":name" is now the default currency.',
-    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
+    'new_default_currency'                      => '„:name” ist jetzt die Standardwährung.',
+    'default_currency_failed'                   => '„:name” konnte nicht als Standardwährung festgelegt werden. Bitte prüfen Sie die Protokolle.',
     'cannot_delete_currency'                    => '„:name” konnte nicht gelöscht werden, da diese noch verwendet wird.',
     'cannot_delete_fallback_currency'           => ':name ist die Standardwährung des Systems und kann daher nicht gelöscht werden.',
     'cannot_disable_currency_journals'          => '„:name” konnte nicht deaktiviert werden, da dieser noch von Buchungen verwendet wird.',
@@ -1661,9 +1667,9 @@ return [
     'disable_currency'                          => 'Deaktivieren',
     'currencies_default_disabled'               => 'Die meisten dieser Währungen sind standardmäßig deaktiviert. Um sie zu verwenden, müssen Sie diese zuerst aktivieren.',
     'currency_is_now_enabled'                   => 'Währung „:name” wurde aktiviert',
-    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
+    'could_not_enable_currency'                 => 'Die Währung „:name” konnte nicht aktiviert werden. Bitte überprüfen Sie die Protokolle.',
     'currency_is_now_disabled'                  => 'Währung „:name” wurde deaktiviert',
-    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
+    'could_not_disable_currency'                => 'Die Währung „:name” konnte nicht deaktiviert werden. Vielleicht wird sie noch verwendet?',
 
     // forms:
     'mandatoryFields'                           => 'Pflichtfelder',
@@ -1949,7 +1955,7 @@ return [
 
 
     // transactions:
-    'unreconcile'                               => 'Undo reconciliation',
+    'unreconcile'                               => 'Kontenabgleich widerrufen',
     'update_withdrawal'                         => 'Ausgaben aktualisieren',
     'update_deposit'                            => 'Einnahmen aktualisieren',
     'update_transaction'                        => 'Buchung aktualisieren',
@@ -2114,9 +2120,9 @@ return [
     'Expense account'                           => 'Ausgabenkonto',
     'Revenue account'                           => 'Einnahmenkonto',
     'Initial balance account'                   => 'Eröffnungssaldo',
-    'account_type_Asset account'                => 'Asset account',
-    'account_type_Expense account'              => 'Expense account',
-    'account_type_Revenue account'              => 'Revenue account',
+    'account_type_Asset account'                => 'Bestandskonto',
+    'account_type_Expense account'              => 'Ausgabenkonto',
+    'account_type_Revenue account'              => 'Einnahmenkonto',
     'account_type_Debt'                         => 'Schuld',
     'account_type_Loan'                         => 'Darlehen',
     'account_type_Mortgage'                     => 'Hypothek',
@@ -2769,3 +2775,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

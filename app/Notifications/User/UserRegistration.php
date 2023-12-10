@@ -40,9 +40,7 @@ class UserRegistration extends Notification
      *
      * @return void
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Get the array representation of the notification.
@@ -50,6 +48,7 @@ class UserRegistration extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
@@ -64,6 +63,7 @@ class UserRegistration extends Notification
      * @param mixed $notifiable
      *
      * @return MailMessage
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail($notifiable)
     {
@@ -78,6 +78,7 @@ class UserRegistration extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
     {

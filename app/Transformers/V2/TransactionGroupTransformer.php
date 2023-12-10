@@ -31,7 +31,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Collection;
@@ -43,8 +42,6 @@ use stdClass;
  */
 class TransactionGroupTransformer extends AbstractTransformer
 {
-    use ConvertsExchangeRates;
-
     private ExchangeRateConverter $converter;
     private array                 $currencies = [];
     private TransactionCurrency   $default;
@@ -64,7 +61,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         foreach ($objects as $object) {
             foreach ($object['sums'] as $sum) {
                 $id              = (int)$sum['currency_id'];
-                $currencies[$id] = $currencies[$id] ?? TransactionCurrency::find($sum['currency_id']);
+                $currencies[$id] ??= TransactionCurrency::find($sum['currency_id']);
             }
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
@@ -79,7 +76,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $meta = TransactionJournalMeta::whereIn('transaction_journal_id', array_keys($journals))->get();
         /** @var TransactionJournalMeta $entry */
         foreach ($meta as $entry) {
-            $id                            = (int)$entry->transaction_journal_id;
+            $id                            = $entry->transaction_journal_id;
             $this->meta[$id][$entry->name] = $entry->data;
         }
 
@@ -87,7 +84,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $notes = Note::whereNoteableType(TransactionJournal::class)->whereIn('noteable_id', array_keys($journals))->get();
         /** @var Note $note */
         foreach ($notes as $note) {
-            $id               = (int)$note->noteable_id;
+            $id               = $note->noteable_id;
             $this->notes[$id] = $note;
         }
 
@@ -195,7 +192,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'native_currency_code'            => $this->default->code,
             'native_currency_name'            => $this->default->name,
             'native_currency_symbol'          => $this->default->symbol,
-            'native_currency_decimal_places'  => (int)$this->default->decimal_places,
+            'native_currency_decimal_places'  => $this->default->decimal_places,
 
             // foreign currency amount:
             'foreign_currency_id'             => $this->stringFromArray($transaction, 'foreign_currency_id', null),
@@ -303,16 +300,28 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
         //        app('log')->debug(sprintf('Now in date("%s")', $string));
         if (10 === strlen($string)) {
-            return Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
+            $res = Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
+            if (false === $res) {
+                return null;
+            }
+            return $res;
         }
         if (25 === strlen($string)) {
             return Carbon::parse($string, config('app.timezone'));
         }
         if (19 === strlen($string) && str_contains($string, 'T')) {
-            return Carbon::createFromFormat('Y-m-d\TH:i:s', substr($string, 0, 19), config('app.timezone'));
+            $res = Carbon::createFromFormat('Y-m-d\TH:i:s', substr($string, 0, 19), config('app.timezone'));
+            if (false === $res) {
+                return null;
+            }
+            return $res;
         }
 
         // 2022-01-01 01:01:01
-        return Carbon::createFromFormat('Y-m-d H:i:s', substr($string, 0, 19), config('app.timezone'));
+        $res = Carbon::createFromFormat('Y-m-d H:i:s', substr($string, 0, 19), config('app.timezone'));
+        if (false === $res) {
+            return null;
+        }
+        return $res;
     }
 }

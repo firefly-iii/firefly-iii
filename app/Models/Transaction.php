@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -37,31 +38,31 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * FireflyIII\Models\Transaction
  *
- * @property int                             $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property bool                            $reconciled
- * @property int                             $account_id
- * @property int                             $transaction_journal_id
- * @property string|null                     $description
- * @property int|null                        $transaction_currency_id
- * @property string                          $modified
- * @property string                          $modified_foreign
- * @property string                          $date
- * @property string                          $max_date
- * @property string                          $amount
- * @property string|null                     $foreign_amount
- * @property int|null                        $foreign_currency_id
- * @property int                             $identifier
- * @property-read Account                    $account
- * @property-read Collection|Budget[]        $budgets
- * @property-read int|null                   $budgets_count
- * @property-read Collection|Category[]      $categories
- * @property-read int|null                   $categories_count
- * @property-read TransactionCurrency|null   $foreignCurrency
- * @property-read TransactionCurrency|null   $transactionCurrency
- * @property-read TransactionJournal         $transactionJournal
+ * @property int                           $id
+ * @property Carbon|null                   $created_at
+ * @property Carbon|null                   $updated_at
+ * @property Carbon|null                   $deleted_at
+ * @property bool                          $reconciled
+ * @property int                           $account_id
+ * @property int                           $transaction_journal_id
+ * @property string|null                   $description
+ * @property int|null                      $transaction_currency_id
+ * @property string|int|null               $modified
+ * @property string|int|null               $modified_foreign
+ * @property string                        $date
+ * @property string                        $max_date
+ * @property string                        $amount
+ * @property string|null                   $foreign_amount
+ * @property int|null                      $foreign_currency_id
+ * @property int                           $identifier
+ * @property-read Account                  $account
+ * @property-read Collection|Budget[]      $budgets
+ * @property-read int|null                 $budgets_count
+ * @property-read Collection|Category[]    $categories
+ * @property-read int|null                 $categories_count
+ * @property-read TransactionCurrency|null $foreignCurrency
+ * @property-read TransactionCurrency|null $transactionCurrency
+ * @property-read TransactionJournal       $transactionJournal
  * @method static Builder|Transaction after(Carbon $date)
  * @method static Builder|Transaction before(Carbon $date)
  * @method static Builder|Transaction newModelQuery()
@@ -84,19 +85,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static Builder|Transaction whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Transaction withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Transaction withoutTrashed()
- * @property int                             $the_count
+ * @property int|string                    $the_count
  * @mixin Eloquent
  */
 class Transaction extends Model
 {
-    use SoftDeletes;
     use HasFactory;
+    use ReturnsIntegerIdTrait;
+    use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at'          => 'datetime',
@@ -107,7 +105,7 @@ class Transaction extends Model
             'bill_name_encrypted' => 'boolean',
             'reconciled'          => 'boolean',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable
         = [
             'account_id',
@@ -120,7 +118,7 @@ class Transaction extends Model
             'foreign_amount',
             'reconciled',
         ];
-    /** @var array Hidden from view */
+
     protected $hidden = ['encrypted'];
 
     /**
@@ -189,9 +187,7 @@ class Transaction extends Model
     public static function isJoined(Builder $query, string $table): bool
     {
         $joins = $query->getQuery()->joins;
-        if (null === $joins) {
-            return false;
-        }
+
         foreach ($joins as $join) {
             if ($join->table === $table) {
                 return true;
@@ -259,6 +255,16 @@ class Transaction extends Model
     }
 
     /**
+     * @return Attribute
+     */
+    protected function accountId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
      * Get the amount
      *
      * @return Attribute
@@ -266,7 +272,7 @@ class Transaction extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
 
@@ -278,7 +284,17 @@ class Transaction extends Model
     protected function foreignAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function transactionJournalId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
         );
     }
 }

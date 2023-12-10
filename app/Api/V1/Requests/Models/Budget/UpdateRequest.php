@@ -38,9 +38,9 @@ use Illuminate\Validation\Validator;
  */
 class UpdateRequest extends FormRequest
 {
+    use ChecksLogin;
     use ConvertsDataTypes;
     use ValidatesAutoBudgetRequest;
-    use ChecksLogin;
 
     /**
      * Get all data from the request.

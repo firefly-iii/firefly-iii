@@ -41,7 +41,7 @@ use League\Fractal\Resource\Item;
  */
 class AttemptController extends Controller
 {
-    public const RESOURCE_KEY = 'webhook_attempts';
+    public const string RESOURCE_KEY = 'webhook_attempts';
     private WebhookRepositoryInterface $repository;
 
     /**

@@ -31,7 +31,6 @@ use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**
@@ -47,7 +46,6 @@ class AccountUpdateService
     protected array                      $validCCFields;
     protected array                      $validFields;
     private array                        $canHaveOpeningBalance;
-    private array                        $canHaveVirtual;
     private User                         $user;
 
     /**
@@ -55,7 +53,6 @@ class AccountUpdateService
      */
     public function __construct()
     {
-        $this->canHaveVirtual        = config('firefly.can_have_virtual_amounts');
         $this->canHaveOpeningBalance = config('firefly.can_have_opening_balance');
         $this->validAssetFields      = config('firefly.valid_asset_fields');
         $this->validCCFields         = config('firefly.valid_cc_fields');
@@ -75,7 +72,7 @@ class AccountUpdateService
      */
     public function update(Account $account, array $data): Account
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         $this->accountRepository->setUser($account->user);
         $this->user = $account->user;
         $account    = $this->updateAccount($account, $data);
@@ -198,21 +195,21 @@ class AccountUpdateService
     {
         // skip if no order info
         if (!array_key_exists('order', $data) || $data['order'] === $account->order) {
-            Log::debug(sprintf('Account order will not be touched because its not set or already at %d.', $account->order));
+            app('log')->debug(sprintf('Account order will not be touched because its not set or already at %d.', $account->order));
 
             return $account;
         }
         // skip if not of orderable type.
         $type = $account->accountType->type;
         if (!in_array($type, [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], true)) {
-            Log::debug('Will not change order of this account.');
+            app('log')->debug('Will not change order of this account.');
 
             return $account;
         }
         // get account type ID's because a join and an update is hard:
-        $oldOrder = (int)$account->order;
+        $oldOrder = $account->order;
         $newOrder = $data['order'];
-        Log::debug(sprintf('Order is set to be updated from %s to %s', $oldOrder, $newOrder));
+        app('log')->debug(sprintf('Order is set to be updated from %s to %s', $oldOrder, $newOrder));
         $list = $this->getTypeIds([AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT]);
         if ($type === AccountType::ASSET) {
             $list = $this->getTypeIds([AccountType::ASSET]);
@@ -224,7 +221,7 @@ class AccountUpdateService
                        ->whereIn('accounts.account_type_id', $list)
                        ->decrement('order');
             $account->order = $newOrder;
-            Log::debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
+            app('log')->debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
             $account->save();
 
             return $account;
@@ -235,7 +232,7 @@ class AccountUpdateService
                    ->whereIn('accounts.account_type_id', $list)
                    ->increment('order');
         $account->order = $newOrder;
-        Log::debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
+        app('log')->debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
         $account->save();
 
         return $account;
@@ -253,7 +250,7 @@ class AccountUpdateService
         foreach ($array as $type) {
             /** @var AccountType $type */
             $type     = AccountType::whereType($type)->first();
-            $return[] = (int)$type->id;
+            $return[] = $type->id;
         }
 
         return $return;
@@ -341,17 +338,20 @@ class AccountUpdateService
             return;
         }
         $array = $preference->data;
-        Log::debug('Old array is: ', $array);
-        Log::debug(sprintf('Must remove : %d', $account->id));
-        $removeAccountId = (int)$account->id;
+        if (!is_array($array)) {
+            $array = [$array];
+        }
+        app('log')->debug('Old array is: ', $array);
+        app('log')->debug(sprintf('Must remove : %d', $account->id));
+        $removeAccountId = $account->id;
         $new             = [];
         foreach ($array as $value) {
             if ((int)$value !== $removeAccountId) {
-                Log::debug(sprintf('Will include: %d', $value));
+                app('log')->debug(sprintf('Will include: %d', $value));
                 $new[] = (int)$value;
             }
         }
-        Log::debug('Final new array is', $new);
+        app('log')->debug('Final new array is', $new);
         app('preferences')->setForUser($account->user, 'frontpageAccounts', $new);
     }
 }

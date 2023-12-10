@@ -27,6 +27,7 @@ namespace FireflyIII\Repositories\UserGroups\Bill;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -75,6 +76,13 @@ interface BillRepositoryInterface
      * @return Carbon
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon;
+
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
+    public function setUser(User $user): void;
 
     /**
      * Collect multi-currency of sum of bills already paid.

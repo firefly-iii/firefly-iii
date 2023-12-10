@@ -84,7 +84,7 @@ class EditController extends Controller
         $startDate  = $piggyBank->startdate?->format('Y-m-d');
         $currency   = $this->accountRepository->getAccountCurrency($piggyBank->account);
         if (null === $currency) {
-            $currency = Amount::getDefaultCurrency();
+            $currency = app('amount')->getDefaultCurrency();
         }
 
         $preFilled = [
@@ -93,7 +93,7 @@ class EditController extends Controller
             'targetamount' => app('steam')->bcround($piggyBank->targetamount, $currency->decimal_places),
             'targetdate'   => $targetDate,
             'startdate'    => $startDate,
-            'object_group' => $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
+            'object_group' => null !== $piggyBank->objectGroups->first() ? $piggyBank->objectGroups->first()->title : '',
             'notes'        => null === $note ? '' : $note->text,
         ];
         if (0 === bccomp($piggyBank->targetamount, '0')) {
@@ -127,7 +127,7 @@ class EditController extends Controller
         app('preferences')->mark();
 
         // store new attachment(s):
-        /** @var array $files */
+        /** @var array|null $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($piggyBank, $files);

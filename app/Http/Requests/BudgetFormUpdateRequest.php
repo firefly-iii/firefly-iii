@@ -35,9 +35,9 @@ use Illuminate\Validation\Validator;
  */
 class BudgetFormUpdateRequest extends FormRequest
 {
+    use ChecksLogin;
     use ConvertsDataTypes;
     use ValidatesAutoBudgetRequest;
-    use ChecksLogin;
 
     /**
      * Returns the data required by the controller.
@@ -65,7 +65,7 @@ class BudgetFormUpdateRequest extends FormRequest
     {
         $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name';
 
-        /** @var Budget $budget */
+        /** @var Budget|null $budget */
         $budget = $this->route()->parameter('budget');
 
         if (null !== $budget) {

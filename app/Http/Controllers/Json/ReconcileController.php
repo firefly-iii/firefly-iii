@@ -34,7 +34,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 use Throwable;
 
@@ -116,13 +115,13 @@ class ReconcileController extends Controller
             $clearedJournals = $collector->getExtractedJournals();
         }
 
-        Log::debug('Start transaction loop');
+        app('log')->debug('Start transaction loop');
         /** @var array $journal */
         foreach ($journals as $journal) {
             $amount = $this->processJournal($account, $accountCurrency, $journal, $amount);
         }
-        Log::debug(sprintf('Final amount is %s', $amount));
-        Log::debug('End transaction loop');
+        app('log')->debug(sprintf('Final amount is %s', $amount));
+        app('log')->debug('End transaction loop');
 
         /** @var array $journal */
         foreach ($clearedJournals as $journal) {
@@ -156,8 +155,8 @@ class ReconcileController extends Controller
                 )
             )->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('View error: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->debug(sprintf('View error: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $view = sprintf('Could not render accounts.reconcile.overview: %s', $e->getMessage());
             throw new FireflyException($view, 0, $e);
         }
@@ -181,7 +180,7 @@ class ReconcileController extends Controller
     private function processJournal(Account $account, TransactionCurrency $currency, array $journal, string $amount): string
     {
         $toAdd = '0';
-        Log::debug(sprintf('User submitted %s #%d: "%s"', $journal['transaction_type_type'], $journal['transaction_journal_id'], $journal['description']));
+        app('log')->debug(sprintf('User submitted %s #%d: "%s"', $journal['transaction_type_type'], $journal['transaction_journal_id'], $journal['description']));
 
         // not much magic below we need to cover using tests.
 
@@ -203,9 +202,9 @@ class ReconcileController extends Controller
         }
 
 
-        Log::debug(sprintf('Going to add %s to %s', $toAdd, $amount));
+        app('log')->debug(sprintf('Going to add %s to %s', $toAdd, $amount));
         $amount = bcadd($amount, $toAdd);
-        Log::debug(sprintf('Result is %s', $amount));
+        app('log')->debug(sprintf('Result is %s', $amount));
 
         return $amount;
     }
@@ -258,8 +257,8 @@ class ReconcileController extends Controller
                 compact('account', 'journals', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
             )->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->debug(sprintf('Could not render: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $html = sprintf('Could not render accounts.reconcile.transactions: %s', $e->getMessage());
             throw new FireflyException($html, 0, $e);
         }

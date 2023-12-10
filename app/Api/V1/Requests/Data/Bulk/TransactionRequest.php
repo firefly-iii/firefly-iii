@@ -30,7 +30,6 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\Api\Data\Bulk\ValidatesBulkTransactionQuery;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 use JsonException;
 
@@ -55,7 +54,7 @@ class TransactionRequest extends FormRequest
             ];
         } catch (JsonException $e) {
             // dont really care. the validation should catch invalid json.
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
         }
 
         return $data;

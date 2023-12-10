@@ -56,6 +56,8 @@ return [
     'cannot_find_subscription'                    => 'Firefly III ne trouve pas l\'abonnement ":name"',
     'no_notes_to_move'                            => 'L\'opération n\'a pas de notes à déplacer dans le champ description',
     'no_tags_to_remove'                           => 'L\'opération n\'a pas de tags à supprimer',
+    'not_withdrawal'                              => 'L\'opération n\'est pas une dépense',
+    'not_deposit'                                 => 'L\'opération n\'est pas un dépôt',
     'cannot_find_tag'                             => 'Firefly III ne trouve pas le tag ":tag"',
     'cannot_find_asset'                           => 'Firefly III ne trouve pas le compte d\'actif ":name"',
     'cannot_find_accounts'                        => 'Firefly III ne trouve pas le compte source ou le compte de destination',

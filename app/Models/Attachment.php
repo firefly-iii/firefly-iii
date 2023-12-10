@@ -23,8 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,7 +36,6 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -51,7 +54,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string|null         $title
  * @property string|null         $description
  * @property string              $mime
- * @property int                 $size
+ * @property int|string          $size
  * @property bool                $uploaded
  * @property string              $notes_text
  * @property-read Model|Eloquent $attachable
@@ -78,19 +81,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUserId($value)
  * @method static Builder|Attachment withTrashed()
  * @method static Builder|Attachment withoutTrashed()
- * @property int|null            $user_group_id
+ * @property int                 $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUserGroupId($value)
  * @mixin Eloquent
  */
 class Attachment extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -98,7 +98,7 @@ class Attachment extends Model
             'deleted_at' => 'datetime',
             'uploaded'   => 'boolean',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['attachable_id', 'attachable_type', 'user_id', 'md5', 'filename', 'mime', 'title', 'description', 'size', 'uploaded'];
 
     /**
@@ -109,13 +109,13 @@ class Attachment extends Model
      * @return Attachment
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Attachment
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $attachmentId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Attachment $attachment */
+            /** @var Attachment|null $attachment */
             $attachment = $user->attachments()->find($attachmentId);
             if (null !== $attachment) {
                 return $attachment;
@@ -160,4 +160,15 @@ class Attachment extends Model
     {
         return $this->morphMany(Note::class, 'noteable');
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function attachableId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
 }

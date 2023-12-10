@@ -33,7 +33,7 @@ use Illuminate\Http\JsonResponse;
  */
 class DestroyController extends Controller
 {
-    public const RESOURCE_KEY = 'accounts';
+    public const string RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
 

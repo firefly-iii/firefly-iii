@@ -49,7 +49,7 @@ class BillRepository implements BillRepositoryInterface
         $set     = $this->userGroup->bills()->orderBy('order', 'ASC')->get();
         $current = 1;
         foreach ($set as $bill) {
-            if ((int)$bill->order !== $current) {
+            if ($bill->order !== $current) {
                 $bill->order = $current;
                 $bill->save();
             }
@@ -81,19 +81,19 @@ class BillRepository implements BillRepositoryInterface
             /** @var Collection $set */
             $set        = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
             $currency   = $bill->transactionCurrency;
-            $currencyId = (int)$bill->transaction_currency_id;
+            $currencyId = $bill->transaction_currency_id;
 
-            $return[$currencyId] = $return[$currencyId] ?? [
+            $return[$currencyId] ??= [
                 'currency_id'             => (string)$currency->id,
                 'currency_name'           => $currency->name,
                 'currency_symbol'         => $currency->symbol,
                 'currency_code'           => $currency->code,
-                'currency_decimal_places' => (int)$currency->decimal_places,
+                'currency_decimal_places' => $currency->decimal_places,
                 'native_id'               => (string)$default->id,
                 'native_name'             => $default->name,
                 'native_symbol'           => $default->symbol,
                 'native_code'             => $default->code,
-                'native_decimal_places'   => (int)$default->decimal_places,
+                'native_decimal_places'   => $default->decimal_places,
                 'sum'                     => '0',
                 'native_sum'              => '0',
             ];
@@ -103,18 +103,18 @@ class BillRepository implements BillRepositoryInterface
                 /** @var Transaction|null $sourceTransaction */
                 $sourceTransaction = $transactionJournal->transactions()->where('amount', '<', 0)->first();
                 if (null !== $sourceTransaction) {
-                    $amount = (string)$sourceTransaction->amount;
-                    if ((int)$sourceTransaction->foreign_currency_id === (int)$currency->id) {
+                    $amount = $sourceTransaction->amount;
+                    if ((int)$sourceTransaction->foreign_currency_id === $currency->id) {
                         // use foreign amount instead!
                         $amount = (string)$sourceTransaction->foreign_amount;
                     }
                     // convert to native currency
                     $nativeAmount = $amount;
-                    if ($currencyId !== (int)$default->id) {
+                    if ($currencyId !== $default->id) {
                         // get rate and convert.
                         $nativeAmount = $converter->convert($currency, $default, $transactionJournal->date, $amount);
                     }
-                    if ((int)$sourceTransaction->foreign_currency_id === (int)$default->id) {
+                    if ((int)$sourceTransaction->foreign_currency_id === $default->id) {
                         // ignore conversion, use foreign amount
                         $nativeAmount = (string)$sourceTransaction->foreign_amount;
                     }
@@ -154,20 +154,20 @@ class BillRepository implements BillRepositoryInterface
 
             if ($total > 0) {
                 $currency                          = $bill->transactionCurrency;
-                $currencyId                        = (int)$bill->transaction_currency_id;
+                $currencyId                        = $bill->transaction_currency_id;
                 $average                           = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
                 $nativeAverage                     = $converter->convert($currency, $default, $start, $average);
-                $return[$currencyId]               = $return[$currencyId] ?? [
+                $return[$currencyId]               ??= [
                     'currency_id'             => (string)$currency->id,
                     'currency_name'           => $currency->name,
                     'currency_symbol'         => $currency->symbol,
                     'currency_code'           => $currency->code,
-                    'currency_decimal_places' => (int)$currency->decimal_places,
+                    'currency_decimal_places' => $currency->decimal_places,
                     'native_id'               => (string)$default->id,
                     'native_name'             => $default->name,
                     'native_symbol'           => $default->symbol,
                     'native_code'             => $default->code,
-                    'native_decimal_places'   => (int)$default->decimal_places,
+                    'native_decimal_places'   => $default->decimal_places,
                     'sum'                     => '0',
                     'native_sum'              => '0',
                 ];
@@ -193,21 +193,21 @@ class BillRepository implements BillRepositoryInterface
     {
         $set          = new Collection();
         $currentStart = clone $start;
-        //Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
-        //Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
+        //app('log')->debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
+        //app('log')->debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
 
         while ($currentStart <= $end) {
-            //Log::debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
+            //app('log')->debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
-            //Log::debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+            //app('log')->debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
             if ($nextExpectedMatch > $end) {// If nextExpectedMatch is after end, we continue
                 break;
             }
             $set->push(clone $nextExpectedMatch);
-            //Log::debug(sprintf('Now %d dates in set.', $set->count()));
+            //app('log')->debug(sprintf('Now %d dates in set.', $set->count()));
             $nextExpectedMatch->addDay();
 
-            //Log::debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+            //app('log')->debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
 
             $currentStart = clone $nextExpectedMatch;
         }

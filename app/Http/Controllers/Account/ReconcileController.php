@@ -38,7 +38,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use JsonException;
 use Psr\Container\ContainerExceptionInterface;
@@ -169,14 +168,14 @@ class ReconcileController extends Controller
             return $this->redirectAccountToAccount($account);
         }
 
-        Log::debug('In ReconcileController::submit()');
+        app('log')->debug('In ReconcileController::submit()');
         $data = $request->getAll();
 
         /** @var string $journalId */
         foreach ($data['journals'] as $journalId) {
             $this->repository->reconcileById((int)$journalId);
         }
-        Log::debug('Reconciled all transactions.');
+        app('log')->debug('Reconciled all transactions.');
 
         // switch dates if necessary
         if ($end->lt($start)) {
@@ -188,7 +187,7 @@ class ReconcileController extends Controller
         if ('create' === $data['reconcile']) {
             $result = $this->createReconciliation($account, $start, $end, $data['difference']);
         }
-        Log::debug('End of routine.');
+        app('log')->debug('End of routine.');
         app('preferences')->mark();
         if ('' === $result) {
             session()->flash('success', (string)trans('firefly.reconciliation_stored'));
@@ -208,14 +207,14 @@ class ReconcileController extends Controller
      * @param Carbon  $end
      * @param string  $difference
      *
-     * @return RedirectResponse|Redirector|string
+     * @return string
      * @throws DuplicateTransactionException
      * @throws JsonException
      */
-    private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference)
+    private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference): string
     {
         if (!$this->isEditableAccount($account)) {
-            return $this->redirectAccountToAccount($account);
+            return 'not-editable';
         }
 
         $reconciliation = $this->accountRepos->getReconciliation($account);

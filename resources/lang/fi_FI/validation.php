@@ -44,6 +44,7 @@ return [
     'invalid_query_currency'         => 'Kyselysi sisältää tilejä, joilla on erilaiset valuutta-asetukset, joka ei ole sallittua.',
     'iban'                           => 'IBAN ei ole oikeassa muodossa.',
     'zero_or_more'                   => 'Arvo ei voi olla negatiivinen.',
+    'no_asset_account'               => 'This is not an asset account.',
     'date_or_time'                   => 'Arvon täytyy olla päivämäärä tai aika-arvo (ISO 8601).',
     'source_equals_destination'      => 'Lähdetili on sama kuin kohdetili - ja sehän ei käy.',
     'unique_account_number_for_user' => 'Tämä tilinumero näyttäisi olevan jo käytössä.',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

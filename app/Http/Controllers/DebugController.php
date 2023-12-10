@@ -42,6 +42,7 @@ use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use const PHP_SAPI;
 
 /**
  * Class DebugController
@@ -69,11 +70,11 @@ class DebugController extends Controller
      */
     public function displayError(): void
     {
-        Log::debug('This is a test message at the DEBUG level.');
-        Log::info('This is a test message at the INFO level.');
+        app('log')->debug('This is a test message at the DEBUG level.');
+        app('log')->info('This is a test message at the INFO level.');
         Log::notice('This is a test message at the NOTICE level.');
         app('log')->warning('This is a test message at the WARNING level.');
-        Log::error('This is a test message at the ERROR level.');
+        app('log')->error('This is a test message at the ERROR level.');
         Log::critical('This is a test message at the CRITICAL level.');
         Log::alert('This is a test message at the ALERT level.');
         Log::emergency('This is a test message at the EMERGENCY level.');
@@ -92,21 +93,21 @@ class DebugController extends Controller
     {
         app('preferences')->mark();
         $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range', 'temp-mfa-secret', 'temp-mfa-codes']);
-        Log::debug('Call cache:clear...');
+        app('log')->debug('Call cache:clear...');
 
         Artisan::call('cache:clear');
-        Log::debug('Call config:clear...');
+        app('log')->debug('Call config:clear...');
         Artisan::call('config:clear');
-        Log::debug('Call route:clear...');
+        app('log')->debug('Call route:clear...');
         Artisan::call('route:clear');
-        Log::debug('Call twig:clean...');
+        app('log')->debug('Call twig:clean...');
         try {
             Artisan::call('twig:clean');
         } catch (Exception $e) {  // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
-        Log::debug('Call view:clear...');
+        app('log')->debug('Call view:clear...');
         Artisan::call('view:clear');
 
         return redirect(route('index'));
@@ -115,12 +116,10 @@ class DebugController extends Controller
     /**
      * Show debug info.
      *
-     * @param Request $request
-     *
      * @return Factory|View
      * @throws FireflyException
      */
-    public function index(Request $request)
+    public function index()
     {
         $table = $this->generateTable();
         $table = str_replace(["\n", "\t", '  '], '', $table);
@@ -129,7 +128,7 @@ class DebugController extends Controller
         // get latest log file:
         $logger = Log::driver();
         // PHPstan doesn't recognize the method because of its polymorphic nature.
-        $handlers   = $logger->getHandlers(); // @phpstan-ignore-line
+        $handlers = $logger->getHandlers(); // @phpstan-ignore-line
         $logContent = '';
         foreach ($handlers as $handler) {
             if ($handler instanceof RotatingFileHandler) {
@@ -141,7 +140,7 @@ class DebugController extends Controller
         }
         if ('' !== $logContent) {
             // last few lines
-            $logContent = 'Truncated from this point <----|' . substr($logContent, -16384);
+            $logContent = 'Truncated from this point <----|' . substr((string)$logContent, -16384);
         }
 
         return view('debug', compact('table', 'now', 'logContent'));
@@ -166,8 +165,8 @@ class DebugController extends Controller
      */
     private function getSystemInformation(): array
     {
-        $maxFileSize   = app('steam')->phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize   = app('steam')->phpBytes(ini_get('post_max_size'));
+        $maxFileSize   = app('steam')->phpBytes((string)ini_get('upload_max_filesize'));
+        $maxPostSize   = app('steam')->phpBytes((string)ini_get('post_max_size'));
         $drivers       = DB::availableDrivers();
         $currentDriver = DB::getDriverName();
         return [
@@ -199,19 +198,19 @@ class DebugController extends Controller
         ];
         try {
             if (file_exists('/var/www/counter-main.txt')) {
-                $return['build'] = trim(file_get_contents('/var/www/counter-main.txt'));
+                $return['build'] = trim((string)file_get_contents('/var/www/counter-main.txt'));
             }
-        } catch (Exception $e) { // generic catch for open basedir.
-            Log::debug('Could not check build counter, but thats ok.');
-            Log::warning($e->getMessage());
+        } catch (Exception $e) { // @phpstan-ignore-line
+            app('log')->debug('Could not check build counter, but thats ok.');
+            app('log')->warning($e->getMessage());
         }
         try {
             if (file_exists('/var/www/build-date-main.txt')) {
-                $return['build_date'] = trim(file_get_contents('/var/www/build-date-main.txt'));
+                $return['build_date'] = trim((string)file_get_contents('/var/www/build-date-main.txt'));
             }
-        } catch (Exception $e) { // generic catch for open basedir.
-            Log::debug('Could not check build date, but thats ok.');
-            Log::warning($e->getMessage());
+        } catch (Exception $e) { // @phpstan-ignore-line
+            app('log')->debug('Could not check build date, but thats ok.');
+            app('log')->warning($e->getMessage());
         }
         if ('' !== (string)env('BASE_IMAGE_BUILD')) {
             $return['base_build'] = env('BASE_IMAGE_BUILD');
@@ -236,7 +235,7 @@ class DebugController extends Controller
         if ($lastTime > 0) {
             $carbon         = Carbon::createFromTimestamp($lastTime);
             $lastCronjob    = $carbon->format('Y-m-d H:i:s');
-            $lastCronjobAgo = $carbon->locale('en')->diffForHumans();
+            $lastCronjobAgo = $carbon->locale('en')->diffForHumans(); // @phpstan-ignore-line
         }
 
         return [
@@ -246,7 +245,7 @@ class DebugController extends Controller
             'default_locale'     => (string)config('firefly.default_locale'),
             'remote_header'      => $userGuard === 'remote_user_guard' ? config('auth.guard_header') : 'N/A',
             'remote_mail_header' => $userGuard === 'remote_user_guard' ? config('auth.guard_email') : 'N/A',
-            'stateful_domains'   => join(', ', config('sanctum.stateful')),
+            'stateful_domains'   => implode(', ', config('sanctum.stateful')),
 
             // the dates for the cron job are based on the recurring cron job's times.
             // any of the cron jobs will do, they always run at the same time.
@@ -270,16 +269,16 @@ class DebugController extends Controller
         $userAgent = request()->header('user-agent');
 
         // set languages, see what happens:
-        $original       = setlocale(LC_ALL, 0);
+        $original       = setlocale(LC_ALL, '0');
         $localeAttempts = [];
         $parts          = app('steam')->getLocaleArray(app('steam')->getLocale());
         foreach ($parts as $code) {
             $code = trim($code);
-            Log::debug(sprintf('Trying to set %s', $code));
+            app('log')->debug(sprintf('Trying to set %s', $code));
             $result                = setlocale(LC_ALL, $code);
             $localeAttempts[$code] = $result === $code;
         }
-        setlocale(LC_ALL, $original);
+        setlocale(LC_ALL, (string)$original);
 
         return [
             'user_id'         => auth()->user()->id,
@@ -314,7 +313,7 @@ class DebugController extends Controller
 
         // has stored reconciliations
         $type = TransactionType::whereType(TransactionType::RECONCILIATION)->first();
-        if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count()) {
+        if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count() > 0) {
             $flags[] = '<span title="Has reconciled">:ledger:</span>';
         }
 
@@ -339,7 +338,7 @@ class DebugController extends Controller
         if ($user->bills()->count() > 0) {
             $flags[] = '<span title="Has subscriptions">:email:</span>';
         }
-        return join(' ', $flags);
+        return implode(' ', $flags);
     }
 
     /**

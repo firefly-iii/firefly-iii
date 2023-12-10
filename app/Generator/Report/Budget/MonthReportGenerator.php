@@ -29,7 +29,6 @@ use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -74,8 +73,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 ->with('accounts', $this->accounts)
                 ->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());
             throw new FireflyException($result, 0, $e);
         }
@@ -155,7 +154,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     protected function getExpenses(): array
     {
         if (0 !== count($this->expenses)) {
-            Log::debug('Return previous set of expenses.');
+            app('log')->debug('Return previous set of expenses.');
 
             return $this->expenses;
         }

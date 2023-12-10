@@ -26,6 +26,7 @@ namespace FireflyIII\Transformers;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
@@ -129,8 +130,8 @@ class RecurrenceTransformer extends AbstractTransformer
                 'updated_at'  => $repetition->updated_at->toAtomString(),
                 'type'        => $repetition->repetition_type,
                 'moment'      => $repetition->repetition_moment,
-                'skip'        => (int)$repetition->repetition_skip,
-                'weekend'     => (int)$repetition->weekend,
+                'skip'        => $repetition->repetition_skip,
+                'weekend'     => $repetition->weekend,
                 'description' => $this->repository->repetitionDescription($repetition),
                 'occurrences' => [],
             ];
@@ -161,7 +162,9 @@ class RecurrenceTransformer extends AbstractTransformer
         // get all transactions:
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions()->get() as $transaction) {
-            $sourceAccount         = $transaction->sourceAccount;
+            /** @var Account|null $sourceAccount */
+            $sourceAccount = $transaction->sourceAccount;
+            /** @var Account|null $destinationAccount */
             $destinationAccount    = $transaction->destinationAccount;
             $foreignCurrencyCode   = null;
             $foreignCurrencySymbol = null;
@@ -171,7 +174,7 @@ class RecurrenceTransformer extends AbstractTransformer
                 $foreignCurrencyId     = (int)$transaction->foreign_currency_id;
                 $foreignCurrencyCode   = $transaction->foreignCurrency->code;
                 $foreignCurrencySymbol = $transaction->foreignCurrency->symbol;
-                $foreignCurrencyDp     = (int)$transaction->foreignCurrency->decimal_places;
+                $foreignCurrencyDp     = $transaction->foreignCurrency->decimal_places;
             }
 
             // source info:
@@ -181,7 +184,7 @@ class RecurrenceTransformer extends AbstractTransformer
             $sourceIban = null;
             if (null !== $sourceAccount) {
                 $sourceName = $sourceAccount->name;
-                $sourceId   = (int)$sourceAccount->id;
+                $sourceId   = $sourceAccount->id;
                 $sourceType = $sourceAccount->accountType->type;
                 $sourceIban = $sourceAccount->iban;
             }
@@ -191,7 +194,7 @@ class RecurrenceTransformer extends AbstractTransformer
             $destinationIban = null;
             if (null !== $destinationAccount) {
                 $destinationName = $destinationAccount->name;
-                $destinationId   = (int)$destinationAccount->id;
+                $destinationId   = $destinationAccount->id;
                 $destinationType = $destinationAccount->accountType->type;
                 $destinationIban = $destinationAccount->iban;
             }
@@ -205,7 +208,7 @@ class RecurrenceTransformer extends AbstractTransformer
                 'currency_id'                     => (string)$transaction->transaction_currency_id,
                 'currency_code'                   => $transaction->transactionCurrency->code,
                 'currency_symbol'                 => $transaction->transactionCurrency->symbol,
-                'currency_decimal_places'         => (int)$transaction->transactionCurrency->decimal_places,
+                'currency_decimal_places'         => $transaction->transactionCurrency->decimal_places,
                 'foreign_currency_id'             => null === $foreignCurrencyId ? null : (string)$foreignCurrencyId,
                 'foreign_currency_code'           => $foreignCurrencyCode,
                 'foreign_currency_symbol'         => $foreignCurrencySymbol,

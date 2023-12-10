@@ -451,11 +451,10 @@ export default {
             if (typeof window.expectedSourceTypes === 'undefined') {
                 console.error('window.expectedSourceTypes is unexpectedly empty.')
             }
-
             this.transactions.push({
                 transaction_journal_id: transaction.transaction_journal_id,
                 description: transaction.description,
-                date: transaction.date.substr(0, 10),
+                date: transaction.date.substring(0, 16),
                 amount: this.roundNumber(this.positiveAmount(transaction.amount), transaction.currency_decimal_places),
                 category: transaction.category_name,
                 errors: {
@@ -666,7 +665,7 @@ export default {
                 sourceId = null;
             }
 
-            // parse amount if has exactly one comma:
+            // parse amount, if amount has exactly one comma:
             // solves issues with some locales.
             if (1 === (String(row.amount).match(/\,/g) || []).length) {
                 row.amount = String(row.amount).replace(',', '.');
@@ -722,7 +721,7 @@ export default {
             if (parseInt(row.piggy_bank) > 0) {
                 currentArray.piggy_bank_id = parseInt(row.piggy_bank);
             }
-            if(this.isReconciled) {
+            if(this.isReconciled && !this.storeAsNew) {
                 // drop content from array:
                 delete currentArray.source_id;
                 delete currentArray.source_name;

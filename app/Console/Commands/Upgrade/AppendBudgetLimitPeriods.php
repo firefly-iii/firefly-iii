@@ -26,7 +26,6 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -37,18 +36,10 @@ class AppendBudgetLimitPeriods extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '550_budget_limit_periods';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    public const string CONFIG_NAME = '550_budget_limit_periods';
+
     protected $description = 'Append budget limits with their (estimated) timeframe.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:budget-limit-periods {--F|force : Force the execution of this command.}';
 
     /**
@@ -99,7 +90,7 @@ class AppendBudgetLimitPeriods extends Command
     /**
      * @param BudgetLimit $limit
      */
-    private function fixLimit(BudgetLimit $limit)
+    private function fixLimit(BudgetLimit $limit): void
     {
         $period = $this->getLimitPeriod($limit);
 
@@ -125,7 +116,7 @@ class AppendBudgetLimitPeriods extends Command
             $limit->end_date->format('Y-m-d'),
             $period
         );
-        Log::debug($msg);
+        app('log')->debug($msg);
     }
 
     /**

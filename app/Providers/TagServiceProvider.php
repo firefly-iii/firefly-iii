@@ -38,9 +38,7 @@ class TagServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void
-    {
-    }
+    public function boot(): void {}
 
     /**
      * Register the application services.
@@ -49,7 +47,7 @@ class TagServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             TagRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var TagRepository $repository */
                 $repository = app(TagRepository::class);
 
@@ -63,7 +61,7 @@ class TagServiceProvider extends ServiceProvider
 
         $this->app->bind(
             OperationsRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var OperationsRepository $repository */
                 $repository = app(OperationsRepository::class);
 

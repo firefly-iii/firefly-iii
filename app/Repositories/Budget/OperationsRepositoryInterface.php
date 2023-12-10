@@ -75,23 +75,7 @@ interface OperationsRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void;
 
-
     /**
-     * Return multi-currency spent information.
-     *
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     * @deprecated
-     */
-    public function spentInPeriodMc(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
-
-    /**
-     * TODO this method was marked as deprecated but I'm not sure why.
-     *
      * @param Carbon                   $start
      * @param Carbon                   $end
      * @param Collection|null          $accounts
@@ -99,7 +83,7 @@ interface OperationsRepositoryInterface
      * @param TransactionCurrency|null $currency
      *
      * @return array
-     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumExpenses(
         Carbon               $start,

@@ -43,7 +43,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 use Storage;
 
@@ -95,7 +94,7 @@ class BillRepository implements BillRepositoryInterface
         $set     = $this->user->bills()->orderBy('order', 'ASC')->get();
         $current = 1;
         foreach ($set as $bill) {
-            if ((int)$bill->order !== $current) {
+            if ($bill->order !== $current) {
                 $bill->order = $current;
                 $bill->save();
             }
@@ -138,22 +137,22 @@ class BillRepository implements BillRepositoryInterface
     public function findBill(?int $billId, ?string $billName): ?Bill
     {
         if (null !== $billId) {
-            $searchResult = $this->find((int)$billId);
+            $searchResult = $this->find($billId);
             if (null !== $searchResult) {
-                Log::debug(sprintf('Found bill based on #%d, will return it.', $billId));
+                app('log')->debug(sprintf('Found bill based on #%d, will return it.', $billId));
 
                 return $searchResult;
             }
         }
         if (null !== $billName) {
-            $searchResult = $this->findByName((string)$billName);
+            $searchResult = $this->findByName($billName);
             if (null !== $searchResult) {
-                Log::debug(sprintf('Found bill based on "%s", will return it.', $billName));
+                app('log')->debug(sprintf('Found bill based on "%s", will return it.', $billName));
 
                 return $searchResult;
             }
         }
-        Log::debug('Found nothing');
+        app('log')->debug('Found nothing');
 
         return null;
     }
@@ -200,7 +199,7 @@ class BillRepository implements BillRepositoryInterface
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : '';
+                $attachment->notes_text  = null !== $notes ? $notes->text : '';
 
                 return $attachment;
             }
@@ -285,13 +284,10 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getNoteText(Bill $bill): string
     {
-        /** @var Note $note */
+        /** @var Note|null $note */
         $note = $bill->notes()->first();
-        if (null !== $note) {
-            return (string)$note->text;
-        }
+        return (string)$note?->text;
 
-        return '';
     }
 
     /**
@@ -315,7 +311,7 @@ class BillRepository implements BillRepositoryInterface
             $transaction                = $journal->transactions()->where('amount', '<', 0)->first();
             $currencyId                 = (int)$journal->transaction_currency_id;
             $currency                   = $journal->transactionCurrency;
-            $result[$currencyId]        = $result[$currencyId] ?? [
+            $result[$currencyId]        ??= [
                 'sum'                     => '0',
                 'count'                   => 0,
                 'avg'                     => '0',
@@ -345,7 +341,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
@@ -373,7 +369,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getPaidDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
-        //Log::debug('Now in getPaidDatesInRange()');
+        //app('log')->debug('Now in getPaidDatesInRange()');
 
         return $bill->transactionJournals()
                     ->before($end)->after($start)->get(
@@ -420,7 +416,7 @@ class BillRepository implements BillRepositoryInterface
         $array = [];
         /** @var Rule $rule */
         foreach ($rules as $rule) {
-            $array[$rule->action_value]   = $array[$rule->action_value] ?? [];
+            $array[$rule->action_value]   ??= [];
             $array[$rule->action_value][] = ['id' => $rule->id, 'title' => $rule->title, 'active' => $rule->active];
         }
         $return = [];
@@ -453,14 +449,14 @@ class BillRepository implements BillRepositoryInterface
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            /** @var Transaction $transaction */
+            /** @var Transaction|null $transaction */
             $transaction = $journal->transactions()->where('amount', '<', 0)->first();
             if (null === $transaction) {
                 continue;
             }
             $currencyId                 = (int)$journal->transaction_currency_id;
             $currency                   = $journal->transactionCurrency;
-            $result[$currencyId]        = $result[$currencyId] ?? [
+            $result[$currencyId]        ??= [
                 'sum'                     => '0',
                 'count'                   => 0,
                 'avg'                     => '0',
@@ -498,7 +494,7 @@ class BillRepository implements BillRepositoryInterface
             $journal          = $bill->user->transactionJournals()->find((int)$transaction['transaction_journal_id']);
             $journal->bill_id = $bill->id;
             $journal->save();
-            Log::debug(sprintf('Linked journal #%d to bill #%d', $journal->id, $bill->id));
+            app('log')->debug(sprintf('Linked journal #%d to bill #%d', $journal->id, $bill->id));
         }
     }
 
@@ -522,12 +518,12 @@ class BillRepository implements BillRepositoryInterface
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
         $start = clone $bill->date;
-        Log::debug('nextExpectedMatch: Start is ' . $start->format('Y-m-d'));
+        app('log')->debug('nextExpectedMatch: Start is ' . $start->format('Y-m-d'));
 
         while ($start < $date) {
-            Log::debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d'), $date->format('Y-m-d')));
+            app('log')->debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d'), $date->format('Y-m-d')));
             $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
-            Log::debug('Start is now ' . $start->format('Y-m-d'));
+            app('log')->debug('Start is now ' . $start->format('Y-m-d'));
         }
 
         $end = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
@@ -537,12 +533,12 @@ class BillRepository implements BillRepositoryInterface
 
         if ($journalCount > 0) {
             // this period had in fact a bill. The new start is the current end, and we create a new end.
-            Log::debug(sprintf('Journal count is %d, so start becomes %s', $journalCount, $end->format('Y-m-d')));
+            app('log')->debug(sprintf('Journal count is %d, so start becomes %s', $journalCount, $end->format('Y-m-d')));
             $start = clone $end;
             $end   = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
         }
-        Log::debug('nextExpectedMatch: Final start is ' . $start->format('Y-m-d'));
-        Log::debug('nextExpectedMatch: Matching end is ' . $end->format('Y-m-d'));
+        app('log')->debug('nextExpectedMatch: Final start is ' . $start->format('Y-m-d'));
+        app('log')->debug('nextExpectedMatch: Matching end is ' . $end->format('Y-m-d'));
 
         $cache->store($start);
 
@@ -623,7 +619,7 @@ class BillRepository implements BillRepositoryInterface
             $set      = $bill->transactionJournals()->after($start)->before($end)->get(['transaction_journals.*']);
             $currency = $bill->transactionCurrency;
 
-            $return[$currency->id] = $return[$currency->id] ?? [
+            $return[$currency->id] ??= [
                 'id'             => (string)$currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,
@@ -637,8 +633,8 @@ class BillRepository implements BillRepositoryInterface
                 /** @var Transaction|null $sourceTransaction */
                 $sourceTransaction = $transactionJournal->transactions()->where('amount', '<', 0)->first();
                 if (null !== $sourceTransaction) {
-                    $amount = (string)$sourceTransaction->amount;
-                    if ((int)$sourceTransaction->foreign_currency_id === (int)$currency->id) {
+                    $amount = $sourceTransaction->amount;
+                    if ((int)$sourceTransaction->foreign_currency_id === $currency->id) {
                         // use foreign amount instead!
                         $amount = (string)$sourceTransaction->foreign_amount;
                     }
@@ -657,7 +653,7 @@ class BillRepository implements BillRepositoryInterface
         return $this->user->bills()
                           ->where('active', true)
                           ->orderBy('bills.name', 'ASC')
-                          ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),]);
+                          ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),]); // @phpstan-ignore-line
     }
 
     /**
@@ -680,7 +676,7 @@ class BillRepository implements BillRepositoryInterface
             if ($total > 0) {
                 $currency                     = $bill->transactionCurrency;
                 $average                      = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
-                $return[$currency->id]        = $return[$currency->id] ?? [
+                $return[$currency->id]        ??= [
                     'id'             => (string)$currency->id,
                     'name'           => $currency->name,
                     'symbol'         => $currency->symbol,
@@ -708,21 +704,21 @@ class BillRepository implements BillRepositoryInterface
     {
         $set          = new Collection();
         $currentStart = clone $start;
-        //Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
-        //Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
+        //app('log')->debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
+        //app('log')->debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
 
         while ($currentStart <= $end) {
-            //Log::debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
+            //app('log')->debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
-            //Log::debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+            //app('log')->debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
             if ($nextExpectedMatch > $end) {// If nextExpectedMatch is after end, we continue
                 break;
             }
             $set->push(clone $nextExpectedMatch);
-            //Log::debug(sprintf('Now %d dates in set.', $set->count()));
+            //app('log')->debug(sprintf('Now %d dates in set.', $set->count()));
             $nextExpectedMatch->addDay();
 
-            //Log::debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+            //app('log')->debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
 
             $currentStart = clone $nextExpectedMatch;
         }

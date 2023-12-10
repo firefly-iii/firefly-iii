@@ -34,7 +34,6 @@ use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -130,9 +129,9 @@ class TagController extends Controller
         $subTitleIcon = 'fa-tag';
 
         $location    = $this->repository->getLocation($tag);
-        $latitude    = $location ? $location->latitude : config('firefly.default_location.latitude');
-        $longitude   = $location ? $location->longitude : config('firefly.default_location.longitude');
-        $zoomLevel   = $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
+        $latitude    = null !== $location ? $location->latitude : config('firefly.default_location.latitude');
+        $longitude   = null !== $location ? $location->longitude : config('firefly.default_location.longitude');
+        $zoomLevel   = null !== $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
         $hasLocation = null !== $location;
         $locations   = [
             'location' => [
@@ -181,9 +180,11 @@ class TagController extends Controller
     }
 
     /**
+     * @param Request $request
      *
+     * @return RedirectResponse
      */
-    public function massDestroy(Request $request)
+    public function massDestroy(Request $request): RedirectResponse
     {
         $tags = $request->get('tags');
         if (null === $tags || !is_array($tags)) {
@@ -200,7 +201,7 @@ class TagController extends Controller
                 $count++;
             }
         }
-        session()->flash('success', (string)trans_choice('firefly.deleted_x_tags', $count));
+        session()->flash('success', trans_choice('firefly.deleted_x_tags', $count));
 
         return redirect(route('tags.index'));
     }
@@ -242,8 +243,8 @@ class TagController extends Controller
         $subTitleIcon = 'fa-tag';
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $start        = $start ?? session('start');
-        $end          = $end ?? session('end');
+        $start        ??= session('start');
+        $end          ??= session('end');
         $location     = $this->repository->getLocation($tag);
         $attachments  = $this->repository->getAttachments($tag);
         $subTitle     = trans(
@@ -256,7 +257,7 @@ class TagController extends Controller
         );
 
         $startPeriod = $this->repository->firstUseDate($tag);
-        $startPeriod = $startPeriod ?? today(config('app.timezone'));
+        $startPeriod ??= today(config('app.timezone'));
         $endPeriod   = clone $end;
         $periods     = $this->getTagPeriodOverview($tag, $startPeriod, $endPeriod);
         $path        = route('tags.show', [$tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
@@ -317,16 +318,16 @@ class TagController extends Controller
     public function store(TagFormRequest $request): RedirectResponse
     {
         $data = $request->collectTagData();
-        Log::debug('Data from request', $data);
+        app('log')->debug('Data from request', $data);
 
         $result = $this->repository->store($data);
-        Log::debug('Data after storage', $result->toArray());
+        app('log')->debug('Data after storage', $result->toArray());
 
         session()->flash('success', (string)trans('firefly.created_tag', ['tag' => $data['tag']]));
         app('preferences')->mark();
 
         // store attachment(s):
-        /** @var array $files */
+        /** @var array|null $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachmentsHelper->saveAttachmentsForModel($result, $files);
@@ -365,7 +366,7 @@ class TagController extends Controller
         app('preferences')->mark();
 
         // store new attachment(s):
-        /** @var array $files */
+        /** @var array|null $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachmentsHelper->saveAttachmentsForModel($tag, $files);

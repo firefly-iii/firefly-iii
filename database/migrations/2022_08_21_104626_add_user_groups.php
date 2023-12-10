@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Schema;
 return new class () extends Migration {
     /**
      * Run the migrations.
-     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      * @return void
      */
     public function up(): void
@@ -42,7 +42,7 @@ return new class () extends Migration {
         try {
             Schema::table(
                 'currency_exchange_rates',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     if (!Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
                         $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
                         $table->foreign('user_group_id', 'cer_to_ugi')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
@@ -65,7 +65,7 @@ return new class () extends Migration {
         try {
             Schema::table(
                 'currency_exchange_rates',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     if ('sqlite' !== config('database.default')) {
                         $table->dropForeign('cer_to_ugi');
                     }

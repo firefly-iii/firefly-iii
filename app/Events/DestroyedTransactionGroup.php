@@ -26,7 +26,6 @@ namespace FireflyIII\Events;
 
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class DestroyedTransactionGroup.
@@ -46,7 +45,7 @@ class DestroyedTransactionGroup extends Event
      */
     public function __construct(TransactionGroup $transactionGroup)
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         $this->transactionGroup = $transactionGroup;
     }
 }

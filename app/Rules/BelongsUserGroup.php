@@ -33,7 +33,6 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class BelongsUserGroup
@@ -65,8 +64,7 @@ class BelongsUserGroup implements ValidationRule
             $fail('validation.belongs_user_or_user_group')->translate();
             return;
         }
-        $attribute = (string)$attribute;
-        Log::debug(sprintf('Group: Going to validate "%s"', $attribute));
+        app('log')->debug(sprintf('Group: Going to validate "%s"', $attribute));
 
         $result = match ($attribute) {
             'piggy_bank_id'               => $this->validatePiggyBankId((int)$value),
@@ -151,7 +149,7 @@ class BelongsUserGroup implements ValidationRule
         }
         $count = 0;
         foreach ($objects as $object) {
-            $objectValue = trim((string)$object->$field);
+            $objectValue = trim((string)$object->$field); // @phpstan-ignore-line
             app('log')->debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));
             if ($objectValue === $value) {
                 $count++;

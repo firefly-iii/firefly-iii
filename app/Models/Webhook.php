@@ -23,10 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\Enums\WebhookDelivery;
 use FireflyIII\Enums\WebhookResponse;
 use FireflyIII\Enums\WebhookTrigger;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -34,7 +37,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -73,12 +75,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                           $secret
  * @method static Builder|Webhook whereSecret($value)
  * @method static Builder|Webhook whereTitle($value)
- * @property int|null                         $user_group_id
+ * @property int                              $user_group_id
  * @method static Builder|Webhook whereUserGroupId($value)
  * @mixin Eloquent
  */
 class Webhook extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
     protected $casts
@@ -179,13 +183,13 @@ class Webhook extends Model
      * @return Webhook
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Webhook
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $webhookId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Webhook $webhook */
+            /** @var Webhook|null $webhook */
             $webhook = $user->webhooks()->find($webhookId);
             if (null !== $webhook) {
                 return $webhook;

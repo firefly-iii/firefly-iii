@@ -33,7 +33,6 @@ use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -83,11 +82,11 @@ class NoCategoryController extends Controller
      */
     public function show(Request $request, Carbon $start = null, Carbon $end = null)
     {
-        Log::debug('Start of noCategory()');
+        app('log')->debug('Start of noCategory()');
         /** @var Carbon $start */
-        $start = $start ?? session('start');
+        $start ??= session('start');
         /** @var Carbon $end */
-        $end      = $end ?? session('end');
+        $end      ??= session('end');
         $page     = (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
         $subTitle = trans(
@@ -96,8 +95,8 @@ class NoCategoryController extends Controller
         );
         $periods  = $this->getNoCategoryPeriodOverview($start);
 
-        Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
-        Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
+        app('log')->debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
+        app('log')->debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -128,13 +127,13 @@ class NoCategoryController extends Controller
         $periods  = new Collection();
         $page     = (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
-        Log::debug('Start of noCategory()');
+        app('log')->debug('Start of noCategory()');
         $subTitle = (string)trans('firefly.all_journals_without_category');
         $first    = $this->journalRepos->firstNull();
         $start    = null === $first ? new Carbon() : $first->date;
         $end      = today(config('app.timezone'));
-        Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
-        Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
+        app('log')->debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
+        app('log')->debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);

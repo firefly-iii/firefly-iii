@@ -33,7 +33,6 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class BelongsUser
@@ -50,8 +49,7 @@ class BelongsUser implements ValidationRule
             $fail('validation.belongs_user')->translate();
             return;
         }
-        $attribute = (string)$attribute;
-        Log::debug(sprintf('Going to validate %s', $attribute));
+        app('log')->debug(sprintf('Going to validate %s', $attribute));
 
         $result = match ($attribute) {
             'piggy_bank_id'               => $this->validatePiggyBankId((int)$value),
@@ -136,11 +134,11 @@ class BelongsUser implements ValidationRule
         }
         $count = 0;
         foreach ($objects as $object) {
-            $objectValue = trim((string)$object->$field);
-            Log::debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));
+            $objectValue = trim((string)$object->$field); // @phpstan-ignore-line
+            app('log')->debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));
             if ($objectValue === $value) {
                 $count++;
-                Log::debug(sprintf('Hit! Count is now %d', $count));
+                app('log')->debug(sprintf('Hit! Count is now %d', $count));
             }
         }
 
@@ -185,7 +183,7 @@ class BelongsUser implements ValidationRule
     private function validateBillName(string $value): bool
     {
         $count = $this->countField(Bill::class, 'name', $value);
-        Log::debug(sprintf('Result of countField for bill name "%s" is %d', $value, $count));
+        app('log')->debug(sprintf('Result of countField for bill name "%s" is %d', $value, $count));
 
         return 1 === $count;
     }

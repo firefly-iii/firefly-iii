@@ -30,5 +30,5 @@ namespace FireflyIII\Support\Calendar\Periodicity;
  */
 final class HalfYearly extends Monthly
 {
-    public const INTERVAL = 6;
+    public const int INTERVAL = 6;
 }

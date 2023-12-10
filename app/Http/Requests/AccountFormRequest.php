@@ -37,9 +37,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class AccountFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use AppendsLocationData;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
 
@@ -122,7 +122,7 @@ class AccountFormRequest extends FormRequest
         ];
         $rules          = Location::requestRules($rules);
 
-        /** @var Account $account */
+        /** @var Account|null $account */
         $account = $this->route()->parameter('account');
         if (null !== $account) {
             // add rules:

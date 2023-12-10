@@ -36,9 +36,15 @@ $finder = PhpCsFixer\Finder::create()
 
 $config = new PhpCsFixer\Config();
 return $config->setRules([
-                             '@PSR12'               => true,
-                             'declare_strict_types' => true,
-                             'strict_param'         => true,
-                             'array_syntax'         => ['syntax' => 'short'],
+                             '@PHP83Migration'             => true,
+                             '@PhpCsFixer:risky'           => true,
+                             '@PSR12:risky'                => true,
+                             'declare_strict_types'        => true,
+                             'strict_param'                => true,
+                             'comment_to_phpdoc'           => false, // breaks phpstan lines in combination with PHPStorm.
+                             'array_syntax'                => ['syntax' => 'short'],
+                             'native_function_invocation'  => false, // annoying
+                             'php_unit_data_provider_name' => false, // bloody annoying long test names
+                             'static_lambda'               => false, // breaks the Response macro for API's.
                          ])
               ->setFinder($finder);

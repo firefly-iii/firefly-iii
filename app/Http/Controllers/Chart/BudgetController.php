@@ -49,8 +49,8 @@ use Illuminate\Support\Collection;
  */
 class BudgetController extends Controller
 {
-    use DateCalculation;
     use AugumentData;
+    use DateCalculation;
 
     protected GeneratorInterface            $generator;
     protected OperationsRepositoryInterface $opsRepository;
@@ -117,7 +117,7 @@ class BudgetController extends Controller
 
             foreach ($spent as $row) {
                 $currencyId              = $row['currency_id'];
-                $currencies[$currencyId] = $currencies[$currencyId] ?? $row; // don't mind the field 'sum'
+                $currencies[$currencyId] ??= $row; // don't mind the field 'sum'
                 // also store this day's sum:
                 $currencies[$currencyId]['spent'][$label] = $row['sum'];
             }
@@ -181,7 +181,7 @@ class BudgetController extends Controller
         while ($start <= $end) {
             $current          = clone $start;
             $expenses         = $this->opsRepository->sumExpenses($current, $current, null, $budgetCollection, $currency);
-            $spent            = $expenses[(int)$currency->id]['sum'] ?? '0';
+            $spent            = $expenses[$currency->id]['sum'] ?? '0';
             $amount           = bcadd($amount, $spent);
             $format           = $start->isoFormat((string)trans('config.month_and_day_js', [], $locale));
             $entries[$format] = $amount;
@@ -237,7 +237,7 @@ class BudgetController extends Controller
         // group by asset account ID:
         foreach ($journals as $journal) {
             $key                    = sprintf('%d-%d', (int)$journal['source_account_id'], $journal['currency_id']);
-            $result[$key]           = $result[$key] ?? [
+            $result[$key]           ??= [
                 'amount'          => '0',
                 'currency_symbol' => $journal['currency_symbol'],
                 'currency_code'   => $journal['currency_code'],
@@ -302,7 +302,7 @@ class BudgetController extends Controller
         $chartData = [];
         foreach ($journals as $journal) {
             $key                    = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
-            $result[$key]           = $result[$key] ?? [
+            $result[$key]           ??= [
                 'amount'          => '0',
                 'currency_symbol' => $journal['currency_symbol'],
                 'currency_code'   => $journal['currency_code'],
@@ -367,7 +367,7 @@ class BudgetController extends Controller
         /** @var array $journal */
         foreach ($journals as $journal) {
             $key                    = sprintf('%d-%d', $journal['destination_account_id'], $journal['currency_id']);
-            $result[$key]           = $result[$key] ?? [
+            $result[$key]           ??= [
                 'amount'          => '0',
                 'currency_symbol' => $journal['currency_symbol'],
                 'currency_code'   => $journal['currency_code'],
@@ -428,6 +428,9 @@ class BudgetController extends Controller
 
     /**
      * Shows a budget overview chart (spent and budgeted).
+     *
+     * Suppress warning because this method will be replaced by API calls.
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      *
      * @param Budget              $budget
      * @param TransactionCurrency $currency

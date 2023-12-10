@@ -60,7 +60,7 @@ class FixTransactionTypes extends Command
             }
         }
         if ($count > 0) {
-            $this->friendlyInfo('Corrected transaction type of %d transaction journals.', $count);
+            $this->friendlyInfo(sprintf('Corrected transaction type of %d transaction journals.', $count));
 
             return 0;
         }

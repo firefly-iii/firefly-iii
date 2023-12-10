@@ -40,7 +40,7 @@ use League\Fractal\Resource\Item;
  */
 class MessageController extends Controller
 {
-    public const RESOURCE_KEY = 'webhook_messages';
+    public const string RESOURCE_KEY = 'webhook_messages';
     private WebhookRepositoryInterface $repository;
 
     /**

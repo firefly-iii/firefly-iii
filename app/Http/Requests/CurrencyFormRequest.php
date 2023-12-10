@@ -33,8 +33,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class CurrencyFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Returns the data required by the controller.
@@ -68,7 +68,7 @@ class CurrencyFormRequest extends FormRequest
             'enabled'        => 'in:0,1',
         ];
 
-        /** @var TransactionCurrency $currency */
+        /** @var TransactionCurrency|null $currency */
         $currency = $this->route()->parameter('currency');
 
         if (null !== $currency) {

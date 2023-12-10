@@ -37,7 +37,6 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -67,14 +66,14 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     public function generateMessages(): void
     {
-        Log::debug(__METHOD__);
+        app('log')->debug(__METHOD__);
         // get the webhooks:
         if (0 === $this->webhooks->count()) {
             $this->webhooks = $this->getWebhooks();
         }
 
         // do some debugging
-        Log::debug(
+        app('log')->debug(
             sprintf('StandardMessageGenerator will generate messages for %d object(s) and %d webhook(s).', $this->objects->count(), $this->webhooks->count())
         );
         $this->run();
@@ -93,12 +92,12 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     private function run(): void
     {
-        Log::debug('Now in StandardMessageGenerator::run');
+        app('log')->debug('Now in StandardMessageGenerator::run');
         /** @var Webhook $webhook */
         foreach ($this->webhooks as $webhook) {
             $this->runWebhook($webhook);
         }
-        Log::debug('Done with StandardMessageGenerator::run');
+        app('log')->debug('Done with StandardMessageGenerator::run');
     }
 
     /**
@@ -109,7 +108,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     private function runWebhook(Webhook $webhook): void
     {
-        Log::debug(sprintf('Now in runWebhook(#%d)', $webhook->id));
+        app('log')->debug(sprintf('Now in runWebhook(#%d)', $webhook->id));
         /** @var Model $object */
         foreach ($this->objects as $object) {
             $this->generateMessage($webhook, $object);
@@ -127,7 +126,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     {
         $class = get_class($model);
         // Line is ignored because all of Firefly III's Models have an id property.
-        Log::debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id)); // @phpstan-ignore-line
+        app('log')->debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id));
 
         $uuid         = Uuid::uuid4();
         $basicMessage = [
@@ -144,9 +143,9 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         switch ($class) {
             default:
                 // Line is ignored because all of Firefly III's Models have an id property.
-                Log::error(
+                app('log')->error(
                     sprintf('Webhook #%d was given %s#%d to deal with but can\'t extract user ID from it.', $webhook->id, $class, $model->id)
-                ); // @phpstan-ignore-line
+                );
 
                 return;
             case TransactionGroup::class:
@@ -158,7 +157,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         // then depends on the response what to put in the message:
         switch ($webhook->response) {
             default:
-                Log::error(
+                app('log')->error(
                     sprintf('The response code for webhook #%d is "%d" and the message generator cant handle it. Soft fail.', $webhook->id, $webhook->response)
                 );
 
@@ -171,10 +170,10 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 try {
                     $basicMessage['content'] = $transformer->transformObject($model);
                 } catch (FireflyException $e) {
-                    Log::error(
+                    app('log')->error(
                         sprintf('The transformer could not include the requested transaction group for webhook #%d: %s', $webhook->id, $e->getMessage())
                     );
-                    Log::error($e->getTraceAsString());
+                    app('log')->error($e->getTraceAsString());
 
                     return;
                 }
@@ -232,7 +231,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $webhookMessage->uuid    = $message['uuid'];
         $webhookMessage->message = $message;
         $webhookMessage->save();
-        Log::debug(sprintf('Stored new webhook message #%d', $webhookMessage->id));
+        app('log')->debug(sprintf('Stored new webhook message #%d', $webhookMessage->id));
     }
 
     /**

@@ -28,7 +28,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -74,8 +73,8 @@ class FrontpageController extends Controller
             try {
                 $html = view('json.piggy-banks', compact('info'))->render();
             } catch (Throwable $e) {
-                Log::error(sprintf('Cannot render json.piggy-banks: %s', $e->getMessage()));
-                Log::error($e->getTraceAsString());
+                app('log')->error(sprintf('Cannot render json.piggy-banks: %s', $e->getMessage()));
+                app('log')->error($e->getTraceAsString());
                 $html = 'Could not render view.';
                 throw new FireflyException($html, 0, $e);
             }

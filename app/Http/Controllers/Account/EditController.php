@@ -88,15 +88,15 @@ class EditController extends Controller
         $roles          = $this->getRoles();
         $liabilityTypes = $this->getLiabilityTypes();
         $location       = $repository->getLocation($account);
-        $latitude       = $location ? $location->latitude : config('firefly.default_location.latitude');
-        $longitude      = $location ? $location->longitude : config('firefly.default_location.longitude');
-        $zoomLevel      = $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
+        $latitude       = null !== $location ? $location->latitude : config('firefly.default_location.latitude');
+        $longitude      = null !== $location ? $location->longitude : config('firefly.default_location.longitude');
+        $zoomLevel      = null !== $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
         $hasLocation    = null !== $location;
         $locations      = [
             'location' => [
-                'latitude'     => old('location_latitude') ?? $latitude,
-                'longitude'    => old('location_longitude') ?? $longitude,
-                'zoom_level'   => old('location_zoom_level') ?? $zoomLevel,
+                'latitude'     => null !== old('location_latitude') ? old('location_latitude') : $latitude,
+                'longitude'    => null !== old('location_longitude') ? old('location_longitude') : $longitude,
+                'zoom_level'   => null !== old('location_zoom_level') ? old('location_zoom_level') : $zoomLevel,
                 'has_location' => $hasLocation || 'true' === old('location_has_location'),
             ],
         ];
@@ -195,7 +195,7 @@ class EditController extends Controller
         $request->session()->flash('success', (string)trans('firefly.updated_account', ['name' => $account->name]));
 
         // store new attachment(s):
-
+        /** @var array|null $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($account, $files);

@@ -35,24 +35,15 @@ use Illuminate\Support\Collection;
 
 /**
  * Class UpgradeCurrencyPreferences
- * TODO DONT FORGET TO ADD THIS TO THE DOCKER BUILD
  */
 class UpgradeCurrencyPreferences extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '610_upgrade_currency_prefs';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    public const string CONFIG_NAME = '610_upgrade_currency_prefs';
+
     protected $description = 'Upgrade user currency preferences';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:upgrade-currency-preferences {--F|force : Force the execution of this command.}';
 
     /**
@@ -71,7 +62,7 @@ class UpgradeCurrencyPreferences extends Command
 
         $this->friendlyPositive('Currency preferences migrated.');
 
-        //$this->markAsExecuted();
+        $this->markAsExecuted();
 
         return 0;
     }
@@ -142,7 +133,7 @@ class UpgradeCurrencyPreferences extends Command
         // set the default currency for the user and for the group:
         $preference      = $this->getPreference($user);
         $defaultCurrency = TransactionCurrency::where('code', $preference)->first();
-        if (null === $currency) {
+        if (null === $defaultCurrency) {
             // get EUR
             $defaultCurrency = TransactionCurrency::where('code', 'EUR')->first();
         }
@@ -159,7 +150,11 @@ class UpgradeCurrencyPreferences extends Command
     {
         $preference = Preference::where('user_id', $user->id)->where('name', 'currencyPreference')->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at']);
 
-        if (null !== $preference) {
+        if (null === $preference) {
+            return 'EUR';
+        }
+
+        if (null !== $preference->data && !is_array($preference->data)) {
             return (string)$preference->data;
         }
         return 'EUR';

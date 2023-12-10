@@ -83,7 +83,7 @@ class TagController extends Controller
             $foreignCurrencyId = (int)$journal['foreign_currency_id'];
 
             if (0 !== $currencyId) {
-                $response[$currencyId]                     = $response[$currencyId] ?? [
+                $response[$currencyId]                     ??= [
                     'difference'       => '0',
                     'difference_float' => 0,
                     'currency_id'      => (string)$currencyId,
@@ -93,7 +93,7 @@ class TagController extends Controller
                 $response[$currencyId]['difference_float'] = (float)$response[$currencyId]['difference']; // float but on purpose.
             }
             if (0 !== $foreignCurrencyId) {
-                $response[$foreignCurrencyId]                     = $response[$foreignCurrencyId] ?? [
+                $response[$foreignCurrencyId]                     ??= [
                     'difference'       => '0',
                     'difference_float' => 0,
                     'currency_id'      => (string)$foreignCurrencyId,
@@ -148,7 +148,7 @@ class TagController extends Controller
 
                 // on currency ID
                 if (0 !== $currencyId) {
-                    $response[$key]                     = $response[$key] ?? [
+                    $response[$key]                     ??= [
                         'id'               => (string)$tagId,
                         'name'             => $tag['name'],
                         'difference'       => '0',

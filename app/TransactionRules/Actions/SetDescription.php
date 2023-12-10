@@ -27,7 +27,6 @@ use DB;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class SetDescription.
@@ -59,7 +58,7 @@ class SetDescription implements ActionInterface
           ->where('id', '=', $journal['transaction_journal_id'])
           ->update(['description' => $this->action->action_value]);
 
-        Log::debug(
+        app('log')->debug(
             sprintf(
                 'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".',
                 $journal['transaction_journal_id'],

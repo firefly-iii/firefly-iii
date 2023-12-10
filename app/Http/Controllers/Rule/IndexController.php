@@ -89,7 +89,7 @@ class IndexController extends Controller
     public function moveRule(Request $request, Rule $rule, RuleGroup $ruleGroup): JsonResponse
     {
         $order = (int)$request->get('order');
-        $this->ruleRepos->moveRule($rule, $ruleGroup, (int)$order);
+        $this->ruleRepos->moveRule($rule, $ruleGroup, $order);
 
         return response()->json([]);
     }

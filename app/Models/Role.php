@@ -23,13 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\Role
@@ -55,18 +56,15 @@ use Illuminate\Support\Carbon;
  */
 class Role extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+    use ReturnsIntegerIdTrait;
+
     protected $casts
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
 
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['name', 'display_name', 'description'];
 
     /**

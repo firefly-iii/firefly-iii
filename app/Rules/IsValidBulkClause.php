@@ -24,14 +24,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Validator;
 use JsonException;
 
 /**
  * Class IsValidBulkClause
  */
-class IsValidBulkClause implements Rule
+class IsValidBulkClause implements ValidationRule
 {
     private string $error;
     private array  $rules;
@@ -54,19 +55,20 @@ class IsValidBulkClause implements Rule
     }
 
     /**
-     * @param string $attribute
-     * @param mixed  $value
+     * @param string  $attribute
+     * @param mixed   $value
+     * @param Closure $fail
      *
-     * @return bool
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $result = $this->basicValidation((string)$value);
         if (false === $result) {
-            return false;
+            $fail($this->error);
         }
-
-        return true;
     }
 
     /**
@@ -107,7 +109,7 @@ class IsValidBulkClause implements Rule
                     'value' => $this->rules[$clause][$arrayKey],
                 ]);
                 if ($validator->fails()) {
-                    $this->error = sprintf('%s: %s: %s', $clause, $arrayKey, join(', ', ($validator->errors()->get('value'))));
+                    $this->error = sprintf('%s: %s: %s', $clause, $arrayKey, implode(', ', ($validator->errors()->get('value'))));
 
                     return false;
                 }

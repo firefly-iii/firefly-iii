@@ -40,7 +40,7 @@ class CreateGroupMemberships extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '560_create_group_memberships';
+    public const string CONFIG_NAME = '560_create_group_memberships';
     protected $description = 'Update group memberships';
     protected $signature   = 'firefly-iii:create-group-memberships';
 

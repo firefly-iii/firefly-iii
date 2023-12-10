@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Calendar;
 
 use Carbon\Carbon;
-use FireflyIII\Support\Calendar\Exceptions\IntervalException;
+use FireflyIII\Exceptions\IntervalException;
 use SplObjectStorage;
 
 /**
@@ -34,7 +34,7 @@ use SplObjectStorage;
  */
 class Calculator
 {
-    public const DEFAULT_INTERVAL = 1;
+    public const int DEFAULT_INTERVAL = 1;
     private static ?SplObjectStorage $intervalMap = null;
     private static array             $intervals   = [];
 
@@ -83,7 +83,7 @@ class Calculator
      */
     private static function loadIntervalMap(): SplObjectStorage
     {
-        if (self::$intervalMap != null) {
+        if (self::$intervalMap !== null) {
             return self::$intervalMap;
         }
         self::$intervalMap = new SplObjectStorage();

@@ -28,7 +28,6 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class FireflyConfig.
@@ -104,7 +103,7 @@ class FireflyConfig
         try {
             $config = Configuration::whereName($name)->whereNull('deleted_at')->first();
         } catch (QueryException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $item       = new Configuration();
             $item->name = $name;
             $item->data = $value;
@@ -137,7 +136,7 @@ class FireflyConfig
     public function getFresh(string $name, $default = null): ?Configuration
     {
         $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        if ($config) {
+        if (null !== $config) {
             return $config;
         }
         // no preference found and default is null:

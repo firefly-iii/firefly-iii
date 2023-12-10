@@ -64,7 +64,7 @@ class UpdateMembershipRequest extends FormRequest
         return [
             'id'      => 'exists:users,id|required_without:email',
             'email'   => 'exists:users,email|required_without:id',
-            'roles.*' => 'required|in:' . join(',', $validRoles),
+            'roles.*' => 'required|in:' . implode(',', $validRoles),
         ];
     }
 }

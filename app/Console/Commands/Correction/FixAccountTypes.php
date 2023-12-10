@@ -81,11 +81,11 @@ class FixAccountTypes extends Command
                                    ->leftJoin('account_types as destination_account_type', 'destination_account.account_type_id', '=', 'destination_account_type.id');
 
         // list all valid combinations, those are allowed. So we select those which are broken.
-        $query->where(function (Builder $q) use ($expected) {
+        $query->where(static function (Builder $q) use ($expected) {
             foreach ($expected as $transactionType => $info) {
                 foreach ($info as $source => $destinations) {
                     foreach ($destinations as $destination) {
-                        $q->whereNot(function (Builder $q1) use ($transactionType, $source, $destination) {
+                        $q->whereNot(static function (Builder $q1) use ($transactionType, $source, $destination) {
                             $q1->where('transaction_types.type', $transactionType);
                             $q1->where('source_account_type.type', $source);
                             $q1->where('destination_account_type.type', $destination);
@@ -114,7 +114,7 @@ class FixAccountTypes extends Command
             $this->friendlyLine(sprintf('Found %d journals that need to be fixed.', $resultSet->count()));
             foreach ($resultSet as $entry) {
                 app('log')->debug(sprintf('Now fixing journal #%d', $entry->id));
-                $journal = TransactionJournal::find((int)$entry->id);
+                $journal = TransactionJournal::find($entry->id);
                 if (null !== $journal) {
                     $this->inspectJournal($journal);
                 }

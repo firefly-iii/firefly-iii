@@ -26,7 +26,6 @@ namespace FireflyIII\Support\Request;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait ChecksLogin
@@ -40,13 +39,13 @@ trait ChecksLogin
      */
     public function authorize(): bool
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         // Only allow logged-in users
         $check = auth()->check();
         if (!$check) {
             return false;
         }
-        if (!property_exists($this, 'acceptedRoles')) {
+        if (!property_exists($this, 'acceptedRoles')) { // @phpstan-ignore-line
             app('log')->debug('Request class has no acceptedRoles array');
             return true; // check for false already took place.
         }
@@ -61,7 +60,8 @@ trait ChecksLogin
         /** @var UserRoleEnum $role */
         foreach ($this->acceptedRoles as $role) {
             // system owner cannot overrule this, MUST be member of the group.
-            if ($user->hasRoleInGroup($userGroup, $role, true, false)) {
+            $access = $user->hasRoleInGroupOrOwner($userGroup, $role);
+            if ($access) {
                 return true;
             }
         }
@@ -79,8 +79,8 @@ trait ChecksLogin
         /** @var User $user */
         $user = auth()->user();
         app('log')->debug('Now in getUserGroup()');
-        /** @var UserGroup $userGroup */
-        $userGroup = $this->route()->parameter('userGroup');
+        /** @var UserGroup|null $userGroup */
+        $userGroup = $this->route()?->parameter('userGroup');
         if (null === $userGroup) {
             app('log')->debug('Request class has no userGroup parameter, but perhaps there is a parameter.');
             $userGroupId = (int)$this->get('user_group_id');

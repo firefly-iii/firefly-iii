@@ -27,7 +27,6 @@ namespace FireflyIII\Support\Cronjobs;
 use Carbon\Carbon;
 use FireflyIII\Jobs\DownloadExchangeRates;
 use FireflyIII\Models\Configuration;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class ExchangeRatesCronjob
@@ -45,26 +44,23 @@ class ExchangeRatesCronjob extends AbstractCronjob
         $diff          = time() - $lastTime;
         $diffForHumans = today(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
         if (0 === $lastTime) {
-            Log::info('Exchange rates cron-job has never fired before.');
+            app('log')->info('Exchange rates cron-job has never fired before.');
         }
         // less than half a day ago:
         if ($lastTime > 0 && $diff <= 43200) {
-            Log::info(sprintf('It has been %s since the exchange rates cron-job has fired.', $diffForHumans));
+            app('log')->info(sprintf('It has been %s since the exchange rates cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
-                Log::info('The exchange rates cron-job will not fire now.');
+                app('log')->info('The exchange rates cron-job will not fire now.');
                 $this->message = sprintf('It has been %s since the exchange rates cron-job has fired. It will not fire now.', $diffForHumans);
 
                 return;
             }
 
-            // fire job regardless.
-            if (true === $this->force) {
-                Log::info('Execution of the exchange rates cron-job has been FORCED.');
-            }
+            app('log')->info('Execution of the exchange rates cron-job has been FORCED.');
         }
 
         if ($lastTime > 0 && $diff > 43200) {
-            Log::info(sprintf('It has been %s since the exchange rates cron-job has fired. It will fire now!', $diffForHumans));
+            app('log')->info(sprintf('It has been %s since the exchange rates cron-job has fired. It will fire now!', $diffForHumans));
         }
 
         $this->fireExchangeRateJob();
@@ -76,7 +72,7 @@ class ExchangeRatesCronjob extends AbstractCronjob
      */
     private function fireExchangeRateJob(): void
     {
-        Log::info(sprintf('Will now fire exchange rates cron job task for date "%s".', $this->date->format('Y-m-d')));
+        app('log')->info(sprintf('Will now fire exchange rates cron job task for date "%s".', $this->date->format('Y-m-d')));
         /** @var DownloadExchangeRates $job */
         $job = app(DownloadExchangeRates::class);
         $job->setDate($this->date);
@@ -89,6 +85,6 @@ class ExchangeRatesCronjob extends AbstractCronjob
         $this->message      = 'Exchange rates cron job fired successfully.';
 
         app('fireflyconfig')->set('last_cer_job', (int)$this->date->format('U'));
-        Log::info('Done with exchange rates job task.');
+        app('log')->info('Done with exchange rates job task.');
     }
 }

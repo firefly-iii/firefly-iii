@@ -24,8 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -33,19 +35,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class UserGroup
  *
- * @property int                                                           $id
- * @property Carbon|null                                                   $created_at
- * @property Carbon|null                                                   $updated_at
- * @property string|null                                                   $deleted_at
- * @property string                                                        $title
- * @property-read Collection|GroupMembership[]                             $groupMemberships
- * @property-read int|null                                                 $group_memberships_count
+ * @property int                                        $id
+ * @property Carbon|null                                $created_at
+ * @property Carbon|null                                $updated_at
+ * @property string|null                                $deleted_at
+ * @property string                                     $title
+ * @property-read Collection|GroupMembership[]          $groupMemberships
+ * @property-read int|null                              $group_memberships_count
  * @method static Builder|UserGroup newModelQuery()
  * @method static Builder|UserGroup newQuery()
  * @method static Builder|UserGroup query()
@@ -54,8 +55,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|UserGroup whereId($value)
  * @method static Builder|UserGroup whereTitle($value)
  * @method static Builder|UserGroup whereUpdatedAt($value)
- * @property-read Collection<int, Account>                                 $accounts
- * @property-read int|null                                                 $accounts_count
+ * @property-read Collection<int, Account>              $accounts
+ * @property-read int|null                              $accounts_count
  * @property-read Collection<int, AvailableBudget>      $availableBudgets
  * @property-read int|null                              $available_budgets_count
  * @property-read Collection<int, Bill>                 $bills
@@ -77,21 +78,23 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read Collection<int, Recurrence>           $recurrences
  * @property-read int|null                              $recurrences_count
  * @property-read Collection<int, RuleGroup>            $ruleGroups
- * @property-read int|null                                       $rule_groups_count
- * @property-read Collection<int, Rule>                          $rules
- * @property-read int|null                                       $rules_count
- * @property-read Collection<int, Tag>                           $tags
- * @property-read int|null                                                 $tags_count
- * @property-read Collection<int, TransactionGroup>                        $transactionGroups
- * @property-read int|null                                                 $transaction_groups_count
- * @property-read Collection<int, Webhook>                                 $webhooks
- * @property-read int|null                                                 $webhooks_count
- * @property-read Collection<int, TransactionCurrency>                     $currencies
- * @property-read int|null                                                 $currencies_count
+ * @property-read int|null                              $rule_groups_count
+ * @property-read Collection<int, Rule>                 $rules
+ * @property-read int|null                              $rules_count
+ * @property-read Collection<int, Tag>                  $tags
+ * @property-read int|null                              $tags_count
+ * @property-read Collection<int, TransactionGroup>     $transactionGroups
+ * @property-read int|null                              $transaction_groups_count
+ * @property-read Collection<int, Webhook>              $webhooks
+ * @property-read int|null                              $webhooks_count
+ * @property-read Collection<int, TransactionCurrency>  $currencies
+ * @property-read int|null                              $currencies_count
  * @mixin Eloquent
  */
 class UserGroup extends Model
 {
+    use ReturnsIntegerIdTrait;
+
     protected $fillable = ['title'];
 
     /**
@@ -102,20 +105,21 @@ class UserGroup extends Model
      * @return UserGroup
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): UserGroup
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $userGroupId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var UserGroup $userGroup */
-            $userGroup = UserGroup::find($userGroupId);
+            /** @var UserGroup|null $userGroup */
+            $userGroup = self::find($userGroupId);
             if (null === $userGroup) {
                 throw new NotFoundHttpException();
             }
             // need at least ready only to be aware of the user group's existence,
             // but owner/full role (in the group) or global owner role may overrule this.
-            if ($user->hasRoleInGroup($userGroup, UserRoleEnum::READ_ONLY, true, true)) {
+            $access = $user->hasRoleInGroupOrOwner($userGroup, UserRoleEnum::READ_ONLY) || $user->hasRole('owner');
+            if ($access) {
                 return $userGroup;
             }
         }

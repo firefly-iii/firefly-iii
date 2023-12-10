@@ -42,7 +42,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 use Storage;
 
@@ -117,7 +116,7 @@ class AccountRepository implements AccountRepositoryInterface
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('accounts.active', true)
             ->where(
-                function (EloquentBuilder $q1) use ($number) {
+                static function (EloquentBuilder $q1) use ($number) { // @phpstan-ignore-line
                     $json = json_encode($number);
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
@@ -165,17 +164,17 @@ class AccountRepository implements AccountRepositoryInterface
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
-        Log::debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
+        app('log')->debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
 
         $query->where('accounts.name', $name);
-        /** @var Account $account */
+        /** @var Account|null $account */
         $account = $query->first(['accounts.*']);
         if (null === $account) {
-            Log::debug(sprintf('There is no account with name "%s" of types', $name), $types);
+            app('log')->debug(sprintf('There is no account with name "%s" of types', $name), $types);
 
             return null;
         }
-        Log::debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
+        app('log')->debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
 
         return $account;
     }
@@ -220,7 +219,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $query = $this->user->accounts()->with(
             [
-                'accountmeta' => function (HasMany $query) {
+                'accountmeta' => static function (HasMany $query) {
                     $query->where('name', 'account_role');
                 },
                 'attachments',
@@ -251,7 +250,7 @@ class AccountRepository implements AccountRepositoryInterface
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : '';
+                $attachment->notes_text  = null !== $notes ? $notes->text : '';
 
                 return $attachment;
             }
@@ -280,7 +279,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
@@ -306,7 +305,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $query = $this->user->accounts()->with(
             [
-                'accountmeta' => function (HasMany $query) {
+                'accountmeta' => static function (HasMany $query) {
                     $query->where('name', 'account_role');
                 },
             ]
@@ -364,7 +363,7 @@ class AccountRepository implements AccountRepositoryInterface
             return null;
         }
 
-        return (string)$transaction->amount;
+        return $transaction->amount;
     }
 
     /**
@@ -434,12 +433,13 @@ class AccountRepository implements AccountRepositoryInterface
         $name     = trans('firefly.reconciliation_account_name', ['name' => $account->name, 'currency' => $currency->code]);
 
         /** @var AccountType $type */
-        $type    = AccountType::where('type', AccountType::RECONCILIATION)->first();
+        $type = AccountType::where('type', AccountType::RECONCILIATION)->first();
+
+        /** @var Account|null $current */
         $current = $this->user->accounts()->where('account_type_id', $type->id)
                               ->where('name', $name)
                               ->first();
 
-        /** @var Account $current */
         if (null !== $current) {
             return $current;
         }
@@ -493,7 +493,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function getMetaValue(Account $account, string $field): ?string
     {
         $result = $account->accountMeta->filter(
-            function (AccountMeta $meta) use ($field) {
+            static function (AccountMeta $meta) use ($field) {
                 return strtolower($meta->name) === strtolower($field);
             }
         );
@@ -568,14 +568,14 @@ class AccountRepository implements AccountRepositoryInterface
         ];
         if (array_key_exists(ucfirst($type), $sets)) {
             $order = (int)$this->getAccountsByType($sets[ucfirst($type)])->max('order');
-            Log::debug(sprintf('Return max order of "%s" set: %d', $type, $order));
+            app('log')->debug(sprintf('Return max order of "%s" set: %d', $type, $order));
 
             return $order;
         }
         $specials = [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION];
 
         $order = (int)$this->getAccountsByType($specials)->max('order');
-        Log::debug(sprintf('Return max order of "%s" set (specials!): %d', $type, $order));
+        app('log')->debug(sprintf('Return max order of "%s" set (specials!): %d', $type, $order));
 
         return $order;
     }
@@ -635,6 +635,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function oldestJournal(Account $account): ?TransactionJournal
     {
+        /** @var TransactionJournal|null $first */
         $first = $account->transactions()
                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                          ->orderBy('transaction_journals.date', 'ASC')
@@ -643,7 +644,7 @@ class AccountRepository implements AccountRepositoryInterface
                          ->orderBy('transaction_journals.id', 'ASC')
                          ->first(['transaction_journals.id']);
         if (null !== $first) {
-            return TransactionJournal::find((int)$first->id);
+            return TransactionJournal::find($first->id);
         }
 
         return null;
@@ -670,7 +671,7 @@ class AccountRepository implements AccountRepositoryInterface
                     continue;
                 }
                 if ($index !== (int)$account->order) {
-                    Log::debug(sprintf('Account #%d ("%s"): order should %d be but is %d.', $account->id, $account->name, $index, $account->order));
+                    app('log')->debug(sprintf('Account #%d ("%s"): order should %d be but is %d.', $account->id, $account->name, $index, $account->order));
                     $account->order = $index;
                     $account->save();
                 }
@@ -728,10 +729,10 @@ class AccountRepository implements AccountRepositoryInterface
             foreach ($parts as $part) {
                 $search = sprintf('%%%s%%', $part);
                 $dbQuery->where(
-                    function (EloquentBuilder $q1) use ($search) {
+                    static function (EloquentBuilder $q1) use ($search) { // @phpstan-ignore-line
                         $q1->where('accounts.iban', 'LIKE', $search);
                         $q1->orWhere(
-                            function (EloquentBuilder $q2) use ($search) {
+                            static function (EloquentBuilder $q2) use ($search) {
                                 $q2->where('account_meta.name', '=', 'account_number');
                                 $q2->where('account_meta.data', 'LIKE', $search);
                             }

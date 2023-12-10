@@ -65,8 +65,8 @@ class BudgetTransformer extends AbstractTransformer
     public function transform(Budget $budget): array
     {
         //$this->opsRepository->setUser($budget->user);
-        $start = $this->parameters->get('start');
-        $end   = $this->parameters->get('end');
+        //$start = $this->parameters->get('start');
+        //$end   = $this->parameters->get('end');
         //$autoBudget = $this->repository->getAutoBudget($budget);
         //        $spent      = [];
         //        if (null !== $start && null !== $end) {
@@ -116,19 +116,4 @@ class BudgetTransformer extends AbstractTransformer
         ];
     }
 
-    /**
-     * @param array $array
-     *
-     * @return array
-     */
-    private function beautify(array $array): array
-    {
-        $return = [];
-        foreach ($array as $data) {
-            $data['sum'] = number_format((float)$data['sum'], (int)$data['currency_decimal_places'], '.', '');
-            $return[]    = $data;
-        }
-
-        return $return;
-    }
 }

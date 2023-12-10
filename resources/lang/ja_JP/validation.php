@@ -44,11 +44,12 @@ return [
     'invalid_query_currency'         => 'クエリには異なる通貨設定の口座を含めることはできません。',
     'iban'                           => '無効なIBANです。',
     'zero_or_more'                   => '数値はマイナスにできません。',
+    'no_asset_account'               => 'これは資産口座ではありません。',
     'date_or_time'                   => '数値はISO 8601 準拠の有効な日付や時刻である必要があります。',
     'source_equals_destination'      => '引き出し口座と預け入れ口座が同じです。',
     'unique_account_number_for_user' => 'この口座番号は既に使われているようです。',
     'unique_iban_for_user'           => 'このIBANは既に使われているようです。',
-    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
+    'reconciled_forbidden_field'     => 'この取引は照合済みです。「:field」は変更できません。',
     'deleted_user'                   => 'セキュリティ上の制約から、このメールアドレスでは登録できません。',
     'rule_trigger_value'             => 'この値は選択されたトリガーには無効です。',
     'rule_action_value'              => 'この値は選択された操作には無効です。',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

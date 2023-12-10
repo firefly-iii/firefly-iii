@@ -118,7 +118,7 @@ class Steam
         $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('balance-in-range');
-        $cache->addProperty($currency ? $currency->id : 0);
+        $cache->addProperty(null !== $currency ? $currency->id : 0);
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
@@ -135,9 +135,9 @@ class Steam
         if (null === $currency) {
             $repository = app(AccountRepositoryInterface::class);
             $repository->setUser($account->user);
-            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
+            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
-        $currencyId = (int)$currency->id;
+        $currencyId = $currency->id;
 
         $start->addDay();
 
@@ -152,12 +152,12 @@ class Steam
                        ->orderBy('transaction_journals.date', 'ASC')
                        ->whereNull('transaction_journals.deleted_at')
                        ->get(
-                           [
-                               'transaction_journals.date',
-                               'transactions.transaction_currency_id',
-                               DB::raw('SUM(transactions.amount) AS modified'),
-                               'transactions.foreign_currency_id',
-                               DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
+                           [ // @phpstan-ignore-line
+                             'transaction_journals.date',
+                             'transactions.transaction_currency_id',
+                             DB::raw('SUM(transactions.amount) AS modified'),
+                             'transactions.foreign_currency_id',
+                             DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
                            ]
                        );
 
@@ -165,8 +165,8 @@ class Steam
         /** @var Transaction $entry */
         foreach ($set as $entry) {
             // normal amount and foreign amount
-            $modified        = null === $entry->modified ? '0' : (string)$entry->modified;
-            $foreignModified = null === $entry->modified_foreign ? '0' : (string)$entry->modified_foreign;
+            $modified        = (string)(null === $entry->modified ? '0' : $entry->modified);
+            $foreignModified = (string)(null === $entry->modified_foreign ? '0' : $entry->modified_foreign);
             $amount          = '0';
             if ($currencyId === (int)$entry->transaction_currency_id || 0 === $currencyId) {
                 // use normal amount:
@@ -176,7 +176,7 @@ class Steam
                 // use foreign amount:
                 $amount = $foreignModified;
             }
-
+            Log::debug(sprintf('Trying to add %s and %s.', var_export($currentBalance, true), var_export($amount, true)));
             $currentBalance  = bcadd($currentBalance, $amount);
             $carbon          = new Carbon($entry->date, config('app.timezone'));
             $date            = $carbon->format('Y-m-d');
@@ -205,14 +205,14 @@ class Steam
         $cache->addProperty($account->id);
         $cache->addProperty('balance');
         $cache->addProperty($date);
-        $cache->addProperty($currency ? $currency->id : 0);
+        $cache->addProperty(null !== $currency ? $currency->id : 0);
         if ($cache->has()) {
             return $cache->get();
         }
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         if (null === $currency) {
-            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
+            $currency = $repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
         // first part: get all balances in own currency:
         $transactions  = $account->transactions()
@@ -230,7 +230,7 @@ class Steam
                                   ->get(['transactions.foreign_amount'])->toArray();
         $foreignBalance = $this->sumTransactions($transactions, 'foreign_amount');
         $balance        = bcadd($nativeBalance, $foreignBalance);
-        $virtual        = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
+        $virtual        = null === $account->virtual_balance ? '0' : $account->virtual_balance;
         $balance        = bcadd($balance, $virtual);
 
         $cache->store($balance);
@@ -295,10 +295,13 @@ class Steam
         $currentBalance = $startBalance;
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
-            $day    = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date'], config('app.timezone'));
+            $day = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date'], config('app.timezone'));
+            if (false === $day) {
+                $day = today(config('app.timezone'));
+            }
             $format = $day->format('Y-m-d');
             // if the transaction is in the expected currency, change nothing.
-            if ((int)$transaction['transaction_currency_id'] === (int)$native->id) {
+            if ((int)$transaction['transaction_currency_id'] === $native->id) {
                 // change the current balance, set it to today, continue the loop.
                 $currentBalance    = bcadd($currentBalance, $transaction['amount']);
                 $balances[$format] = $currentBalance;
@@ -306,16 +309,16 @@ class Steam
                 continue;
             }
             // if foreign currency is in the expected currency, do nothing:
-            if ((int)$transaction['foreign_currency_id'] === (int)$native->id) {
+            if ((int)$transaction['foreign_currency_id'] === $native->id) {
                 $currentBalance    = bcadd($currentBalance, $transaction['foreign_amount']);
                 $balances[$format] = $currentBalance;
                 app('log')->debug(sprintf('%s: transaction in %s (foreign), new balance is %s.', $format, $native->code, $currentBalance));
                 continue;
             }
             // otherwise, convert 'amount' to the necessary currency:
-            $currencyId = (int)$transaction['transaction_currency_id'];
-            $currency   = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
-
+            $currencyId              = (int)$transaction['transaction_currency_id'];
+            $currency                = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
+            $currencies[$currencyId] = $currency;
 
             $rate              = $converter->getCurrencyRate($currency, $native, $day);
             $convertedAmount   = bcmul($transaction['amount'], $rate);
@@ -362,15 +365,13 @@ class Steam
         $cache->addProperty($date);
         $cache->addProperty($native->id);
         if ($cache->has()) {
-            // return $cache->get();
+            return $cache->get();
         }
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $currency   = $repository->getAccountCurrency($account);
-        if (null === $currency) {
-            throw new FireflyException('Cannot get converted account balance: no currency found for account.');
-        }
-        if ((int)$native->id === (int)$currency->id) {
+        $currency   = null === $currency ? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup) : $currency;
+        if ($native->id === $currency->id) {
             return $this->balance($account, $date);
         }
         /**
@@ -448,9 +449,12 @@ class Steam
         // but we need to convert each transaction separately because the date difference may
         // incur huge currency changes.
         $converter = new ExchangeRateConverter();
-        foreach ($new as $index => $set) {
+        foreach ($new as $set) {
             foreach ($set as $transaction) {
-                $date            = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date']);
+                $date = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date']);
+                if (false === $date) {
+                    $date = today(config('app.timezone'));
+                }
                 $rate            = $converter->getCurrencyRate($currency, $native, $date);
                 $convertedAmount = bcmul($transaction['amount'], $rate);
                 $balance         = bcadd($balance, $convertedAmount);
@@ -467,7 +471,7 @@ class Steam
         }
 
         // add virtual balance (also needs conversion)
-        $virtual = null === $account->virtual_balance ? '0' : (string)$account->virtual_balance;
+        $virtual = null === $account->virtual_balance ? '0' : $account->virtual_balance;
         $virtual = $converter->convert($currency, $native, $account->created_at, $virtual);
         $balance = bcadd($balance, $virtual);
 
@@ -535,8 +539,8 @@ class Steam
         $result = [];
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $default = app('amount')->getDefaultCurrencyByUser($account->user);
-            $result[(int)$account->id]
+            $default = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
+            $result[$account->id]
                      = [
                 'balance'        => $this->balance($account, $date),
                 'native_balance' => $this->balanceConverted($account, $date, $default),
@@ -600,8 +604,8 @@ class Steam
                             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                             ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
                             ->groupBy('transactions.transaction_currency_id');
-        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]);
-        $return   = [];
+        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]); // @phpstan-ignore-line
+        $return = [];
         /** @var stdClass $entry */
         foreach ($balances as $entry) {
             $return[(int)$entry->transaction_currency_id] = (string)$entry->sum_for_currency;
@@ -632,7 +636,7 @@ class Steam
             $number = sprintf('%.12f', $number);
         }
 
-        // Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
+        // app('log')->debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
         if (str_contains($number, '.')) {
             if ($number[0] !== '-') {
                 return bcadd($number, '0.' . str_repeat('0', $precision) . '5', $precision);
@@ -719,7 +723,7 @@ class Steam
         } catch (Exception $e) { // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);
         }
-        return $hostName;
+        return (string)$hostName;
     }
 
     /**
@@ -734,12 +738,13 @@ class Steam
         $set = auth()->user()->transactions()
                      ->whereIn('transactions.account_id', $accounts)
                      ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
-                     ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]);
+                     ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]); // @phpstan-ignore-line
 
+        /** @var Transaction $entry */
         foreach ($set as $entry) {
             $date = new Carbon($entry->max_date, config('app.timezone'));
             $date->setTimezone(config('app.timezone'));
-            $list[(int)$entry->account_id] = $date;
+            $list[$entry->account_id] = $date;
         }
 
         return $list;
@@ -756,9 +761,14 @@ class Steam
     public function getLocale(): string // get preference
     {
         $locale = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
+        if (is_array($locale)) {
+            $locale = 'equal';
+        }
         if ('equal' === $locale) {
             $locale = $this->getLanguage();
         }
+        $locale = (string)$locale;
+
 
         // Check for Windows to replace the locale correctly.
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
@@ -812,7 +822,7 @@ class Steam
      */
     public function getSafePreviousUrl(): string
     {
-        //Log::debug(sprintf('getSafePreviousUrl: "%s"', session()->previousUrl()));
+        //app('log')->debug(sprintf('getSafePreviousUrl: "%s"', session()->previousUrl()));
         return session()->previousUrl() ?? route('index');
     }
 
@@ -826,7 +836,7 @@ class Steam
      */
     public function getSafeUrl(string $unknownUrl, string $safeUrl): string
     {
-        //Log::debug(sprintf('getSafeUrl(%s, %s)', $unknownUrl, $safeUrl));
+        //app('log')->debug(sprintf('getSafeUrl(%s, %s)', $unknownUrl, $safeUrl));
         $returnUrl   = $safeUrl;
         $unknownHost = parse_url($unknownUrl, PHP_URL_HOST);
         $safeHost    = parse_url($safeUrl, PHP_URL_HOST);
@@ -880,10 +890,10 @@ class Steam
             return $value;
         }
 
-        $number = substr($value, 0, strpos($value, 'E'));
+        $number = substr($value, 0, (int)strpos($value, 'E'));
         if (str_contains($number, '.')) {
-            $post   = strlen(substr($number, strpos($number, '.') + 1));
-            $mantis = substr($value, strpos($value, 'E') + 1);
+            $post   = strlen(substr($number, (int)strpos($number, '.') + 1));
+            $mantis = substr($value, (int)strpos($value, 'E') + 1);
             if ($mantis < 0) {
                 $post += abs((int)$mantis);
             }
@@ -956,8 +966,8 @@ class Steam
                 $amount = bcmul($amount, '-1');
             }
         } catch (ValueError $e) {
-            Log::error(sprintf('ValueError in Steam::positive("%s"): %s', $amount, $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('ValueError in Steam::positive("%s"): %s', $amount, $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             return '0';
         }
 

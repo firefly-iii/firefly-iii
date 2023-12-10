@@ -34,17 +34,8 @@ class CreateLinkTypes extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Creates all link types.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:create-link-types';
 
     /**

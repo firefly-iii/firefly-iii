@@ -34,8 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class UserStoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Logged in + owner

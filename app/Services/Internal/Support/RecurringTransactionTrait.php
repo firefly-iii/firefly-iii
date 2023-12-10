@@ -40,7 +40,6 @@ use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Validation\AccountValidator;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**
@@ -107,9 +106,9 @@ trait RecurringTransactionTrait
      */
     protected function createTransactions(Recurrence $recurrence, array $transactions): void
     {
-        Log::debug('Now in createTransactions()');
+        app('log')->debug('Now in createTransactions()');
         foreach ($transactions as $index => $array) {
-            Log::debug(sprintf('Now at transaction #%d', $index));
+            app('log')->debug(sprintf('Now at transaction #%d', $index));
             $sourceTypes = config(sprintf('firefly.expected_source_types.source.%s', $recurrence->transactionType->type));
             $destTypes   = config(sprintf('firefly.expected_source_types.destination.%s', $recurrence->transactionType->type));
             $source      = $this->findAccount($sourceTypes, $array['source_id'], null);
@@ -120,10 +119,10 @@ trait RecurringTransactionTrait
             $currency        = $factory->find($array['currency_id'] ?? null, $array['currency_code'] ?? null);
             $foreignCurrency = $factory->find($array['foreign_currency_id'] ?? null, $array['foreign_currency_code'] ?? null);
             if (null === $currency) {
-                $currency = app('amount')->getDefaultCurrencyByUser($recurrence->user);
+                $currency = app('amount')->getDefaultCurrencyByUserGroup($recurrence->user->userGroup);
             }
 
-            Log::debug(
+            app('log')->debug(
                 sprintf('Will set the validator type to %s based on the type of the recurrence (#%d).', $recurrence->transactionType->type, $recurrence->id)
             );
 
@@ -197,7 +196,7 @@ trait RecurringTransactionTrait
         $repository->setUser($this->user);
 
         // if user has submitted an account ID, search for it.
-        $result = $repository->find((int)$accountId);
+        $result = $repository->find($accountId);
         if (null !== $result) {
             return $result;
         }
@@ -222,7 +221,7 @@ trait RecurringTransactionTrait
                 try {
                     $result = $factory->findOrCreate($accountName, $expectedType);
                 } catch (FireflyException $e) {
-                    Log::error($e->getMessage());
+                    app('log')->error($e->getMessage());
                 }
             }
         }
@@ -366,7 +365,7 @@ trait RecurringTransactionTrait
      */
     protected function deleteTransactions(Recurrence $recurrence): void
     {
-        Log::debug('deleteTransactions()');
+        app('log')->debug('deleteTransactions()');
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions as $transaction) {
             $transaction->recurrenceTransactionMeta()->delete();

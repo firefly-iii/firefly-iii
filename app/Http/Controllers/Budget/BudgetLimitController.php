@@ -40,7 +40,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -107,12 +106,11 @@ class BudgetLimitController extends Controller
     }
 
     /**
-     * @param Request     $request
      * @param BudgetLimit $budgetLimit
      *
      * @return RedirectResponse|Redirector
      */
-    public function delete(Request $request, BudgetLimit $budgetLimit)
+    public function delete(BudgetLimit $budgetLimit)
     {
         $this->blRepository->destroyBudgetLimit($budgetLimit);
         session()->flash('success', trans('firefly.deleted_bl'));
@@ -130,15 +128,20 @@ class BudgetLimitController extends Controller
      */
     public function store(Request $request): RedirectResponse | JsonResponse
     {
-        Log::debug('Going to store new budget-limit.', $request->all());
+        app('log')->debug('Going to store new budget-limit.', $request->all());
         // first search for existing one and update it if necessary.
         $currency = $this->currencyRepos->find((int)$request->get('transaction_currency_id'));
         $budget   = $this->repository->find((int)$request->get('budget_id'));
         if (null === $currency || null === $budget) {
             throw new FireflyException('No valid currency or budget.');
         }
-        $start  = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $end    = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+        $start = Carbon::createFromFormat('Y-m-d', $request->get('start'));
+        $end   = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+
+        if (false === $start || false === $end) {
+            return response()->json([]);
+        }
+
         $amount = (string)$request->get('amount');
         $start->startOfDay();
         $end->startOfDay();
@@ -147,7 +150,7 @@ class BudgetLimitController extends Controller
             return response()->json([]);
         }
 
-        Log::debug(sprintf('Start: %s, end: %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
+        app('log')->debug(sprintf('Start: %s, end: %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         $limit = $this->blRepository->find($budget, $currency, $start, $end);
 

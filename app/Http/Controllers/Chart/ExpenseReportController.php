@@ -147,7 +147,7 @@ class ExpenseReportController extends Controller
 
         while ($currentStart < $end) {
             $currentEnd = clone $currentStart;
-            $currentEnd = $currentEnd->$function();
+            $currentEnd = $currentEnd->$function(); // @phpstan-ignore-line
 
             // get expenses grouped by opposing name:
             $expenses = $this->groupByName($this->getExpensesForOpposing($accounts, $all, $currentStart, $currentEnd));
@@ -166,8 +166,8 @@ class ExpenseReportController extends Controller
                 $currentExpense = $expenses[$name] ?? '0';
 
                 // add to sum:
-                $sumOfIncome[$exp->id]  = $sumOfIncome[$exp->id] ?? '0';
-                $sumOfExpense[$exp->id] = $sumOfExpense[$exp->id] ?? '0';
+                $sumOfIncome[$exp->id]  ??= '0';
+                $sumOfExpense[$exp->id] ??= '0';
                 $sumOfIncome[$exp->id]  = bcadd($sumOfIncome[$exp->id], $currentIncome);
                 $sumOfExpense[$exp->id] = bcadd($sumOfExpense[$exp->id], $currentExpense);
 
@@ -186,7 +186,7 @@ class ExpenseReportController extends Controller
         $newSet = [];
         foreach ($chartData as $key => $entry) {
             // TODO not sure, this is a bad comparison.
-            if (0 === !array_sum($entry['entries'])) {
+            if (array_sum($entry['entries']) > 0) {
                 $newSet[$key] = $entry;
             }
         }

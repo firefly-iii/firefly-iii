@@ -28,7 +28,6 @@ use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class DestroyedGroupEventHandler
@@ -40,7 +39,7 @@ class DestroyedGroupEventHandler
      */
     public function triggerWebhooks(DestroyedTransactionGroup $destroyedGroupEvent): void
     {
-        Log::debug('DestroyedTransactionGroup:triggerWebhooks');
+        app('log')->debug('DestroyedTransactionGroup:triggerWebhooks');
         $group = $destroyedGroupEvent->transactionGroup;
         $user  = $group->user;
         /** @var MessageGeneratorInterface $engine */

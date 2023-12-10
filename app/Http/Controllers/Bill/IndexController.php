@@ -30,9 +30,11 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\ObjectGroup\OrganisesObjectGroups;
 use FireflyIII\Transformers\BillTransformer;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -69,7 +71,7 @@ class IndexController extends Controller
     /**
      * Show all bills.
      */
-    public function index()
+    public function index(): View | Application | Factory | \Illuminate\Contracts\Foundation\Application
     {
         $this->cleanupObjectGroups();
         $this->repository->correctOrder();
@@ -107,7 +109,7 @@ class IndexController extends Controller
             $array      = $transformer->transform($bill);
             $groupOrder = (int)$array['object_group_order'];
             // make group array if necessary:
-            $bills[$groupOrder] = $bills[$groupOrder] ?? [
+            $bills[$groupOrder] ??= [
                 'object_group_id'    => $array['object_group_id'],
                 'object_group_title' => $array['object_group_title'],
                 'bills'              => [],
@@ -157,7 +159,7 @@ class IndexController extends Controller
                 }
 
                 $currencyId                     = $bill['currency_id'];
-                $sums[$groupOrder][$currencyId] = $sums[$groupOrder][$currencyId] ?? [
+                $sums[$groupOrder][$currencyId] ??= [
                     'currency_id'             => $currencyId,
                     'currency_code'           => $bill['currency_code'],
                     'currency_name'           => $bill['currency_name'],
@@ -190,8 +192,8 @@ class IndexController extends Controller
     {
         $avg = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
 
-        Log::debug(sprintf('Amount per period for bill #%d "%s"', $bill['id'], $bill['name']));
-        Log::debug(sprintf('Average is %s', $avg));
+        app('log')->debug(sprintf('Amount per period for bill #%d "%s"', $bill['id'], $bill['name']));
+        app('log')->debug(sprintf('Average is %s', $avg));
         // calculate amount per year:
         $multiplies = [
             'yearly'    => '1',
@@ -202,7 +204,7 @@ class IndexController extends Controller
             'daily'     => '365.24',
         ];
         $yearAmount = bcmul($avg, bcdiv($multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
-        Log::debug(sprintf('Amount per year is %s (%s * %s / %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
+        app('log')->debug(sprintf('Amount per year is %s (%s * %s / %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
 
         // per period:
         $division  = [
@@ -222,7 +224,7 @@ class IndexController extends Controller
         ];
         $perPeriod = bcdiv($yearAmount, $division[$range]);
 
-        Log::debug(sprintf('Amount per %s is %s (%s / %s)', $range, $perPeriod, $yearAmount, $division[$range]));
+        app('log')->debug(sprintf('Amount per %s is %s (%s / %s)', $range, $perPeriod, $yearAmount, $division[$range]));
 
         return $perPeriod;
     }
@@ -247,7 +249,7 @@ class IndexController extends Controller
              * @var array $entry
              */
             foreach ($array as $currencyId => $entry) {
-                $totals[$currencyId]               = $totals[$currencyId] ?? [
+                $totals[$currencyId]               ??= [
                     'currency_id'             => $currencyId,
                     'currency_code'           => $entry['currency_code'],
                     'currency_name'           => $entry['currency_name'],

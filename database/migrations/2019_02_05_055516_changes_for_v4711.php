@@ -46,7 +46,7 @@ class ChangesForV4711 extends Migration
 
     /**
      * Run the migrations.
-     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      * @return void
      */
     public function up(): void

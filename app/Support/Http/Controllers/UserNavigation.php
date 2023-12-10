@@ -31,7 +31,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait UserNavigation
@@ -53,9 +52,9 @@ trait UserNavigation
      */
     final protected function getPreviousUrl(string $identifier): string
     {
-        Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
+        app('log')->debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
         $url = (string)session($identifier);
-        Log::debug(sprintf('The URL is %s', $url));
+        app('log')->debug(sprintf('The URL is %s', $url));
 
         return app('steam')->getSafeUrl($url, route('index'));
     }
@@ -107,7 +106,7 @@ trait UserNavigation
             /** @var Transaction|null $transaction */
             $transaction = $account->transactions()->first();
             if (null === $transaction) {
-                Log::error(sprintf('Account #%d has no transactions. Dont know where it belongs.', $account->id));
+                app('log')->error(sprintf('Account #%d has no transactions. Dont know where it belongs.', $account->id));
                 session()->flash('error', trans('firefly.cant_find_redirect_account'));
 
                 return redirect(route('index'));
@@ -116,7 +115,7 @@ trait UserNavigation
             /** @var Transaction|null $other */
             $other = $journal->transactions()->where('id', '!=', $transaction->id)->first();
             if (null === $other) {
-                Log::error(sprintf('Account #%d has no valid journals. Dont know where it belongs.', $account->id));
+                app('log')->error(sprintf('Account #%d has no valid journals. Dont know where it belongs.', $account->id));
                 session()->flash('error', trans('firefly.cant_find_redirect_account'));
 
                 return redirect(route('index'));
@@ -138,7 +137,7 @@ trait UserNavigation
         /** @var TransactionJournal|null $journal */
         $journal = $group->transactionJournals()->first();
         if (null === $journal) {
-            Log::error(sprintf('No journals in group #%d', $group->id));
+            app('log')->error(sprintf('No journals in group #%d', $group->id));
 
             return redirect(route('index'));
         }
@@ -166,7 +165,7 @@ trait UserNavigation
         $return = app('steam')->getSafePreviousUrl();
         session()->put($identifier, $return);
 
-        Log::debug(sprintf('rememberPreviousUrl: %s: "%s"', $identifier, $return));
+        app('log')->debug(sprintf('rememberPreviousUrl: %s: "%s"', $identifier, $return));
 
         return $return;
     }

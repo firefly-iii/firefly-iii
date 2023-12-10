@@ -31,7 +31,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class IndexController
@@ -82,7 +81,7 @@ class IndexController extends Controller
      */
     public function setOrder(Request $request, ObjectGroup $objectGroup)
     {
-        Log::debug(sprintf('Found object group #%d "%s"', $objectGroup->id, $objectGroup->title));
+        app('log')->debug(sprintf('Found object group #%d "%s"', $objectGroup->id, $objectGroup->title));
         $newOrder = (int)$request->get('order');
         $this->repository->setOrder($objectGroup, $newOrder);
 

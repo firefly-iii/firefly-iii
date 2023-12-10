@@ -47,14 +47,13 @@ class JavascriptController extends Controller
     /**
      * Show info about accounts.
      *
-     * @param AccountRepositoryInterface  $repository
-     * @param CurrencyRepositoryInterface $currencyRepository
+     * @param AccountRepositoryInterface $repository
      *
      * @return Response
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function accounts(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
+    public function accounts(AccountRepositoryInterface $repository): Response
     {
         $accounts = $repository->getAccountsByType(
             [AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD]
@@ -102,9 +101,8 @@ class JavascriptController extends Controller
     /**
      * Show some common variables to be used in scripts.
      *
-     * @param Request                     $request
-     * @param AccountRepositoryInterface  $repository
-     * @param CurrencyRepositoryInterface $currencyRepository
+     * @param Request                    $request
+     * @param AccountRepositoryInterface $repository
      *
      * @return Response
      * @throws FireflyException
@@ -112,7 +110,7 @@ class JavascriptController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function variables(Request $request, AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
+    public function variables(Request $request, AccountRepositoryInterface $repository): Response
     {
         $account  = $repository->find((int)$request->get('account'));
         $currency = app('amount')->getDefaultCurrency();
@@ -147,11 +145,9 @@ class JavascriptController extends Controller
     /**
      * Bit of a hack but OK.
      *
-     * @param Request $request
-     *
      * @return Response
      */
-    public function variablesV2(Request $request): Response
+    public function variablesV2(): Response
     {
         /** @var Carbon $start */
         $start = clone session('start', today(config('app.timezone'))->startOfMonth());

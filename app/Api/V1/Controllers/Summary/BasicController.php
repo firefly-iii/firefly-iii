@@ -32,7 +32,6 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -107,8 +106,8 @@ class BasicController extends Controller
         $balanceData  = $this->getBalanceInformation($start, $end);
         $billData     = $this->getBillInformation($start, $end);
         $spentData    = $this->getLeftToSpendInfo($start, $end);
-        $networthData = $this->getNetWorthInfo($start, $end);
-        $total        = array_merge($balanceData, $billData, $spentData, $networthData);
+        $netWorthData = $this->getNetWorthInfo($start, $end);
+        $total        = array_merge($balanceData, $billData, $spentData, $netWorthData);
 
         // give new keys
         $return = [];
@@ -149,12 +148,12 @@ class BasicController extends Controller
         /** @var array $transactionJournal */
         foreach ($set as $transactionJournal) {
             $currencyId           = (int)$transactionJournal['currency_id'];
-            $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
+            $incomes[$currencyId] ??= '0';
             $incomes[$currencyId] = bcadd(
                 $incomes[$currencyId],
                 bcmul($transactionJournal['amount'], '-1')
             );
-            $sums[$currencyId]    = $sums[$currencyId] ?? '0';
+            $sums[$currencyId]    ??= '0';
             $sums[$currencyId]    = bcadd($sums[$currencyId], bcmul($transactionJournal['amount'], '-1'));
         }
 
@@ -172,9 +171,9 @@ class BasicController extends Controller
         /** @var array $transactionJournal */
         foreach ($set as $transactionJournal) {
             $currencyId            = (int)$transactionJournal['currency_id'];
-            $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
+            $expenses[$currencyId] ??= '0';
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $transactionJournal['amount']);
-            $sums[$currencyId]     = $sums[$currencyId] ?? '0';
+            $sums[$currencyId]     ??= '0';
             $sums[$currencyId]     = bcadd($sums[$currencyId], $transactionJournal['amount']);
         }
 
@@ -368,30 +367,30 @@ class BasicController extends Controller
             }
         );
 
-        $netWorthSet = $netWorthHelper->getNetWorthByCurrency($filtered, $date);
+        $netWorthSet = $netWorthHelper->byAccounts($filtered, $date);
         $return      = [];
-        foreach ($netWorthSet as $data) {
-            /** @var TransactionCurrency $currency */
-            $currency = $data['currency'];
-            $amount   = $data['balance'];
+        foreach ($netWorthSet as $key => $data) {
+            if ('native' === $key) {
+                continue;
+            }
+            $amount = $data['balance'];
             if (0 === bccomp($amount, '0')) {
                 continue;
             }
             // return stuff
             $return[] = [
-                'key'                     => sprintf('net-worth-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency' => $currency->symbol]),
+                'key'                     => sprintf('net-worth-in-%s', $data['currency_code']),
+                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency' => $data['currency_symbol']]),
                 'monetary_value'          => $amount,
-                'currency_id'             => (string)$currency->id,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatAnything($currency, $data['balance'], false),
+                'currency_id'             => (string)$data['currency_id'],
+                'currency_code'           => $data['currency_code'],
+                'currency_symbol'         => $data['currency_symbol'],
+                'currency_decimal_places' => $data['currency_decimal_places'],
+                'value_parsed'            => app('amount')->formatFlat($data['currency_symbol'], $data['currency_decimal_places'], $data['balance'], false),
                 'local_icon'              => 'line-chart',
                 'sub_title'               => '',
             ];
         }
-
         return $return;
     }
 

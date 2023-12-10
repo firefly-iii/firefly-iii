@@ -82,19 +82,19 @@ class StoreController extends Controller
 
         try {
             $transactionGroup = $this->groupRepository->store($data);
-        } catch (DuplicateTransactionException $e) {
+        } catch (DuplicateTransactionException $e) { // @phpstan-ignore-line
             app('log')->warning('Caught a duplicate transaction. Return error message.');
             $validator = Validator::make(
                 ['transactions' => [['description' => $e->getMessage()]]],
                 ['transactions.0.description' => new IsDuplicateTransaction()]
             );
-            throw new ValidationException($validator, 0, $e);
-        } catch (FireflyException $e) {
+            throw new ValidationException($validator); // @phpstan-ignore-line
+        } catch (FireflyException $e) { // @phpstan-ignore-line
             app('log')->warning('Caught an exception. Return error message.');
             app('log')->error($e->getMessage());
             $message   = sprintf('Internal exception: %s', $e->getMessage());
             $validator = Validator::make(['transactions' => [['description' => $message]]], ['transactions.0.description' => new IsDuplicateTransaction()]);
-            throw new ValidationException($validator, 0, $e);
+            throw new ValidationException($validator); // @phpstan-ignore-line
         }
         app('preferences')->mark();
         $applyRules   = $data['apply_rules'] ?? true;

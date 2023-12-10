@@ -98,7 +98,7 @@ return [
     'to'                      => 'Hova',
     'budget'                  => 'Költségkeret',
     'category'                => 'Kategória',
-    'bill'                    => 'Számla',
+    'bill'                    => 'Fizetendő számla',
     'withdrawal'              => 'Költség',
     'deposit'                 => 'Bevétel',
     'transfer'                => 'Átvezetés',
@@ -197,3 +197,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

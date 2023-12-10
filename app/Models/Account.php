@@ -25,6 +25,8 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -42,36 +44,36 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class Account
  *
- * @property int                                    $id
- * @property \Illuminate\Support\Carbon|null        $created_at
- * @property \Illuminate\Support\Carbon|null        $updated_at
- * @property \Illuminate\Support\Carbon|null        $deleted_at
- * @property int                                    $user_id
- * @property int                                    $account_type_id
- * @property string                                 $name
- * @property string|null                            $virtual_balance
- * @property string|null                            $iban
- * @property bool                                   $active
- * @property bool                                   $encrypted
- * @property int                                    $order
- * @property-read Collection|AccountMeta[]          $accountMeta
- * @property-read int|null                          $account_meta_count
- * @property AccountType                            $accountType
- * @property-read Collection|Attachment[]           $attachments
- * @property-read int|null                          $attachments_count
- * @property-read string                            $account_number
- * @property-read string                            $edit_name
- * @property-read Collection|Location[]             $locations
- * @property-read int|null                          $locations_count
- * @property-read Collection|Note[]                 $notes
- * @property-read int|null                          $notes_count
- * @property-read Collection|ObjectGroup[]          $objectGroups
- * @property-read int|null                          $object_groups_count
- * @property-read Collection|PiggyBank[]            $piggyBanks
- * @property-read int|null                          $piggy_banks_count
- * @property-read Collection|Transaction[]          $transactions
- * @property-read int|null                          $transactions_count
- * @property-read User                              $user
+ * @property int                           $id
+ * @property Carbon|null                   $created_at
+ * @property Carbon|null                   $updated_at
+ * @property Carbon|null                   $deleted_at
+ * @property int                           $user_id
+ * @property int                           $account_type_id
+ * @property string                        $name
+ * @property string                        $virtual_balance
+ * @property string|null                   $iban
+ * @property bool                          $active
+ * @property bool                          $encrypted
+ * @property int                           $order
+ * @property-read Collection|AccountMeta[] $accountMeta
+ * @property-read int|null                 $account_meta_count
+ * @property AccountType                   $accountType
+ * @property-read Collection|Attachment[]  $attachments
+ * @property-read int|null                 $attachments_count
+ * @property-read string                   $account_number
+ * @property-read string                   $edit_name
+ * @property-read Collection|Location[]    $locations
+ * @property-read int|null                 $locations_count
+ * @property-read Collection|Note[]        $notes
+ * @property-read int|null                 $notes_count
+ * @property-read Collection|ObjectGroup[] $objectGroups
+ * @property-read int|null                 $object_groups_count
+ * @property-read Collection|PiggyBank[]   $piggyBanks
+ * @property-read int|null                 $piggy_banks_count
+ * @property-read Collection|Transaction[] $transactions
+ * @property-read int|null                 $transactions_count
+ * @property-read User                     $user
  * @method static EloquentBuilder|Account accountTypeIn($types)
  * @method static EloquentBuilder|Account newModelQuery()
  * @method static EloquentBuilder|Account newQuery()
@@ -91,31 +93,28 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static EloquentBuilder|Account whereVirtualBalance($value)
  * @method static Builder|Account withTrashed()
  * @method static Builder|Account withoutTrashed()
- * @property Carbon                                 $lastActivityDate
- * @property string                                 $startBalance
- * @property string              $endBalance
- * @property string              $difference
- * @property string              $interest
- * @property string              $interestPeriod
- * @property string              $accountTypeString
- * @property Location            $location
- * @property string              $liability_direction
- * @property string              $current_debt
- * @property int|null            $user_group_id
+ * @property Carbon                        $lastActivityDate
+ * @property string                        $startBalance
+ * @property string                        $endBalance
+ * @property string                        $difference
+ * @property string                        $interest
+ * @property string                        $interestPeriod
+ * @property string                        $accountTypeString
+ * @property Location                      $location
+ * @property string                        $liability_direction
+ * @property string                        $current_debt
+ * @property int                           $user_group_id
  * @method static EloquentBuilder|Account whereUserGroupId($value)
- * @property-read UserGroup|null $userGroup
+ * @property-read UserGroup|null           $userGroup
  * @mixin Eloquent
  */
 class Account extends Model
 {
-    use SoftDeletes;
     use HasFactory;
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
+    use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -125,9 +124,9 @@ class Account extends Model
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
-    /** @var array Hidden from view */
+
     protected $hidden             = ['encrypted'];
     private bool $joinedAccountTypes = false;
 
@@ -139,13 +138,13 @@ class Account extends Model
      * @return Account
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Account
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $accountId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Account $account */
+            /** @var Account|null $account */
             $account = $user->accounts()->with(['accountType'])->find($accountId);
             if (null !== $account) {
                 return $account;
@@ -185,12 +184,12 @@ class Account extends Model
      */
     public function getAccountNumberAttribute(): string
     {
-        /** @var AccountMeta $metaValue */
+        /** @var AccountMeta|null $metaValue */
         $metaValue = $this->accountMeta()
                           ->where('name', 'account_number')
                           ->first();
 
-        return $metaValue ? $metaValue->data : '';
+        return null !== $metaValue ? $metaValue->data : '';
     }
 
     /**
@@ -293,6 +292,38 @@ class Account extends Model
     }
 
     /**
+     * @return Attribute
+     */
+    protected function accountId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * Get the user ID
+     *
+     * @return Attribute
+     */
+    protected function accountTypeId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
      * Get the virtual balance
      *
      * @return Attribute
@@ -300,7 +331,8 @@ class Account extends Model
     protected function virtualBalance(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
+
 }

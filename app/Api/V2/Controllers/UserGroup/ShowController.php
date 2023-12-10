@@ -30,7 +30,6 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\Transformers\V2\UserGroupTransformer;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -57,11 +56,9 @@ class ShowController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         $collection = new Collection();
         $pageSize   = $this->parameters->get('limit');
@@ -85,12 +82,11 @@ class ShowController extends Controller
     }
 
     /**
-     * @param Request   $request
      * @param UserGroup $userGroup
      *
      * @return JsonResponse
      */
-    public function show(Request $request, UserGroup $userGroup): JsonResponse
+    public function show(UserGroup $userGroup): JsonResponse
     {
         $transformer = new UserGroupTransformer();
         $transformer->setParameters($this->parameters);

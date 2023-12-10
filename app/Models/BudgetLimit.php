@@ -23,15 +23,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
 use FireflyIII\Events\Model\BudgetLimit\Created;
 use FireflyIII\Events\Model\BudgetLimit\Deleted;
 use FireflyIII\Events\Model\BudgetLimit\Updated;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -41,13 +42,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                   $created_at
  * @property Carbon|null                   $updated_at
  * @property int                           $budget_id
- * @property int|null                      $transaction_currency_id
+ * @property int                           $transaction_currency_id
  * @property Carbon                        $start_date
  * @property Carbon|null                   $end_date
  * @property string                        $amount
  * @property string                        $spent
  * @property string|null                   $period
- * @property int                           $generated
+ * @property int|string                    $generated
  * @property-read Budget                   $budget
  * @property-read TransactionCurrency|null $transactionCurrency
  * @method static Builder|BudgetLimit newModelQuery()
@@ -67,11 +68,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class BudgetLimit extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+    use ReturnsIntegerIdTrait;
+
     protected $casts
         = [
             'created_at'  => 'datetime',
@@ -86,7 +84,7 @@ class BudgetLimit extends Model
             'updated' => Updated::class,
             'deleted' => Deleted::class,
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['budget_id', 'start_date', 'end_date', 'amount', 'transaction_currency_id'];
 
     /**
@@ -97,7 +95,7 @@ class BudgetLimit extends Model
      * @return BudgetLimit
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): BudgetLimit
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $budgetLimitId = (int)$value;
@@ -136,7 +134,29 @@ class BudgetLimit extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function budgetId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function transactionCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+
 }

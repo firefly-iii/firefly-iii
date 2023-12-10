@@ -48,7 +48,7 @@ class PiggyBankFactory
         }
         // first find by ID:
         if ($piggyBankId > 0) {
-            /** @var PiggyBank $piggyBank */
+            /** @var PiggyBank|null $piggyBank */
             $piggyBank = $this->user->piggyBanks()->find($piggyBankId);
             if (null !== $piggyBank) {
                 return $piggyBank;
@@ -57,7 +57,7 @@ class PiggyBankFactory
 
         // then find by name:
         if ('' !== $piggyBankName) {
-            /** @var PiggyBank $piggyBank */
+            /** @var PiggyBank|null $piggyBank */
             $piggyBank = $this->findByName($piggyBankName);
             if (null !== $piggyBank) {
                 return $piggyBank;

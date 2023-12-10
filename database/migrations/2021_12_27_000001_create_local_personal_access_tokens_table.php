@@ -44,14 +44,14 @@ class CreateLocalPersonalAccessTokensTable extends Migration
 
     /**
      * Run the migrations.
-     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      * @return void
      */
     public function up(): void
     {
         if (!Schema::hasTable('personal_access_tokens')) {
             try {
-                Schema::create('personal_access_tokens', function (Blueprint $table) {
+                Schema::create('personal_access_tokens', static function (Blueprint $table) {
                     $table->bigIncrements('id');
                     $table->morphs('tokenable');
                     $table->string('name');

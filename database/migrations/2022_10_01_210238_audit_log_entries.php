@@ -30,14 +30,14 @@ use Illuminate\Support\Facades\Schema;
 return new class () extends Migration {
     /**
      * Run the migrations.
-     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      * @return void
      */
     public function up(): void
     {
         if (!Schema::hasTable('audit_log_entries')) {
             try {
-                Schema::create('audit_log_entries', function (Blueprint $table) {
+                Schema::create('audit_log_entries', static function (Blueprint $table) {
                     $table->id();
                     $table->timestamps();
                     $table->softDeletes();

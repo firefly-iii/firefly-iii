@@ -32,7 +32,6 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -140,7 +139,7 @@ class AmountController extends Controller
             return redirect(route('piggy-banks.index'));
         }
 
-        Log::error('Cannot add ' . $amount . ' because canAddAmount returned false.');
+        app('log')->error('Cannot add ' . $amount . ' because canAddAmount returned false.');
         session()->flash(
             'error',
             (string)trans(

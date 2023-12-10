@@ -36,9 +36,7 @@ class AdminServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void
-    {
-    }
+    public function boot(): void {}
 
     /**
      * Register the application services.
@@ -55,7 +53,7 @@ class AdminServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             LinkTypeRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var LinkTypeRepository $repository */
                 $repository = app(LinkTypeRepository::class);
                 // reference to auth is not understood by phpstan.

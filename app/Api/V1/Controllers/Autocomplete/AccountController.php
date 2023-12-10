@@ -41,6 +41,7 @@ class AccountController extends Controller
 {
     use AccountFilter;
 
+    /** @var array<int, string> */
     private array                      $balanceTypes;
     private AccountRepositoryInterface $repository;
 
@@ -117,10 +118,10 @@ class AccountController extends Controller
         // custom order.
         usort(
             $return,
-            function ($a, $b) {
+            static function (array $left, array $right) {
                 $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
-                $posA  = array_search($a['type'], $order, true);
-                $posB  = array_search($b['type'], $order, true);
+                $posA  = (int)array_search($left['type'], $order, true);
+                $posB  = (int)array_search($right['type'], $order, true);
 
                 return $posA - $posB;
             }

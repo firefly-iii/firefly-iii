@@ -37,17 +37,8 @@ class DeleteOrphanedTransactions extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Deletes orphaned transactions.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:delete-orphaned-transactions';
 
     /**
@@ -81,7 +72,7 @@ class DeleteOrphanedTransactions extends Command
         }
         $this->friendlyInfo(sprintf('Found %d orphaned journal(s).', $count));
         foreach ($set as $entry) {
-            $journal = TransactionJournal::withTrashed()->find((int)$entry->id);
+            $journal = TransactionJournal::withTrashed()->find($entry->id);
             if (null !== $journal) {
                 $journal->delete();
                 $this->friendlyWarning(
@@ -144,11 +135,11 @@ class DeleteOrphanedTransactions extends Command
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
             // delete journals
-            $journal = TransactionJournal::find((int)$transaction->transaction_journal_id);
-            if ($journal) {
+            $journal = TransactionJournal::find($transaction->transaction_journal_id);
+            if (null !== $journal) {
                 $journal->delete();
             }
-            Transaction::where('transaction_journal_id', (int)$transaction->transaction_journal_id)->delete();
+            Transaction::where('transaction_journal_id', $transaction->transaction_journal_id)->delete();
             $this->friendlyWarning(
                 sprintf(
                     'Deleted transaction journal #%d because account #%d was already deleted.',

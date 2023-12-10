@@ -79,7 +79,7 @@ class AccountFactory
      */
     public function findOrCreate(string $accountName, string $accountType): Account
     {
-        Log::debug(sprintf('findOrCreate("%s", "%s")', $accountName, $accountType));
+        app('log')->debug(sprintf('findOrCreate("%s", "%s")', $accountName, $accountType));
 
         $type = $this->accountRepository->getAccountTypeByType($accountType);
         if (null === $type) {
@@ -88,7 +88,7 @@ class AccountFactory
         $return = $this->user->accounts->where('account_type_id', $type->id)->where('name', $accountName)->first();
 
         if (null === $return) {
-            Log::debug('Found nothing. Will create a new one.');
+            app('log')->debug('Found nothing. Will create a new one.');
             $return = $this->create(
                 [
                     'user_id'           => $this->user->id,
@@ -115,7 +115,7 @@ class AccountFactory
      */
     public function create(array $data): Account
     {
-        Log::debug('Now in AccountFactory::create()');
+        app('log')->debug('Now in AccountFactory::create()');
         $type         = $this->getAccountType($data);
         $data['iban'] = $this->filterIban($data['iban'] ?? null);
 
@@ -163,7 +163,7 @@ class AccountFactory
             app('log')->warning(sprintf('Found NO account type based on %d and "%s"', $accountTypeId, $accountTypeName));
             throw new FireflyException(sprintf('AccountFactory::create() was unable to find account type #%d ("%s").', $accountTypeId, $accountTypeName));
         }
-        Log::debug(sprintf('Found account type based on %d and "%s": "%s"', $accountTypeId, $accountTypeName, $result->type));
+        app('log')->debug(sprintf('Found account type based on %d and "%s": "%s"', $accountTypeId, $accountTypeName, $result->type));
 
         return $result;
     }
@@ -176,7 +176,7 @@ class AccountFactory
      */
     public function find(string $accountName, string $accountType): ?Account
     {
-        Log::debug(sprintf('Now in AccountFactory::find("%s", "%s")', $accountName, $accountType));
+        app('log')->debug(sprintf('Now in AccountFactory::find("%s", "%s")', $accountName, $accountType));
         $type = AccountType::whereType($accountType)->first();
 
         /** @var Account|null */
@@ -228,16 +228,16 @@ class AccountFactory
         try {
             $this->storeOpeningBalance($account, $data);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
         }
 
         // create credit liability data (only liabilities)
         try {
             $this->storeCreditLiability($account, $data);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
         }
 
         // create notes
@@ -358,22 +358,22 @@ class AccountFactory
      */
     private function storeCreditLiability(Account $account, array $data): void
     {
-        Log::debug('storeCreditLiability');
+        app('log')->debug('storeCreditLiability');
         $account->refresh();
         $accountType = $account->accountType->type;
         $direction   = $this->accountRepository->getMetaValue($account, 'liability_direction');
         $valid       = config('firefly.valid_liabilities');
         if (in_array($accountType, $valid, true)) {
-            Log::debug('Is a liability with credit ("i am owed") direction.');
+            app('log')->debug('Is a liability with credit ("i am owed") direction.');
             if ($this->validOBData($data)) {
-                Log::debug('Has valid CL data.');
+                app('log')->debug('Has valid CL data.');
                 $openingBalance     = $data['opening_balance'];
                 $openingBalanceDate = $data['opening_balance_date'];
                 // store credit transaction.
                 $this->updateCreditTransaction($account, $direction, $openingBalance, $openingBalanceDate);
             }
             if (!$this->validOBData($data)) {
-                Log::debug('Does NOT have valid CL data, deletr any CL transaction.');
+                app('log')->debug('Does NOT have valid CL data, deletr any CL transaction.');
                 $this->deleteCreditTransaction($account);
             }
         }

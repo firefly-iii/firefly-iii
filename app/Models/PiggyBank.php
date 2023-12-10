@@ -23,16 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -83,13 +85,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class PiggyBank extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -101,9 +99,9 @@ class PiggyBank extends Model
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate', 'active'];
-    /** @var array Hidden from view */
+
     protected $hidden = ['targetamount_encrypted', 'encrypted'];
 
     /**
@@ -114,7 +112,7 @@ class PiggyBank extends Model
      * @return PiggyBank
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): PiggyBank
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $piggyBankId = (int)$value;
@@ -145,7 +143,7 @@ class PiggyBank extends Model
     }
 
     /**
-     * Get all of the piggy bank's notes.
+     * Get all the piggy bank's notes.
      */
     public function notes(): MorphMany
     {
@@ -155,7 +153,7 @@ class PiggyBank extends Model
     /**
      * Get all the tags for the post.
      */
-    public function objectGroups()
+    public function objectGroups(): MorphToMany
     {
         return $this->morphToMany(ObjectGroup::class, 'object_groupable');
     }
@@ -186,6 +184,26 @@ class PiggyBank extends Model
     }
 
     /**
+     * @return Attribute
+     */
+    protected function accountId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
      * Get the max amount
      *
      * @return Attribute
@@ -193,7 +211,8 @@ class PiggyBank extends Model
     protected function targetamount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
+
 }

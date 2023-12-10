@@ -30,7 +30,6 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class SetBudget.
@@ -54,12 +53,13 @@ class SetBudget implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        /** @var User $user */
         $user   = User::find($journal['user_id']);
         $search = $this->action->action_value;
 
         $budget = $user->budgets()->where('name', $search)->first();
         if (null === $budget) {
-            Log::debug(
+            app('log')->debug(
                 sprintf(
                     'RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.',
                     $journal['transaction_journal_id'],
@@ -71,7 +71,7 @@ class SetBudget implements ActionInterface
         }
 
         if (TransactionType::WITHDRAWAL !== $journal['transaction_type_type']) {
-            Log::debug(
+            app('log')->debug(
                 sprintf(
                     'RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a %s.',
                     $journal['transaction_journal_id'],
@@ -88,13 +88,13 @@ class SetBudget implements ActionInterface
         $object        = $user->transactionJournals()->find($journal['transaction_journal_id']);
         $oldBudget     = $object->budgets()->first();
         $oldBudgetName = $oldBudget?->name;
-        if ((int)$oldBudget?->id === (int)$budget->id) {
+        if ((int)$oldBudget?->id === $budget->id) {
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_linked_to_budget', ['name' => $budget->name])));
             return false;
         }
 
 
-        Log::debug(
+        app('log')->debug(
             sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal['transaction_journal_id'], $budget->id, $budget->name)
         );
 

@@ -285,7 +285,7 @@ return [
 
     // API access
     'authorization_request'                => 'Firefly III v:version autorisatieverzoek',
-    'authorization_request_intro'          => 'Applicatie "<strong>:client</strong>" vraagt ​​toestemming om toegang te krijgen tot je financiële administratie. Wil je <strong>:client</strong> autoriseren om toegang te krijgen tot je gegevens?',
+    'authorization_request_intro'          => "Applicatie \"<strong>:client</strong>\" vraagt \u{200b}\u{200b}toestemming om toegang te krijgen tot je financiële administratie. Wil je <strong>:client</strong> autoriseren om toegang te krijgen tot je gegevens?",
     'authorization_request_site'           => 'Je wordt doorgestuurd naar <code>:url</code>, die vervolgens toegang heeft tot je Firefly III-gegevens.',
     'authorization_request_invalid'        => 'Dit toegangsverzoek is ongeldig. Volg deze link niet meer.',
     'scopes_will_be_able'                  => 'Deze applicatie krijgt toegang tot:',
@@ -469,6 +469,10 @@ return [
     'search_modifier_transaction_type'                    => 'Transactietype is ":value"',
     'search_modifier_not_transaction_type'                => 'Transactietype is niet ":value"',
     'search_modifier_tag_is'                              => 'Tag is ":value"',
+    'search_modifier_tag_contains'                        => 'Tag contains ":value"',
+    'search_modifier_not_tag_contains'                    => 'Tag does not contain ":value"',
+    'search_modifier_tag_ends'                            => 'Tag ends with ":value"',
+    'search_modifier_tag_starts'                          => 'Tag starts with ":value"',
     'search_modifier_not_tag_is'                          => 'Geen tag is ":value"',
     'search_modifier_date_on_year'                        => 'Transactie is in jaar ":value"',
     'search_modifier_not_date_on_year'                    => 'Transactie is niet in jaar ":value"',
@@ -1278,6 +1282,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Voeg notitie toe aan beschrijving',
     'rule_action_move_descr_to_notes'                     => 'Notitie vervangen door beschrijving',
     'rule_action_move_notes_to_descr'                     => 'Beschrijving vervangen door notitie',
+    'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
+    'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => 'Regelgroep voor contracten',
     'rulegroup_for_bills_description'                     => 'Een speciale regelgroep voor alle regels die betrekking hebben op contracten.',
     'rule_for_bill_title'                                 => 'Automatisch gegenereerde regel voor contract ":name"',
@@ -2282,8 +2288,8 @@ return [
     'account_role_savingAsset'                  => 'Spaarrekening',
     'account_role_ccAsset'                      => 'Credit card',
     'account_role_cashWalletAsset'              => 'Cash',
-    'budget_chart_click'                        => 'Klik op een budgetnaam in de tabel hierboven om een ​​grafiek te zien.',
-    'category_chart_click'                      => 'Klik op een categorienaam in de tabel hierboven om een ​​grafiek te zien.',
+    'budget_chart_click'                        => "Klik op een budgetnaam in de tabel hierboven om een \u{200b}\u{200b}grafiek te zien.",
+    'category_chart_click'                      => "Klik op een categorienaam in de tabel hierboven om een \u{200b}\u{200b}grafiek te zien.",
     'in_out_accounts'                           => 'Inkomsten en uitgaven per combinatie',
     'in_out_accounts_per_asset'                 => 'Inkomsten en uitgaven (per betaalrekening)',
     'in_out_per_category'                       => 'Verdiend en uitgegeven per categorie',
@@ -2769,3 +2775,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

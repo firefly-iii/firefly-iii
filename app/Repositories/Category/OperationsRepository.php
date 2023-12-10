@@ -63,7 +63,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
@@ -81,7 +81,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -91,7 +91,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // info about the categories:
-            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+            $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string)$categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
@@ -121,7 +121,7 @@ class OperationsRepository implements OperationsRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
@@ -159,7 +159,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation();
@@ -177,7 +177,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -187,7 +187,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // info about the categories:
-            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+            $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string)$categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
@@ -223,7 +223,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
@@ -241,7 +241,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -251,7 +251,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // info about the categories:
-            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+            $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string)$categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
@@ -288,7 +288,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
@@ -306,7 +306,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -316,7 +316,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // info about the categories:
-            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+            $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string)$categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
@@ -361,7 +361,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
@@ -371,7 +371,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId]        ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -405,7 +405,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
@@ -414,7 +414,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId]        ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -448,7 +448,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (null === $categories || (null !== $categories && 0 === $categories->count())) {
+        if (null === $categories || 0 === $categories->count()) {
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
@@ -457,7 +457,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId]        ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],

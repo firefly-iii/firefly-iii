@@ -26,7 +26,6 @@ namespace FireflyIII\Support\Form;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\MessageBag;
 use Throwable;
 
@@ -45,7 +44,7 @@ trait FormSupport
      */
     public function select(string $name, array $list = null, $selected = null, array $options = null): string
     {
-        $list     = $list ?? [];
+        $list     ??= [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
@@ -54,7 +53,7 @@ trait FormSupport
         try {
             $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render select(): %s', $e->getMessage()));
+            app('log')->debug(sprintf('Could not render select(): %s', $e->getMessage()));
             $html = 'Could not render select.';
         }
 
@@ -69,7 +68,7 @@ trait FormSupport
      */
     protected function label(string $name, array $options = null): string
     {
-        $options = $options ?? [];
+        $options ??= [];
         if (array_key_exists('label', $options)) {
             return $options['label'];
         }
@@ -87,7 +86,7 @@ trait FormSupport
      */
     protected function expandOptionArray(string $name, $label, array $options = null): array
     {
-        $options                 = $options ?? [];
+        $options                 ??= [];
         $name                    = str_replace('[]', '', $name);
         $options['class']        = 'form-control';
         $options['id']           = 'ffInput_' . $name;
@@ -105,7 +104,7 @@ trait FormSupport
     protected function getHolderClasses(string $name): string
     {
         // Get errors from session:
-        /** @var MessageBag $errors */
+        /** @var MessageBag|null $errors */
         $errors  = session('errors');
         $classes = 'form-group';
 
@@ -157,8 +156,8 @@ trait FormSupport
         $date = null;
         try {
             $date = today(config('app.timezone'));
-        } catch (InvalidDateException $e) {
-            Log::error($e->getMessage());
+        } catch (InvalidDateException $e) {  // @phpstan-ignore-line
+            app('log')->error($e->getMessage());
         }
 
         return $date;

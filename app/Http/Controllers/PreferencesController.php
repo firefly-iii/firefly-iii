@@ -33,7 +33,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use JsonException;
 use Psr\Container\ContainerExceptionInterface;
@@ -54,7 +53,7 @@ class PreferencesController extends Controller
         parent::__construct();
 
         $this->middleware(
-            function ($request, $next) {
+            static function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.preferences'));
                 app('view')->share('mainTitleIcon', 'fa-gear');
 
@@ -92,13 +91,18 @@ class PreferencesController extends Controller
             if ('opt_group_' === $role) {
                 $role = 'opt_group_defaultAsset';
             }
-            $groupedAccounts[trans(sprintf('firefly.%s', $role))][$account->id] = $account->name;
+            $groupedAccounts[(string)trans(sprintf('firefly.%s', $role))][$account->id] = $account->name;
         }
         ksort($groupedAccounts);
 
-        $accountIds         = $accounts->pluck('id')->toArray();
-        $viewRange          = app('navigation')->getViewRange(false);
-        $frontPageAccounts  = app('preferences')->get('frontPageAccounts', $accountIds);
+        /** @var array<int, int> $accountIds */
+        $accountIds            = $accounts->pluck('id')->toArray();
+        $viewRange             = app('navigation')->getViewRange(false);
+        $frontPageAccountsPref = app('preferences')->get('frontPageAccounts', $accountIds);
+        $frontPageAccounts     = $frontPageAccountsPref->data;
+        if (!is_array($frontPageAccounts)) {
+            $frontPageAccounts = $accountIds;
+        }
         $language           = app('steam')->getLanguage();
         $languages          = config('firefly.languages');
         $locale             = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
@@ -107,7 +111,10 @@ class PreferencesController extends Controller
         $slackUrl           = app('preferences')->get('slack_webhook_url', '')->data;
         $customFiscalYear   = app('preferences')->get('customFiscalYear', 0)->data;
         $fiscalYearStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
-        $fiscalYearStart    = date('Y') . '-' . $fiscalYearStartStr;
+        if (is_array($fiscalYearStartStr)) {
+            $fiscalYearStartStr = '01-01';
+        }
+        $fiscalYearStart    = sprintf('%s-%s', date('Y'), (string)$fiscalYearStartStr);
         $tjOptionalFields   = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $availableDarkModes = config('firefly.available_dark_modes');
 
@@ -122,20 +129,20 @@ class PreferencesController extends Controller
         // list of locales also has "equal" which makes it equal to whatever the language is.
 
         try {
-            $locales = json_decode(file_get_contents(resource_path(sprintf('lang/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
+            $locales = json_decode((string)file_get_contents(resource_path(sprintf('lang/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $locales = [];
         }
         $locales = ['equal' => (string)trans('firefly.equal_to_language')] + $locales;
         // an important fallback is that the frontPageAccount array gets refilled automatically
         // when it turns up empty.
-        if (0 === count($frontPageAccounts->data)) {
+        if (0 === count($frontPageAccounts)) {
             $frontPageAccounts = $accountIds;
         }
 
         // for the demo user, the slackUrl is automatically emptied.
-        // this isn't really secure but it means that the demo site has a semi-secret
+        // this isn't really secure, but it means that the demo site has a semi-secret
         // slackUrl.
         if (auth()->user()->hasRole('demo')) {
             $slackUrl = '';

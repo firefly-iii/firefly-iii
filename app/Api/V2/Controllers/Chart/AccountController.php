@@ -26,7 +26,7 @@ namespace FireflyIII\Api\V2\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Api\V2\Request\Generic\DateRequest;
+use FireflyIII\Api\V2\Request\Chart\DashboardChartRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -35,6 +35,7 @@ use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -78,14 +79,15 @@ class AccountController extends Controller
      *
      * TODO validate and set user_group_id from request
      *
-     * @param DateRequest $request
+     * @param DashboardChartRequest $request
      *
      * @return JsonResponse
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function dashboard(DateRequest $request): JsonResponse
+    public function dashboard(DashboardChartRequest $request): JsonResponse
     {
         /** @var Carbon $start */
         $start = $this->parameters->get('start');
@@ -93,18 +95,37 @@ class AccountController extends Controller
         $end = $this->parameters->get('end');
         $end->endOfDay();
 
-        // user's preferences
-        $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT])->pluck('id')->toArray();
-        $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
         /** @var TransactionCurrency $default */
-        $default   = app('amount')->getDefaultCurrency();
-        $accounts  = $this->repository->getAccountsById($frontPage->data);
+        $default = app('amount')->getDefaultCurrency();
+        $params  = $request->getAll();
+        /** @var Collection $accounts */
+        $accounts  = $params['accounts'];
         $chartData = [];
 
-        if (!(is_array($frontPage->data) && count($frontPage->data) > 0)) {
-            $frontPage->data = $defaultSet;
-            $frontPage->save();
+        // user's preferences
+        if (0 === $accounts->count()) {
+            $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT])->pluck('id')->toArray();
+            $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
+
+            if (!(is_array($frontPage->data) && count($frontPage->data) > 0)) {
+                $frontPage->data = $defaultSet;
+                $frontPage->save();
+            }
+
+            $accounts = $this->repository->getAccountsById($frontPage->data);
         }
+
+        // both options are overruled by "preselected"
+        if ('all' === $params['preselected']) {
+            $accounts = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        }
+        if ('assets' === $params['preselected']) {
+            $accounts = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        }
+        if ('liabilities' === $params['preselected']) {
+            $accounts = $this->repository->getAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
+        }
+
         /** @var Account $account */
         foreach ($accounts as $account) {
             $currency = $this->repository->getAccountCurrency($account);
@@ -123,7 +144,7 @@ class AccountController extends Controller
                 'native_id'               => (string)$default->id,
                 'native_code'             => $default->code,
                 'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => (int)$default->decimal_places,
+                'native_decimal_places'   => $default->decimal_places,
                 'start'                   => $start->toAtomString(),
                 'end'                     => $end->toAtomString(),
                 'period'                  => '1D',

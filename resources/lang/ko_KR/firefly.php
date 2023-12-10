@@ -469,6 +469,10 @@ return [
     'search_modifier_transaction_type'                    => '거래 유형은 ":value" 입니다',
     'search_modifier_not_transaction_type'                => '거래 유형은 ":value"가 아닙니다',
     'search_modifier_tag_is'                              => '태그는 ":value" 입니다',
+    'search_modifier_tag_contains'                        => 'Tag contains ":value"',
+    'search_modifier_not_tag_contains'                    => 'Tag does not contain ":value"',
+    'search_modifier_tag_ends'                            => 'Tag ends with ":value"',
+    'search_modifier_tag_starts'                          => 'Tag starts with ":value"',
     'search_modifier_not_tag_is'                          => '":value" 태그가 없습니다.',
     'search_modifier_date_on_year'                        => '거래는 ":value" 연도에 있습니다',
     'search_modifier_not_date_on_year'                    => '거래는 ":value" 연도에 있지 않습니다',
@@ -1278,6 +1282,8 @@ return [
     'rule_action_append_notes_to_descr'                   => '설명에 메모 추가',
     'rule_action_move_descr_to_notes'                     => '노트를 설명으로 바꾸기',
     'rule_action_move_notes_to_descr'                     => '설명을 노트로 바꾸기',
+    'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
+    'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => '청구서에 대한 규칙 그룹',
     'rulegroup_for_bills_description'                     => '청구서와 관련된 모든 규칙을 위한 특별 규칙 그룹입니다.',
     'rule_for_bill_title'                                 => '청구서 ":name"에 대한 자동 생성 규칙',
@@ -2769,3 +2775,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

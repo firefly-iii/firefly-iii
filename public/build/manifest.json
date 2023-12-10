@@ -1,60 +1,60 @@
 {
-  "_load-translations-87b32220.js": {
-    "file": "assets/load-translations-87b32220.js",
-    "integrity": "sha384-LUgquSUz4wVrMfbb+2ydJ62mkgPPdNzpRUho5uNkTiYfVX2htuR3SALdplVf/PkK"
+  "_load-translations-85b093de.js": {
+    "file": "assets/load-translations-85b093de.js",
+    "integrity": "sha384-AQsbwlyfi+JD0G6ymSMcfR9FfVJIdqMf/btUvbHkKcRLKTnIN0orw0xpEAajOEWs"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
-    "file": "assets/fa-brands-400-003f1154.ttf",
+    "file": "assets/fa-brands-400-5656d596.ttf",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf",
-    "integrity": "sha384-4EQH+PmKesDrfu4je7V8FqFBmki3WyM5kRanRrc8h0mBNO4t1nDOTN6DIxfmm4pE"
+    "integrity": "sha384-z6ErMQpm9VO+PSzFwaRYqupTfPdf/8FqehfXiAegd1OsCVEwyxGfXRitsOAlSwL8"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2": {
-    "file": "assets/fa-brands-400-faae6fc0.woff2",
+    "file": "assets/fa-brands-400-3a8924cd.woff2",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2",
-    "integrity": "sha384-nWRwAM374M2/Kes6S6O2dGHU0rqnWmg0z0XxZiW15DCy3XRY0/oTfALEnWzGDaRL"
+    "integrity": "sha384-bkcB7e1rvHdmNnhkhQO4nuNk9I0RiTPMW8QUEuAB43yV0a+pj+4wcq0TqdEjkAG0"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf": {
-    "file": "assets/fa-regular-400-7d81a1a7.ttf",
+    "file": "assets/fa-regular-400-5d02dc9b.ttf",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.ttf",
-    "integrity": "sha384-YdQktu6FPOgaFQYYBvOWlPWMbMusTav1NsefBpQssPEe9CLJ8tgsV71lV23spHCc"
+    "integrity": "sha384-U8lQh2H28bJCCd0UDMYkUilXo/MkC+X4bagXkhsKG7nSiMTjR7PXEol7FOqOfiRv"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2": {
-    "file": "assets/fa-regular-400-9169d8be.woff2",
+    "file": "assets/fa-regular-400-2bccecf0.woff2",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2",
-    "integrity": "sha384-d4XYctR/QCX2hwpVKFf2jRVpNbX/lvW/SBtmseI5R0DqUkh6IIgJL6gqOQcVG9AI"
+    "integrity": "sha384-2hgsGQjjgVclDGAvWslIa+GwYh3Bn/ztuvakT4ICpV95tadfxcw0WMPHsEKjsPVT"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf": {
-    "file": "assets/fa-solid-900-cea79b34.ttf",
+    "file": "assets/fa-solid-900-fbbf06d7.ttf",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf",
-    "integrity": "sha384-5v9qe32KjexA3nf6mGKT6kA39om1v84xVOd9s2bGSEislD6ovRaHRIMnd2GOlI+L"
+    "integrity": "sha384-2VoAADNdfW/EPlkrhW8xHXpt8CCvqmFA3HH12T2EfU1VBBJfvTPNbKLxMk84zc5O"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2": {
-    "file": "assets/fa-solid-900-886c8611.woff2",
+    "file": "assets/fa-solid-900-9fc85f3a.woff2",
     "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2",
-    "integrity": "sha384-B73JAwYNSgI4rwb14zwxigHgAkg1Ms+j6+9sJoDpiL11+VW5RjQCLfIh0RVoi0h6"
+    "integrity": "sha384-YxWlWCDksuL6Ljn1HkJNPH8l+jSRIWPpMpPw3pFa0QnmLXjwV/uPwpDm/b9vn/o1"
   },
   "resources/assets/v2/pages/dashboard/dashboard.js": {
-    "file": "assets/dashboard-42661760.js",
+    "file": "assets/dashboard-bfc72cdb.js",
     "imports": [
-      "_load-translations-87b32220.js"
+      "_load-translations-85b093de.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/dashboard/dashboard.js",
-    "integrity": "sha384-YDUMtay8vqXg8UEhHKPzu4HAobu10REigb/p5ljIF+hGupVods6Vc/wqxUxx0fqy"
+    "integrity": "sha384-kE37MWn3DWfTheoMqJM1SS56PGlwlaaoJEIf66eW+ROFo88rAWyrwX52Jy0Q/0yU"
   },
   "resources/assets/v2/pages/transactions/create.js": {
-    "file": "assets/create-1321af8a.js",
+    "file": "assets/create-46a6e026.js",
     "imports": [
-      "_load-translations-87b32220.js"
+      "_load-translations-85b093de.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/create.js",
-    "integrity": "sha384-IhP3MrZwa0yb46MNueQyisca3xFP0rXA14CDqZyFuZTj4SWixSkGcMpjxGIBz6QO"
+    "integrity": "sha384-QZuBYZlNZHnJZmm/a/XSDVXIz8uRSjsItfumwo+Mcf2wqwxb3DLScIic5vy3V7TF"
   },
   "resources/assets/v2/sass/app.scss": {
-    "file": "assets/app-28a195fd.css",
+    "file": "assets/app-fb7b26ec.css",
     "isEntry": true,
     "src": "resources/assets/v2/sass/app.scss",
-    "integrity": "sha384-E/ojpHNuLxPbdew8iDiIKVYDJU4S+J/CFOSq9N57hch8mzgzLk4J4YCAyuCdj//E"
+    "integrity": "sha384-asG3EmbviAZntc1AzgJpoF+jBChn+oq/7eQfYWrCdJ1Ku/c7rJ82sstr6Eptxqgd"
   }
 }

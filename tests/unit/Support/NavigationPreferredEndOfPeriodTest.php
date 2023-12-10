@@ -43,7 +43,7 @@ class NavigationPreferredEndOfPeriodTest extends TestCase
         $this->navigation = new Navigation();
     }
 
-    public static function providePeriods(): array
+    public static function providePeriods(): iterable
     {
         return [
             '1 week'    => ['start' => Carbon::now(), 'end' => Carbon::now()->addWeek(), 'expected' => 'endOfDay'],
@@ -67,6 +67,6 @@ class NavigationPreferredEndOfPeriodTest extends TestCase
     public function testGivenStartAndEndDatesWhenCallPreferredEndOfPeriodThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected)
     {
         $formatPeriod = $this->navigation->preferredEndOfPeriod($start, $end);
-        $this->assertEquals($expected, $formatPeriod);
+        self::assertSame($expected, $formatPeriod);
     }
 }

@@ -35,9 +35,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class TagFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use AppendsLocationData;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data for controller.
@@ -64,7 +64,7 @@ class TagFormRequest extends FormRequest
     {
         $idRule = '';
 
-        /** @var Tag $tag */
+        /** @var Tag|null $tag */
         $tag     = $this->route()->parameter('tag');
         $tagRule = 'required|max:1024|min:1|uniqueObjectForUser:tags,tag';
         if (null !== $tag) {

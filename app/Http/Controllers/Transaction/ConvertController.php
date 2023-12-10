@@ -33,7 +33,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Transformers\TransactionGroupTransformer;
@@ -42,7 +41,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -55,7 +53,6 @@ class ConvertController extends Controller
     use ModelInformation;
 
     private AccountRepositoryInterface $accountRepository;
-    private JournalRepositoryInterface $repository;
 
     /**
      * ConvertController constructor.
@@ -69,7 +66,6 @@ class ConvertController extends Controller
         // some useful repositories:
         $this->middleware(
             function ($request, $next) {
-                $this->repository        = app(JournalRepositoryInterface::class);
                 $this->accountRepository = app(AccountRepositoryInterface::class);
                 app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
@@ -119,7 +115,7 @@ class ConvertController extends Controller
         ];
 
         if ($sourceType->type === $destinationType->type) { // cannot convert to its own type.
-            Log::debug('This is already a transaction of the expected type..');
+            app('log')->debug('This is already a transaction of the expected type..');
             session()->flash('info', (string)trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$group->id]));

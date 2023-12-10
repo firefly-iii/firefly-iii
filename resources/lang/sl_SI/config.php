@@ -36,7 +36,7 @@ declare(strict_types=1);
 
 return [
     'html_language'            => 'sl',
-    'locale'                   => 'sl, Slovenian, sl_SI, sl_SI.utf8, sl_SI.UTF-8',
+    'locale'                   => 'sl, Slovenščina, sl_SI, sl_SI.utf8, sl_SI.UTF-8',
     //'month'                   => '%B %Y',
     'month_js'                 => 'MMMM YYYY',
 
@@ -101,3 +101,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

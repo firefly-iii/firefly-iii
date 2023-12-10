@@ -24,12 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Carbon;
 
 /**
  * Class UserRole
@@ -53,6 +54,8 @@ use Illuminate\Support\Carbon;
  */
 class UserRole extends Model
 {
+    use ReturnsIntegerIdTrait;
+
     protected $fillable = ['title'];
 
     /**

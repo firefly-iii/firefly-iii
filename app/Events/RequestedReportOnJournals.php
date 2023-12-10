@@ -29,7 +29,6 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class RequestedReportOnJournals
@@ -53,7 +52,7 @@ class RequestedReportOnJournals
      */
     public function __construct(int $userId, Collection $groups)
     {
-        Log::debug('In event RequestedReportOnJournals.');
+        app('log')->debug('In event RequestedReportOnJournals.');
         $this->userId = $userId;
         $this->groups = $groups;
     }

@@ -23,13 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -64,13 +65,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class LinkType extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -79,7 +77,7 @@ class LinkType extends Model
             'editable'   => 'boolean',
         ];
 
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['name', 'inward', 'outward', 'editable'];
 
     /**
@@ -91,7 +89,7 @@ class LinkType extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): LinkType
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $linkTypeId = (int)$value;
@@ -110,4 +108,6 @@ class LinkType extends Model
     {
         return $this->hasMany(TransactionJournalLink::class);
     }
+
+
 }

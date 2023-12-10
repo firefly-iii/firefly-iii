@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
@@ -34,7 +33,7 @@ use Illuminate\Validation\Validator;
  */
 trait CurrencyValidation
 {
-    public const TEST = 'Test';
+    public const string TEST = 'Test';
 
     /**
      * If the transactions contain foreign amounts, there must also be foreign currency information.
@@ -46,7 +45,7 @@ trait CurrencyValidation
         if ($validator->errors()->count() > 0) {
             return;
         }
-        Log::debug('Now in validateForeignCurrencyInformation()');
+        app('log')->debug('Now in validateForeignCurrencyInformation()');
         $transactions = $this->getTransactionsArray($validator);
 
         foreach ($transactions as $index => $transaction) {

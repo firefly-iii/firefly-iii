@@ -88,7 +88,7 @@ class CorrectAmounts extends Command
         }
         /** @var AutoBudget $item */
         foreach ($set as $item) {
-            $item->amount = app('steam')->positive((string)$item->amount);
+            $item->amount = app('steam')->positive($item->amount);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d auto budget amount(s).', $count));
@@ -108,7 +108,7 @@ class CorrectAmounts extends Command
         }
         /** @var AvailableBudget $item */
         foreach ($set as $item) {
-            $item->amount = app('steam')->positive((string)$item->amount);
+            $item->amount = app('steam')->positive($item->amount);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d available budget amount(s).', $count));
@@ -128,8 +128,8 @@ class CorrectAmounts extends Command
         }
         /** @var Bill $item */
         foreach ($set as $item) {
-            $item->amount_min = app('steam')->positive((string)$item->amount_min);
-            $item->amount_max = app('steam')->positive((string)$item->amount_max);
+            $item->amount_min = app('steam')->positive($item->amount_min);
+            $item->amount_max = app('steam')->positive($item->amount_max);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d bill amount(s).', $count));
@@ -149,7 +149,7 @@ class CorrectAmounts extends Command
         }
         /** @var BudgetLimit $item */
         foreach ($set as $item) {
-            $item->amount = app('steam')->positive((string)$item->amount);
+            $item->amount = app('steam')->positive($item->amount);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d budget limit amount(s).', $count));
@@ -167,9 +167,9 @@ class CorrectAmounts extends Command
 
             return;
         }
-        /** @var BudgetLimit $item */
+        /** @var CurrencyExchangeRate $item */
         foreach ($set as $item) {
-            $item->rate = app('steam')->positive((string)$item->rate);
+            $item->rate = app('steam')->positive($item->rate);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d currency exchange rate(s).', $count));
@@ -189,7 +189,7 @@ class CorrectAmounts extends Command
         }
         /** @var PiggyBankRepetition $item */
         foreach ($set as $item) {
-            $item->currentamount = app('steam')->positive((string)$item->currentamount);
+            $item->currentamount = app('steam')->positive($item->currentamount);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d piggy bank repetition amount(s).', $count));
@@ -207,9 +207,9 @@ class CorrectAmounts extends Command
 
             return;
         }
-        /** @var PiggyBankRepetition $item */
+        /** @var PiggyBank $item */
         foreach ($set as $item) {
-            $item->targetamount = app('steam')->positive((string)$item->targetamount);
+            $item->targetamount = app('steam')->positive($item->targetamount);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d piggy bank amount(s).', $count));
@@ -229,10 +229,10 @@ class CorrectAmounts extends Command
 
             return;
         }
-        /** @var PiggyBankRepetition $item */
+        /** @var RecurrenceTransaction $item */
         foreach ($set as $item) {
-            $item->amount         = app('steam')->positive((string)$item->amount);
-            $item->foreign_amount = app('steam')->positive((string)$item->foreign_amount);
+            $item->amount         = app('steam')->positive($item->amount);
+            $item->foreign_amount = app('steam')->positive($item->foreign_amount);
             $item->save();
         }
         $this->friendlyInfo(sprintf('Corrected %d recurring transaction amount(s).', $count));
@@ -259,7 +259,7 @@ class CorrectAmounts extends Command
             }
             if (-1 === $check) {
                 $fixed++;
-                $item->trigger_value = app('steam')->positive((string)$item->trigger_value);
+                $item->trigger_value = app('steam')->positive($item->trigger_value);
                 $item->save();
             }
         }

@@ -25,7 +25,9 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\User;
 use Illuminate\Console\Command;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -37,18 +39,10 @@ class BudgetLimitCurrency extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_bl_currency';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    public const string CONFIG_NAME = '480_bl_currency';
+
     protected $description = 'Give budget limits a currency';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:bl-currency {--F|force : Force the execution of this command.}';
 
     /**
@@ -73,8 +67,10 @@ class BudgetLimitCurrency extends Command
         /** @var BudgetLimit $budgetLimit */
         foreach ($budgetLimits as $budgetLimit) {
             if (null === $budgetLimit->transaction_currency_id) {
+                /** @var Budget|null $budget */
                 $budget = $budgetLimit->budget;
                 if (null !== $budget) {
+                    /** @var User|null $user */
                     $user = $budget->user;
                     if (null !== $user) {
                         $currency                             = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);

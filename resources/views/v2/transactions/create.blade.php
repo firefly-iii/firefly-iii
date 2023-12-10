@@ -98,7 +98,7 @@
                                                 <input type="text"
                                                        class="form-control ac-source"
                                                        :id="'source_' + index"
-                                                       x-model="transaction.source_account.name"
+                                                       x-model="transaction.source_account.alpine_name"
                                                        :data-index="index"
                                                        placeholder="{{ __('firefly.source_account')  }}">
                                             </div>
@@ -112,7 +112,7 @@
                                                 <input type="text"
                                                        class="form-control ac-dest"
                                                        :id="'dest_' + index"
-                                                       x-model="transaction.destination_account.name"
+                                                       x-model="transaction.destination_account.alpine_name"
                                                        :data-index="index"
                                                        placeholder="{{ __('firefly.destination_account')  }}">
                                             </div>
@@ -148,7 +148,7 @@
                                                 <select class="form-control" :id="'currency_code_' + index"
                                                         x-model="transaction.currency_code"
                                                 >
-                                                    <template x-for="currency in enabledCurrencies">
+                                                    <template x-for="currency in nativeCurrencies">
                                                         <option :selected="currency.id == defaultCurrency.id" :label="currency.name" :value="currency.code" x-text="currency.name"></option>
                                                     </template>
                                                 </select>
@@ -160,7 +160,7 @@
                                                        :data-index="index"
                                                        x-model="transaction.amount"
                                                        @change="changedAmount"
-                                                       placeholder="Amount">
+                                                       placeholder="0.00">
                                             </div>
                                         </div>
                                     </div>

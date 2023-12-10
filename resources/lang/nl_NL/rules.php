@@ -56,6 +56,8 @@ return [
     'cannot_find_subscription'                    => 'Firefly III kan geen abonnement met naam ":name" vinden',
     'no_notes_to_move'                            => 'De transactie heeft geen notities om te verplaatsen naar het omschrijvingsveld',
     'no_tags_to_remove'                           => 'De transactie heeft geen tags om te verwijderen',
+    'not_withdrawal'                              => 'The transaction is not a withdrawal',
+    'not_deposit'                                 => 'The transaction is not a deposit',
     'cannot_find_tag'                             => 'Firefly III kan tag ":tag" niet vinden',
     'cannot_find_asset'                           => 'Firefly III kan geen betaalrekening met naam ":name" vinden',
     'cannot_find_accounts'                        => 'Firefly III kan de bron- of doelrekening niet vinden',

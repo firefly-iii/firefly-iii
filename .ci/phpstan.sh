@@ -29,7 +29,20 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # cp .ci/.env.ci .env
 
 # Do static code analysis.
-# ./vendor/bin/phpstan analyse -c .ci/phpstan.neon --no-progress
-./vendor/bin/phpstan analyse -c .ci/phpstan.neon --xdebug --error-format=table > phpstan-report.txt
+if [[ $GITHUB_ACTIONS = "" ]]
+then
+    ./vendor/bin/phpstan analyse -c .ci/phpstan.neon --error-format=table > phpstan-report.txt
+    EXIT_CODE=$?
+    echo "The PHPstan report can be found in phpstan-report.txt. Exit code is $EXIT_CODE."
+fi
 
-echo 'The PHPstan report can be found in phpstan-report.txt'
+if [[ $GITHUB_ACTIONS = "true" ]]
+then
+    ./vendor/bin/phpstan analyse -c .ci/phpstan.neon --no-progress --error-format=github
+    EXIT_CODE=$?
+
+    # temporary exit code 0
+    # EXIT_CODE=0
+fi
+
+exit $EXIT_CODE

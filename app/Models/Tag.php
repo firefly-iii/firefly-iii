@@ -23,7 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -32,7 +35,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -75,19 +77,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereZoomLevel($value)
  * @method static Builder|Tag withTrashed()
  * @method static Builder|Tag withoutTrashed()
- * @property int|null                             $user_group_id
+ * @property int                                  $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereUserGroupId($value)
  * @mixin Eloquent
  */
 class Tag extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -98,7 +98,7 @@ class Tag extends Model
             'latitude'   => 'float',
             'longitude'  => 'float',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['user_id', 'user_group_id', 'tag', 'date', 'description', 'tagMode'];
 
     protected $hidden = ['zoomLevel', 'latitude', 'longitude'];
@@ -111,13 +111,13 @@ class Tag extends Model
      * @return Tag
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Tag
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $tagId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Tag $tag */
+            /** @var Tag|null $tag */
             $tag = $user->tags()->find($tagId);
             if (null !== $tag) {
                 return $tag;

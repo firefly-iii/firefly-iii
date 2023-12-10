@@ -67,29 +67,38 @@ class HomeController extends Controller
      */
     public function dateRange(Request $request): JsonResponse
     {
+        $stringStart = '';
+        $stringEnd   = '';
         try {
             $stringStart = e((string)$request->get('start'));
             $start       = Carbon::createFromFormat('Y-m-d', $stringStart);
         } catch (InvalidFormatException $e) {
-            Log::error(sprintf('Start: could not parse date string "%s" so ignore it.', $stringStart));
+            app('log')->error(sprintf('Start: could not parse date string "%s" so ignore it.', $stringStart));
             $start = Carbon::now()->startOfMonth();
         }
         try {
             $stringEnd = e((string)$request->get('end'));
             $end       = Carbon::createFromFormat('Y-m-d', $stringEnd);
         } catch (InvalidFormatException $e) {
-            Log::error(sprintf('End could not parse date string "%s" so ignore it.', $stringEnd));
+            app('log')->error(sprintf('End could not parse date string "%s" so ignore it.', $stringEnd));
             $end = Carbon::now()->endOfMonth();
         }
+        if (false === $start) {
+            $start = Carbon::now()->startOfMonth();
+        }
+        if (false === $end) {
+            $end = Carbon::now()->endOfMonth();
+        }
+
         $label         = $request->get('label');
         $isCustomRange = false;
 
-        Log::debug('Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->get('label')]);
+        app('log')->debug('Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->get('label')]);
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
         if ($label === (string)trans('firefly.everything') || $label === (string)trans('firefly.customRange')) {
             $isCustomRange = true;
-            Log::debug('Range is now marked as "custom".');
+            app('log')->debug('Range is now marked as "custom".');
         }
 
         $diff = $start->diffInDays($end) + 1;
@@ -99,11 +108,11 @@ class HomeController extends Controller
         }
 
         $request->session()->put('is_custom_range', $isCustomRange);
-        Log::debug(sprintf('Set is_custom_range to %s', var_export($isCustomRange, true)));
+        app('log')->debug(sprintf('Set is_custom_range to %s', var_export($isCustomRange, true)));
         $request->session()->put('start', $start);
-        Log::debug(sprintf('Set start to %s', $start->format('Y-m-d H:i:s')));
+        app('log')->debug(sprintf('Set start to %s', $start->format('Y-m-d H:i:s')));
         $request->session()->put('end', $end);
-        Log::debug(sprintf('Set end to %s', $end->format('Y-m-d H:i:s')));
+        app('log')->debug(sprintf('Set end to %s', $end->format('Y-m-d H:i:s')));
 
         return response()->json(['ok' => 'ok']);
     }
@@ -125,20 +134,26 @@ class HomeController extends Controller
         if (0 === $count) {
             return redirect(route('new-user.index'));
         }
-        $subTitle     = (string)trans('firefly.welcome_back');
-        $transactions = [];
-        $frontPage    = app('preferences')->getFresh('frontPageAccounts', $repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray());
+        $subTitle       = (string)trans('firefly.welcome_back');
+        $transactions   = [];
+        $frontPage      = app('preferences')->getFresh('frontPageAccounts', $repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray());
+        $frontPageArray = $frontPage->data;
+        if (!is_array($frontPageArray)) {
+            $frontPageArray = [];
+        }
+
+
         /** @var Carbon $start */
         $start = session('start', today(config('app.timezone'))->startOfMonth());
         /** @var Carbon $end */
         $end      = session('end', today(config('app.timezone'))->endOfMonth());
-        $accounts = $repository->getAccountsById($frontPage->data);
+        $accounts = $repository->getAccountsById($frontPageArray);
         $today    = today(config('app.timezone'));
 
         // sort frontpage accounts by order
         $accounts = $accounts->sortBy('order');
 
-        Log::debug('Frontpage accounts are ', $frontPage->data);
+        app('log')->debug('Frontpage accounts are ', $frontPageArray);
 
         /** @var BillRepositoryInterface $billRepository */
         $billRepository = app(BillRepositoryInterface::class);

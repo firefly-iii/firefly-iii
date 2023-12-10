@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -31,7 +33,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -69,6 +70,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class WebhookMessage extends Model
 {
+    use ReturnsIntegerIdTrait;
+
     protected $casts
         = [
             'sent'    => 'boolean',
@@ -86,13 +89,13 @@ class WebhookMessage extends Model
      * @return WebhookMessage
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): WebhookMessage
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $messageId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var WebhookMessage $message */
+            /** @var WebhookMessage|null $message */
             $message = self::find($messageId);
             if (null !== $message && $message->webhook->user_id === $user->id) {
                 return $message;
@@ -125,7 +128,17 @@ class WebhookMessage extends Model
     protected function sent(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (bool)$value,
+            get: static fn($value) => (bool)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function webhookId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
         );
     }
 }

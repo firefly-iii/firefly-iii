@@ -36,34 +36,34 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Dobrodošli na osnovni strani Firefly III. Vzemi si čas za sprehod skozi ta uvod, da dobiš občutek, kako Firefly III deluje.',
-    'index_accounts-chart'                  => 'Ta diagram prikazuje trenutno stanje tvojih računov sredstev. V nastavitvah lahko izbereš račune, ki so vidni tukaj.',
-    'index_box_out_holder'                  => 'To polje in polja poleg tega ti bodo omogočila hiter pregled tvoje finančne situacije.',
-    'index_help'                            => 'Če potrebuješ pomoč na strani ali obrazcu, pritisni ta gumb.',
-    'index_outro'                           => 'Večina strani Firefly III se bo začela z malo predstavitvijo, kot je ta. Če imaš vprašanja ali pripombe, se obrni name. Uživaj!',
-    'index_sidebar-toggle'                  => 'Za ustvarjanje novih transakcij, računov ali drugih stvari uporabi meni pod to ikono.',
-    'index_cash_account'                    => 'To so računi, ki so bili ustvarjeni do sedaj. Lahko uporabiš gotovinski račun za sledenje gotovinskih stroškov, vendar to ni obvezno.',
+    'index_intro'                           => 'Dobrodošli na osnovni strani Firefly III. Vzemite si čas za sprehod skozi ta uvod, da dobite občutek, kako Firefly III deluje.',
+    'index_accounts-chart'                  => 'Ta diagram prikazuje trenutno stanje vaših računov sredstev. V nastavitvah lahko izberete račune, ki so vidni tukaj.',
+    'index_box_out_holder'                  => 'To polje in polja poleg tega vam bodo omogočila hiter pregled vaše finančne situacije.',
+    'index_help'                            => 'Če potrebujete pomoč na strani ali obrazcu, pritisnite ta gumb.',
+    'index_outro'                           => 'Večina strani Firefly III se bo začela z malo predstavitvijo, kot je ta. Če imate vprašanja ali pripombe, se obrnite name. Uživaj!',
+    'index_sidebar-toggle'                  => 'Za ustvarjanje novih transakcij, računov ali drugih stvari uporabite meni pod to ikono.',
+    'index_cash_account'                    => 'To so računi, ki so bili ustvarjeni do sedaj. Lahko uporabite gotovinski račun za sledenje gotovinskih stroškov, vendar to ni obvezno.',
 
     // transactions
     'transactions_create_basic_info'        => 'Vnesite osnovne podatke o transakciji. Vir, destinacija, datum in opis.',
     'transactions_create_amount_info'       => 'Vnesite znesek transakcije. Po potrebi se bodo polja samodejno posodobila za podatke o znesku v tujini.',
     'transactions_create_optional_info'     => 'Vsa ta polja so neobvezna. Če sem dodate metapodatke, bodo vaše transakcije bolje organizirane.',
-    'transactions_create_split'             => 'Če želite razdeliti transakcijo, dodajte več delitev s tem gumbom',
+    'transactions_create_split'             => 'Če želite razdeliti transakcijo, dodajte več razdelitev s tem gumbom',
 
     // create account:
-    'accounts_create_iban'                  => 'Svojim računom dodeli veljaven IBAN. To lahko zelo olajša uvoz podatkov v prihodnosti.',
+    'accounts_create_iban'                  => 'Vašim računom dodelite veljaven IBAN. To lahko zelo olajša uvoz podatkov v prihodnosti.',
     'accounts_create_asset_opening_balance' => 'Računi sredstev imajo lahko "začetno stanje", kar označuje začetek zgodovine tega računa v Firefly III.',
-    'accounts_create_asset_currency'        => 'Firefly III podpira več valut. Računi sredstev imajo eno glavno valuto, ki jo nastaviš tukaj.',
-    'accounts_create_asset_virtual'         => 'Včasih lahko računu nastaviš virtualno stanje: dodaten znesek, ki se vedno doda ali odstrani od dejanskega stanja.',
+    'accounts_create_asset_currency'        => 'Firefly III podpira več valut. Računi sredstev imajo eno glavno valuto, ki jo nastavite tukaj.',
+    'accounts_create_asset_virtual'         => 'Včasih lahko računu nastavite virtualno stanje: dodaten znesek, ki se vedno doda ali odstrani od dejanskega stanja.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Proračuni se uporabljajo za upravljanje tvojih financ in tvorijo eno od ključnih funkcij Firefly III.',
-    'budgets_index_set_budget'              => 'Določi svoj celotni proračun za vsako obdobje, tako da ti lahko Firefly III pove, če si predvideli vsa razpoložljiva sredstva.',
+    'budgets_index_intro'                   => 'Proračuni se uporabljajo za upravljanje vaših financ in tvorijo eno od ključnih funkcij Firefly III.',
+    'budgets_index_set_budget'              => 'Določite svoj celotni proračun za vsako obdobje, tako da vam lahko Firefly III pove, če ste predvideli vsa razpoložljiva sredstva.',
     'budgets_index_see_expenses_bar'        => 'Poraba denarja bo počasi zapolnila to vrstico.',
     'budgets_index_navigate_periods'        => 'Krmarjenje po obdobjih omogoča preprosto predčasno nastavitev proračunov.',
-    'budgets_index_new_budget'              => 'Ustvari nove proračune, kot se ti zdi primerno.',
-    'budgets_index_list_of_budgets'         => 'S to tabelo določi zneske za vsak proračun in si oglej, kako napreduješ.',
-    'budgets_index_outro'                   => 'Če želiš izvedeti več o pripravi proračuna, preveri ikono pomoči v zgornjem desnem kotu.',
+    'budgets_index_new_budget'              => 'Ustvarite nove proračune, kot se vam zdi primerno.',
+    'budgets_index_list_of_budgets'         => 'S to tabelo določite zneske za vsak proračun in si oglejte, kako napredujete.',
+    'budgets_index_outro'                   => 'Če želite izvedeti več o pripravi proračuna, preverite ikono pomoči v zgornjem desnem kotu.',
 
 /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
@@ -78,11 +78,11 @@ return [
 
 
     // reports (index)
-    'reports_index_intro'                   => 'S temi poročili dobiš podroben vpogled v svoje finance.',
-    'reports_index_inputReportType'         => 'Izberi vrsto poročila. Oglej si strani za pomoč, če želiš videti, kaj ti vsako poročilo prikazuje.',
-    'reports_index_inputAccountsSelect'     => 'Račune sredstev lahko izključiš ali vključiš, kot se ti zdi primerno.',
-    'reports_index_inputDateRange'          => 'Izbrano časovno obdobje je v celoti odvisno od tebe: od enega dneva do 10 let.',
-    'reports_index_extra-options-box'       => 'Glede na izbrano poročilo lahko tukaj izbereš dodatne filtre in možnosti. Opazuj polje, ko spreminjaš vrste poročil.',
+    'reports_index_intro'                   => 'S temi poročili dobite podroben vpogled v vaše finance.',
+    'reports_index_inputReportType'         => 'Izberite vrsto poročila. Oglejte si strani za pomoč, če želite videti, kaj vam vsako poročilo prikazuje.',
+    'reports_index_inputAccountsSelect'     => 'Račune sredstev lahko izključite ali vključite, kot se vam to zdi primerno.',
+    'reports_index_inputDateRange'          => 'Izbrano časovno obdobje je v celoti odvisno od vas: od enega dneva do 10 let.',
+    'reports_index_extra-options-box'       => 'Glede na izbrano poročilo lahko tukaj izberete dodatne filtre in možnosti. Opazujte polje, ko spreminjate vrste poročil.',
 
     // reports (reports)
     'reports_report_default_intro'          => 'To poročilo vam bo dalo hiter in celovit pregled vaših financ. Če želite videti še kaj drugega, me prosim kontaktirajte!',
@@ -95,24 +95,24 @@ return [
 
     'reports_report_tag_intro'                  => 'To poročilo vam bo dalo vpogled v eno ali več oznak.',
     'reports_report_tag_pieCharts'              => 'Ti grafikoni vam bodo dali vpogled v stroške in prihodke na oznako, račun, kategorijo ali proračun.',
-    'reports_report_tag_incomeAndExpensesChart' => 'This chart shows your expenses and income per tag.',
+    'reports_report_tag_incomeAndExpensesChart' => 'Ta grafikon prikazuje vaše stroške in prihodke po kategorijah.',
 
-    'reports_report_budget_intro'                             => 'This report will give you insight in one or multiple budgets.',
-    'reports_report_budget_pieCharts'                         => 'These charts will give you insight in expenses per budget or per account.',
-    'reports_report_budget_incomeAndExpensesChart'            => 'This chart shows your expenses per budget.',
+    'reports_report_budget_intro'                             => 'To poročilo vam bo dalo vpogled v enega ali več proračunov.',
+    'reports_report_budget_pieCharts'                         => 'Ti grafikoni vam bodo dali vpogled v odhodke po proračunih v računu.',
+    'reports_report_budget_incomeAndExpensesChart'            => 'Ta grafikon prikazuje vaše stroške po proračunih.',
 
     // create transaction
-    'transactions_create_switch_box'                          => 'Use these buttons to quickly switch the type of transaction you wish to save.',
-    'transactions_create_ffInput_category'                    => 'You can freely type in this field. Previously created categories will be suggested.',
-    'transactions_create_withdrawal_ffInput_budget'           => 'Link your withdrawal to a budget for better financial control.',
-    'transactions_create_withdrawal_currency_dropdown_amount' => 'Use this dropdown when your withdrawal is in another currency.',
-    'transactions_create_deposit_currency_dropdown_amount'    => 'Use this dropdown when your deposit is in another currency.',
-    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Select a piggy bank and link this transfer to your savings.',
+    'transactions_create_switch_box'                          => 'Uporabite te gumbe za hitri prekop med tipi transakcij, ki jih želite shraniti.',
+    'transactions_create_ffInput_category'                    => 'V to polje lahko prosto pišete. Predhodno ustvarjene kategorije bodo samodejno predlagane.',
+    'transactions_create_withdrawal_ffInput_budget'           => 'Povežite svoj dvig s proračunom za boljši finančni nadzor.',
+    'transactions_create_withdrawal_currency_dropdown_amount' => 'Uporabite ta spustni meni, ko je vaš dvig v drugi valuti.',
+    'transactions_create_deposit_currency_dropdown_amount'    => 'Uporabite ta spustni meni, ko je vaš depozit v drugi valuti.',
+    'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Izberite hranilnik in to nakazilo povežite s svojimi prihranki.',
 
     // piggy banks index:
-    'piggy-banks_index_saved'                                 => 'This field shows you how much you\'ve saved in each piggy bank.',
-    'piggy-banks_index_button'                                => 'Next to this progress bar are two buttons (+ and -) to add or remove money from each piggy bank.',
-    'piggy-banks_index_accountStatus'                         => 'For each asset account with at least one piggy bank the status is listed in this table.',
+    'piggy-banks_index_saved'                                 => 'V tem polju je prikazano, koliko ste prihranili v posameznem hranilniku.',
+    'piggy-banks_index_button'                                => 'Poleg te vrstice napredka sta dva gumba (+ in -) za dodajanje ali odstranjevanje denarja iz vsakega hranilnika.',
+    'piggy-banks_index_accountStatus'                         => 'Za vsak račun sredstev z vsaj enim hranilnikom je status naveden v tej tabeli.',
 
 /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
@@ -127,46 +127,46 @@ return [
 
 
     // create piggy
-    'piggy-banks_create_name'                                 => 'What is your goal? A new couch, a camera, money for emergencies?',
-    'piggy-banks_create_date'                                 => 'You can set a target date or a deadline for your piggy bank.',
+    'piggy-banks_create_name'                                 => 'Kaj je vaš cilj? Nov kavč, kamera, denar za nujne primere?',
+    'piggy-banks_create_date'                                 => 'Določite lahko ciljni datum ali rok za vaš hranilnik.',
 
     // show piggy
-    'piggy-banks_show_piggyChart'                             => 'This chart will show the history of this piggy bank.',
-    'piggy-banks_show_piggyDetails'                           => 'Some details about your piggy bank',
-    'piggy-banks_show_piggyEvents'                            => 'Any additions or removals are also listed here.',
+    'piggy-banks_show_piggyChart'                             => 'Ta grafikon bo prikazal zgodovino tega hranilnika.',
+    'piggy-banks_show_piggyDetails'                           => 'Nekaj podrobnosti o vašem hranilniku',
+    'piggy-banks_show_piggyEvents'                            => 'Tukaj so navedena tudi vsa dodajanja ali odstranitve.',
 
     // bill index
-    'bills_index_rules'                                       => 'Here you see which rules will check if this bill is hit',
-    'bills_index_paid_in_period'                              => 'This field indicates when the bill was last paid.',
-    'bills_index_expected_in_period'                          => 'This field indicates for each bill if and when the next bill is expected to hit.',
+    'bills_index_rules'                                       => 'Tukaj vidite, katera pravila bodo preverila, ali je to željen račun',
+    'bills_index_paid_in_period'                              => 'V tem polju je navedeno, kdaj je bil račun nazadnje plačan.',
+    'bills_index_expected_in_period'                          => 'To polje označuje za vsak račun, če in kdaj se pričakuje da bo izdan naslednji račun.',
 
     // show bill
-    'bills_show_billInfo'                                     => 'This table shows some general information about this bill.',
-    'bills_show_billButtons'                                  => 'Use this button to re-scan old transactions so they will be matched to this bill.',
-    'bills_show_billChart'                                    => 'This chart shows the transactions linked to this bill.',
+    'bills_show_billInfo'                                     => 'Ta tabela prikazuje nekaj splošnih informacij o tem računu.',
+    'bills_show_billButtons'                                  => 'Uporabite ta gumb za ponovni pregled starih transakcij, da se bodo ujemale s tem računom.',
+    'bills_show_billChart'                                    => 'Ta grafikon prikazuje transakcije, povezane s tem računom.',
 
     // create bill
-    'bills_create_intro'                                      => 'Use bills to track the amount of money you\'re due every period. Think about expenses like rent, insurance or mortgage payments.',
-    'bills_create_name'                                       => 'Use a descriptive name such as "Rent" or "Health insurance".',
+    'bills_create_intro'                                      => 'Uporabite račune za spremljanje zneska denarja, ki ga zapadete v vsakem obdobju. Pomislite na stroške, kot so najemnina, zavarovanje ali hipotekarna plačila.',
+    'bills_create_name'                                       => 'Uporabite opisno ime, kot je "Najemnina" ali "Zdravstveno zavarovanje".',
     //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
-    'bills_create_amount_min_holder'                          => 'Select a minimum and maximum amount for this bill.',
-    'bills_create_repeat_freq_holder'                         => 'Most bills repeat monthly, but you can set another frequency here.',
-    'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks, the "skip"-field should be set to "1" to skip every other week.',
+    'bills_create_amount_min_holder'                          => 'Izberite najnižji in najvišji znesek za ta račun.',
+    'bills_create_repeat_freq_holder'                         => 'Večina računov se ponavlja mesečno, vendar lahko tukaj nastavite drugačno pogostost.',
+    'bills_create_skip_holder'                                => 'Če se račun ponavlja vsaka 2 tedna, je treba polje "preskoči" nastaviti na "1", da preskočite vsak drugi teden.',
 
     // rules index
-    'rules_index_intro'                                       => 'Firefly III allows you to manage rules, that will automagically be applied to any transaction you create or edit.',
-    'rules_index_new_rule_group'                              => 'You can combine rules in groups for easier management.',
-    'rules_index_new_rule'                                    => 'Create as many rules as you like.',
-    'rules_index_prio_buttons'                                => 'Order them any way you see fit.',
-    'rules_index_test_buttons'                                => 'You can test your rules or apply them to existing transactions.',
-    'rules_index_rule-triggers'                               => 'Rules have "triggers" and "actions" that you can order by drag-and-drop.',
-    'rules_index_outro'                                       => 'Be sure to check out the help pages using the (?) icon in the top right!',
+    'rules_index_intro'                                       => 'Firefly III vam omogoča upravljanje pravil, ki bodo samodejno uporabljena za vsako transakcijo, ki jo ustvarite ali uredite.',
+    'rules_index_new_rule_group'                              => 'Za lažje upravljanje lahko pravila združite v skupine.',
+    'rules_index_new_rule'                                    => 'Ustvarite poljubno število pravil.',
+    'rules_index_prio_buttons'                                => 'Razvrstite jih tako, kot se vam zdi primerno.',
+    'rules_index_test_buttons'                                => 'Svoja pravila lahko preizkusite ali jih uporabite za obstoječe transakcije.',
+    'rules_index_rule-triggers'                               => 'Pravila imajo "sprožilce" in "dejanja", ki jih lahko razvrstite tako, da jih povlečete in spustite.',
+    'rules_index_outro'                                       => 'Ne pozabite preveriti strani s pomočjo z ikono (?) zgoraj desno!',
 
     // create rule:
-    'rules_create_mandatory'                                  => 'Choose a descriptive title, and set when the rule should be fired.',
-    'rules_create_ruletriggerholder'                          => 'Add as many triggers as you like, but remember that ALL triggers must match before any actions are fired.',
-    'rules_create_test_rule_triggers'                         => 'Use this button to see which transactions would match your rule.',
-    'rules_create_actions'                                    => 'Set as many actions as you like.',
+    'rules_create_mandatory'                                  => 'Izberite opisni naslov in nastavite, kdaj naj se pravilo sproži.',
+    'rules_create_ruletriggerholder'                          => 'Dodajte poljubno število sprožilcev, vendar ne pozabite, da se morajo VSI sprožilci ujemati, preden se sprožijo kakršna koli dejanja.',
+    'rules_create_test_rule_triggers'                         => 'S tem gumbom si oglejte, katere transakcije ustrezajo vašemu pravilu.',
+    'rules_create_actions'                                    => 'Nastavite poljubno število dejanj.',
 
 /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
@@ -181,15 +181,15 @@ return [
 
 
     // preferences
-    'preferences_index_tabs'                                  => 'More options are available behind these tabs.',
+    'preferences_index_tabs'                                  => 'Za temi zavihki je na voljo še več možnosti.',
 
     // currencies
-    'currencies_index_intro'                                  => 'Firefly III supports multiple currencies, which you can change on this page.',
-    'currencies_index_default'                                => 'Firefly III has one default currency.',
-    'currencies_index_buttons'                                => 'Use these buttons to change the default currency or enable other currencies.',
+    'currencies_index_intro'                                  => 'Firefly III podpira več valut, ki jih lahko spremenite na tej strani.',
+    'currencies_index_default'                                => 'Firefly III ima eno privzeto valuto.',
+    'currencies_index_buttons'                                => 'S temi gumbi spremenite privzeto valuto ali omogočite druge valute.',
 
     // create currency
-    'currencies_create_code'                                  => 'This code should be ISO compliant (Google it for your new currency).',
+    'currencies_create_code'                                  => 'Ta koda mora biti skladna z ISO (poguglajte jo za vašo novo valuto).',
 ];
 /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
@@ -201,3 +201,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

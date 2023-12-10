@@ -30,5 +30,5 @@ namespace FireflyIII\Support\Calendar\Periodicity;
  */
 final class Fortnightly extends Weekly
 {
-    public const INTERVAL = 2;
+    public const int INTERVAL = 2;
 }

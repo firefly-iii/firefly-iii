@@ -23,14 +23,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -62,19 +64,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUserId($value)
  * @method static Builder|AvailableBudget withTrashed()
  * @method static Builder|AvailableBudget withoutTrashed()
- * @property int|null                 $user_group_id
+ * @property int                      $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUserGroupId($value)
  * @mixin Eloquent
  */
 class AvailableBudget extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
         = [
             'created_at'              => 'datetime',
@@ -84,7 +83,7 @@ class AvailableBudget extends Model
             'end_date'                => 'date',
             'transaction_currency_id' => 'int',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['user_id', 'user_group_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date'];
 
     /**
@@ -95,13 +94,13 @@ class AvailableBudget extends Model
      * @return AvailableBudget
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): AvailableBudget
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $availableBudgetId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var AvailableBudget $availableBudget */
+            /** @var AvailableBudget|null $availableBudget */
             $availableBudget = $user->availableBudgets()->find($availableBudgetId);
             if (null !== $availableBudget) {
                 return $availableBudget;
@@ -132,7 +131,18 @@ class AvailableBudget extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function transactionCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
 }

@@ -26,7 +26,6 @@ namespace FireflyIII\Support\Binder;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -54,10 +53,10 @@ class TagOrId implements BinderInterface
             if (null !== $result) {
                 return $result;
             }
-            Log::error('TagOrId: tag not found.');
+            app('log')->error('TagOrId: tag not found.');
             throw new NotFoundHttpException();
         }
-        Log::error('TagOrId: user is not logged in.');
+        app('log')->error('TagOrId: user is not logged in.');
         throw new NotFoundHttpException();
     }
 }

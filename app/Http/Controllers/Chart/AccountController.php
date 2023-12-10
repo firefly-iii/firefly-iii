@@ -40,7 +40,6 @@ use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -51,9 +50,9 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class AccountController extends Controller
 {
-    use DateCalculation;
     use AugumentData;
     use ChartGeneration;
+    use DateCalculation;
 
     protected GeneratorInterface        $generator;
     private AccountRepositoryInterface  $accountRepository;
@@ -126,7 +125,7 @@ class AccountController extends Controller
                 // grab the difference and find the currency.
                 $startAmount             = (string)($startBalances[$accountId][$currencyId] ?? '0');
                 $diff                    = bcsub((string)$endAmount, $startAmount);
-                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->find($currencyId);
+                $currencies[$currencyId] ??= $this->currencyRepository->find($currencyId);
                 if (0 !== bccomp($diff, '0')) {
                     // store the values in a temporary array.
                     $tempData[] = [
@@ -335,14 +334,15 @@ class AccountController extends Controller
         $start      = clone session('start', today(config('app.timezone'))->startOfMonth());
         $end        = clone session('end', today(config('app.timezone'))->endOfMonth());
         $defaultSet = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
-        Log::debug('Default set is ', $defaultSet);
-        $frontPage = app('preferences')->get('frontPageAccounts', $defaultSet);
-        Log::debug('Frontpage preference set is ', $frontPage->data);
-        if (0 === count($frontPage->data)) {
+        app('log')->debug('Default set is ', $defaultSet);
+        $frontPage      = app('preferences')->get('frontPageAccounts', $defaultSet);
+        $frontPageArray = !is_array($frontPage->data) ? [] : $frontPage->data;
+        app('log')->debug('Frontpage preference set is ', $frontPageArray);
+        if (0 === count($frontPageArray)) {
             app('preferences')->set('frontPageAccounts', $defaultSet);
-            Log::debug('frontpage set is empty!');
+            app('log')->debug('frontpage set is empty!');
         }
-        $accounts = $repository->getAccountsById($frontPage->data);
+        $accounts = $repository->getAccountsById($frontPageArray);
 
         return response()->json($this->accountBalanceChart($accounts, $start, $end));
     }
@@ -585,7 +585,7 @@ class AccountController extends Controller
                 // grab the difference and find the currency.
                 $startAmount             = (string)($startBalances[$accountId][$currencyId] ?? '0');
                 $diff                    = bcsub((string)$endAmount, $startAmount);
-                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->find($currencyId);
+                $currencies[$currencyId] ??= $this->currencyRepository->find($currencyId);
                 if (0 !== bccomp($diff, '0')) {
                     // store the values in a temporary array.
                     $tempData[] = [

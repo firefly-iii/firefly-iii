@@ -30,16 +30,14 @@ use FireflyIII\Support\Request\GetRuleConfiguration;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
-use function is_array;
-
 /**
  * Class StoreRequest
  */
 class StoreRequest extends FormRequest
 {
+    use ChecksLogin;
     use ConvertsDataTypes;
     use GetRuleConfiguration;
-    use ChecksLogin;
 
     /**
      * Get all data from the request.
@@ -199,7 +197,8 @@ class StoreRequest extends FormRequest
      */
     protected function atLeastOneActiveTrigger(Validator $validator): void
     {
-        $data     = $validator->getData();
+        $data = $validator->getData();
+        /** @var string|int|array|null $triggers */
         $triggers = $data['triggers'] ?? [];
         // need at least one trigger
         if (!is_countable($triggers) || 0 === count($triggers)) {
@@ -228,7 +227,8 @@ class StoreRequest extends FormRequest
      */
     protected function atLeastOneActiveAction(Validator $validator): void
     {
-        $data    = $validator->getData();
+        $data = $validator->getData();
+        /** @var string|int|array|null $actions */
         $actions = $data['actions'] ?? [];
         // need at least one trigger
         if (!is_countable($actions) || 0 === count($actions)) {

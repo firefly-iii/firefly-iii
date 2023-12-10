@@ -28,7 +28,6 @@ use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class ClearCategory.
@@ -56,7 +55,7 @@ class ClearCategory implements ActionInterface
         $object   = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         $category = $object->categories()->first();
         if (null === $category) {
-            Log::debug(sprintf('RuleAction ClearCategory, no category in journal #%d.', $journal['transaction_journal_id']));
+            app('log')->debug(sprintf('RuleAction ClearCategory, no category in journal #%d.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_already_no_category')));
             return false;
         }
@@ -65,7 +64,7 @@ class ClearCategory implements ActionInterface
 
         event(new TriggeredAuditLog($this->action->rule, $object, 'clear_category', $category->name, null));
 
-        Log::debug(sprintf('RuleAction ClearCategory removed all categories from journal #%d.', $journal['transaction_journal_id']));
+        app('log')->debug(sprintf('RuleAction ClearCategory removed all categories from journal #%d.', $journal['transaction_journal_id']));
 
         return true;
     }

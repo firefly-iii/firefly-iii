@@ -34,7 +34,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToDeleteFile;
 use LogicException;
@@ -87,7 +86,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
             try {
                 $unencryptedContent = Crypt::decrypt($encryptedContent); // verified
             } catch (DecryptException $e) {
-                Log::debug(sprintf('Could not decrypt attachment #%d but this is fine: %s', $attachment->id, $e->getMessage()));
+                app('log')->debug(sprintf('Could not decrypt attachment #%d but this is fine: %s', $attachment->id, $e->getMessage()));
                 $unencryptedContent = $encryptedContent;
             }
         }
@@ -157,7 +156,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
@@ -207,7 +206,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
                 try {
                     $dbNote->delete();
                 } catch (LogicException $e) {
-                    Log::error($e->getMessage());
+                    app('log')->error($e->getMessage());
                 }
             }
 

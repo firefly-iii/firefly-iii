@@ -55,7 +55,7 @@ class AutoSum
             /** @var string $amount */
             $amount = $getSum($object);
 
-            $return[$currency->id] = $return[$currency->id] ?? [
+            $return[$currency->id] ??= [
                 'id'             => (string)$currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,

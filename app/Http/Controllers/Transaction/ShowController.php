@@ -32,7 +32,6 @@ use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -76,15 +75,14 @@ class ShowController extends Controller
     }
 
     /**
-     * @param Request          $request
      * @param TransactionGroup $transactionGroup
      *
      * @return Factory|View
      * @throws FireflyException
      */
-    public function show(Request $request, TransactionGroup $transactionGroup)
+    public function show(TransactionGroup $transactionGroup)
     {
-        /** @var TransactionJournal $first */
+        /** @var TransactionJournal|null $first */
         $first  = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
         $splits = $transactionGroup->transactionJournals()->count();
 
@@ -105,7 +103,7 @@ class ShowController extends Controller
         $amounts  = $this->getAmounts($groupArray);
         $accounts = $this->getAccounts($groupArray);
 
-        foreach ($groupArray['transactions'] as $index => $transaction) {
+        foreach (array_keys($groupArray['transactions']) as $index) {
             $groupArray['transactions'][$index]['tags'] = $this->repository->getTagObjects(
                 $groupArray['transactions'][$index]['transaction_journal_id']
             );
@@ -192,7 +190,10 @@ class ShowController extends Controller
      */
     private function getAccounts(array $group): array
     {
-        $accounts = [];
+        $accounts = [
+            'source'      => [],
+            'destination' => [],
+        ];
 
         foreach ($group['transactions'] as $transaction) {
             $accounts['source'][]      = [

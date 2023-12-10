@@ -52,7 +52,7 @@ class FiscalHelper implements FiscalHelperInterface
      */
     public function endOfFiscalYear(Carbon $date): Carbon
     {
-        // Log::debug(sprintf('Now in endOfFiscalYear(%s).', $date->format('Y-m-d')));
+        // app('log')->debug(sprintf('Now in endOfFiscalYear(%s).', $date->format('Y-m-d')));
         $endDate = $this->startOfFiscalYear($date);
         if (true === $this->useCustomFiscalYear) {
             // add 1 year and sub 1 day
@@ -62,7 +62,7 @@ class FiscalHelper implements FiscalHelperInterface
         if (false === $this->useCustomFiscalYear) {
             $endDate->endOfYear();
         }
-        // Log::debug(sprintf('Result of endOfFiscalYear(%s) = %s', $date->format('Y-m-d'), $endDate->format('Y-m-d')));
+        // app('log')->debug(sprintf('Result of endOfFiscalYear(%s) = %s', $date->format('Y-m-d'), $endDate->format('Y-m-d')));
 
         return $endDate;
     }
@@ -80,6 +80,10 @@ class FiscalHelper implements FiscalHelperInterface
         $startDate = clone $date;
         if (true === $this->useCustomFiscalYear) {
             $prefStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
+            if (is_array($prefStartStr)) {
+                $prefStartStr = '01-01';
+            }
+            $prefStartStr = (string)$prefStartStr;
             [$mth, $day] = explode('-', $prefStartStr);
             $startDate->day((int)$day)->month((int)$mth);
 
@@ -92,7 +96,7 @@ class FiscalHelper implements FiscalHelperInterface
             $startDate->startOfYear();
         }
 
-        // Log::debug(sprintf('Result of startOfFiscalYear(%s) = %s', $date->format('Y-m-d'), $startDate->format('Y-m-d')));
+        // app('log')->debug(sprintf('Result of startOfFiscalYear(%s) = %s', $date->format('Y-m-d'), $startDate->format('Y-m-d')));
 
         return $startDate;
     }

@@ -74,6 +74,7 @@ class CategoryController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
@@ -104,22 +105,22 @@ class CategoryController extends Controller
             $amount                  = app('steam')->positive($journal['amount']);
             $nativeAmount            = $converter->convert($default, $currency, $journal['date'], $amount);
             $key                     = sprintf('%s-%s', $categoryName, $currency->code);
-            if ((int)$journal['foreign_currency_id'] === (int)$default->id) {
+            if ((int)$journal['foreign_currency_id'] === $default->id) {
                 $nativeAmount = app('steam')->positive($journal['foreign_amount']);
             }
             // create arrays
-            $return[$key] = $return[$key] ?? [
+            $return[$key] ??= [
                 'label'                   => $categoryName,
                 'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,
                 'currency_name'           => $currency->name,
                 'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => (int)$currency->decimal_places,
+                'currency_decimal_places' => $currency->decimal_places,
                 'native_id'               => (string)$default->id,
                 'native_code'             => $default->code,
                 'native_name'             => $default->name,
                 'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => (int)$default->decimal_places,
+                'native_decimal_places'   => $default->decimal_places,
                 'period'                  => null,
                 'start'                   => $start->toAtomString(),
                 'end'                     => $end->toAtomString(),
@@ -135,7 +136,7 @@ class CategoryController extends Controller
         $return = array_values($return);
 
         // order by native amount
-        usort($return, function (array $a, array $b) {
+        usort($return, static function (array $a, array $b) {
             return (float)$a['native_amount'] < (float)$b['native_amount'] ? 1 : -1;
         });
         return response()->json($this->clean($return));

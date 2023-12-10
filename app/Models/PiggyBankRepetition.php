@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -33,14 +34,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * FireflyIII\Models\PiggyBankRepetition
  *
- * @property int                             $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int                             $piggy_bank_id
- * @property \Illuminate\Support\Carbon|null $startdate
- * @property \Illuminate\Support\Carbon|null $targetdate
- * @property string                          $currentamount
- * @property-read PiggyBank                  $piggyBank
+ * @property int            $id
+ * @property Carbon|null    $created_at
+ * @property Carbon|null    $updated_at
+ * @property int            $piggy_bank_id
+ * @property Carbon|null    $startdate
+ * @property Carbon|null    $targetdate
+ * @property string         $currentamount
+ * @property-read PiggyBank $piggyBank
  * @method static EloquentBuilder|PiggyBankRepetition newModelQuery()
  * @method static EloquentBuilder|PiggyBankRepetition newQuery()
  * @method static EloquentBuilder|PiggyBankRepetition onDates(Carbon $start, Carbon $target)
@@ -57,11 +58,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class PiggyBankRepetition extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+    use ReturnsIntegerIdTrait;
+
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -69,7 +67,7 @@ class PiggyBankRepetition extends Model
             'startdate'  => 'date',
             'targetdate' => 'date',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
 
     /**
@@ -103,13 +101,13 @@ class PiggyBankRepetition extends Model
     public function scopeRelevantOnDate(EloquentBuilder $query, Carbon $date)
     {
         return $query->where(
-            function (EloquentBuilder $q) use ($date) {
+            static function (EloquentBuilder $q) use ($date) {
                 $q->where('startdate', '<=', $date->format('Y-m-d 00:00:00'));
                 $q->orWhereNull('startdate');
             }
         )
                      ->where(
-                         function (EloquentBuilder $q) use ($date) {
+                         static function (EloquentBuilder $q) use ($date) {
                              $q->where('targetdate', '>=', $date->format('Y-m-d 00:00:00'));
                              $q->orWhereNull('targetdate');
                          }
@@ -133,7 +131,17 @@ class PiggyBankRepetition extends Model
     protected function currentamount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function piggyBankId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
         );
     }
 }

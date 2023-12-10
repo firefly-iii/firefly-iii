@@ -23,15 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -74,20 +77,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserId($value)
  * @method static Builder|Rule withTrashed()
  * @method static Builder|Rule withoutTrashed()
- * @property int|null                     $user_group_id
+ * @property int                          $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Rule whereUserGroupId($value)
  * @property-read UserGroup|null          $userGroup
  * @mixin Eloquent
  */
 class Rule extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at'      => 'datetime',
@@ -99,7 +100,7 @@ class Rule extends Model
             'id'              => 'int',
             'strict'          => 'boolean',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id', 'strict'];
 
     /**
@@ -110,13 +111,13 @@ class Rule extends Model
      * @return Rule
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Rule
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $ruleId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Rule $rule */
+            /** @var Rule|null $rule */
             $rule = $user->rules()->find($ruleId);
             if (null !== $rule) {
                 return $rule;
@@ -173,5 +174,25 @@ class Rule extends Model
     public function userGroup(): BelongsTo
     {
         return $this->belongsTo(UserGroup::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function ruleGroupId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

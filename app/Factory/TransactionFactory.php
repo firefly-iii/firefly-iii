@@ -33,7 +33,6 @@ use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
 use Validator;
 
 /**
@@ -107,16 +106,16 @@ class TransactionFactory
             /** @var Transaction|null $result */
             $result = Transaction::create($data);
         } catch (QueryException $e) {
-            Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException(sprintf('Query exception when creating transaction: %s', $e->getMessage()), 0, $e);
         }
         if (null === $result) {
             throw new FireflyException('Transaction is NULL.');
         }
 
-        Log::debug(
+        app('log')->debug(
             sprintf(
                 'Created transaction #%d (%s %s, account %s), part of journal #%d',
                 $result->id,
@@ -128,7 +127,9 @@ class TransactionFactory
         );
 
         // do foreign currency thing: add foreign currency info to $one and $two if necessary.
-        if (null !== $this->foreignCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id && '' !== $foreignAmount) {
+        if (null !== $this->foreignCurrency &&
+            null !== $foreignAmount &&
+            $this->foreignCurrency->id !== $this->currency->id) {
             $result->foreign_currency_id = $this->foreignCurrency->id;
             $result->foreign_amount      = $foreignAmount;
         }
@@ -147,15 +148,15 @@ class TransactionFactory
     private function updateAccountInformation(): void
     {
         if (!array_key_exists('iban', $this->accountInformation)) {
-            Log::debug('No IBAN information in array, will not update.');
+            app('log')->debug('No IBAN information in array, will not update.');
             return;
         }
         if ('' !== (string)$this->account->iban) {
-            Log::debug('Account already has IBAN information, will not update.');
+            app('log')->debug('Account already has IBAN information, will not update.');
             return;
         }
         if ($this->account->iban === $this->accountInformation['iban']) {
-            Log::debug('Account already has this IBAN, will not update.');
+            app('log')->debug('Account already has this IBAN, will not update.');
             return;
         }
         // validate info:
@@ -163,11 +164,11 @@ class TransactionFactory
             'iban' => ['required', new UniqueIban($this->account, $this->account->accountType->type)],
         ]);
         if ($validator->fails()) {
-            Log::debug('Invalid or non-unique IBAN, will not update.');
+            app('log')->debug('Invalid or non-unique IBAN, will not update.');
             return;
         }
 
-        Log::debug('Will update account with IBAN information.');
+        app('log')->debug('Will update account with IBAN information.');
         $service = app(AccountUpdateService::class);
         $service->update($this->account, ['iban' => $this->accountInformation['iban']]);
     }
@@ -253,8 +254,7 @@ class TransactionFactory
 
     /**
      * @param User $user
-     *
-
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function setUser(User $user): void
     {

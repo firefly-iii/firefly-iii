@@ -38,7 +38,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -51,11 +50,8 @@ class ReportController extends Controller
 {
     use RenderPartialViews;
 
-    /** @var ReportHelperInterface Helper interface. */
-    protected $helper;
-
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
+    protected ReportHelperInterface   $helper;
+    private BudgetRepositoryInterface $repository;
 
     /**
      * ReportController constructor.
@@ -292,7 +288,7 @@ class ReportController extends Controller
             if ('opt_group_' === $role) {
                 $role = 'opt_group_defaultAsset';
             }
-            $groupedAccounts[trans(sprintf('firefly.%s', $role))][$account->id] = $account;
+            $groupedAccounts[(string)trans(sprintf('firefly.%s', $role))][$account->id] = $account;
         }
         ksort($groupedAccounts);
 
@@ -328,12 +324,12 @@ class ReportController extends Controller
      *
      * @param ReportFormRequest $request
      *
-     * @return RedirectResponse|Redirector
+     * @return RedirectResponse|Redirector|View
      *
      * @throws FireflyException
      *
      */
-    public function postIndex(ReportFormRequest $request)
+    public function postIndex(ReportFormRequest $request): RedirectResponse | Redirector | View
     {
         // report type:
         $reportType = $request->get('report_type');
@@ -346,7 +342,7 @@ class ReportController extends Controller
         $double     = implode(',', $request->getDoubleList()->pluck('id')->toArray());
 
         if (0 === $request->getAccountList()->count()) {
-            Log::debug('Account count is zero');
+            app('log')->debug('Account count is zero');
             session()->flash('error', (string)trans('firefly.select_at_least_one_account'));
 
             return redirect(route('reports.index'));

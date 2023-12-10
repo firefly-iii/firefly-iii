@@ -34,11 +34,6 @@ use Laravel\Passport\Passport;
  */
 class AuthServiceProvider extends ServiceProvider
 {
-    /**
-     * The policy mappings for the application.
-     *
-     * @var array
-     */
     protected $policies
         = [
             // 'FireflyIII\Model' => 'FireflyIII\Policies\ModelPolicy',
@@ -46,6 +41,7 @@ class AuthServiceProvider extends ServiceProvider
 
     /**
      * Register any authentication / authorization services.
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return void
      */
@@ -53,7 +49,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         Auth::provider(
             'remote_user_provider',
-            function ($app, array $config) {
+            static function ($app, array $config) {
                 return new RemoteUserProvider();
             }
         );

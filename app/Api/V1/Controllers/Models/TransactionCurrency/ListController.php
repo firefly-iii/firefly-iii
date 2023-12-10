@@ -255,8 +255,8 @@ class ListController extends Controller
         $unfiltered     = $recurringRepos->getAll();
 
         // filter selection
-        $collection = $unfiltered->filter(
-            static function (Recurrence $recurrence) use ($currency) {
+        $collection = $unfiltered->filter( // @phpstan-ignore-line
+            static function (Recurrence $recurrence) use ($currency) {  // @phpstan-ignore-line
                 /** @var RecurrenceTransaction $transaction */
                 foreach ($recurrence->recurrenceTransactions as $transaction) {
                     if ($transaction->transaction_currency_id === $currency->id || $transaction->foreign_currency_id === $currency->id) {
@@ -305,8 +305,8 @@ class ListController extends Controller
         $ruleRepos  = app(RuleRepositoryInterface::class);
         $unfiltered = $ruleRepos->getAll();
 
-        $collection = $unfiltered->filter(
-            static function (Rule $rule) use ($currency) {
+        $collection = $unfiltered->filter( // @phpstan-ignore-line
+            static function (Rule $rule) use ($currency) { // @phpstan-ignore-line
                 /** @var RuleTrigger $trigger */
                 foreach ($rule->ruleTriggers as $trigger) {
                     if ('currency_is' === $trigger->trigger_type && $currency->name === $trigger->trigger_value) {

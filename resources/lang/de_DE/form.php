@@ -98,7 +98,7 @@ return [
     'returnHereUpdateExplanation' => 'Nach dem Update, hierher zurückkehren.',
     'description'                 => 'Beschreibung',
     'expense_account'             => 'Ausgabenkonto',
-    'revenue_account'             => 'Kreditor (Einnahme)',
+    'revenue_account'             => 'Einnahmenkonto',
     'decimal_places'              => 'Nachkommastellen',
     'destination_amount'          => 'Betrag (Ziel)',
     'new_email_address'           => 'Neue E-Mail-Adresse',
@@ -273,7 +273,7 @@ return [
     'due_date'                  => 'Fälligkeitstermin',
     'payment_date'              => 'Zahlungsdatum',
     'invoice_date'              => 'Rechnungsdatum',
-    'internal_reference'        => 'Interner Verweis',
+    'internal_reference'        => 'Interne Referenz',
     'inward'                    => 'Beschreibung der Eingänge',
     'outward'                   => 'Beschreibung der Ausgänge',
     'rule_group_id'             => 'Regelgruppe',
@@ -314,3 +314,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

@@ -25,9 +25,12 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,50 +44,50 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionJournal
  *
- * @property int                                                    $id
- * @property Carbon|null                                            $created_at
- * @property Carbon|null                                            $updated_at
- * @property Carbon|null                                            $deleted_at
- * @property int                                                    $user_id
- * @property int                                                    $transaction_type_id
- * @property int|null                                               $transaction_group_id
- * @property int|null                                               $bill_id
- * @property int|null                                               $transaction_currency_id
- * @property string                                                 $description
- * @property Carbon                                                 $date
- * @property Carbon|null                                            $interest_date
- * @property Carbon|null                                            $book_date
- * @property Carbon|null                                            $process_date
- * @property int                                                    $order
- * @property int                                                    $tag_count
- * @property string                                                 $transaction_type_type
- * @property bool                                                   $encrypted
- * @property bool                                                   $completed
- * @property-read Collection|Attachment[]                           $attachments
- * @property-read int|null                                          $attachments_count
- * @property-read Bill|null                                         $bill
- * @property-read Collection|Budget[]                               $budgets
- * @property-read int|null                                          $budgets_count
- * @property-read Collection|Category[]                             $categories
- * @property-read int|null                                          $categories_count
- * @property-read Collection|TransactionJournalLink[]               $destJournalLinks
- * @property-read int|null                                          $dest_journal_links_count
- * @property-read Collection|Note[]                                 $notes
- * @property-read int|null                                          $notes_count
- * @property-read Collection|PiggyBankEvent[]                       $piggyBankEvents
- * @property-read int|null                                          $piggy_bank_events_count
- * @property-read Collection|TransactionJournalLink[]               $sourceJournalLinks
- * @property-read int|null                                          $source_journal_links_count
- * @property-read Collection|Tag[]                                  $tags
- * @property-read int|null                                          $tags_count
- * @property-read TransactionCurrency|null                          $transactionCurrency
- * @property-read TransactionGroup|null                             $transactionGroup
- * @property-read Collection|TransactionJournalMeta[]               $transactionJournalMeta
- * @property-read int|null                                          $transaction_journal_meta_count
- * @property-read TransactionType                                   $transactionType
- * @property-read Collection|Transaction[]                          $transactions
- * @property-read int|null                                          $transactions_count
- * @property-read User                                              $user
+ * @property int                                      $id
+ * @property Carbon|null                              $created_at
+ * @property Carbon|null                              $updated_at
+ * @property Carbon|null                              $deleted_at
+ * @property int                                      $user_id
+ * @property int                                      $transaction_type_id
+ * @property int|string|null                          $transaction_group_id
+ * @property int|string|null                          $bill_id
+ * @property int|string|null                          $transaction_currency_id
+ * @property string|null                              $description
+ * @property Carbon                                   $date
+ * @property Carbon|null                              $interest_date
+ * @property Carbon|null                              $book_date
+ * @property Carbon|null                              $process_date
+ * @property int                                      $order
+ * @property int                                      $tag_count
+ * @property string                                   $transaction_type_type
+ * @property bool                                     $encrypted
+ * @property bool                                     $completed
+ * @property-read Collection|Attachment[]             $attachments
+ * @property-read int|null                            $attachments_count
+ * @property-read Bill|null                           $bill
+ * @property-read Collection|Budget[]                 $budgets
+ * @property-read int|null                            $budgets_count
+ * @property-read Collection|Category[]               $categories
+ * @property-read int|null                            $categories_count
+ * @property-read Collection|TransactionJournalLink[] $destJournalLinks
+ * @property-read int|null                            $dest_journal_links_count
+ * @property-read Collection|Note[]                   $notes
+ * @property-read int|null                            $notes_count
+ * @property-read Collection|PiggyBankEvent[]         $piggyBankEvents
+ * @property-read int|null                            $piggy_bank_events_count
+ * @property-read Collection|TransactionJournalLink[] $sourceJournalLinks
+ * @property-read int|null                            $source_journal_links_count
+ * @property-read Collection|Tag[]                    $tags
+ * @property-read int|null                            $tags_count
+ * @property-read TransactionCurrency|null            $transactionCurrency
+ * @property-read TransactionGroup|null               $transactionGroup
+ * @property-read Collection|TransactionJournalMeta[] $transactionJournalMeta
+ * @property-read int|null                            $transaction_journal_meta_count
+ * @property-read TransactionType                     $transactionType
+ * @property-read Collection|Transaction[]            $transactions
+ * @property-read int|null                            $transactions_count
+ * @property-read User                                $user
  * @method static EloquentBuilder|TransactionJournal after(Carbon $date)
  * @method static EloquentBuilder|TransactionJournal before(Carbon $date)
  * @method static EloquentBuilder|TransactionJournal newModelQuery()
@@ -112,25 +115,23 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static EloquentBuilder|TransactionJournal whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withTrashed()
  * @method static \Illuminate\Database\Query\Builder|TransactionJournal withoutTrashed()
- * @property-read Collection|Location[]          $locations
- * @property-read int|null                       $locations_count
- * @property int                                 $the_count
- * @property int|null                            $user_group_id
+ * @property-read Collection|Location[]               $locations
+ * @property-read int|null                            $locations_count
+ * @property int|string                               $the_count
+ * @property int                                      $user_group_id
  * @method static EloquentBuilder|TransactionJournal whereUserGroupId($value)
- * @property-read Collection<int, AuditLogEntry> $auditLogEntries
- * @property-read int|null                       $audit_log_entries_count
+ * @property-read Collection<int, AuditLogEntry>      $auditLogEntries
+ * @property-read int|null                            $audit_log_entries_count
  * @mixin Eloquent
  */
 class TransactionJournal extends Model
 {
-    use SoftDeletes;
     use HasFactory;
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
+    use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at'    => 'datetime',
@@ -146,7 +147,7 @@ class TransactionJournal extends Model
             'completed'     => 'boolean',
         ];
 
-    /** @var array Fields that can be filled */
+
     protected $fillable
         = [
             'user_id',
@@ -160,7 +161,7 @@ class TransactionJournal extends Model
             'order',
             'date',
         ];
-    /** @var array Hidden from view */
+
     protected $hidden = ['encrypted'];
 
     /**
@@ -171,13 +172,13 @@ class TransactionJournal extends Model
      * @return TransactionJournal
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): TransactionJournal
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $journalId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var TransactionJournal $journal */
+            /** @var TransactionJournal|null $journal */
             $journal = $user->transactionJournals()->where('transaction_journals.id', $journalId)->first(['transaction_journals.*']);
             if (null !== $journal) {
                 return $journal;
@@ -330,9 +331,6 @@ class TransactionJournal extends Model
     public static function isJoined(Builder $query, string $table): bool
     {
         $joins = $query->getQuery()->joins;
-        if (null === $joins) {
-            return false;
-        }
         foreach ($joins as $join) {
             if ($join->table === $table) {
                 return true;
@@ -396,5 +394,25 @@ class TransactionJournal extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function transactionTypeId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

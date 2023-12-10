@@ -24,12 +24,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Carbon;
 
 /**
  * Class GroupMembership
@@ -58,6 +61,9 @@ use Illuminate\Support\Carbon;
  */
 class GroupMembership extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
+
     protected $fillable = ['user_id', 'user_group_id', 'user_role_id'];
 
     /**
@@ -83,4 +89,16 @@ class GroupMembership extends Model
     {
         return $this->belongsTo(UserRole::class);
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function userRoleId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+
 }

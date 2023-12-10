@@ -65,7 +65,7 @@ class UserGroups extends Migration
                 try {
                     Schema::table(
                         $tableName,
-                        function (Blueprint $table) use ($tableName) {
+                        static function (Blueprint $table) use ($tableName) {
                             if ('sqlite' !== config('database.default')) {
                                 $table->dropForeign(sprintf('%s_to_ugi', $tableName));
                             }
@@ -85,7 +85,7 @@ class UserGroups extends Migration
             try {
                 Schema::table(
                     'users',
-                    function (Blueprint $table) {
+                    static function (Blueprint $table) {
                         if ('sqlite' !== config('database.default')) {
                             $table->dropForeign('type_user_group_id');
                         }
@@ -107,7 +107,7 @@ class UserGroups extends Migration
 
     /**
      * Run the migrations.
-     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      * @return void
      */
     public function up(): void
@@ -178,7 +178,7 @@ class UserGroups extends Migration
         try {
             Schema::table(
                 'users',
-                function (Blueprint $table) {
+                static function (Blueprint $table) {
                     if (!Schema::hasColumn('users', 'user_group_id')) {
                         $table->bigInteger('user_group_id', false, true)->nullable();
                         $table->foreign('user_group_id', 'type_user_group_id')->references('id')->on('user_groups')->onDelete('set null')->onUpdate(
@@ -197,7 +197,7 @@ class UserGroups extends Migration
             try {
                 Schema::table(
                     $tableName,
-                    function (Blueprint $table) use ($tableName) {
+                    static function (Blueprint $table) use ($tableName) {
                         if (!Schema::hasColumn($tableName, 'user_group_id')) {
                             $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
                             $table->foreign('user_group_id', sprintf('%s_to_ugi', $tableName))->references('id')->on('user_groups')->onDelete(

@@ -44,6 +44,7 @@ return [
     'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
     'iban'                           => '這不是有效的 IBAN。',
     'zero_or_more'                   => '此數值不能為負數。',
+    'no_asset_account'               => 'This is not an asset account.',
     'date_or_time'                   => '此數值須為有效的日期或時間值 (ISO 8601)。',
     'source_equals_destination'      => '來源帳戶與目標帳戶相同。',
     'unique_account_number_for_user' => '此帳戶號碼似乎已在使用。',
@@ -150,10 +151,10 @@ return [
     'required'                   => ':attribute 欄位是必填的。',
     'required_if'                => '當 :other 為 :value 時，欄位 :attribute 是必填的。',
     'required_unless'            => '除非 :other 為 :values，否則欄位 :attribute 是必填的。',
-    'required_with'              => '當 :values​​ 存在時，欄位 :attribute 是必填的。',
-    'required_with_all'          => '當 :values​​ 存在時，欄位 :attribute 是必填的。',
-    'required_without'           => '當 :values​​ 不存在時，欄位 :attribute 是必填的。',
-    'required_without_all'       => '當沒有任何 :values​​ 存在時，欄位 :attribute 是必填的。',
+    'required_with'              => "當 :values\u{200b}\u{200b} 存在時，欄位 :attribute 是必填的。",
+    'required_with_all'          => "當 :values\u{200b}\u{200b} 存在時，欄位 :attribute 是必填的。",
+    'required_without'           => "當 :values\u{200b}\u{200b} 不存在時，欄位 :attribute 是必填的。",
+    'required_without_all'       => "當沒有任何 :values\u{200b}\u{200b} 存在時，欄位 :attribute 是必填的。",
     'same'                       => ':attribute 和 :other 必須相符。',
     'size.numeric'               => ':attribute 必須是 :size。',
     'amount_min_over_max'        => '最小金額不能大於最大金額。',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

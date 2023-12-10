@@ -24,13 +24,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\Location
@@ -63,11 +65,8 @@ use Illuminate\Support\Carbon;
  */
 class Location extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+    use ReturnsIntegerIdTrait;
+
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -77,7 +76,7 @@ class Location extends Model
             'latitude'   => 'float',
             'longitude'  => 'float',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['locatable_id', 'locatable_type', 'latitude', 'longitude', 'zoom_level'];
 
     /**
@@ -114,4 +113,16 @@ class Location extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function locatableId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+
 }

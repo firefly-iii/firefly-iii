@@ -56,6 +56,7 @@ class UserInvitation extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
@@ -70,6 +71,7 @@ class UserInvitation extends Notification
      * @param mixed $notifiable
      *
      * @return MailMessage
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail($notifiable)
     {
@@ -84,6 +86,7 @@ class UserInvitation extends Notification
      * @param mixed $notifiable
      *
      * @return SlackMessage
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack($notifiable)
     {
@@ -98,6 +101,7 @@ class UserInvitation extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
     {

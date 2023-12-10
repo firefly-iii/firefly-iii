@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use const DIRECTORY_SEPARATOR;
 
 /**
  * Class AttachmentHelper.
@@ -48,8 +49,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     protected array   $allowedMimes  = [];
     protected int     $maxUploadSize = 0;
 
-    /** @var Filesystem The disk where attachments are stored. */
-    protected $uploadDisk;
+    protected Filesystem $uploadDisk;
 
     /**
      * AttachmentHelper constructor.
@@ -96,7 +96,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function getAttachmentLocation(Attachment $attachment): string
     {
-        return sprintf('%sat-%d.data', DIRECTORY_SEPARATOR, (int)$attachment->id);
+        return sprintf('%sat-%d.data', DIRECTORY_SEPARATOR, $attachment->id);
     }
 
     /**
@@ -139,6 +139,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function saveAttachmentFromApi(Attachment $attachment, string $content): bool
     {
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $resource = tmpfile();
         if (false === $resource) {
             Log::error('Cannot create temp-file for file upload.');
@@ -153,9 +154,20 @@ class AttachmentHelper implements AttachmentHelperInterface
         }
 
         $path = stream_get_meta_data($resource)['uri'];
-        fwrite($resource, $content);
-        $finfo       = finfo_open(FILEINFO_MIME_TYPE);
-        $mime        = finfo_file($finfo, $path);
+        Log::debug(sprintf('Path is %s', $path));
+        $result = fwrite($resource, $content);
+        if (false === $result) {
+            Log::error('Could not write temp file.');
+            return false;
+        }
+        Log::debug(sprintf('Wrote %d bytes to temp file.', $result));
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        if (false === $finfo) {
+            Log::error('Could not open finfo.');
+            fclose($resource);
+            return false;
+        }
+        $mime        = (string)finfo_file($finfo, $path);
         $allowedMime = config('firefly.allowedMimes');
         if (!in_array($mime, $allowedMime, true)) {
             Log::error(sprintf('Mime type %s is not allowed for API file upload.', $mime));
@@ -163,17 +175,21 @@ class AttachmentHelper implements AttachmentHelperInterface
 
             return false;
         }
+        Log::debug(sprintf('Found mime "%s" in file "%s"', $mime, $path));
         // is allowed? Save the file, without encryption.
         $parts = explode('/', $attachment->fileName());
         $file  = $parts[count($parts) - 1];
+        Log::debug(sprintf('Write file to disk in file named "%s"', $file));
         $this->uploadDisk->put($file, $content);
 
         // update attachment.
-        $attachment->md5      = md5_file($path);
+        $attachment->md5      = (string)md5_file($path);
         $attachment->mime     = $mime;
         $attachment->size     = strlen($content);
         $attachment->uploaded = true;
         $attachment->save();
+
+        Log::debug('Done!');
 
         return true;
     }
@@ -196,7 +212,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
         if (is_array($files)) {
             Log::debug('$files is an array.');
-            /** @var UploadedFile $entry */
+            /** @var UploadedFile|null $entry */
             foreach ($files as $entry) {
                 if (null !== $entry) {
                     $this->processFile($entry, $model);
@@ -227,7 +243,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $validation = $this->validateUpload($file, $model);
         $attachment = null;
         if (false !== $validation) {
-            $user = $model->user; // @phpstan-ignore-line
+            $user = $model->user;
             // ignore lines about polymorphic calls.
             if ($model instanceof PiggyBank) {
                 $user = $model->account->user;
@@ -236,7 +252,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             $attachment = new Attachment(); // create Attachment object.
             $attachment->user()->associate($user);
             $attachment->attachable()->associate($model);
-            $attachment->md5      = md5_file($file->getRealPath());
+            $attachment->md5      = (string)md5_file($file->getRealPath());
             $attachment->filename = $file->getClientOriginalName();
             $attachment->mime     = $file->getMimeType();
             $attachment->size     = $file->getSize();
@@ -251,7 +267,7 @@ class AttachmentHelper implements AttachmentHelperInterface
                 throw new FireflyException('Cannot upload empty or non-existent file.');
             }
 
-            $content = $fileObject->fread($file->getSize());
+            $content = (string)$fileObject->fread($file->getSize());
             Log::debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
 
             // store it without encryption.
@@ -371,7 +387,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             $count = $model->account->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
         }
         if (!($model instanceof PiggyBank)) {
-            $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count(); // @phpstan-ignore-line
+            $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
         }
         $result = false;
         if ($count > 0) {

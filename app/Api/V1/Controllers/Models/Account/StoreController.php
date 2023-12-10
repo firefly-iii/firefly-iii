@@ -35,7 +35,7 @@ use League\Fractal\Resource\Item;
  */
 class StoreController extends Controller
 {
-    public const RESOURCE_KEY = 'accounts';
+    public const string RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
 

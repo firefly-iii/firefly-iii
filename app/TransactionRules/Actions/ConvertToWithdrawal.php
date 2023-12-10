@@ -35,7 +35,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**
@@ -65,20 +64,20 @@ class ConvertToWithdrawal implements ActionInterface
         /** @var TransactionJournal|null $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
-            Log::error(sprintf('Cannot find journal #%d, cannot convert to withdrawal.', $journal['transaction_journal_id']));
+            app('log')->error(sprintf('Cannot find journal #%d, cannot convert to withdrawal.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_not_found')));
             return false;
         }
         $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
-            Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to withdrawal.', $journal['transaction_group_id']));
+            app('log')->error(sprintf('Group #%d has more than one transaction in it, cannot convert to withdrawal.', $journal['transaction_group_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
             return false;
         }
 
         $type = $object->transactionType->type;
         if (TransactionType::WITHDRAWAL === $type) {
-            Log::error(sprintf('Journal #%d is already a withdrawal (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
+            app('log')->error(sprintf('Journal #%d is already a withdrawal (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.is_already_withdrawal')));
             return false;
         }
@@ -87,12 +86,12 @@ class ConvertToWithdrawal implements ActionInterface
             return false;
         }
         if (TransactionType::DEPOSIT === $type) {
-            Log::debug('Going to transform a deposit to a withdrawal.');
+            app('log')->debug('Going to transform a deposit to a withdrawal.');
             try {
                 $res = $this->convertDepositArray($object);
             } catch (JsonException | FireflyException $e) {
-                Log::debug('Could not convert transfer to deposit.');
-                Log::error($e->getMessage());
+                app('log')->debug('Could not convert transfer to deposit.');
+                app('log')->error($e->getMessage());
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
                 return false;
             }
@@ -100,23 +99,20 @@ class ConvertToWithdrawal implements ActionInterface
 
             return $res;
         }
-        if (TransactionType::TRANSFER === $type) {
-            Log::debug('Going to transform a transfer to a withdrawal.');
+        // can only be transfer at this point.
+        app('log')->debug('Going to transform a transfer to a withdrawal.');
 
-            try {
-                $res = $this->convertTransferArray($object);
-            } catch (JsonException | FireflyException $e) {
-                Log::debug('Could not convert transfer to deposit.');
-                Log::error($e->getMessage());
-                event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
-                return false;
-            }
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::TRANSFER, TransactionType::WITHDRAWAL));
-
-            return $res;
+        try {
+            $res = $this->convertTransferArray($object);
+        } catch (JsonException | FireflyException $e) {
+            app('log')->debug('Could not convert transfer to deposit.');
+            app('log')->error($e->getMessage());
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
+            return false;
         }
-        event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.unsupported_transaction_type_withdrawal', ['type' => $type])));
-        return false;
+        event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionType::TRANSFER, TransactionType::WITHDRAWAL));
+
+        return $res;
     }
 
     /**
@@ -149,7 +145,7 @@ class ConvertToWithdrawal implements ActionInterface
             $opposingAccount = $factory->findOrCreate($opposingName, AccountType::EXPENSE);
         }
 
-        Log::debug(sprintf('ConvertToWithdrawal. Action value is "%s", expense name is "%s"', $this->action->action_value, $opposingName));
+        app('log')->debug(sprintf('ConvertToWithdrawal. Action value is "%s", expense name is "%s"', $this->action->action_value, $opposingName));
 
         // update source transaction(s) to be the original destination account
         DB::table('transactions')
@@ -169,7 +165,7 @@ class ConvertToWithdrawal implements ActionInterface
           ->where('id', '=', $journal->id)
           ->update(['transaction_type_id' => $newType->id]);
 
-        Log::debug('Converted deposit to withdrawal.');
+        app('log')->debug('Converted deposit to withdrawal.');
 
         return true;
     }
@@ -239,7 +235,7 @@ class ConvertToWithdrawal implements ActionInterface
             $opposingAccount = $factory->findOrCreate($opposingName, AccountType::EXPENSE);
         }
 
-        Log::debug(sprintf('ConvertToWithdrawal. Action value is "%s", destination name is "%s"', $this->action->action_value, $opposingName));
+        app('log')->debug(sprintf('ConvertToWithdrawal. Action value is "%s", destination name is "%s"', $this->action->action_value, $opposingName));
 
         // update destination transaction(s) to be new expense account.
         DB::table('transactions')
@@ -253,7 +249,7 @@ class ConvertToWithdrawal implements ActionInterface
           ->where('id', '=', $journal->id)
           ->update(['transaction_type_id' => $newType->id]);
 
-        Log::debug('Converted transfer to withdrawal.');
+        app('log')->debug('Converted transfer to withdrawal.');
 
         return true;
     }

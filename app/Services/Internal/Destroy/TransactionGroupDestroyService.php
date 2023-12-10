@@ -25,7 +25,6 @@ namespace FireflyIII\Services\Internal\Destroy;
 
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Models\TransactionGroup;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionGroupDestroyService
@@ -39,7 +38,7 @@ class TransactionGroupDestroyService
      */
     public function destroy(TransactionGroup $transactionGroup): void
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         /** @var JournalDestroyService $service */
         $service = app(JournalDestroyService::class);
         foreach ($transactionGroup->transactionJournals as $journal) {

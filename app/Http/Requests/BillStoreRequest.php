@@ -32,8 +32,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class BillStoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Returns the data required by the controller.
@@ -74,7 +74,7 @@ class BillStoreRequest extends FormRequest
             'date'                    => 'required|date',
             'bill_end_date'           => 'nullable|date',
             'extension_date'          => 'nullable|date',
-            'repeat_freq'             => sprintf('required|in:%s', join(',', config('firefly.bill_periods'))),
+            'repeat_freq'             => sprintf('required|in:%s', implode(',', config('firefly.bill_periods'))),
             'skip'                    => 'required|integer|gte:0|lte:31',
             'active'                  => 'boolean',
         ];

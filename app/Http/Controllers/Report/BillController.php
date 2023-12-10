@@ -29,7 +29,6 @@ use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -61,8 +60,8 @@ class BillController extends Controller
         try {
             $result = view('reports.partials.bills', compact('report'))->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = 'Could not render view.';
             throw new FireflyException($result, 0, $e);
         }

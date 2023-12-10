@@ -76,7 +76,7 @@ class TransactionController extends Controller
         // this deserves better code, but for now a loop of basic if-statements
         // to respond to what is in the $query.
         // this is OK because only one thing can be in the query at the moment.
-        if ($this->updatesTransactionAccount($params)) {
+        if ($this->isUpdateTransactionAccount($params)) {
             $original    = $this->repository->find((int)$params['where']['account_id']);
             $destination = $this->repository->find((int)$params['update']['account_id']);
 
@@ -89,11 +89,11 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param array $params
+     * @param array $params <array<string, array<string, int|string>>>
      *
      * @return bool
      */
-    private function updatesTransactionAccount(array $params): bool
+    private function isUpdateTransactionAccount(array $params): bool
     {
         return array_key_exists('account_id', $params['where']) && array_key_exists('account_id', $params['update']);
     }

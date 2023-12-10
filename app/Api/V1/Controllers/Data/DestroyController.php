@@ -45,7 +45,6 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class DestroyController
@@ -67,135 +66,34 @@ class DestroyController extends Controller
     {
         $objects      = $request->getObjects();
         $this->unused = $request->boolean('unused', false);
-        switch ($objects) {
-            default:
-                throw new FireflyException(sprintf('200033: This endpoint can\'t handle object "%s"', $objects));
-            case 'budgets':
-                $this->destroyBudgets();
-                break;
-            case 'bills':
-                $this->destroyBills();
-                break;
-            case 'piggy_banks':
-                $this->destroyPiggyBanks();
-                break;
-            case 'rules':
-                $this->destroyRules();
-                break;
-            case 'recurring':
-                $this->destroyRecurringTransactions();
-                break;
-            case 'categories':
-                $this->destroyCategories();
-                break;
-            case 'tags':
-                $this->destroyTags();
-                break;
-            case 'object_groups':
-                $this->destroyObjectGroups();
-                break;
-            case 'not_assets_liabilities':
-                $this->destroyAccounts(
-                    [
-                        AccountType::BENEFICIARY,
-                        AccountType::CASH,
-                        AccountType::CREDITCARD,
-                        AccountType::DEFAULT,
-                        AccountType::EXPENSE,
-                        AccountType::IMPORT,
-                        AccountType::INITIAL_BALANCE,
-                        AccountType::LIABILITY_CREDIT,
-                        AccountType::RECONCILIATION,
-                        AccountType::REVENUE,
-                    ]
-                );
-                break;
-            case 'accounts':
-                $this->destroyAccounts(
-                    [
-                        AccountType::ASSET,
-                        AccountType::BENEFICIARY,
-                        AccountType::CASH,
-                        AccountType::CREDITCARD,
-                        AccountType::DEBT,
-                        AccountType::DEFAULT,
-                        AccountType::EXPENSE,
-                        AccountType::IMPORT,
-                        AccountType::INITIAL_BALANCE,
-                        AccountType::LIABILITY_CREDIT,
-                        AccountType::LOAN,
-                        AccountType::MORTGAGE,
-                        AccountType::RECONCILIATION,
-                        AccountType::REVENUE,
-                    ]
-                );
-                break;
-            case 'asset_accounts':
-                $this->destroyAccounts(
-                    [
-                        AccountType::ASSET,
-                        AccountType::DEFAULT,
-                    ]
-                );
-                break;
-            case 'expense_accounts':
-                $this->destroyAccounts(
-                    [
-                        AccountType::BENEFICIARY,
-                        AccountType::EXPENSE,
-                    ]
-                );
-                break;
-            case 'revenue_accounts':
-                $this->destroyAccounts(
-                    [
-                        AccountType::REVENUE,
-                    ]
-                );
-                break;
-            case 'liabilities':
-                $this->destroyAccounts(
-                    [
-                        AccountType::DEBT,
-                        AccountType::LOAN,
-                        AccountType::MORTGAGE,
-                        AccountType::CREDITCARD,
-                    ]
-                );
-                break;
-            case 'transactions':
-                $this->destroyTransactions(
-                    [
-                        TransactionType::WITHDRAWAL,
-                        TransactionType::DEPOSIT,
-                        TransactionType::TRANSFER,
-                        TransactionType::RECONCILIATION,
-                        TransactionType::OPENING_BALANCE,
-                    ]
-                );
-                break;
-            case 'withdrawals':
-                $this->destroyTransactions(
-                    [
-                        TransactionType::WITHDRAWAL,
-                    ]
-                );
-                break;
-            case 'deposits':
-                $this->destroyTransactions(
-                    [
-                        TransactionType::DEPOSIT,
-                    ]
-                );
-                break;
-            case 'transfers':
-                $this->destroyTransactions(
-                    [
-                        TransactionType::TRANSFER,
-                    ]
-                );
-                break;
-        }
+
+        $allExceptAssets = [AccountType::BENEFICIARY, AccountType::CASH, AccountType::CREDITCARD, AccountType::DEFAULT, AccountType::EXPENSE, AccountType::IMPORT, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT, AccountType::RECONCILIATION, AccountType::REVENUE,];
+        $all             = [AccountType::ASSET, AccountType::BENEFICIARY, AccountType::CASH, AccountType::CREDITCARD, AccountType::DEBT, AccountType::DEFAULT, AccountType::EXPENSE, AccountType::IMPORT, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::RECONCILIATION,];
+        $liabilities     = [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
+        $transactions    = [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::RECONCILIATION, TransactionType::OPENING_BALANCE,];
+
+        match ($objects) {
+            'budgets'                => $this->destroyBudgets(),
+            'bills'                  => $this->destroyBills(),
+            'piggy_banks'            => $this->destroyPiggyBanks(),
+            'rules'                  => $this->destroyRules(),
+            'recurring'              => $this->destroyRecurringTransactions(),
+            'categories'             => $this->destroyCategories(),
+            'tags'                   => $this->destroyTags(),
+            'object_groups'          => $this->destroyObjectGroups(),
+            'not_assets_liabilities' => $this->destroyAccounts($allExceptAssets),
+            'accounts'               => $this->destroyAccounts($all),
+            'asset_accounts'         => $this->destroyAccounts([AccountType::ASSET, AccountType::DEFAULT]),
+            'expense_accounts'       => $this->destroyAccounts([AccountType::BENEFICIARY, AccountType::EXPENSE]),
+            'revenue_accounts'       => $this->destroyAccounts([AccountType::REVENUE]),
+            'liabilities'            => $this->destroyAccounts($liabilities),
+            'transactions'           => $this->destroyTransactions($transactions),
+            'withdrawals'            => $this->destroyTransactions([TransactionType::WITHDRAWAL]),
+            'deposits'               => $this->destroyTransactions([TransactionType::DEPOSIT]),
+            'transfers'              => $this->destroyTransactions([TransactionType::TRANSFER]),
+            default                  => throw new FireflyException(sprintf('200033: This endpoint can\'t handle object "%s"', $objects)),
+        };
+
         app('preferences')->mark();
 
         return response()->json([], 204);
@@ -290,7 +188,7 @@ class DestroyController extends Controller
     }
 
     /**
-     * @param array $types
+     * @param array $types <int, string>
      */
     private function destroyAccounts(array $types): void
     {
@@ -303,19 +201,19 @@ class DestroyController extends Controller
         foreach ($collection as $account) {
             $count = $account->transactions()->count();
             if (true === $this->unused && 0 === $count) {
-                Log::info(sprintf('Deleted unused account #%d "%s"', $account->id, $account->name));
+                app('log')->info(sprintf('Deleted unused account #%d "%s"', $account->id, $account->name));
                 $service->destroy($account, null);
                 continue;
             }
             if (false === $this->unused) {
-                Log::info(sprintf('Deleting account #%d "%s"', $account->id, $account->name));
+                app('log')->info(sprintf('Deleting account #%d "%s"', $account->id, $account->name));
                 $service->destroy($account, null);
             }
         }
     }
 
     /**
-     * @param array $types
+     * @param array $types <int, string>
      */
     private function destroyTransactions(array $types): void
     {

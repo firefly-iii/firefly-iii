@@ -66,6 +66,7 @@ class RuleActionFailed extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
@@ -80,6 +81,7 @@ class RuleActionFailed extends Notification
      * @param mixed $notifiable
      *
      * @return SlackMessage
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack($notifiable)
     {
@@ -88,9 +90,9 @@ class RuleActionFailed extends Notification
         $ruleTitle  = $this->ruleTitle;
         $ruleLink   = $this->ruleLink;
 
-        return (new SlackMessage())->content($this->message)->attachment(function ($attachment) use ($groupTitle, $groupLink) {
+        return (new SlackMessage())->content($this->message)->attachment(static function ($attachment) use ($groupTitle, $groupLink) {
             $attachment->title((string)trans('rules.inspect_transaction', ['title' => $groupTitle]), $groupLink);
-        })->attachment(function ($attachment) use ($ruleTitle, $ruleLink) {
+        })->attachment(static function ($attachment) use ($ruleTitle, $ruleLink) {
             $attachment->title((string)trans('rules.inspect_rule', ['title' => $ruleTitle]), $ruleLink);
         });
     }
@@ -101,13 +103,17 @@ class RuleActionFailed extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
     {
         /** @var User|null $user */
         $user     = auth()->user();
-        $slackUrl = null === $user ? '' : (string)app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (UrlValidator::isValidWebhookURL($slackUrl)) {
+        $slackUrl = null === $user ? '' : app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
+        if (is_array($slackUrl)) {
+            $slackUrl = '';
+        }
+        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
             app('log')->debug('Will send ruleActionFailed through Slack!');
             return ['slack'];
         }

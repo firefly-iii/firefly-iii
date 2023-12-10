@@ -50,7 +50,7 @@ class BudgetFactory
 
         // first by ID:
         if ($budgetId > 0) {
-            /** @var Budget $budget */
+            /** @var Budget|null $budget */
             $budget = $this->user->budgets()->find($budgetId);
             if (null !== $budget) {
                 return $budget;

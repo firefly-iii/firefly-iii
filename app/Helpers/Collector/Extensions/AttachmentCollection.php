@@ -29,7 +29,6 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait AttachmentCollection
@@ -45,7 +44,13 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($name): bool {
+        /**
+         * @param int   $index
+         * @param array $object
+         *
+         * @return bool
+         */
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -73,7 +78,7 @@ trait AttachmentCollection
      */
     public function hasAttachments(): GroupCollectorInterface
     {
-        Log::debug('Add filter on attachment ID.');
+        app('log')->debug('Add filter on attachment ID.');
         $this->joinAttachmentTables();
         $this->query->whereNotNull('attachments.attachable_id');
         $this->query->whereNull('attachments.deleted_at');
@@ -91,7 +96,7 @@ trait AttachmentCollection
             $this->hasJoinedAttTables = true;
             $this->query->leftJoin('attachments', 'attachments.attachable_id', '=', 'transaction_journals.id')
                         ->where(
-                            static function (EloquentBuilder $q1) {
+                            static function (EloquentBuilder $q1) { // @phpstan-ignore-line
                                 $q1->where('attachments.attachable_type', TransactionJournal::class);
                                 $q1->where('attachments.uploaded', true);
                                 $q1->whereNull('attachments.deleted_at');
@@ -124,7 +129,14 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($name): bool {
+        /**
+         * @param int   $index
+         * @param array $object
+         *
+         * @return bool
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -154,7 +166,14 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($name): bool {
+        /**
+         * @param int   $index
+         * @param array $object
+         *
+         * @return bool
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -184,7 +203,14 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($name): bool {
+        /**
+         * @param int   $index
+         * @param array $object
+         *
+         * @return bool
+         * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+         */
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -214,7 +240,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($name): bool {
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -244,7 +270,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($name): bool {
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -271,7 +297,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($name): bool {
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -298,7 +324,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($name): bool {
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -328,7 +354,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -355,7 +381,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -382,7 +408,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -409,7 +435,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -436,7 +462,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -463,7 +489,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -490,7 +516,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -517,7 +543,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter              = function (int $index, array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -542,13 +568,13 @@ trait AttachmentCollection
      */
     public function hasNoAttachments(): GroupCollectorInterface
     {
-        Log::debug('Add filter on no attachments.');
+        app('log')->debug('Add filter on no attachments.');
         $this->joinAttachmentTables();
 
-        $this->query->where(function (Builder $q1) {
+        $this->query->where(static function (Builder $q1) { // @phpstan-ignore-line
             $q1
                 ->whereNull('attachments.attachable_id')
-                ->orWhere(function (Builder $q2) {
+                ->orWhere(static function (Builder $q2) {
                     $q2
                         ->whereNotNull('attachments.attachable_id')
                         ->whereNotNull('attachments.deleted_at');

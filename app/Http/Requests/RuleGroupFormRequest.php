@@ -34,8 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class RuleGroupFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data for controller.
@@ -65,7 +65,7 @@ class RuleGroupFormRequest extends FormRequest
     {
         $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
 
-        /** @var RuleGroup $ruleGroup */
+        /** @var RuleGroup|null $ruleGroup */
         $ruleGroup = $this->route()->parameter('ruleGroup');
 
         if (null !== $ruleGroup) {

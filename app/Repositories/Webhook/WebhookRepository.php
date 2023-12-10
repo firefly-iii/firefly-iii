@@ -98,7 +98,7 @@ class WebhookRepository implements WebhookRepositoryInterface
                        ->where('webhook_messages.errored', 0)
                        ->get(['webhook_messages.*'])
                        ->filter(
-                           function (WebhookMessage $message) {
+                           static function (WebhookMessage $message) {
                                return $message->webhookAttempts()->count() <= 2;
                            }
                        )->splice(0, 3);
@@ -109,7 +109,7 @@ class WebhookRepository implements WebhookRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }

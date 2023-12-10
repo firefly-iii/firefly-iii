@@ -23,13 +23,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -40,7 +42,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null         $updated_at
  * @property string|null         $deleted_at
  * @property int                 $webhook_message_id
- * @property int                 $status_code
+ * @property int|string          $status_code
  * @property string|null         $logs
  * @property string|null         $response
  * @property-read WebhookMessage $webhookMessage
@@ -62,6 +64,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class WebhookAttempt extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
     /**
@@ -72,13 +75,13 @@ class WebhookAttempt extends Model
      * @return WebhookAttempt
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): WebhookAttempt
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $attemptId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var WebhookAttempt $attempt */
+            /** @var WebhookAttempt|null $attempt */
             $attempt = self::find($attemptId);
             if (null !== $attempt && $attempt->webhookMessage->webhook->user_id === $user->id) {
                 return $attempt;
@@ -93,5 +96,15 @@ class WebhookAttempt extends Model
     public function webhookMessage(): BelongsTo
     {
         return $this->belongsTo(WebhookMessage::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function webhookMessageId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

@@ -36,7 +36,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -49,17 +48,9 @@ class ExportData extends Command
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Command to export data from Firefly III.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:export-data
     {--user=1 : The user ID that the export should run for.}
     {--token= : The user\'s access token.}
@@ -199,17 +190,26 @@ class ExportData extends Command
     {
         $date  = today(config('app.timezone'))->subYear();
         $error = false;
-        if (null !== $this->option($field)) {
+
+        if (!in_array($field, ['start', 'end'], true)) {
+            throw new FireflyException(sprintf('Invalid field "%s" given, can only be "start" or "end".', $field));
+        }
+
+        if (is_string($this->option($field))) {
             try {
                 $date = Carbon::createFromFormat('!Y-m-d', $this->option($field));
             } catch (InvalidArgumentException $e) {
-                Log::error($e->getMessage());
+                app('log')->error($e->getMessage());
                 $this->friendlyError(sprintf('%s date "%s" must be formatted YYYY-MM-DD. Field will be ignored.', $field, $this->option('start')));
                 $error = true;
             }
+            if (false === $date) {
+                $this->friendlyError(sprintf('%s date "%s" must be formatted YYYY-MM-DD.', $field, $this->option('start')));
+                throw new FireflyException(sprintf('%s date "%s" must be formatted YYYY-MM-DD.', $field, $this->option('start')));
+            }
         }
         if (null === $this->option($field)) {
-            Log::info(sprintf('No date given in field "%s"', $field));
+            app('log')->info(sprintf('No date given in field "%s"', $field));
             $error = true;
         }
 
@@ -217,12 +217,15 @@ class ExportData extends Command
             $journal = $this->journalRepository->firstNull();
             $date    = null === $journal ? today(config('app.timezone'))->subYear() : $journal->date;
             $date->startOfDay();
+            return $date;
         }
-
-        if (true === $error && 'end' === $field) {
+        // field can only be 'end' at this point, so no need to include it in the check.
+        if (true === $error) {
             $date = today(config('app.timezone'));
             $date->endOfDay();
+            return $date;
         }
+
         if ('end' === $field) {
             $date->endOfDay();
         }
@@ -238,13 +241,13 @@ class ExportData extends Command
     {
         $final       = new Collection();
         $accounts    = new Collection();
-        $accountList = $this->option('accounts');
+        $accountList = (string)$this->option('accounts');
         $types       = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
-        if (null !== $accountList && '' !== (string)$accountList) {
+        if ('' !== $accountList) {
             $accountIds = explode(',', $accountList);
             $accounts   = $this->accountRepository->getAccountsById($accountIds);
         }
-        if (null === $accountList) {
+        if ('' === $accountList) {
             $accounts = $this->accountRepository->getAccountsByType($types);
         }
         // filter accounts,
@@ -269,7 +272,7 @@ class ExportData extends Command
     private function getExportDirectory(): string
     {
         $directory = (string)$this->option('export_directory');
-        if (null === $directory) {
+        if ('' === $directory) {
             $directory = './';
         }
         if (!is_writable($directory)) {

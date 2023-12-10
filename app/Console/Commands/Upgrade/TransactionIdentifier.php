@@ -30,7 +30,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Schema;
@@ -42,7 +41,7 @@ class TransactionIdentifier extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_transaction_identifier';
+    public const string CONFIG_NAME = '480_transaction_identifier';
     protected $description = 'Fixes transaction identifiers.';
     protected $signature   = 'firefly-iii:transaction-identifiers {--F|force : Force the execution of this command.}';
     private JournalCLIRepositoryInterface $cliRepository;
@@ -162,7 +161,7 @@ class TransactionIdentifier extends Command
     private function findOpposing(Transaction $transaction, array $exclude): ?Transaction
     {
         // find opposing:
-        $amount = bcmul((string)$transaction->amount, '-1');
+        $amount = bcmul($transaction->amount, '-1');
 
         try {
             /** @var Transaction $opposing */
@@ -171,7 +170,7 @@ class TransactionIdentifier extends Command
                                    ->whereNotIn('id', $exclude)
                                    ->first();
         } catch (QueryException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $this->friendlyError('Firefly III could not find the "identifier" field in the "transactions" table.');
             $this->friendlyError(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
             $this->friendlyError('Please run "php artisan migrate" to add this field to the table.');

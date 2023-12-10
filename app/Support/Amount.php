@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use NumberFormatter;
 
@@ -52,7 +51,7 @@ class Amount
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
     {
-        return $this->formatFlat($format->symbol, (int)$format->decimal_places, $amount, $coloured);
+        return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
     }
 
     /**
@@ -72,13 +71,13 @@ class Amount
     {
         $locale   = app('steam')->getLocale();
         $rounded  = app('steam')->bcround($amount, $decimalPlaces);
-        $coloured = $coloured ?? true;
+        $coloured ??= true;
 
         $fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
         $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result = $fmt->format((float)$rounded); // intentional float
+        $result = (string)$fmt->format((float)$rounded); // intentional float
 
         if (true === $coloured) {
             if (1 === bccomp($rounded, '0')) {
@@ -121,29 +120,11 @@ class Amount
         /** @var User $user */
         $user = auth()->user();
 
-        return $this->getDefaultCurrencyByUser($user);
-    }
-
-    /**
-     * @param User $user
-     * @deprecated use getDefaultCurrencyByUserGroup instead.
-     * @return TransactionCurrency
-     */
-    public function getDefaultCurrencyByUser(User $user): TransactionCurrency
-    {
         return $this->getDefaultCurrencyByUserGroup($user->userGroup);
     }
 
     /**
-     * @return TransactionCurrency
-     */
-    public function getSystemCurrency(): TransactionCurrency
-    {
-        return TransactionCurrency::where('code', 'EUR')->first();
-    }
-
-    /**
-     * @param User $user
+     * @param UserGroup $userGroup
      *
      * @return TransactionCurrency
      */
@@ -158,11 +139,31 @@ class Amount
         $default = $userGroup->currencies()->where('group_default', true)->first();
         if (null === $default) {
             $default = $this->getSystemCurrency();
+            // could be the user group has no default right now.
             $userGroup->currencies()->sync([$default->id => ['group_default' => true]]);
         }
         $cache->store($default);
 
         return $default;
+    }
+
+    /**
+     * @return TransactionCurrency
+     */
+    public function getSystemCurrency(): TransactionCurrency
+    {
+        return TransactionCurrency::where('code', 'EUR')->first();
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return TransactionCurrency
+     * @deprecated use getDefaultCurrencyByUserGroup instead.
+     */
+    public function getDefaultCurrencyByUser(User $user): TransactionCurrency
+    {
+        return $this->getDefaultCurrencyByUserGroup($user->userGroup);
     }
 
     /**
@@ -303,21 +304,5 @@ class Amount
         }
 
         return $format;
-    }
-
-    /**
-     * @param string $value
-     *
-     * @return string
-     */
-    private function tryDecrypt(string $value): string
-    {
-        try {
-            $value = Crypt::decrypt($value); // verified
-        } catch (DecryptException $e) {
-            // @ignoreException
-        }
-
-        return $value;
     }
 }

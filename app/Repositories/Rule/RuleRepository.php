@@ -34,7 +34,6 @@ use FireflyIII\Support\Search\OperatorQuerySearch;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class RuleRepository.
@@ -298,9 +297,9 @@ class RuleRepository implements RuleRepositoryInterface
 
         // reset order:
         $this->resetRuleOrder($ruleGroup);
-        Log::debug('Done with resetting.');
+        app('log')->debug('Done with resetting.');
         if (array_key_exists('order', $data)) {
-            Log::debug(sprintf('User has submitted order %d', $data['order']));
+            app('log')->debug(sprintf('User has submitted order %d', $data['order']));
             $this->setOrder($rule, $data['order']);
         }
 
@@ -367,7 +366,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
@@ -377,11 +376,11 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function setOrder(Rule $rule, int $newOrder): void
     {
-        $oldOrder = (int)$rule->order;
-        $groupId  = (int)$rule->rule_group_id;
+        $oldOrder = $rule->order;
+        $groupId  = $rule->rule_group_id;
         $maxOrder = $this->maxOrder($rule->ruleGroup);
         $newOrder = $newOrder > $maxOrder ? $maxOrder + 1 : $newOrder;
-        Log::debug(sprintf('New order will be %d', $newOrder));
+        app('log')->debug(sprintf('New order will be %d', $newOrder));
 
         if ($newOrder > $oldOrder) {
             $this->user->rules()
@@ -391,7 +390,7 @@ class RuleRepository implements RuleRepositoryInterface
                        ->where('rules.id', '!=', $rule->id)
                        ->decrement('rules.order');
             $rule->order = $newOrder;
-            Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
+            app('log')->debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
             $rule->save();
 
             return;
@@ -404,7 +403,7 @@ class RuleRepository implements RuleRepositoryInterface
                    ->where('rules.id', '!=', $rule->id)
                    ->increment('rules.order');
         $rule->order = $newOrder;
-        Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
+        app('log')->debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
         $rule->save();
     }
 

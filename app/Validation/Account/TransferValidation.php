@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Validation\Account;
 
 use FireflyIII\Models\Account;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait TransferValidation
@@ -41,14 +40,14 @@ trait TransferValidation
         $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
         $accountName = array_key_exists('name', $array) ? $array['name'] : null;
         $accountIban = array_key_exists('iban', $array) ? $array['iban'] : null;
-        Log::debug('Now in validateTransferDestination', $array);
+        app('log')->debug('Now in validateTransferDestination', $array);
         // source can be any of the following types.
         $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
         if (null === $accountId && null === $accountName && null === $accountIban && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the destination of a transfer can't be created.
             $this->destError = (string)trans('validation.transfer_dest_need_data');
-            Log::error('Both values are NULL, cant create transfer destination.');
+            app('log')->error('Both values are NULL, cant create transfer destination.');
 
             return false;
         }
@@ -99,7 +98,7 @@ trait TransferValidation
         $accountName   = array_key_exists('name', $array) ? $array['name'] : null;
         $accountIban   = array_key_exists('iban', $array) ? $array['iban'] : null;
         $accountNumber = array_key_exists('number', $array) ? $array['number'] : null;
-        Log::debug('Now in validateTransferSource', $array);
+        app('log')->debug('Now in validateTransferSource', $array);
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);
         if (null === $accountId && null === $accountName
@@ -122,7 +121,7 @@ trait TransferValidation
             return false;
         }
         $this->setSource($search);
-        Log::debug('Valid source!');
+        app('log')->debug('Valid source!');
 
         return true;
     }

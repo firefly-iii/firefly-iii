@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII;
 
+use Carbon\Carbon;
 use Eloquent;
 use Exception;
 use FireflyIII\Enums\UserRoleEnum;
@@ -66,7 +67,6 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laravel\Passport\Client;
@@ -80,7 +80,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class User.
  *
- * @property int                                                                     $id
+ * @property int|string                                                              $id
  * @property string                                                                  $email
  * @property bool                                                                    $isAdmin
  * @property bool                                                                    $has2FA
@@ -173,38 +173,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class User extends Authenticatable
 {
-    use Notifiable;
     use HasApiTokens;
+    use Notifiable;
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts
-        = [
+                        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'blocked'    => 'boolean',
         ];
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = ['email', 'password', 'blocked', 'blocked_code'];
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = ['password', 'remember_token'];
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'users';
+    protected $hidden   = ['password', 'remember_token'];
+    protected $table    = 'users';
 
     /**
      * @param string $value
@@ -212,7 +192,7 @@ class User extends Authenticatable
      * @return User
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): User
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $userId = (int)$value;
@@ -380,35 +360,51 @@ class User extends Authenticatable
         return 'objectguid';
     }
 
-
     /**
-     * Does the user have role X in group Y?
+     * Does the user have role X in group Y, or is the user the group owner of has full rights to the group?
      *
      * If $allowOverride is set to true, then the roles FULL or OWNER will also be checked,
      * which means that in most cases the user DOES have access, regardless of the original role submitted in $role.
      *
      * @param UserGroup    $userGroup
      * @param UserRoleEnum $role
-     * @param bool         $allowOverride
      *
      * @return bool
      */
-    public function hasRoleInGroup(UserGroup $userGroup, UserRoleEnum $role, bool $allowGroupOverride = false, bool $allowSystemOverride = false): bool
+    public function hasRoleInGroupOrOwner(UserGroup $userGroup, UserRoleEnum $role): bool
     {
-        if ($allowSystemOverride && $this->hasRole('owner')) {
-            app('log')->debug(sprintf('hasRoleInGroup: user "#%d %s" is system owner and allowSystemOverride = true, return true', $this->id, $this->email));
-            return true;
-        }
-        $roles = [$role->value];
-        if ($allowGroupOverride) {
-            $roles[] = UserRoleEnum::OWNER->value;
-            $roles[] = UserRoleEnum::FULL->value;
-        }
-        app('log')->debug(sprintf('in hasRoleInGroup(%s)', join(', ', $roles)));
+        $roles = [$role->value, UserRoleEnum::OWNER->value, UserRoleEnum::FULL->value];
+        return $this->hasAnyRoleInGroup($userGroup, $roles);
+    }
+
+    /**
+     * Does the user have role X in group Y?
+     *
+     * @param UserGroup    $userGroup
+     * @param UserRoleEnum $role
+     *
+     * @return bool
+     */
+    public function hasSpecificRoleInGroup(UserGroup $userGroup, UserRoleEnum $role): bool
+    {
+        return $this->hasAnyRoleInGroup($userGroup, [$role]);
+    }
+
+    /**
+     * Does the user have role X, Y or Z in group A?
+     *
+     * @param UserGroup $userGroup
+     * @param array     $roles
+     *
+     * @return bool
+     */
+    private function hasAnyRoleInGroup(UserGroup $userGroup, array $roles): bool
+    {
+        app('log')->debug(sprintf('in hasAnyRoleInGroup(%s)', implode(', ', $roles)));
         /** @var Collection $dbRoles */
         $dbRoles = UserRole::whereIn('title', $roles)->get();
         if (0 === $dbRoles->count()) {
-            app('log')->error(sprintf('Could not find role(s): %s. Probably migration mishap.', join(', ', $roles)));
+            app('log')->error(sprintf('Could not find role(s): %s. Probably migration mishap.', implode(', ', $roles)));
             return false;
         }
         $dbRolesIds    = $dbRoles->pluck('id')->toArray();
@@ -423,7 +419,7 @@ class User extends Authenticatable
                 'User #%d "%s" does not have roles %s in user group #%d "%s"',
                 $this->id,
                 $this->email,
-                join(', ', $roles),
+                implode(', ', $roles),
                 $userGroup->id,
                 $userGroup->title
             ));
@@ -447,37 +443,12 @@ class User extends Authenticatable
             'User #%d "%s" does not have roles %s in user group #%d "%s"',
             $this->id,
             $this->email,
-            join(', ', $roles),
+            implode(', ', $roles),
             $userGroup->id,
             $userGroup->title
         ));
         return false;
-        //        // not necessary, should always return true:
-        //        $result = $groupMembership->userRole->title === $role->value;
-        //        app('log')->error(sprintf('Does user #%d "%s" have role "%s" in user group #%d "%s"? %s',
-        //                                  $this->id, $this->email,
-        //                                  $role->value, $userGroup->id, $userGroup->title, var_export($result, true)));
-        //        return $result;
-    }
 
-    /**
-     * @param string $role
-     *
-     * @return bool
-     */
-    public function hasRole(string $role): bool
-    {
-        return $this->roles()->where('name', $role)->count() === 1;
-    }
-
-    /**
-     * Link to roles.
-     *
-     * @return BelongsToMany
-     */
-    public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class);
     }
 
     /**
@@ -539,8 +510,9 @@ class User extends Authenticatable
      */
     public function routeNotificationFor($driver, $notification = null)
     {
-        if (method_exists($this, $method = 'routeNotificationFor' . Str::studly($driver))) {
-            return $this->{$method}($notification);
+        $method = 'routeNotificationFor' . Str::studly($driver);
+        if (method_exists($this, $method)) {
+            return $this->{$method}($notification); // @phpstan-ignore-line
         }
         $email = $this->email;
         // see if user has alternative email address:
@@ -561,6 +533,28 @@ class User extends Authenticatable
     }
 
     /**
+     * This method refers to the "global" role a user can have, outside of any group they may be part of.
+     *
+     * @param string $role
+     *
+     * @return bool
+     */
+    public function hasRole(string $role): bool
+    {
+        return $this->roles()->where('name', $role)->count() === 1;
+    }
+
+    /**
+     * Link to roles.
+     *
+     * @return BelongsToMany
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    /**
      * Route notifications for the Slack channel.
      *
      * @param Notification $notification
@@ -572,20 +566,28 @@ class User extends Authenticatable
     public function routeNotificationForSlack(Notification $notification): string
     {
         // this check does not validate if the user is owner, Should be done by notification itself.
+        $res = app('fireflyconfig')->get('slack_webhook_url', '')->data;
+        if (is_array($res)) {
+            $res = '';
+        }
+        $res = (string)$res;
         if ($notification instanceof TestNotification) {
-            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
+            return $res;
         }
         if ($notification instanceof UserInvitation) {
-            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
+            return $res;
         }
         if ($notification instanceof UserRegistration) {
-            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
+            return $res;
         }
         if ($notification instanceof VersionCheckResult) {
-            return app('fireflyconfig')->get('slack_webhook_url', '')->data;
+            return $res;
         }
-
-        return app('preferences')->getForUser($this, 'slack_webhook_url', '')->data;
+        $pref = app('preferences')->getForUser($this, 'slack_webhook_url', '')->data;
+        if (is_array($pref)) {
+            return '';
+        }
+        return (string)$pref;
     }
 
     /**

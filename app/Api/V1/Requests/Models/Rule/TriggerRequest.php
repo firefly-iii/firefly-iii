@@ -34,8 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class TriggerRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * @return array
@@ -56,7 +56,16 @@ class TriggerRequest extends FormRequest
      */
     private function getDate(string $field): ?Carbon
     {
-        return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', substr($this->query($field), 0, 10));
+        $value = $this->query($field);
+        if (is_array($value)) {
+            return null;
+        }
+        $value  = (string)$value;
+        $result = null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', substr($value, 0, 10));
+        if (false === $result) {
+            return null;
+        }
+        return $result;
     }
 
     /**

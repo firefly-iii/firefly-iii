@@ -49,7 +49,7 @@ class GroupCloneService
         $newGroup = $group->replicate();
         $newGroup->save();
         foreach ($group->transactionJournals as $journal) {
-            $this->cloneJournal($journal, $newGroup, (int)$group->id);
+            $this->cloneJournal($journal, $newGroup, $group->id);
         }
 
         return $newGroup;
@@ -105,7 +105,7 @@ class GroupCloneService
 
         // add relation.
         // TODO clone ALL linked piggy banks
-        /** @var PiggyBankEvent $event */
+        /** @var PiggyBankEvent|null $event */
         $event = $journal->piggyBankEvents()->first();
         if (null !== $event) {
             $piggyBank = $event->piggyBank;

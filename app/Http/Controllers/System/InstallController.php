@@ -28,12 +28,10 @@ use Cache;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Laravel\Passport\Passport;
 use phpseclib3\Crypt\RSA;
@@ -47,9 +45,9 @@ class InstallController extends Controller
 {
     use GetConfigurationData;
 
-    public const BASEDIR_ERROR   = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
-    public const FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
-    public const OTHER_ERROR     = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
+    public const string BASEDIR_ERROR   = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
+    public const string FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
+    public const string OTHER_ERROR     = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
     private string $lastError;
     private array  $upgradeCommands;
 
@@ -58,6 +56,7 @@ class InstallController extends Controller
      */
     public function __construct()
     {
+        parent::__construct();
         // empty on purpose.
         $this->upgradeCommands = [
             // there are 5 initial commands
@@ -107,18 +106,18 @@ class InstallController extends Controller
             'errorMessage'   => null,
         ];
 
-        Log::debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
+        app('log')->debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
         $indexes = array_values(array_keys($this->upgradeCommands));
         if (array_key_exists($requestIndex, $indexes)) {
             $command    = $indexes[$requestIndex];
             $parameters = $this->upgradeCommands[$command];
-            Log::debug(sprintf('Will now execute command "%s" with parameters', $command), $parameters);
+            app('log')->debug(sprintf('Will now execute command "%s" with parameters', $command), $parameters);
             try {
                 $result = $this->executeCommand($command, $parameters);
             } catch (FireflyException $e) {
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-                if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
+                app('log')->error($e->getMessage());
+                app('log')->error($e->getTraceAsString());
+                if (str_contains($e->getMessage(), 'open_basedir restriction in effect')) {
                     $this->lastError = self::BASEDIR_ERROR;
                 }
                 $result          = false;
@@ -144,21 +143,21 @@ class InstallController extends Controller
      */
     private function executeCommand(string $command, array $args): bool
     {
-        Log::debug(sprintf('Will now call command %s with args.', $command), $args);
+        app('log')->debug(sprintf('Will now call command %s with args.', $command), $args);
         try {
             if ('generate-keys' === $command) {
                 $this->keys();
             }
             if ('generate-keys' !== $command) {
                 Artisan::call($command, $args);
-                Log::debug(Artisan::output());
+                app('log')->debug(Artisan::output());
             }
         } catch (Exception $e) { // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);
         }
         // clear cache as well.
         Cache::clear();
-        Preferences::mark();
+        app('preferences')->mark();
 
         return true;
     }
@@ -168,11 +167,8 @@ class InstallController extends Controller
      */
     public function keys(): void
     {
-        // switch on PHP version.
-        $keys = [];
-        // switch on class existence.
-        Log::info('Will run PHP8 code.');
-        $keys = RSA::createKey(4096);
+
+        $key = RSA::createKey(4096);
 
         [$publicKey, $privateKey] = [
             Passport::keyPath('oauth-public.key'),
@@ -183,7 +179,7 @@ class InstallController extends Controller
             return;
         }
 
-        file_put_contents($publicKey, $keys['publickey']);
-        file_put_contents($privateKey, $keys['privatekey']);
+        file_put_contents($publicKey, (string)$key->getPublicKey());
+        file_put_contents($privateKey, $key->toString('PKCS1'));
     }
 }

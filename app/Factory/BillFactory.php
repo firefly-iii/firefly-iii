@@ -30,7 +30,6 @@ use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**
@@ -52,7 +51,7 @@ class BillFactory
      */
     public function create(array $data): ?Bill
     {
-        Log::debug(sprintf('Now in %s', __METHOD__), $data);
+        app('log')->debug(sprintf('Now in %s', __METHOD__), $data);
         $factory  = app(TransactionCurrencyFactory::class);
         $currency = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null)) ??
                     app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
@@ -80,8 +79,8 @@ class BillFactory
                 ]
             );
         } catch (QueryException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException('400000: Could not store bill.', 0, $e);
         }
 

@@ -44,7 +44,7 @@ class OtherCurrenciesCorrections extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_other_currencies';
+    public const string CONFIG_NAME = '480_other_currencies';
     protected $description = 'Update all journal currency information.';
     protected $signature   = 'firefly-iii:other-currencies {--F|force : Force the execution of this command.}';
     private array                         $accountCurrencies;
@@ -169,8 +169,8 @@ class OtherCurrenciesCorrections extends Command
                 }
 
                 // when mismatch in transaction:
-                if ((int)$transaction->transaction_currency_id !== (int)$currency->id) {
-                    $transaction->foreign_currency_id     = (int)$transaction->transaction_currency_id;
+                if ($transaction->transaction_currency_id !== $currency->id) {
+                    $transaction->foreign_currency_id     = $transaction->transaction_currency_id;
                     $transaction->foreign_amount          = $transaction->amount;
                     $transaction->transaction_currency_id = $currency->id;
                     $transaction->save();

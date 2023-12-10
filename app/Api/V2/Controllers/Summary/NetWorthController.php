@@ -27,7 +27,9 @@ namespace FireflyIII\Api\V2\Controllers\Summary;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\SingleDateRequest;
 use FireflyIII\Helpers\Report\NetWorthInterface;
-use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 
@@ -37,9 +39,9 @@ use Illuminate\Http\JsonResponse;
 class NetWorthController extends Controller
 {
     use ValidatesUserGroupTrait;
-    use ConvertsExchangeRates;
 
-    private NetWorthInterface $netWorth;
+    private NetWorthInterface          $netWorth;
+    private AccountRepositoryInterface $repository;
 
     /**
      *
@@ -49,12 +51,13 @@ class NetWorthController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->netWorth = app(NetWorthInterface::class);
-
+                $this->netWorth   = app(NetWorthInterface::class);
+                $this->repository = app(AccountRepositoryInterface::class);
                 // new way of user group validation
                 $userGroup = $this->validateUserGroup($request);
                 if (null !== $userGroup) {
                     $this->netWorth->setUserGroup($userGroup);
+                    $this->repository->setUserGroup($userGroup);
                 }
 
                 return $next($request);
@@ -72,10 +75,21 @@ class NetWorthController extends Controller
      */
     public function get(SingleDateRequest $request): JsonResponse
     {
-        $date      = $request->getDate();
-        $result    = $this->netWorth->sumNetWorthByCurrency($date);
-        $converted = $this->cerSum($result);
+        $date     = $request->getDate();
+        $accounts = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
 
-        return response()->api($converted);
+        // filter list on preference of being included.
+        $filtered = $accounts->filter(
+            function (Account $account) {
+                $includeNetWorth = $this->repository->getMetaValue($account, 'include_net_worth');
+
+                return null === $includeNetWorth || '1' === $includeNetWorth;
+            }
+        );
+
+        // skip accounts that should not be in the net worth
+        $result = $this->netWorth->byAccounts($filtered, $date);
+
+        return response()->api($result);
     }
 }

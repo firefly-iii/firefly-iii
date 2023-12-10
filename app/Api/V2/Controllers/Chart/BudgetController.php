@@ -170,9 +170,8 @@ class BudgetController extends Controller
      */
     private function noBudgetLimits(Budget $budget, Carbon $start, Carbon $end): array
     {
-        $budgetId = (int)$budget->id;
-        $spent    = $this->opsRepository->listExpenses($start, $end, null, new Collection([$budget]));
-        return $this->processExpenses($budgetId, $spent, $start, $end);
+        $spent = $this->opsRepository->listExpenses($start, $end, null, new Collection([$budget]));
+        return $this->processExpenses($budget->id, $spent, $start, $end);
     }
 
     /**
@@ -199,8 +198,8 @@ class BudgetController extends Controller
          * @var array $block
          */
         foreach ($array as $currencyId => $block) {
-            $this->currencies[$currencyId] = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
-            $return[$currencyId]           = $return[$currencyId] ?? [
+            $this->currencies[$currencyId] ??= TransactionCurrency::find($currencyId);
+            $return[$currencyId]           ??= [
                 'currency_id'             => (string)$currencyId,
                 'currency_code'           => $block['currency_code'],
                 'currency_name'           => $block['currency_name'],
@@ -210,7 +209,7 @@ class BudgetController extends Controller
                 'native_code'             => $this->currency->code,
                 'native_name'             => $this->currency->name,
                 'native_symbol'           => $this->currency->symbol,
-                'native_decimal_places'   => (int)$this->currency->decimal_places,
+                'native_decimal_places'   => $this->currency->decimal_places,
                 'start'                   => $start->toAtomString(),
                 'end'                     => $end->toAtomString(),
                 'spent'                   => '0',
@@ -275,11 +274,10 @@ class BudgetController extends Controller
      */
     private function processLimit(Budget $budget, BudgetLimit $limit): array
     {
-        $budgetId = (int)$budget->id;
-        $end      = clone $limit->end_date;
+        $end = clone $limit->end_date;
         $end->endOfDay();
         $spent                = $this->opsRepository->listExpenses($limit->start_date, $end, null, new Collection([$budget]));
-        $limitCurrencyId      = (int)$limit->transaction_currency_id;
+        $limitCurrencyId      = $limit->transaction_currency_id;
         $limitCurrency        = $limit->transactionCurrency;
         $converter            = new ExchangeRateConverter();
         $filtered             = [];
@@ -295,9 +293,9 @@ class BudgetController extends Controller
                 $filtered[$currencyId] = $entry;
             }
         }
-        $result = $this->processExpenses($budgetId, $filtered, $limit->start_date, $end);
+        $result = $this->processExpenses($budget->id, $filtered, $limit->start_date, $end);
         if (1 === count($result)) {
-            $compare = bccomp((string)$limit->amount, app('steam')->positive($result[$limitCurrencyId]['spent']));
+            $compare = bccomp($limit->amount, app('steam')->positive($result[$limitCurrencyId]['spent']));
             if (1 === $compare) {
                 // convert this amount into the native currency:
                 $result[$limitCurrencyId]['left']        = bcadd($limit->amount, $result[$limitCurrencyId]['spent']);

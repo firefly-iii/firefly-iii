@@ -40,7 +40,7 @@ return [
     'index_accounts-chart'                  => 'Ce tableau montre le solde actuel de vos comptes d\'actifs. Vous pouvez sélectionner les comptes visibles ici dans vos préférences.',
     'index_box_out_holder'                  => 'Cette petite boîte et les cases à côté de celle-ci vous donneront un rapide aperçu de votre situation financière.',
     'index_help'                            => 'Si vous avez besoin d’aide avec une page ou un formulaire, appuyez sur ce bouton.',
-    'index_outro'                           => 'La plupart des pages de Firefly III vont commencer avec un petit tour comme celui-ci. Merci de me contacter si vous avez des questions ou des commentaires. Profitez-en !',
+    'index_outro'                           => "La plupart des pages de Firefly III vont commencer avec un petit tour comme celui-ci. Merci de me contacter si vous avez des questions ou des commentaires. Profitez-en\u{a0}!",
     'index_sidebar-toggle'                  => 'Pour créer de nouvelles opérations, comptes ou autres choses, utilisez le menu sous cette icône.',
     'index_cash_account'                    => 'Voici les comptes créés jusqu\'ici. Vous pouvez utiliser le compte de trésorerie pour faire le suivi de vos dépenses en espèces, mais ce n\'est pas obligatoire, bien sûr.',
 
@@ -54,7 +54,7 @@ return [
     'accounts_create_iban'                  => 'Donnez à vos comptes un IBAN valide. Cela pourrait rendre une importation de données très facile à l\'avenir.',
     'accounts_create_asset_opening_balance' => 'Les comptes d\'actifs peuvent avoir un «solde d\'ouverture», indiquant le début de l\'historique de ce compte dans Firefly III.',
     'accounts_create_asset_currency'        => 'Firefly III prend en charge plusieurs devises. Les comptes d\'actifs ont une devise principale, que vous devez définir ici.',
-    'accounts_create_asset_virtual'         => 'Il peut parfois être utile de donner à votre compte un solde virtuel : un montant supplémentaire toujours ajouté ou soustrait du solde réel.',
+    'accounts_create_asset_virtual'         => "Il peut parfois être utile de donner à votre compte un solde virtuel\u{a0}: un montant supplémentaire toujours ajouté ou soustrait du solde réel.",
 
     // budgets index
     'budgets_index_intro'                   => 'Les budgets sont utilisés pour gérer vos finances et forment l\'une des principales fonctions de Firefly III.',
@@ -81,7 +81,7 @@ return [
     'reports_index_intro'                   => 'Utilisez ces rapports pour obtenir des informations détaillées sur vos finances.',
     'reports_index_inputReportType'         => 'Choisissez un type de rapport. Consultez les pages d\'aide pour voir ce que vous présente chaque rapport.',
     'reports_index_inputAccountsSelect'     => 'Vous pouvez exclure ou inclure les comptes d\'actifs comme bon vous semble.',
-    'reports_index_inputDateRange'          => 'L\'intervalle de dates sélectionné est entièrement libre : de un jour à 10 ans.',
+    'reports_index_inputDateRange'          => "L'intervalle de dates sélectionné est entièrement libre\u{a0}: de un jour à 10 ans.",
     'reports_index_extra-options-box'       => 'Selon le rapport que vous avez sélectionné, vous pouvez sélectionner des filtres et options supplémentaires ici. Regardez cette case lorsque vous modifiez les types de rapport.',
 
     // reports (reports)
@@ -201,3 +201,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

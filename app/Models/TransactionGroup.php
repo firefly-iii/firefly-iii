@@ -23,7 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -31,8 +34,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -59,20 +60,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereUserId($value)
  * @method static Builder|TransactionGroup withTrashed()
  * @method static Builder|TransactionGroup withoutTrashed()
- * @property int|null                             $user_group_id
+ * @property int                                  $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionGroup whereUserGroupId($value)
  * @property-read UserGroup|null                  $userGroup
  * @mixin Eloquent
  */
 class TransactionGroup extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'id'         => 'integer',
@@ -83,7 +82,7 @@ class TransactionGroup extends Model
             'date'       => 'datetime',
         ];
 
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['user_id', 'user_group_id', 'title'];
 
     /**
@@ -94,24 +93,24 @@ class TransactionGroup extends Model
      * @return TransactionGroup
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): TransactionGroup
+    public static function routeBinder(string $value): self
     {
-        Log::debug(sprintf('Now in %s("%s")', __METHOD__, $value));
+        app('log')->debug(sprintf('Now in %s("%s")', __METHOD__, $value));
         if (auth()->check()) {
             $groupId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            Log::debug(sprintf('User authenticated as %s', $user->email));
-            /** @var TransactionGroup $group */
+            app('log')->debug(sprintf('User authenticated as %s', $user->email));
+            /** @var TransactionGroup|null $group */
             $group = $user->transactionGroups()
                           ->with(['transactionJournals', 'transactionJournals.transactions'])
                           ->where('transaction_groups.id', $groupId)->first(['transaction_groups.*']);
             if (null !== $group) {
-                Log::debug(sprintf('Found group #%d.', $group->id));
+                app('log')->debug(sprintf('Found group #%d.', $group->id));
                 return $group;
             }
         }
-        Log::debug('Found no group.');
+        app('log')->debug('Found no group.');
 
         throw new NotFoundHttpException();
     }

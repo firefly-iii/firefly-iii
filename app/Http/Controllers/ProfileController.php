@@ -36,7 +36,6 @@ use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\User;
 use Google2FA;
@@ -49,7 +48,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Laravel\Passport\ClientRepository;
 use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
@@ -90,7 +88,7 @@ class ProfileController extends Controller
         );
         $authGuard          = config('firefly.authentication_guard');
         $this->internalAuth = 'web' === $authGuard;
-        Log::debug(sprintf('ProfileController::__construct(). Authentication guard is "%s"', $authGuard));
+        app('log')->debug(sprintf('ProfileController::__construct(). Authentication guard is "%s"', $authGuard));
 
         $this->middleware(IsDemoUser::class)->except(['index']);
     }
@@ -115,20 +113,23 @@ class ProfileController extends Controller
             return redirect(route('profile.index'));
         }
         $domain           = $this->getDomain();
-        $secretPreference = Preferences::get('temp-mfa-secret');
-        $codesPreference  = Preferences::get('temp-mfa-codes');
+        $secretPreference = app('preferences')->get('temp-mfa-secret');
+        $codesPreference  = app('preferences')->get('temp-mfa-codes');
 
         // generate secret if not in session
         if (null === $secretPreference) {
             // generate secret + store + flash
             $secret = Google2FA::generateSecretKey();
-            Preferences::set('temp-mfa-secret', $secret);
+            app('preferences')->set('temp-mfa-secret', $secret);
         }
 
         // re-use secret if in session
         if (null !== $secretPreference) {
             // get secret from session and flash
             $secret = $secretPreference->data;
+        }
+        if (is_array($secret)) {
+            $secret = '';
         }
 
         // generate recovery codes if not in session:
@@ -138,17 +139,20 @@ class ProfileController extends Controller
             // generate codes + store + flash:
             $recovery      = app(Recovery::class);
             $recoveryCodes = $recovery->lowercase()->setCount(8)->setBlocks(2)->setChars(6)->toArray();
-            Preferences::set('temp-mfa-codes', $recoveryCodes);
+            app('preferences')->set('temp-mfa-codes', $recoveryCodes);
         }
 
         // get codes from session if present already:
         if (null !== $codesPreference) {
             $recoveryCodes = $codesPreference->data;
         }
+        if (!is_array($recoveryCodes)) {
+            $recoveryCodes = [];
+        }
 
         $codes = implode("\r\n", $recoveryCodes);
 
-        $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
+        $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, (string)$secret);
 
         return view('profile.code', compact('image', 'secret', 'codes'));
     }
@@ -228,8 +232,8 @@ class ProfileController extends Controller
         /** @var User $user */
         $user = auth()->user();
 
-        Preferences::delete('temp-mfa-secret');
-        Preferences::delete('temp-mfa-codes');
+        app('preferences')->delete('temp-mfa-secret');
+        app('preferences')->delete('temp-mfa-codes');
         $repository->setMFACode($user, null);
         app('preferences')->mark();
 
@@ -284,7 +288,11 @@ class ProfileController extends Controller
         $subTitle       = $user->email;
         $userId         = $user->id;
         $enabled2FA     = null !== $user->mfa_secret;
-        $mfaBackupCount = count(app('preferences')->get('mfa_recovery', [])->data);
+        $recoveryData   = app('preferences')->get('mfa_recovery', [])->data;
+        if (!is_array($recoveryData)) {
+            $recoveryData = [];
+        }
+        $mfaBackupCount = count($recoveryData);
         $this->createOAuthKeys();
 
         if (0 === $count) {
@@ -499,12 +507,18 @@ class ProfileController extends Controller
         $user = auth()->user();
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $secret     = Preferences::get('temp-mfa-secret')?->data;
+        $secret     = app('preferences')->get('temp-mfa-secret')?->data;
+        if (is_array($secret)) {
+            $secret = null;
+        }
+        if (is_int($secret)) {
+            $secret = (string)$secret;
+        }
 
         $repository->setMFACode($user, $secret);
 
-        Preferences::delete('temp-mfa-secret');
-        Preferences::delete('temp-mfa-codes');
+        app('preferences')->delete('temp-mfa-secret');
+        app('preferences')->delete('temp-mfa-codes');
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();
@@ -595,7 +609,7 @@ class ProfileController extends Controller
         }
         /** @var User $user */
         $user = auth()->user();
-        Log::info(sprintf('User #%d has opted to delete their account', auth()->user()->id));
+        app('log')->info(sprintf('User #%d has opted to delete their account', auth()->user()->id));
         // make repository delete user:
         auth()->logout();
         session()->flush();

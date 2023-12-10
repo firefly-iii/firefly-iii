@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\RecurrenceMeta
@@ -58,13 +60,10 @@ use Illuminate\Support\Carbon;
  */
 class RecurrenceMeta extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -73,7 +72,7 @@ class RecurrenceMeta extends Model
             'name'       => 'string',
             'value'      => 'string',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['recurrence_id', 'name', 'value'];
     /** @var string The table to store the data in */
     protected $table = 'recurrences_meta';
@@ -84,5 +83,15 @@ class RecurrenceMeta extends Model
     public function recurrence(): BelongsTo
     {
         return $this->belongsTo(Recurrence::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function recurrenceId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

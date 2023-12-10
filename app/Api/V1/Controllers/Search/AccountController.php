@@ -32,7 +32,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Log;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 
@@ -67,7 +66,7 @@ class AccountController extends Controller
      */
     public function search(Request $request): JsonResponse | Response
     {
-        Log::debug('Now in account search()');
+        app('log')->debug('Now in account search()');
         $manager = $this->getManager();
         $query   = trim((string)$request->get('query'));
         $field   = trim((string)$request->get('field'));

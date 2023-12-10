@@ -92,7 +92,7 @@ class AccountTransformer extends AbstractTransformer
         }
 
         // no order for some accounts:
-        $order = (int)$account->order;
+        $order = $account->order;
         if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'], true)) {
             $order = null;
         }
@@ -184,7 +184,7 @@ class AccountTransformer extends AbstractTransformer
 
         // only grab default when result is null:
         if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrencyByUser($account->user);
+            $currency = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
         $currencyId     = (string)$currency->id;
         $currencyCode   = $currency->code;
@@ -212,7 +212,11 @@ class AccountTransformer extends AbstractTransformer
         if (null !== $monthlyPaymentDate) {
             // try classic date:
             if (10 === strlen($monthlyPaymentDate)) {
-                $monthlyPaymentDate = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'))->toAtomString();
+                $object = Carbon::createFromFormat('!Y-m-d', $monthlyPaymentDate, config('app.timezone'));
+                if (false === $object) {
+                    $object = today(config('app.timezone'));
+                }
+                $monthlyPaymentDate = $object->toAtomString();
             }
             if (10 !== strlen($monthlyPaymentDate)) {
                 $monthlyPaymentDate = Carbon::parse($monthlyPaymentDate, config('app.timezone'))->toAtomString();
@@ -240,7 +244,12 @@ class AccountTransformer extends AbstractTransformer
             $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);
         }
         if (null !== $openingBalanceDate) {
-            $openingBalanceDate = Carbon::createFromFormat('Y-m-d H:i:s', $openingBalanceDate, config('app.timezone'))->toAtomString();
+            $object = Carbon::createFromFormat('Y-m-d H:i:s', $openingBalanceDate, config('app.timezone'));
+            if (false === $object) {
+                $object = today(config('app.timezone'));
+            }
+            $openingBalanceDate = $object->toAtomString();
+
         }
 
         return [$openingBalance, $openingBalanceDate];

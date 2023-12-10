@@ -71,7 +71,7 @@ class ChangesForV550 extends Migration
             try {
                 Schema::table(
                     'budget_transaction_journal',
-                    function (Blueprint $table) {
+                    static function (Blueprint $table) {
                         if ('sqlite' !== config('database.default')) {
                             $table->dropForeign('budget_id_foreign');
                         }
@@ -124,7 +124,7 @@ class ChangesForV550 extends Migration
 
     /**
      * Run the migrations.
-     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      * @return void
      */
     public function up(): void
@@ -136,7 +136,7 @@ class ChangesForV550 extends Migration
             try {
                 Schema::create(
                     'jobs',
-                    function (Blueprint $table) {
+                    static function (Blueprint $table) {
                         $table->bigIncrements('id');
                         $table->string('queue')->index();
                         $table->longText('payload');
@@ -159,7 +159,7 @@ class ChangesForV550 extends Migration
             try {
                 Schema::create(
                     'failed_jobs',
-                    function (Blueprint $table) {
+                    static function (Blueprint $table) {
                         $table->bigIncrements('id');
                         $table->string('uuid')->unique();
                         $table->text('connection');
@@ -180,7 +180,7 @@ class ChangesForV550 extends Migration
             try {
                 Schema::table(
                     'budget_transaction_journal',
-                    function (Blueprint $table) {
+                    static function (Blueprint $table) {
                         if (!Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
                             $table->integer('budget_limit_id', false, true)->nullable()->default(null)->after('budget_id');
                             $table->foreign('budget_limit_id', 'budget_id_foreign')->references('id')->on('budget_limits')->onDelete('set null');

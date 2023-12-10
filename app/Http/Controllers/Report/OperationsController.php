@@ -29,7 +29,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -85,8 +84,8 @@ class OperationsController extends Controller
         try {
             $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = 'Could not render view.';
             throw new FireflyException($result, 0, $e);
         }
@@ -122,8 +121,8 @@ class OperationsController extends Controller
         try {
             $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = 'Could not render view.';
             throw new FireflyException($result, 0, $e);
         }
@@ -163,7 +162,7 @@ class OperationsController extends Controller
         /** @var int $currencyId */
         foreach ($keys as $currencyId) {
             $currencyInfo             = $incomes['sums'][$currencyId] ?? $expenses['sums'][$currencyId];
-            $sums[$currencyId]        = $sums[$currencyId] ?? [
+            $sums[$currencyId]        ??= [
                 'currency_id'             => $currencyId,
                 'currency_name'           => $currencyInfo['currency_name'],
                 'currency_code'           => $currencyInfo['currency_code'],
@@ -179,8 +178,8 @@ class OperationsController extends Controller
         try {
             $result = view('reports.partials.operations', compact('sums'))->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = 'Could not render view.';
             throw new FireflyException($result, 0, $e);
         }

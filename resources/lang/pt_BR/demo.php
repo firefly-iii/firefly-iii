@@ -37,9 +37,9 @@ declare(strict_types=1);
 return [
     'no_demo_text'           => 'Desculpe, não há nenhum texto extra de explicação para <abbr title=":route">esta página</abbr>.',
     'see_help_icon'          => 'No entanto, o <i class="fa fa-question-circle"></i>-ícone no canto superior direito pode lhe dizer mais.',
-    'index'                  => 'Bem-vindo ao <strong>Firefly III</strong>! Nesta página você pode obter uma rápida visão geral de suas finanças. Para mais informações, confira Contas de Ativos &rarr; <a href=":asset">Contas de Ativos</a> e, claro, as páginas de <a href=":budgets">Orçamentos</a> e <a href=":reports">Relatório</a>.Ou então, dê uma olhada ao redor e veja onde você vai parar.',
+    'index'                  => 'Bem-vindo ao <strong>Firefly III</strong>! Nesta página você pode obter uma rápida visão geral de suas finanças. Para mais informações, confira Contas de Ativos &rarr; <a href=":asset">Contas de Ativos</a> e, claro, as páginas de <a href=":budgets">Orçamentos</a> e <a href=":reports">Relatórios</a>.Ou então, dê uma olhada ao redor e veja onde você vai parar.',
     'accounts-index'         => 'Contas de ativo são suas contas bancárias pessoais. Contas de despesa são aquilo em que você gasta seu dinheiro, tais como lojas e amigos. Contas de receitas são as fontes das quais você recebe seu dinheiro, como o seu trabalho, o governo ou outras fontes de renda. Passivos são suas dívidas e empréstimos, como dívidas antigas de cartão de crédito ou empréstimos estudantis. Nesta página você pode editá-los ou removê-los.',
-    'budgets-index'          => 'Esta página mostra a você uma visão geral dos seus orçamentos. A barra superior mostra a quantidade disponível a ser orçamentada. Isto pode ser personalizado para qualquer valor clicando o montante à direita. A quantidade que você gastou de fato é mostrada na barra abaixo. Abaixo, estão as despesas para cada orçamento e o que você orçou neles.',
+    'budgets-index'          => 'Esta página mostra a você uma visão geral dos seus orçamentos. A barra superior mostra a quantidade disponível a ser orçada. Isto pode ser personalizado para qualquer valor clicando no montante à direita. O valor que você gastou de fato é mostrada na barra abaixo. Abaixo, estão as despesas para cada orçamento e o que você orçou neles.',
     'reports-index-start'    => 'Firefly III suporta vários tipos de relatórios. Leia sobre eles clicando no<i class="fa fa-question-circle"></i>-ícone no canto superior direito.',
     'reports-index-examples' => 'Certifique-se de verificar estes exemplos: <a href=":one">um quadro financeiro mensal</a>, <a href=":two">um quadro financeiro anual</a> e <a href=":three">uma visão geral orçamentária</a>.',
     'currencies-index'       => 'Firefly III oferece suporte a várias moedas. Embora o padrão seja o Euro, ela pode ser definida para o dólar americano e muitas outras moedas. Como você pode ver uma pequena seleção de moedas foi incluída, mas você pode adicionar suas próprias se desejar. No entanto, alterar a moeda padrão não vai mudar a moeda de transações existentes: Firefly III suporta o uso de várias moedas ao mesmo tempo.',
@@ -58,3 +58,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

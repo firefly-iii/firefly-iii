@@ -103,7 +103,7 @@ trait AccountCollection
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->where(
-                static function (EloquentBuilder $query) use ($accountIds) {
+                static function (EloquentBuilder $query) use ($accountIds) { // @phpstan-ignore-line
                     $query->whereIn('source.account_id', $accountIds);
                     $query->orWhereIn('destination.account_id', $accountIds);
                 }
@@ -126,7 +126,7 @@ trait AccountCollection
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->where(
-                static function (EloquentBuilder $query) use ($accountIds) {
+                static function (EloquentBuilder $query) use ($accountIds) { // @phpstan-ignore-line
                     $query->whereIn('source.account_id', $accountIds);
                     $query->whereIn('destination.account_id', $accountIds);
                 }
@@ -168,7 +168,7 @@ trait AccountCollection
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->where(
-                static function (EloquentBuilder $query) use ($accountIds) {
+                static function (EloquentBuilder $query) use ($accountIds) { // @phpstan-ignore-line
                     $query->whereNotIn('source.account_id', $accountIds);
                     $query->whereNotIn('destination.account_id', $accountIds);
                 }
@@ -210,7 +210,7 @@ trait AccountCollection
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->where(
-                static function (EloquentBuilder $q1) use ($accountIds) {
+                static function (EloquentBuilder $q1) use ($accountIds) { // @phpstan-ignore-line
                     // sourceAccount is in the set, and destination is NOT.
 
                     $q1->where(

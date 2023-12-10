@@ -44,6 +44,7 @@ return [
     'invalid_query_currency'         => 'Váš dotaz obsahuje účty, které mají různá nastavení měny, což není povoleno.',
     'iban'                           => 'Toto není platný IBAN.',
     'zero_or_more'                   => 'Hodnota nemůže být záporná.',
+    'no_asset_account'               => 'This is not an asset account.',
     'date_or_time'                   => 'Je třeba, aby hodnota byla platné datum nebo čas (ve formátu dle normy ISO 8601).',
     'source_equals_destination'      => 'Zdrojový účet je zároveň i cílový.',
     'unique_account_number_for_user' => 'Zdá se, že toto číslo účtu se již používá.',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

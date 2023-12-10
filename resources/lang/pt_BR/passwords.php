@@ -36,7 +36,7 @@ declare(strict_types=1);
 
 return [
     'password' => 'A senha precisa ter no mínimo seis caracteres e tem que ser igual à confirmação de senha.',
-    'user'     => 'Não foi possível encontrar o usuário com este e-mail.',
+    'user'     => 'Não foi possível encontrar um usuário com este e-mail.',
     'token'    => 'Este token de redefinição de senha é inválido.',
     'sent'     => 'Nós te enviamos um email com um link para trocar a senha!',
     'reset'    => 'Sua senha foi redefinida!',

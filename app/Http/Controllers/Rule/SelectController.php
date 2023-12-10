@@ -38,7 +38,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
 
@@ -58,7 +57,7 @@ class SelectController extends Controller
         parent::__construct();
 
         $this->middleware(
-            function ($request, $next) {
+            static function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
@@ -98,7 +97,7 @@ class SelectController extends Controller
         $newRuleEngine->fire();
         $resultCount = $newRuleEngine->getResults();
 
-        session()->flash('success', (string)trans_choice('firefly.applied_rule_selection', $resultCount, ['title' => $rule->title]));
+        session()->flash('success', trans_choice('firefly.applied_rule_selection', $resultCount, ['title' => $rule->title]));
 
         return redirect()->route('rules.index');
     }
@@ -108,9 +107,9 @@ class SelectController extends Controller
      *
      * @param Rule $rule
      *
-     * @return Factory|View
+     * @return Factory|View|RedirectResponse
      */
-    public function selectTransactions(Rule $rule)
+    public function selectTransactions(Rule $rule): Factory | View | RedirectResponse
     {
         if (false === $rule->active) {
             session()->flash('warning', trans('firefly.cannot_fire_inactive_rules'));
@@ -137,7 +136,8 @@ class SelectController extends Controller
     public function testTriggers(TestRuleFormRequest $request): JsonResponse
     {
         // build fake rule
-        $rule         = new Rule();
+        $rule = new Rule();
+        /** @var \Illuminate\Database\Eloquent\Collection<int, RuleTrigger> $triggers */
         $triggers     = new Collection();
         $rule->strict = '1' === $request->get('strict');
 
@@ -183,8 +183,8 @@ class SelectController extends Controller
         try {
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
         } catch (Throwable $exception) {
-            Log::error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
-            Log::error($exception->getTraceAsString());
+            app('log')->error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
+            app('log')->error($exception->getTraceAsString());
             $view = sprintf('Could not render list.journals-tiny: %s', $exception->getMessage());
             throw new FireflyException($view, 0, $exception);
         }
@@ -227,8 +227,8 @@ class SelectController extends Controller
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
         } catch (Throwable $exception) {
             $message = sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage());
-            Log::error($message);
-            Log::error($exception->getTraceAsString());
+            app('log')->error($message);
+            app('log')->error($exception->getTraceAsString());
             throw new FireflyException($message, 0, $exception);
         }
 

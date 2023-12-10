@@ -45,7 +45,7 @@ class UserTransformer extends AbstractTransformer
      */
     public function transform(User $user): array
     {
-        $this->repository = $this->repository ?? app(UserRepositoryInterface::class);
+        $this->repository ??= app(UserRepositoryInterface::class);
 
         return [
             'id'           => (int)$user->id,

@@ -30,5 +30,5 @@ namespace FireflyIII\Support\Calendar\Periodicity;
  */
 final class Bimonthly extends Monthly
 {
-    public const INTERVAL = 2;
+    public const int INTERVAL = 2;
 }

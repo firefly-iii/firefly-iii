@@ -23,8 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,7 +36,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -46,10 +49,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int                                     $transaction_type_id
  * @property string                                  $title
  * @property string                                  $description
- * @property Carbon                                  $first_date
+ * @property Carbon|null                             $first_date
  * @property Carbon|null                             $repeat_until
  * @property Carbon|null                             $latest_date
- * @property int                                     $repetitions
+ * @property int|string                              $repetitions
  * @property bool                                    $apply_rules
  * @property bool                                    $active
  * @property-read Collection|Attachment[]            $attachments
@@ -85,19 +88,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereUserId($value)
  * @method static Builder|Recurrence withTrashed()
  * @method static Builder|Recurrence withoutTrashed()
- * @property int|null                                $user_group_id
+ * @property int                                     $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Recurrence whereUserGroupId($value)
  * @mixin Eloquent
  */
 class Recurrence extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at'   => 'datetime',
@@ -113,7 +114,7 @@ class Recurrence extends Model
             'active'       => 'bool',
             'apply_rules'  => 'bool',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable
         = ['user_id', 'transaction_type_id', 'title', 'description', 'first_date', 'repeat_until', 'latest_date', 'repetitions', 'apply_rules', 'active'];
     /** @var string The table to store the data in */
@@ -127,13 +128,13 @@ class Recurrence extends Model
      * @return Recurrence
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Recurrence
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $recurrenceId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Recurrence $recurrence */
+            /** @var Recurrence|null $recurrence */
             $recurrence = $user->recurrences()->find($recurrenceId);
             if (null !== $recurrence) {
                 return $recurrence;
@@ -204,5 +205,15 @@ class Recurrence extends Model
     public function transactionType(): BelongsTo
     {
         return $this->belongsTo(TransactionType::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function transactionTypeId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

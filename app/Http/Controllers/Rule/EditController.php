@@ -36,7 +36,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
 
@@ -45,8 +44,8 @@ use Throwable;
  */
 class EditController extends Controller
 {
-    use RuleManagement;
     use RenderPartialViews;
+    use RuleManagement;
 
     private RuleRepositoryInterface $ruleRepos;
 
@@ -101,7 +100,7 @@ class EditController extends Controller
             $oldTriggers = $this->parseFromOperators($operators);
         }
         // has old input?
-        if (count($request->old()) > 0) {
+        if (null !== $request->old() && is_array($request->old()) && count($request->old()) > 0) {
             $oldTriggers = $this->getPreviousTriggers($request);
             $oldActions  = $this->getPreviousActions($request);
         }
@@ -173,8 +172,8 @@ class EditController extends Controller
                 )->render();
             } catch (Throwable $e) {
                 $message = sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage());
-                Log::debug($message);
-                Log::error($e->getTraceAsString());
+                app('log')->debug($message);
+                app('log')->error($e->getTraceAsString());
                 throw new FireflyException($message, 0, $e);
             }
             $index++;

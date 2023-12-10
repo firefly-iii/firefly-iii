@@ -34,6 +34,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -81,24 +82,24 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     *
+     * @return JsonResponse|RedirectResponse
      * @throws ValidationException
      */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse | RedirectResponse
     {
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get($this->username())));
-        Log::info('User is trying to login.');
+        app('log')->info('User is trying to login.');
 
         $this->validateLogin($request);
-        Log::debug('Login data is present.');
+        app('log')->debug('Login data is present.');
 
         /** Copied directly from AuthenticatesUsers, but with logging added: */
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
-        if (method_exists($this, 'hasTooManyLoginAttempts') && $this->hasTooManyLoginAttempts($request)) {
+        if ($this->hasTooManyLoginAttempts($request)) {
             Log::channel('audit')->info(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
-            Log::error(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
+            app('log')->error(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
             $this->fireLockoutEvent($request);
 
             $this->sendLockoutResponse($request);
@@ -106,7 +107,7 @@ class LoginController extends Controller
         /** Copied directly from AuthenticatesUsers, but with logging added: */
         if ($this->attemptLogin($request)) {
             Log::channel('audit')->info(sprintf('User "%s" has been logged in.', $request->get($this->username())));
-            Log::debug(sprintf('Redirect after login is %s.', $this->redirectPath()));
+            app('log')->debug(sprintf('Redirect after login is %s.', $this->redirectPath()));
 
             // if you just logged in, it can't be that you have a valid 2FA cookie.
 
@@ -126,6 +127,9 @@ class LoginController extends Controller
         Log::channel('audit')->info(sprintf('Login failed. Attempt for user "%s" failed.', $request->get($this->username())));
 
         $this->sendFailedLoginResponse($request);
+
+        /** @noinspection PhpUnreachableStatementInspection */
+        return response()->json([]);
     }
 
     /**
@@ -144,7 +148,7 @@ class LoginController extends Controller
      * @param Request $request
      *
      * @return void
-     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @throws ValidationException
      */
     protected function sendFailedLoginResponse(Request $request)
@@ -187,9 +191,7 @@ class LoginController extends Controller
 
         $request->session()->regenerateToken();
 
-        if ($response = $this->loggedOut($request)) {
-            return $response;
-        }
+        $this->loggedOut($request);
 
         return $request->wantsJson()
             ? new Response('', 204)

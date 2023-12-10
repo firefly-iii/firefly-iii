@@ -27,7 +27,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -60,8 +59,8 @@ trait RuleManagement
                         ]
                     )->render();
                 } catch (Throwable $e) {
-                    Log::error(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
-                    Log::error($e->getTraceAsString());
+                    app('log')->error(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
+                    app('log')->error($e->getTraceAsString());
                     throw new FireflyException(sprintf('Could not render: %s', $e->getMessage()), 0, $e);
                 }
                 $index++;
@@ -107,8 +106,8 @@ trait RuleManagement
                         ]
                     )->render();
                 } catch (Throwable $e) {
-                    Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
-                    Log::error($e->getTraceAsString());
+                    app('log')->debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
+                    app('log')->error($e->getTraceAsString());
                     throw new FireflyException(sprintf('Could not render: %s', $e->getMessage()), 0, $e);
                 }
                 $index++;
@@ -139,12 +138,14 @@ trait RuleManagement
 
         $index = 0;
         foreach ($submittedOperators as $operator) {
+            $rootOperator = OperatorQuerySearch::getRootOperator($operator['type']);
+            $needsContext = (bool)config(sprintf('search.operators.%s.needs_context', $rootOperator));
             try {
                 $renderedEntries[] = view(
                     'rules.partials.trigger',
                     [
-                        'oldTrigger'    => OperatorQuerySearch::getRootOperator($operator['type']),
-                        'oldValue'      => $operator['value'],
+                        'oldTrigger'    => $rootOperator,
+                        'oldValue'      => $needsContext ? $operator['value'] : '',
                         'oldChecked'    => false,
                         'oldProhibited' => $operator['prohibited'] ?? false,
                         'count'         => $index + 1,
@@ -152,8 +153,8 @@ trait RuleManagement
                     ]
                 )->render();
             } catch (Throwable $e) {
-                Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
-                Log::error($e->getTraceAsString());
+                app('log')->debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
+                app('log')->error($e->getTraceAsString());
                 throw new FireflyException(sprintf('Could not render: %s', $e->getMessage()), 0, $e);
             }
             $index++;

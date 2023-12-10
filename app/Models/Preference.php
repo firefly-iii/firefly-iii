@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -54,11 +56,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Preference extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
+
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -66,7 +66,7 @@ class Preference extends Model
             'data'       => 'array',
         ];
 
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['user_id', 'data', 'name'];
 
     /**
@@ -77,7 +77,7 @@ class Preference extends Model
      * @return Preference
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Preference
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             /** @var User $user */
@@ -92,10 +92,10 @@ class Preference extends Model
             }
             $default = config('firefly.default_preferences');
             if (array_key_exists($value, $default)) {
-                $preference          = new Preference();
+                $preference          = new self();
                 $preference->name    = $value;
                 $preference->data    = $default[$value];
-                $preference->user_id = $user->id;
+                $preference->user_id = (int)$user->id;
                 $preference->save();
 
                 return $preference;

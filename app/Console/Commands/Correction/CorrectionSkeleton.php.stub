@@ -10,17 +10,8 @@ use Illuminate\Console\Command;
  */
 class CorrectionSkeleton extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'DESCRIPTION HERE';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:CORR_COMMAND';
 
     /**

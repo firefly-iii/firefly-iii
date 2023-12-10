@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -31,7 +33,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\RecurrenceTransaction
@@ -42,11 +43,11 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null                                 $deleted_at
  * @property int                                         $recurrence_id
  * @property int                                         $transaction_currency_id
- * @property int|null                                    $foreign_currency_id
+ * @property int|string|null                             $foreign_currency_id
  * @property int                                         $source_id
  * @property int                                         $destination_id
  * @property string                                      $amount
- * @property string|null                                 $foreign_amount
+ * @property string                                      $foreign_amount
  * @property string                                      $description
  * @property-read Account                                $destinationAccount
  * @property-read TransactionCurrency|null               $foreignCurrency
@@ -80,13 +81,10 @@ use Illuminate\Support\Carbon;
  */
 class RecurrenceTransaction extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at'     => 'datetime',
@@ -96,7 +94,7 @@ class RecurrenceTransaction extends Model
             'foreign_amount' => 'string',
             'description'    => 'string',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable
         = [
             'recurrence_id',
@@ -173,7 +171,17 @@ class RecurrenceTransaction extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function destinationId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
         );
     }
 
@@ -183,7 +191,48 @@ class RecurrenceTransaction extends Model
     protected function foreignAmount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
+        );
+
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function recurrenceId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function sourceId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function transactionCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function userId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
         );
     }
 }

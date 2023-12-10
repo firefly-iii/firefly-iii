@@ -80,7 +80,7 @@ return [
 
     'reconciliation_list'    => 'Reconciliaciones',
     'create_withdrawal'      => 'Crear nuevo retiro',
-    'create_deposit'         => 'Crear nuevo ingreso',
+    'create_deposit'         => 'Crear nuevo depósito',
     'create_transfer'        => 'Crear nueva transferencia',
     'create_new_transaction' => 'Crear una nueva transacción',
     'edit_journal'           => 'Editar transacción ":description"',

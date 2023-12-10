@@ -103,7 +103,7 @@ class EditController extends Controller
             'notes'                   => $this->repository->getNoteText($bill),
             'transaction_currency_id' => $bill->transaction_currency_id,
             'active'                  => $hasOldInput ? (bool)$request->old('active') : $bill->active,
-            'object_group'            => $bill->objectGroups->first() ? $bill->objectGroups->first()->title : '',
+            'object_group'            => null !== $bill->objectGroups->first() ? $bill->objectGroups->first()->title : '',
         ];
 
         $request->session()->flash('preFilled', $preFilled);
@@ -128,7 +128,7 @@ class EditController extends Controller
         $request->session()->flash('success', (string)trans('firefly.updated_bill', ['name' => $bill->name]));
         app('preferences')->mark();
 
-        /** @var array $files */
+        /** @var array|null $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($bill, $files);

@@ -31,7 +31,6 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -40,9 +39,9 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class RemoteUserGuard implements Guard
 {
-    protected Application $application;
-    protected $provider;
-    protected $user;
+    protected Application  $application;
+    protected UserProvider $provider;
+    protected User | null  $user;
 
     /**
      * Create a new authentication guard.
@@ -55,9 +54,9 @@ class RemoteUserGuard implements Guard
      */
     public function __construct(UserProvider $provider, Application $app)
     {
-        /** @var Request $request */
+        /** @var Request|null $request */
         $request = $app->get('request');
-        Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', $request?->getMethod(), $request?->getRequestUri()));
+        app('log')->debug(sprintf('Created RemoteUserGuard for %s "%s"', $request?->getMethod(), $request?->getRequestUri()));
         $this->application = $app;
         $this->provider    = $provider;
         $this->user        = null;
@@ -68,9 +67,9 @@ class RemoteUserGuard implements Guard
      */
     public function authenticate(): void
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
         if (null !== $this->user) {
-            Log::debug(sprintf('%s is found: #%d, "%s".', get_class($this->user), $this->user->id, $this->user->email));
+            app('log')->debug(sprintf('%s is found: #%d, "%s".', get_class($this->user), $this->user->id, $this->user->email));
 
             return;
         }
@@ -79,16 +78,16 @@ class RemoteUserGuard implements Guard
         $userID = request()->server($header) ?? null;
 
         if (function_exists('apache_request_headers')) {
-            Log::debug('Use apache_request_headers to find user ID.');
+            app('log')->debug('Use apache_request_headers to find user ID.');
             $userID = request()->server($header) ?? apache_request_headers()[$header] ?? null;
         }
 
         if (null === $userID || '' === $userID) {
-            Log::error(sprintf('No user in header "%s".', $header));
+            app('log')->error(sprintf('No user in header "%s".', $header));
             throw new FireflyException('The guard header was unexpectedly empty. See the logs.');
         }
 
-        Log::debug(sprintf('User ID found in header is "%s"', $userID));
+        app('log')->debug(sprintf('User ID found in header is "%s"', $userID));
 
         /** @var User $retrievedUser */
         $retrievedUser = $this->provider->retrieveById($userID);
@@ -109,7 +108,7 @@ class RemoteUserGuard implements Guard
             }
         }
 
-        Log::debug(sprintf('Result of getting user from provider: %s', $retrievedUser->email));
+        app('log')->debug(sprintf('Result of getting user from provider: %s', $retrievedUser->email));
         $this->user = $retrievedUser;
     }
 
@@ -118,7 +117,7 @@ class RemoteUserGuard implements Guard
      */
     public function guest(): bool
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
         return !$this->check();
     }
 
@@ -127,8 +126,8 @@ class RemoteUserGuard implements Guard
      */
     public function check(): bool
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
-        return !is_null($this->user());
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
+        return null !== $this->user();
     }
 
     /**
@@ -136,10 +135,10 @@ class RemoteUserGuard implements Guard
      */
     public function user(): ?User
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
         $user = $this->user;
         if (null === $user) {
-            Log::debug('User is NULL');
+            app('log')->debug('User is NULL');
             return null;
         }
 
@@ -151,26 +150,31 @@ class RemoteUserGuard implements Guard
      */
     public function hasUser(): bool
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
         throw new FireflyException('Did not implement RemoteUserGuard::hasUser()');
     }
 
     /**
      * @inheritDoc
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
-    public function id(): ?User
+    public function id(): int | string | null
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
-        return $this->user;
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
+        return $this->user?->id;
     }
 
     /**
      * @inheritDoc
      */
-    public function setUser(Authenticatable $user)
+    public function setUser(Authenticatable | User | null $user)
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
-        $this->user = $user;
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
+        if ($user instanceof User) {
+            $this->user = $user;
+            return;
+        }
+        app('log')->error(sprintf('Did not set user at %s', __METHOD__));
     }
 
     /**
@@ -178,7 +182,7 @@ class RemoteUserGuard implements Guard
      */
     public function validate(array $credentials = [])
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
         throw new FireflyException('Did not implement RemoteUserGuard::validate()');
     }
 
@@ -187,7 +191,7 @@ class RemoteUserGuard implements Guard
      */
     public function viaRemember(): bool
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
         return false;
     }
 }

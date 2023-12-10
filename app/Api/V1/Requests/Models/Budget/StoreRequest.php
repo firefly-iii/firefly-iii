@@ -37,9 +37,9 @@ use Illuminate\Validation\Validator;
  */
 class StoreRequest extends FormRequest
 {
+    use ChecksLogin;
     use ConvertsDataTypes;
     use ValidatesAutoBudgetRequest;
-    use ChecksLogin;
 
     /**
      * Get all data from the request.

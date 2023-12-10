@@ -26,12 +26,10 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Model\PiggyBank;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\UserGroups\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\V2\PiggyBankTransformer;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
@@ -61,13 +59,11 @@ class IndexController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * TODO see autocomplete/accountcontroller for list.
      *
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         $piggies     = $this->repository->getPiggyBanks();
         $pageSize    = $this->parameters->get('limit');

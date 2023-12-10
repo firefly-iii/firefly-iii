@@ -33,7 +33,6 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
@@ -41,8 +40,8 @@ use Illuminate\Validation\Validator;
  */
 class RecurrenceFormRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get the data required by the controller.
@@ -260,7 +259,7 @@ class RecurrenceFormRequest extends FormRequest
         }
 
         // update some rules in case the user is editing a post:
-        /** @var Recurrence $recurrence */
+        /** @var Recurrence|null $recurrence */
         $recurrence = $this->route()->parameter('recurrence');
         if ($recurrence instanceof Recurrence) {
             $rules['id']         = 'required|numeric|exists:recurrences,id';
@@ -297,7 +296,7 @@ class RecurrenceFormRequest extends FormRequest
      */
     public function validateAccountInformation(Validator $validator): void
     {
-        Log::debug('Now in validateAccountInformation (RecurrenceFormRequest)()');
+        app('log')->debug('Now in validateAccountInformation (RecurrenceFormRequest)()');
         /** @var AccountValidator $accountValidator */
         $accountValidator = app(AccountValidator::class);
         $data             = $validator->getData();

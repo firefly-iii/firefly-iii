@@ -67,7 +67,7 @@ class PiggyBankTransformer extends AbstractTransformer
         $this->piggyRepos->setUser($account->user);
 
         // get currency from account, or use default.
-        $currency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
+        $currency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
 
         // note
         $notes = $this->piggyRepos->getNoteText($piggyBank);
@@ -76,11 +76,11 @@ class PiggyBankTransformer extends AbstractTransformer
         $objectGroupId    = null;
         $objectGroupOrder = null;
         $objectGroupTitle = null;
-        /** @var ObjectGroup $objectGroup */
+        /** @var ObjectGroup|null $objectGroup */
         $objectGroup = $piggyBank->objectGroups->first();
         if (null !== $objectGroup) {
-            $objectGroupId    = (int)$objectGroup->id;
-            $objectGroupOrder = (int)$objectGroup->order;
+            $objectGroupId    = $objectGroup->id;
+            $objectGroupOrder = $objectGroup->order;
             $objectGroupTitle = $objectGroup->title;
         }
 
@@ -112,7 +112,7 @@ class PiggyBankTransformer extends AbstractTransformer
             'currency_id'             => (string)$currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int)$currency->decimal_places,
+            'currency_decimal_places' => $currency->decimal_places,
             'target_amount'           => $targetAmount,
             'percentage'              => $percentage,
             'current_amount'          => $currentAmount,
@@ -120,10 +120,10 @@ class PiggyBankTransformer extends AbstractTransformer
             'save_per_month'          => $savePerMonth,
             'start_date'              => $startDate,
             'target_date'             => $targetDate,
-            'order'                   => (int)$piggyBank->order,
+            'order'                   => $piggyBank->order,
             'active'                  => true,
             'notes'                   => $notes,
-            'object_group_id'         => $objectGroupId ? (string)$objectGroupId : null,
+            'object_group_id'         => null !== $objectGroupId ? (string)$objectGroupId : null,
             'object_group_order'      => $objectGroupOrder,
             'object_group_title'      => $objectGroupTitle,
             'links'                   => [

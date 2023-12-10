@@ -23,11 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\RuleAction
@@ -36,8 +38,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property int         $rule_id
- * @property string      $action_type
- * @property string      $action_value
+ * @property string|null $action_type
+ * @property string|null $action_value
  * @property int         $order
  * @property bool        $active
  * @property bool        $stop_processing
@@ -58,11 +60,8 @@ use Illuminate\Support\Carbon;
  */
 class RuleAction extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+    use ReturnsIntegerIdTrait;
+
     protected $casts
         = [
             'created_at'      => 'datetime',
@@ -72,7 +71,7 @@ class RuleAction extends Model
             'stop_processing' => 'boolean',
         ];
 
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['rule_id', 'action_type', 'action_value', 'order', 'active', 'stop_processing'];
 
     /**
@@ -82,4 +81,25 @@ class RuleAction extends Model
     {
         return $this->belongsTo(Rule::class);
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function ruleId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
 }

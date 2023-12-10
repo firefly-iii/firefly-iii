@@ -45,7 +45,7 @@ return [
     'be_right_back'           => 'Rögtön jövök!',
     'check_back'              => 'FireFly III jelenleg karbantartás alatt. Kérem látogasson vissza később.',
     'error_occurred'          => 'Hoppá! Hiba történt.',
-    'db_error_occurred'       => 'Whoops! A database error occurred.',
+    'db_error_occurred'       => 'Hoppá! Adatbázis hiba történt.',
     'error_not_recoverable'   => 'Sajnos a hiba után nem sikerült visszaállni :(. A futás megszakadt. A hiba:',
     'error'                   => 'Hiba',
     'error_location'          => 'Hiba a <span style="font-family: monospace;">:file</span> fájl :line sorában a :code kódnál.',
@@ -73,8 +73,8 @@ return [
     'tell_more'           => 'Részletesebben írd le, mint hogy "azt írja hoppá, hiba történt!"',
     'include_logs'        => 'Hiba naplók hozzáadása (lásd fentebb).',
     'what_did_you_do'     => 'Meséld el mit csináltál.',
-    'offline_header'      => 'You are probably offline',
-    'offline_unreachable' => 'Firefly III is unreachable. Your device is currently offline or the server is not working.',
-    'offline_github'      => 'If you are sure both your device and the server are online, please open a ticket on <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'offline_header'      => 'Az eszköz valószínűleg offline állapotban van',
+    'offline_unreachable' => 'A Firefly III elérhetetlen. Az eszköz nem kapcsolódik az internethez, vagy a szerver nem elérhető.',
+    'offline_github'      => 'Ha biztos benne, hogy az eszköz és a szerver is online állapotban van, kérem nyisson egy jegyet a <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>-on.',
 
 ];

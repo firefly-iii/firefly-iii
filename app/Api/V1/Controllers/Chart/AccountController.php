@@ -30,6 +30,7 @@ use FireflyIII\Api\V1\Requests\Data\DateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\User;
@@ -90,8 +91,9 @@ class AccountController extends Controller
 
         // user's preferences
         $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
-        $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
-        $default    = app('amount')->getDefaultCurrency();
+        /** @var Preference $frontPage */
+        $frontPage = app('preferences')->get('frontPageAccounts', $defaultSet);
+        $default   = app('amount')->getDefaultCurrency();
 
         if (!(is_array($frontPage->data) && count($frontPage->data) > 0)) {
             $frontPage->data = $defaultSet;

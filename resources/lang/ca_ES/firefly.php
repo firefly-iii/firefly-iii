@@ -43,7 +43,7 @@ return [
     'split'                                => 'Dividir',
     'single_split'                         => 'Divisió',
     'clone'                                => 'Duplicar',
-    'clone_and_edit'                       => 'Clone and edit',
+    'clone_and_edit'                       => 'Clona i edita',
     'confirm_action'                       => 'Confirmar acció',
     'last_seven_days'                      => 'Últims set dies',
     'last_thirty_days'                     => 'Últims trenta dies',
@@ -469,6 +469,10 @@ return [
     'search_modifier_transaction_type'                    => 'El tipus de transacció és ":value"',
     'search_modifier_not_transaction_type'                => 'El tipus de transacció no és ":value"',
     'search_modifier_tag_is'                              => 'L\'etiqueta és ":value"',
+    'search_modifier_tag_contains'                        => 'L\'etiqueta conté ":value"',
+    'search_modifier_not_tag_contains'                    => 'L\'etiqueta no conté ":value"',
+    'search_modifier_tag_ends'                            => 'L\'etiqueta acaba amb ":value"',
+    'search_modifier_tag_starts'                          => 'L\'etiqueta comença amb ":value"',
     'search_modifier_not_tag_is'                          => 'Cap etiqueta és ":value"',
     'search_modifier_date_on_year'                        => 'L\'any de la transacció és ":value"',
     'search_modifier_not_date_on_year'                    => 'L\'any de la transacció no és ":value"',
@@ -1278,6 +1282,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Afegir notes a la descripció',
     'rule_action_move_descr_to_notes'                     => 'Substituir les notes per la descripció',
     'rule_action_move_notes_to_descr'                     => 'Substituir la descripció per les notes',
+    'rule_action_set_destination_to_cash_choice'          => 'Establir el compte destí a (efectiu)',
+    'rule_action_set_source_to_cash_choice'               => 'Establir el compte font a (efectiu)',
     'rulegroup_for_bills_title'                           => 'Grup de regles per factures',
     'rulegroup_for_bills_description'                     => 'Un grup de regles especial per totes les regles que involucren factures.',
     'rule_for_bill_title'                                 => 'Regla autogenerada per la factura ":name"',
@@ -1566,7 +1572,7 @@ return [
     'list_all_attachments'                      => 'Llistat de tots els adjunts',
 
     // transaction index
-    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
+    'is_reconciled_fields_dropped'              => 'Com aquesta transacció està reconciliada, no podràs actualitzar els comptes, ni les quantitats.',
     'title_expenses'                            => 'Despeses',
     'title_withdrawal'                          => 'Despeses',
     'title_revenue'                             => 'Ingressos / salari',
@@ -1634,8 +1640,8 @@ return [
     'create_currency'                           => 'Crear una nova moneda',
     'store_currency'                            => 'Guardar nova moneda',
     'update_currency'                           => 'Actualitza la moneda',
-    'new_default_currency'                      => '":name" is now the default currency.',
-    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
+    'new_default_currency'                      => '":name" està ara a la moneda per defecte.',
+    'default_currency_failed'                   => 'No s\'ha pogut establir ":name" com a la moneda per defecte. Per favor, revisa els registres.',
     'cannot_delete_currency'                    => 'No es pot eliminar :name perquè encara s\'utilitza.',
     'cannot_delete_fallback_currency'           => ':name és la moneda alternativa del sistema i no es pot eliminar.',
     'cannot_disable_currency_journals'          => 'No es pot deshabilitar :name perquè les transaccions encara la fan servir.',
@@ -1661,9 +1667,9 @@ return [
     'disable_currency'                          => 'Deshabilitar',
     'currencies_default_disabled'               => 'La majoria d\'aquestes monedes estan deshabilitades per defecte. Per utilitzar-les, les has d\'habilitar primer.',
     'currency_is_now_enabled'                   => 'La moneda ":name" s\'ha habilitat',
-    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
+    'could_not_enable_currency'                 => 'No s\'ha pogut habilitar la moneda ":name". Per favor, revisa els registres.',
     'currency_is_now_disabled'                  => 'La moneda ":name" s\'ha deshabilitat',
-    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
+    'could_not_disable_currency'                => 'No s\'ha pogut deshabilitar la moneda ":name". Pot ser encara està en ús?',
 
     // forms:
     'mandatoryFields'                           => 'Camps obligatoris',
@@ -1949,7 +1955,7 @@ return [
 
 
     // transactions:
-    'unreconcile'                               => 'Undo reconciliation',
+    'unreconcile'                               => 'Desfés la reconciliació',
     'update_withdrawal'                         => 'Actualitzar retirada',
     'update_deposit'                            => 'Actualitzar ingrés',
     'update_transaction'                        => 'Actualitzar transacció',
@@ -2769,3 +2775,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

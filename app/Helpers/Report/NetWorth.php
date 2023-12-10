@@ -36,7 +36,6 @@ use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use JsonException;
 
 /**
  * This class can handle both request with and without a user group and will return the appropriate repository when
@@ -54,6 +53,11 @@ class NetWorth implements NetWorthInterface
     private null | UserGroup            $userGroup;
 
     /**
+     * This method collects the user's net worth in ALL the user's currencies
+     * (1, 4 and 8) and also in the 'native' currency for ease of use.
+     *
+     * The set of accounts has to be fed to it.
+     *
      * @param Collection $accounts
      * @param Carbon     $date
      *
@@ -81,16 +85,16 @@ class NetWorth implements NetWorthInterface
             'native' => [
                 'balance'                 => '0',
                 'native_balance'          => '0',
-                'currency_id'             => (int)$default->id,
+                'currency_id'             => $default->id,
                 'currency_code'           => $default->code,
                 'currency_name'           => $default->name,
                 'currency_symbol'         => $default->symbol,
-                'currency_decimal_places' => (int)$default->decimal_places,
-                'native_id'               => (int)$default->id,
+                'currency_decimal_places' => $default->decimal_places,
+                'native_id'               => $default->id,
                 'native_code'             => $default->code,
                 'native_name'             => $default->name,
                 'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => (int)$default->decimal_places,
+                'native_decimal_places'   => $default->decimal_places,
             ],
         ];
         $balances = app('steam')->balancesByAccountsConverted($accounts, $date);
@@ -98,35 +102,38 @@ class NetWorth implements NetWorthInterface
         /** @var Account $account */
         foreach ($accounts as $account) {
             app('log')->debug(sprintf('Now at account #%d ("%s")', $account->id, $account->name));
-            $currency      = $this->getRepository()->getAccountCurrency($account);
-            $currencyId    = (int)$currency->id;
+            $currency = $this->getRepository()->getAccountCurrency($account);
+            if (null === $currency) {
+                $currency = app('amount')->getDefaultCurrency();
+            }
+            $currencyId    = $currency->id;
             $balance       = '0';
             $nativeBalance = '0';
-            if (array_key_exists((int)$account->id, $balances)) {
-                $balance       = $balances[(int)$account->id]['balance'] ?? '0';
-                $nativeBalance = $balances[(int)$account->id]['native_balance'] ?? '0';
+            if (array_key_exists($account->id, $balances)) {
+                $balance       = $balances[$account->id]['balance'] ?? '0';
+                $nativeBalance = $balances[$account->id]['native_balance'] ?? '0';
             }
             app('log')->debug(sprintf('Balance is %s, native balance is %s', $balance, $nativeBalance));
             // always subtract virtual balance
-            $virtualBalance = (string)$account->virtual_balance;
+            $virtualBalance = $account->virtual_balance;
             if ('' !== $virtualBalance) {
                 $balance              = bcsub($balance, $virtualBalance);
                 $nativeVirtualBalance = $converter->convert($default, $currency, $account->created_at, $virtualBalance);
                 $nativeBalance        = bcsub($nativeBalance, $nativeVirtualBalance);
             }
-            $netWorth[$currencyId] = $netWorth[$currencyId] ?? [
+            $netWorth[$currencyId] ??= [
                 'balance'                 => '0',
                 'native_balance'          => '0',
                 'currency_id'             => $currencyId,
                 'currency_code'           => $currency->code,
                 'currency_name'           => $currency->name,
                 'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => (int)$currency->decimal_places,
-                'native_id'               => (int)$default->id,
+                'currency_decimal_places' => $currency->decimal_places,
+                'native_id'               => $default->id,
                 'native_code'             => $default->code,
                 'native_name'             => $default->name,
                 'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => (int)$default->decimal_places,
+                'native_decimal_places'   => $default->decimal_places,
             ];
 
             $netWorth[$currencyId]['balance']        = bcadd($balance, $netWorth[$currencyId]['balance']);
@@ -151,93 +158,11 @@ class NetWorth implements NetWorthInterface
     }
 
     /**
-     * Returns the user's net worth in an array with the following layout:
-     *
-     * -
-     *  - currency: TransactionCurrency object
-     *  - date: the current date
-     *  - amount: the user's net worth in that currency.
-     *
-     * This repeats for each currency the user has transactions in.
-     * Result of this method is cached.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $date
-     *
-     * @return array
-     * @throws JsonException
-     * @throws FireflyException
-     * @deprecated
-     */
-    public function getNetWorthByCurrency(Collection $accounts, Carbon $date): array
-    {
-        // start in the past, end in the future? use $date
-        $cache = new CacheProperties();
-        $cache->addProperty($date);
-        $cache->addProperty('net-worth-by-currency');
-        $cache->addProperty(implode(',', $accounts->pluck('id')->toArray()));
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
-        $netWorth = [];
-        $result   = [];
-        //        Log::debug(sprintf('Now in getNetWorthByCurrency(%s)', $date->format('Y-m-d')));
-
-        // get default currency
-        $default = app('amount')->getDefaultCurrencyByUser($this->user);
-
-        // get all balances:
-        $balances = app('steam')->balancesByAccounts($accounts, $date);
-
-        // get the preferred currency for this account
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            //            Log::debug(sprintf('Now at account #%d: "%s"', $account->id, $account->name));
-            $currencyId = (int)$this->getRepository()->getMetaValue($account, 'currency_id');
-            $currencyId = 0 === $currencyId ? $default->id : $currencyId;
-
-            //            Log::debug(sprintf('Currency ID is #%d', $currencyId));
-
-            // balance in array:
-            $balance = $balances[$account->id] ?? '0';
-
-            //Log::debug(sprintf('Balance for %s is %s', $date->format('Y-m-d'), $balance));
-
-            // always subtract virtual balance.
-            $virtualBalance = (string)$account->virtual_balance;
-            if ('' !== $virtualBalance) {
-                $balance = bcsub($balance, $virtualBalance);
-            }
-
-            //            Log::debug(sprintf('Balance corrected to %s because of virtual balance (%s)', $balance, $virtualBalance));
-
-            if (!array_key_exists($currencyId, $netWorth)) {
-                $netWorth[$currencyId] = '0';
-            }
-            $netWorth[$currencyId] = bcadd($balance, $netWorth[$currencyId]);
-            //            Log::debug(sprintf('Total net worth for currency #%d is %s', $currencyId, $netWorth[$currencyId]));
-        }
-        ksort($netWorth);
-
-        // loop results and add currency information:
-        foreach ($netWorth as $currencyId => $balance) {
-            $result[] = [
-                'currency' => $this->currencyRepos->find($currencyId),
-                'balance'  => $balance,
-            ];
-        }
-        $cache->store($result);
-
-        return $result;
-    }
-
-    /**
      * @param User|Authenticatable|null $user
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null === $user) {
+        if (!($user instanceof User)) {
             return;
         }
         $this->user      = $user;
@@ -263,6 +188,7 @@ class NetWorth implements NetWorthInterface
 
     /**
      * @inheritDoc
+     * @deprecated
      */
     public function sumNetWorthByCurrency(Carbon $date): array
     {
@@ -277,12 +203,12 @@ class NetWorth implements NetWorthInterface
             $balance  = $balances[$account->id] ?? '0';
 
             // always subtract virtual balance.
-            $virtualBalance = (string)$account->virtual_balance;
+            $virtualBalance = $account->virtual_balance;
             if ('' !== $virtualBalance) {
                 $balance = bcsub($balance, $virtualBalance);
             }
 
-            $return[$currency->id]        = $return[$currency->id] ?? [
+            $return[$currency->id]        ??= [
                 'id'             => (string)$currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,

@@ -22,7 +22,7 @@ jobs:
       - name: Setup PHP with Xdebug
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.3'
           coverage: xdebug
           extensions: >-
             bcmath
@@ -42,14 +42,23 @@ jobs:
             xml
             xmlwriter
 
+      - name: Copy standard configuration
+        run: cp .env.testing .env
+
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction --no-progress --no-scripts
 
+      - name: PHPStan
+        run: .ci/phpstan.sh
+
+      - name: PHPMD
+        run: .ci/phpmd.sh
+
+      - name: PHP CS Fixer
+        run: .ci/phpcs.sh
+
       - name: "Create database file"
         run: touch storage/database/database.sqlite
-
-      - name: "Create the database"
-        run: php artisan firefly-iii:create-database
 
       - name: "Upgrades the database to the latest version"
         run: php artisan firefly-iii:upgrade-database

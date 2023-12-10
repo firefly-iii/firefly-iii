@@ -48,7 +48,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**
@@ -86,7 +85,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     public function destroy(TransactionGroup $group): void
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         $service = new TransactionGroupDestroyService();
         $service->destroy($group);
     }
@@ -176,8 +175,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $result = [];
         /** @var Attachment $attachment */
         foreach ($set as $attachment) {
-            $journalId              = (int)$attachment->attachable_id;
-            $result[$journalId]     = $result[$journalId] ?? [];
+            $journalId              = $attachment->attachable_id;
+            $result[$journalId]     ??= [];
             $current                = $attachment->toArray();
             $current['file_exists'] = true;
             $current['notes']       = $repository->getNoteText($attachment);
@@ -194,7 +193,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof user) {
             $this->user = $user;
         }
     }
@@ -242,7 +241,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         /** @var TransactionJournalLink $entry */
         foreach ($set as $entry) {
             $journalId          = in_array($entry->source_id, $journals, true) ? $entry->source_id : $entry->destination_id;
-            $return[$journalId] = $return[$journalId] ?? [];
+            $return[$journalId] ??= [];
 
             // phpstan: the editable field is provided by the query.
 
@@ -402,7 +401,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     {
         $return   = [];
         $journals = $group->transactionJournals->pluck('id')->toArray();
-        $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        $currency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         $data     = PiggyBankEvent::whereIn('transaction_journal_id', $journals)
                                   ->with('piggyBank', 'piggyBank.account')
                                   ->get(['piggy_bank_events.*']);
@@ -418,8 +417,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             if (null !== $currencyPreference) {
                 $currency = TransactionCurrency::where('id', $currencyPreference->data)->first();
             }
-            $journalId          = (int)$row->transaction_journal_id;
-            $return[$journalId] = $return[$journalId] ?? [];
+            $journalId          = $row->transaction_journal_id;
+            $return[$journalId] ??= [];
 
             $return[$journalId][] = [
                 'piggy'    => $row->piggyBank->name,
@@ -480,8 +479,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             throw new DuplicateTransactionException($e->getMessage(), 0, $e);
         } catch (FireflyException $e) {
             app('log')->warning('Group repository caught group factory with an exception!');
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
         }
     }

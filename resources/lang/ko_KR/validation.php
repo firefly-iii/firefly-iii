@@ -44,6 +44,7 @@ return [
     'invalid_query_currency'         => '쿼리에 허용되지 않는 다른 통화 설정이 있는 계정이 포함되어 있습니다.',
     'iban'                           => '유효한 IBAN이 아닙니다.',
     'zero_or_more'                   => '값은 음수가 될 수 없습니다.',
+    'no_asset_account'               => 'This is not an asset account.',
     'date_or_time'                   => '유효한 날짜 또는 시간 값(ISO 8601) 이어야 합니다.',
     'source_equals_destination'      => '소스 계정이 대상 계정과 같습니다.',
     'unique_account_number_for_user' => '이 계좌 번호는 이미 사용 중인 것 같습니다.',
@@ -192,7 +193,7 @@ return [
  */
 
 
-    'secure_password'             => '안전한 비밀번호가 아닙니다. 다시 시도해 주세요. 자세한 내용은 https://bit.ly/FF3-password-security 를 ​​방문하세요.',
+    'secure_password'             => "안전한 비밀번호가 아닙니다. 다시 시도해 주세요. 자세한 내용은 https://bit.ly/FF3-password-security 를 \u{200b}\u{200b}방문하세요.",
     'valid_recurrence_rep_type'   => '반복 거래에 대한 반복 유형이 잘못되었습니다.',
     'valid_recurrence_rep_moment' => '이 유형의 반복에 대한 반복 시점이 잘못되었습니다.',
     'invalid_account_info'        => '잘못된 계정 정보입니다.',
@@ -269,7 +270,7 @@ return [
     'transfer_source_bad_data'  => '[c] ID ":id" 또는 이름 ":name"을 검색할 때 유효한 소스 계정을 찾을 수 없습니다.',
     'transfer_dest_need_data'   => '[c] 계속하려면 유효한 대상 계정 ID 및/또는 유효한 대상 계정 이름이 필요합니다.',
     'transfer_dest_bad_data'    => 'ID ":id" 또는 이름 ":name"을 검색할 때 유효한 대상 계정을 찾을 수 없습니다.',
-    'need_id_in_edit'           => '각 분할에는 transaction_journal_id(유효한 ​​ID 또는 0) 가 있어야 합니다.',
+    'need_id_in_edit'           => "각 분할에는 transaction_journal_id(유효한 \u{200b}\u{200b}ID 또는 0) 가 있어야 합니다.",
 
     'ob_source_need_data'           => '계속하려면 유효한 소스 계정 ID 및/또는 유효한 소스 계정 이름이 필요합니다.',
     'lc_source_need_data'           => '계속하려면 유효한 소스 계정 ID가 필요합니다.',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

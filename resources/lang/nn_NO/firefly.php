@@ -469,6 +469,10 @@ return [
     'search_modifier_transaction_type'                    => 'Transaksjonstype er ":value"',
     'search_modifier_not_transaction_type'                => 'Transaksjonstype er ikkje ":value"',
     'search_modifier_tag_is'                              => 'Nøkkelordet er «:value»',
+    'search_modifier_tag_contains'                        => 'Tag contains ":value"',
+    'search_modifier_not_tag_contains'                    => 'Tag does not contain ":value"',
+    'search_modifier_tag_ends'                            => 'Tag ends with ":value"',
+    'search_modifier_tag_starts'                          => 'Tag starts with ":value"',
     'search_modifier_not_tag_is'                          => 'Ingen nøkkelord er «:value»',
     'search_modifier_date_on_year'                        => 'Transaksjonen er i år ":value"',
     'search_modifier_not_date_on_year'                    => 'Transaksjonen er ikkje i året ":value"',
@@ -1278,6 +1282,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Legg notat til beskrivinga',
     'rule_action_move_descr_to_notes'                     => 'Erstatt notat med beskriving',
     'rule_action_move_notes_to_descr'                     => 'Erstatt beskriving med notat',
+    'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
+    'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => 'Regelgruppe for rekningar',
     'rulegroup_for_bills_description'                     => 'Ein spesiell regelgruppe for alle reglane som involverer rekningar.',
     'rule_for_bill_title'                                 => 'Automatisk generert regel for rekning ":name"',
@@ -1679,8 +1685,8 @@ return [
     'yearly_budgets'                            => 'Yearly budgets',
     'other_budgets'                             => 'Custom timed budgets',
     'budget_limit_not_in_range'                 => 'Dette beløpet gjeld frå :start til :end:',
-    'total_available_budget'                    => 'Total available budget (between :start and :end)',
-    'total_available_budget_in_currency'        => 'Total available budget in :currency',
+    'total_available_budget'                    => 'Totalt tilgjengeleg budsjett (mellom :start og :end)',
+    'total_available_budget_in_currency'        => 'Totalt tilgjengeleg budsjett i :currency',
     'see_below'                                 => 'sjå nedanfor',
     'create_new_budget'                         => 'Opprett eit nytt budsjett',
     'store_new_budget'                          => 'Lagra nytt budsjett',
@@ -1712,7 +1718,7 @@ return [
     'update_budget_amount_range'                => 'Oppdater (forventa) tilgjengeleg beløp mellom :start og :end',
     'set_budget_limit_title'                    => 'Sett budsjettert beløp for budsjett :budget mellom :start og :end',
     'set_budget_limit'                          => 'Angi budsjettert beløp',
-    'budget_period_navigator'                   => 'Periodenavigatør',
+    'budget_period_navigator'                   => 'Periodenavigering',
     'info_on_available_amount'                  => 'Kva har eg tilgjengeleg?',
     'available_amount_indication'               => 'Bruk desse beløpa for å få ein indikasjon på kva ditt totale budsjett kan vera.',
     'suggested'                                 => 'Foreslått',
@@ -2769,3 +2775,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

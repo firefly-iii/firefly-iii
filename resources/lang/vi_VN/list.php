@@ -55,10 +55,10 @@ return [
     'lastActivity'          => 'Hoạt động cuối cùng',
     'balanceDiff'           => 'Số dư chênh lệch',
     'other_meta_data'       => 'Dữ liệu khác',
-    'invited_at'            => 'Invited at',
-    'expires'               => 'Invitation expires',
-    'invited_by'            => 'Invited by',
-    'invite_link'           => 'Invite link',
+    'invited_at'            => 'Được mời lúc',
+    'expires'               => 'Lời mời đã quá hạn',
+    'invited_by'            => 'Được mời bởi',
+    'invite_link'           => 'Link mời',
     'account_type'          => 'Loại tài khoản',
     'created_at'            => 'Được tạo tại',
     'account'               => 'Tài khoản',
@@ -105,7 +105,7 @@ return [
     'type'                    => 'Loại',
     'completed'               => 'Đã hoàn thành',
     'iban'                    => 'IBAN',
-    'account_number'          => 'Account number',
+    'account_number'          => 'Số tài khoản',
     'paid_current_period'     => 'Được trả ở thời gian này',
     'email'                   => 'Thư điện tử',
     'registered_at'           => 'Đã đăng ký tại',
@@ -175,16 +175,16 @@ return [
     'interest'            => 'Lãi',
     'interest_period'     => 'Chu kỳ lãi',
     'liability_type'      => 'Loại trách nhiệm pháp lý',
-    'liability_direction' => 'Liability in/out',
+    'liability_direction' => 'Vay vào/ra',
     'end_date'            => 'Ngày kết thúc',
     'payment_info'        => 'Thông tin thanh toán',
     'expected_info'       => 'Giao dịch dự kiến tiếp theo',
     'start_date'          => 'Ngày bắt đầu',
-    'trigger'             => 'Trigger',
-    'response'            => 'Response',
-    'delivery'            => 'Delivery',
+    'trigger'             => 'Kích hoạt',
+    'response'            => 'Đáp lại',
+    'delivery'            => 'Phân phối',
     'url'                 => 'URL',
-    'secret'              => 'Secret',
+    'secret'              => 'Mã bí mật',
 
 ];
 /*
@@ -197,3 +197,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

@@ -78,12 +78,12 @@ class ExchangeRateConverter
     private function getRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
     {
         // first attempt:
-        $rate = $this->getFromDB((int)$from->id, (int)$to->id, $date->format('Y-m-d'));
+        $rate = $this->getFromDB($from->id, $to->id, $date->format('Y-m-d'));
         if (null !== $rate) {
             return $rate;
         }
         // no result. perhaps the other way around?
-        $rate = $this->getFromDB((int)$to->id, (int)$from->id, $date->format('Y-m-d'));
+        $rate = $this->getFromDB($to->id, $from->id, $date->format('Y-m-d'));
         if (null !== $rate) {
             return bcdiv('1', $rate);
         }
@@ -123,7 +123,7 @@ class ExchangeRateConverter
         }
         app('log')->debug(sprintf('Going to get rate #%d->#%d (%s) from DB.', $from, $to, $date));
 
-        /** @var CurrencyExchangeRate $result */
+        /** @var CurrencyExchangeRate|null $result */
         $result = auth()->user()
                         ->currencyExchangeRates()
                         ->where('from_currency_id', $from)
@@ -151,16 +151,16 @@ class ExchangeRateConverter
     private function getEuroRate(TransactionCurrency $currency, Carbon $date): string
     {
         $euroId = $this->getEuroId();
-        if ($euroId === (int)$currency->id) {
+        if ($euroId === $currency->id) {
             return '1';
         }
-        $rate = $this->getFromDB((int)$currency->id, $euroId, $date->format('Y-m-d'));
+        $rate = $this->getFromDB($currency->id, $euroId, $date->format('Y-m-d'));
 
         if (null !== $rate) {
             //            app('log')->debug(sprintf('Rate for %s to EUR is %s.', $currency->code, $rate));
             return $rate;
         }
-        $rate = $this->getFromDB($euroId, (int)$currency->id, $date->format('Y-m-d'));
+        $rate = $this->getFromDB($euroId, $currency->id, $date->format('Y-m-d'));
         if (null !== $rate) {
             return bcdiv('1', $rate);
             //            app('log')->debug(sprintf('Inverted rate for %s to EUR is %s.', $currency->code, $rate));
@@ -194,7 +194,7 @@ class ExchangeRateConverter
         if (null === $euro) {
             throw new FireflyException('Cannot find EUR in system, cannot do currency conversion.');
         }
-        $cache->store((int)$euro->id);
-        return (int)$euro->id;
+        $cache->store($euro->id);
+        return $euro->id;
     }
 }

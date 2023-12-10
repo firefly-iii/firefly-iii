@@ -44,6 +44,7 @@ return [
     'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
     'iban'                           => 'Ini bukan IBAN yang valid.',
     'zero_or_more'                   => 'Nilai tidak bisa negatif.',
+    'no_asset_account'               => 'This is not an asset account.',
     'date_or_time'                   => 'Nilainya harus berupa nilai tanggal atau waktu yang valid (ISO 8601).',
     'source_equals_destination'      => 'Akun sumber sama dengan akun tujuan.',
     'unique_account_number_for_user' => 'Sepertinya nomor rekening ini sudah digunakan.',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

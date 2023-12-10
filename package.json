@@ -6,7 +6,7 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "axios": "^1.5.1",
+        "axios": "^1.6.1",
         "laravel-vite-plugin": "^0.8.1",
         "sass": "^1.69.4",
         "vite": "^4.5.1",
@@ -15,7 +15,7 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^6.4.0",
         "@popperjs/core": "^2.11.8",
-        "alpinejs": "^3.13.2",
+        "alpinejs": "^3.13.3",
         "bootstrap": "^5.3.0",
         "bootstrap5-autocomplete": "^1.1.22",
         "chart.js": "^4.4.0",

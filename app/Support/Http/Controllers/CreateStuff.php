@@ -112,12 +112,12 @@ trait CreateStuff
             return;
         }
 
-        $keys = RSA::createKey(4096);
+        $key = RSA::createKey(4096);
 
         Log::alert('NO OAuth keys were found. They have been created.');
 
-        file_put_contents($publicKey, $keys['publickey']);
-        file_put_contents($privateKey, $keys['privatekey']);
+        file_put_contents($publicKey, (string)$key->getPublicKey());
+        file_put_contents($privateKey, $key->toString('PKCS1'));
     }
 
     /**

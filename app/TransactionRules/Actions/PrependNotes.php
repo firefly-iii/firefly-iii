@@ -27,7 +27,6 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class PrependNotes.
@@ -61,7 +60,7 @@ class PrependNotes implements ActionInterface
             $dbNote->text          = '';
         }
         $before = $dbNote->text;
-        Log::debug(sprintf('RuleAction PrependNotes prepended "%s" to "%s".', $this->action->action_value, $dbNote->text));
+        app('log')->debug(sprintf('RuleAction PrependNotes prepended "%s" to "%s".', $this->action->action_value, $dbNote->text));
         $text         = sprintf('%s%s', $this->action->action_value, $dbNote->text);
         $dbNote->text = $text;
         $dbNote->save();

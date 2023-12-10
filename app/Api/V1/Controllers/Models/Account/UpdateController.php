@@ -29,16 +29,14 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
-use Preferences;
 
 /**
  * Class UpdateController
  */
 class UpdateController extends Controller
 {
-    public const RESOURCE_KEY = 'accounts';
+    public const string RESOURCE_KEY = 'accounts';
 
     private AccountRepositoryInterface $repository;
 
@@ -73,13 +71,13 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Account $account): JsonResponse
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         $data         = $request->getUpdateData();
         $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $account      = $this->repository->update($account, $data);
         $manager      = $this->getManager();
         $account->refresh();
-        Preferences::mark();
+        app('preferences')->mark();
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);

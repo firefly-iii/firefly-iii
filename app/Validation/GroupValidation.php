@@ -27,7 +27,6 @@ namespace FireflyIII\Validation;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
@@ -60,7 +59,7 @@ trait GroupValidation
             'source_number',
             'destination_number',
         ];
-        /** @var array $transaction */
+        /** @var array|null $transaction */
         foreach ($transactions as $index => $transaction) {
             if (!is_array($transaction)) {
                 throw new FireflyException('Invalid data submitted: transaction is not array.');
@@ -107,7 +106,7 @@ trait GroupValidation
         $count = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
                             ->leftJoin('transaction_groups', 'transaction_groups.id', 'transaction_journals.transaction_group_id')
                             ->where('transaction_journals.transaction_group_id', $transactionGroup->id)
-                            ->where('transactions.reconciled', 1)->where('transactions.amount', '<', 0)->count(['transactions.id']);
+                            ->where('transactions.reconciled', 1)->where('transactions.amount', '<', 0)->count('transactions.id');
         if (0 === $count) {
             app('log')->debug(sprintf('Transaction is not reconciled, done with %s', __METHOD__));
             return;
@@ -142,7 +141,7 @@ trait GroupValidation
         if ($validator->errors()->count() > 0) {
             return;
         }
-        Log::debug('Now in GroupValidation::validateDescriptions()');
+        app('log')->debug('Now in GroupValidation::validateDescriptions()');
         $transactions      = $this->getTransactionsArray($validator);
         $validDescriptions = 0;
         foreach ($transactions as $transaction) {
@@ -168,7 +167,7 @@ trait GroupValidation
         if ($validator->errors()->count() > 0) {
             return;
         }
-        Log::debug('Now in validateGroupDescription()');
+        app('log')->debug('Now in validateGroupDescription()');
         $data         = $validator->getData();
         $transactions = $this->getTransactionsArray($validator);
 
@@ -188,12 +187,12 @@ trait GroupValidation
      */
     protected function validateJournalIds(Validator $validator, TransactionGroup $transactionGroup): void
     {
-        Log::debug(sprintf('Now in GroupValidation::validateJournalIds(%d)', $transactionGroup->id));
+        app('log')->debug(sprintf('Now in GroupValidation::validateJournalIds(%d)', $transactionGroup->id));
         $transactions = $this->getTransactionsArray($validator);
 
         if (count($transactions) < 2) {
             // no need for validation.
-            Log::debug(sprintf('%d transaction(s) in submission, can skip this check.', count($transactions)));
+            app('log')->debug(sprintf('%d transaction(s) in submission, can skip this check.', count($transactions)));
 
             return;
         }
@@ -222,15 +221,15 @@ trait GroupValidation
         if (array_key_exists('transaction_journal_id', $transaction)) {
             $journalId = $transaction['transaction_journal_id'];
         }
-        Log::debug(sprintf('Now in validateJournalId(%d, %d)', $index, $journalId));
+        app('log')->debug(sprintf('Now in validateJournalId(%d, %d)', $index, $journalId));
         if (0 === $journalId || '' === $journalId || '0' === $journalId) {
-            Log::debug('Submitted 0, will accept to be used in a new transaction.');
+            app('log')->debug('Submitted 0, will accept to be used in a new transaction.');
 
             return;
         }
         $journalId = (int)$journalId;
         $count     = $transactionGroup->transactionJournals()->where('transaction_journals.id', $journalId)->count();
-        if (null === $journalId || 0 === $count) {
+        if (0 === $journalId || 0 === $count) {
             app('log')->warning(sprintf('Transaction group #%d has %d journals with ID %d', $transactionGroup->id, $count, $journalId));
             app('log')->warning('Invalid submission: Each split must have transaction_journal_id (either valid ID or 0).');
             $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string)trans('validation.need_id_in_edit'));

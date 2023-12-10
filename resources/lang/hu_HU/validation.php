@@ -44,6 +44,7 @@ return [
     'invalid_query_currency'         => 'Your query contains accounts that have different currency settings, which is not allowed.',
     'iban'                           => 'Ez nem egy érvényes IBAN számlaszám.',
     'zero_or_more'                   => 'Az érték nem lehet negatív.',
+    'no_asset_account'               => 'Ez nem egy eszközszámla.',
     'date_or_time'                   => 'Az értéknek érvényes dátum vagy időformátumúnak kell lennie (ISO 8601).',
     'source_equals_destination'      => 'A forrásszámla egyenlő a célszámlával.',
     'unique_account_number_for_user' => 'Úgy tűnik, hogy ez a számlaszám már használatban van.',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

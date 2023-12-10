@@ -98,27 +98,27 @@ class MassController extends Controller
      */
     public function destroy(MassDeleteJournalRequest $request)
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         $ids   = $request->get('confirm_mass_delete');
         $count = 0;
         if (is_array($ids)) {
-            Log::debug('Array of IDs', $ids);
+            app('log')->debug('Array of IDs', $ids);
             /** @var string $journalId */
             foreach ($ids as $journalId) {
-                Log::debug(sprintf('Searching for ID #%d', $journalId));
-                /** @var TransactionJournal $journal */
+                app('log')->debug(sprintf('Searching for ID #%d', $journalId));
+                /** @var TransactionJournal|null $journal */
                 $journal = $this->repository->find((int)$journalId);
-                if (null !== $journal && (int)$journalId === (int)$journal->id) {
+                if (null !== $journal && (int)$journalId === $journal->id) {
                     $this->repository->destroyJournal($journal);
                     ++$count;
-                    Log::debug(sprintf('Deleted transaction journal #%d', $journalId));
+                    app('log')->debug(sprintf('Deleted transaction journal #%d', $journalId));
                     continue;
                 }
-                Log::debug(sprintf('Could not find transaction journal #%d', $journalId));
+                app('log')->debug(sprintf('Could not find transaction journal #%d', $journalId));
             }
         }
         app('preferences')->mark();
-        session()->flash('success', (string)trans_choice('firefly.mass_deleted_transactions_success', $count));
+        session()->flash('success', trans_choice('firefly.mass_deleted_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUrl('transactions.mass-delete.url'));
@@ -190,7 +190,7 @@ class MassController extends Controller
         }
 
         app('preferences')->mark();
-        session()->flash('success', (string)trans_choice('firefly.mass_edited_transactions_success', $count));
+        session()->flash('success', trans_choice('firefly.mass_edited_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUrl('transactions.mass-edit.url'));
@@ -224,7 +224,7 @@ class MassController extends Controller
             'amount'           => $this->getStringFromRequest($request, $journal->id, 'amount'),
             'foreign_amount'   => $this->getStringFromRequest($request, $journal->id, 'foreign_amount'),
         ];
-        Log::debug(sprintf('Will update journal #%d with data.', $journal->id), $data);
+        app('log')->debug(sprintf('Will update journal #%d with data.', $journal->id), $data);
 
         // call service to update.
         $service->setData($data);
@@ -252,7 +252,8 @@ class MassController extends Controller
         try {
             $carbon = Carbon::parse($value[$journalId]);
         } catch (InvalidArgumentException $e) {
-            $e->getMessage();
+            Log::warning(sprintf('Could not parse "%s" but dont mind', $value[$journalId]));
+            Log::warning($e->getMessage());
 
             return null;
         }

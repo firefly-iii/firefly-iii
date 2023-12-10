@@ -33,8 +33,8 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class AutocompleteRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * @return array

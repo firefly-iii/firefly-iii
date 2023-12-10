@@ -34,9 +34,9 @@ use Illuminate\Validation\Validator;
  */
 class BudgetFormStoreRequest extends FormRequest
 {
+    use ChecksLogin;
     use ConvertsDataTypes;
     use ValidatesAutoBudgetRequest;
-    use ChecksLogin;
 
     /**
      * Returns the data required by the controller.

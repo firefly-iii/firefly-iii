@@ -56,6 +56,8 @@ return [
     'cannot_find_subscription'                    => 'Firefly IIIはサブスクリプション「":name"」を見つけられませんでした',
     'no_notes_to_move'                            => '取引には概要に設定できるメモがありません',
     'no_tags_to_remove'                           => '取引には削除できるタグがありません',
+    'not_withdrawal'                              => 'The transaction is not a withdrawal',
+    'not_deposit'                                 => 'The transaction is not a deposit',
     'cannot_find_tag'                             => 'Firefly IIIはタグ「:tag」を見つけられませんでした',
     'cannot_find_asset'                           => 'Firefly IIIは資産口座「:name」を見つけられませんでした',
     'cannot_find_accounts'                        => 'Firefly IIIは引き出し元または預け入れ先口座を見つけられませんでした',

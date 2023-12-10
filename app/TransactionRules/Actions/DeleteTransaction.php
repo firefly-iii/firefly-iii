@@ -29,7 +29,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class DeleteTransaction.
@@ -57,13 +56,14 @@ class DeleteTransaction implements ActionInterface
 
         // destroy entire group.
         if (1 === $count) {
-            Log::debug(
+            app('log')->debug(
                 sprintf(
                     'RuleAction DeleteTransaction DELETED the entire transaction group of journal #%d ("%s").',
                     $journal['transaction_journal_id'],
                     $journal['description']
                 )
             );
+            /** @var TransactionGroup $group */
             $group   = TransactionGroup::find($journal['transaction_group_id']);
             $service = app(TransactionGroupDestroyService::class);
             $service->destroy($group);
@@ -72,12 +72,13 @@ class DeleteTransaction implements ActionInterface
 
             return true;
         }
-        Log::debug(
+        app('log')->debug(
             sprintf('RuleAction DeleteTransaction DELETED transaction journal #%d ("%s").', $journal['transaction_journal_id'], $journal['description'])
         );
 
         // trigger delete factory:
-        $object = TransactionJournal::find($journal['transaction_group_id']);
+        /** @var TransactionJournal|null $object */
+        $object = TransactionJournal::find($journal['transaction_journal_id']);
         if (null !== $object) {
             /** @var JournalDestroyService $service */
             $service = app(JournalDestroyService::class);

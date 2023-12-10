@@ -38,10 +38,10 @@ export function parseFromEntries(entries, transactionType) {
             current.currency_code = entry.currency_code;
 
             // if ID is set:
-            if ('' !== entry.source_account.id.toString()) {
+            if (typeof entry.source_account.id !== 'undefined' && '' !== entry.source_account.id.toString()) {
                 current.source_id = entry.source_account.id;
             }
-            if ('' !== entry.destination_account.id.toString()) {
+            if (typeof entry.destination_account.id !== 'undefined' && '' !== entry.destination_account.id.toString()) {
                 current.destination_id = entry.destination_account.id;
             }
 

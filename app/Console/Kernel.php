@@ -26,7 +26,6 @@ namespace FireflyIII\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Illuminate\Support\Facades\Log;
 
 /**
  * File to make sure commands work.
@@ -54,7 +53,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(
             static function () {
-                Log::error(
+                app('log')->error(
                     'Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions at https://docs.firefly-iii.org/'
                 );
                 echo "\n";

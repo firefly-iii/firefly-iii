@@ -33,7 +33,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -51,7 +50,7 @@ class Controller extends BaseController
 {
     use ValidatesUserGroupTrait;
 
-    protected const CONTENT_TYPE = 'application/vnd.api+json';
+    protected const string CONTENT_TYPE = 'application/vnd.api+json';
     protected ParameterBag $parameters;
 
     /**
@@ -103,16 +102,16 @@ class Controller extends BaseController
             try {
                 $date = request()->query->get($field);
             } catch (BadRequestException $e) {
-                Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $field));
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
+                app('log')->error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $field));
+                app('log')->error($e->getMessage());
+                app('log')->error($e->getTraceAsString());
             }
             if (null !== $date) {
                 try {
-                    $obj = Carbon::parse($date, config('app.timezone'));
+                    $obj = Carbon::parse((string)$date, config('app.timezone'));
                 } catch (InvalidDateException | InvalidFormatException $e) {
                     // don't care
-                    app('log')->warning(sprintf('Ignored invalid date "%s" in API v2 controller parameter check: %s', substr($date, 0, 20), $e->getMessage()));
+                    app('log')->warning(sprintf('Ignored invalid date "%s" in API v2 controller parameter check: %s', substr((string)$date, 0, 20), $e->getMessage()));
                 }
                 // out of range? set to null.
                 if (null !== $obj && ($obj->year <= 1900 || $obj->year > 2099)) {
@@ -128,8 +127,8 @@ class Controller extends BaseController
             try {
                 $value = request()->query->get($integer);
             } catch (BadRequestException $e) {
-                Log::error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $integer));
-                Log::error($e->getMessage());
+                app('log')->error(sprintf('Request field "%s" contains a non-scalar value. Value set to NULL.', $integer));
+                app('log')->error($e->getMessage());
                 $value = null;
             }
             if (null !== $value) {

@@ -51,27 +51,6 @@ interface NetWorthInterface
     public function byAccounts(Collection $accounts, Carbon $date): array;
 
     /**
-     * TODO unsure why this is deprecated.
-     *
-     * Returns the user's net worth in an array with the following layout:
-     *
-     * -
-     *  - currency: TransactionCurrency object
-     *  - date: the current date
-     *  - amount: the user's net worth in that currency.
-     *
-     * This repeats for each currency the user has transactions in.
-     * Result of this method is cached.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $date
-     *
-     * @return array
-     * @deprecated
-     */
-    public function getNetWorthByCurrency(Collection $accounts, Carbon $date): array;
-
-    /**
      * @param User|Authenticatable|null $user
      */
     public function setUser(User | Authenticatable | null $user): void;
@@ -89,6 +68,7 @@ interface NetWorthInterface
      * @param Carbon $date
      *
      * @return array
+     * @deprecated
      */
     public function sumNetWorthByCurrency(Carbon $date): array;
 }

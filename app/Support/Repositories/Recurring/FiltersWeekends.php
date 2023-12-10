@@ -27,7 +27,6 @@ namespace FireflyIII\Support\Repositories\Recurring;
 use Carbon\Carbon;
 use FireflyIII\Models\RecurrenceRepetition;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait FiltersWeekends
@@ -45,9 +44,9 @@ trait FiltersWeekends
      */
     protected function filterWeekends(RecurrenceRepetition $repetition, array $dates): array
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
-        if ((int)$repetition->weekend === RecurrenceRepetition::WEEKEND_DO_NOTHING) {
-            Log::debug('Repetition will not be filtered on weekend days.');
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        if ($repetition->weekend === RecurrenceRepetition::WEEKEND_DO_NOTHING) {
+            app('log')->debug('Repetition will not be filtered on weekend days.');
 
             return $dates;
         }
@@ -57,7 +56,7 @@ trait FiltersWeekends
             $isWeekend = $date->isWeekend();
             if (!$isWeekend) {
                 $return[] = clone $date;
-                //Log::debug(sprintf('Date is %s, not a weekend date.', $date->format('D d M Y')));
+                //app('log')->debug(sprintf('Date is %s, not a weekend date.', $date->format('D d M Y')));
                 continue;
             }
 
@@ -65,7 +64,7 @@ trait FiltersWeekends
             if ($repetition->weekend === RecurrenceRepetition::WEEKEND_TO_FRIDAY) {
                 $clone = clone $date;
                 $clone->addDays(5 - $date->dayOfWeekIso);
-                Log::debug(
+                app('log')->debug(
                     sprintf('Date is %s, and this is in the weekend, so corrected to %s (Friday).', $date->format('D d M Y'), $clone->format('D d M Y'))
                 );
                 $return[] = clone $clone;
@@ -76,22 +75,22 @@ trait FiltersWeekends
             if ($repetition->weekend === RecurrenceRepetition::WEEKEND_TO_MONDAY) {
                 $clone = clone $date;
                 $clone->addDays(8 - $date->dayOfWeekIso);
-                Log::debug(
+                app('log')->debug(
                     sprintf('Date is %s, and this is in the weekend, so corrected to %s (Monday).', $date->format('D d M Y'), $clone->format('D d M Y'))
                 );
                 $return[] = $clone;
                 continue;
             }
-            //Log::debug(sprintf('Date is %s, removed from final result', $date->format('D d M Y')));
+            //app('log')->debug(sprintf('Date is %s, removed from final result', $date->format('D d M Y')));
         }
 
         // filter unique dates
-        Log::debug(sprintf('Count before filtering: %d', count($dates)));
+        app('log')->debug(sprintf('Count before filtering: %d', count($dates)));
         $collection = new Collection($return);
         $filtered   = $collection->unique();
         $return     = $filtered->toArray();
 
-        Log::debug(sprintf('Count after filtering: %d', count($return)));
+        app('log')->debug(sprintf('Count after filtering: %d', count($return)));
 
         return $return;
     }

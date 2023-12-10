@@ -31,7 +31,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class LinkToBill.
@@ -56,6 +55,7 @@ class LinkToBill implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
+        /** @var User $user */
         $user = User::find($journal['user_id']);
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
@@ -67,7 +67,7 @@ class LinkToBill implements ActionInterface
             $count = DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])
                        ->where('bill_id', $bill->id)->count();
             if (0 !== $count) {
-                Log::error(
+                app('log')->error(
                     sprintf(
                         'RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": already set.',
                         $journal['transaction_journal_id'],
@@ -82,17 +82,18 @@ class LinkToBill implements ActionInterface
             DB::table('transaction_journals')
               ->where('id', '=', $journal['transaction_journal_id'])
               ->update(['bill_id' => $bill->id]);
-            Log::debug(
+            app('log')->debug(
                 sprintf('RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").', $journal['transaction_journal_id'], $bill->id, $bill->name)
             );
 
+            /** @var TransactionJournal $object */
             $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
             event(new TriggeredAuditLog($this->action->rule, $object, 'set_bill', null, $bill->name));
 
             return true;
         }
 
-        Log::error(
+        app('log')->error(
             sprintf(
                 'RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": no such bill found or not a withdrawal.',
                 $journal['transaction_journal_id'],

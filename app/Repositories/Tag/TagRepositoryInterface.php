@@ -189,6 +189,24 @@ interface TagRepositoryInterface
     public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array;
 
     /**
+     * Find one or more tags that start with the string in the query
+     *
+     * @param string $query
+     *
+     * @return Collection
+     */
+    public function tagEndsWith(string $query): Collection;
+
+    /**
+     * Find one or more tags that start with the string in the query
+     *
+     * @param string $query
+     *
+     * @return Collection
+     */
+    public function tagStartsWith(string $query): Collection;
+
+    /**
      * @param Tag    $tag
      * @param Carbon $start
      * @param Carbon $end

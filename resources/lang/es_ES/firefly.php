@@ -43,7 +43,7 @@ return [
     'split'                                => 'Separar',
     'single_split'                         => 'División',
     'clone'                                => 'Duplicar',
-    'clone_and_edit'                       => 'Clone and edit',
+    'clone_and_edit'                       => 'Clonar y editar',
     'confirm_action'                       => 'Confirmar acción',
     'last_seven_days'                      => 'Últimos siete días',
     'last_thirty_days'                     => 'Últimos treinta días',
@@ -97,7 +97,7 @@ return [
     'block_account_logout'                 => 'Tu sesión ha sido cerrada. Las cuentas bloqueadas no pueden utilizar este sitio. ¿Registrarte con una dirección válida de correo electrónico?',
     'flash_success'                        => '¡Operación correcta!',
     'flash_info'                           => 'Mensaje',
-    'flash_warning'                        => '¡Atención!',
+    'flash_warning'                        => '¡Advertencia!',
     'flash_error'                          => '¡Error!',
     'flash_danger'                         => '¡Peligro!',
     'flash_info_multiple'                  => 'Hay un mensaje | Hay :count mensajes',
@@ -107,7 +107,7 @@ return [
     'help_for_this_page_body'              => 'Puedes encontrar más información sobre esta página <a href="https://docs.firefly-iii.org/">en la documentación</a>.',
     'two_factor_welcome'                   => '¡Hola!',
     'two_factor_enter_code'                => 'Para continuar, introduce tu código de autenticación de dos pasos. La aplicación puede generarlo para usted.',
-    'two_factor_code_here'                 => 'Ingresar código aquí',
+    'two_factor_code_here'                 => 'Introducir el código aquí',
     'two_factor_title'                     => 'Autenticación en dos pasos',
     'authenticate'                         => 'Autentificar',
     'two_factor_forgot_title'              => 'Autenticación en dos pasos perdida',
@@ -469,6 +469,10 @@ return [
     'search_modifier_transaction_type'                    => 'El tipo de transacción es ":value"',
     'search_modifier_not_transaction_type'                => 'El tipo de transacción no es ":value"',
     'search_modifier_tag_is'                              => 'La etiqueta es ":value"',
+    'search_modifier_tag_contains'                        => 'Tag contains ":value"',
+    'search_modifier_not_tag_contains'                    => 'Tag does not contain ":value"',
+    'search_modifier_tag_ends'                            => 'Tag ends with ":value"',
+    'search_modifier_tag_starts'                          => 'Tag starts with ":value"',
     'search_modifier_not_tag_is'                          => 'Ninguna etiqueta es ":value"',
     'search_modifier_date_on_year'                        => 'El año de la transacción es ":value"',
     'search_modifier_not_date_on_year'                    => 'El año de la transacción no es ":value"',
@@ -1278,6 +1282,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Añadir las notas a la descripción',
     'rule_action_move_descr_to_notes'                     => 'Reemplazar las notas con la descripción',
     'rule_action_move_notes_to_descr'                     => 'Reemplazar la descripción con notas',
+    'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
+    'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => 'Regla de grupo para facturas',
     'rulegroup_for_bills_description'                     => 'Un grupo de reglas especiales para todas las reglas que involucren facturas.',
     'rule_for_bill_title'                                 => 'Regla autogenerada para la factura ":name"',
@@ -1566,7 +1572,7 @@ return [
     'list_all_attachments'                      => 'Listado de documentos adjuntos',
 
     // transaction index
-    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
+    'is_reconciled_fields_dropped'              => 'Debido a que esta transacción está reconciliada, no podrá actualizar las cuentas, ni las cantidades.',
     'title_expenses'                            => 'Gastos',
     'title_withdrawal'                          => 'Gastos',
     'title_revenue'                             => 'Ingresos / salarios',
@@ -1634,8 +1640,8 @@ return [
     'create_currency'                           => 'Crear nueva moneda',
     'store_currency'                            => 'Crear moneda',
     'update_currency'                           => 'Actualizar moneda',
-    'new_default_currency'                      => '":name" is now the default currency.',
-    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
+    'new_default_currency'                      => '":name" es ahora la moneda predeterminada.',
+    'default_currency_failed'                   => 'No se pudo establecer ":name" como moneda predeterminada. Por favor, compruebe los registros.',
     'cannot_delete_currency'                    => 'No puede eliminar :name porque todavía esta en uso.',
     'cannot_delete_fallback_currency'           => ':name es la moneda de reserva del sistema y no se puede eliminar.',
     'cannot_disable_currency_journals'          => 'No se puede desactivar :name porque las transacciones siguen utilizándola.',
@@ -1661,9 +1667,9 @@ return [
     'disable_currency'                          => 'Desactivar',
     'currencies_default_disabled'               => 'La mayoría de estas monedas están desactivadas por defecto. Para usarlas, debes activarlas primero.',
     'currency_is_now_enabled'                   => 'Moneda ":name" ha sido activada',
-    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
+    'could_not_enable_currency'                 => 'No se pudo habilitar la moneda ":name". Por favor, revise los registros.',
     'currency_is_now_disabled'                  => 'Moneda ":name" ha sido desactivada',
-    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
+    'could_not_disable_currency'                => 'No se pudo deshabilitar la moneda ":name". ¿Tal vez todavía esté en uso?',
 
     // forms:
     'mandatoryFields'                           => 'Campos obligatorios',
@@ -1949,7 +1955,7 @@ return [
 
 
     // transactions:
-    'unreconcile'                               => 'Undo reconciliation',
+    'unreconcile'                               => 'Deshacer reconciliación',
     'update_withdrawal'                         => 'Actualización de gasto',
     'update_deposit'                            => 'Actualizar ingreso',
     'update_transaction'                        => 'Actualizar transacción',
@@ -2769,3 +2775,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

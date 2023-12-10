@@ -31,8 +31,8 @@ use Tests\integration\Traits\CollectsValues;
  */
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication;
     use CollectsValues;
+    use CreatesApplication;
 
     protected const MAX_ITERATIONS = 2;
 

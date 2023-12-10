@@ -147,7 +147,7 @@ return [
     'start_date'                  => 'Startgrense',
     'end_date'                    => 'Sluttgrense',
     'enddate'                     => 'Sluttdato',
-    'move_rules_before_delete'    => 'Rule group',
+    'move_rules_before_delete'    => 'Regelgruppe',
     'start'                       => 'Start område',
     'end'                         => 'Slutt område',
     'delete_account'              => 'Slett konto ":name"',
@@ -314,3 +314,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

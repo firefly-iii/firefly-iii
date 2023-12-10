@@ -26,7 +26,6 @@ namespace FireflyIII\Validation\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait LiabilityValidation
@@ -40,7 +39,7 @@ trait LiabilityValidation
      */
     protected function validateLCDestination(array $array): bool
     {
-        Log::debug('Now in validateLCDestination', $array);
+        app('log')->debug('Now in validateLCDestination', $array);
         $result      = null;
         $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
         $accountName = array_key_exists('name', $array) ? $array['name'] : null;
@@ -49,23 +48,23 @@ trait LiabilityValidation
         // if the ID is not null the source account should be a dummy account of the type liability credit.
         // the ID of the destination must belong to a liability.
         if (null !== $accountId) {
-            if (AccountType::LIABILITY_CREDIT !== $this?->source?->accountType?->type) {
-                Log::error('Source account is not a liability.');
+            if (AccountType::LIABILITY_CREDIT !== $this->source?->accountType?->type) {
+                app('log')->error('Source account is not a liability.');
                 return false;
             }
             $result = $this->findExistingAccount($validTypes, $array);
             if (null === $result) {
-                Log::error('Destination account is not a liability.');
+                app('log')->error('Destination account is not a liability.');
                 return false;
             }
             return true;
         }
 
         if (null !== $accountName && '' !== $accountName) {
-            Log::debug('Destination ID is null, now we can assume the destination is a (new) liability credit account.');
+            app('log')->debug('Destination ID is null, now we can assume the destination is a (new) liability credit account.');
             return true;
         }
-        Log::error('Destination ID is null, but destination name is also NULL.');
+        app('log')->error('Destination ID is null, but destination name is also NULL.');
         return false;
     }
 
@@ -78,19 +77,19 @@ trait LiabilityValidation
      */
     protected function validateLCSource(array $array): bool
     {
-        Log::debug('Now in validateLCSource', $array);
+        app('log')->debug('Now in validateLCSource', $array);
         // if the array has an ID and ID is not null, try to find it and check type.
         // this account must be a liability
         $accountId = array_key_exists('id', $array) ? $array['id'] : null;
         if (null !== $accountId) {
-            Log::debug('Source ID is not null, assume were looking for a liability.');
+            app('log')->debug('Source ID is not null, assume were looking for a liability.');
             // find liability credit:
             $result = $this->findExistingAccount(config('firefly.valid_liabilities'), $array);
             if (null === $result) {
-                Log::error('Did not find a liability account, return false.');
+                app('log')->error('Did not find a liability account, return false.');
                 return false;
             }
-            Log::debug(sprintf('Return true, found #%d ("%s")', $result->id, $result->name));
+            app('log')->debug(sprintf('Return true, found #%d ("%s")', $result->id, $result->name));
             $this->setSource($result);
             return true;
         }
@@ -100,11 +99,11 @@ trait LiabilityValidation
 
         $result = true;
         if ('' === $accountName || null === $accountName) {
-            Log::error('Array must have a name, is not the case, return false.');
+            app('log')->error('Array must have a name, is not the case, return false.');
             $result = false;
         }
         if (true === $result) {
-            Log::error('Array has a name, return true.');
+            app('log')->error('Array has a name, return true.');
             // set the source to be a (dummy) revenue account.
             $account              = new Account();
             $accountType          = AccountType::whereType(AccountType::LIABILITY_CREDIT)->first();

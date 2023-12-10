@@ -35,7 +35,7 @@ use League\Fractal\Resource\Item;
  */
 class StoreController extends Controller
 {
-    public const RESOURCE_KEY = 'webhooks';
+    public const string RESOURCE_KEY = 'webhooks';
     private WebhookRepositoryInterface $repository;
 
     /**

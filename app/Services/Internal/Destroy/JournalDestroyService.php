@@ -29,7 +29,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionJournalMeta;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class JournalDestroyService
@@ -41,17 +40,17 @@ class JournalDestroyService
      */
     public function destroy(TransactionJournal $journal): void
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
-            Log::debug(sprintf('Will now delete transaction #%d', $transaction->id));
+            app('log')->debug(sprintf('Will now delete transaction #%d', $transaction->id));
             $transaction->delete();
         }
 
         // also delete journal_meta entries.
         /** @var TransactionJournalMeta $meta */
         foreach ($journal->transactionJournalMeta()->get() as $meta) {
-            Log::debug(sprintf('Will now delete meta-entry #%d', $meta->id));
+            app('log')->debug(sprintf('Will now delete meta-entry #%d', $meta->id));
             $meta->delete();
         }
 

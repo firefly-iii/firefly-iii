@@ -27,7 +27,6 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -60,8 +59,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 ->with('doubles', $this->expense)
                 ->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Cannot render reports.double.report: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Cannot render reports.double.report: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());
             throw new FireflyException($result, 0, $e);
         }

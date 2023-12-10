@@ -43,7 +43,7 @@ class UpgradeLiabilities extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '560_upgrade_liabilities';
+    public const string CONFIG_NAME = '560_upgrade_liabilities';
     protected $description = 'Upgrade liabilities to new 5.6.0 structure.';
     protected $signature   = 'firefly-iii:upgrade-liabilities {--F|force : Force the execution of this command.}';
 
@@ -149,9 +149,9 @@ class UpgradeLiabilities extends Command
             return;
         }
         // source MUST be the liability.
-        if ((int)$destination->account_id === (int)$account->id) {
+        if ($destination->account_id === $account->id) {
             // so if not, switch things around:
-            $sourceAccountId         = (int)$source->account_id;
+            $sourceAccountId         = $source->account_id;
             $source->account_id      = $destination->account_id;
             $destination->account_id = $sourceAccountId;
             $source->save();

@@ -51,7 +51,7 @@ $mysql_ssl_verify  = envNonEmpty('MYSQL_SSL_VERIFY_SERVER_CERT', null);
 
 $mySqlSSLOptions = [];
 $useSSL          = envNonEmpty('MYSQL_USE_SSL', false);
-if (false !== $useSSL && null !== $useSSL) {
+if (false !== $useSSL && null !== $useSSL && '' !== $useSSL) {
     if (null !== $mysql_ssl_ca_dir) {
         $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CAPATH] = $mysql_ssl_ca_dir;
     }
@@ -138,7 +138,7 @@ return [
         'client'  => env('REDIS_CLIENT', 'predis'),
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'predis'),
-            'prefix'  => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
+            //'prefix'  => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
         'default' => [
             'scheme'   => envNonEmpty('REDIS_SCHEME', 'tcp'),

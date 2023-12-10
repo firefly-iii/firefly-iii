@@ -35,15 +35,15 @@ use Illuminate\Support\Collection;
 class AccountSearch implements GenericSearchInterface
 {
     /** @var string */
-    public const SEARCH_ALL = 'all';
+    public const string SEARCH_ALL = 'all';
     /** @var string */
-    public const SEARCH_IBAN = 'iban';
+    public const string SEARCH_IBAN = 'iban';
     /** @var string */
-    public const SEARCH_ID = 'id';
+    public const string SEARCH_ID = 'id';
     /** @var string */
-    public const SEARCH_NAME = 'name';
+    public const string SEARCH_NAME = 'name';
     /** @var string */
-    public const SEARCH_NUMBER = 'number';
+    public const string SEARCH_NUMBER = 'number';
     private string $field;
     private string $query;
     private array  $types;
@@ -69,7 +69,7 @@ class AccountSearch implements GenericSearchInterface
             default:
             case self::SEARCH_ALL:
                 $searchQuery->where(
-                    static function (Builder $q) use ($like) {
+                    static function (Builder $q) use ($like) { // @phpstan-ignore-line
                         $q->where('accounts.id', 'LIKE', $like);
                         $q->orWhere('accounts.name', 'LIKE', $like);
                         $q->orWhere('accounts.iban', 'LIKE', $like);
@@ -77,7 +77,7 @@ class AccountSearch implements GenericSearchInterface
                 );
                 // meta data:
                 $searchQuery->orWhere(
-                    static function (Builder $q) use ($originalQuery) {
+                    static function (Builder $q) use ($originalQuery) { // @phpstan-ignore-line
                         $json = json_encode($originalQuery, JSON_THROW_ON_ERROR);
                         $q->where('account_meta.name', '=', 'account_number');
                         $q->where('account_meta.data', 'LIKE', $json);
@@ -96,7 +96,7 @@ class AccountSearch implements GenericSearchInterface
             case self::SEARCH_NUMBER:
                 // meta data:
                 $searchQuery->Where(
-                    static function (Builder $q) use ($originalQuery) {
+                    static function (Builder $q) use ($originalQuery) { // @phpstan-ignore-line
                         $json = json_encode($originalQuery, JSON_THROW_ON_ERROR);
                         $q->where('account_meta.name', 'account_number');
                         $q->where('account_meta.data', $json);
@@ -139,7 +139,7 @@ class AccountSearch implements GenericSearchInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }

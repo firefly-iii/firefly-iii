@@ -72,7 +72,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         $query = $this->user->availableBudgets()->with(['transactionCurrency']);
         if (null !== $start && null !== $end) {
             $query->where(
-                static function (Builder $q1) use ($start, $end) {
+                static function (Builder $q1) use ($start, $end) { // @phpstan-ignore-line
                     $q1->where('start_date', '=', $start->format('Y-m-d'));
                     $q1->where('end_date', '=', $end->format('Y-m-d'));
                 }
@@ -133,13 +133,14 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
      */
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string
     {
-        $amount          = '0';
+        $amount = '0';
+        /** @var AvailableBudget|null $availableBudget */
         $availableBudget = $this->user->availableBudgets()
                                       ->where('transaction_currency_id', $currency->id)
                                       ->where('start_date', $start->format('Y-m-d'))
                                       ->where('end_date', $end->format('Y-m-d'))->first();
         if (null !== $availableBudget) {
-            $amount = (string)$availableBudget->amount;
+            $amount = $availableBudget->amount;
         }
 
         return $amount;
@@ -248,8 +249,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
             $availableBudget = new AvailableBudget();
             $availableBudget->user()->associate($this->user);
             $availableBudget->transactionCurrency()->associate($currency);
-            $availableBudget->start_date = $start->format('Y-m-d');
-            $availableBudget->end_date   = $end->format('Y-m-d');
+            $availableBudget->start_date = $start->startOfDay();
+            $availableBudget->end_date   = $end->endOfDay();
         }
         $availableBudget->amount = $amount;
         $availableBudget->save();
@@ -262,7 +263,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }

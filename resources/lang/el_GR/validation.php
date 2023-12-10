@@ -44,6 +44,7 @@ return [
     'invalid_query_currency'         => 'Το ερώτημά σας περιέχει λογαριασμούς που έχουν διαφορετικές ρυθμίσεις νομίσματος, το οποίο δεν επιτρέπεται.',
     'iban'                           => 'Αυτό δεν είναι έγκυρο IBAN.',
     'zero_or_more'                   => 'Αυτή η τιμή δεν μπορεί να είναι αρνητική.',
+    'no_asset_account'               => 'This is not an asset account.',
     'date_or_time'                   => 'Αυτή η τιμή πρέπει να είναι έγκυρη ημερομηνία ή τιμή ώρας (ISO 8601).',
     'source_equals_destination'      => 'Ο λογαριασμός προέλευσης ισούται με το λογαριασμό προορισμού.',
     'unique_account_number_for_user' => 'Φαίνεται πως αυτός ο αριθμός λογαριασμού χρησιμοποιείται ήδη.',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

@@ -32,7 +32,6 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class StoredGroupEventHandler
@@ -47,11 +46,11 @@ class StoredGroupEventHandler
     public function processRules(StoredTransactionGroup $storedGroupEvent): void
     {
         if (false === $storedGroupEvent->applyRules) {
-            Log::info(sprintf('Will not run rules on group #%d', $storedGroupEvent->transactionGroup->id));
+            app('log')->info(sprintf('Will not run rules on group #%d', $storedGroupEvent->transactionGroup->id));
 
             return;
         }
-        Log::debug('Now in StoredGroupEventHandler::processRules()');
+        app('log')->debug('Now in StoredGroupEventHandler::processRules()');
 
         $journals = $storedGroupEvent->transactionGroup->transactionJournals;
         $array    = [];
@@ -60,7 +59,7 @@ class StoredGroupEventHandler
             $array[] = $journal->id;
         }
         $journalIds = implode(',', $array);
-        Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
+        app('log')->debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
         $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
@@ -97,10 +96,10 @@ class StoredGroupEventHandler
      */
     public function triggerWebhooks(StoredTransactionGroup $storedGroupEvent): void
     {
-        Log::debug(__METHOD__);
+        app('log')->debug(__METHOD__);
         $group = $storedGroupEvent->transactionGroup;
         if (false === $storedGroupEvent->fireWebhooks) {
-            Log::info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
+            app('log')->info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
 
             return;
         }

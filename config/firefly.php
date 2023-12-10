@@ -86,8 +86,10 @@ use FireflyIII\TransactionRules\Actions\SetBudget;
 use FireflyIII\TransactionRules\Actions\SetCategory;
 use FireflyIII\TransactionRules\Actions\SetDescription;
 use FireflyIII\TransactionRules\Actions\SetDestinationAccount;
+use FireflyIII\TransactionRules\Actions\SetDestinationToCashAccount;
 use FireflyIII\TransactionRules\Actions\SetNotes;
 use FireflyIII\TransactionRules\Actions\SetSourceAccount;
+use FireflyIII\TransactionRules\Actions\SetSourceToCashAccount;
 use FireflyIII\TransactionRules\Actions\SwitchAccounts;
 use FireflyIII\TransactionRules\Actions\UpdatePiggybank;
 use FireflyIII\User;
@@ -112,9 +114,9 @@ return [
         'handle_debts' => true,
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.0.30',
-    'api_version'                  => '2.0.11',
-    'db_version'                   => 21,
+    'version'                      => '6.1.0-alpha.1',
+    'api_version'                  => '2.0.12',
+    'db_version'                   => 22,
 
     // generic settings
     'maxUploadSize'                => 1073741824, // 1 GB
@@ -516,6 +518,8 @@ return [
         'append_notes_to_descr'   => AppendNotesToDescription::class,
         'move_descr_to_notes'     => MoveDescriptionToNotes::class,
         'move_notes_to_descr'     => MoveNotesToDescription::class,
+        'set_source_to_cash'      => SetSourceToCashAccount::class,
+        'set_destination_to_cash' => SetDestinationToCashAccount::class,
     ],
     'context-rule-actions' => [
         'set_category',
@@ -908,4 +912,7 @@ return [
 
     // only used in v1
     'allowed_sort_parameters'   => ['order', 'name', 'iban'],
+
+    // preselected account lists possibilities:
+    'preselected_accounts' => ['all','assets','liabilities'],
 ];

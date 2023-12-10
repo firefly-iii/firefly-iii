@@ -32,8 +32,7 @@
             autocomplete="off"
             class="form-control"
             name="date[]"
-
-            type="date"
+            type="datetime-local"
             v-bind:placeholder="$t('firefly.date')"
             v-bind:title="$t('firefly.date')" @input="handleInput"
         >

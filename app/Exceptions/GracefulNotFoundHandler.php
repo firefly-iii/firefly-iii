@@ -30,13 +30,8 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -51,10 +46,10 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @param Request   $request
      * @param Throwable $e
      *
-     * @return Application|JsonResponse|\Illuminate\Http\Response|Redirector|RedirectResponse|Response
+     * @return Response
      * @throws Throwable
      */
-    public function render($request, Throwable $e)
+    public function render($request, Throwable $e): Response
     {
         $route = $request->route();
         if (null === $route) {
@@ -141,23 +136,24 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @return Response
      * @throws Throwable
      */
-    private function handleAccount(Request $request, Throwable $exception)
+    private function handleAccount(Request $request, Throwable $exception): Response
     {
-        Log::debug('404 page is probably a deleted account. Redirect to overview of account types.');
+        app('log')->debug('404 page is probably a deleted account. Redirect to overview of account types.');
         /** @var User $user */
-        $user  = auth()->user();
-        $route = $request->route();
-        $param = $route->parameter('account');
+        $user      = auth()->user();
+        $route     = $request->route();
+        $param     = $route->parameter('account');
+        $accountId = 0;
         if ($param instanceof Account) {
-            $accountId = (int)$param->id;
+            $accountId = $param->id;
         }
-        if (!($param instanceof Account)) {
+        if (!($param instanceof Account) && !is_object($param)) {
             $accountId = (int)$param;
         }
         /** @var Account|null $account */
         $account = $user->accounts()->with(['accountType'])->withTrashed()->find($accountId);
         if (null === $account) {
-            Log::error(sprintf('Could not find account %d, so give big fat error.', $accountId));
+            app('log')->error(sprintf('Could not find account %d, so give big fat error.', $accountId));
 
             return parent::render($request, $exception);
         }
@@ -177,23 +173,24 @@ class GracefulNotFoundHandler extends ExceptionHandler
      */
     private function handleGroup(Request $request, Throwable $exception)
     {
-        Log::debug('404 page is probably a deleted group. Redirect to overview of group types.');
+        app('log')->debug('404 page is probably a deleted group. Redirect to overview of group types.');
         /** @var User $user */
         $user    = auth()->user();
         $route   = $request->route();
-        $groupId = (int)$route->parameter('transactionGroup');
+        $param   = $route->parameter('transactionGroup');
+        $groupId = !is_object($param) ? (int)$param : 0;
 
         /** @var TransactionGroup|null $group */
         $group = $user->transactionGroups()->withTrashed()->find($groupId);
         if (null === $group) {
-            Log::error(sprintf('Could not find group %d, so give big fat error.', $groupId));
+            app('log')->error(sprintf('Could not find group %d, so give big fat error.', $groupId));
 
             return parent::render($request, $exception);
         }
         /** @var TransactionJournal|null $journal */
         $journal = $group->transactionJournals()->withTrashed()->first();
         if (null === $journal) {
-            Log::error(sprintf('Could not find journal for group %d, so give big fat error.', $groupId));
+            app('log')->error(sprintf('Could not find journal for group %d, so give big fat error.', $groupId));
 
             return parent::render($request, $exception);
         }
@@ -216,22 +213,23 @@ class GracefulNotFoundHandler extends ExceptionHandler
      */
     private function handleAttachment(Request $request, Throwable $exception)
     {
-        Log::debug('404 page is probably a deleted attachment. Redirect to parent object.');
+        app('log')->debug('404 page is probably a deleted attachment. Redirect to parent object.');
         /** @var User $user */
         $user         = auth()->user();
         $route        = $request->route();
-        $attachmentId = (int)$route->parameter('attachment');
+        $param        = $route->parameter('attachment');
+        $attachmentId = is_object($param) ? 0 : (int)$param;
         /** @var Attachment|null $attachment */
         $attachment = $user->attachments()->withTrashed()->find($attachmentId);
         if (null === $attachment) {
-            Log::error(sprintf('Could not find attachment %d, so give big fat error.', $attachmentId));
+            app('log')->error(sprintf('Could not find attachment %d, so give big fat error.', $attachmentId));
 
             return parent::render($request, $exception);
         }
         // get bindable.
         if (TransactionJournal::class === $attachment->attachable_type) {
             // is linked to journal, get group of journal (if not also deleted)
-            /** @var TransactionJournal $journal */
+            /** @var TransactionJournal|null $journal */
             $journal = $user->transactionJournals()->withTrashed()->find($attachment->attachable_id);
             if (null !== $journal) {
                 return redirect(route('transactions.show', [$journal->transaction_group_id]));
@@ -239,14 +237,14 @@ class GracefulNotFoundHandler extends ExceptionHandler
         }
         if (Bill::class === $attachment->attachable_type) {
             // is linked to bill.
-            /** @var Bill $bill */
+            /** @var Bill|null $bill */
             $bill = $user->bills()->withTrashed()->find($attachment->attachable_id);
             if (null !== $bill) {
                 return redirect(route('bills.show', [$bill->id]));
             }
         }
 
-        Log::error(sprintf('Could not redirect attachment %d, its linked to a %s.', $attachmentId, $attachment->attachable_type));
+        app('log')->error(sprintf('Could not redirect attachment %d, its linked to a %s.', $attachmentId, $attachment->attachable_type));
 
         return parent::render($request, $exception);
     }

@@ -27,19 +27,18 @@ namespace FireflyIII\Exceptions;
 use ErrorException;
 use FireflyIII\Jobs\MailError;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -75,49 +74,49 @@ class Handler extends ExceptionHandler
      * @param Request   $request
      * @param Throwable $e
      *
-     * @return mixed
+     * @return Response
      * @throws Throwable
      */
-    public function render($request, Throwable $e)
+    public function render($request, Throwable $e): Response
     {
         $expectsJson = $request->expectsJson();
         // if the user requests anything /api/, assume the user wants to see JSON.
         if (str_starts_with($request->getRequestUri(), '/api/')) {
-            Log::debug('API endpoint, always assume user wants JSON.');
+            app('log')->debug('API endpoint, always assume user wants JSON.');
             $expectsJson = true;
         }
 
-        Log::debug('Now in Handler::render()');
+        app('log')->debug('Now in Handler::render()');
         if ($e instanceof LaravelValidationException && $expectsJson) {
             // ignore it: controller will handle it.
-            Log::debug(sprintf('Return to parent to handle LaravelValidationException(%d)', $e->status));
+            app('log')->debug(sprintf('Return to parent to handle LaravelValidationException(%d)', $e->status));
             return parent::render($request, $e);
         }
         if ($e instanceof NotFoundHttpException && $expectsJson) {
             // JSON error:
-            Log::debug('Return JSON not found error.');
+            app('log')->debug('Return JSON not found error.');
             return response()->json(['message' => 'Resource not found', 'exception' => 'NotFoundHttpException'], 404);
         }
 
         if ($e instanceof AuthenticationException && $expectsJson) {
             // somehow Laravel handler does not catch this:
-            Log::debug('Return JSON unauthenticated error.');
+            app('log')->debug('Return JSON unauthenticated error.');
             return response()->json(['message' => 'Unauthenticated', 'exception' => 'AuthenticationException'], 401);
         }
 
         if ($e instanceof OAuthServerException && $expectsJson) {
-            Log::debug('Return JSON OAuthServerException.');
+            app('log')->debug('Return JSON OAuthServerException.');
             // somehow Laravel handler does not catch this:
             return response()->json(['message' => $e->getMessage(), 'exception' => 'OAuthServerException'], 401);
         }
         if ($e instanceof BadRequestHttpException) {
-            Log::debug('Return JSON BadRequestHttpException.');
+            app('log')->debug('Return JSON BadRequestHttpException.');
             return response()->json(['message' => $e->getMessage(), 'exception' => 'BadRequestHttpException'], 400);
         }
 
         if ($e instanceof BadHttpHeaderException) {
             // is always API exception.
-            Log::debug('Return JSON BadHttpHeaderException.');
+            app('log')->debug('Return JSON BadHttpHeaderException.');
             return response()->json(['message' => $e->getMessage(), 'exception' => 'BadHttpHeaderException'], $e->statusCode);
         }
 
@@ -125,9 +124,9 @@ class Handler extends ExceptionHandler
             $errorCode = 500;
             $errorCode = $e instanceof MethodNotAllowedHttpException ? 405 : $errorCode;
 
-            $isDebug = config('app.debug', false);
+            $isDebug = (bool)config('app.debug', false);
             if ($isDebug) {
-                Log::debug(sprintf('Return JSON %s with debug.', get_class($e)));
+                app('log')->debug(sprintf('Return JSON %s with debug.', get_class($e)));
                 return response()->json(
                     [
                         'message'   => $e->getMessage(),
@@ -139,7 +138,7 @@ class Handler extends ExceptionHandler
                     $errorCode
                 );
             }
-            Log::debug(sprintf('Return JSON %s.', get_class($e)));
+            app('log')->debug(sprintf('Return JSON %s.', get_class($e)));
             return response()->json(
                 ['message' => sprintf('Internal Firefly III Exception: %s', $e->getMessage()), 'exception' => get_class($e)],
                 $errorCode
@@ -147,7 +146,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof NotFoundHttpException) {
-            Log::debug('Refer to GracefulNotFoundHandler');
+            app('log')->debug('Refer to GracefulNotFoundHandler');
             $handler = app(GracefulNotFoundHandler::class);
 
             return $handler->render($request, $e);
@@ -155,20 +154,20 @@ class Handler extends ExceptionHandler
 
         // special view for database errors with extra instructions
         if ($e instanceof QueryException) {
-            Log::debug('Return Firefly III database exception view.');
+            app('log')->debug('Return Firefly III database exception view.');
             $isDebug = config('app.debug');
 
             return response()->view('errors.DatabaseException', ['exception' => $e, 'debug' => $isDebug], 500);
         }
 
         if ($e instanceof FireflyException || $e instanceof ErrorException || $e instanceof OAuthServerException) {
-            Log::debug('Return Firefly III error view.');
+            app('log')->debug('Return Firefly III error view.');
             $isDebug = config('app.debug');
 
             return response()->view('errors.FireflyException', ['exception' => $e, 'debug' => $isDebug], 500);
         }
 
-        Log::debug(sprintf('Error "%s" has no Firefly III treatment, parent will handle.', get_class($e)));
+        app('log')->debug(sprintf('Error "%s" has no Firefly III treatment, parent will handle.', get_class($e)));
 
         return parent::render($request, $e);
     }
@@ -184,7 +183,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $e)
     {
-        $doMailError = config('firefly.send_error_message');
+        $doMailError = (bool)config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
             parent::report($e);
 
@@ -232,13 +231,11 @@ class Handler extends ExceptionHandler
      */
     private function shouldntReportLocal(Throwable $e): bool
     {
-        return !is_null(
-            Arr::first(
-                $this->dontReport,
-                function ($type) use ($e) {
+        return null !== Arr::first(
+            $this->dontReport,
+            static function ($type) use ($e) {
                     return $e instanceof $type;
                 }
-            )
         );
     }
 
@@ -248,9 +245,9 @@ class Handler extends ExceptionHandler
      * @param Request                    $request
      * @param LaravelValidationException $exception
      *
-     * @return Application|RedirectResponse|Redirector
+     * @return JsonResponse| RedirectResponse |\Illuminate\Http\Response
      */
-    protected function invalid($request, LaravelValidationException $exception): Application | RedirectResponse | Redirector
+    protected function invalid($request, LaravelValidationException $exception): JsonResponse | RedirectResponse | \Illuminate\Http\Response
     {
         // protect against open redirect when submitting invalid forms.
         $previous = app('steam')->getSafePreviousUrl();

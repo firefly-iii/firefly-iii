@@ -34,7 +34,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -128,7 +127,7 @@ class BulkController extends Controller
         }
 
         app('preferences')->mark();
-        $request->session()->flash('success', (string)trans_choice('firefly.mass_edited_transactions_success', $count));
+        $request->session()->flash('success', trans_choice('firefly.mass_edited_transactions_success', $count));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUrl('transactions.bulk-edit.url'));
@@ -146,7 +145,7 @@ class BulkController extends Controller
         if (true === $ignoreUpdate) {
             return false;
         }
-        Log::debug(sprintf('Set budget to %d', $budgetId));
+        app('log')->debug(sprintf('Set budget to %d', $budgetId));
         $this->repository->updateBudget($journal, $budgetId);
 
         return true;
@@ -162,7 +161,7 @@ class BulkController extends Controller
     private function updateJournalTags(TransactionJournal $journal, string $action, array $tags): bool
     {
         if ('do_replace' === $action) {
-            Log::debug(sprintf('Set tags to %s', implode(',', $tags)));
+            app('log')->debug(sprintf('Set tags to %s', implode(',', $tags)));
             $this->repository->updateTags($journal, $tags);
         }
         if ('do_append' === $action) {
@@ -186,7 +185,7 @@ class BulkController extends Controller
         if (true === $ignoreUpdate) {
             return false;
         }
-        Log::debug(sprintf('Set budget to %s', $category));
+        app('log')->debug(sprintf('Set budget to %s', $category));
         $this->repository->updateCategory($journal, $category);
 
         return true;

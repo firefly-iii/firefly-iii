@@ -27,7 +27,6 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransferBudgets
@@ -56,7 +55,7 @@ class TransferBudgets extends Command
         foreach ($set as $entry) {
             $message = sprintf('Transaction journal #%d is a %s, so has no longer a budget.', $entry->id, $entry->transactionType->type);
             $this->friendlyInfo($message);
-            Log::debug($message);
+            app('log')->debug($message);
             $entry->budgets()->sync([]);
             $count++;
         }
@@ -66,7 +65,7 @@ class TransferBudgets extends Command
         }
         if (0 !== $count) {
             $message = sprintf('Corrected %d invalid budget/journal entries (entry).', $count);
-            Log::debug($message);
+            app('log')->debug($message);
             $this->friendlyInfo($message);
         }
         return 0;

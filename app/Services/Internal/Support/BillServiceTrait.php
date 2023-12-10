@@ -26,7 +26,6 @@ namespace FireflyIII\Services\Internal\Support;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait BillServiceTrait
@@ -52,7 +51,7 @@ trait BillServiceTrait
 
         /** @var RuleAction $ruleAction */
         foreach ($set as $ruleAction) {
-            Log::debug(sprintf('Updated rule action #%d to search for new bill name "%s"', $ruleAction->id, $newName));
+            app('log')->debug(sprintf('Updated rule action #%d to search for new bill name "%s"', $ruleAction->id, $newName));
             $ruleAction->action_value = $newName;
             $ruleAction->save();
         }

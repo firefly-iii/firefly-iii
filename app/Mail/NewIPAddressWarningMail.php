@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class NewIPAddressWarningMail
@@ -64,7 +63,7 @@ class NewIPAddressWarningMail extends Mailable
         try {
             $hostName = app('steam')->getHostName($this->ipAddress);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $hostName = $this->ipAddress;
         }
         if ($hostName !== $this->ipAddress) {

@@ -38,9 +38,7 @@ class BillServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void
-    {
-    }
+    public function boot(): void {}
 
     /**
      * Register the application services.
@@ -49,7 +47,7 @@ class BillServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             BillRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var BillRepositoryInterface $repository */
                 $repository = app(BillRepository::class);
 
@@ -65,7 +63,7 @@ class BillServiceProvider extends ServiceProvider
         // administration variant
         $this->app->bind(
             AdminBillRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var AdminBillRepositoryInterface $repository */
                 $repository = app(AdminBillRepository::class);
 

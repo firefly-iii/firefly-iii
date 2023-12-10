@@ -54,9 +54,6 @@ trait ValidatesAutoBudgetRequest
             return;
         }
 
-        if ('' === $amount) {
-            $validator->errors()->add('auto_budget_amount', (string)trans('validation.amount_required_for_auto_budget'));
-        }
         if (1 !== bccomp((string)$amount, '0')) {
             $validator->errors()->add('auto_budget_amount', (string)trans('validation.auto_budget_amount_positive'));
         }

@@ -32,7 +32,10 @@ use PDOException;
  */
 class LinkTypeSeeder extends Seeder
 {
-    public function run()
+    /**
+     * @return void
+     */
+    public function run(): void
     {
         $types = [
             [

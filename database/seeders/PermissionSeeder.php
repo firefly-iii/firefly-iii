@@ -32,7 +32,7 @@ use PDOException;
  */
 class PermissionSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $roles = [
             [

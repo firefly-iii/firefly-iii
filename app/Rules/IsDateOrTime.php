@@ -27,67 +27,61 @@ namespace FireflyIII\Rules;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
-use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\Log;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
  * Class IsDateOrTime
  */
-class IsDateOrTime implements Rule
+class IsDateOrTime implements ValidationRule
 {
     /**
-     * Get the validation error message.
+     * @param string  $attribute
+     * @param mixed   $value
+     * @param Closure $fail
      *
-     * @return string
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function message()
-    {
-        return (string)trans('validation.date_or_time');
-    }
-
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return bool
-     */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $value = (string)$value;
         if ('' === $value) {
-            return false;
+            $fail('validation.date_or_time')->translate();
+            return;
         }
         if (10 === strlen($value)) {
             // probably a date format.
             try {
                 Carbon::createFromFormat('Y-m-d', $value);
-            } catch (InvalidDateException $e) {
-                Log::error(sprintf('"%s" is not a valid date: %s', $value, $e->getMessage()));
+            } catch (InvalidDateException $e) { // @phpstan-ignore-line
+                app('log')->error(sprintf('"%s" is not a valid date: %s', $value, $e->getMessage()));
 
-                return false;
-            } catch (InvalidFormatException $e) {
-                Log::error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
+                $fail('validation.date_or_time')->translate();
+                return;
+            } catch (InvalidFormatException $e) { // @phpstan-ignore-line
+                app('log')->error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
 
-                return false;
+                $fail('validation.date_or_time')->translate();
+                return;
             }
 
-            return true;
+            return;
         }
         // is an atom string, I hope?
         try {
             Carbon::parse($value);
-        } catch (InvalidDateException $e) {
-            Log::error(sprintf('"%s" is not a valid date or time: %s', $value, $e->getMessage()));
+        } catch (InvalidDateException $e) { // @phpstan-ignore-line
+            app('log')->error(sprintf('"%s" is not a valid date or time: %s', $value, $e->getMessage()));
 
-            return false;
+            $fail('validation.date_or_time')->translate();
+            return;
         } catch (InvalidFormatException $e) {
-            Log::error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
+            app('log')->error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
 
-            return false;
+            $fail('validation.date_or_time')->translate();
+            return;
         }
-
-        return true;
     }
 }

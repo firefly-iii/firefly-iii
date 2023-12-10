@@ -27,7 +27,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -133,7 +132,7 @@ class AccountForm
      */
     public function assetAccountCheckList(string $name, array $options = null): string
     {
-        $options  = $options ?? [];
+        $options  ??= [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
@@ -147,7 +146,7 @@ class AccountForm
         try {
             $html = view('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
         } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
+            app('log')->debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
             $html = 'Could not render assetAccountCheckList.';
             throw new FireflyException($html, 0, $e);
         }

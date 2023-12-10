@@ -43,7 +43,7 @@ class NavigationPreferredCarbonFormatTest extends TestCase
         $this->navigation = new Navigation();
     }
 
-    public static function providePeriods(): array
+    public static function providePeriods(): iterable
     {
         return [
             '1 week'    => ['start' => Carbon::now(), 'end' => Carbon::now()->addWeek(), 'expected' => 'Y-m-d'],
@@ -67,6 +67,6 @@ class NavigationPreferredCarbonFormatTest extends TestCase
     public function testGivenStartAndEndDatesWhenCallPreferredCarbonFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected)
     {
         $carbonFormat = $this->navigation->preferredCarbonFormat($start, $end);
-        $this->assertEquals($expected, $carbonFormat);
+        self::assertSame($expected, $carbonFormat);
     }
 }

@@ -27,6 +27,7 @@ namespace FireflyIII\Repositories\UserGroups\Currency;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 interface CurrencyRepositoryInterface
@@ -114,7 +115,7 @@ interface CurrencyRepositoryInterface
     /**
      * Get the user group's currencies.
      *
-     * @return Collection
+     * @return Collection<TransactionCurrency>
      */
     public function get(): Collection;
 
@@ -153,6 +154,13 @@ interface CurrencyRepositoryInterface
      * @return Collection
      */
     public function searchCurrency(string $search, int $limit): Collection;
+
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
+    public function setUser(User $user): void;
 
     /**
      * @param array $data

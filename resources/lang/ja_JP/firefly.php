@@ -43,7 +43,7 @@ return [
     'split'                                => '分割',
     'single_split'                         => '分割',
     'clone'                                => '複製',
-    'clone_and_edit'                       => 'Clone and edit',
+    'clone_and_edit'                       => '複製と編集',
     'confirm_action'                       => '操作を確認',
     'last_seven_days'                      => '過去7日間',
     'last_thirty_days'                     => '過去30日間',
@@ -469,6 +469,10 @@ return [
     'search_modifier_transaction_type'                    => '取引種別が「:value」',
     'search_modifier_not_transaction_type'                => '取引種別が「:value」ではない',
     'search_modifier_tag_is'                              => 'タグが「:value」',
+    'search_modifier_tag_contains'                        => 'Tag contains ":value"',
+    'search_modifier_not_tag_contains'                    => 'Tag does not contain ":value"',
+    'search_modifier_tag_ends'                            => 'Tag ends with ":value"',
+    'search_modifier_tag_starts'                          => 'Tag starts with ":value"',
     'search_modifier_not_tag_is'                          => 'タグ「:value」がない',
     'search_modifier_date_on_year'                        => '「:value」年の取引',
     'search_modifier_not_date_on_year'                    => '「:value」年の取引ではない',
@@ -1278,6 +1282,8 @@ return [
     'rule_action_append_notes_to_descr'                   => '概要の終わりにメモを追加',
     'rule_action_move_descr_to_notes'                     => 'メモを概要で置き換え',
     'rule_action_move_notes_to_descr'                     => '概要をメモで置き換え',
+    'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
+    'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => '請求のルールグループ',
     'rulegroup_for_bills_description'                     => '請求に関するすべてのルールのための特別なグループです。',
     'rule_for_bill_title'                                 => '請求「:name」用に自動作成されたルール',
@@ -1566,7 +1572,7 @@ return [
     'list_all_attachments'                      => 'すべての添付ファイルのリスト',
 
     // transaction index
-    'is_reconciled_fields_dropped'              => 'Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).',
+    'is_reconciled_fields_dropped'              => 'この取引は照合済みのため、口座や金額を更新することはできません。',
     'title_expenses'                            => '支出',
     'title_withdrawal'                          => '支出',
     'title_revenue'                             => '収益 / 収入',
@@ -1634,8 +1640,8 @@ return [
     'create_currency'                           => '新しい通貨を作成',
     'store_currency'                            => '新しい通貨を保存',
     'update_currency'                           => '通貨を更新',
-    'new_default_currency'                      => '":name" is now the default currency.',
-    'default_currency_failed'                   => 'Could not make ":name" the default currency. Please check the logs.',
+    'new_default_currency'                      => '「:name」はデフォルト通貨です。',
+    'default_currency_failed'                   => '「:name」をデフォルト通貨にすることができませんでした。ログを確認してください。',
     'cannot_delete_currency'                    => ':nameは使用されているため削除できません。',
     'cannot_delete_fallback_currency'           => ':name はシステムのフォールバック通貨であり、削除できません。',
     'cannot_disable_currency_journals'          => '取引がまだ使用しているため、:name を無効にできません。',
@@ -1661,9 +1667,9 @@ return [
     'disable_currency'                          => '無効',
     'currencies_default_disabled'               => 'これらの通貨のほとんどはデフォルトで無効になっています。使用するには、まず有効にする必要があります。',
     'currency_is_now_enabled'                   => '通貨「:name」が有効になりました',
-    'could_not_enable_currency'                 => 'Could not enable currency ":name". Please review the logs.',
+    'could_not_enable_currency'                 => '通貨「:name」を有効にできませんでした。ログを確認してください。',
     'currency_is_now_disabled'                  => '通貨「:name」は無効になりました',
-    'could_not_disable_currency'                => 'Could not disable currency ":name". Perhaps it is still in use?',
+    'could_not_disable_currency'                => '通貨「:name」を無効にできませんでした。使用中ではありませんか？',
 
     // forms:
     'mandatoryFields'                           => '必須項目',
@@ -1949,7 +1955,7 @@ return [
 
 
     // transactions:
-    'unreconcile'                               => 'Undo reconciliation',
+    'unreconcile'                               => '照合を取り消す',
     'update_withdrawal'                         => '出金を更新',
     'update_deposit'                            => '入金を更新',
     'update_transaction'                        => '取引を更新',
@@ -2769,3 +2775,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

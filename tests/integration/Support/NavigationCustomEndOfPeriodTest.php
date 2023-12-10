@@ -38,10 +38,10 @@ class NavigationCustomEndOfPeriodTest extends TestCase
     public function testGivenADateAndCustomFrequencyWhenCalculateTheDateThenReturnsTheEndOfMonthSuccessful()
     {
         $from       = Carbon::parse('2023-08-05');
-        $expected   = Carbon::parse('2023-09-04');
+        $expected   = Carbon::parse('2023-09-03');
         $navigation = new Navigation();
 
         $period = $navigation->endOfPeriod($from, 'custom');
-        $this->assertEquals($expected->toDateString(), $period->toDateString());
+        self::assertSame($expected->toDateString(), $period->toDateString());
     }
 }

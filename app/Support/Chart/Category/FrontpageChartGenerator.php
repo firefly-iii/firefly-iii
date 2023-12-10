@@ -128,7 +128,7 @@ class FrontpageChartGenerator
     {
         $currencyId = (int)$currency['currency_id'];
 
-        $this->currencies[$currencyId] = $this->currencies[$currencyId] ?? [
+        $this->currencies[$currencyId] ??= [
             'currency_id'             => $currencyId,
             'currency_name'           => $currency['currency_name'],
             'currency_symbol'         => $currency['currency_symbol'],

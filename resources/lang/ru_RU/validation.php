@@ -44,11 +44,12 @@ return [
     'invalid_query_currency'         => 'Ваш запрос содержит счета с разными валютами, что недопустимо.',
     'iban'                           => 'Это некорректный IBAN.',
     'zero_or_more'                   => 'Это значение не может быть отрицательным.',
+    'no_asset_account'               => 'Это не счет активов.',
     'date_or_time'                   => 'Значение должно быть корректной датой или временем (ISO 8601).',
     'source_equals_destination'      => 'Счёт источник и счёт назначения совпадают.',
     'unique_account_number_for_user' => 'Этот номер счёта уже используется.',
     'unique_iban_for_user'           => 'Этот IBAN уже используется.',
-    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
+    'reconciled_forbidden_field'     => 'Эта транзакция уже сверена, вы не можете изменить ":field"',
     'deleted_user'                   => 'По соображениям безопасности, вы не можете зарегистрироваться, используя этот адрес электронной почты.',
     'rule_trigger_value'             => 'Это значение является недопустимым для выбранного триггера.',
     'rule_action_value'              => 'Это значение является недопустимым для выбранного действия.',
@@ -60,8 +61,8 @@ return [
     'transaction_types_equal'        => 'Все части транзакции должны быть одного типа.',
     'invalid_transaction_type'       => 'Недопустимый тип транзакции.',
     'invalid_selection'              => 'Вы сделали неправильный выбор.',
-    'belongs_user'                   => 'This value is linked to an object that does not seem to exist.',
-    'belongs_user_or_user_group'     => 'This value is linked to an object that does not seem to exist in your current financial administration.',
+    'belongs_user'                   => 'Это значение связано с объектом, который не существует.',
+    'belongs_user_or_user_group'     => 'Это значение связано с объектом, который не существует в Вашем текущем финансовом администрировании.',
     'at_least_one_transaction'       => 'Необходима как минимум одна транзакция.',
     'recurring_transaction_id'       => 'Необходима минимум одна транзакция.',
     'need_id_to_match'               => 'Вы должны отправить эту запись с ID для того, чтобы API мог сопоставить её.',
@@ -175,7 +176,7 @@ return [
     'unique_piggy_bank_for_user' => 'Название копилки должно быть уникальным.',
     'unique_object_group'        => 'Название группы должно быть уникальным',
     'starts_with'                => 'Значение должно начинаться с :values.',
-    'unique_webhook'             => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
+    'unique_webhook'             => 'У вас уже есть вебхук с этим сочетанием URL, триггер, ответа и доставки.',
     'unique_existing_webhook'    => 'У вас уже есть другой вебхук с этим сочетанием URL, триггер, ответа и доставки.',
     'same_account_type'          => 'Оба счета должны иметь один тип счета',
     'same_account_currency'      => 'Оба счета должны иметь одну и ту же валюту',
@@ -236,14 +237,14 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => 'Для продолжения необходим действительный ID счёта-источника и/или действительное имя счёта.',
-    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_source_bad_data'  => '[a] Не удалось найти учетную запись источника при поиске ID ":id" или имени ":name".',
+    'withdrawal_dest_need_data'   => '[a] Для продолжения необходимо получить правильный идентификатор счета назначения и/или действительное имя счета назначения.',
     'withdrawal_dest_bad_data'    => 'Не удалось найти действительный счёт назначения при поиске ID ":id" или имени ":name".',
 
     'withdrawal_dest_iban_exists' => 'Этот IBAN счета назначения уже используется счетом актива или обязательства и не может быть использован в качестве назначения для снятия средств.',
     'deposit_src_iban_exists'     => 'Этот IBAN счета-источника уже используется счетом актива или обязательства и не может быть использован в качестве источника депозита.',
 
-    'reconciliation_source_bad_data' => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+    'reconciliation_source_bad_data' => 'Не удалось найти действующую учетную запись сверки при поиске ID ":id" или имя ":name".',
 
     'generic_source_bad_data' => '[e] Не удалось найти корректный счёт-источник при поиске ID ":id" или имени ":name".',
 
@@ -266,7 +267,7 @@ return [
 
 
     'transfer_source_need_data' => 'Для продолжения необходим действительный ID счёта-источника и/или действительное имя счёта.',
-    'transfer_source_bad_data'  => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'transfer_source_bad_data'  => '[c] Не удалось найти учетную запись источника при поиске ID ":id" или имени ":name".',
     'transfer_dest_need_data'   => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
     'transfer_dest_bad_data'    => 'Не удалось найти действительный счёт назначения при поиске ID ":id" или имени ":name".',
     'need_id_in_edit'           => 'Каждая разделённая транзакция должна иметь transaction_journal_id (либо действительный ID, либо 0).',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

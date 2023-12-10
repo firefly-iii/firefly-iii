@@ -23,13 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -57,15 +58,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class TransactionType extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    public const DEPOSIT          = 'Deposit';
-    public const INVALID          = 'Invalid';
-    public const LIABILITY_CREDIT = 'Liability credit';
-    public const OPENING_BALANCE  = 'Opening balance';
-    public const RECONCILIATION   = 'Reconciliation';
-    public const TRANSFER         = 'Transfer';
-    public const WITHDRAWAL       = 'Withdrawal';
+    public const string DEPOSIT          = 'Deposit';
+    public const string INVALID          = 'Invalid';
+    public const string LIABILITY_CREDIT = 'Liability credit';
+    public const string OPENING_BALANCE  = 'Opening balance';
+    public const string RECONCILIATION   = 'Reconciliation';
+    public const string TRANSFER         = 'Transfer';
+    public const string WITHDRAWAL       = 'Withdrawal';
 
     protected $casts
                         = [
@@ -83,7 +85,7 @@ class TransactionType extends Model
      * @return TransactionType
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $type): TransactionType
+    public static function routeBinder(string $type): self
     {
         if (!auth()->check()) {
             throw new NotFoundHttpException();

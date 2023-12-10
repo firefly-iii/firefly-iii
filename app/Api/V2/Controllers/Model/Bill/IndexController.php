@@ -26,13 +26,10 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Model\Bill;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\UserGroups\Bill\BillRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\V2\BillTransformer;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
@@ -63,13 +60,12 @@ class IndexController extends Controller
     }
 
     /**
-     * @param Request $request
      *
      * TODO see autocomplete/accountcontroller for list.
      *
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         $this->repository->correctOrder();
         $bills       = $this->repository->getBills();

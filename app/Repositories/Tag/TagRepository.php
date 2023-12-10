@@ -36,7 +36,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Storage;
 
 /**
@@ -88,7 +87,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function get(): Collection
     {
-        return $this->user->tags()->orderBy('tag', 'ASC')->get();
+        return $this->user->tags()->orderBy('tag', 'ASC')->get(['tags.*']);
     }
 
     /**
@@ -114,7 +113,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
@@ -162,7 +161,7 @@ class TagRepository implements TagRepositoryInterface
 
         return $set->each(
             static function (Attachment $attachment) use ($disk) {
-                /** @var Note $note */
+                /** @var Note|null $note */
                 $note = $attachment->notes()->first();
                 // only used in v1 view of tags
                 $attachment->file_exists = $disk->exists($attachment->fileName());
@@ -183,12 +182,12 @@ class TagRepository implements TagRepositoryInterface
 
         // add date range (or not):
         if (null === $year) {
-            Log::debug('Get tags without a date.');
+            app('log')->debug('Get tags without a date.');
             $tagQuery->whereNull('tags.date');
         }
 
         if (null !== $year) {
-            Log::debug(sprintf('Get tags with year %s.', $year));
+            app('log')->debug(sprintf('Get tags with year %s.', $year));
             $tagQuery->where('tags.date', '>=', $year . '-01-01 00:00:00')->where('tags.date', '<=', $year . '-12-31 23:59:59');
         }
         $collection = $tagQuery->get();
@@ -330,7 +329,7 @@ class TagRepository implements TagRepositoryInterface
         /** @var array $journal */
         foreach ($journals as $journal) {
             $currencyId        = (int)$journal['currency_id'];
-            $sums[$currencyId] = $sums[$currencyId] ?? [
+            $sums[$currencyId] ??= [
                 'currency_id'                    => $currencyId,
                 'currency_name'                  => $journal['currency_name'],
                 'currency_symbol'                => $journal['currency_symbol'],
@@ -352,7 +351,7 @@ class TagRepository implements TagRepositoryInterface
 
             $foreignCurrencyId = $journal['foreign_currency_id'];
             if (null !== $foreignCurrencyId && 0 !== $foreignCurrencyId) {
-                $sums[$foreignCurrencyId] = $sums[$foreignCurrencyId] ?? [
+                $sums[$foreignCurrencyId] ??= [
                     'currency_id'                    => $foreignCurrencyId,
                     'currency_name'                  => $journal['foreign_currency_name'],
                     'currency_symbol'                => $journal['foreign_currency_symbol'],
@@ -373,6 +372,26 @@ class TagRepository implements TagRepositoryInterface
         }
 
         return $sums;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function tagEndsWith(string $query): Collection
+    {
+        $search = sprintf('%%%s', $query);
+
+        return $this->user->tags()->where('tag', 'LIKE', $search)->get(['tags.*']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function tagStartsWith(string $query): Collection
+    {
+        $search = sprintf('%s%%', $query);
+
+        return $this->user->tags()->where('tag', 'LIKE', $search)->get(['tags.*']);
     }
 
     /**

@@ -67,7 +67,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
         $this->piggyRepos->setUser($account->user);
 
         // get associated currency or fall back to the default:
-        $currency = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUser($account->user);
+        $currency = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
 
         // get associated journal and transaction, if any:
         $journalId = $event->transaction_journal_id;
@@ -85,9 +85,9 @@ class PiggyBankEventTransformer extends AbstractTransformer
             'currency_id'             => (string)$currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int)$currency->decimal_places,
-            'transaction_journal_id'  => $journalId ? (string)$journalId : null,
-            'transaction_group_id'    => $groupId ? (string)$groupId : null,
+            'currency_decimal_places' => $currency->decimal_places,
+            'transaction_journal_id'  => null !== $journalId ? (string)$journalId : null,
+            'transaction_group_id'    => null !== $groupId ? (string)$groupId : null,
             'links'                   => [
                 [
                     'rel' => 'self',

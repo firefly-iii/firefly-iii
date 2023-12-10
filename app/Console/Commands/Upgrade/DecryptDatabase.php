@@ -31,7 +31,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -116,7 +115,7 @@ class DecryptDatabase extends Command
         try {
             $configVar = app('fireflyconfig')->get($configName, false);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
         }
         if (null !== $configVar) {
             return (bool)$configVar->data;
@@ -157,8 +156,8 @@ class DecryptDatabase extends Command
         } catch (FireflyException $e) {
             $message = sprintf('Could not decrypt field "%s" in row #%d of table "%s": %s', $field, $id, $table, $e->getMessage());
             $this->friendlyError($message);
-            Log::error($message);
-            Log::error($e->getTraceAsString());
+            app('log')->error($message);
+            app('log')->error($e->getTraceAsString());
         }
 
         // A separate routine for preferences table:
@@ -213,8 +212,8 @@ class DecryptDatabase extends Command
             return;
         }
 
-        /** @var Preference $object */
-        $object = Preference::find((int)$id);
+        /** @var Preference|null $object */
+        $object = Preference::find($id);
         if (null !== $object) {
             $object->data = $newValue;
             $object->save();

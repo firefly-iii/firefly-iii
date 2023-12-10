@@ -32,7 +32,6 @@ use League\Fractal\Resource\Item;
  */
 class BudgetLimitTransformer extends AbstractTransformer
 {
-    /** @var string[] */
     protected array $availableIncludes
         = [
             'budget',
@@ -81,7 +80,7 @@ class BudgetLimitTransformer extends AbstractTransformer
         $currencySymbol        = null;
         if (null !== $currency) {
             $amount                = $budgetLimit->amount;
-            $currencyId            = (int)$currency->id;
+            $currencyId            = $currency->id;
             $currencyName          = $currency->name;
             $currencyCode          = $currency->code;
             $currencySymbol        = $currency->symbol;

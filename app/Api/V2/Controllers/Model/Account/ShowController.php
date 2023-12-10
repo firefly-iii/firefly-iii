@@ -28,7 +28,6 @@ use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Transformers\V2\AccountTransformer;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Show = show a single account.
@@ -40,7 +39,7 @@ class ShowController extends Controller
     /**
      * TODO this endpoint is not yet reachable.
      */
-    public function show(Request $request, Account $account): JsonResponse
+    public function show(Account $account): JsonResponse
     {
         $transformer = new AccountTransformer();
         $transformer->setParameters($this->parameters);

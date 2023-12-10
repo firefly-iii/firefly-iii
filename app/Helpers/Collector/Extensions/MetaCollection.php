@@ -45,7 +45,7 @@ trait MetaCollection
     public function excludeBills(Collection $bills): GroupCollectorInterface
     {
         $this->withBillInformation();
-        $this->query->where(static function (EloquentBuilder $q1) use ($bills) {
+        $this->query->where(static function (EloquentBuilder $q1) use ($bills) { // @phpstan-ignore-line
             $q1->whereNotIn('transaction_journals.bill_id', $bills->pluck('id')->toArray());
             $q1->orWhereNull('transaction_journals.bill_id');
         });
@@ -83,7 +83,7 @@ trait MetaCollection
     {
         $this->withBudgetInformation();
 
-        $this->query->where(static function (EloquentBuilder $q2) use ($budget) {
+        $this->query->where(static function (EloquentBuilder $q2) use ($budget) { // @phpstan-ignore-line
             $q2->where('budgets.id', '!=', $budget->id);
             $q2->orWhereNull('budgets.id');
         });
@@ -119,7 +119,7 @@ trait MetaCollection
     {
         if ($budgets->count() > 0) {
             $this->withBudgetInformation();
-            $this->query->where(static function (EloquentBuilder $q1) use ($budgets) {
+            $this->query->where(static function (EloquentBuilder $q1) use ($budgets) { // @phpstan-ignore-line
                 $q1->whereNotIn('budgets.id', $budgets->pluck('id')->toArray());
                 $q1->orWhereNull('budgets.id');
             });
@@ -135,7 +135,7 @@ trait MetaCollection
     {
         if ($categories->count() > 0) {
             $this->withCategoryInformation();
-            $this->query->where(static function (EloquentBuilder $q1) use ($categories) {
+            $this->query->where(static function (EloquentBuilder $q1) use ($categories) { // @phpstan-ignore-line
                 $q1->whereNotIn('categories.id', $categories->pluck('id')->toArray());
                 $q1->orWhereNull('categories.id');
             });
@@ -176,7 +176,7 @@ trait MetaCollection
     {
         $this->withCategoryInformation();
 
-        $this->query->where(static function (EloquentBuilder $q2) use ($category) {
+        $this->query->where(static function (EloquentBuilder $q2) use ($category) { // @phpstan-ignore-line
             $q2->where('categories.id', '!=', $category->id);
             $q2->orWhereNull('categories.id');
         });
@@ -226,7 +226,7 @@ trait MetaCollection
      */
     public function excludeInternalReference(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -253,7 +253,7 @@ trait MetaCollection
      */
     public function externalIdContains(string $externalId): GroupCollectorInterface
     {
-        $externalId = json_encode($externalId);
+        $externalId = (string)json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -268,7 +268,7 @@ trait MetaCollection
      */
     public function externalIdDoesNotContain(string $externalId): GroupCollectorInterface
     {
-        $externalId = json_encode($externalId);
+        $externalId = (string)json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -283,7 +283,7 @@ trait MetaCollection
      */
     public function externalIdDoesNotEnd(string $externalId): GroupCollectorInterface
     {
-        $externalId = json_encode($externalId);
+        $externalId = (string)json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -298,7 +298,7 @@ trait MetaCollection
      */
     public function externalIdDoesNotStart(string $externalId): GroupCollectorInterface
     {
-        $externalId = json_encode($externalId);
+        $externalId = (string)json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -313,7 +313,7 @@ trait MetaCollection
      */
     public function externalIdEnds(string $externalId): GroupCollectorInterface
     {
-        $externalId = json_encode($externalId);
+        $externalId = (string)json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -328,7 +328,7 @@ trait MetaCollection
      */
     public function externalIdStarts(string $externalId): GroupCollectorInterface
     {
-        $externalId = json_encode($externalId);
+        $externalId = (string)json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -346,7 +346,7 @@ trait MetaCollection
     public function externalUrlContains(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = json_encode($url);
+        $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', trim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $url));
@@ -362,7 +362,7 @@ trait MetaCollection
     public function externalUrlDoesNotContain(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = json_encode($url);
+        $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', trim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s%%', $url));
@@ -378,7 +378,7 @@ trait MetaCollection
     public function externalUrlDoesNotEnd(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = json_encode($url);
+        $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', ltrim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s', $url));
@@ -394,7 +394,7 @@ trait MetaCollection
     public function externalUrlDoesNotStart(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = json_encode($url);
+        $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', rtrim($url, '"'));
         //var_dump($url);
 
@@ -412,7 +412,7 @@ trait MetaCollection
     public function externalUrlEnds(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = json_encode($url);
+        $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', ltrim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s', $url));
@@ -428,7 +428,7 @@ trait MetaCollection
     public function externalUrlStarts(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = json_encode($url);
+        $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', rtrim($url, '"'));
         //var_dump($url);
 
@@ -487,7 +487,7 @@ trait MetaCollection
      */
     public function internalReferenceContains(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
         //var_dump($internalReference);
         //exit;
@@ -504,7 +504,7 @@ trait MetaCollection
      */
     public function internalReferenceDoesNotContain(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -519,7 +519,7 @@ trait MetaCollection
      */
     public function internalReferenceDoesNotEnd(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -534,7 +534,7 @@ trait MetaCollection
      */
     public function internalReferenceDoesNotStart(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -549,7 +549,7 @@ trait MetaCollection
      */
     public function internalReferenceEnds(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -564,7 +564,7 @@ trait MetaCollection
      */
     public function internalReferenceStarts(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -618,7 +618,7 @@ trait MetaCollection
     public function notesDoNotContain(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value) {
+        $this->query->where(static function (Builder $q) use ($value) { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', 'NOT LIKE', sprintf('%%%s%%', $value));
         });
@@ -634,7 +634,7 @@ trait MetaCollection
     public function notesDontEndWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value) {
+        $this->query->where(static function (Builder $q) use ($value) { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', 'NOT LIKE', sprintf('%%%s', $value));
         });
@@ -650,7 +650,7 @@ trait MetaCollection
     public function notesDontStartWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value) {
+        $this->query->where(static function (Builder $q) use ($value) { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', 'NOT LIKE', sprintf('%s%%', $value));
         });
@@ -692,7 +692,7 @@ trait MetaCollection
     public function notesExactlyNot(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value) {
+        $this->query->where(static function (Builder $q) use ($value) { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', '!=', sprintf('%s', $value));
         });
@@ -836,7 +836,7 @@ trait MetaCollection
      */
     public function setInternalReference(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = json_encode($internalReference);
+        $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -915,8 +915,9 @@ trait MetaCollection
 
         // this method adds a "postFilter" to the collector.
         $list                = $tags->pluck('tag')->toArray();
-        $filter              = function (int $index, array $object) use ($list): bool {
+        $filter              = static function (array $object) use ($list): bool {
             foreach ($object['transactions'] as $transaction) {
+                app('log')->debug(sprintf('Transaction has %d tag(s)', count($transaction['tags'])));
                 foreach ($transaction['tags'] as $tag) {
                     if (in_array($tag['name'], $list, true)) {
                         return false;
@@ -1050,13 +1051,13 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         // TODO not sure if this will work properly.
-        $this->query->where(function (Builder $q1) {
-            $q1->where(function (Builder $q2) {
+        $this->query->where(static function (Builder $q1) { // @phpstan-ignore-line
+            $q1->where(static function (Builder $q2) {
                 $q2->where('journal_meta.name', '=', 'external_id');
                 $q2->whereNull('journal_meta.data');
-            })->orWhere(function (Builder $q3) {
+            })->orWhere(static function (Builder $q3) {
                 $q3->where('journal_meta.name', '!=', 'external_id');
-            })->orWhere(function (Builder $q4) {
+            })->orWhere(static function (Builder $q4) {
                 $q4->whereNull('journal_meta.name');
             });
         });
@@ -1071,13 +1072,13 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         // TODO not sure if this will work properly.
-        $this->query->where(function (Builder $q1) {
-            $q1->where(function (Builder $q2) {
+        $this->query->where(static function (Builder $q1) { // @phpstan-ignore-line
+            $q1->where(static function (Builder $q2) {
                 $q2->where('journal_meta.name', '=', 'external_url');
                 $q2->whereNull('journal_meta.data');
-            })->orWhere(function (Builder $q3) {
+            })->orWhere(static function (Builder $q3) {
                 $q3->where('journal_meta.name', '!=', 'external_url');
-            })->orWhere(function (Builder $q4) {
+            })->orWhere(static function (Builder $q4) {
                 $q4->whereNull('journal_meta.name');
             });
         });
@@ -1091,7 +1092,7 @@ trait MetaCollection
     public function withoutNotes(): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(function (Builder $q) {
+        $this->query->where(static function (Builder $q) { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', '');
         });

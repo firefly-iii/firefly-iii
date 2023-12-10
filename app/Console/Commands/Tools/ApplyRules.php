@@ -47,17 +47,9 @@ class ApplyRules extends Command
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'This command will apply your rules and rule groups on a selection of your transactions.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature
         = 'firefly-iii:apply-rules
                             {--user=1 : The user ID.}
@@ -305,6 +297,10 @@ class ApplyRules extends Command
         if (null !== $endString && '' !== $endString) {
             $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
         }
+        if (false === $inputEnd || false === $inputStart) {
+            Log::error('Could not parse start or end date in verifyInputDate().');
+            return;
+        }
 
         if ($inputStart > $inputEnd) {
             [$inputEnd, $inputStart] = [$inputStart, $inputEnd];
@@ -335,7 +331,7 @@ class ApplyRules extends Command
                 // if in rule selection, or group in selection or all rules, it's included.
                 $test = $this->includeRule($rule, $group);
                 if (true === $test) {
-                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
+                    app('log')->debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
                     $rulesToApply->push($rule);
                 }
             }

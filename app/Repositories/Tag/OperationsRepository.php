@@ -67,7 +67,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $tags && $tags->count() > 0) {
             $collector->setTags($tags);
         }
-        if (null === $tags || (null !== $tags && 0 === $tags->count())) {
+        if (null === $tags || 0 === $tags->count()) {
             $collector->setTags($this->getTags());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation()->withTagInformation();
@@ -76,7 +76,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $listedJournals = [];
         foreach ($journals as $journal) {
             $currencyId         = (int)$journal['currency_id'];
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'tags'                    => [],
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -95,7 +95,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                     continue;
                 }
                 $listedJournals[]                   = $journalId;
-                $array[$currencyId]['tags'][$tagId] = $array[$currencyId]['tags'][$tagId] ?? [
+                $array[$currencyId]['tags'][$tagId] ??= [
                     'id'                   => $tagId,
                     'name'                 => $tagName,
                     'transaction_journals' => [],
@@ -124,7 +124,7 @@ class OperationsRepository implements OperationsRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
@@ -166,7 +166,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $tags && $tags->count() > 0) {
             $collector->setTags($tags);
         }
-        if (null === $tags || (null !== $tags && 0 === $tags->count())) {
+        if (null === $tags || 0 === $tags->count()) {
             $collector->setTags($this->getTags());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation()->withTagInformation();
@@ -176,7 +176,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId         = (int)$journal['currency_id'];
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'tags'                    => [],
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -196,7 +196,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 }
                 $listedJournals[] = $journalId;
 
-                $array[$currencyId]['tags'][$tagId]                                     = $array[$currencyId]['tags'][$tagId] ?? [
+                $array[$currencyId]['tags'][$tagId]                                     ??= [
                     'id'                   => $tagId,
                     'name'                 => $tagName,
                     'transaction_journals' => [],

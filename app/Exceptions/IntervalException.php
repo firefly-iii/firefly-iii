@@ -3,7 +3,7 @@
 
 /*
  * IntervalException.php
- * Copyright (c) 2023 Antonio Spinelli https://github.com/tonicospinelli
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Support\Calendar\Exceptions;
+namespace FireflyIII\Exceptions;
 
 use Exception;
 use FireflyIII\Support\Calendar\Periodicity;
@@ -34,9 +34,17 @@ use Throwable;
  */
 final class IntervalException extends Exception
 {
-    public readonly array       $availableIntervals;
-    public readonly Periodicity $periodicity;
+    public array       $availableIntervals;
+    public Periodicity $periodicity;
+    /** @var mixed */
     protected $message = 'The periodicity %s is unknown. Choose one of available periodicity: %s';
+
+    public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+        $this->availableIntervals = [];
+        $this->periodicity        = Periodicity::Monthly;
+    }
 
     /**
      * @param Periodicity    $periodicity
@@ -51,14 +59,15 @@ final class IntervalException extends Exception
         array       $intervals,
         int         $code = 0,
         ?Throwable  $previous = null
-    ): IntervalException {
+    ): self
+    {
         $message = sprintf(
             'The periodicity %s is unknown. Choose one of available periodicity: %s',
             $periodicity->name,
-            join(', ', $intervals)
+            implode(', ', $intervals)
         );
 
-        $exception                     = new IntervalException($message, $code, $previous);
+        $exception                     = new self($message, $code, $previous);
         $exception->periodicity        = $periodicity;
         $exception->availableIntervals = $intervals;
         return $exception;

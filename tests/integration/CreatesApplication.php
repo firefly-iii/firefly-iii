@@ -38,7 +38,7 @@ trait CreatesApplication
      */
     public function createApplication()
     {
-        $app = require_once __DIR__ . '/../../bootstrap/app.php';
+        $app = require __DIR__ . '/../../bootstrap/app.php';
 
         $app->make(Kernel::class)->bootstrap();
 

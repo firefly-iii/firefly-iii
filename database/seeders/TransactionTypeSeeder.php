@@ -32,7 +32,7 @@ use PDOException;
  */
 class TransactionTypeSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         $types = [
             TransactionType::WITHDRAWAL,

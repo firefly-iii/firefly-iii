@@ -28,7 +28,6 @@ use Artisan;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Console\KeysCommand;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -38,8 +37,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class OAuthKeys
 {
-    private const PRIVATE_KEY = 'oauth_private_key';
-    private const PUBLIC_KEY  = 'oauth_public_key';
+    private const string PRIVATE_KEY = 'oauth_private_key';
+    private const string PUBLIC_KEY  = 'oauth_public_key';
 
     /**
      *
@@ -75,8 +74,8 @@ class OAuthKeys
                 $privateKey = (string)app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
                 $publicKey  = (string)app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
             } catch (ContainerExceptionInterface | NotFoundExceptionInterface | FireflyException $e) {
-                Log::error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
-                Log::error($e->getTraceAsString());
+                app('log')->error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
+                app('log')->error($e->getTraceAsString());
             }
         }
         if ('' !== $privateKey && '' !== $publicKey) {
@@ -131,8 +130,8 @@ class OAuthKeys
             $privateContent = Crypt::decrypt($privateKey);
             $publicContent  = Crypt::decrypt($publicKey);
         } catch (DecryptException $e) {
-            Log::error('Could not decrypt pub/private keypair.');
-            Log::error($e->getMessage());
+            app('log')->error('Could not decrypt pub/private keypair.');
+            app('log')->error($e->getMessage());
 
             // delete config vars from DB:
             app('fireflyconfig')->delete(self::PRIVATE_KEY);

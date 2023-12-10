@@ -35,7 +35,6 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
@@ -52,8 +51,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class RegisterController extends Controller
 {
-    use RegistersUsers;
     use CreateStuff;
+    use RegistersUsers;
 
     /**
      * Where to redirect users after registration.
@@ -98,7 +97,7 @@ class RegisterController extends Controller
 
         $this->validator($request->all())->validate();
         $user = $this->createUser($request->all());
-        Log::info(sprintf('Registered new user %s', $user->email));
+        app('log')->info(sprintf('Registered new user %s', $user->email));
         event(new RegisteredUser($user));
 
         $this->guard()->login($user);

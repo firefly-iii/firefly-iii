@@ -47,9 +47,9 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class CategoryController extends Controller
 {
-    use DateCalculation;
     use AugumentData;
     use ChartGeneration;
+    use DateCalculation;
 
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
@@ -193,7 +193,7 @@ class CategoryController extends Controller
         if (null !== $category) {
             /** @var OperationsRepositoryInterface $opsRepository */
             $opsRepository = app(OperationsRepositoryInterface::class);
-            $categoryId    = (int)$category->id;
+            $categoryId    = $category->id;
             // this gives us all currencies
             $collection = new Collection([$category]);
             $expenses   = $opsRepository->listExpenses($start, $end, null, $collection);
@@ -235,7 +235,7 @@ class CategoryController extends Controller
             foreach ($outSet['transaction_journals'] as $journal) {
                 $amount                               = app('steam')->positive($journal['amount']);
                 $date                                 = $journal['date']->isoFormat($format);
-                $chartData[$outKey]['entries'][$date] = $chartData[$outKey]['entries'][$date] ?? '0';
+                $chartData[$outKey]['entries'][$date] ??= '0';
 
                 $chartData[$outKey]['entries'][$date] = bcadd($amount, $chartData[$outKey]['entries'][$date]);
             }
@@ -244,7 +244,7 @@ class CategoryController extends Controller
             foreach ($inSet['transaction_journals'] as $journal) {
                 $amount                              = app('steam')->positive($journal['amount']);
                 $date                                = $journal['date']->isoFormat($format);
-                $chartData[$inKey]['entries'][$date] = $chartData[$inKey]['entries'][$date] ?? '0';
+                $chartData[$inKey]['entries'][$date] ??= '0';
                 $chartData[$inKey]['entries'][$date] = bcadd($amount, $chartData[$inKey]['entries'][$date]);
             }
         }

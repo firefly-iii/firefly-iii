@@ -39,7 +39,7 @@ class AddLdapColumnsToUsersTable extends Migration
             try {
                 Schema::table(
                     'users',
-                    function (Blueprint $table) {
+                    static function (Blueprint $table) {
                         $table->dropColumn(['domain']);
                     }
                 );
@@ -52,6 +52,7 @@ class AddLdapColumnsToUsersTable extends Migration
 
     /**
      * Run the migrations.
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -59,7 +60,7 @@ class AddLdapColumnsToUsersTable extends Migration
             try {
                 Schema::table(
                     'users',
-                    function (Blueprint $table) {
+                    static function (Blueprint $table) {
                         $table->string('domain')->nullable();
                     }
                 );

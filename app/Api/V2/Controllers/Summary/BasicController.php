@@ -100,6 +100,7 @@ class BasicController extends Controller
      *
      * @return JsonResponse
      * @throws Exception
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function basic(DateRequest $request): JsonResponse
     {
@@ -163,15 +164,15 @@ class BasicController extends Controller
             $currency                = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
             $currencies[$currencyId] = $currency;
             $nativeAmount            = $converter->convert($currency, $default, $transactionJournal['date'], $amount);
-            if ((int)$transactionJournal['foreign_currency_id'] === (int)$default->id) {
+            if ((int)$transactionJournal['foreign_currency_id'] === $default->id) {
                 // use foreign amount instead
                 $nativeAmount = $transactionJournal['foreign_amount'];
             }
             // prep the arrays
-            $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
-            $incomes['native']    = $incomes['native'] ?? '0';
-            $sums[$currencyId]    = $sums[$currencyId] ?? '0';
-            $sums['native']       = $sums['native'] ?? '0';
+            $incomes[$currencyId] ??= '0';
+            $incomes['native']    ??= '0';
+            $sums[$currencyId]    ??= '0';
+            $sums['native']       ??= '0';
 
             // add values:
             $incomes[$currencyId] = bcadd($incomes[$currencyId], $amount);
@@ -201,16 +202,16 @@ class BasicController extends Controller
             $currency                = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
             $currencies[$currencyId] = $currency;
             $nativeAmount            = $converter->convert($currency, $default, $transactionJournal['date'], $amount);
-            if ((int)$transactionJournal['foreign_currency_id'] === (int)$default->id) {
+            if ((int)$transactionJournal['foreign_currency_id'] === $default->id) {
                 // use foreign amount instead
                 $nativeAmount = $transactionJournal['foreign_amount'];
             }
 
             // prep arrays
-            $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
-            $expenses['native']    = $expenses['native'] ?? '0';
-            $sums[$currencyId]     = $sums[$currencyId] ?? '0';
-            $sums['native']        = $sums['native'] ?? '0';
+            $expenses[$currencyId] ??= '0';
+            $expenses['native']    ??= '0';
+            $sums[$currencyId]     ??= '0';
+            $sums['native']        ??= '0';
 
             // add values
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $amount);
@@ -376,7 +377,7 @@ class BasicController extends Controller
             'currency_id'             => (string)$default->id,
             'currency_code'           => $default->code,
             'currency_symbol'         => $default->symbol,
-            'currency_decimal_places' => (int)$default->decimal_places,
+            'currency_decimal_places' => $default->decimal_places,
         ];
         $nativePerDay = [
             'key'                     => 'left-per-day-to-spend-in-native',
@@ -384,7 +385,7 @@ class BasicController extends Controller
             'currency_id'             => (string)$default->id,
             'currency_code'           => $default->code,
             'currency_symbol'         => $default->symbol,
-            'currency_decimal_places' => (int)$default->decimal_places,
+            'currency_decimal_places' => $default->decimal_places,
         ];
 
         /**
@@ -393,7 +394,7 @@ class BasicController extends Controller
          */
         foreach ($spent as $currencyId => $row) {
             app('log')->debug(sprintf('Processing spent array in currency #%d', $currencyId));
-            $currencyId  = (int)$currencyId;
+            $currencyId  = $currencyId;
             $spent       = '0';
             $spentNative = '0';
             // get the sum from the array of transactions (double loop but who cares)
@@ -407,7 +408,7 @@ class BasicController extends Controller
                     $currencies[$currencyId] = $currency;
                     $amount                  = app('steam')->negative($journal['amount']);
                     $amountNative            = $converter->convert($default, $currency, $start, $amount);
-                    if ((int)$journal['foreign_currency_id'] === (int)$default->id) {
+                    if ((int)$journal['foreign_currency_id'] === $default->id) {
                         $amountNative = $journal['foreign_amount'];
                     }
                     $spent       = bcadd($spent, $amount);

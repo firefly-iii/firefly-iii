@@ -32,7 +32,6 @@ use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use JsonException;
 use Psr\Container\ContainerExceptionInterface;
@@ -138,7 +137,7 @@ class IndexController extends Controller
      */
     public function index(Request $request, string $objectType)
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
         $subTitle     = (string)trans(sprintf('firefly.%s_accounts', $objectType));
         $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
@@ -152,7 +151,7 @@ class IndexController extends Controller
         $accounts      = $collection->slice(($page - 1) * $pageSize, $pageSize);
         $inactiveCount = $this->repository->getInactiveAccountsByType($types)->count();
 
-        Log::debug(sprintf('Count of collection: %d, count of accounts: %d', $total, $accounts->count()));
+        app('log')->debug(sprintf('Count of collection: %d, count of accounts: %d', $total, $accounts->count()));
 
         unset($collection);
         /** @var Carbon $start */
@@ -189,13 +188,13 @@ class IndexController extends Controller
             }
         );
         // make paginator:
-        Log::debug(sprintf('Count of accounts before LAP: %d', $accounts->count()));
+        app('log')->debug(sprintf('Count of accounts before LAP: %d', $accounts->count()));
         /** @var LengthAwarePaginator $accounts */
         $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
         $accounts->setPath(route('accounts.index', [$objectType]));
 
-        Log::debug(sprintf('Count of accounts after LAP (1): %d', $accounts->count()));
-        Log::debug(sprintf('Count of accounts after LAP (2): %d', $accounts->getCollection()->count()));
+        app('log')->debug(sprintf('Count of accounts after LAP (1): %d', $accounts->count()));
+        app('log')->debug(sprintf('Count of accounts after LAP (2): %d', $accounts->getCollection()->count()));
 
         return view('accounts.index', compact('objectType', 'inactiveCount', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
     }

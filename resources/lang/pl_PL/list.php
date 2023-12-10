@@ -111,7 +111,7 @@ return [
     'registered_at'           => 'Zarejestrowano',
     'is_blocked'              => 'Jest zablokowany',
     'is_admin'                => 'Jest administratorem',
-    'has_two_factor'          => 'Ma dwustopniową autoryzację',
+    'has_two_factor'          => 'Ma dwuetapową autoryzację',
     'blocked_code'            => 'Kod blokady',
     'source_account'          => 'Konto źródłowe',
     'destination_account'     => 'Konto docelowe',
@@ -197,3 +197,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

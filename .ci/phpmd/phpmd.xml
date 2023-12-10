@@ -20,53 +20,74 @@
   -->
 
 <ruleset name="pcsg-generated-ruleset"
-    xmlns="http://pmd.sf.net/ruleset/1.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
-    xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
-	<description>Bla bla</description>
+         xmlns="http://pmd.sf.net/ruleset/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+         xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
+    <description>Firefly III ruleset.</description>
+    <!-- Import the entire controversial code rule set -->
+    <rule ref="rulesets/controversial.xml">
+        <exclude name="CamelCasePropertyName"/>
+    </rule>
 
-	<!--
-Commando vanuit firefly directory:
-phpmd database,app,tests html /gdrive-all/development/phpmd/phpmd.xml > public/report.html
-	-->
+    <!-- clean code -->
+    <!-- <rule ref="rulesets/codesize.xml" /> -->
+    <rule ref="rulesets/unusedcode.xml"/>
 
-	<!-- Import the entire controversial code rule set -->
-	<rule ref="rulesets/controversial.xml">
-		<exclude name="CamelCasePropertyName" />
-	</rule>
 
-	<!-- clean code -->
-	<rule ref="rulesets/codesize.xml" />
-	<rule ref="rulesets/design.xml" />
-	<rule ref="rulesets/naming.xml" />
-	<rule ref="rulesets/unusedcode.xml" />
+    <rule ref="rulesets/design.xml/NumberOfChildren">
+        <properties>
+            <!-- TODO we want to be at minimum 15. But we start high, and drop the bar slowly. -->
+            <property name="minimum" value="256"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/design.xml/CouplingBetweenObjects">
+        <properties>
+            <!-- TODO we want to be at maximum 13. But we start high, and drop the bar slowly. -->
+            <property name="maximum" value="256"/>
+        </properties>
+    </rule>
 
-	<rule ref="rulesets/codesize.xml/CyclomaticComplexity">
-		<properties>
-			<property name="reportLevel" value="5"/>
-		</properties>
-	</rule>
-	<rule ref="rulesets/codesize.xml/NPathComplexity">
-		<properties>
-			<property name="minimum" value="128"/>
-		</properties>
-	</rule>
-	<rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
-		<properties>
-			<property name="minimum" value="40"/>
-		</properties>
-	</rule>
-	<rule ref="rulesets/codesize.xml/ExcessiveParameterList">
-		<properties>
-			<property name="minimum" value="5"/>
-		</properties>
-	</rule>
 
-	<!-- include clean code manually -->
-	<rule ref="rulesets/cleancode.xml/BooleanArgumentFlag" />
-	<rule ref="rulesets/cleancode.xml/ElseExpression" />
+    <rule ref="rulesets/naming.xml/ShortMethodName">
+        <properties>
+            <property name="minimum" value="3"/>
+        </properties>
+    </rule>
 
-	<!-- no this one -->
-	<!--<rule ref="rulesets/cleancode.xml/StaticAccess" />-->
+    <!-- code size -->
+    <rule ref="rulesets/codesize.xml/CyclomaticComplexity">
+        <properties>
+            <!-- TODO we want to be at report level 5. But we start high, and drop the bar slowly. -->
+            <property name="reportLevel" value="500"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/codesize.xml/NPathComplexity">
+        <properties>
+            <!-- TODO we want to be at a value of 128. But we start high, and drop the bar slowly. -->
+            <property name="minimum" value="24062500"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
+        <properties>
+            <!-- TODO we want to be at a value of 40. But we start high, and drop the bar slowly. -->
+            <property name="minimum" value="100"/>
+            <property name="ignore-whitespace" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/codesize.xml/ExcessiveParameterList">
+        <properties>
+            <!-- 5 is fine. 6 is excessive, but I have just one of those. At the end of the day, I still need all params. -->
+            <property name="minimum" value="5"/>
+        </properties>
+    </rule>
+
+    <!-- include clean code manually -->
+    <rule ref="rulesets/cleancode.xml/BooleanArgumentFlag"/>
+    <rule ref="rulesets/cleancode.xml/ElseExpression"/>
+    <rule ref="rulesets/cleancode.xml/MissingImport"/>
+    <rule ref="rulesets/cleancode.xml/UndefinedVariable"/>
+    <rule ref="rulesets/cleancode.xml/IfStatementAssignment"/>
+    <rule ref="rulesets/cleancode.xml/DuplicatedArrayKey"/>
+    <rule ref="rulesets/cleancode.xml/ErrorControlOperator"/>
 </ruleset>

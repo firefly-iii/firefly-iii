@@ -31,7 +31,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 use Throwable;
 
@@ -98,8 +97,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
                 ->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());
             throw new FireflyException($result, 0, $e);
         }
@@ -135,7 +134,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $journals         = array_reverse($journals, true);
         $dayBeforeBalance = app('steam')->balance($account, $date);
         $startBalance     = $dayBeforeBalance;
-        $defaultCurrency  = app('amount')->getDefaultCurrencyByUser($account->user);
+        $defaultCurrency  = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         $currency         = $accountRepository->getAccountCurrency($account) ?? $defaultCurrency;
 
         foreach ($journals as $index => $journal) {

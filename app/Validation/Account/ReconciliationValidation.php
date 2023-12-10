@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Validation\Account;
 
 use FireflyIII\Models\Account;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait ReconciliationValidation
@@ -53,7 +52,7 @@ trait ReconciliationValidation
         }
 
         // after that, search for it expecting an asset account or a liability.
-        Log::debug('Now in validateReconciliationDestination', $array);
+        app('log')->debug('Now in validateReconciliationDestination', $array);
 
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);
@@ -65,7 +64,7 @@ trait ReconciliationValidation
             return false;
         }
         $this->setSource($search);
-        Log::debug('Valid source account!');
+        app('log')->debug('Valid source account!');
 
         return true;
     }
@@ -85,13 +84,13 @@ trait ReconciliationValidation
         // is expected to be "positive", i.e. the money flows from the
         // source to the asset account that is the destination.
         if (null === $accountId && null === $accountName) {
-            Log::debug('The source is valid because ID and name are NULL.');
+            app('log')->debug('The source is valid because ID and name are NULL.');
             $this->setSource(new Account());
             return true;
         }
 
         // after that, search for it expecting an asset account or a liability.
-        Log::debug('Now in validateReconciliationSource', $array);
+        app('log')->debug('Now in validateReconciliationSource', $array);
 
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);
@@ -103,7 +102,7 @@ trait ReconciliationValidation
             return false;
         }
         $this->setSource($search);
-        Log::debug('Valid source account!');
+        app('log')->debug('Valid source account!');
 
         return true;
     }

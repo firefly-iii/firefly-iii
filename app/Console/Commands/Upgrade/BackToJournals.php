@@ -41,18 +41,10 @@ class BackToJournals extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_back_to_journals';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    public const string CONFIG_NAME = '480_back_to_journals';
+
     protected $description = 'Move meta data back to journals, not individual transactions.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:back-to-journals {--F|force : Force the execution of this command.}';
 
     /**
@@ -177,7 +169,7 @@ class BackToJournals extends Command
         // both have a budget, but they don't match.
         if (null !== $budget && null !== $journalBudget && $budget->id !== $journalBudget->id) {
             // sync to journal:
-            $journal->budgets()->sync([(int)$budget->id]);
+            $journal->budgets()->sync([$budget->id]);
 
             return;
         }
@@ -185,7 +177,7 @@ class BackToJournals extends Command
         // transaction has a budget, but the journal doesn't.
         if (null !== $budget && null === $journalBudget) {
             // sync to journal:
-            $journal->budgets()->sync([(int)$budget->id]);
+            $journal->budgets()->sync([$budget->id]);
         }
     }
 
@@ -249,12 +241,12 @@ class BackToJournals extends Command
         // both have a category, but they don't match.
         if (null !== $category && null !== $journalCategory && $category->id !== $journalCategory->id) {
             // sync to journal:
-            $journal->categories()->sync([(int)$category->id]);
+            $journal->categories()->sync([$category->id]);
         }
 
         // transaction has a category, but the journal doesn't.
         if (null !== $category && null === $journalCategory) {
-            $journal->categories()->sync([(int)$category->id]);
+            $journal->categories()->sync([$category->id]);
         }
     }
 

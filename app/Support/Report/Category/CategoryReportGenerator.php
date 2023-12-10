@@ -107,7 +107,7 @@ class CategoryReportGenerator
      */
     private function processCurrencyArray(int $currencyId, array $currencyRow): void
     {
-        $this->report['sums'][$currencyId] = $this->report['sums'][$currencyId] ?? [
+        $this->report['sums'][$currencyId] ??= [
             'spent'                   => '0',
             'earned'                  => '0',
             'sum'                     => '0',
@@ -136,7 +136,7 @@ class CategoryReportGenerator
     private function processCategoryRow(int $currencyId, array $currencyRow, int $categoryId, array $categoryRow): void
     {
         $key                              = sprintf('%s-%s', $currencyId, $categoryId);
-        $this->report['categories'][$key] = $this->report['categories'][$key] ?? [
+        $this->report['categories'][$key] ??= [
             'id'                      => $categoryId,
             'title'                   => $categoryRow['name'],
             'currency_id'             => $currencyRow['currency_id'],

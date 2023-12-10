@@ -56,6 +56,7 @@ class VersionCheckResult extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
@@ -70,6 +71,7 @@ class VersionCheckResult extends Notification
      * @param mixed $notifiable
      *
      * @return MailMessage
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail($notifiable)
     {
@@ -84,11 +86,12 @@ class VersionCheckResult extends Notification
      * @param mixed $notifiable
      *
      * @return SlackMessage
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack($notifiable)
     {
         return (new SlackMessage())->content($this->message)
-                                   ->attachment(function ($attachment) {
+                                   ->attachment(static function ($attachment) {
                                        $attachment->title('Firefly III @ GitHub', 'https://github.com/firefly-iii/firefly-iii/releases');
                                    });
     }
@@ -99,6 +102,7 @@ class VersionCheckResult extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
     {

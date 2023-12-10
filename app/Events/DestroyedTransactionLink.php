@@ -33,7 +33,7 @@ class DestroyedTransactionLink extends Event
 {
     use SerializesModels;
 
-    private TransactionJournalLink $link; /// @phpstan-ignore-line PHPStan thinks this property is never read.
+    private TransactionJournalLink $link; // @phpstan-ignore-line
 
     /**
      * DestroyedTransactionLink constructor.

@@ -23,8 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,7 +37,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -75,7 +78,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|Budget withTrashed()
  * @method static Builder|Budget withoutTrashed()
  * @property string                               $email
- * @property int|null                             $user_group_id
+ * @property int                                  $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Budget whereUserGroupId($value)
  * @property-read Collection|Note[]               $notes
  * @property-read int|null                        $notes_count
@@ -83,13 +86,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Budget extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -98,9 +98,9 @@ class Budget extends Model
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['user_id', 'name', 'active', 'order', 'user_group_id'];
-    /** @var array Hidden from view */
+
     protected $hidden = ['encrypted'];
 
     /**
@@ -111,13 +111,13 @@ class Budget extends Model
      * @return Budget
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Budget
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $budgetId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Budget $budget */
+            /** @var Budget|null $budget */
             $budget = $user->budgets()->find($budgetId);
             if (null !== $budget) {
                 return $budget;
@@ -181,4 +181,15 @@ class Budget extends Model
     {
         return $this->belongsToMany(Transaction::class, 'budget_transaction', 'budget_id');
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
 }

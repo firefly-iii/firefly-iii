@@ -29,7 +29,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class CurrencyRepository.
@@ -77,18 +76,18 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         if ($fromCurrency->id === $toCurrency->id) {
             $rate       = new CurrencyExchangeRate();
-            $rate->rate = 1;
+            $rate->rate = "1";
             $rate->id   = 0;
 
             return $rate;
         }
-        /** @var CurrencyExchangeRate $rate */
+        /** @var CurrencyExchangeRate|null $rate */
         $rate = $this->user->currencyExchangeRates()
                            ->where('from_currency_id', $fromCurrency->id)
                            ->where('to_currency_id', $toCurrency->id)
                            ->where('date', $date->format('Y-m-d'))->first();
         if (null !== $rate) {
-            Log::debug(sprintf('Found cached exchange rate in database for %s to %s on %s', $fromCurrency->code, $toCurrency->code, $date->format('Y-m-d')));
+            app('log')->debug(sprintf('Found cached exchange rate in database for %s to %s on %s', $fromCurrency->code, $toCurrency->code, $date->format('Y-m-d')));
 
             return $rate;
         }
@@ -124,7 +123,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }

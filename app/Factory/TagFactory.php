@@ -26,7 +26,6 @@ namespace FireflyIII\Factory;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TagFactory
@@ -43,12 +42,12 @@ class TagFactory
     public function findOrCreate(string $tag): ?Tag
     {
         $tag = trim($tag);
-        Log::debug(sprintf('Now in TagFactory::findOrCreate("%s")', $tag));
+        app('log')->debug(sprintf('Now in TagFactory::findOrCreate("%s")', $tag));
 
         /** @var Tag|null $dbTag */
         $dbTag = $this->user->tags()->where('tag', $tag)->first();
         if (null !== $dbTag) {
-            Log::debug(sprintf('Tag exists (#%d), return it.', $dbTag->id));
+            app('log')->debug(sprintf('Tag exists (#%d), return it.', $dbTag->id));
 
             return $dbTag;
         }
@@ -63,11 +62,11 @@ class TagFactory
             ]
         );
         if (null === $newTag) {
-            Log::error(sprintf('TagFactory::findOrCreate("%s") but tag is unexpectedly NULL!', $tag));
+            app('log')->error(sprintf('TagFactory::findOrCreate("%s") but tag is unexpectedly NULL!', $tag));
 
             return null;
         }
-        Log::debug(sprintf('Created new tag #%d ("%s")', $newTag->id, $newTag->tag));
+        app('log')->debug(sprintf('Created new tag #%d ("%s")', $newTag->id, $newTag->tag));
 
         return $newTag;
     }
@@ -93,7 +92,8 @@ class TagFactory
             'longitude'     => null,
             'zoomLevel'     => null,
         ];
-        $tag       = Tag::create($array);
+        /** @var Tag|null $tag */
+        $tag = Tag::create($array);
         if (null !== $tag && null !== $latitude && null !== $longitude) {
             // create location object.
             $location             = new Location();

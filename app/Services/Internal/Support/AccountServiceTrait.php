@@ -38,7 +38,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 use Validator;
 
@@ -64,7 +63,7 @@ trait AccountServiceTrait
         $rules     = ['iban' => 'required|iban'];
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
-            Log::info(sprintf('Detected invalid IBAN ("%s"). Return NULL instead.', $iban));
+            app('log')->info(sprintf('Detected invalid IBAN ("%s"). Return NULL instead.', $iban));
 
             return null;
         }
@@ -138,7 +137,7 @@ trait AccountServiceTrait
             $data['account_role'] = '';
         }
 
-        if ($account->accountType->type === AccountType::ASSET && array_key_exists('account_role', $data) && 'ccAsset' === $data['account_role']) {
+        if ($account->accountType->type === AccountType::ASSET && 'ccAsset' === $data['account_role']) {
             $fields = $this->validCCFields;
         }
         /** @var AccountMetaFactory $factory */
@@ -204,11 +203,11 @@ trait AccountServiceTrait
         }
         if ('' !== $data['opening_balance'] && array_key_exists('opening_balance_date', $data) && '' !== $data['opening_balance_date']
             && $data['opening_balance_date'] instanceof Carbon) {
-            Log::debug('Array has valid opening balance data.');
+            app('log')->debug('Array has valid opening balance data.');
 
             return true;
         }
-        Log::debug('Array does not have valid opening balance data.');
+        app('log')->debug('Array does not have valid opening balance data.');
 
         return false;
     }
@@ -224,8 +223,12 @@ trait AccountServiceTrait
      */
     protected function createOBGroup(Account $account, array $data): TransactionGroup
     {
-        Log::debug('Now going to create an OB group.');
-        $language   = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
+        app('log')->debug('Now going to create an OB group.');
+        $language = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
+        if (is_array($language)) {
+            $language = 'en_US';
+        }
+        $language   = (string)$language;
         $sourceId   = null;
         $sourceName = null;
         $destId     = null;
@@ -234,19 +237,19 @@ trait AccountServiceTrait
 
         // amount is positive.
         if (1 === bccomp($amount, '0')) {
-            Log::debug(sprintf('Amount is %s, which is positive. Source is a new IB account, destination is #%d', $amount, $account->id));
+            app('log')->debug(sprintf('Amount is %s, which is positive. Source is a new IB account, destination is #%d', $amount, $account->id));
             $sourceName = trans('firefly.initial_balance_description', ['account' => $account->name], $language);
             $destId     = $account->id;
         }
         // amount is not positive
         if (-1 === bccomp($amount, '0')) {
-            Log::debug(sprintf('Amount is %s, which is negative. Destination is a new IB account, source is #%d', $amount, $account->id));
+            app('log')->debug(sprintf('Amount is %s, which is negative. Destination is a new IB account, source is #%d', $amount, $account->id));
             $destName = trans('firefly.initial_balance_account', ['account' => $account->name], $language);
             $sourceId = $account->id;
         }
         // amount is 0
         if (0 === bccomp($amount, '0')) {
-            Log::debug('Amount is zero, so will not make an OB group.');
+            app('log')->debug('Amount is zero, so will not make an OB group.');
             throw new FireflyException('Amount for new opening balance was unexpectedly 0.');
         }
 
@@ -256,7 +259,7 @@ trait AccountServiceTrait
         // get or grab currency:
         $currency = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('default')->getDefaultCurrencyByUser($account->user);
+            $currency = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
 
         // submit to factory:
@@ -289,7 +292,7 @@ trait AccountServiceTrait
                 ],
             ],
         ];
-        Log::debug('Going for submission in createOBGroup', $submission);
+        app('log')->debug('Going for submission in createOBGroup', $submission);
 
         /** @var TransactionGroupFactory $factory */
         $factory = app(TransactionGroupFactory::class);
@@ -298,8 +301,8 @@ trait AccountServiceTrait
         try {
             $group = $factory->create($submission);
         } catch (DuplicateTransactionException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -313,11 +316,11 @@ trait AccountServiceTrait
      */
     protected function deleteCreditTransaction(Account $account): void
     {
-        Log::debug(sprintf('deleteCreditTransaction() for account #%d', $account->id));
+        app('log')->debug(sprintf('deleteCreditTransaction() for account #%d', $account->id));
         $creditGroup = $this->getCreditTransaction($account);
 
         if (null !== $creditGroup) {
-            Log::debug('Credit journal found, delete journal.');
+            app('log')->debug('Credit journal found, delete journal.');
             /** @var TransactionGroupDestroyService $service */
             $service = app(TransactionGroupDestroyService::class);
             $service->destroy($creditGroup);
@@ -333,7 +336,7 @@ trait AccountServiceTrait
      */
     protected function getCreditTransaction(Account $account): ?TransactionGroup
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        app('log')->debug(sprintf('Now at %s', __METHOD__));
 
         return $this->accountRepository->getCreditTransactionGroup($account);
     }
@@ -345,12 +348,12 @@ trait AccountServiceTrait
      */
     protected function deleteOBGroup(Account $account): void
     {
-        Log::debug(sprintf('deleteOB() for account #%d', $account->id));
+        app('log')->debug(sprintf('deleteOB() for account #%d', $account->id));
         $openingBalanceGroup = $this->getOBGroup($account);
 
         // opening balance data? update it!
         if (null !== $openingBalanceGroup) {
-            Log::debug('Opening balance journal found, delete journal.');
+            app('log')->debug('Opening balance journal found, delete journal.');
             /** @var TransactionGroupDestroyService $service */
             $service = app(TransactionGroupDestroyService::class);
             $service->destroy($openingBalanceGroup);
@@ -387,7 +390,7 @@ trait AccountServiceTrait
 
         if (null === $currency) {
             // use default currency:
-            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+            $currency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         }
         $currency->enabled = true;
         $currency->save();
@@ -410,10 +413,10 @@ trait AccountServiceTrait
      */
     protected function updateCreditTransaction(Account $account, string $direction, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
 
         if (0 === bccomp($openingBalance, '0')) {
-            Log::debug('Amount is zero, so will not update liability credit/debit group.');
+            app('log')->debug('Amount is zero, so will not update liability credit/debit group.');
             throw new FireflyException('Amount for update liability credit/debit was unexpectedly 0.');
         }
         // if direction is "debit" (i owe this debt), amount is negative.
@@ -434,7 +437,7 @@ trait AccountServiceTrait
         // if exists, update:
         $currency = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('default')->getDefaultCurrencyByUser($account->user);
+            $currency = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
 
         // simply grab the first journal and change it:
@@ -471,14 +474,18 @@ trait AccountServiceTrait
      */
     protected function createCreditTransaction(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
-        Log::debug('Now going to create an createCreditTransaction.');
+        app('log')->debug('Now going to create an createCreditTransaction.');
 
         if (0 === bccomp($openingBalance, '0')) {
-            Log::debug('Amount is zero, so will not make an liability credit group.');
+            app('log')->debug('Amount is zero, so will not make an liability credit group.');
             throw new FireflyException('Amount for new liability credit was unexpectedly 0.');
         }
 
         $language = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
+        if (is_array($language)) {
+            $language = 'en_US';
+        }
+        $language = (string)$language;
 
         // set source and/or destination based on whether the amount is positive or negative.
         // first, assume the amount is positive and go from there:
@@ -501,7 +508,7 @@ trait AccountServiceTrait
         // get or grab currency:
         $currency = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('default')->getDefaultCurrencyByUser($account->user);
+            $currency = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
 
         // submit to factory:
@@ -534,7 +541,7 @@ trait AccountServiceTrait
                 ],
             ],
         ];
-        Log::debug('Going for submission in createCreditTransaction', $submission);
+        app('log')->debug('Going for submission in createCreditTransaction', $submission);
 
         /** @var TransactionGroupFactory $factory */
         $factory = app(TransactionGroupFactory::class);
@@ -543,8 +550,8 @@ trait AccountServiceTrait
         try {
             $group = $factory->create($submission);
         } catch (DuplicateTransactionException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -561,7 +568,7 @@ trait AccountServiceTrait
      */
     private function getObJournal(TransactionGroup $group): TransactionJournal
     {
-        /** @var TransactionJournal $journal */
+        /** @var TransactionJournal|null $journal */
         $journal = $group->transactionJournals()->first();
         if (null === $journal) {
             throw new FireflyException(sprintf('Group #%d has no OB journal', $group->id));
@@ -581,7 +588,7 @@ trait AccountServiceTrait
      */
     private function getOBTransaction(TransactionJournal $journal, Account $account): Transaction
     {
-        /** @var Transaction $transaction */
+        /** @var Transaction|null $transaction */
         $transaction = $journal->transactions()->where('account_id', '!=', $account->id)->first();
         if (null === $transaction) {
             throw new FireflyException(sprintf('Could not get OB transaction for journal #%d', $journal->id));
@@ -599,7 +606,7 @@ trait AccountServiceTrait
      */
     private function getNotOBTransaction(TransactionJournal $journal, Account $account): Transaction
     {
-        /** @var Transaction $transaction */
+        /** @var Transaction|null $transaction */
         $transaction = $journal->transactions()->where('account_id', $account->id)->first();
         if (null === $transaction) {
             throw new FireflyException(sprintf('Could not get non-OB transaction for journal #%d', $journal->id));
@@ -622,18 +629,18 @@ trait AccountServiceTrait
      */
     protected function updateOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         // create if not exists:
         $obGroup = $this->getOBGroup($account);
         if (null === $obGroup) {
             return $this->createOBGroupV2($account, $openingBalance, $openingBalanceDate);
         }
-        Log::debug('Update OB group');
+        app('log')->debug('Update OB group');
 
         // if exists, update:
         $currency = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('default')->getDefaultCurrencyByUser($account->user);
+            $currency = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
 
         // simply grab the first journal and change it:
@@ -646,7 +653,7 @@ trait AccountServiceTrait
 
         // if amount is negative:
         if (1 === bccomp('0', $openingBalance)) {
-            Log::debug('Amount is negative.');
+            app('log')->debug('Amount is negative.');
             // account transaction loses money:
             $accountTransaction->amount                  = app('steam')->negative($openingBalance);
             $accountTransaction->transaction_currency_id = $currency->id;
@@ -656,7 +663,7 @@ trait AccountServiceTrait
             $obTransaction->transaction_currency_id = $currency->id;
         }
         if (-1 === bccomp('0', $openingBalance)) {
-            Log::debug('Amount is positive.');
+            app('log')->debug('Amount is positive.');
             // account gains money:
             $accountTransaction->amount                  = app('steam')->positive($openingBalance);
             $accountTransaction->transaction_currency_id = $currency->id;
@@ -685,8 +692,12 @@ trait AccountServiceTrait
      */
     protected function createOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
-        Log::debug('Now going to create an OB group.');
-        $language   = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
+        app('log')->debug('Now going to create an OB group.');
+        $language = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
+        if (is_array($language)) {
+            $language = 'en_US';
+        }
+        $language   = (string)$language;
         $sourceId   = null;
         $sourceName = null;
         $destId     = null;
@@ -694,19 +705,19 @@ trait AccountServiceTrait
 
         // amount is positive.
         if (1 === bccomp($openingBalance, '0')) {
-            Log::debug(sprintf('Amount is %s, which is positive. Source is a new IB account, destination is #%d', $openingBalance, $account->id));
+            app('log')->debug(sprintf('Amount is %s, which is positive. Source is a new IB account, destination is #%d', $openingBalance, $account->id));
             $sourceName = trans('firefly.initial_balance_description', ['account' => $account->name], $language);
             $destId     = $account->id;
         }
         // amount is not positive
         if (-1 === bccomp($openingBalance, '0')) {
-            Log::debug(sprintf('Amount is %s, which is negative. Destination is a new IB account, source is #%d', $openingBalance, $account->id));
+            app('log')->debug(sprintf('Amount is %s, which is negative. Destination is a new IB account, source is #%d', $openingBalance, $account->id));
             $destName = trans('firefly.initial_balance_account', ['account' => $account->name], $language);
             $sourceId = $account->id;
         }
         // amount is 0
         if (0 === bccomp($openingBalance, '0')) {
-            Log::debug('Amount is zero, so will not make an OB group.');
+            app('log')->debug('Amount is zero, so will not make an OB group.');
             throw new FireflyException('Amount for new opening balance was unexpectedly 0.');
         }
 
@@ -716,7 +727,7 @@ trait AccountServiceTrait
         // get or grab currency:
         $currency = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('default')->getDefaultCurrencyByUser($account->user);
+            $currency = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
         }
 
         // submit to factory:
@@ -749,7 +760,7 @@ trait AccountServiceTrait
                 ],
             ],
         ];
-        Log::debug('Going for submission in createOBGroupV2', $submission);
+        app('log')->debug('Going for submission in createOBGroupV2', $submission);
 
         /** @var TransactionGroupFactory $factory */
         $factory = app(TransactionGroupFactory::class);
@@ -758,8 +769,8 @@ trait AccountServiceTrait
         try {
             $group = $factory->create($submission);
         } catch (DuplicateTransactionException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 

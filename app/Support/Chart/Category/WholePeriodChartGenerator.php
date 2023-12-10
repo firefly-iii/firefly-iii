@@ -152,7 +152,7 @@ class WholePeriodChartGenerator
         $return = [];
         foreach ($array as $block) {
             foreach ($block as $currencyId => $currencyRow) {
-                $return[$currencyId] = $return[$currencyId] ?? [
+                $return[$currencyId] ??= [
                     'currency_id'             => $currencyId,
                     'currency_name'           => $currencyRow['currency_name'],
                     'currency_symbol'         => $currencyRow['currency_symbol'],

@@ -23,45 +23,37 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Closure;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
  *
  * Class IsAssetAccountId
  */
-class IsAssetAccountId implements Rule
+class IsAssetAccountId implements ValidationRule
 {
     /**
-     * Get the validation error message. This is not translated because only the API uses it.
+     * @param string  $attribute
+     * @param mixed   $value
+     * @param Closure $fail
      *
-     * @return string
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function message(): string
-    {
-        return 'This is not an asset account.';
-    }
-
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @return bool
-     */
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $accountId = (int)$value;
-        $account   = Account::with('accountType')->find($accountId);
+        /** @var Account|null $account */
+        $account = Account::with('accountType')->find($accountId);
         if (null === $account) {
-            return false;
+            $fail('validation.no_asset_account')->translate();
+            return;
         }
         if ($account->accountType->type !== AccountType::ASSET && $account->accountType->type !== AccountType::DEFAULT) {
-            return false;
+            $fail('validation.no_asset_account')->translate();
         }
-
-        return true;
     }
 }

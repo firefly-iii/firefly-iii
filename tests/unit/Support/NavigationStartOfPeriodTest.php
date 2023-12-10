@@ -44,7 +44,7 @@ class NavigationStartOfPeriodTest extends TestCase
         $this->navigation = new Navigation();
     }
 
-    public static function provideDates(): array
+    public static function provideDates(): iterable
     {
         return [
             'custom'    => ['frequency' => 'custom', 'from' => Carbon::now(), 'expected' => Carbon::now()],
@@ -74,7 +74,7 @@ class NavigationStartOfPeriodTest extends TestCase
         ];
     }
 
-    public static function provideUnknownFrequencies(): array
+    public static function provideUnknownFrequencies(): iterable
     {
         return [
             '1day'    => ['frequency' => '1day', 'from' => Carbon::now(), 'expected' => Carbon::now()],
@@ -89,7 +89,7 @@ class NavigationStartOfPeriodTest extends TestCase
     public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected)
     {
         $period = $this->navigation->startOfPeriod($from, $frequency);
-        $this->assertEquals($expected->toDateString(), $period->toDateString());
+        self::assertSame($expected->toDateString(), $period->toDateString());
     }
 
     /**
@@ -102,6 +102,6 @@ class NavigationStartOfPeriodTest extends TestCase
            ->andReturnNull();
 
         $period = $this->navigation->startOfPeriod($from, $frequency);
-        $this->assertEquals($expected->toDateString(), $period->toDateString());
+        self::assertSame($expected->toDateString(), $period->toDateString());
     }
 }

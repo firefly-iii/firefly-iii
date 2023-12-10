@@ -25,9 +25,9 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Exceptions\IntervalException;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Support\Calendar\Calculator;
-use FireflyIII\Support\Calendar\Exceptions\IntervalException;
 use FireflyIII\Support\Calendar\Periodicity;
 use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
@@ -46,7 +46,7 @@ class Navigation
      */
     public function __construct(Calculator $calculator = null)
     {
-        $this->calculator = ($calculator instanceof Calculator) ?: new Calculator();
+        $this->calculator = $calculator instanceof Calculator ? $calculator : new Calculator();
     }
 
     /**
@@ -91,7 +91,7 @@ class Navigation
             Log::error(sprintf(
                 'The periodicity %s is unknown. Choose one of available periodicity: %s',
                 $repeatFreq,
-                join(', ', array_keys($functionMap))
+                implode(', ', array_keys($functionMap))
             ));
             return $theDate;
         }
@@ -112,7 +112,7 @@ class Navigation
             return $this->calculator->nextDateByInterval($epoch, $periodicity, $skipInterval);
         } catch (IntervalException $exception) {
             Log::warning($exception->getMessage(), ['exception' => $exception]);
-        } catch (Throwable $exception) {
+        } catch (Throwable $exception) { // @phpstan-ignore-line
             Log::error($exception->getMessage(), ['exception' => $exception]);
         }
 
@@ -145,8 +145,8 @@ class Navigation
         $workEnd   = clone $loopDate;
         while ($loopCount < 13) {
             // make range:
-            $workStart = \Navigation::startOfPeriod($workStart, $range);
-            $workEnd   = \Navigation::endOfPeriod($workStart, $range);
+            $workStart = $this->startOfPeriod($workStart, $range);
+            $workEnd   = $this->endOfPeriod($workStart, $range);
 
             // make sure we don't go overboard
             if ($workEnd->gt($start)) {
@@ -213,7 +213,7 @@ class Navigation
         ];
         if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
-            $date->$function();
+            $date->$function(); // @phpstan-ignore-line
 
             return $date;
         }
@@ -325,7 +325,7 @@ class Navigation
         $function = $functionMap[$repeatFreq];
 
         if (array_key_exists($repeatFreq, $modifierMap)) {
-            $currentEnd->$function($modifierMap[$repeatFreq]);
+            $currentEnd->$function($modifierMap[$repeatFreq]); // @phpstan-ignore-line
             if (in_array($repeatFreq, $subDay, true)) {
                 $currentEnd->subDay();
             }
@@ -333,7 +333,7 @@ class Navigation
 
             return $currentEnd;
         }
-        $currentEnd->$function();
+        $currentEnd->$function(); // @phpstan-ignore-line
         $currentEnd->endOfDay();
         if (in_array($repeatFreq, $subDay, true)) {
             $currentEnd->subDay();
@@ -351,7 +351,7 @@ class Navigation
      */
     public function diffInPeriods(string $period, int $skip, Carbon $beginning, Carbon $end): int
     {
-        app('log')->debug(sprintf(
+        Log::debug(sprintf(
             'diffInPeriods: %s (skip: %d), between %s and %s.',
             $period,
             $skip,
@@ -367,32 +367,33 @@ class Navigation
             'yearly'    => 'floatDiffInYears',
         ];
         if (!array_key_exists($period, $map)) {
-            app('log')->warning(sprintf('No diffInPeriods for period "%s"', $period));
+            Log::warning(sprintf('No diffInPeriods for period "%s"', $period));
             return 1;
         }
         $func = $map[$period];
         // first do the diff
-        $diff = $beginning->$func($end);
+        $floatDiff = $beginning->$func($end); // @phpstan-ignore-line
+
 
         // then correct for quarterly or half-year
         if ('quarterly' === $period) {
-            app('log')->debug(sprintf('Q: Corrected %f to %f', $diff, $diff / 3));
-            $diff = $diff / 3;
+            Log::debug(sprintf('Q: Corrected %f to %f', $floatDiff, $floatDiff / 3));
+            $floatDiff /= 3;
         }
         if ('half-year' === $period) {
-            app('log')->debug(sprintf('H: Corrected %f to %f', $diff, $diff / 6));
-            $diff = $diff / 6;
+            Log::debug(sprintf('H: Corrected %f to %f', $floatDiff, $floatDiff / 6));
+            $floatDiff /= 6;
         }
 
         // then do ceil()
-        $diff = ceil($diff);
+        $diff = ceil($floatDiff);
 
-        app('log')->debug(sprintf('Diff is %f (%d)', $beginning->$func($end), $diff));
+        Log::debug(sprintf('Diff is %f periods (%d rounded up)', $floatDiff, $diff));
 
         if ($skip > 0) {
             $parameter = $skip + 1;
             $diff      = ceil($diff / $parameter) * $parameter;
-            app('log')->debug(sprintf(
+            Log::debug(sprintf(
                 'diffInPeriods: skip is %d, so param is %d, and diff becomes %d',
                 $skip,
                 $parameter,
@@ -433,7 +434,7 @@ class Navigation
 
         if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
-            $currentEnd->$function();
+            $currentEnd->$function(); // @phpstan-ignore-line
         }
 
         if (null !== $maxDate && $currentEnd > $maxDate) {
@@ -455,7 +456,11 @@ class Navigation
      */
     public function getViewRange(bool $correct): string
     {
-        $range = (string)app('preferences')->get('viewRange', '1M')?->data ?? '1M';
+        $range = app('preferences')->get('viewRange', '1M')?->data ?? '1M';
+        if (is_array($range)) {
+            $range = '1M';
+        }
+        $range = (string)$range;
         if (!$correct) {
             return $range;
         }
@@ -507,7 +512,7 @@ class Navigation
             $formatted           = $begin->format($format);
             $displayed           = $begin->isoFormat($displayFormat);
             $entries[$formatted] = $displayed;
-            $begin->$increment();
+            $begin->$increment(); // @phpstan-ignore-line
         }
 
         return $entries;
@@ -562,7 +567,7 @@ class Navigation
         ];
 
         if (array_key_exists($repeatFrequency, $formatMap)) {
-            return $date->isoFormat((string)$formatMap[$repeatFrequency]);
+            return $date->isoFormat($formatMap[$repeatFrequency]);
         }
         if ('3M' === $repeatFrequency || 'quarter' === $repeatFrequency) {
             $quarter = ceil($theDate->month / 3);
@@ -700,7 +705,7 @@ class Navigation
      */
     public function subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = null): Carbon
     {
-        $subtract = $subtract ?? 1;
+        $subtract ??= 1;
         $date     = clone $theDate;
         // 1D 1W 1M 3M 6M 1Y
         $functionMap = [
@@ -725,7 +730,7 @@ class Navigation
         ];
         if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
-            $date->$function($subtract);
+            $date->$function($subtract); // @phpstan-ignore-line
 
             return $date;
         }
@@ -800,7 +805,7 @@ class Navigation
 
         if (array_key_exists($range, $functionMap)) {
             $function = $functionMap[$range];
-            $end->$function();
+            $end->$function(); // @phpstan-ignore-line
 
             return $end;
         }
@@ -861,7 +866,7 @@ class Navigation
         ];
         if (array_key_exists($range, $functionMap)) {
             $function = $functionMap[$range];
-            $start->$function();
+            $start->$function(); // @phpstan-ignore-line
 
             return $start;
         }

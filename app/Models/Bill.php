@@ -23,7 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,9 +34,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -44,7 +47,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                          $updated_at
  * @property Carbon|null                          $deleted_at
  * @property int                                  $user_id
- * @property int|null                             $transaction_currency_id
+ * @property int                                  $transaction_currency_id
  * @property string                               $name
  * @property string                               $match
  * @property string                               $amount_min
@@ -95,19 +98,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereUserId($value)
  * @method static Builder|Bill withTrashed()
  * @method static Builder|Bill withoutTrashed()
- * @property int|null                             $user_group_id
+ * @property int                                  $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Bill whereUserGroupId($value)
  * @mixin Eloquent
  */
 class Bill extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
         = [
             'created_at'      => 'datetime',
@@ -123,7 +123,7 @@ class Bill extends Model
             'match_encrypted' => 'boolean',
         ];
 
-    /** @var array Fields that can be filled */
+
     protected $fillable
         = [
             'name',
@@ -141,7 +141,7 @@ class Bill extends Model
             'end_date',
             'extension_date',
         ];
-    /** @var array Hidden from view */
+
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
 
     /**
@@ -152,13 +152,13 @@ class Bill extends Model
      * @return Bill
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Bill
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $billId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Bill $bill */
+            /** @var Bill|null $bill */
             $bill = $user->bills()->find($billId);
             if (null !== $bill) {
                 return $bill;
@@ -192,9 +192,9 @@ class Bill extends Model
     }
 
     /**
-     * Get all of the tags for the post.
+     * Get all the tags for the post.
      */
-    public function objectGroups()
+    public function objectGroups(): MorphToMany
     {
         return $this->morphToMany(ObjectGroup::class, 'object_groupable');
     }
@@ -242,7 +242,7 @@ class Bill extends Model
     protected function amountMax(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
 
@@ -254,7 +254,41 @@ class Bill extends Model
     protected function amountMin(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * Get the skip
+     *
+     * @return Attribute
+     */
+    protected function skip(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function transactionCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+
 }

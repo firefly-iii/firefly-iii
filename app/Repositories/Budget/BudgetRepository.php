@@ -44,7 +44,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 use Storage;
 
@@ -91,7 +90,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function budgetedInPeriod(Carbon $start, Carbon $end): array
     {
-        Log::debug(sprintf('Now in budgetedInPeriod("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d')));
+        app('log')->debug(sprintf('Now in budgetedInPeriod("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d')));
         $return = [];
         /** @var BudgetLimitRepository $limitRepository */
         $limitRepository = app(BudgetLimitRepository::class);
@@ -99,13 +98,13 @@ class BudgetRepository implements BudgetRepositoryInterface
         $budgets = $this->getActiveBudgets();
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            Log::debug(sprintf('Budget #%d: "%s"', $budget->id, $budget->name));
+            app('log')->debug(sprintf('Budget #%d: "%s"', $budget->id, $budget->name));
             $limits = $limitRepository->getBudgetLimits($budget, $start, $end);
             /** @var BudgetLimit $limit */
             foreach ($limits as $limit) {
-                Log::debug(sprintf('Budget limit #%d', $limit->id));
+                app('log')->debug(sprintf('Budget limit #%d', $limit->id));
                 $currency              = $limit->transactionCurrency;
-                $return[$currency->id] = $return[$currency->id] ?? [
+                $return[$currency->id] ??= [
                     'id'             => (string)$currency->id,
                     'name'           => $currency->name,
                     'symbol'         => $currency->symbol,
@@ -115,24 +114,24 @@ class BudgetRepository implements BudgetRepositoryInterface
                 ];
                 // same period
                 if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)) {
-                    $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string)$limit->amount);
-                    Log::debug(sprintf('Add full amount [1]: %s', $limit->amount));
+                    $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $limit->amount);
+                    app('log')->debug(sprintf('Add full amount [1]: %s', $limit->amount));
                     continue;
                 }
                 // limit is inside of date range
                 if ($start->lte($limit->start_date) && $end->gte($limit->end_date)) {
-                    $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string)$limit->amount);
-                    Log::debug(sprintf('Add full amount [2]: %s', $limit->amount));
+                    $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $limit->amount);
+                    app('log')->debug(sprintf('Add full amount [2]: %s', $limit->amount));
                     continue;
                 }
                 $total                        = $limit->start_date->diffInDays($limit->end_date) + 1; // include the day itself.
                 $days                         = $this->daysInOverlap($limit, $start, $end);
-                $amount                       = bcmul(bcdiv((string)$limit->amount, (string)$total), (string)$days);
+                $amount                       = bcmul(bcdiv($limit->amount, (string)$total), (string)$days);
                 $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
-                Log::debug(
+                app('log')->debug(
                     sprintf(
                         'Amount per day: %s (%s over %d days). Total amount for %d days: %s',
-                        bcdiv((string)$limit->amount, (string)$total),
+                        bcdiv($limit->amount, (string)$total),
                         $limit->amount,
                         $total,
                         $days,
@@ -149,7 +148,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
@@ -209,19 +208,19 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function budgetedInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array
     {
-        Log::debug(sprintf('Now in budgetedInPeriod(#%d, "%s", "%s")', $budget->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
+        app('log')->debug(sprintf('Now in budgetedInPeriod(#%d, "%s", "%s")', $budget->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
         $return = [];
         /** @var BudgetLimitRepository $limitRepository */
         $limitRepository = app(BudgetLimitRepository::class);
         $limitRepository->setUser($this->user);
 
-        Log::debug(sprintf('Budget #%d: "%s"', $budget->id, $budget->name));
+        app('log')->debug(sprintf('Budget #%d: "%s"', $budget->id, $budget->name));
         $limits = $limitRepository->getBudgetLimits($budget, $start, $end);
         /** @var BudgetLimit $limit */
         foreach ($limits as $limit) {
-            Log::debug(sprintf('Budget limit #%d', $limit->id));
+            app('log')->debug(sprintf('Budget limit #%d', $limit->id));
             $currency              = $limit->transactionCurrency;
-            $return[$currency->id] = $return[$currency->id] ?? [
+            $return[$currency->id] ??= [
                 'id'             => (string)$currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,
@@ -231,24 +230,24 @@ class BudgetRepository implements BudgetRepositoryInterface
             ];
             // same period
             if ($limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)) {
-                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string)$limit->amount);
-                Log::debug(sprintf('Add full amount [1]: %s', $limit->amount));
+                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $limit->amount);
+                app('log')->debug(sprintf('Add full amount [1]: %s', $limit->amount));
                 continue;
             }
             // limit is inside of date range
             if ($start->lte($limit->start_date) && $end->gte($limit->end_date)) {
-                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string)$limit->amount);
-                Log::debug(sprintf('Add full amount [2]: %s', $limit->amount));
+                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $limit->amount);
+                app('log')->debug(sprintf('Add full amount [2]: %s', $limit->amount));
                 continue;
             }
             $total                        = $limit->start_date->diffInDays($limit->end_date) + 1; // include the day itself.
             $days                         = $this->daysInOverlap($limit, $start, $end);
-            $amount                       = bcmul(bcdiv((string)$limit->amount, (string)$total), (string)$days);
+            $amount                       = bcmul(bcdiv($limit->amount, (string)$total), (string)$days);
             $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
-            Log::debug(
+            app('log')->debug(
                 sprintf(
                     'Amount per day: %s (%s over %d days). Total amount for %d days: %s',
-                    bcdiv((string)$limit->amount, (string)$total),
+                    bcdiv($limit->amount, (string)$total),
                     $limit->amount,
                     $total,
                     $days,
@@ -291,7 +290,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function update(Budget $budget, array $data): Budget
     {
-        Log::debug('Now in update()');
+        app('log')->debug('Now in update()');
 
         $oldName = $budget->name;
         if (array_key_exists('name', $data)) {
@@ -342,12 +341,12 @@ class BudgetRepository implements BudgetRepositoryInterface
                              ->whereIn('rule_actions.action_type', $types)
                              ->where('rule_actions.action_value', $oldName)
                              ->get(['rule_actions.*']);
-        Log::debug(sprintf('Found %d actions to update.', $actions->count()));
+        app('log')->debug(sprintf('Found %d actions to update.', $actions->count()));
         /** @var RuleAction $action */
         foreach ($actions as $action) {
             $action->action_value = $newName;
             $action->save();
-            Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
+            app('log')->debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
         }
     }
 
@@ -363,12 +362,12 @@ class BudgetRepository implements BudgetRepositoryInterface
                                ->whereIn('rule_triggers.trigger_type', $types)
                                ->where('rule_triggers.trigger_value', $oldName)
                                ->get(['rule_triggers.*']);
-        Log::debug(sprintf('Found %d triggers to update.', $triggers->count()));
+        app('log')->debug(sprintf('Found %d triggers to update.', $triggers->count()));
         /** @var RuleTrigger $trigger */
         foreach ($triggers as $trigger) {
             $trigger->trigger_value = $newName;
             $trigger->save();
-            Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
+            app('log')->debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
         }
     }
 
@@ -417,7 +416,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $autoBudget = $this->getAutoBudget($budget);
 
         // grab default currency:
-        $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        $currency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
 
         if (null === $autoBudget) {
             // at this point it's a blind assumption auto_budget_type is 1 or 2.
@@ -490,8 +489,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         $budgets = $this->getBudgets();
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            DB::table('budget_transaction')->where('budget_id', (int)$budget->id)->delete();
-            DB::table('budget_transaction_journal')->where('budget_id', (int)$budget->id)->delete();
+            DB::table('budget_transaction')->where('budget_id', $budget->id)->delete();
+            DB::table('budget_transaction_journal')->where('budget_id', $budget->id)->delete();
             RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', (string)$budget->id)->delete();
             RuleAction::where('action_type', 'set_budget')->where('action_value', (string)$budget->id)->delete();
             $budget->delete();
@@ -526,17 +525,17 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function findBudget(?int $budgetId, ?string $budgetName): ?Budget
     {
-        Log::debug('Now in findBudget()');
-        Log::debug(sprintf('Searching for budget with ID #%d...', $budgetId));
+        app('log')->debug('Now in findBudget()');
+        app('log')->debug(sprintf('Searching for budget with ID #%d...', $budgetId));
         $result = $this->find((int)$budgetId);
         if (null === $result && null !== $budgetName && '' !== $budgetName) {
-            Log::debug(sprintf('Searching for budget with name %s...', $budgetName));
-            $result = $this->findByName((string)$budgetName);
+            app('log')->debug(sprintf('Searching for budget with name %s...', $budgetName));
+            $result = $this->findByName($budgetName);
         }
         if (null !== $result) {
-            Log::debug(sprintf('Found budget #%d: %s', $result->id, $result->name));
+            app('log')->debug(sprintf('Found budget #%d: %s', $result->id, $result->name));
         }
-        Log::debug(sprintf('Found result is null? %s', var_export(null === $result, true)));
+        app('log')->debug(sprintf('Found result is null? %s', var_export(null === $result, true)));
 
         return $result;
     }
@@ -590,7 +589,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : '';
+                $attachment->notes_text  = null !== $notes ? $notes->text : '';
 
                 return $attachment;
             }
@@ -665,7 +664,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function spentInPeriod(Carbon $start, Carbon $end): array
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         $start->startOfDay();
         $end->endOfDay();
 
@@ -695,7 +694,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId]        ??= [
                 'id'             => (string)$currencyId,
                 'name'           => $journal['currency_name'],
                 'symbol'         => $journal['currency_symbol'],
@@ -708,7 +707,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             // also do foreign amount:
             $foreignId = (int)$journal['foreign_currency_id'];
             if (0 !== $foreignId) {
-                $array[$foreignId]        = $array[$foreignId] ?? [
+                $array[$foreignId]        ??= [
                     'id'             => (string)$foreignId,
                     'name'           => $journal['foreign_currency_name'],
                     'symbol'         => $journal['foreign_currency_symbol'],
@@ -728,7 +727,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function spentInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        app('log')->debug(sprintf('Now in %s', __METHOD__));
         $start->startOfDay();
         $end->endOfDay();
 
@@ -758,7 +757,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId]        ??= [
                 'id'             => (string)$currencyId,
                 'name'           => $journal['currency_name'],
                 'symbol'         => $journal['currency_symbol'],
@@ -771,7 +770,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             // also do foreign amount:
             $foreignId = (int)$journal['foreign_currency_id'];
             if (0 !== $foreignId) {
-                $array[$foreignId]        = $array[$foreignId] ?? [
+                $array[$foreignId]        ??= [
                     'id'             => (string)$foreignId,
                     'name'           => $journal['foreign_currency_name'],
                     'symbol'         => $journal['foreign_currency_symbol'],
@@ -807,8 +806,8 @@ class BudgetRepository implements BudgetRepositoryInterface
                 ]
             );
         } catch (QueryException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
             throw new FireflyException('400002: Could not store budget.', 0, $e);
         }
 
@@ -848,7 +847,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $currency = $repos->findByCode((string)$data['currency_code']);
         }
         if (null === $currency) {
-            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+            $currency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         }
 
         $autoBudget = new AutoBudget();

@@ -43,7 +43,7 @@ class NavigationPreferredSqlFormatTest extends TestCase
         $this->navigation = new Navigation();
     }
 
-    public static function provideDates(): array
+    public static function provideDates(): iterable
     {
         return [
             '1 week'    => ['start' => Carbon::now(), 'end' => Carbon::now()->addWeek(), 'expected' => '%Y-%m-%d'],
@@ -67,6 +67,6 @@ class NavigationPreferredSqlFormatTest extends TestCase
     public function testGivenStartAndEndDatesWhenCallPreferredSqlFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected)
     {
         $formatPeriod = $this->navigation->preferredSqlFormat($start, $end);
-        $this->assertEquals($expected, $formatPeriod);
+        self::assertSame($expected, $formatPeriod);
     }
 }

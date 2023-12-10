@@ -33,9 +33,7 @@ use FireflyIII\User;
 use Hash;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use InvalidArgumentException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Route as RouteFacade;
@@ -56,7 +54,7 @@ trait RequestInformation
         $url   = url()->to('/');
         $parts = parse_url($url);
 
-        return $parts['host'];
+        return $parts['host'] ?? '';
     }
 
     /**
@@ -130,7 +128,9 @@ trait RequestInformation
      */
     final protected function getSpecificPageName(): string // get request info
     {
-        return null === RouteFacade::current()->parameter('objectType') ? '' : '_' . RouteFacade::current()->parameter('objectType');
+        /** @var string|null $param */
+        $param = RouteFacade::current()->parameter('objectType');
+        return null === $param ? '' : sprintf('_%s', $param);
     }
 
     /**
@@ -168,23 +168,22 @@ trait RequestInformation
      */
     final protected function parseAttributes(array $attributes): array // parse input + return result
     {
-        $attributes['location'] = $attributes['location'] ?? '';
+        $attributes['location'] ??= '';
         $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get', '', []));
-        try {
-            $attributes['startDate'] = Carbon::createFromFormat('Ymd', $attributes['startDate'])->startOfDay();
-        } catch (InvalidArgumentException $e) {
-            Log::debug(sprintf('Not important error message: %s', $e->getMessage()));
-            $date                    = today(config('app.timezone'))->startOfMonth();
-            $attributes['startDate'] = $date;
+        $date                   = Carbon::createFromFormat('Ymd', $attributes['startDate']);
+        if (false === $date) {
+            $date = today(config('app.timezone'));
         }
+        $date->startOfMonth();
+        $attributes['startDate'] = $date;
 
-        try {
-            $attributes['endDate'] = Carbon::createFromFormat('Ymd', $attributes['endDate'])->endOfDay();
-        } catch (InvalidArgumentException $e) {
-            Log::debug(sprintf('Not important error message: %s', $e->getMessage()));
-            $date                  = today(config('app.timezone'))->startOfMonth();
-            $attributes['endDate'] = $date;
+        $date2 = Carbon::createFromFormat('Ymd', $attributes['endDate']);
+        if (false === $date2) {
+            $date2 = today(config('app.timezone'));
         }
+        $date2->endOfDay();
+        $attributes['endDate'] = $date2;
+
 
         return $attributes;
     }

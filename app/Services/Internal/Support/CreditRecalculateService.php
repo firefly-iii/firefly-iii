@@ -32,7 +32,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class CreditRecalculateService
@@ -85,8 +84,8 @@ class CreditRecalculateService
             try {
                 $this->findByJournal($journal);
             } catch (FireflyException $e) {
-                Log::error($e->getTraceAsString());
-                Log::error(sprintf('Could not find work account for transaction group #%d.', $this->group->id));
+                app('log')->error($e->getTraceAsString());
+                app('log')->error(sprintf('Could not find work account for transaction group #%d.', $this->group->id));
             }
         }
     }
@@ -131,11 +130,12 @@ class CreditRecalculateService
      */
     private function getAccountByDirection(TransactionJournal $journal, string $direction): Account
     {
-        /** @var Transaction $transaction */
+        /** @var Transaction|null $transaction */
         $transaction = $journal->transactions()->where('amount', $direction, '0')->first();
         if (null === $transaction) {
             throw new FireflyException(sprintf('Cannot find "%s"-transaction of journal #%d', $direction, $journal->id));
         }
+        /** @var Account|null $foundAccount */
         $foundAccount = $transaction->account;
         if (null === $foundAccount) {
             throw new FireflyException(sprintf('Cannot find "%s"-account of transaction #%d of journal #%d', $direction, $transaction->id, $journal->id));
@@ -197,7 +197,7 @@ class CreditRecalculateService
         $startOfDebt = $this->repository->getOpeningBalanceAmount($account) ?? '0';
         $leftOfDebt  = app('steam')->positive($startOfDebt);
         $currency    = $this->repository->getAccountCurrency($account);
-        $decimals    = (int)($currency?->decimal_places ?? 2);
+        $decimals    = $currency?->decimal_places ?? 2;
         app('log')->debug(sprintf('Start of debt is "%s", so initial left of debt is "%s"', app('steam')->bcround($startOfDebt, $decimals), app('steam')->bcround($leftOfDebt, $decimals)));
 
         /** @var AccountMetaFactory $factory */
@@ -238,7 +238,7 @@ class CreditRecalculateService
         $source = $openingBalance->transactions()->where('amount', '<', 0)->first();
         /** @var Transaction $dest */
         $dest = $openingBalance->transactions()->where('amount', '>', 0)->first();
-        if ((int)$source->account_id !== $account->id) {
+        if ($source->account_id !== $account->id) {
             app('log')->info(sprintf('Liability #%d has a reversed opening balance. Will fix this now.', $account->id));
             app('log')->debug(sprintf('Source amount "%s" is now "%s"', $source->amount, app('steam')->positive($source->amount)));
             app('log')->debug(sprintf('Destination amount "%s" is now "%s"', $dest->amount, app('steam')->negative($dest->amount)));
@@ -273,8 +273,7 @@ class CreditRecalculateService
         $journal         = $transaction->transactionJournal;
         $foreignCurrency = $transaction->foreignCurrency;
         $accountCurrency = $this->repository->getAccountCurrency($account);
-        $groupId         = $journal->transaction_group_id;
-        $decimals        = (int)$accountCurrency->decimal_places;
+        $decimals        = $accountCurrency->decimal_places;
         $type            = $journal->transactionType->type;
         /** @var Transaction $destTransaction */
         $destTransaction = $journal->transactions()->where('amount', '>', '0')->first();
@@ -307,7 +306,7 @@ class CreditRecalculateService
         // because we're lending person X more money
         if (
             $type === TransactionType::WITHDRAWAL
-            && (int)$account->id === (int)$transaction->account_id
+            && $account->id === $transaction->account_id
             && 1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
@@ -323,7 +322,7 @@ class CreditRecalculateService
         // because we're sending money away from the loan (like loan forgiveness)
         if (
             $type === TransactionType::WITHDRAWAL
-            && (int)$account->id === (int)$sourceTransaction->account_id
+            && $account->id === $sourceTransaction->account_id
             && -1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
@@ -339,7 +338,7 @@ class CreditRecalculateService
         // because the person is paying us back.
         if (
             $type === TransactionType::DEPOSIT
-            && (int)$account->id === (int)$transaction->account_id
+            && $account->id === $transaction->account_id
             && -1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
@@ -355,7 +354,7 @@ class CreditRecalculateService
         // because the person is having to pay more money.
         if (
             $type === TransactionType::DEPOSIT
-            && (int)$account->id === (int)$destTransaction->account_id
+            && $account->id === $destTransaction->account_id
             && 1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
@@ -369,7 +368,7 @@ class CreditRecalculateService
         // because the person has to pay more back.
         if (
             $type === TransactionType::TRANSFER
-            && (int)$account->id === (int)$destTransaction->account_id
+            && $account->id === $destTransaction->account_id
             && 1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
         ) {
@@ -384,7 +383,7 @@ class CreditRecalculateService
         // because we're paying off the debt
         if (
             $type === TransactionType::WITHDRAWAL
-            && (int)$account->id === (int)$transaction->account_id
+            && $account->id === $transaction->account_id
             && 1 === bccomp($usedAmount, '0')
             && 'debit' === $direction
         ) {
@@ -399,7 +398,7 @@ class CreditRecalculateService
         // because we are borrowing more money.
         if (
             $type === TransactionType::DEPOSIT
-            && (int)$account->id === (int)$transaction->account_id
+            && $account->id === $transaction->account_id
             && -1 === bccomp($usedAmount, '0')
             && 'debit' === $direction
         ) {
@@ -414,7 +413,7 @@ class CreditRecalculateService
         // because we are paying interest.
         if (
             $type === TransactionType::WITHDRAWAL
-            && (int)$account->id === (int)$transaction->account_id
+            && $account->id === $transaction->account_id
             && -1 === bccomp($usedAmount, '0')
             && 'debit' === $direction
         ) {
@@ -433,7 +432,7 @@ class CreditRecalculateService
             return $result;
         }
 
-        Log::warning(sprintf('[-1] Catch-all, should not happen. Left of debt = %s', app('steam')->bcround($leftOfDebt, $decimals)));
+        app('log')->warning(sprintf('[-1] Catch-all, should not happen. Left of debt = %s', app('steam')->bcround($leftOfDebt, $decimals)));
 
         return $leftOfDebt;
     }

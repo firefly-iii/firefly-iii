@@ -25,7 +25,6 @@ namespace FireflyIII\Validation\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait WithdrawalValidation
@@ -42,7 +41,7 @@ trait WithdrawalValidation
         $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
         $accountName = array_key_exists('name', $array) ? $array['name'] : null;
         $accountIban = array_key_exists('iban', $array) ? $array['iban'] : null;
-        Log::debug('Now in validateGenericSource', $array);
+        app('log')->debug('Now in validateGenericSource', $array);
         // source can be any of the following types.
         $validTypes = [AccountType::ASSET, AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
         if (null === $accountId && null === $accountName && null === $accountIban && false === $this->canCreateTypes($validTypes)) {
@@ -63,7 +62,7 @@ trait WithdrawalValidation
             return false;
         }
         $this->setSource($search);
-        Log::debug('Valid source account!');
+        app('log')->debug('Valid source account!');
 
         return true;
     }
@@ -94,7 +93,7 @@ trait WithdrawalValidation
         $accountName   = array_key_exists('name', $array) ? $array['name'] : null;
         $accountIban   = array_key_exists('iban', $array) ? $array['iban'] : null;
         $accountNumber = array_key_exists('number', $array) ? $array['number'] : null;
-        Log::debug('Now in validateWithdrawalDestination()', $array);
+        app('log')->debug('Now in validateWithdrawalDestination()', $array);
         // source can be any of the following types.
         $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
         app('log')->debug('Source type can be: ', $validTypes);
@@ -149,7 +148,7 @@ trait WithdrawalValidation
         $accountIban   = array_key_exists('iban', $array) ? $array['iban'] : null;
         $accountNumber = array_key_exists('number', $array) ? $array['number'] : null;
 
-        Log::debug('Now in validateWithdrawalSource', $array);
+        app('log')->debug('Now in validateWithdrawalSource', $array);
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);
         if (null === $accountId && null === $accountName && null === $accountNumber && null === $accountIban && false === $this->canCreateTypes($validTypes)) {
@@ -170,7 +169,7 @@ trait WithdrawalValidation
             return false;
         }
         $this->setSource($search);
-        Log::debug('Valid source account!');
+        app('log')->debug('Valid source account!');
 
         return true;
     }

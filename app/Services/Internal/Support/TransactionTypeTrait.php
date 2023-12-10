@@ -26,7 +26,6 @@ namespace FireflyIII\Services\Internal\Support;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionTypeFactory;
 use FireflyIII\Models\TransactionType;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Trait TransactionTypeTrait
@@ -48,7 +47,7 @@ trait TransactionTypeTrait
         $factory         = app(TransactionTypeFactory::class);
         $transactionType = $factory->find($type);
         if (null === $transactionType) {
-            Log::error(sprintf('Could not find transaction type for "%s"', $type));
+            app('log')->error(sprintf('Could not find transaction type for "%s"', $type));
             throw new FireflyException(sprintf('Could not find transaction type for "%s"', $type));
         }
 

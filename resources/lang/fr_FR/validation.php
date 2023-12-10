@@ -44,11 +44,12 @@ return [
     'invalid_query_currency'         => 'Votre requête contient des comptes qui ont des paramètres de devise différents, ce qui n\'est pas autorisé.',
     'iban'                           => 'Il ne s\'agit pas d\'un IBAN valide.',
     'zero_or_more'                   => 'Le montant ne peut pas être négatif.',
+    'no_asset_account'               => 'Ce n\'est pas un compte d\'actif.',
     'date_or_time'                   => 'La valeur doit être une date ou une heure valide (ISO 8601).',
     'source_equals_destination'      => 'Le compte source est identique au compte de destination.',
-    'unique_account_number_for_user' => 'Il semble que ce numéro de compte est déjà utilisé.',
+    'unique_account_number_for_user' => 'Il semble que ce numéro de compte soit déjà utilisé.',
     'unique_iban_for_user'           => 'Il semble que cet IBAN soit déjà utilisé.',
-    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
+    'reconciled_forbidden_field'     => 'Cette opération est déjà rappochée, vous ne pouvez pas modifier «:field»',
     'deleted_user'                   => 'Compte tenu des contraintes de sécurité, vous ne pouvez pas vous inscrire en utilisant cette adresse e-mail.',
     'rule_trigger_value'             => 'Cette valeur n’est pas valide pour le déclencheur sélectionné.',
     'rule_action_value'              => 'Cette valeur n’est pas valide pour l’action sélectionnée.',
@@ -165,9 +166,9 @@ return [
     'url'                        => 'Le format de l\'URL de :attribute n\'est pas valide.',
     'timezone'                   => 'Le champ :attribute doit être un fuseau horaire valide.',
     '2fa_code'                   => 'Le champ :attribute est invalide.',
-    'dimensions'                 => 'Le :attribute possède des dimensions d’image non valides.',
+    'dimensions'                 => "Le\u{a0}:attribute possède des dimensions d’image non valides.",
     'distinct'                   => ':attribute possède une valeur en double.',
-    'file'                       => 'Le :attribute doit être un fichier.',
+    'file'                       => "Le\u{a0}:attribute doit être un fichier.",
     'in_array'                   => 'Le champ :attribute n\'existe pas dans :other.',
     'present'                    => 'Le champs :attribute doit être rempli.',
     'amount_zero'                => 'Le montant total ne peut pas être zéro.',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

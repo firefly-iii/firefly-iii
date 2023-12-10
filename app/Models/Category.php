@@ -25,6 +25,8 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -39,9 +41,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * FireflyIII\Models\Category
  *
  * @property int                                  $id
- * @property \Illuminate\Support\Carbon|null      $created_at
- * @property \Illuminate\Support\Carbon|null      $updated_at
- * @property \Illuminate\Support\Carbon|null      $deleted_at
+ * @property Carbon|null                          $created_at
+ * @property Carbon|null                          $updated_at
+ * @property Carbon|null                          $deleted_at
  * @property int                                  $user_id
  * @property string                               $name
  * @property Carbon                               $lastActivity
@@ -68,19 +70,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUserId($value)
  * @method static Builder|Category withTrashed()
  * @method static Builder|Category withoutTrashed()
- * @property int|null                             $user_group_id
+ * @property int                                  $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUserGroupId($value)
  * @mixin Eloquent
  */
 class Category extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -88,9 +87,9 @@ class Category extends Model
             'deleted_at' => 'datetime',
             'encrypted'  => 'boolean',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['user_id', 'user_group_id', 'name'];
-    /** @var array Hidden from view */
+
     protected $hidden = ['encrypted'];
 
     /**
@@ -101,13 +100,13 @@ class Category extends Model
      * @return Category
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): Category
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $categoryId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var Category $category */
+            /** @var Category|null $category */
             $category = $user->categories()->find($categoryId);
             if (null !== $category) {
                 return $category;
@@ -155,4 +154,5 @@ class Category extends Model
     {
         return $this->belongsToMany(Transaction::class, 'category_transaction', 'category_id');
     }
+
 }

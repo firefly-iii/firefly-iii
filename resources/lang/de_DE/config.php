@@ -42,7 +42,7 @@ return [
 
     //'month_and_day'           => '%B %e, %Y',
     'month_and_day_moment_js'  => 'DD. MMM. YYYY',
-    'month_and_day_fns'        => 'd. MMMM Y',
+    'month_and_day_fns'        => 'D. MMMM Y',
     'month_and_day_js'         => 'Do MMMM YYYY',
 
     //'month_and_date_day'      => '%A %B %e, %Y',
@@ -101,3 +101,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

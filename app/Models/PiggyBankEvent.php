@@ -23,12 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\PiggyBankEvent
@@ -56,20 +57,17 @@ use Illuminate\Support\Carbon;
  */
 class PiggyBankEvent extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+    use ReturnsIntegerIdTrait;
+
     protected $casts
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'date'       => 'date',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
-    /** @var array Hidden from view */
+
     protected $hidden = ['amount_encrypted'];
 
     /**
@@ -105,7 +103,17 @@ class PiggyBankEvent extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function piggyBankId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
         );
     }
 }

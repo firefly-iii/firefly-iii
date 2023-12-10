@@ -23,15 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -42,7 +45,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null       $updated_at
  * @property Carbon|null       $deleted_at
  * @property int               $user_id
- * @property string            $title
+ * @property string|null       $title
  * @property string|null       $description
  * @property int               $order
  * @property bool              $active
@@ -66,19 +69,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUserId($value)
  * @method static Builder|RuleGroup withTrashed()
  * @method static Builder|RuleGroup withoutTrashed()
- * @property int|null          $user_group_id
+ * @property int               $user_group_id
  * @method static \Illuminate\Database\Eloquent\Builder|RuleGroup whereUserGroupId($value)
  * @mixin Eloquent
  */
 class RuleGroup extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at'      => 'datetime',
@@ -89,7 +90,7 @@ class RuleGroup extends Model
             'order'           => 'int',
         ];
 
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['user_id', 'user_group_id', 'stop_processing', 'order', 'title', 'description', 'active'];
 
     /**
@@ -100,13 +101,13 @@ class RuleGroup extends Model
      * @return RuleGroup
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): RuleGroup
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $ruleGroupId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
-            /** @var RuleGroup $ruleGroup */
+            /** @var RuleGroup|null $ruleGroup */
             $ruleGroup = $user->ruleGroups()->find($ruleGroupId);
             if (null !== $ruleGroup) {
                 return $ruleGroup;
@@ -129,5 +130,15 @@ class RuleGroup extends Model
     public function rules(): HasMany
     {
         return $this->hasMany(Rule::class);
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

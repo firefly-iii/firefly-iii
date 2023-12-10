@@ -61,7 +61,7 @@ class TwoFactorController extends Controller
     public function submitMFA(Request $request)
     {
         /** @var array $mfaHistory */
-        $mfaHistory = Preferences::get('mfa_history', [])->data;
+        $mfaHistory = app('preferences')->get('mfa_history', [])->data;
         $mfaCode    = (string)$request->get('one_time_password');
 
         // is in history? then refuse to use it.
@@ -127,7 +127,7 @@ class TwoFactorController extends Controller
     private function filterMFAHistory(): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory = Preferences::get('mfa_history', [])->data;
+        $mfaHistory = app('preferences')->get('mfa_history', [])->data;
         $newHistory = [];
         $now        = time();
         foreach ($mfaHistory as $entry) {
@@ -140,7 +140,7 @@ class TwoFactorController extends Controller
                 ];
             }
         }
-        Preferences::set('mfa_history', $newHistory);
+        app('preferences')->set('mfa_history', $newHistory);
     }
 
     /**
@@ -149,14 +149,14 @@ class TwoFactorController extends Controller
     private function addToMFAHistory(string $mfaCode): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory   = Preferences::get('mfa_history', [])->data;
+        $mfaHistory   = app('preferences')->get('mfa_history', [])->data;
         $entry        = [
             'time' => time(),
             'code' => $mfaCode,
         ];
         $mfaHistory[] = $entry;
 
-        Preferences::set('mfa_history', $mfaHistory);
+        app('preferences')->set('mfa_history', $mfaHistory);
         $this->filterMFAHistory();
     }
 
@@ -169,7 +169,10 @@ class TwoFactorController extends Controller
      */
     private function isBackupCode(string $mfaCode): bool
     {
-        $list = Preferences::get('mfa_recovery', [])->data;
+        $list = app('preferences')->get('mfa_recovery', [])->data;
+        if (!is_array($list)) {
+            $list = [];
+        }
         if (in_array($mfaCode, $list, true)) {
             return true;
         }
@@ -184,8 +187,11 @@ class TwoFactorController extends Controller
      */
     private function removeFromBackupCodes(string $mfaCode): void
     {
-        $list    = Preferences::get('mfa_recovery', [])->data;
+        $list = app('preferences')->get('mfa_recovery', [])->data;
+        if (!is_array($list)) {
+            $list = [];
+        }
         $newList = array_values(array_diff($list, [$mfaCode]));
-        Preferences::set('mfa_recovery', $newList);
+        app('preferences')->set('mfa_recovery', $newList);
     }
 }

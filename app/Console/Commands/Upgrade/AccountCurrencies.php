@@ -44,7 +44,7 @@ class AccountCurrencies extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_account_currencies';
+    public const string CONFIG_NAME = '480_account_currencies';
 
     protected $description = 'Give all accounts proper currency info.';
     protected $signature   = 'firefly-iii:account-currencies {--F|force : Force the execution of this command.}';
@@ -109,20 +109,18 @@ class AccountCurrencies extends Command
      */
     private function updateAccountCurrencies(): void
     {
-        $users               = $this->userRepos->all();
-        $defaultCurrencyCode = (string)config('firefly.default_currency', 'EUR');
+        $users = $this->userRepos->all();
         foreach ($users as $user) {
-            $this->updateCurrenciesForUser($user, $defaultCurrencyCode);
+            $this->updateCurrenciesForUser($user);
         }
     }
 
     /**
-     * @param User   $user
-     * @param string $systemCurrencyCode
+     * @param User $user
      *
      * @throws FireflyException
      */
-    private function updateCurrenciesForUser(User $user, string $systemCurrencyCode): void
+    private function updateCurrenciesForUser(User $user): void
     {
         $this->accountRepos->setUser($user);
         $accounts = $this->accountRepos->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);

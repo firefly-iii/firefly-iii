@@ -26,6 +26,8 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -59,6 +61,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class InvitedUser extends Model
 {
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
+
     protected $casts
                         = [
             'expires'  => 'datetime',
@@ -73,11 +78,11 @@ class InvitedUser extends Model
      *
      * @return InvitedUser
      */
-    public static function routeBinder(string $value): InvitedUser
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $attemptId = (int)$value;
-            /** @var InvitedUser $attempt */
+            /** @var InvitedUser|null $attempt */
             $attempt = self::find($attemptId);
             if (null !== $attempt) {
                 return $attempt;
@@ -93,4 +98,6 @@ class InvitedUser extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+
 }

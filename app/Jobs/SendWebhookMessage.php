@@ -31,7 +31,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class SendWebhookMessage
@@ -62,7 +61,7 @@ class SendWebhookMessage implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::debug(sprintf('Now handling webhook message #%d', $this->message->id));
+        app('log')->debug(sprintf('Now handling webhook message #%d', $this->message->id));
         // send job!
         $sender = app(WebhookSenderInterface::class);
         $sender->setMessage($this->message);

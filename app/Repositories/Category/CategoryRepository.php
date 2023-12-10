@@ -38,7 +38,6 @@ use FireflyIII\Services\Internal\Update\CategoryUpdateService;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Storage;
 
 /**
@@ -125,11 +124,11 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function findCategory(?int $categoryId, ?string $categoryName): ?Category
     {
-        Log::debug('Now in findCategory()');
-        Log::debug(sprintf('Searching for category with ID #%d...', $categoryId));
+        app('log')->debug('Now in findCategory()');
+        app('log')->debug(sprintf('Searching for category with ID #%d...', $categoryId));
         $result = $this->find((int)$categoryId);
         if (null === $result) {
-            Log::debug(sprintf('Searching for category with name %s...', $categoryName));
+            app('log')->debug(sprintf('Searching for category with name %s...', $categoryName));
             $result = $this->findByName((string)$categoryName);
             if (null === $result && '' !== (string)$categoryName) {
                 // create it!
@@ -137,9 +136,9 @@ class CategoryRepository implements CategoryRepositoryInterface
             }
         }
         if (null !== $result) {
-            Log::debug(sprintf('Found category #%d: %s', $result->id, $result->name));
+            app('log')->debug(sprintf('Found category #%d: %s', $result->id, $result->name));
         }
-        Log::debug(sprintf('Found category result is null? %s', var_export(null === $result, true)));
+        app('log')->debug(sprintf('Found category result is null? %s', var_export(null === $result, true)));
 
         return $result;
     }
@@ -201,7 +200,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
@@ -307,7 +306,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             static function (Attachment $attachment) use ($disk) {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes       = $notes ? $notes->text : '';
+                $attachment->notes_text  = null !== $notes ? $notes->text : '';
 
                 return $attachment;
             }

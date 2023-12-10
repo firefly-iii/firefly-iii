@@ -24,14 +24,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -61,17 +64,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|ObjectGroup whereTitle($value)
  * @method static Builder|ObjectGroup whereUpdatedAt($value)
  * @method static Builder|ObjectGroup whereUserId($value)
- * @property int|null                    $user_group_id
+ * @property int                         $user_group_id
  * @method static Builder|ObjectGroup whereUserGroupId($value)
  * @mixin Eloquent
  */
 class ObjectGroup extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+    use ReturnsIntegerIdTrait;
+    use ReturnsIntegerUserIdTrait;
+
     protected $casts
                         = [
             'created_at' => 'datetime',
@@ -89,11 +90,11 @@ class ObjectGroup extends Model
      * @return ObjectGroup
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): ObjectGroup
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $objectGroupId = (int)$value;
-            /** @var ObjectGroup $objectGroup */
+            /** @var ObjectGroup|null $objectGroup */
             $objectGroup = self::where('object_groups.id', $objectGroupId)
                                ->where('object_groups.user_id', auth()->user()->id)->first();
             if (null !== $objectGroup) {
@@ -134,4 +135,16 @@ class ObjectGroup extends Model
     {
         return $this->morphedByMany(PiggyBank::class, 'object_groupable');
     }
+
+
+    /**
+     * @return Attribute
+     */
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
 }

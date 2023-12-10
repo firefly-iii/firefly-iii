@@ -83,7 +83,7 @@ class OperationsRepository implements OperationsRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
@@ -100,7 +100,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         foreach ($journals as $journal) {
             $currencyId         = (int)$journal['currency_id'];
             $journalId          = (int)$journal['transaction_journal_id'];
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
 
                 'currency_id'             => $journal['currency_id'],
                 'currency_name'           => $journal['currency_name'],
@@ -111,7 +111,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             $array[$currencyId]['transaction_journals'][$journalId] = [
-                'amount'                   => app('steam')->$direction((string)$journal['amount']),
+                'amount'                   => app('steam')->$direction((string)$journal['amount']), // @phpstan-ignore-line
                 'date'                     => $journal['date'],
                 'transaction_journal_id'   => $journalId,
                 'budget_name'              => $journal['budget_name'],
@@ -151,6 +151,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * @inheritDoc
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumExpenses(
         Carbon               $start,
@@ -158,7 +159,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?Collection          $accounts = null,
         ?Collection          $expense = null,
         ?TransactionCurrency $currency = null
-    ): array {
+    ): array
+    {
         $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
 
         return $this->groupByCurrency($journals, 'negative');
@@ -173,6 +175,7 @@ class OperationsRepository implements OperationsRepositoryInterface
      * @param string                   $type
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     private function getTransactionsForSum(
         string               $type,
@@ -181,7 +184,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?Collection          $accounts = null,
         ?Collection          $opposing = null,
         ?TransactionCurrency $currency = null
-    ): array {
+    ): array
+    {
         $start->startOfDay();
         $end->endOfDay();
 
@@ -260,7 +264,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId]        ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -268,12 +272,12 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'currency_code'           => $journal['currency_code'],
                 'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->$direction($journal['amount']));
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->$direction($journal['amount'])); // @phpstan-ignore-line
 
             // also do foreign amount:
             $foreignId = (int)$journal['foreign_currency_id'];
             if (0 !== $foreignId) {
-                $array[$foreignId]        = $array[$foreignId] ?? [
+                $array[$foreignId]        ??= [
                     'sum'                     => '0',
                     'currency_id'             => $foreignId,
                     'currency_name'           => $journal['foreign_currency_name'],
@@ -281,7 +285,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                     'currency_code'           => $journal['foreign_currency_code'],
                     'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
                 ];
-                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->$direction($journal['foreign_amount']));
+                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->$direction($journal['foreign_amount']));// @phpstan-ignore-line
             }
         }
 
@@ -290,6 +294,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * @inheritDoc
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumExpensesByDestination(
         Carbon               $start,
@@ -297,7 +302,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?Collection          $accounts = null,
         ?Collection          $expense = null,
         ?TransactionCurrency $currency = null
-    ): array {
+    ): array
+    {
         $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
 
         return $this->groupByDirection($journals, 'destination', 'negative');
@@ -318,7 +324,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $key                = sprintf('%s-%s', $journal[$idKey], $journal['currency_id']);
-            $array[$key]        = $array[$key] ?? [
+            $array[$key]        ??= [
                 'id'                      => $journal[$idKey],
                 'name'                    => $journal[$nameKey],
                 'sum'                     => '0',
@@ -328,12 +334,12 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'currency_code'           => $journal['currency_code'],
                 'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
-            $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->$method((string)$journal['amount']));
+            $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->$method((string)$journal['amount']));// @phpstan-ignore-line
 
             // also do foreign amount:
             if (0 !== (int)$journal['foreign_currency_id']) {
                 $key                = sprintf('%s-%s', $journal[$idKey], $journal['foreign_currency_id']);
-                $array[$key]        = $array[$key] ?? [
+                $array[$key]        ??= [
                     'id'                      => $journal[$idKey],
                     'name'                    => $journal[$nameKey],
                     'sum'                     => '0',
@@ -343,7 +349,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                     'currency_code'           => $journal['foreign_currency_code'],
                     'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
                 ];
-                $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->$method((string)$journal['foreign_amount']));
+                $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->$method((string)$journal['foreign_amount']));// @phpstan-ignore-line
             }
         }
 
@@ -352,6 +358,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * @inheritDoc
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumExpensesBySource(
         Carbon               $start,
@@ -359,7 +366,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?Collection          $accounts = null,
         ?Collection          $expense = null,
         ?TransactionCurrency $currency = null
-    ): array {
+    ): array
+    {
         $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
 
         return $this->groupByDirection($journals, 'source', 'negative');
@@ -367,6 +375,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * @inheritDoc
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumIncome(
         Carbon               $start,
@@ -374,7 +383,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?Collection          $accounts = null,
         ?Collection          $revenue = null,
         ?TransactionCurrency $currency = null
-    ): array {
+    ): array
+    {
         $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
 
         return $this->groupByCurrency($journals, 'positive');
@@ -382,6 +392,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * @inheritDoc
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumIncomeByDestination(
         Carbon               $start,
@@ -389,7 +400,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?Collection          $accounts = null,
         ?Collection          $revenue = null,
         ?TransactionCurrency $currency = null
-    ): array {
+    ): array
+    {
         $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
 
         return $this->groupByDirection($journals, 'destination', 'positive');
@@ -397,6 +409,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * @inheritDoc
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumIncomeBySource(
         Carbon               $start,
@@ -404,7 +417,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?Collection          $accounts = null,
         ?Collection          $revenue = null,
         ?TransactionCurrency $currency = null
-    ): array {
+    ): array
+    {
         $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
 
         return $this->groupByDirection($journals, 'source', 'positive');
@@ -459,7 +473,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $amount        = app('steam')->positive($journal['amount']);
 
         // source first
-        $return[$sourceKey] = $return[$sourceKey] ?? [
+        $return[$sourceKey] ??= [
             'id'               => (string)$sourceId,
             'name'             => $journal['source_account_name'],
             'difference'       => '0',
@@ -473,7 +487,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         ];
 
         // dest next:
-        $return[$destKey] = $return[$destKey] ?? [
+        $return[$destKey] ??= [
             'id'               => (string)$destinationId,
             'name'             => $journal['destination_account_name'],
             'difference'       => '0',
@@ -503,7 +517,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // same as above:
             // source first
-            $return[$sourceKey] = $return[$sourceKey] ?? [
+            $return[$sourceKey] ??= [
                 'id'               => (string)$sourceId,
                 'name'             => $journal['source_account_name'],
                 'difference'       => '0',
@@ -517,7 +531,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // dest next:
-            $return[$destKey] = $return[$destKey] ?? [
+            $return[$destKey] ??= [
                 'id'               => (string)$destinationId,
                 'name'             => $journal['destination_account_name'],
                 'difference'       => '0',

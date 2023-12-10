@@ -29,7 +29,6 @@ use Closure;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class SessionFilter.
@@ -48,7 +47,7 @@ class Range
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->user()) {
+        if (null !== $request->user()) {
             // set start, end and finish:
             $this->setRange();
 
@@ -70,9 +69,13 @@ class Range
         // ignore preference. set the range to be the current month:
         if (!app('session')->has('start') && !app('session')->has('end')) {
             $viewRange = app('preferences')->get('viewRange', '1M')->data;
-            $today     = today(config('app.timezone'));
-            $start     = app('navigation')->updateStartDate($viewRange, $today);
-            $end       = app('navigation')->updateEndDate($viewRange, $start);
+            if (is_array($viewRange)) {
+                $viewRange = '1M';
+            }
+
+            $today = today(config('app.timezone'));
+            $start = app('navigation')->updateStartDate((string)$viewRange, $today);
+            $end   = app('navigation')->updateEndDate((string)$viewRange, $start);
 
             app('session')->put('start', $start);
             app('session')->put('end', $end);
@@ -108,7 +111,7 @@ class Range
 
         // send error to view, if could not set money format
         if (false === $moneyResult) {
-            Log::error('Could not set locale. The following array doesnt work: ', $localeArray);
+            app('log')->error('Could not set locale. The following array doesnt work: ', $localeArray);
             app('view')->share('invalidMonetaryLocale', true);
         }
 

@@ -40,7 +40,7 @@ use Twig\TwigFunction;
 class General extends AbstractExtension
 {
     /**
-     * @return array
+     * @inheritDoc
      */
     public function getFilters(): array
     {
@@ -114,7 +114,7 @@ class General extends AbstractExtension
                         return 'fa-file-o';
                     case 'application/pdf':
                         return 'fa-file-pdf-o';
-                        /* image */
+                    /* image */
                     case 'image/png':
                     case 'image/jpeg':
                     case 'image/svg+xml':
@@ -122,7 +122,7 @@ class General extends AbstractExtension
                     case 'image/heic-sequence':
                     case 'application/vnd.oasis.opendocument.image':
                         return 'fa-file-image-o';
-                        /* MS word */
+                    /* MS word */
                     case 'application/msword':
                     case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                     case 'application/vnd.openxmlformats-officedocument.wordprocessingml.template':
@@ -137,7 +137,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.text-web':
                     case 'application/vnd.oasis.opendocument.text-master':
                         return 'fa-file-word-o';
-                        /* MS excel */
+                    /* MS excel */
                     case 'application/vnd.ms-excel':
                     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
                     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.template':
@@ -147,7 +147,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.spreadsheet':
                     case 'application/vnd.oasis.opendocument.spreadsheet-template':
                         return 'fa-file-excel-o';
-                        /* MS powerpoint */
+                    /* MS powerpoint */
                     case 'application/vnd.ms-powerpoint':
                     case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
                     case 'application/vnd.openxmlformats-officedocument.presentationml.template':
@@ -158,7 +158,7 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.presentation':
                     case 'application/vnd.oasis.opendocument.presentation-template':
                         return 'fa-file-powerpoint-o';
-                        /* calc */
+                    /* calc */
                     case 'application/vnd.sun.xml.draw':
                     case 'application/vnd.sun.xml.draw.template':
                     case 'application/vnd.stardivision.draw':
@@ -357,7 +357,7 @@ class General extends AbstractExtension
     {
         return new TwigFunction(
             'formatDate',
-            function (string $date, string $format): string {
+            static function (string $date, string $format): string {
                 $carbon = new Carbon($date);
 
                 return $carbon->isoFormat($format);

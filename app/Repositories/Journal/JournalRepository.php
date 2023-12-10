@@ -89,7 +89,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function firstNull(): ?TransactionJournal
     {
-        /** @var TransactionJournal $entry */
+        /** @var TransactionJournal|null $entry */
         $entry  = $this->user->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
         $result = null;
         if (null !== $entry) {
@@ -104,7 +104,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getDestinationAccount(TransactionJournal $journal): Account
     {
-        /** @var Transaction $transaction */
+        /** @var Transaction|null $transaction */
         $transaction = $journal->transactions()->with('account')->where('amount', '>', 0)->first();
         if (null === $transaction) {
             throw new FireflyException(sprintf('Your administration is broken. Transaction journal #%d has no destination transaction.', $journal->id));
@@ -142,7 +142,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getLast(): ?TransactionJournal
     {
-        /** @var TransactionJournal $entry */
+        /** @var TransactionJournal|null $entry */
         $entry  = $this->user->transactionJournals()->orderBy('date', 'DESC')->first(['transaction_journals.*']);
         $result = null;
         if (null !== $entry) {
@@ -159,13 +159,9 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getLinkNoteText(TransactionJournalLink $link): string
     {
-        /** @var Note $note */
+        /** @var Note|null $note */
         $note = $link->notes()->first();
-        if (null !== $note) {
-            return $note->text ?? '';
-        }
-
-        return '';
+        return (string)$note?->text;
     }
 
     /**
@@ -202,7 +198,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getSourceAccount(TransactionJournal $journal): Account
     {
-        /** @var Transaction $transaction */
+        /** @var Transaction|null $transaction */
         $transaction = $journal->transactions()->with('account')->where('amount', '<', 0)->first();
         if (null === $transaction) {
             throw new FireflyException(sprintf('Your administration is broken. Transaction journal #%d has no source transaction.', $journal->id));
@@ -216,7 +212,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function reconcileById(int $journalId): void
     {
-        /** @var TransactionJournal $journal */
+        /** @var TransactionJournal|null $journal */
         $journal = $this->user->transactionJournals()->find($journalId);
         $journal?->transactions()->update(['reconciled' => true]);
     }
@@ -257,7 +253,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function setUser(User | Authenticatable | null $user): void
     {
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
@@ -267,7 +263,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function unreconcileById(int $journalId): void
     {
-        /** @var TransactionJournal $journal */
+        /** @var TransactionJournal|null $journal */
         $journal = $this->user->transactionJournals()->find($journalId);
         $journal?->transactions()->update(['reconciled' => false]);
     }

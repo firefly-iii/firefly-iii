@@ -25,51 +25,47 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Model\BudgetLimit;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Api\V2\Request\Generic\DateRequest;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Budget;
-use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
-use FireflyIII\Transformers\V2\BudgetLimitTransformer;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Class ListController
  */
 class ListController extends Controller
 {
-    private BudgetLimitRepositoryInterface $repository;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(BudgetLimitRepositoryInterface::class);
-
-                return $next($request);
-            }
-        );
-    }
+    //    private BudgetLimitRepositoryInterface $repository;
+    //
+    //    public function __construct()
+    //    {
+    //        parent::__construct();
+    //        $this->middleware(
+    //            function ($request, $next) {
+    //                $this->repository = app(BudgetLimitRepositoryInterface::class);
+    //
+    //                return $next($request);
+    //            }
+    //        );
+    //    }
 
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/budgets/listBudgetLimitByBudget
+     * // DateRequest $request, Budget $budget
      */
-    public function index(DateRequest $request, Budget $budget): JsonResponse
+    public function index(): JsonResponse
     {
-        throw new FireflyException('Needs refactoring, move to IndexController.');
-        $pageSize   = $this->parameters->get('limit');
-        $dates      = $request->getAll();
-        $collection = $this->repository->getBudgetLimits($budget, $dates['start'], $dates['end']);
-        $total      = $collection->count();
-        $collection->slice($pageSize * $this->parameters->get('page'), $pageSize);
-
-        $paginator   = new LengthAwarePaginator($collection, $total, $pageSize, $this->parameters->get('page'));
-        $transformer = new BudgetLimitTransformer();
-
-        return response()
-            ->api($this->jsonApiList('budget-limits', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+        return response()->json([]);
+        //        throw new FireflyException('Needs refactoring, move to IndexController.');
+        //        $pageSize   = $this->parameters->get('limit');
+        //        $dates      = $request->getAll();
+        //        $collection = $this->repository->getBudgetLimits($budget, $dates['start'], $dates['end']);
+        //        $total      = $collection->count();
+        //        $collection->slice($pageSize * $this->parameters->get('page'), $pageSize);
+        //
+        //        $paginator   = new LengthAwarePaginator($collection, $total, $pageSize, $this->parameters->get('page'));
+        //        $transformer = new BudgetLimitTransformer();
+        //
+        //        return response()
+        //            ->api($this->jsonApiList('budget-limits', $paginator, $transformer))
+        //            ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

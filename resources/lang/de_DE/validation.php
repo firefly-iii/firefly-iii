@@ -44,11 +44,12 @@ return [
     'invalid_query_currency'         => 'Ihre Abfrage enthält unzulässigerweise Konten mit unterschiedlicher Währungseinstellung.',
     'iban'                           => 'Dies ist keine gültige IBAN.',
     'zero_or_more'                   => 'Der Wert darf nicht negativ sein.',
+    'no_asset_account'               => 'Dies ist kein Bestandskonto.',
     'date_or_time'                   => 'Der Wert muss ein gültiges Datum oder Zeitangabe sein (ISO 8601).',
     'source_equals_destination'      => 'Das Quellkonto entspricht dem Zielkonto.',
     'unique_account_number_for_user' => 'Diese Kontonummer scheint bereits verwendet zu sein.',
     'unique_iban_for_user'           => 'Dieser IBAN scheint bereits verwendet zu werden.',
-    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
+    'reconciled_forbidden_field'     => 'Diese Buchung ist bereits abgeglichen, Sie können das „:field” nicht ändern',
     'deleted_user'                   => 'Aufgrund von Sicherheitsbeschränkungen ist eine Registrierung mit dieser E-Mail-Adresse nicht zugelassen.',
     'rule_trigger_value'             => 'Dieser Wert ist für den ausgewählten Auslöser ungültig.',
     'rule_action_value'              => 'Dieser Wert ist für die gewählte Aktion ungültig.',
@@ -60,8 +61,8 @@ return [
     'transaction_types_equal'        => 'Alle Aufteilungen müssen vom gleichen Typ sein.',
     'invalid_transaction_type'       => 'Ungültige Transaktionstyp',
     'invalid_selection'              => 'Ihre Auswahl ist ungültig.',
-    'belongs_user'                   => 'This value is linked to an object that does not seem to exist.',
-    'belongs_user_or_user_group'     => 'This value is linked to an object that does not seem to exist in your current financial administration.',
+    'belongs_user'                   => 'Dieser Wert verweist auf ein Objekt, das offenbar nicht existiert.',
+    'belongs_user_or_user_group'     => 'Dieser Wert verweist auf ein Objekt, das in Ihrer aktuellen Finanzverwaltung offenbar nicht existiert.',
     'at_least_one_transaction'       => 'Sie brauchen mindestens eine Transaktion.',
     'recurring_transaction_id'       => 'Sie benötigen mindestens eine Buchung.',
     'need_id_to_match'               => 'Sie müssen diesen Eintrag mit einer ID übermitteln, damit die API ihn zuordnen kann.',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

@@ -31,7 +31,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -68,10 +67,10 @@ class ForgotPasswordController extends Controller
      */
     public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
     {
-        Log::info('Start of sendResetLinkEmail()');
+        app('log')->info('Start of sendResetLinkEmail()');
         if ('web' !== config('firefly.authentication_guard')) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', config('firefly.authentication_guard'));
-            Log::error($message);
+            app('log')->error($message);
 
             return view('error', compact('message'));
         }
@@ -80,7 +79,7 @@ class ForgotPasswordController extends Controller
         $this->validateEmail($request);
 
         // verify if the user is not a demo user. If so, we give him back an error.
-        /** @var User $user */
+        /** @var User|null $user */
         $user = User::where('email', $request->get('email'))->first();
 
         if (null !== $user && $repository->hasRole($user, 'demo')) {
@@ -92,7 +91,7 @@ class ForgotPasswordController extends Controller
         // need to show to the user. Finally, we'll send out a proper response.
         $result = $this->broker()->sendResetLink($request->only('email'));
         if ('passwords.throttled' === $result) {
-            Log::error(sprintf('Cowardly refuse to send a password reset message to user #%d because the reset button has been throttled.', $user->id));
+            app('log')->error(sprintf('Cowardly refuse to send a password reset message to user #%d because the reset button has been throttled.', $user->id));
         }
 
         // always send the same response to the user:

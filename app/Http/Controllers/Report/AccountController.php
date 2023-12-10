@@ -29,7 +29,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -65,8 +64,8 @@ class AccountController extends Controller
         try {
             $result = view('reports.partials.accounts', compact('accountReport'))->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Could not render reports.partials.accounts: %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Could not render reports.partials.accounts: %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = 'Could not render view.';
             throw new FireflyException($result, 0, $e);
         }

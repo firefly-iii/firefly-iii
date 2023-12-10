@@ -32,17 +32,9 @@ use Illuminate\Console\Command;
  */
 class OutputVersion extends Command
 {
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Outputs the Firefly III version';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:output-version';
 
     /**

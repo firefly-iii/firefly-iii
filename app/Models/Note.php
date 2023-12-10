@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\Note
@@ -60,20 +62,17 @@ use Illuminate\Support\Carbon;
  */
 class Note extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+
     protected $casts
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['title', 'text', 'noteable_id', 'noteable_type'];
 
     /**
@@ -84,4 +83,16 @@ class Note extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function noteableId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+
 }

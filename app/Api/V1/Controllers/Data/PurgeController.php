@@ -35,6 +35,7 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -51,6 +52,7 @@ class PurgeController extends Controller
      */
     public function purge(): JsonResponse
     {
+        /** @var User $user */
         $user = auth()->user();
 
         // some manual code, too lazy to call all repositories.

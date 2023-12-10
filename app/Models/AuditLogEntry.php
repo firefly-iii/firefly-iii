@@ -24,12 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Carbon;
 
 /**
  * Class AuditLogEntry
@@ -68,6 +70,7 @@ use Illuminate\Support\Carbon;
  */
 class AuditLogEntry extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
     protected $casts
@@ -92,4 +95,26 @@ class AuditLogEntry extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function auditableId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function changerId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+
 }

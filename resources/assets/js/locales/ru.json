@@ -30,7 +30,7 @@
         "submit": "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044c",
         "amount": "\u0421\u0443\u043c\u043c\u0430",
         "date": "\u0414\u0430\u0442\u0430",
-        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
+        "is_reconciled_fields_dropped": "\u041f\u043e\u0441\u043a\u043e\u043b\u044c\u043a\u0443 \u044d\u0442\u0430 \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0438\u044f \u0441\u0432\u0435\u0440\u0435\u043d\u0430, \u0432\u044b \u043d\u0435 \u0441\u043c\u043e\u0436\u0435\u0442\u0435 \u043e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u0441\u0447\u0435\u0442\u0430, \u043d\u0438 \u0441\u0443\u043c\u043c\u0443(\u044b).",
         "tags": "\u041c\u0435\u0442\u043a\u0438",
         "no_budget": "(\u0432\u043d\u0435 \u0431\u044e\u0434\u0436\u0435\u0442\u0430)",
         "no_bill": "(\u043d\u0435\u0442 \u0441\u0447\u0451\u0442\u0430 \u043d\u0430 \u043e\u043f\u043b\u0430\u0442\u0443)",
@@ -122,11 +122,11 @@
         "attempt_content_title": "Webhook attempts",
         "attempt_content_help": "These are all the unsuccessful attempts of this webhook message to submit to the configured URL. After some time, Firefly III will stop trying.",
         "no_attempts": "There are no unsuccessful attempts. That's a good thing!",
-        "webhook_attempt_at": "Attempt at {moment}",
+        "webhook_attempt_at": "\u041f\u043e\u043f\u044b\u0442\u043a\u0430 \u0432 {moment}",
         "logs": "\u041b\u043e\u0433\u0438",
         "response": "\u041e\u0442\u0432\u0435\u0442",
         "visit_webhook_url": "\u041f\u043e\u0441\u0435\u0442\u0438\u0442\u044c URL \u0432\u0435\u0431\u0445\u0443\u043a\u0430",
-        "reset_webhook_secret": "Reset webhook secret"
+        "reset_webhook_secret": "\u0421\u0431\u0440\u043e\u0441\u0438\u0442\u044c \u0441\u0435\u043a\u0440\u0435\u0442 webhook"
     },
     "form": {
         "url": "\u0421\u0441\u044b\u043b\u043a\u0430",

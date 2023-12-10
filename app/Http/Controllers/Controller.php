@@ -39,9 +39,9 @@ abstract class Controller extends BaseController
 {
     use AuthorizesRequests;
     use DispatchesJobs;
-    use ValidatesRequests;
     use RequestInformation;
     use UserNavigation;
+    use ValidatesRequests;
 
     protected string $dateTimeFormat;
     protected string $monthAndDayFormat;
@@ -57,7 +57,7 @@ abstract class Controller extends BaseController
     {
         // is site a demo site?
         $isDemoSiteConfig = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site', false));
-        $isDemoSite       = $isDemoSiteConfig ? $isDemoSiteConfig->data : false;
+        $isDemoSite       = (bool)$isDemoSiteConfig->data;
         app('view')->share('IS_DEMO_SITE', $isDemoSite);
         app('view')->share('DEMO_USERNAME', config('firefly.demo_username'));
         app('view')->share('DEMO_PASSWORD', config('firefly.demo_password'));
@@ -74,8 +74,8 @@ abstract class Controller extends BaseController
         app('view')->share('logoutUrl', $logoutUrl);
 
         // upload size
-        $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize = app('steam')->phpBytes(ini_get('post_max_size'));
+        $maxFileSize = app('steam')->phpBytes((string)ini_get('upload_max_filesize'));
+        $maxPostSize = app('steam')->phpBytes((string)ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
         app('view')->share('uploadSize', $uploadSize);
 

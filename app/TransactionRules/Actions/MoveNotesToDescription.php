@@ -29,7 +29,6 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class MoveNotesToDescription
@@ -60,10 +59,10 @@ class MoveNotesToDescription implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        /** @var TransactionJournal $object */
+        /** @var TransactionJournal|null $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
-            Log::error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
+            app('log')->error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_other_user')));
             return false;
         }
@@ -81,7 +80,7 @@ class MoveNotesToDescription implements ActionInterface
         }
         $before              = $object->description;
         $beforeNote          = $note->text;
-        $object->description = (string)$this->clearString($note->text, false);
+        $object->description = (string)$this->clearString($note->text);
         $object->save();
         $note->delete();
 

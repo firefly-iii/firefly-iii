@@ -31,7 +31,6 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
 use Illuminate\Http\Request;
-use Preferences;
 
 /**
  * Class InterestingMessage
@@ -54,23 +53,23 @@ class InterestingMessage
         }
 
         if ($this->groupMessage($request)) {
-            Preferences::mark();
+            app('preferences')->mark();
             $this->handleGroupMessage($request);
         }
         if ($this->accountMessage($request)) {
-            Preferences::mark();
+            app('preferences')->mark();
             $this->handleAccountMessage($request);
         }
         if ($this->billMessage($request)) {
-            Preferences::mark();
+            app('preferences')->mark();
             $this->handleBillMessage($request);
         }
         if ($this->webhookMessage($request)) {
-            Preferences::mark();
+            app('preferences')->mark();
             $this->handleWebhookMessage($request);
         }
         if ($this->currencyMessage($request)) {
-            Preferences::mark();
+            app('preferences')->mark();
             $this->handleCurrencyMessage($request);
         }
 
@@ -110,7 +109,7 @@ class InterestingMessage
         $message            = $request->get('message');
 
         // send message about newly created transaction group.
-        /** @var TransactionGroup $group */
+        /** @var TransactionGroup|null $group */
         $group = auth()->user()->transactionGroups()->with(['transactionJournals', 'transactionJournals.transactionType'])->find((int)$transactionGroupId);
 
         if (null === $group) {
@@ -119,7 +118,7 @@ class InterestingMessage
 
         $count = $group->transactionJournals->count();
 
-        /** @var TransactionJournal $journal */
+        /** @var TransactionJournal|null $journal */
         $journal = $group->transactionJournals->first();
         if (null === $journal) {
             return;
@@ -164,7 +163,7 @@ class InterestingMessage
         $accountId = $request->get('account_id');
         $message   = $request->get('message');
 
-        /** @var Account $account */
+        /** @var Account|null $account */
         $account = auth()->user()->accounts()->withTrashed()->find($accountId);
 
         if (null === $account) {
@@ -204,7 +203,7 @@ class InterestingMessage
         $billId  = $request->get('bill_id');
         $message = $request->get('message');
 
-        /** @var Bill $bill */
+        /** @var Bill|null $bill */
         $bill = auth()->user()->bills()->withTrashed()->find($billId);
 
         if (null === $bill) {
@@ -241,7 +240,7 @@ class InterestingMessage
         $webhookId = $request->get('webhook_id');
         $message   = $request->get('message');
 
-        /** @var Webhook $webhook */
+        /** @var Webhook|null $webhook */
         $webhook = auth()->user()->webhooks()->withTrashed()->find($webhookId);
 
         if (null === $webhook) {
@@ -272,6 +271,11 @@ class InterestingMessage
         return null !== $code && null !== $message;
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return void
+     */
     private function handleCurrencyMessage(Request $request): void
     {
         // params:
@@ -279,7 +283,7 @@ class InterestingMessage
         $code    = $request->get('code');
         $message = $request->get('message');
 
-        /** @var TransactionCurrency $webhook */
+        /** @var TransactionCurrency|null $currency */
         $currency = TransactionCurrency::whereCode($code)->first();
 
         if (null === $currency) {

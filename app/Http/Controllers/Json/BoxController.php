@@ -30,7 +30,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\AvailableBudget;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
@@ -38,7 +37,6 @@ use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class BoxController.
@@ -75,7 +73,7 @@ class BoxController extends Controller
         $cache->addProperty($today);
         $cache->addProperty('box-available');
         if ($cache->has()) {
-            //return response()->json($cache->get());
+            return response()->json($cache->get());
         }
         $leftPerDayAmount  = '0';
         $leftToSpendAmount = '0';
@@ -85,7 +83,7 @@ class BoxController extends Controller
         $availableBudgets = $abRepository->getAvailableBudgetsByExactDate($start, $end);
         app('log')->debug(sprintf('Found %d available budget(s)', $availableBudgets->count()));
         $availableBudgets = $availableBudgets->filter(
-            static function (AvailableBudget $availableBudget) use ($currency) {
+            static function (AvailableBudget $availableBudget) use ($currency) { // @phpstan-ignore-line
                 if ($availableBudget->transaction_currency_id === $currency->id) {
                     app('log')->debug(sprintf(
                         'Will include AB #%d: from %s-%s amount %s',
@@ -104,7 +102,7 @@ class BoxController extends Controller
         // spent in this period, in budgets, for default currency.
         // also calculate spent per day.
         $spent       = $opsRepository->sumExpenses($start, $end, null, null, $currency);
-        $spentAmount = $spent[(int)$currency->id]['sum'] ?? '0';
+        $spentAmount = $spent[$currency->id]['sum'] ?? '0';
         app('log')->debug(sprintf('Spent for default currency for all budgets in this period: %s', $spentAmount));
 
         $days = $today->between($start, $end) ? $today->diffInDays($start) + 1 : $end->diffInDays($start) + 1;
@@ -120,7 +118,7 @@ class BoxController extends Controller
             $leftToSpendAmount = bcadd($totalAvailableSum, $spentAmount);
             app('log')->debug(sprintf('So left to spend is %s', $leftToSpendAmount));
             if (1 === bccomp($leftToSpendAmount, '0')) {
-                app('log')->debug(sprintf('Left to spend is positive!'));
+                app('log')->debug('Left to spend is positive!');
                 $boxTitle         = (string)trans('firefly.left_to_spend');
                 $days             = $today->diffInDays($end) + 1;
                 $display          = 1; // not overspent
@@ -181,9 +179,9 @@ class BoxController extends Controller
         foreach ($set as $journal) {
             $currencyId           = (int)$journal['currency_id'];
             $amount               = $journal['amount'] ?? '0';
-            $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
+            $incomes[$currencyId] ??= '0';
             $incomes[$currencyId] = bcadd($incomes[$currencyId], app('steam')->positive($amount));
-            $sums[$currencyId]    = $sums[$currencyId] ?? '0';
+            $sums[$currencyId]    ??= '0';
             $sums[$currencyId]    = bcadd($sums[$currencyId], app('steam')->positive($amount));
         }
 
@@ -196,9 +194,9 @@ class BoxController extends Controller
         /** @var array $journal */
         foreach ($set as $journal) {
             $currencyId            = (int)$journal['currency_id'];
-            $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
+            $expenses[$currencyId] ??= '0';
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $journal['amount'] ?? '0');
-            $sums[$currencyId]     = $sums[$currencyId] ?? '0';
+            $sums[$currencyId]     ??= '0';
             $sums[$currencyId]     = bcadd($sums[$currencyId], $journal['amount']);
         }
 
@@ -253,27 +251,28 @@ class BoxController extends Controller
         $allAccounts       = $accountRepository->getActiveAccountsByType(
             [AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]
         );
-        Log::debug(sprintf('Found %d accounts.', $allAccounts->count()));
+        app('log')->debug(sprintf('Found %d accounts.', $allAccounts->count()));
 
         // filter list on preference of being included.
         $filtered = $allAccounts->filter(
-            function (Account $account) use ($accountRepository) {
+            static function (Account $account) use ($accountRepository) {
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
                 $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
                 if (false === $result) {
-                    Log::debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
+                    app('log')->debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
                 }
 
                 return $result;
             }
         );
 
-        $netWorthSet = $netWorthHelper->getNetWorthByCurrency($filtered, $date);
+        $netWorthSet = $netWorthHelper->byAccounts($filtered, $date);
         $return      = [];
-        foreach ($netWorthSet as $data) {
-            /** @var TransactionCurrency $currency */
-            $currency              = $data['currency'];
-            $return[$currency->id] = app('amount')->formatAnything($currency, $data['balance'], false);
+        foreach ($netWorthSet as $key => $data) {
+            if ('native' === $key) {
+                continue;
+            }
+            $return[$data['currency_id']] = app('amount')->formatFlat($data['currency_symbol'], $data['currency_decimal_places'], $data['balance'], false);
         }
         $return = [
             'net_worths' => array_values($return),

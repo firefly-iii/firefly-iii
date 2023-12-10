@@ -34,7 +34,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -79,7 +78,7 @@ class DeleteController extends Controller
             return $this->redirectGroupToAccount($group);
         }
 
-        Log::debug(sprintf('Start of delete view for group #%d', $group->id));
+        app('log')->debug(sprintf('Start of delete view for group #%d', $group->id));
 
         $journal = $group->transactionJournals->first();
         if (null === $journal) {
@@ -89,7 +88,7 @@ class DeleteController extends Controller
         $subTitle   = (string)trans('firefly.delete_' . $objectType, ['description' => $group->title ?? $journal->description]);
         $previous   = app('steam')->getSafePreviousUrl();
         // put previous url in session
-        Log::debug('Will try to remember previous URL');
+        app('log')->debug('Will try to remember previous URL');
         $this->rememberPreviousUrl('transactions.delete.url');
 
         return view('transactions.delete', compact('group', 'journal', 'subTitle', 'objectType', 'previous'));
@@ -100,11 +99,11 @@ class DeleteController extends Controller
      *
      * @param TransactionGroup $group
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|Redirector
      */
-    public function destroy(TransactionGroup $group): RedirectResponse
+    public function destroy(TransactionGroup $group): RedirectResponse | Redirector
     {
-        Log::debug(sprintf('Now in %s(#%d).', __METHOD__, $group->id));
+        app('log')->debug(sprintf('Now in %s(#%d).', __METHOD__, $group->id));
         if (!$this->isEditableGroup($group)) {
             return $this->redirectGroupToAccount($group);
         }
@@ -118,10 +117,10 @@ class DeleteController extends Controller
 
         // grab asset account(s) from group:
         $accounts = [];
-        /** @var TransactionJournal $journal */
-        foreach ($group->transactionJournals as $journal) {
+        /** @var TransactionJournal $currentJournal */
+        foreach ($group->transactionJournals as $currentJournal) {
             /** @var Transaction $transaction */
-            foreach ($journal->transactions as $transaction) {
+            foreach ($currentJournal->transactions as $transaction) {
                 $type = $transaction->account->accountType->type;
                 // if is valid liability, trigger event!
                 if (in_array($type, config('firefly.valid_liabilities'), true)) {
@@ -134,7 +133,7 @@ class DeleteController extends Controller
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            Log::debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
+            app('log')->debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
             event(new UpdatedAccount($account));
         }
         app('preferences')->mark();

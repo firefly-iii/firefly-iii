@@ -68,7 +68,7 @@ return [
     // new IP
     'login_from_new_ip'                       => 'Novo login no Firefly III',
     'slack_login_from_new_ip'                 => 'Novo login no Firefly III do IP :ip (:host)',
-    'new_ip_body'                             => 'O Firefly III detectou um novo login em sua conta a partir de um endereço IP desconhecido. Caso você nunca tenha logado do endereço IP abaixo, ou o fez há mais de seis meses, o Firefly III irá notificá-lo.',
+    'new_ip_body'                             => 'Firefly III detectou um novo login em sua conta a partir de um endereço IP desconhecido. Caso você nunca tenha logado do endereço IP abaixo, ou o fez há mais de seis meses, o Firefly III irá notificá-lo.',
     'new_ip_warning'                          => 'Caso você reconheça este endereço IP ou o login, você pode ignorar esta mensagem. Ou se você não fez login, se não tem ideia do que se trata, verifique a segurança da sua senha, altere-a e desconecte-se de todas as outras sessões. Para fazer isso, vá para sua página de perfil. Claro que você já habilitou 2FA, né? Mantenha-se seguro!',
     'ip_address'                              => 'Endereço IP',
     'host_name'                               => 'Servidor',
@@ -76,7 +76,7 @@ return [
 
     // access token created
     'access_token_created_subject'            => 'Um novo token de acesso foi criado',
-    'access_token_created_body'               => 'Alguém (esperamos que você) acabou de criar um novo token de acesso à API do Firefly III, para sua conta.',
+    'access_token_created_body'               => 'Alguém (esperamos que você) acabou de criar um novo token de acesso à API do Firefly III para sua conta.',
     'access_token_created_explanation'        => 'Este token permite acessar **TODOS** os seus registros financeiros através da API do Firefly III.',
     'access_token_created_revoke'             => 'Se não foi você, por favor revogue este token o mais rápido possível em :url',
 
@@ -122,12 +122,12 @@ return [
     // OAuth token created
     'oauth_created_subject'                   => 'Um novo cliente OAuth foi criado',
     'oauth_created_body'                      => 'Alguém (esperamos que você) acabou de criar um Cliente OAuth na API do Firefly III para sua conta de usuário. Está nomeado como ":name" e a URL de retorno é `:url`.',
-    'oauth_created_explanation'               => 'Este chave de cliente permite acessar **TODOS** os seus registros financeiros através da API do Firefly III.',
-    'oauth_created_undo'                      => 'Se não foi você, revogue o acesso desta chave o mais rápido possível, em `:url`',
+    'oauth_created_explanation'               => 'Com esta chave, o cliente pode acessar **TODOS** os seus registros financeiros através da API do Firefly III.',
+    'oauth_created_undo'                      => 'Se não foi você, revogue o acesso desta chave o mais rápido possível em `:url`',
 
     // reset password
     'reset_pw_subject'                        => 'Seu pedido de redefinição de senha',
-    'reset_pw_instructions'                   => 'Alguém tentou redefinir sua senha. Se foi você, por favor, abra o link abaixo para fazê-lo.',
+    'reset_pw_instructions'                   => 'Alguém tentou redefinir sua senha. Se foi você, por favor, siga o link abaixo para continuar.',
     'reset_pw_warning'                        => '**POR FAVOR**, confirme que o link realmente direciona você para o Firefly III que você espera!',
 
     // error
@@ -185,3 +185,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

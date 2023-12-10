@@ -36,9 +36,7 @@ class RuleServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void
-    {
-    }
+    public function boot(): void {}
 
     /**
      * Register the application services.
@@ -47,7 +45,7 @@ class RuleServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             RuleRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var RuleRepository $repository */
                 $repository = app(RuleRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)

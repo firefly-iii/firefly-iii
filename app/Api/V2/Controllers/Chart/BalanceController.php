@@ -32,7 +32,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Http\JsonResponse;
@@ -44,23 +43,6 @@ use Illuminate\Support\Collection;
 class BalanceController extends Controller
 {
     use CleansChartData;
-
-    private AccountRepositoryInterface $repository;
-
-    /**
-     *
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(AccountRepositoryInterface::class);
-
-                return $next($request);
-            }
-        );
-    }
 
     /**
      * The code is practically a duplicate of ReportController::operations.
@@ -99,7 +81,7 @@ class BalanceController extends Controller
         /** @var TransactionCurrency $default */
         $default    = app('amount')->getDefaultCurrency();
         $converter  = new ExchangeRateConverter();
-        $currencies = [(int)$default->id => $default,]; // currency cache
+        $currencies = [$default->id => $default,]; // currency cache
         $data       = [];
         $chartData  = [];
 
@@ -112,18 +94,18 @@ class BalanceController extends Controller
         $journals = $collector->getExtractedJournals();
 
         // set array for default currency (even if unused later on)
-        $defaultCurrencyId        = (int)$default->id;
+        $defaultCurrencyId        = $default->id;
         $data[$defaultCurrencyId] = [
             'currency_id'             => (string)$defaultCurrencyId,
             'currency_symbol'         => $default->symbol,
             'currency_code'           => $default->code,
             'currency_name'           => $default->name,
-            'currency_decimal_places' => (int)$default->decimal_places,
+            'currency_decimal_places' => $default->decimal_places,
             'native_id'               => (string)$defaultCurrencyId,
             'native_symbol'           => $default->symbol,
             'native_code'             => $default->code,
             'native_name'             => $default->name,
-            'native_decimal_places'   => (int)$default->decimal_places,
+            'native_decimal_places'   => $default->decimal_places,
         ];
 
 
@@ -139,7 +121,7 @@ class BalanceController extends Controller
             $currencies[$currencyId] = $currency; // may just re-assign itself, don't mind.
 
             // set the array with monetary info, if it does not exist.
-            $data[$currencyId] = $data[$currencyId] ?? [
+            $data[$currencyId] ??= [
                 'currency_id'             => (string)$currencyId,
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
@@ -149,11 +131,11 @@ class BalanceController extends Controller
                 'native_id'               => (string)$default->id,
                 'native_code'             => $default->code,
                 'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => (int)$default->decimal_places,
+                'native_decimal_places'   => $default->decimal_places,
             ];
 
             // set the array (in monetary info) with spent/earned in this $period, if it does not exist.
-            $data[$currencyId][$period] = $data[$currencyId][$period] ?? [
+            $data[$currencyId][$period] ??= [
                 'period'        => $period,
                 'spent'         => '0',
                 'earned'        => '0',
@@ -186,7 +168,7 @@ class BalanceController extends Controller
             $amountConverted = bcmul($amount, $rate);
 
             // perhaps transaction already has the foreign amount in the native currency.
-            if ((int)$journal['foreign_currency_id'] === (int)$default->id) {
+            if ((int)$journal['foreign_currency_id'] === $default->id) {
                 $amountConverted = $journal['foreign_amount'] ?? '0';
                 $amountConverted = 'earned' === $key ? app('steam')->positive($amountConverted) : app('steam')->negative($amountConverted);
             }

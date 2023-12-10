@@ -61,6 +61,7 @@ class BillReminder extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
@@ -75,6 +76,7 @@ class BillReminder extends Notification
      * @param mixed $notifiable
      *
      * @return MailMessage
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail($notifiable)
     {
@@ -94,6 +96,7 @@ class BillReminder extends Notification
      * @param mixed $notifiable
      *
      * @return SlackMessage
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack($notifiable)
     {
@@ -105,7 +108,7 @@ class BillReminder extends Notification
         $url  = route('bills.show', [$bill->id]);
         return (new SlackMessage())
             ->warning()
-            ->attachment(function ($attachment) use ($bill, $url) {
+            ->attachment(static function ($attachment) use ($bill, $url) {
                 $attachment->title((string)trans('firefly.visit_bill', ['name' => $bill->name]), $url);
             })
             ->content($message);
@@ -117,13 +120,17 @@ class BillReminder extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
     {
         /** @var User|null $user */
         $user     = auth()->user();
-        $slackUrl = null === $user ? '' : (string)app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (UrlValidator::isValidWebhookURL($slackUrl)) {
+        $slackUrl = null === $user ? '' : app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
+        if (is_array($slackUrl)) {
+            $slackUrl = '';
+        }
+        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
             return ['mail', 'slack'];
         }
         return ['mail'];

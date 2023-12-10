@@ -31,16 +31,14 @@ use FireflyIII\Support\Request\GetRuleConfiguration;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
-use function is_array;
-
 /**
  * Class UpdateRequest
  */
 class UpdateRequest extends FormRequest
 {
+    use ChecksLogin;
     use ConvertsDataTypes;
     use GetRuleConfiguration;
-    use ChecksLogin;
 
     /**
      * Get all data from the request.

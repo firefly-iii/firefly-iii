@@ -35,17 +35,9 @@ class FixPostgresSequences extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Fixes issues with PostgreSQL sequences.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:fix-pgsql-sequences';
 
     /**
@@ -128,11 +120,11 @@ class FixPostgresSequences extends Command
                 continue;
             }
 
-            if ($nextId->nextval < $highestId->max) {
+            if ($nextId->nextval < $highestId->max) { // @phpstan-ignore-line
                 DB::select(sprintf('SELECT setval(\'%s_id_seq\', %d)', $tableToCheck, $highestId->max));
                 $highestId = DB::table($tableToCheck)->select(DB::raw('MAX(id)'))->first();
                 $nextId    = DB::table($tableToCheck)->select(DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))->first();
-                if ($nextId->nextval > $highestId->max) {
+                if ($nextId->nextval > $highestId->max) { // @phpstan-ignore-line
                     $this->friendlyInfo(sprintf('Table "%s" autoincrement corrected.', $tableToCheck));
                 }
                 if ($nextId->nextval <= $highestId->max) {

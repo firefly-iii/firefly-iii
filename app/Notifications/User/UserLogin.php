@@ -31,7 +31,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class UserLogin
@@ -58,6 +57,7 @@ class UserLogin extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
@@ -72,6 +72,7 @@ class UserLogin extends Notification
      * @param mixed $notifiable
      *
      * @return MailMessage
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail($notifiable)
     {
@@ -80,7 +81,7 @@ class UserLogin extends Notification
         try {
             $hostName = app('steam')->getHostName($this->ip);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $hostName = $this->ip;
         }
         if ($hostName !== $this->ip) {
@@ -98,6 +99,7 @@ class UserLogin extends Notification
      * @param mixed $notifiable
      *
      * @return SlackMessage
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack($notifiable)
     {
@@ -105,7 +107,7 @@ class UserLogin extends Notification
         try {
             $hostName = app('steam')->getHostName($this->ip);
         } catch (FireflyException $e) {
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             $hostName = $this->ip;
         }
         if ($hostName !== $this->ip) {
@@ -121,13 +123,17 @@ class UserLogin extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
     {
         /** @var User|null $user */
         $user     = auth()->user();
-        $slackUrl = null === $user ? '' : (string)app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
-        if (UrlValidator::isValidWebhookURL($slackUrl)) {
+        $slackUrl = null === $user ? '' : app('preferences')->getForUser(auth()->user(), 'slack_webhook_url', '')->data;
+        if (is_array($slackUrl)) {
+            $slackUrl = '';
+        }
+        if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
             return ['mail', 'slack'];
         }
         return ['mail'];

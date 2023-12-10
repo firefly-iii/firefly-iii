@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\UserGroups\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -46,4 +47,11 @@ interface OperationsRepositoryInterface
      * @return array
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
+
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
+    public function setUser(User $user): void;
 }

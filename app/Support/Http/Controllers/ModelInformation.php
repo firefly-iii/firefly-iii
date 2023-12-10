@@ -30,7 +30,6 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -60,8 +59,8 @@ trait ModelInformation
                 ]
             )->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
+            app('log')->error(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
+            app('log')->error($e->getTraceAsString());
             $result = 'Could not render view. See log files.';
             throw new FireflyException($result, 0, $e);
         }
@@ -80,8 +79,11 @@ trait ModelInformation
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         // types of liability:
-        $debt           = $repository->getAccountTypeByType(AccountType::DEBT);
-        $loan           = $repository->getAccountTypeByType(AccountType::LOAN);
+        /** @var AccountType $debt */
+        $debt = $repository->getAccountTypeByType(AccountType::DEBT);
+        /** @var AccountType $loan */
+        $loan = $repository->getAccountTypeByType(AccountType::LOAN);
+        /** @var AccountType $mortgage */
         $mortgage       = $repository->getAccountTypeByType(AccountType::MORTGAGE);
         $liabilityTypes = [
             $debt->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
@@ -129,7 +131,7 @@ trait ModelInformation
         $result       = [];
         $billTriggers = ['currency_is', 'amount_more', 'amount_less', 'description_contains'];
         $values       = [
-            $bill->transactionCurrency()->first()->name,
+            $bill->transactionCurrency()->first()?->name,
             $bill->amount_min,
             $bill->amount_max,
             $bill->name,
@@ -147,10 +149,9 @@ trait ModelInformation
                     ]
                 )->render();
             } catch (Throwable $e) {
-                Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
-                Log::debug($e->getTraceAsString());
-                $string = '';
-                throw new FireflyException('Could not render trigger', 0, $e);
+                app('log')->debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
+                app('log')->debug($e->getTraceAsString());
+                throw new FireflyException(sprintf('Could not render trigger: %s', $e->getMessage()), 0, $e);
             }
             if ('' !== $string) {
                 $result[] = $string;
@@ -168,7 +169,7 @@ trait ModelInformation
      */
     private function getTriggersForJournal(TransactionJournal $journal): array
     {
-        // See reference nr. 40
+        // TODO duplicated code.
         $operators = config('search.operators');
         $triggers  = [];
         foreach ($operators as $key => $operator) {
@@ -198,7 +199,7 @@ trait ModelInformation
 
         // currency
         $journalTriggers[$index] = 'currency_is';
-        $values[$index]          = sprintf('%s (%s)', $journal->transactionCurrency->name, $journal->transactionCurrency->code);
+        $values[$index]          = sprintf('%s (%s)', $journal->transactionCurrency?->name, $journal->transactionCurrency?->code);
         $index++;
 
         // amount_exactly:
@@ -250,29 +251,25 @@ trait ModelInformation
             $values[$index]          = $notes->text;
         }
 
-        foreach ($journalTriggers as $index => $trigger) {
+        foreach ($journalTriggers as $ii => $trigger) {
             try {
-                $string = view(
-                    'rules.partials.trigger',
-                    [
-                        'oldTrigger' => $trigger,
-                        'oldValue'   => $values[$index],
-                        'oldChecked' => false,
-                        'count'      => $index + 1,
-                        'triggers'   => $triggers,
-                    ]
-                )->render();
+                $renderInfo = [
+                    'oldTrigger' => $trigger,
+                    'oldValue'   => $values[$ii],
+                    'oldChecked' => false,
+                    'count'      => $ii + 1,
+                    'triggers'   => $triggers,
+                ];
+                $string     = view('rules.partials.trigger', $renderInfo)->render();
             } catch (Throwable $e) {
-                Log::debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
-                Log::debug($e->getTraceAsString());
-                $string = '';
-                throw new FireflyException('Could not render trigger', 0, $e);
+                app('log')->debug(sprintf('Throwable was thrown in getTriggersForJournal(): %s', $e->getMessage()));
+                app('log')->debug($e->getTraceAsString());
+                throw new FireflyException(sprintf('Could not render trigger: %s', $e->getMessage()), 0, $e);
             }
             if ('' !== $string) {
                 $result[] = $string;
             }
         }
-
         return $result;
     }
 }

@@ -100,8 +100,12 @@ class EditController extends Controller
             'active'                  => $hasOldInput ? (bool)$request->old('active') : $budget->active,
             'auto_budget_currency_id' => $hasOldInput ? (int)$request->old('auto_budget_currency_id') : $currency->id,
         ];
-        if ($autoBudget) {
-            $amount                          = $hasOldInput ? $request->old('auto_budget_amount') : $autoBudget->amount;
+        if (null !== $autoBudget) {
+            $amount = $hasOldInput ? $request->old('auto_budget_amount') : $autoBudget->amount;
+            if (is_array($amount)) {
+                $amount = '0';
+            }
+            $amount                          = (string)$amount;
             $preFilled['auto_budget_amount'] = app('steam')->bcround($amount, $autoBudget->transactionCurrency->decimal_places);
         }
 
@@ -135,6 +139,7 @@ class EditController extends Controller
         $redirect = redirect($this->getPreviousUrl('budgets.edit.url'));
 
         // store new attachment(s):
+        /** @var array|null $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($budget, $files);

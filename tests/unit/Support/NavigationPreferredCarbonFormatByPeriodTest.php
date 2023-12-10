@@ -42,7 +42,7 @@ class NavigationPreferredCarbonFormatByPeriodTest extends TestCase
         $this->navigation = new Navigation();
     }
 
-    public static function providePeriods(): array
+    public static function providePeriods(): iterable
     {
         return [
             'unknown'     => ['period' => '1day', 'expected' => 'Y-m-d'],
@@ -60,6 +60,6 @@ class NavigationPreferredCarbonFormatByPeriodTest extends TestCase
     public function testGivenAPeriodWhenCallPreferredCarbonFormatByPeriodThenReturnsExpectedFormat(string $period, string $expected)
     {
         $formatPeriod = $this->navigation->preferredCarbonFormatByPeriod($period);
-        $this->assertEquals($expected, $formatPeriod);
+        self::assertSame($expected, $formatPeriod);
     }
 }

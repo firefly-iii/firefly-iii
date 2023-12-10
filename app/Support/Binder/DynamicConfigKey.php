@@ -45,6 +45,7 @@ class DynamicConfigKey
      *
      * @return string
      * @throws NotFoundHttpException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public static function routeBinder(string $value, Route $route): string
     {

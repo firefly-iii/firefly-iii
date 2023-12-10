@@ -85,7 +85,7 @@ class DoubleReportController extends Controller
             foreach ($currency['transaction_journals'] as $journal) {
                 $categoryName             = $journal['budget_name'] ?? trans('firefly.no_budget');
                 $title                    = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
-                $result[$title]           = $result[$title] ?? [
+                $result[$title]           ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
                     'currency_code'   => $currency['currency_code'],
@@ -120,7 +120,7 @@ class DoubleReportController extends Controller
             foreach ($currency['transaction_journals'] as $journal) {
                 $categoryName             = $journal['category_name'] ?? trans('firefly.no_category');
                 $title                    = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
-                $result[$title]           = $result[$title] ?? [
+                $result[$title]           ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
                     'currency_code'   => $currency['currency_code'],
@@ -155,7 +155,7 @@ class DoubleReportController extends Controller
             foreach ($currency['transaction_journals'] as $journal) {
                 $categoryName             = $journal['category_name'] ?? trans('firefly.no_category');
                 $title                    = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
-                $result[$title]           = $result[$title] ?? [
+                $result[$title]           ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
                     'currency_code'   => $currency['currency_code'],
@@ -195,7 +195,7 @@ class DoubleReportController extends Controller
             $spentKey = sprintf('%d-spent', $currency['currency_id']);
             $name     = $this->getCounterpartName($accounts, $account->id, $account->name, $account->iban);
 
-            $chartData[$spentKey] = $chartData[$spentKey] ?? [
+            $chartData[$spentKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
                     (string)trans('firefly.spent_in_specific_double', ['account' => $name]),
@@ -211,7 +211,7 @@ class DoubleReportController extends Controller
             foreach ($currency['transaction_journals'] as $journal) {
                 $key                                   = $journal['date']->isoFormat($format);
                 $amount                                = app('steam')->positive($journal['amount']);
-                $chartData[$spentKey]['entries'][$key] = $chartData[$spentKey]['entries'][$key] ?? '0';
+                $chartData[$spentKey]['entries'][$key] ??= '0';
                 $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
             }
         }
@@ -221,7 +221,7 @@ class DoubleReportController extends Controller
             $earnedKey = sprintf('%d-earned', $currency['currency_id']);
             $name      = $this->getCounterpartName($accounts, $account->id, $account->name, $account->iban);
 
-            $chartData[$earnedKey] = $chartData[$earnedKey] ?? [
+            $chartData[$earnedKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
                     (string)trans('firefly.earned_in_specific_double', ['account' => $name]),
@@ -237,7 +237,7 @@ class DoubleReportController extends Controller
             foreach ($currency['transaction_journals'] as $journal) {
                 $key                                    = $journal['date']->isoFormat($format);
                 $amount                                 = app('steam')->positive($journal['amount']);
-                $chartData[$earnedKey]['entries'][$key] = $chartData[$earnedKey]['entries'][$key] ?? '0';
+                $chartData[$earnedKey]['entries'][$key] ??= '0';
                 $chartData[$earnedKey]['entries'][$key] = bcadd($chartData[$earnedKey]['entries'][$key], $amount);
             }
         }
@@ -323,7 +323,7 @@ class DoubleReportController extends Controller
                     // do something
                     $tagName                  = trans('firefly.no_tags');
                     $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
-                    $result[$title]           = $result[$title] ?? [
+                    $result[$title]           ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -341,7 +341,7 @@ class DoubleReportController extends Controller
                     // do something
                     $tagName                  = $tag['name'];
                     $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
-                    $result[$title]           = $result[$title] ?? [
+                    $result[$title]           ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -383,7 +383,7 @@ class DoubleReportController extends Controller
                     // do something
                     $tagName                  = trans('firefly.no_tags');
                     $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
-                    $result[$title]           = $result[$title] ?? [
+                    $result[$title]           ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -401,7 +401,7 @@ class DoubleReportController extends Controller
                     // do something
                     $tagName                  = $tag['name'];
                     $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
-                    $result[$title]           = $result[$title] ?? [
+                    $result[$title]           ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],

@@ -37,7 +37,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class DownloadExchangeRates
@@ -74,7 +73,7 @@ class DownloadExchangeRates implements ShouldQueue
             $newDate = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;
-            Log::debug(sprintf('Created new DownloadExchangeRates("%s")', $this->date->format('Y-m-d')));
+            app('log')->debug(sprintf('Created new DownloadExchangeRates("%s")', $this->date->format('Y-m-d')));
         }
     }
 
@@ -83,7 +82,7 @@ class DownloadExchangeRates implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::debug('Now in handle()');
+        app('log')->debug('Now in handle()');
         $currencies = $this->repository->getCompleteSet();
 
         /** @var TransactionCurrency $currency */
@@ -100,7 +99,7 @@ class DownloadExchangeRates implements ShouldQueue
      */
     private function downloadRates(TransactionCurrency $currency): void
     {
-        Log::debug(sprintf('Now downloading new exchange rates for currency %s.', $currency->code));
+        app('log')->debug(sprintf('Now downloading new exchange rates for currency %s.', $currency->code));
         $base   = sprintf('%s/%s/%s', (string)config('cer.url'), $this->date->year, $this->date->isoWeek);
         $client = new Client();
         $url    = sprintf('%s/%s.json', $base, $currency->code);
@@ -122,6 +121,9 @@ class DownloadExchangeRates implements ShouldQueue
             return;
         }
         $date = Carbon::createFromFormat('Y-m-d', $json['date'], config('app.timezone'));
+        if (false === $date) {
+            return;
+        }
         $this->saveRates($currency, $date, $json['rates']);
     }
 
@@ -137,10 +139,10 @@ class DownloadExchangeRates implements ShouldQueue
         foreach ($rates as $code => $rate) {
             $to = $this->getCurrency($code);
             if (null === $to) {
-                Log::debug(sprintf('Currency %s is not in use, do not save rate.', $code));
+                app('log')->debug(sprintf('Currency %s is not in use, do not save rate.', $code));
                 continue;
             }
-            Log::debug(sprintf('Currency %s is in use.', $code));
+            app('log')->debug(sprintf('Currency %s is in use.', $code));
             $this->saveRate($currency, $to, $date, $rate);
         }
     }
@@ -154,22 +156,22 @@ class DownloadExchangeRates implements ShouldQueue
     {
         // if we have it already, don't bother searching for it again.
         if (array_key_exists($code, $this->active)) {
-            Log::debug(sprintf('Already know what the result is of searching for %s', $code));
+            app('log')->debug(sprintf('Already know what the result is of searching for %s', $code));
             return $this->active[$code];
         }
         // find it in the database.
         $currency = $this->repository->findByCode($code);
         if (null === $currency) {
-            Log::debug(sprintf('Did not find currency %s.', $code));
+            app('log')->debug(sprintf('Did not find currency %s.', $code));
             $this->active[$code] = null;
             return null;
         }
         if (false === $currency->enabled) {
-            Log::debug(sprintf('Currency %s is not enabled.', $code));
+            app('log')->debug(sprintf('Currency %s is not enabled.', $code));
             $this->active[$code] = null;
             return null;
         }
-        Log::debug(sprintf('Currency %s is enabled.', $code));
+        app('log')->debug(sprintf('Currency %s is enabled.', $code));
         $this->active[$code] = $currency;
 
         return $currency;
@@ -189,7 +191,7 @@ class DownloadExchangeRates implements ShouldQueue
             $this->repository->setUser($user);
             $existing = $this->repository->getExchangeRate($from, $to, $date);
             if (null === $existing) {
-                Log::debug(sprintf('Saved rate from %s to %s for user #%d.', $from->code, $to->code, $user->id));
+                app('log')->debug(sprintf('Saved rate from %s to %s for user #%d.', $from->code, $to->code, $user->id));
                 $this->repository->setExchangeRate($from, $to, $date, $rate);
             }
         }

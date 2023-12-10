@@ -23,11 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Carbon;
 
 /**
  * Class AccountMeta
@@ -52,17 +53,14 @@ use Illuminate\Support\Carbon;
  */
 class AccountMeta extends Model
 {
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+    use ReturnsIntegerIdTrait;
+
     protected $casts
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['account_id', 'name', 'data'];
     /** @var string The table to store the data in */
     protected $table = 'account_meta';
@@ -78,20 +76,19 @@ class AccountMeta extends Model
     /**
      * @param mixed $value
      *
-     * @return mixed
+     * @return string
      */
-    public function getDataAttribute($value): string
+    public function getDataAttribute(mixed $value): string
     {
         return (string)json_decode($value, true);
     }
 
     /**
      * @param mixed $value
-     *
-
      */
-    public function setDataAttribute($value): void
+    public function setDataAttribute(mixed $value): void
     {
         $this->attributes['data'] = json_encode($value);
     }
+
 }

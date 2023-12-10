@@ -34,7 +34,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Str;
 
 /**
@@ -124,7 +123,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function deleteInvite(InvitedUser $invite): void
     {
-        Log::debug(sprintf('Deleting invite #%d', $invite->id));
+        app('log')->debug(sprintf('Deleting invite #%d', $invite->id));
         $invite->delete();
     }
 
@@ -136,7 +135,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function destroy(User $user): bool
     {
-        Log::debug(sprintf('Calling delete() on user %d', $user->id));
+        app('log')->debug(sprintf('Calling delete() on user %d', $user->id));
 
         $user->groupMemberships()->delete();
         $user->delete();
@@ -155,7 +154,7 @@ class UserRepository implements UserRepositoryInterface
         foreach ($groups as $group) {
             $count = $group->groupMemberships()->count();
             if (0 === $count) {
-                Log::info(sprintf('Deleted empty group #%d ("%s")', $group->id, $group->title));
+                app('log')->info(sprintf('Deleted empty group #%d ("%s")', $group->id, $group->title));
                 $group->delete();
             }
         }
@@ -227,7 +226,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function getRolesInGroup(User $user, int $groupId): array
     {
-        /** @var UserGroup $group */
+        /** @var UserGroup|null $group */
         $group = UserGroup::find($groupId);
         if (null === $group) {
             throw new FireflyException(sprintf('Could not find group #%d', $groupId));
@@ -300,10 +299,12 @@ class UserRepository implements UserRepositoryInterface
         if (null === $user) {
             return false;
         }
-        /** @var Role $userRole */
-        foreach ($user->roles as $userRole) {
-            if ($userRole->name === $role) {
-                return true;
+        if ($user instanceof User) {
+            /** @var Role $userRole */
+            foreach ($user->roles as $userRole) {
+                if ($userRole->name === $role) {
+                    return true;
+                }
             }
         }
 
@@ -334,7 +335,7 @@ class UserRepository implements UserRepositoryInterface
     public function redeemCode(string $code): void
     {
         $obj = InvitedUser::where('invite_code', $code)->where('redeemed', 0)->first();
-        if ($obj) {
+        if (null !== $obj) {
             $obj->redeemed = true;
             $obj->save();
         }
@@ -385,7 +386,7 @@ class UserRepository implements UserRepositoryInterface
     {
         $roleObject = Role::where('name', $role)->first();
         if (null === $roleObject) {
-            Log::error(sprintf('Could not find role "%s" in attachRole()', $role));
+            app('log')->error(sprintf('Could not find role "%s" in attachRole()', $role));
 
             return false;
         }
@@ -394,7 +395,7 @@ class UserRepository implements UserRepositoryInterface
             $user->roles()->attach($roleObject);
         } catch (QueryException $e) {
             // don't care
-            Log::error(sprintf('Query exception when giving user a role: %s', $e->getMessage()));
+            app('log')->error(sprintf('Query exception when giving user a role: %s', $e->getMessage()));
         }
 
         return true;

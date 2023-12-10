@@ -90,8 +90,8 @@ class AccountController extends Controller
         $date            = $this->parameters->get('date') ?? today(config('app.timezone'));
         $result          = $this->adminRepository->searchAccount((string)$query, $types, $data['limit']);
         $defaultCurrency = app('amount')->getDefaultCurrency();
-
-        $allItems = [];
+        $groupedResult   = [];
+        $allItems        = [];
         /** @var Account $account */
         foreach ($result as $account) {
             $nameWithBalance = $account->name;
@@ -102,7 +102,7 @@ class AccountController extends Controller
                 $nameWithBalance = sprintf('%s (%s)', $account->name, app('amount')->formatAnything($currency, $balance, false));
             }
             $type                 = (string)trans(sprintf('firefly.%s', $account->accountType->type));
-            $groupedResult[$type] = $groupedResult[$type] ?? [
+            $groupedResult[$type] ??= [
                 'group ' => $type,
                 'items'  => [],
             ];
@@ -123,12 +123,12 @@ class AccountController extends Controller
 
         usort(
             $allItems,
-            function (array $a, array $b): int {
-                $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
-                $pos_a = array_search($a['type'], $order, true);
-                $pos_b = array_search($b['type'], $order, true);
+            static function (array $left, array $right): int {
+                $order    = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
+                $posLeft  = (int)array_search($left['type'], $order, true);
+                $posRight = (int)array_search($right['type'], $order, true);
 
-                return $pos_a - $pos_b;
+                return $posLeft - $posRight;
             }
         );
         return response()->json($allItems);

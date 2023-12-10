@@ -36,9 +36,7 @@ class RecurringServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void
-    {
-    }
+    public function boot(): void {}
 
     /**
      * Register the application services.
@@ -47,7 +45,7 @@ class RecurringServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             RecurringRepositoryInterface::class,
-            function (Application $app) {
+            static function (Application $app) {
                 /** @var RecurringRepositoryInterface $repository */
                 $repository = app(RecurringRepository::class);
 

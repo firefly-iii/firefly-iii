@@ -52,7 +52,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         $memberships = $userGroup->groupMemberships()->get();
         /** @var GroupMembership $membership */
         foreach ($memberships as $membership) {
-            /** @var User $user */
+            /** @var User|null $user */
             $user = $membership->user()->first();
             if (null === $user) {
                 continue;
@@ -85,7 +85,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
                     'recurrences', 'rules', 'ruleGroups', 'tags', 'transactionGroups', 'transactionJournals', 'piggyBanks', 'accounts', 'webhooks',
         ];
         foreach ($objects as $object) {
-            foreach ($userGroup->$object()->get() as $item) {
+            foreach ($userGroup->$object()->get() as $item) { // @phpstan-ignore-line
                 $item->delete();
             }
         }
@@ -104,7 +104,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         $memberships = $this->user->groupMemberships()->get();
         /** @var GroupMembership $membership */
         foreach ($memberships as $membership) {
-            /** @var UserGroup $group */
+            /** @var UserGroup|null $group */
             $group = $membership->userGroup()->first();
             if (null !== $group) {
                 $collection->push($group);
@@ -130,12 +130,13 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         while ($exists && $loop < 10) {
             $existingGroup = $this->findByName($groupName);
             if (null === $existingGroup) {
-                $exists        = false;
+                $exists = false;
+                /** @var UserGroup|null $existingGroup */
                 $existingGroup = $this->store(['user' => $user, 'title' => $groupName]);
             }
             if (null !== $existingGroup) {
                 // group already exists
-                $groupName = sprintf('%s-%s', $user->email, substr(sha1((string)(rand(1000, 9999) . microtime())), 0, 4));
+                $groupName = sprintf('%s-%s', $user->email, substr(sha1((rand(1000, 9999) . microtime())), 0, 4));
             }
             $loop++;
         }
@@ -182,7 +183,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
     public function setUser(Authenticatable | User | null $user): void
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
-        if (null !== $user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }
@@ -205,12 +206,15 @@ class UserGroupRepository implements UserGroupRepositoryInterface
     {
         $owner = UserRole::whereTitle(UserRoleEnum::OWNER)->first();
         app('log')->debug('in update membership');
+        /** @var User|null $user */
         $user = null;
         if (array_key_exists('id', $data)) {
+            /** @var User|null $user */
             $user = User::find($data['id']);
             app('log')->debug('Found user by ID');
         }
         if (array_key_exists('email', $data) && '' !== (string)$data['email']) {
+            /** @var User|null $user */
             $user = User::whereEmail($data['email'])->first();
             app('log')->debug('Found user by email');
         }
@@ -220,11 +224,11 @@ class UserGroupRepository implements UserGroupRepositoryInterface
             return $userGroup;
         }
         // count the number of members in the group right now:
-        $membershipCount = $userGroup->groupMemberships()->distinct()->get(['group_memberships.user_id'])->count();
+        $membershipCount = $userGroup->groupMemberships()->distinct()->count('group_memberships.user_id');
 
         // if it's 1:
         if (1 === $membershipCount) {
-            $lastUserId = (int)$userGroup->groupMemberships()->distinct()->first(['group_memberships.user_id'])->user_id;
+            $lastUserId = $userGroup->groupMemberships()->distinct()->first(['group_memberships.user_id'])->user_id;
             // if this is also the user we're editing right now, and we remove all of their roles:
             if ($lastUserId === (int)$user->id && 0 === count($data['roles'])) {
                 app('log')->debug('User is last in this group, refuse to act');
@@ -242,7 +246,11 @@ class UserGroupRepository implements UserGroupRepositoryInterface
                                     ->where('user_role_id', $owner->id)
                                     ->where('user_id', '!=', $user->id)->count();
             // if there are no other owners and the current users does not get or keep the owner role, refuse.
-            if (0 === $ownerCount && (0 === count($data['roles']) || (count($data['roles']) > 0 && !in_array(UserRoleEnum::OWNER->value, $data['roles'], true)))) {
+            if (
+                0 === $ownerCount &&
+                (0 === count($data['roles']) ||
+                 (count($data['roles']) > 0 && // @phpstan-ignore-line
+                  !in_array(UserRoleEnum::OWNER->value, $data['roles'], true)))) {
                 app('log')->debug('User needs to keep owner role in this group, refuse to act');
                 throw new FireflyException('The last owner in this user group must keep the "owner" role.');
             }
@@ -273,11 +281,11 @@ class UserGroupRepository implements UserGroupRepositoryInterface
     private function simplifyListByName(array $roles): array
     {
         if (in_array(UserRoleEnum::OWNER->value, $roles, true)) {
-            app('log')->debug(sprintf('List of roles is [%1$s] but this includes "%2$s", so return [%2$s]', join(',', $roles), UserRoleEnum::OWNER->value));
+            app('log')->debug(sprintf('List of roles is [%1$s] but this includes "%2$s", so return [%2$s]', implode(',', $roles), UserRoleEnum::OWNER->value));
             return [UserRoleEnum::OWNER->value];
         }
         if (in_array(UserRoleEnum::FULL->value, $roles, true)) {
-            app('log')->debug(sprintf('List of roles is [%1$s] but this includes "%2$s", so return [%2$s]', join(',', $roles), UserRoleEnum::FULL->value));
+            app('log')->debug(sprintf('List of roles is [%1$s] but this includes "%2$s", so return [%2$s]', implode(',', $roles), UserRoleEnum::FULL->value));
             return [UserRoleEnum::FULL->value];
         }
         return $roles;

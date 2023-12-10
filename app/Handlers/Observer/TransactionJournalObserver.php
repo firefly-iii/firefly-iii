@@ -40,7 +40,7 @@ class TransactionJournalObserver
         app('log')->debug('Observe "deleting" of a transaction journal.');
 
         // to make sure the listener doesn't get back to use and loop
-        TransactionJournal::withoutEvents(function () use ($transactionJournal) {
+        TransactionJournal::withoutEvents(static function () use ($transactionJournal) {
             foreach ($transactionJournal->transactions()->get() as $transaction) {
                 $transaction->delete();
             }

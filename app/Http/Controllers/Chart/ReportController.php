@@ -36,7 +36,6 @@ use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use JsonException;
 
 /**
@@ -98,7 +97,7 @@ class ReportController extends Controller
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
                 $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
                 if (false === $result) {
-                    Log::debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
+                    app('log')->debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
                 }
 
                 return $result;
@@ -109,19 +108,22 @@ class ReportController extends Controller
 
         while ($current < $end) {
             // get balances by date, grouped by currency.
-            $result = $helper->getNetWorthByCurrency($filtered, $current);
+            $result = $helper->byAccounts($filtered, $current);
 
             // loop result, add to array.
             /** @var array $netWorthItem */
-            foreach ($result as $netWorthItem) {
-                $currencyId = $netWorthItem['currency']->id;
+            foreach ($result as $key => $netWorthItem) {
+                if ('native' === $key) {
+                    continue;
+                }
+                $currencyId = $netWorthItem['currency_id'];
                 $label      = $current->isoFormat((string)trans('config.month_and_day_js', [], $locale));
                 if (!array_key_exists($currencyId, $chartData)) {
                     $chartData[$currencyId] = [
-                        'label'           => 'Net worth in ' . $netWorthItem['currency']->name,
+                        'label'           => 'Net worth in ' . $netWorthItem['currency_name'],
                         'type'            => 'line',
-                        'currency_symbol' => $netWorthItem['currency']->symbol,
-                        'currency_code'   => $netWorthItem['currency']->code,
+                        'currency_symbol' => $netWorthItem['currency_symbol'],
+                        'currency_code'   => $netWorthItem['currency_code'],
                         'entries'         => [],
                     ];
                 }
@@ -157,7 +159,7 @@ class ReportController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
+        app('log')->debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
         $format         = app('navigation')->preferredCarbonFormat($start, $end);
         $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
         $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
@@ -180,14 +182,14 @@ class ReportController extends Controller
         foreach ($journals as $journal) {
             $period                     = $journal['date']->format($format);
             $currencyId                 = (int)$journal['currency_id'];
-            $data[$currencyId]          = $data[$currencyId] ?? [
+            $data[$currencyId]          ??= [
                 'currency_id'             => $currencyId,
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
                 'currency_name'           => $journal['currency_name'],
                 'currency_decimal_places' => (int)$journal['currency_decimal_places'],
             ];
-            $data[$currencyId][$period] = $data[$currencyId][$period] ?? [
+            $data[$currencyId][$period] ??= [
                 'period' => $period,
                 'spent'  => '0',
                 'earned' => '0',

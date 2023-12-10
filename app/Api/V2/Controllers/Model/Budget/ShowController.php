@@ -27,10 +27,8 @@ namespace FireflyIII\Api\V2\Controllers\Model\Budget;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Support\Http\Api\ConvertsExchangeRates;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -39,8 +37,6 @@ use Illuminate\Http\JsonResponse;
  */
 class ShowController extends Controller
 {
-    use ConvertsExchangeRates;
-
     private BudgetRepositoryInterface $repository;
 
     /**
@@ -59,18 +55,19 @@ class ShowController extends Controller
     }
 
     /**
+     * 2023-10-29 removed the cerSum reference, not sure where this is used atm
+     * so removed from api.php. Also applies to "spent" method.
+     *
      * This endpoint is documented at:
      * TODO add URL
      *
      */
     public function budgeted(DateRequest $request, Budget $budget): JsonResponse
     {
-        throw new FireflyException('Needs refactoring, uses deprecated method.');
-        $data      = $request->getAll();
-        $result    = $this->repository->budgetedInPeriodForBudget($budget, $data['start'], $data['end']);
-        $converted = $this->cerSum(array_values($result));
+        $data   = $request->getAll();
+        $result = $this->repository->budgetedInPeriodForBudget($budget, $data['start'], $data['end']);
 
-        return response()->json($converted);
+        return response()->json($result);
     }
 
     /**
@@ -80,11 +77,9 @@ class ShowController extends Controller
      */
     public function spent(DateRequest $request, Budget $budget): JsonResponse
     {
-        throw new FireflyException('Needs refactoring, uses deprecated method.');
-        $data      = $request->getAll();
-        $result    = $this->repository->spentInPeriodForBudget($budget, $data['start'], $data['end']);
-        $converted = $this->cerSum(array_values($result));
+        $data   = $request->getAll();
+        $result = $this->repository->spentInPeriodForBudget($budget, $data['start'], $data['end']);
 
-        return response()->json($converted);
+        return response()->json($result);
     }
 }

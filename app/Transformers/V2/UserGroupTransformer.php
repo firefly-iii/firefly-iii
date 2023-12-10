@@ -57,8 +57,8 @@ class UserGroupTransformer extends AbstractTransformer
             $user = auth()->user();
             /** @var UserGroup $userGroup */
             foreach ($objects as $userGroup) {
-                $userGroupId = (int)$userGroup->id;
-                $access      = $user->hasRoleInGroup($userGroup, UserRoleEnum::VIEW_MEMBERSHIPS, true, true);
+                $userGroupId = $userGroup->id;
+                $access      = $user->hasRoleInGroupOrOwner($userGroup, UserRoleEnum::VIEW_MEMBERSHIPS) || $user->hasRole('owner');
                 if ($access) {
                     $groupMemberships = $userGroup->groupMemberships()->get();
                     /** @var GroupMembership $groupMembership */
@@ -84,11 +84,11 @@ class UserGroupTransformer extends AbstractTransformer
     public function transform(UserGroup $userGroup): array
     {
         $return = [
-            'id'         => (int)$userGroup->id,
+            'id'         => $userGroup->id,
             'created_at' => $userGroup->created_at->toAtomString(),
             'updated_at' => $userGroup->updated_at->toAtomString(),
             'title'      => $userGroup->title,
-            'members'    => $this->memberships[(int)$userGroup->id] ?? [],
+            'members'    => $this->memberships[$userGroup->id] ?? [],
         ];
         // if the user has a specific role in this group, then collect the memberships.
 

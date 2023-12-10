@@ -70,11 +70,11 @@ class AccountTransformer extends AbstractTransformer
 
         $currencies = $repository->getByIds($currencyIds);
         foreach ($currencies as $currency) {
-            $id                    = (int)$currency->id;
+            $id                    = $currency->id;
             $this->currencies[$id] = $currency;
         }
         foreach ($meta as $entry) {
-            $id                                   = (int)$entry->account_id;
+            $id                                   = $entry->account_id;
             $this->accountMeta[$id][$entry->name] = $entry->data;
         }
         // get account types:
@@ -84,7 +84,7 @@ class AccountTransformer extends AbstractTransformer
                                    ->get(['accounts.id', 'account_types.type']);
         /** @var AccountType $row */
         foreach ($accountTypes as $row) {
-            $this->accountTypes[(int)$row->id] = (string)config(sprintf('firefly.shortNamesByFullName.%s', $row->type));
+            $this->accountTypes[$row->id] = (string)config(sprintf('firefly.shortNamesByFullName.%s', $row->type));
         }
     }
 
@@ -110,12 +110,12 @@ class AccountTransformer extends AbstractTransformer
      */
     public function transform(Account $account): array
     {
-        $id = (int)$account->id;
+        $id = $account->id;
 
         // various meta
         $accountRole = $this->accountMeta[$id]['account_role'] ?? null;
         $accountType = $this->accountTypes[$id];
-        $order       = (int)$account->order;
+        $order       = $account->order;
 
         // no currency? use default
         $currency = $this->default;
@@ -144,12 +144,12 @@ class AccountTransformer extends AbstractTransformer
             'currency_id'             => (string)$currency->id,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => (int)$currency->decimal_places,
+            'currency_decimal_places' => $currency->decimal_places,
 
             'native_currency_id'             => (string)$this->default->id,
             'native_currency_code'           => $this->default->code,
             'native_currency_symbol'         => $this->default->symbol,
-            'native_currency_decimal_places' => (int)$this->default->decimal_places,
+            'native_currency_decimal_places' => $this->default->decimal_places,
 
             // balance:
             'current_balance'                => $balance,

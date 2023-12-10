@@ -26,8 +26,6 @@ namespace FireflyIII\Console\Commands\System;
 use FireflyIII\Support\System\GeneratesInstallationId;
 use Illuminate\Console\Command;
 
-use function FireflyIII\Console\Commands\str_starts_with;
-
 /**
  * Class UpgradeFireflyInstructions.
  *
@@ -37,17 +35,9 @@ class UpgradeFireflyInstructions extends Command
 {
     use GeneratesInstallationId;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+
     protected $description = 'Instructions in case of upgrade trouble.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly:instructions {task}';
 
     /**
@@ -56,10 +46,10 @@ class UpgradeFireflyInstructions extends Command
     public function handle(): int
     {
         $this->generateInstallationId();
-        if ('update' === (string)$this->argument('task')) {
+        if ('update' === $this->argument('task')) {
             $this->updateInstructions();
         }
-        if ('install' === (string)$this->argument('task')) {
+        if ('install' === $this->argument('task')) {
             $this->installInstructions();
         }
 
@@ -71,14 +61,15 @@ class UpgradeFireflyInstructions extends Command
      */
     private function updateInstructions(): void
     {
-        /** @var string $version */
-        $version = config('firefly.version');
-        $config  = config('upgrade.text.upgrade');
-        $text    = '';
+        $version = (string)config('firefly.version');
+        /** @var array $config */
+        $config = config('upgrade.text.upgrade');
+        $text   = '';
+        /** @var string $compare */
         foreach (array_keys($config) as $compare) {
             // if string starts with:
-            if (\str_starts_with($version, $compare)) {
-                $text = $config[$compare];
+            if (str_starts_with($version, $compare)) {
+                $text = (string)$config[$compare];
             }
         }
 
@@ -88,7 +79,7 @@ class UpgradeFireflyInstructions extends Command
         $this->showLine();
 
         $this->boxed('');
-        if (null === $text || '' === $text) {
+        if ('' === $text) {
             $this->boxed(sprintf('Thank you for updating to Firefly III, v%s', $version));
             $this->boxedInfo('There are no extra upgrade instructions.');
             $this->boxed('Firefly III should be ready for use.');
@@ -184,14 +175,15 @@ class UpgradeFireflyInstructions extends Command
      */
     private function installInstructions(): void
     {
-        /** @var string $version */
-        $version = config('firefly.version');
-        $config  = config('upgrade.text.install');
-        $text    = '';
+        $version = (string)config('firefly.version');
+        /** @var array $config */
+        $config = config('upgrade.text.install');
+        $text   = '';
+        /** @var string $compare */
         foreach (array_keys($config) as $compare) {
             // if string starts with:
-            if (\str_starts_with($version, $compare)) {
-                $text = $config[$compare];
+            if (str_starts_with($version, $compare)) {
+                $text = (string)$config[$compare];
             }
         }
         $this->newLine();
@@ -199,7 +191,7 @@ class UpgradeFireflyInstructions extends Command
         $this->newLine();
         $this->showLine();
         $this->boxed('');
-        if (null === $text || '' === $text) {
+        if ('' === $text) {
             $this->boxed(sprintf('Thank you for installing Firefly III, v%s!', $version));
             $this->boxedInfo('There are no extra installation instructions.');
             $this->boxed('Firefly III should be ready for use.');

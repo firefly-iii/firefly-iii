@@ -28,15 +28,12 @@ use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Collection;
 
 /**
  * Class ExchangeRateSeeder
  */
 class ExchangeRateSeeder extends Seeder
 {
-    private Collection $users;
-
     /**
      * @return void
      */
@@ -111,6 +108,7 @@ class ExchangeRateSeeder extends Seeder
      * @param float               $rate
      *
      * @return void
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     private function addRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date, float $rate): void
     {

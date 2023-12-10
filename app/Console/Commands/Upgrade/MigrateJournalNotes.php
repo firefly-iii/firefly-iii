@@ -27,7 +27,6 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -38,18 +37,10 @@ class MigrateJournalNotes extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_migrate_notes';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    public const string CONFIG_NAME = '480_migrate_notes';
+
     protected $description = 'Migrate notes for transaction journals.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:migrate-notes {--F|force : Force the execution of this command.}';
 
     /**
@@ -82,7 +73,7 @@ class MigrateJournalNotes extends Command
 
             $note->text = $meta->data;
             $note->save();
-            Log::debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
+            app('log')->debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
             $meta->delete();
 
             $count++;

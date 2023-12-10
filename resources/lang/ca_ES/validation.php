@@ -44,11 +44,12 @@ return [
     'invalid_query_currency'         => 'La consulta conté comptes amb diferents preferències de moneda, cosa que no és permesa.',
     'iban'                           => 'Aquest IBAN no és vàlid.',
     'zero_or_more'                   => 'El valor no pot ser negatiu.',
+    'no_asset_account'               => 'Aquest no és un compte d\'actius.',
     'date_or_time'                   => 'El valor ha de ser una data o hora vàlida (ISO 8601).',
     'source_equals_destination'      => 'El compte d\'origen és el mateix que el compte de destí.',
     'unique_account_number_for_user' => 'Sembla que el número de compte ja està en ús.',
     'unique_iban_for_user'           => 'Sembla que l\'IBAN ja està en ús.',
-    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
+    'reconciled_forbidden_field'     => 'Aquesta transacció ja està reconciliada, no pots canviar el ":field"',
     'deleted_user'                   => 'Per restriccions de seguretat, no et pots registrar amb aquesta adreça de correu electrònic.',
     'rule_trigger_value'             => 'Aquest valor és invàlid per l\'activador seleccionat.',
     'rule_action_value'              => 'Aquest valor és invàlid per l\'acció seleccionada.',
@@ -307,3 +308,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

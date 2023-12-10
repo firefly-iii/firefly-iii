@@ -99,7 +99,7 @@ return [
     'description'                 => 'Описание',
     'expense_account'             => 'Счет расходов',
     'revenue_account'             => 'Доходный счет',
-    'decimal_places'              => 'Количество цифр после точки',
+    'decimal_places'              => 'Количество знаков после запятой',
     'destination_amount'          => 'Сумма (назначение)',
     'new_email_address'           => 'Новый адрес электронной почты',
     'verification'                => 'Проверка',
@@ -147,7 +147,7 @@ return [
     'start_date'                  => 'Начало диапазона',
     'end_date'                    => 'Конец диапазона',
     'enddate'                     => 'Дата окончания',
-    'move_rules_before_delete'    => 'Rule group',
+    'move_rules_before_delete'    => 'Группа правил',
     'start'                       => 'Начало диапазона',
     'end'                         => 'Конец диапазона',
     'delete_account'              => 'Удалить счёт ":name"',
@@ -314,3 +314,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

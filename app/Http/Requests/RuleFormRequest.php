@@ -34,9 +34,9 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class RuleFormRequest extends FormRequest
 {
+    use ChecksLogin;
     use ConvertsDataTypes;
     use GetRuleConfiguration;
-    use ChecksLogin;
 
     /**
      * Get all data for controller.
@@ -164,7 +164,7 @@ class RuleFormRequest extends FormRequest
             'strict'           => 'in:0,1',
         ];
 
-        /** @var Rule $rule */
+        /** @var Rule|null $rule */
         $rule = $this->route()->parameter('rule');
 
         if (null !== $rule) {

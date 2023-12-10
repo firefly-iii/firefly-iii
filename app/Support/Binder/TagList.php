@@ -27,7 +27,6 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -51,10 +50,10 @@ class TagList implements BinderInterface
                              ->get();
             }
             $list = array_unique(array_map('\strtolower', explode(',', $value)));
-            Log::debug('List of tags is', $list);
+            app('log')->debug('List of tags is', $list);
 
-            if (0 === count($list)) {
-                Log::error('Tag list is empty.');
+            if (0 === count($list)) { // @phpstan-ignore-line
+                app('log')->error('Tag list is empty.');
                 throw new NotFoundHttpException();
             }
 
@@ -81,7 +80,7 @@ class TagList implements BinderInterface
                 return $collection;
             }
         }
-        Log::error('TagList: user is not logged in.');
+        app('log')->error('TagList: user is not logged in.');
         throw new NotFoundHttpException();
     }
 }

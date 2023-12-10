@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Events;
 
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Queue\SerializesModels;
 
 /**
@@ -37,10 +38,13 @@ class ActuallyLoggedIn extends Event
     public User $user;
 
     /**
-     * @param User $user
+     * @param User|Authenticatable|null $user
      */
-    public function __construct(User $user)
+    public function __construct(User | Authenticatable | null $user)
     {
-        $this->user = $user;
+        if ($user instanceof User) {
+            $this->user = $user;
+        }
+
     }
 }

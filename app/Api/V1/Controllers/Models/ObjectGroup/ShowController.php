@@ -24,13 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\ObjectGroup;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use FireflyIII\Transformers\ObjectGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -69,12 +67,9 @@ class ShowController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @param Request $request
-     *
      * @return JsonResponse
-     * @throws FireflyException
      */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
         $manager = $this->getManager();
 

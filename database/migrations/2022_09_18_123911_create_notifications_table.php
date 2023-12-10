@@ -30,14 +30,14 @@ use Illuminate\Support\Facades\Schema;
 return new class () extends Migration {
     /**
      * Run the migrations.
-     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      * @return void
      */
     public function up(): void
     {
         if (!Schema::hasTable('notifications')) {
             try {
-                Schema::create('notifications', function (Blueprint $table) {
+                Schema::create('notifications', static function (Blueprint $table) {
                     $table->uuid('id')->primary();
                     $table->string('type');
                     $table->morphs('notifiable');

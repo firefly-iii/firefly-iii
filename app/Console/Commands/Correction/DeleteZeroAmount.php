@@ -35,17 +35,8 @@ class DeleteZeroAmount extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Delete transactions with zero amount.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:delete-zero-amount';
 
     /**

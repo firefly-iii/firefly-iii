@@ -24,13 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 
 /**
  * FireflyIII\Models\AutoBudget
@@ -41,7 +42,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null              $deleted_at
  * @property int                      $budget_id
  * @property int                      $transaction_currency_id
- * @property int                      $auto_budget_type
+ * @property int|string               $auto_budget_type
  * @property string                   $amount
  * @property string                   $period
  * @property-read Budget              $budget
@@ -65,11 +66,12 @@ use Illuminate\Support\Carbon;
  */
 class AutoBudget extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    public const AUTO_BUDGET_ADJUSTED = 3;
-    public const AUTO_BUDGET_RESET    = 1;
-    public const AUTO_BUDGET_ROLLOVER = 2;
+    public const int AUTO_BUDGET_ADJUSTED = 3;
+    public const int AUTO_BUDGET_RESET    = 1;
+    public const int AUTO_BUDGET_ROLLOVER = 2;
     protected $fillable = ['budget_id', 'amount', 'period'];
 
     /**
@@ -94,7 +96,28 @@ class AutoBudget extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
+
+    /**
+     * @return Attribute
+     */
+    protected function budgetId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function transactionCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
 }

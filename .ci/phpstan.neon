@@ -1,42 +1,33 @@
-includes:
-  - ../vendor/nunomaduro/larastan/extension.neon
-  - ../vendor/ergebnis/phpstan-rules/rules.neon
-  - ../vendor/phpstan/phpstan-deprecation-rules/rules.neon
-  - ../vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
-
 parameters:
+  universalObjectCratesClasses:
+    - Illuminate\Database\Eloquent\Model
+  # TODO: slowly remove these parameters and fix the issues found.
+  reportUnmatchedIgnoredErrors: false
+  checkGenericClassInNonGenericObjectType: false  # remove this rule when all other issues are solved.
   ignoreErrors:
+  # TODO: slowly remove these exceptions and fix the issues found.
+    - '#Dynamic call to static method#' # all the Laravel ORM things depend on this.
+    - '#Control structures using switch should not be used.#' # switch is fine in some cases.
+    - '#with no value type specified in iterable type array#' # remove this rule when all other issues are solved.
+    - '#has no value type specified in iterable type array#' # remove this rule when all other issues are solved.
     - '#is not allowed to extend#'
+    - '#switch is forbidden to use#'
     - '#is neither abstract nor final#'
-    - '#has a nullable return type declaration#'
-    - '#with a nullable type declaration#'
+    - '#on left side of \?\?\= always exists and is not nullable#'
+    - '#has a nullable return type declaration#' # perhaps throw errors instead?
+    - '#with a nullable type declaration#' # decide what action should be if param is null.
     - '#with null as default value#'
-    - '#is not covariant with PHPDoc type array#'
+    -
+        message: '#Constructor in [a-zA-Z0-9\\_]+ has parameter \$[a-zA-Z0-9\\_]+ with default value#'
+        paths:
+            - ../app/Exceptions/IntervalException.php
+            - ../app/Support/Navigation.php
     -
         message: '#but containers should not be injected#'
         paths:
             - ../app/Support/Authentication/RemoteUserGuard.php
     -
-        message: '#Control structures using switch should not be used.#'
-        paths:
-            - ../app/Api/V1/Controllers/Data/DestroyController.php
-            - ../app/Console/Commands/Correction/FixAccountTypes.php
-            - ../app/Console/Commands/Upgrade/OtherCurrenciesCorrections.php
-            - ../app/Exceptions/GracefulNotFoundHandler.php
-            - ../app/Generator/Webhook/StandardMessageGenerator.php
-            - ../app/Support/Amount.php
-            - ../app/Support/Navigation.php
-            - ../app/Support/ParseDateString.php
-            - ../app/Support/Search/AccountSearch.php
-            - ../app/Support/Search/OperatorQuerySearch.php
-            - ../app/Support/Twig/General.php
-            - ../app/Transformers/RecurrenceTransformer.php
-            - ../app/Validation/AccountValidator.php
-            - ../app/Validation/RecurrenceValidation.php
-            - ../app/Validation/TransactionValidation.php
-
-    -
-        message: '#Function compact\(\) should not be used#'
+        message: '#Function compact\(\) should not be used#' # too useful in template rendering.
         paths:
             - ../app/Generator/Report/Account/MonthReportGenerator.php
             - ../app/Generator/Report/Audit/MonthReportGenerator.php
@@ -57,7 +48,6 @@ parameters:
         message: '#Either catch a more specific exception#'
         paths:
             - ../app/Support/Form/FormSupport.php
-
   paths:
     - ../app
     - ../database
@@ -66,5 +56,6 @@ parameters:
     - ../bootstrap/app.php
 
   # The level 8 is the highest level. original was 5
-  level: 4
+  # 7 is more than enough, higher just leaves NULL things.
+  level: 7
 

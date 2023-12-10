@@ -27,6 +27,8 @@ namespace FireflyIII\Repositories\UserGroups\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\UserGroup;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -40,6 +42,22 @@ interface AccountRepositoryInterface
      * @return Account|null
      */
     public function find(int $accountId): ?Account;
+
+    /**
+     * @param string $number
+     * @param array  $types
+     *
+     * @return Account|null
+     */
+    public function findByAccountNumber(string $number, array $types): ?Account;
+
+    /**
+     * @param string $iban
+     * @param array  $types
+     *
+     * @return Account|null
+     */
+    public function findByIbanNull(string $iban, array $types): ?Account;
 
     /**
      * @param string $name
@@ -96,6 +114,20 @@ interface AccountRepositoryInterface
      * @return Collection
      */
     public function searchAccount(string $query, array $types, int $limit): Collection;
+
+    /**
+     * @param User $user
+     *
+     * @return void
+     */
+    public function setUser(User $user): void;
+
+    /**
+     * @param UserGroup $userGroup
+     *
+     * @return void
+     */
+    public function setUserGroup(UserGroup $userGroup): void;
 
 
 }

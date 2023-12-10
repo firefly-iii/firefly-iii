@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -39,18 +38,10 @@ class MigrateAttachments extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const CONFIG_NAME = '480_migrate_attachments';
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    public const string CONFIG_NAME = '480_migrate_attachments';
+
     protected $description = 'Migrates attachment meta-data.';
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+
     protected $signature = 'firefly-iii:migrate-attachments {--F|force : Force the execution of this command.}';
 
     /**
@@ -92,7 +83,7 @@ class MigrateAttachments extends Command
                 $att->description = '';
                 $att->save();
 
-                Log::debug(sprintf('Migrated attachment #%s description to note #%d.', $att->id, $note->id));
+                app('log')->debug(sprintf('Migrated attachment #%s description to note #%d.', $att->id, $note->id));
                 $count++;
             }
         }

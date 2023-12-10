@@ -47,7 +47,7 @@ return [
     'active'                    => 'Actif',
     'amount_min'                => 'Montant minimum',
     'amount_max'                => 'Montant maximum',
-    'match'                     => 'Correspondre à',
+    'match'                     => 'Correspond à',
     'strict'                    => 'Mode strict',
     'repeat_freq'               => 'Répétitions',
     'object_group'              => 'Groupe',
@@ -133,7 +133,7 @@ return [
     'iban'                        => 'Numéro IBAN',
     'account_number'              => 'Numéro de compte',
     'creditCardNumber'            => 'Numéro de carte de crédit',
-    'has_headers'                 => 'Entêtes ',
+    'has_headers'                 => "Entêtes\u{a0}",
     'date_format'                 => 'Format de la date',
     'specifix'                    => 'Banque - ou déposer des corrections spécifiques',
     'attachments[]'               => 'Pièces jointes',
@@ -202,7 +202,7 @@ return [
     'also_delete_transactions'    => 'La seule opération liée à ce compte sera aussi supprimée.|Les :count opérations liées à ce compte seront aussi supprimées.',
     'also_delete_transactions_js' => 'Aucune opération|La seule opération liée à ce compte sera aussi supprimée.|Les {count} opérations liées à ce compte seront aussi supprimées.',
     'also_delete_connections'     => 'La seule opération liée à ce type de lien perdra cette connexion. | Toutes les opérations :count liées à ce type de lien perdront leur connexion.',
-    'also_delete_rules'           => 'La seule règle liée à ce groupe de règles sera aussi supprimée.|Les :count règles liées à ce groupe de règles seront aussi supprimées.',
+    'also_delete_rules'           => 'La règle liée à ce groupe de règles sera aussi supprimée.|Les :count règles liées à ce groupe de règles seront aussi supprimées.',
     'also_delete_piggyBanks'      => 'La seule tirelire liée à ce compte sera aussi supprimée.|Les :count tirelires liées à ce compte seront aussi supprimées.',
     'also_delete_piggyBanks_js'   => 'Aucune tirelire|La seule tirelire liée à ce compte sera aussi supprimée.|Les {count} tirelires liées à ce compte seront aussi supprimées.',
     'not_delete_piggy_banks'      => 'La tirelire associée à ce groupe ne sera pas supprimée.|Les :count tirelires associées à ce groupe ne seront pas supprimées.',
@@ -214,7 +214,7 @@ return [
     'check_for_updates'           => 'Vérifier les mises à jour',
     'liability_direction'         => 'Sens du passif',
     'delete_object_group'         => 'Supprimer le groupe ":title"',
-    'email'                       => 'Adresse Email',
+    'email'                       => 'Adresse e-mail',
     'password'                    => 'Mot de passe',
     'password_confirmation'       => 'Entrer à nouveau le mot de passe',
     'blocked'                     => 'Est bloqué ?',
@@ -314,3 +314,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

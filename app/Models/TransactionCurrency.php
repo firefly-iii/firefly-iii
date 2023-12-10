@@ -23,37 +23,39 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * FireflyIII\Models\TransactionCurrency
  *
- * @property int                                                $id
- * @property Carbon|null                                        $created_at
- * @property Carbon|null                                        $updated_at
- * @property Carbon|null                                        $deleted_at
- * @property bool                                               $enabled
- * @property bool                                               $userDefault
- * @property bool                                               $userEnabled
- * @property string                                             $code
- * @property string                                             $name
- * @property string                                             $symbol
- * @property int                                                $decimal_places
- * @property-read Collection|BudgetLimit[]                      $budgetLimits
- * @property-read int|null                                      $budget_limits_count
- * @property-read Collection|TransactionJournal[]               $transactionJournals
- * @property-read int|null                                      $transaction_journals_count
- * @property-read Collection|Transaction[]                      $transactions
- * @property-read int|null                                      $transactions_count
+ * @property int                                  $id
+ * @property Carbon|null                          $created_at
+ * @property Carbon|null                          $updated_at
+ * @property Carbon|null                          $deleted_at
+ * @property bool                                 $enabled
+ * @property bool|null                            $userDefault
+ * @property bool|null                            $userEnabled
+ * @property string                               $code
+ * @property string                               $name
+ * @property string                               $symbol
+ * @property int                                  $decimal_places
+ * @property-read Collection|BudgetLimit[]        $budgetLimits
+ * @property-read int|null                        $budget_limits_count
+ * @property-read Collection|TransactionJournal[] $transactionJournals
+ * @property-read int|null                        $transaction_journals_count
+ * @property-read Collection|Transaction[]        $transactions
+ * @property-read int|null                        $transactions_count
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency newQuery()
  * @method static Builder|TransactionCurrency onlyTrashed()
@@ -69,21 +71,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereUpdatedAt($value)
  * @method static Builder|TransactionCurrency withTrashed()
  * @method static Builder|TransactionCurrency withoutTrashed()
- * @property-read Collection<int, UserGroup> $userGroups
- * @property-read int|null                   $user_groups_count
- * @property-read Collection<int, User>      $users
- * @property-read int|null                   $users_count
+ * @property-read Collection<int, UserGroup>      $userGroups
+ * @property-read int|null                        $user_groups_count
+ * @property-read Collection<int, User>           $users
+ * @property-read int|null                        $users_count
  * @mixin Eloquent
  */
 class TransactionCurrency extends Model
 {
+    use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+    public ?bool $userDefault;
+    public ?bool $userEnabled;
     protected $casts
         = [
             'created_at'     => 'datetime',
@@ -92,7 +92,7 @@ class TransactionCurrency extends Model
             'decimal_places' => 'int',
             'enabled'        => 'bool',
         ];
-    /** @var array Fields that can be filled */
+
     protected $fillable = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
 
     /**
@@ -103,7 +103,7 @@ class TransactionCurrency extends Model
      * @return TransactionCurrency
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): TransactionCurrency
+    public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $currencyId = (int)$value;
@@ -117,14 +117,6 @@ class TransactionCurrency extends Model
     }
 
     /**
-     * @return HasMany
-     */
-    public function budgetLimits(): HasMany
-    {
-        return $this->hasMany(BudgetLimit::class);
-    }
-
-    /**
      * @param User $user
      *
      * @return void
@@ -133,8 +125,16 @@ class TransactionCurrency extends Model
     {
         $current           = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
         $default           = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
-        $this->userDefault = (int)$default->id === (int)$this->id;
+        $this->userDefault = $default->id === $this->id;
         $this->userEnabled = null !== $current;
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function budgetLimits(): HasMany
+    {
+        return $this->hasMany(BudgetLimit::class);
     }
 
     /**
@@ -171,5 +171,15 @@ class TransactionCurrency extends Model
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class)->withTimestamps()->withPivot('user_default');
+    }
+
+    /**
+     * @return Attribute
+     */
+    protected function decimalPlaces(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

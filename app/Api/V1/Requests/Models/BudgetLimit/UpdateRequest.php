@@ -36,8 +36,8 @@ use Illuminate\Validation\Validator;
  */
 class UpdateRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
@@ -84,7 +84,7 @@ class UpdateRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator) {
+            static function (Validator $validator) {
                 // validate start before end only if both are there.
                 $data = $validator->getData();
                 if (array_key_exists('start', $data) && array_key_exists('end', $data)) {

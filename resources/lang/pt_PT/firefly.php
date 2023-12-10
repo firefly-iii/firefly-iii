@@ -469,6 +469,10 @@ return [
     'search_modifier_transaction_type'                    => 'Tipo de transacção é ":value"',
     'search_modifier_not_transaction_type'                => 'O tipo de transação não é ":value"',
     'search_modifier_tag_is'                              => 'A etiqueta é ":value"',
+    'search_modifier_tag_contains'                        => 'Tag contains ":value"',
+    'search_modifier_not_tag_contains'                    => 'Tag does not contain ":value"',
+    'search_modifier_tag_ends'                            => 'Tag ends with ":value"',
+    'search_modifier_tag_starts'                          => 'Tag starts with ":value"',
     'search_modifier_not_tag_is'                          => 'Nenhuma etiqueta é ":value"',
     'search_modifier_date_on_year'                        => 'A transação é do ano ":value"',
     'search_modifier_not_date_on_year'                    => 'A transação não é no ano ":value"',
@@ -1278,6 +1282,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Acrescentar notas à descrição',
     'rule_action_move_descr_to_notes'                     => 'Substituir notas por descrição',
     'rule_action_move_notes_to_descr'                     => 'Substituir descrição por notas',
+    'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
+    'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
     'rulegroup_for_bills_title'                           => 'Grupo de regras para encargos',
     'rulegroup_for_bills_description'                     => 'Um grupo especial de regras para todas as regras que envolvem encargos.',
     'rule_for_bill_title'                                 => 'Regra gerada automaticamente para o encargo ":name"',
@@ -2769,3 +2775,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

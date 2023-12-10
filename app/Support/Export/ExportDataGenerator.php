@@ -53,7 +53,6 @@ use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use League\Csv\CannotInsertRecord;
 use League\Csv\Exception;
 use League\Csv\Writer;
@@ -67,8 +66,8 @@ class ExportDataGenerator
 {
     use ConvertsDataTypes;
 
-    private const ADD_RECORD_ERR = 'Could not add record to set: %s';
-    private const EXPORT_ERR     = 'Could not export to string: %s';
+    private const string ADD_RECORD_ERR = 'Could not add record to set: %s';
+    private const string EXPORT_ERR     = 'Could not export to string: %s';
     private Collection $accounts;
     private Carbon     $end;
     private bool       $exportAccounts;
@@ -212,7 +211,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -289,7 +288,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -356,7 +355,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -407,7 +406,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -487,7 +486,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -651,7 +650,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -782,7 +781,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -837,7 +836,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -936,7 +935,7 @@ class ExportDataGenerator
                 $journal['budget_name'],
                 $journal['bill_name'],
                 $this->mergeTags($journal['tags']),
-                $this->clearString($journal['notes'], true),
+                $this->clearStringKeepNewlines($journal['notes']),
 
                 // export also the optional fields (ALL)
 
@@ -990,7 +989,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            Log::error($e->getMessage());
+            app('log')->error($e->getMessage());
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 

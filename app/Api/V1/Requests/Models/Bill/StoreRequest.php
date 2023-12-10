@@ -28,7 +28,6 @@ use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
@@ -38,8 +37,8 @@ use Illuminate\Validation\Validator;
  */
 class StoreRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use ChecksLogin;
+    use ConvertsDataTypes;
 
     /**
      * Get all data from the request.
@@ -48,7 +47,7 @@ class StoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        Log::debug('Raw fields in Bill StoreRequest', $this->all());
+        app('log')->debug('Raw fields in Bill StoreRequest', $this->all());
         $fields = [
             'name'               => ['name', 'convertString'],
             'amount_min'         => ['amount_min', 'convertString'],
