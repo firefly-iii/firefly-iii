@@ -28,7 +28,6 @@ use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Transformers\V2\AccountTransformer;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Show = show a single account.

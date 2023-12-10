@@ -27,9 +27,7 @@ namespace FireflyIII\Console\Commands\System;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
-use Illuminate\Filesystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
-use League\Flysystem\FilesystemReader;
 use Storage;
 
 /**

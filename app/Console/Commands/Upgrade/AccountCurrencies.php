@@ -46,8 +46,8 @@ class AccountCurrencies extends Command
 
     public const string CONFIG_NAME = '480_account_currencies';
 
-    protected $description = 'Give all accounts proper currency info.';
-    protected $signature   = 'firefly-iii:account-currencies {--F|force : Force the execution of this command.}';
+    protected                          $description = 'Give all accounts proper currency info.';
+    protected                          $signature   = 'firefly-iii:account-currencies {--F|force : Force the execution of this command.}';
     private AccountRepositoryInterface $accountRepos;
     private int                        $count;
     private UserRepositoryInterface    $userRepos;
@@ -109,14 +109,14 @@ class AccountCurrencies extends Command
      */
     private function updateAccountCurrencies(): void
     {
-        $users               = $this->userRepos->all();
+        $users = $this->userRepos->all();
         foreach ($users as $user) {
             $this->updateCurrenciesForUser($user);
         }
     }
 
     /**
-     * @param User   $user
+     * @param User $user
      *
      * @throws FireflyException
      */

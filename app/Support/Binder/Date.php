@@ -71,7 +71,7 @@ class Date implements BinderInterface
 
         try {
             $result = new Carbon($value);
-        } catch (InvalidDateException $e) { /** @phpstan-ignore-line */
+        } catch (InvalidDateException $e) { // @phpstan-ignore-line
             $message = sprintf('Could not parse date "%s" for user #%d: %s', $value, auth()->user()->id, $e->getMessage());
             app('log')->error($message);
             throw new NotFoundHttpException($message, $e);

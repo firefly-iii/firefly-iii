@@ -45,7 +45,7 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 
             return $type;
         }
-        $typeString = $typeString ?? TransactionType::WITHDRAWAL;
+        $typeString ??= TransactionType::WITHDRAWAL;
         $search     = $this->findByType($typeString);
         if (null === $search) {
             $search = $this->findByType(TransactionType::WITHDRAWAL);

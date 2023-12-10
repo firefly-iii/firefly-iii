@@ -27,7 +27,6 @@ use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use FireflyIII\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**

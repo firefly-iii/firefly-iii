@@ -84,7 +84,7 @@ class TransactionCurrency extends Model
 
     public ?bool $userDefault;
     public ?bool $userEnabled;
-    protected    $casts
+    protected $casts
         = [
             'created_at'     => 'datetime',
             'updated_at'     => 'datetime',

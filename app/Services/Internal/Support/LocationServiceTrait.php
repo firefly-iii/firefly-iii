@@ -40,7 +40,7 @@ trait LocationServiceTrait
      */
     protected function storeNewLocation(Model $model, array $data): ?Location
     {
-        $data['store_location'] = $data['store_location'] ?? false;
+        $data['store_location'] ??= false;
         if ($data['store_location']) {
             $location             = new Location();
             $location->latitude   = $data['latitude'] ?? config('firefly.default_location.latitude');

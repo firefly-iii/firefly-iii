@@ -71,7 +71,7 @@ class PiggyBankForm
                 $groupTitle = $group->title;
                 $groupOrder = $group->order;
             }
-            $subList[$groupOrder]                        = $subList[$groupOrder] ?? [
+            $subList[$groupOrder] ??= [
                 'group'   => [
                     'title' => $groupTitle,
                 ],

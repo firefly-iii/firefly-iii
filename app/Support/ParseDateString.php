@@ -156,7 +156,7 @@ class ParseDateString
         $result = false;
         try {
             $result = Carbon::createFromFormat('Y-m-d', $date);
-        } catch (InvalidFormatException $e) {
+        } catch (InvalidFormatException $e) { // @phpstan-ignore-line
             Log::error(sprintf('parseDefaultDate("%s") ran into an error, but dont mind: %s', $date, $e->getMessage()));
         }
         if (false === $result) {

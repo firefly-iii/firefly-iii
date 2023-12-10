@@ -61,7 +61,7 @@ return [
     'transaction_types_equal'        => 'Wszystkie podziały muszą być tego samego typu.',
     'invalid_transaction_type'       => 'Nieprawidłowy typ transakcji.',
     'invalid_selection'              => 'Twój wybór jest nieprawidłowy.',
-    'belongs_user'                   => 'This value is linked to an object that does not seem to exist.',
+    'belongs_user'                   => 'Ta wartość jest powiązana z obiektem, który nie istnieje.',
     'belongs_user_or_user_group'     => 'This value is linked to an object that does not seem to exist in your current financial administration.',
     'at_least_one_transaction'       => 'Wymaga co najmniej jednej transakcji.',
     'recurring_transaction_id'       => 'Wymaga co najmniej jednej transakcji.',

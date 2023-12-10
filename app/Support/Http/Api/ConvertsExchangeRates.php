@@ -171,7 +171,7 @@ trait ConvertsExchangeRates
     private function convertAmount(string $amount, TransactionCurrency $from, TransactionCurrency $to, ?Carbon $date = null): string
     {
         app('log')->debug(sprintf('Converting %s from %s to %s', $amount, $from->code, $to->code));
-        $date = $date ?? today(config('app.timezone'));
+        $date ??= today(config('app.timezone'));
         $rate = $this->getRate($from, $to, $date);
 
         return bcmul($amount, $rate);

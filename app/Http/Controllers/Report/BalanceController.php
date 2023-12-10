@@ -104,7 +104,7 @@ class BalanceController extends Controller
             foreach ($journals as $journal) {
                 $sourceAccount                  = $journal['source_account_id'];
                 $currencyId                     = $journal['currency_id'];
-                $spent[$sourceAccount]          = $spent[$sourceAccount] ?? [
+                $spent[$sourceAccount] ??= [
                     'source_account_id'       => $sourceAccount,
                     'currency_id'             => $journal['currency_id'],
                     'currency_code'           => $journal['currency_code'],
@@ -116,7 +116,7 @@ class BalanceController extends Controller
                 $spent[$sourceAccount]['spent'] = bcadd($spent[$sourceAccount]['spent'], $journal['amount']);
 
                 // also fix sum:
-                $report['sums'][$budgetId][$currencyId]        = $report['sums'][$budgetId][$currencyId] ?? [
+                $report['sums'][$budgetId][$currencyId] ??= [
                     'sum'                     => '0',
                     'currency_id'             => $journal['currency_id'],
                     'currency_code'           => $journal['currency_code'],

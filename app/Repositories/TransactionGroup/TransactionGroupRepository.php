@@ -176,7 +176,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         /** @var Attachment $attachment */
         foreach ($set as $attachment) {
             $journalId              = $attachment->attachable_id;
-            $result[$journalId]     = $result[$journalId] ?? [];
+            $result[$journalId] ??= [];
             $current                = $attachment->toArray();
             $current['file_exists'] = true;
             $current['notes']       = $repository->getNoteText($attachment);
@@ -241,7 +241,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         /** @var TransactionJournalLink $entry */
         foreach ($set as $entry) {
             $journalId          = in_array($entry->source_id, $journals, true) ? $entry->source_id : $entry->destination_id;
-            $return[$journalId] = $return[$journalId] ?? [];
+            $return[$journalId] ??= [];
 
             // phpstan: the editable field is provided by the query.
 
@@ -418,7 +418,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                 $currency = TransactionCurrency::where('id', $currencyPreference->data)->first();
             }
             $journalId          = $row->transaction_journal_id;
-            $return[$journalId] = $return[$journalId] ?? [];
+            $return[$journalId] ??= [];
 
             $return[$journalId][] = [
                 'piggy'    => $row->piggyBank->name,

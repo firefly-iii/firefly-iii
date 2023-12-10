@@ -166,8 +166,8 @@ class ExpenseReportController extends Controller
                 $currentExpense = $expenses[$name] ?? '0';
 
                 // add to sum:
-                $sumOfIncome[$exp->id]  = $sumOfIncome[$exp->id] ?? '0';
-                $sumOfExpense[$exp->id] = $sumOfExpense[$exp->id] ?? '0';
+                $sumOfIncome[$exp->id] ??= '0';
+                $sumOfExpense[$exp->id] ??= '0';
                 $sumOfIncome[$exp->id]  = bcadd($sumOfIncome[$exp->id], $currentIncome);
                 $sumOfExpense[$exp->id] = bcadd($sumOfExpense[$exp->id], $currentExpense);
 

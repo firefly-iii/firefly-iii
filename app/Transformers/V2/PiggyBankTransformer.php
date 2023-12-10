@@ -92,7 +92,7 @@ class PiggyBankTransformer extends AbstractTransformer
         foreach ($currencyPreferences as $preference) {
             $currencyId                   = (int)$preference->data;
             $accountId                    = $preference->account_id;
-            $currencies[$currencyId]      = $currencies[$currencyId] ?? TransactionJournal::find($currencyId);
+            $currencies[$currencyId] ??= TransactionJournal::find($currencyId);
             $this->currencies[$accountId] = $currencies[$currencyId];
         }
 

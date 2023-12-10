@@ -43,8 +43,8 @@ class FixAccountTypes extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description = 'Make sure all journals have the correct from/to account types.';
-    protected $signature   = 'firefly-iii:fix-account-types';
+    protected              $description = 'Make sure all journals have the correct from/to account types.';
+    protected              $signature   = 'firefly-iii:fix-account-types';
     private int            $count;
     private array          $expected;
     private AccountFactory $factory;

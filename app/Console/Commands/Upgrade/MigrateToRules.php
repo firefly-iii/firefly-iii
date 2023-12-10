@@ -169,7 +169,7 @@ class MigrateToRules extends Command
         if ('MIGRATED_TO_RULES' === $bill->match) {
             return;
         }
-        $languageString   = null !== $language->data && !is_array($language->data) ? (string)$language->data : 'en_US';
+        $languageString = null !== $language->data && !is_array($language->data) ? (string)$language->data : 'en_US';
 
         // get match thing:
         $match   = implode(' ', explode(',', $bill->match));

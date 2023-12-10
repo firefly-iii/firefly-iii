@@ -46,7 +46,7 @@ class IntroController extends Controller
     public function getIntroSteps(string $route, string $specificPage = null): JsonResponse
     {
         app('log')->debug(sprintf('getIntroSteps for route "%s" and page "%s"', $route, $specificPage));
-        $specificPage  = $specificPage ?? '';
+        $specificPage ??= '';
         $steps         = $this->getBasicSteps($route);
         $specificSteps = $this->getSpecificSteps($route, $specificPage);
         if (0 === count($specificSteps)) {
@@ -106,7 +106,7 @@ class IntroController extends Controller
      */
     public function postEnable(string $route, string $specialPage = null): JsonResponse
     {
-        $specialPage = $specialPage ?? '';
+        $specialPage ??= '';
         $route       = str_replace('.', '_', $route);
         $key         = 'shown_demo_' . $route;
         if ('' !== $specialPage) {
@@ -130,7 +130,7 @@ class IntroController extends Controller
      */
     public function postFinished(string $route, string $specialPage = null): JsonResponse
     {
-        $specialPage = $specialPage ?? '';
+        $specialPage ??= '';
         $key         = 'shown_demo_' . $route;
         if ('' !== $specialPage) {
             $key .= '_' . $specialPage;

@@ -109,7 +109,7 @@ class CategoryController extends Controller
                 $nativeAmount = app('steam')->positive($journal['foreign_amount']);
             }
             // create arrays
-            $return[$key] = $return[$key] ?? [
+            $return[$key] ??= [
                 'label'                   => $categoryName,
                 'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,

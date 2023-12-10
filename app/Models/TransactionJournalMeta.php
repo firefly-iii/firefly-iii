@@ -95,7 +95,7 @@ class TransactionJournalMeta extends Model
     {
         $data                     = json_encode($value);
         $this->attributes['data'] = $data;
-        $this->attributes['hash'] = hash('sha256',(string)  $data);
+        $this->attributes['hash'] = hash('sha256', (string)  $data);
     }
 
     /**

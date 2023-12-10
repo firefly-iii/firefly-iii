@@ -59,7 +59,8 @@ final class IntervalException extends Exception
         array       $intervals,
         int         $code = 0,
         ?Throwable  $previous = null
-    ): self {
+    ): self
+    {
         $message = sprintf(
             'The periodicity %s is unknown. Choose one of available periodicity: %s',
             $periodicity->name,

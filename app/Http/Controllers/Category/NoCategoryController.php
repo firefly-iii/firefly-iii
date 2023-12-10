@@ -84,9 +84,9 @@ class NoCategoryController extends Controller
     {
         app('log')->debug('Start of noCategory()');
         /** @var Carbon $start */
-        $start = $start ?? session('start');
+        $start ??= session('start');
         /** @var Carbon $end */
-        $end      = $end ?? session('end');
+        $end ??= session('end');
         $page     = (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
         $subTitle = trans(

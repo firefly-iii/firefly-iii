@@ -86,7 +86,7 @@ class CategoryReportController extends Controller
                 foreach ($category['transaction_journals'] as $journal) {
                     $objectName               = $journal['budget_name'] ?? trans('firefly.no_budget');
                     $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
-                    $result[$title]           = $result[$title] ?? [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -120,7 +120,7 @@ class CategoryReportController extends Controller
             /** @var array $category */
             foreach ($currency['categories'] as $category) {
                 $title          = sprintf('%s (%s)', $category['name'], $currency['currency_name']);
-                $result[$title] = $result[$title] ?? [
+                $result[$title] ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
                     'currency_code'   => $currency['currency_code'],
@@ -155,7 +155,7 @@ class CategoryReportController extends Controller
             /** @var array $category */
             foreach ($currency['categories'] as $category) {
                 $title          = sprintf('%s (%s)', $category['name'], $currency['currency_name']);
-                $result[$title] = $result[$title] ?? [
+                $result[$title] ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
                     'currency_code'   => $currency['currency_code'],
@@ -192,7 +192,7 @@ class CategoryReportController extends Controller
                 foreach ($category['transaction_journals'] as $journal) {
                     $objectName               = $journal['destination_account_name'] ?? trans('firefly.empty');
                     $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
-                    $result[$title]           = $result[$title] ?? [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -228,7 +228,7 @@ class CategoryReportController extends Controller
                 foreach ($category['transaction_journals'] as $journal) {
                     $objectName               = $journal['destination_account_name'] ?? trans('firefly.empty');
                     $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
-                    $result[$title]           = $result[$title] ?? [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -264,7 +264,7 @@ class CategoryReportController extends Controller
         foreach ($spent as $currency) {
             // add things to chart Data for each currency:
             $spentKey             = sprintf('%d-spent', $currency['currency_id']);
-            $chartData[$spentKey] = $chartData[$spentKey] ?? [
+            $chartData[$spentKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
                     (string)trans('firefly.spent_in_specific_category', ['category' => $category->name]),
@@ -281,7 +281,7 @@ class CategoryReportController extends Controller
                 foreach ($currentCategory['transaction_journals'] as $journal) {
                     $key                                   = $journal['date']->isoFormat($format);
                     $amount                                = app('steam')->positive($journal['amount']);
-                    $chartData[$spentKey]['entries'][$key] = $chartData[$spentKey]['entries'][$key] ?? '0';
+                    $chartData[$spentKey]['entries'][$key] ??= '0';
                     $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
                 }
             }
@@ -291,7 +291,7 @@ class CategoryReportController extends Controller
         foreach ($earned as $currency) {
             // add things to chart Data for each currency:
             $spentKey             = sprintf('%d-earned', $currency['currency_id']);
-            $chartData[$spentKey] = $chartData[$spentKey] ?? [
+            $chartData[$spentKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
                     (string)trans('firefly.earned_in_specific_category', ['category' => $category->name]),
@@ -308,7 +308,7 @@ class CategoryReportController extends Controller
                 foreach ($currentCategory['transaction_journals'] as $journal) {
                     $key                                   = $journal['date']->isoFormat($format);
                     $amount                                = app('steam')->positive($journal['amount']);
-                    $chartData[$spentKey]['entries'][$key] = $chartData[$spentKey]['entries'][$key] ?? '0';
+                    $chartData[$spentKey]['entries'][$key] ??= '0';
                     $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
                 }
             }
@@ -364,7 +364,7 @@ class CategoryReportController extends Controller
                 foreach ($category['transaction_journals'] as $journal) {
                     $objectName               = $journal['source_account_name'] ?? trans('firefly.empty');
                     $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
-                    $result[$title]           = $result[$title] ?? [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -400,7 +400,7 @@ class CategoryReportController extends Controller
                 foreach ($category['transaction_journals'] as $journal) {
                     $objectName               = $journal['source_account_name'] ?? trans('firefly.empty');
                     $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
-                    $result[$title]           = $result[$title] ?? [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],

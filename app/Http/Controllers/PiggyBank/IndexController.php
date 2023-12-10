@@ -106,7 +106,7 @@ class IndexController extends Controller
             $array      = $transformer->transform($piggy);
             $groupOrder = (int)$array['object_group_order'];
             // make group array if necessary:
-            $piggyBanks[$groupOrder] = $piggyBanks[$groupOrder] ?? [
+            $piggyBanks[$groupOrder] ??= [
                 'object_group_id'    => $array['object_group_id'] ?? 0,
                 'object_group_title' => $array['object_group_title'] ?? trans('firefly.default_group_title_name'),
                 'piggy_banks'        => [],
@@ -154,7 +154,7 @@ class IndexController extends Controller
             $groupId = $group['object_group_id'];
             foreach ($group['piggy_banks'] as $piggy) {
                 $currencyId                  = $piggy['currency_id'];
-                $sums[$groupId][$currencyId] = $sums[$groupId][$currencyId] ?? [
+                $sums[$groupId][$currencyId] ??= [
                     'target'                  => '0',
                     'saved'                   => '0',
                     'left_to_save'            => '0',

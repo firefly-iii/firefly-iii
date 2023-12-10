@@ -169,10 +169,10 @@ class BasicController extends Controller
                 $nativeAmount = $transactionJournal['foreign_amount'];
             }
             // prep the arrays
-            $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
-            $incomes['native']    = $incomes['native'] ?? '0';
-            $sums[$currencyId]    = $sums[$currencyId] ?? '0';
-            $sums['native']       = $sums['native'] ?? '0';
+            $incomes[$currencyId] ??= '0';
+            $incomes['native']    ??= '0';
+            $sums[$currencyId]    ??= '0';
+            $sums['native']       ??= '0';
 
             // add values:
             $incomes[$currencyId] = bcadd($incomes[$currencyId], $amount);
@@ -208,10 +208,10 @@ class BasicController extends Controller
             }
 
             // prep arrays
-            $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
-            $expenses['native']    = $expenses['native'] ?? '0';
-            $sums[$currencyId]     = $sums[$currencyId] ?? '0';
-            $sums['native']        = $sums['native'] ?? '0';
+            $expenses[$currencyId] ??= '0';
+            $expenses['native']    ??= '0';
+            $sums[$currencyId]     ??= '0';
+            $sums['native']        ??= '0';
 
             // add values
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $amount);

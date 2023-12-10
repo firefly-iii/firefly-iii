@@ -44,7 +44,7 @@ trait FormSupport
      */
     public function select(string $name, array $list = null, $selected = null, array $options = null): string
     {
-        $list     = $list ?? [];
+        $list ??= [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
@@ -68,7 +68,7 @@ trait FormSupport
      */
     protected function label(string $name, array $options = null): string
     {
-        $options = $options ?? [];
+        $options ??= [];
         if (array_key_exists('label', $options)) {
             return $options['label'];
         }
@@ -86,7 +86,7 @@ trait FormSupport
      */
     protected function expandOptionArray(string $name, $label, array $options = null): array
     {
-        $options                 = $options ?? [];
+        $options ??= [];
         $name                    = str_replace('[]', '', $name);
         $options['class']        = 'form-control';
         $options['id']           = 'ffInput_' . $name;
@@ -156,7 +156,7 @@ trait FormSupport
         $date = null;
         try {
             $date = today(config('app.timezone'));
-        } catch (InvalidDateException $e) {
+        } catch (InvalidDateException $e) {  // @phpstan-ignore-line
             app('log')->error($e->getMessage());
         }
 

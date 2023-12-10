@@ -25,8 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Model\BudgetLimit;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Api\V2\Request\Generic\DateRequest;
-use FireflyIII\Models\Budget;
 use Illuminate\Http\JsonResponse;
 
 /**

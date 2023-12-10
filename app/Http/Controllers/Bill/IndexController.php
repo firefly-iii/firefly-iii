@@ -109,7 +109,7 @@ class IndexController extends Controller
             $array      = $transformer->transform($bill);
             $groupOrder = (int)$array['object_group_order'];
             // make group array if necessary:
-            $bills[$groupOrder] = $bills[$groupOrder] ?? [
+            $bills[$groupOrder] ??= [
                 'object_group_id'    => $array['object_group_id'],
                 'object_group_title' => $array['object_group_title'],
                 'bills'              => [],
@@ -159,7 +159,7 @@ class IndexController extends Controller
                 }
 
                 $currencyId                     = $bill['currency_id'];
-                $sums[$groupOrder][$currencyId] = $sums[$groupOrder][$currencyId] ?? [
+                $sums[$groupOrder][$currencyId] ??= [
                     'currency_id'             => $currencyId,
                     'currency_code'           => $bill['currency_code'],
                     'currency_name'           => $bill['currency_name'],
@@ -249,7 +249,7 @@ class IndexController extends Controller
              * @var array $entry
              */
             foreach ($array as $currencyId => $entry) {
-                $totals[$currencyId]               = $totals[$currencyId] ?? [
+                $totals[$currencyId] ??= [
                     'currency_id'             => $currencyId,
                     'currency_code'           => $entry['currency_code'],
                     'currency_name'           => $entry['currency_name'],

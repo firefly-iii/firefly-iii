@@ -88,9 +88,9 @@ class ShowController extends Controller
     public function noBudget(Request $request, Carbon $start = null, Carbon $end = null)
     {
         /** @var Carbon $start */
-        $start = $start ?? session('start');
+        $start ??= session('start');
         /** @var Carbon $end */
-        $end      = $end ?? session('end');
+        $end ??= session('end');
         $subTitle = trans(
             'firefly.without_budget_between',
             ['start' => $start->isoFormat($this->monthAndDayFormat), 'end' => $end->isoFormat($this->monthAndDayFormat)]

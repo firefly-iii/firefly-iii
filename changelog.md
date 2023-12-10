@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.1.0 - 2023-12-05
+## 6.1.0 - 2023-12-xx
 
 > This release required **PHP 8.3.0** and will not work on earlier releases of PHP
 
@@ -542,10 +542,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 This is release
 
-*
-
-*6.0.0
-** of Firefly III.
+**6.0.0** of Firefly III.
 
 ### Warnings
 

@@ -30,7 +30,6 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\Transformers\V2\UserGroupTransformer;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 

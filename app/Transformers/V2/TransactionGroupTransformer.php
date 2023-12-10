@@ -62,7 +62,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         foreach ($objects as $object) {
             foreach ($object['sums'] as $sum) {
                 $id              = (int)$sum['currency_id'];
-                $currencies[$id] = $currencies[$id] ?? TransactionCurrency::find($sum['currency_id']);
+                $currencies[$id] ??= TransactionCurrency::find($sum['currency_id']);
             }
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {

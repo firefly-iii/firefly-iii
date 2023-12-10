@@ -121,7 +121,7 @@ class BalanceController extends Controller
             $currencies[$currencyId] = $currency; // may just re-assign itself, don't mind.
 
             // set the array with monetary info, if it does not exist.
-            $data[$currencyId] = $data[$currencyId] ?? [
+            $data[$currencyId] ??= [
                 'currency_id'             => (string)$currencyId,
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
@@ -135,7 +135,7 @@ class BalanceController extends Controller
             ];
 
             // set the array (in monetary info) with spent/earned in this $period, if it does not exist.
-            $data[$currencyId][$period] = $data[$currencyId][$period] ?? [
+            $data[$currencyId][$period] ??= [
                 'period'        => $period,
                 'spent'         => '0',
                 'earned'        => '0',

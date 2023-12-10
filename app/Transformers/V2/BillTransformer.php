@@ -64,7 +64,7 @@ class BillTransformer extends AbstractTransformer
         foreach ($objects as $object) {
             $id              = $object->transaction_currency_id;
             $bills[]         = $object->id;
-            $currencies[$id] = $currencies[$id] ?? TransactionCurrency::find($id);
+            $currencies[$id] ??= TransactionCurrency::find($id);
         }
         $this->currencies = $currencies;
 
@@ -120,7 +120,7 @@ class BillTransformer extends AbstractTransformer
                 $transaction             = $transactions[$journal->id] ?? [];
                 $billId                  = (int)$journal->bill_id;
                 $currencyId              = (int)($transaction['transaction_currency_id'] ?? 0);
-                $currencies[$currencyId] = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
+                $currencies[$currencyId] ??= TransactionCurrency::find($currencyId);
 
                 // foreign currency
                 $foreignCurrencyId     = null;
@@ -132,7 +132,7 @@ class BillTransformer extends AbstractTransformer
                 if (null !== $transaction['foreign_currency_id']) {
                     app('log')->debug(sprintf('Foreign currency is #%d', $transaction['foreign_currency_id']));
                     $foreignCurrencyId              = (int)$transaction['foreign_currency_id'];
-                    $currencies[$foreignCurrencyId] = $currencies[$foreignCurrencyId] ?? TransactionCurrency::find($foreignCurrencyId);
+                    $currencies[$foreignCurrencyId] ??= TransactionCurrency::find($foreignCurrencyId);
                     $foreignCurrencyCode            = $currencies[$foreignCurrencyId]->code;
                     $foreignCurrencyName            = $currencies[$foreignCurrencyId]->name;
                     $foreignCurrencySymbol          = $currencies[$foreignCurrencyId]->symbol;

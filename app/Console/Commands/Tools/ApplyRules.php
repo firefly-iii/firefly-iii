@@ -50,7 +50,7 @@ class ApplyRules extends Command
 
     protected $description = 'This command will apply your rules and rule groups on a selection of your transactions.';
 
-    protected $signature
+    protected                            $signature
         = 'firefly-iii:apply-rules
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}
@@ -297,7 +297,7 @@ class ApplyRules extends Command
         if (null !== $endString && '' !== $endString) {
             $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
         }
-        if(false === $inputEnd || false === $inputStart) {
+        if (false === $inputEnd || false === $inputStart) {
             Log::error('Could not parse start or end date in verifyInputDate().');
             return;
         }

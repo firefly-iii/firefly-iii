@@ -81,7 +81,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -91,7 +91,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // info about the categories:
-            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+            $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string)$categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
@@ -177,7 +177,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -187,7 +187,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // info about the categories:
-            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+            $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string)$categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
@@ -241,7 +241,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -251,7 +251,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // info about the categories:
-            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+            $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string)$categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
@@ -306,7 +306,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -316,7 +316,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // info about the categories:
-            $array[$currencyId]['categories'][$categoryId] = $array[$currencyId]['categories'][$categoryId] ?? [
+            $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string)$categoryId,
                 'name'                 => $categoryName,
                 'transaction_journals' => [],
@@ -371,7 +371,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -414,7 +414,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -457,7 +457,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],

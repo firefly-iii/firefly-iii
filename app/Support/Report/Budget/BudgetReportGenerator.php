@@ -77,7 +77,7 @@ class BudgetReportGenerator
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             $accountId                = $account->id;
-            $this->report[$accountId] = $this->report[$accountId] ?? [
+            $this->report[$accountId] ??= [
                 'name'       => $account->name,
                 'id'         => $account->id,
                 'iban'       => $account->iban,
@@ -117,7 +117,7 @@ class BudgetReportGenerator
             $sourceAccountId = $journal['source_account_id'];
 
             $this->report[$sourceAccountId]['currencies'][$currencyId]
-                = $this->report[$sourceAccountId]['currencies'][$currencyId] ?? [
+                ??= [
                 'currency_id'             => $expenses['currency_id'],
                 'currency_symbol'         => $expenses['currency_symbol'],
                 'currency_name'           => $expenses['currency_name'],
@@ -126,7 +126,7 @@ class BudgetReportGenerator
             ];
 
             $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId]
-                = $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId] ?? '0';
+                ??= '0';
 
             $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId]
                 = bcadd($this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId], $journal['amount']);
@@ -169,7 +169,7 @@ class BudgetReportGenerator
     private function processBudget(Budget $budget): void
     {
         $budgetId                           = $budget->id;
-        $this->report['budgets'][$budgetId] = $this->report['budgets'][$budgetId] ?? [
+        $this->report['budgets'][$budgetId] ??= [
             'budget_id'     => $budgetId,
             'budget_name'   => $budget->name,
             'no_budget'     => false,
@@ -201,7 +201,7 @@ class BudgetReportGenerator
         $left          = -1 === bccomp(bcadd($limit->amount, $spent), '0') ? '0' : bcadd($limit->amount, $spent);
         $overspent     = 1 === bccomp(bcmul($spent, '-1'), $limit->amount) ? bcadd($spent, $limit->amount) : '0';
 
-        $this->report['budgets'][$budgetId]['budget_limits'][$limitId] = $this->report['budgets'][$budgetId]['budget_limits'][$limitId] ?? [
+        $this->report['budgets'][$budgetId]['budget_limits'][$limitId] ??= [
             'budget_limit_id'         => $limitId,
             'start_date'              => $limit->start_date,
             'end_date'                => $limit->end_date,
@@ -220,7 +220,7 @@ class BudgetReportGenerator
 
         // make sum information:
         $this->report['sums'][$currencyId]
-                                                        = $this->report['sums'][$currencyId] ?? [
+                                                        ??= [
             'budgeted'                => '0',
             'spent'                   => '0',
             'left'                    => '0',
@@ -284,9 +284,9 @@ class BudgetReportGenerator
             $this->report['sums'][$nbCurrencyId]['currency_decimal_places'] = $nbCurrencyDp;
 
             // append other sums because they might be missing:
-            $this->report['sums'][$nbCurrencyId]['overspent'] = $this->report['sums'][$nbCurrencyId]['overspent'] ?? '0';
-            $this->report['sums'][$nbCurrencyId]['left']      = $this->report['sums'][$nbCurrencyId]['left'] ?? '0';
-            $this->report['sums'][$nbCurrencyId]['budgeted']  = $this->report['sums'][$nbCurrencyId]['budgeted'] ?? '0';
+            $this->report['sums'][$nbCurrencyId]['overspent'] ??= '0';
+            $this->report['sums'][$nbCurrencyId]['left'] ??= '0';
+            $this->report['sums'][$nbCurrencyId]['budgeted'] ??= '0';
         }
     }
 
@@ -314,7 +314,7 @@ class BudgetReportGenerator
                 if (0 !== bccomp($budgeted, '0') && 0 !== bccomp($totalBudgeted, '0')) {
                     $budgetedPct = round((float)bcmul(bcdiv($budgeted, $totalBudgeted), '100'));
                 }
-                $this->report['sums'][$currencyId]['budgeted']                                 = $this->report['sums'][$currencyId]['budgeted'] ?? '0';
+                $this->report['sums'][$currencyId]['budgeted'] ??= '0';
                 $this->report['budgets'][$budgetId]['budget_limits'][$limitId]['spent_pct']    = $spentPct;
                 $this->report['budgets'][$budgetId]['budget_limits'][$limitId]['budgeted_pct'] = $budgetedPct;
             }

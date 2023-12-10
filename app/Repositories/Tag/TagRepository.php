@@ -329,7 +329,7 @@ class TagRepository implements TagRepositoryInterface
         /** @var array $journal */
         foreach ($journals as $journal) {
             $currencyId        = (int)$journal['currency_id'];
-            $sums[$currencyId] = $sums[$currencyId] ?? [
+            $sums[$currencyId] ??= [
                 'currency_id'                    => $currencyId,
                 'currency_name'                  => $journal['currency_name'],
                 'currency_symbol'                => $journal['currency_symbol'],
@@ -351,7 +351,7 @@ class TagRepository implements TagRepositoryInterface
 
             $foreignCurrencyId = $journal['foreign_currency_id'];
             if (null !== $foreignCurrencyId && 0 !== $foreignCurrencyId) {
-                $sums[$foreignCurrencyId] = $sums[$foreignCurrencyId] ?? [
+                $sums[$foreignCurrencyId] ??= [
                     'currency_id'                    => $foreignCurrencyId,
                     'currency_name'                  => $journal['foreign_currency_name'],
                     'currency_symbol'                => $journal['foreign_currency_symbol'],

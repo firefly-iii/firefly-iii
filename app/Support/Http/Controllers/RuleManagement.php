@@ -139,7 +139,7 @@ trait RuleManagement
         $index = 0;
         foreach ($submittedOperators as $operator) {
             $rootOperator = OperatorQuerySearch::getRootOperator($operator['type']);
-            $needsContext = (bool) config(sprintf('search.operators.%s.needs_context',$rootOperator));
+            $needsContext = (bool) config(sprintf('search.operators.%s.needs_context', $rootOperator));
             try {
                 $renderedEntries[] = view(
                     'rules.partials.trigger',

@@ -27,7 +27,6 @@ namespace FireflyIII\Api\V2\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Chart\DashboardChartRequest;
-use FireflyIII\Api\V2\Request\Generic\DateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -100,7 +99,7 @@ class AccountController extends Controller
         $default = app('amount')->getDefaultCurrency();
         $params  = $request->getAll();
         /** @var Collection $accounts */
-        $accounts = $params['accounts'];
+        $accounts  = $params['accounts'];
         $chartData = [];
 
         // user's preferences
@@ -117,13 +116,13 @@ class AccountController extends Controller
         }
 
         // both options are overruled by "preselected"
-        if('all' === $params['preselected']) {
+        if ('all' === $params['preselected']) {
             $accounts = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
         }
-        if('assets' === $params['preselected']) {
+        if ('assets' === $params['preselected']) {
             $accounts = $this->repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         }
-        if('liabilities' === $params['preselected']) {
+        if ('liabilities' === $params['preselected']) {
             $accounts = $this->repository->getAccountsByType([AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]);
         }
 

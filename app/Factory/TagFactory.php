@@ -93,7 +93,7 @@ class TagFactory
             'zoomLevel'     => null,
         ];
         /** @var Tag|null $tag */
-        $tag       = Tag::create($array);
+        $tag = Tag::create($array);
         if (null !== $tag && null !== $latitude && null !== $longitude) {
             // create location object.
             $location             = new Location();

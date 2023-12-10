@@ -97,9 +97,9 @@ class ShowController extends Controller
         }
 
         /** @var Carbon $start */
-        $start = $start ?? session('start');
+        $start ??= session('start');
         /** @var Carbon $end */
-        $end = $end ?? session('end');
+        $end ??= session('end');
 
         if ($end < $start) {
             [$start, $end] = [$end, $start];

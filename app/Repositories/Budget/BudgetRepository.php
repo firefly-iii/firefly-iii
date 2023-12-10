@@ -104,7 +104,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             foreach ($limits as $limit) {
                 app('log')->debug(sprintf('Budget limit #%d', $limit->id));
                 $currency              = $limit->transactionCurrency;
-                $return[$currency->id] = $return[$currency->id] ?? [
+                $return[$currency->id] ??= [
                     'id'             => (string)$currency->id,
                     'name'           => $currency->name,
                     'symbol'         => $currency->symbol,
@@ -220,7 +220,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         foreach ($limits as $limit) {
             app('log')->debug(sprintf('Budget limit #%d', $limit->id));
             $currency              = $limit->transactionCurrency;
-            $return[$currency->id] = $return[$currency->id] ?? [
+            $return[$currency->id] ??= [
                 'id'             => (string)$currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,
@@ -694,7 +694,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'id'             => (string)$currencyId,
                 'name'           => $journal['currency_name'],
                 'symbol'         => $journal['currency_symbol'],
@@ -707,7 +707,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             // also do foreign amount:
             $foreignId = (int)$journal['foreign_currency_id'];
             if (0 !== $foreignId) {
-                $array[$foreignId]        = $array[$foreignId] ?? [
+                $array[$foreignId] ??= [
                     'id'             => (string)$foreignId,
                     'name'           => $journal['foreign_currency_name'],
                     'symbol'         => $journal['foreign_currency_symbol'],
@@ -757,7 +757,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'id'             => (string)$currencyId,
                 'name'           => $journal['currency_name'],
                 'symbol'         => $journal['currency_symbol'],
@@ -770,7 +770,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             // also do foreign amount:
             $foreignId = (int)$journal['foreign_currency_id'];
             if (0 !== $foreignId) {
-                $array[$foreignId]        = $array[$foreignId] ?? [
+                $array[$foreignId] ??= [
                     'id'             => (string)$foreignId,
                     'name'           => $journal['foreign_currency_name'],
                     'symbol'         => $journal['foreign_currency_symbol'],

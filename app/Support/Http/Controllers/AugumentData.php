@@ -263,7 +263,7 @@ trait AugumentData
                 $name = $journal['source_account_name'];
             }
 
-            $grouped[$name] = $grouped[$name] ?? '0';
+            $grouped[$name] ??= '0';
             $grouped[$name] = bcadd($journal['amount'], $grouped[$name]);
         }
 

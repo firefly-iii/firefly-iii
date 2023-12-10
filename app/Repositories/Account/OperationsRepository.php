@@ -100,7 +100,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         foreach ($journals as $journal) {
             $currencyId         = (int)$journal['currency_id'];
             $journalId          = (int)$journal['transaction_journal_id'];
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
 
                 'currency_id'             => $journal['currency_id'],
                 'currency_name'           => $journal['currency_name'],
@@ -264,7 +264,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -277,7 +277,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             // also do foreign amount:
             $foreignId = (int)$journal['foreign_currency_id'];
             if (0 !== $foreignId) {
-                $array[$foreignId]        = $array[$foreignId] ?? [
+                $array[$foreignId] ??= [
                     'sum'                     => '0',
                     'currency_id'             => $foreignId,
                     'currency_name'           => $journal['foreign_currency_name'],
@@ -324,7 +324,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $key                = sprintf('%s-%s', $journal[$idKey], $journal['currency_id']);
-            $array[$key]        = $array[$key] ?? [
+            $array[$key] ??= [
                 'id'                      => $journal[$idKey],
                 'name'                    => $journal[$nameKey],
                 'sum'                     => '0',
@@ -339,7 +339,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             // also do foreign amount:
             if (0 !== (int)$journal['foreign_currency_id']) {
                 $key                = sprintf('%s-%s', $journal[$idKey], $journal['foreign_currency_id']);
-                $array[$key]        = $array[$key] ?? [
+                $array[$key] ??= [
                     'id'                      => $journal[$idKey],
                     'name'                    => $journal[$nameKey],
                     'sum'                     => '0',
@@ -473,7 +473,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $amount        = app('steam')->positive($journal['amount']);
 
         // source first
-        $return[$sourceKey] = $return[$sourceKey] ?? [
+        $return[$sourceKey] ??= [
             'id'               => (string)$sourceId,
             'name'             => $journal['source_account_name'],
             'difference'       => '0',
@@ -487,7 +487,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         ];
 
         // dest next:
-        $return[$destKey] = $return[$destKey] ?? [
+        $return[$destKey] ??= [
             'id'               => (string)$destinationId,
             'name'             => $journal['destination_account_name'],
             'difference'       => '0',
@@ -517,7 +517,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // same as above:
             // source first
-            $return[$sourceKey] = $return[$sourceKey] ?? [
+            $return[$sourceKey] ??= [
                 'id'               => (string)$sourceId,
                 'name'             => $journal['source_account_name'],
                 'difference'       => '0',
@@ -531,7 +531,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // dest next:
-            $return[$destKey] = $return[$destKey] ?? [
+            $return[$destKey] ??= [
                 'id'               => (string)$destinationId,
                 'name'             => $journal['destination_account_name'],
                 'difference'       => '0',

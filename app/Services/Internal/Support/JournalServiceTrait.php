@@ -164,7 +164,7 @@ trait JournalServiceTrait
         // find by preferred type.
         $source = $this->accountRepository->findByIbanNull($data['iban'], [$types[0]]);
         // or any expected type.
-        $source = $source ?? $this->accountRepository->findByIbanNull($data['iban'], $types);
+        $source ??= $this->accountRepository->findByIbanNull($data['iban'], $types);
 
         if (null !== $source) {
             app('log')->debug(sprintf('Found "account_iban" object: #%d, %s', $source->id, $source->name));
@@ -196,7 +196,7 @@ trait JournalServiceTrait
         $source = $this->accountRepository->findByAccountNumber((string)$data['number'], [$types[0]]);
 
         // or any expected type.
-        $source = $source ?? $this->accountRepository->findByAccountNumber((string)$data['number'], $types);
+        $source ??= $this->accountRepository->findByAccountNumber((string)$data['number'], $types);
 
         if (null !== $source) {
             app('log')->debug(sprintf('Found account: #%d, %s', $source->id, $source->name));
@@ -230,7 +230,7 @@ trait JournalServiceTrait
         $source = $this->accountRepository->findByName($data['name'], [$types[0]]);
 
         // or any expected type.
-        $source = $source ?? $this->accountRepository->findByName($data['name'], $types);
+        $source ??= $this->accountRepository->findByName($data['name'], $types);
 
         if (null !== $source) {
             app('log')->debug(sprintf('Found "account_name" object: #%d, %s', $source->id, $source->name));

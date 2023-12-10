@@ -175,7 +175,7 @@ return [
     'interest'            => 'Lãi',
     'interest_period'     => 'Chu kỳ lãi',
     'liability_type'      => 'Loại trách nhiệm pháp lý',
-    'liability_direction' => 'Liability in/out',
+    'liability_direction' => 'Vay vào/ra',
     'end_date'            => 'Ngày kết thúc',
     'payment_info'        => 'Thông tin thanh toán',
     'expected_info'       => 'Giao dịch dự kiến tiếp theo',

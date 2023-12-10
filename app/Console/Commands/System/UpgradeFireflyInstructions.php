@@ -61,15 +61,15 @@ class UpgradeFireflyInstructions extends Command
      */
     private function updateInstructions(): void
     {
-        $version = (string) config('firefly.version');
+        $version = (string)config('firefly.version');
         /** @var array $config */
-        $config  = config('upgrade.text.upgrade');
-        $text    = '';
+        $config = config('upgrade.text.upgrade');
+        $text   = '';
         /** @var string $compare */
         foreach (array_keys($config) as $compare) {
             // if string starts with:
             if (str_starts_with($version, $compare)) {
-                $text = (string) $config[$compare];
+                $text = (string)$config[$compare];
             }
         }
 
@@ -175,15 +175,15 @@ class UpgradeFireflyInstructions extends Command
      */
     private function installInstructions(): void
     {
-        $version = (string) config('firefly.version');
+        $version = (string)config('firefly.version');
         /** @var array $config */
-        $config  = config('upgrade.text.install');
-        $text    = '';
+        $config = config('upgrade.text.install');
+        $text   = '';
         /** @var string $compare */
         foreach (array_keys($config) as $compare) {
             // if string starts with:
             if (str_starts_with($version, $compare)) {
-                $text = (string) $config[$compare];
+                $text = (string)$config[$compare];
             }
         }
         $this->newLine();

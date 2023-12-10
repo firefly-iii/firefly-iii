@@ -71,7 +71,7 @@ class AccountTasker implements AccountTaskerInterface
         foreach ($accounts as $account) {
             $id                            = $account->id;
             $currency                      = $repository->getAccountCurrency($account) ?? $defaultCurrency;
-            $return['sums'][$currency->id] = $return['sums'][$currency->id] ?? [
+            $return['sums'][$currency->id] ??= [
                 'start'                   => '0',
                 'end'                     => '0',
                 'difference'              => '0',
@@ -174,8 +174,8 @@ class AccountTasker implements AccountTaskerInterface
             $sourceId                        = (int)$journal['destination_account_id'];
             $currencyId                      = (int)$journal['currency_id'];
             $key                             = sprintf('%s-%s', $sourceId, $currencyId);
-            $currencies[$currencyId]         = $currencies[$currencyId] ?? $currencyRepos->find($currencyId);
-            $report['accounts'][$key]        = $report['accounts'][$key] ?? [
+            $currencies[$currencyId] ??= $currencyRepos->find($currencyId);
+            $report['accounts'][$key] ??= [
                 'id'                      => $sourceId,
                 'name'                    => $journal['destination_account_name'],
                 'sum'                     => '0',
@@ -200,7 +200,7 @@ class AccountTasker implements AccountTaskerInterface
                 $report['accounts'][$key]['average'] = bcdiv($report['accounts'][$key]['sum'], (string)$report['accounts'][$key]['count']);
             }
             $currencyId                         = $report['accounts'][$key]['currency_id'];
-            $report['sums'][$currencyId]        = $report['sums'][$currencyId] ?? [
+            $report['sums'][$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $report['accounts'][$key]['currency_id'],
                 'currency_name'           => $report['accounts'][$key]['currency_name'],
@@ -272,7 +272,7 @@ class AccountTasker implements AccountTaskerInterface
             $currencyId = (int)$journal['currency_id'];
             $key        = sprintf('%s-%s', $sourceId, $currencyId);
             if (!array_key_exists($key, $report['accounts'])) {
-                $currencies[$currencyId]  = $currencies[$currencyId] ?? $currencyRepos->find($currencyId);
+                $currencies[$currencyId] ??= $currencyRepos->find($currencyId);
                 $report['accounts'][$key] = [
                     'id'                      => $sourceId,
                     'name'                    => $journal['source_account_name'],
@@ -296,7 +296,7 @@ class AccountTasker implements AccountTaskerInterface
                 $report['accounts'][$key]['average'] = bcdiv($report['accounts'][$key]['sum'], (string)$report['accounts'][$key]['count']);
             }
             $currencyId                         = $report['accounts'][$key]['currency_id'];
-            $report['sums'][$currencyId]        = $report['sums'][$currencyId] ?? [
+            $report['sums'][$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $report['accounts'][$key]['currency_id'],
                 'currency_name'           => $report['accounts'][$key]['currency_name'],

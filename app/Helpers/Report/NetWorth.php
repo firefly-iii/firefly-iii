@@ -121,7 +121,7 @@ class NetWorth implements NetWorthInterface
                 $nativeVirtualBalance = $converter->convert($default, $currency, $account->created_at, $virtualBalance);
                 $nativeBalance        = bcsub($nativeBalance, $nativeVirtualBalance);
             }
-            $netWorth[$currencyId] = $netWorth[$currencyId] ?? [
+            $netWorth[$currencyId] ??= [
                 'balance'                 => '0',
                 'native_balance'          => '0',
                 'currency_id'             => $currencyId,
@@ -208,7 +208,7 @@ class NetWorth implements NetWorthInterface
                 $balance = bcsub($balance, $virtualBalance);
             }
 
-            $return[$currency->id]        = $return[$currency->id] ?? [
+            $return[$currency->id] ??= [
                 'id'             => (string)$currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,

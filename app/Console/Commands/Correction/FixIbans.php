@@ -37,8 +37,8 @@ class FixIbans extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description = 'Removes spaces from IBANs';
-    protected $signature   = 'firefly-iii:fix-ibans';
+    protected   $description = 'Removes spaces from IBANs';
+    protected   $signature   = 'firefly-iii:fix-ibans';
     private int $count       = 0;
 
     /**
@@ -91,7 +91,7 @@ class FixIbans extends Command
         /** @var Account $account */
         foreach ($accounts as $account) {
             $userId       = $account->user_id;
-            $set[$userId] = $set[$userId] ?? [];
+            $set[$userId] ??= [];
             $iban         = (string)$account->iban;
             if ('' === $iban) {
                 continue;

@@ -198,8 +198,8 @@ class BudgetController extends Controller
          * @var array $block
          */
         foreach ($array as $currencyId => $block) {
-            $this->currencies[$currencyId] = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
-            $return[$currencyId]           = $return[$currencyId] ?? [
+            $this->currencies[$currencyId] ??= TransactionCurrency::find($currencyId);
+            $return[$currencyId]           ??= [
                 'currency_id'             => (string)$currencyId,
                 'currency_code'           => $block['currency_code'],
                 'currency_name'           => $block['currency_name'],

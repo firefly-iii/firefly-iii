@@ -100,7 +100,7 @@ class CreateController extends Controller
                 session()->flash('warning', trans('firefly.rule_from_search_words', ['string' => $words]));
                 $operators[] = [
                     'type'  => 'description_contains',
-                    'value' => $words
+                    'value' => $words,
                 ];
             }
             $oldTriggers = $this->parseFromOperators($operators);

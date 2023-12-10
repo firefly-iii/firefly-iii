@@ -31,7 +31,6 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

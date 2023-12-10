@@ -64,7 +64,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         foreach ($journals as $journal) {
             $currencyId = (int)$journal['currency_id'];
 
-            $data[$currencyId] = $data[$currencyId] ?? [
+            $data[$currencyId] ??= [
                 'id'                      => 0,
                 'name'                    => sprintf('%s (%s)', trans('firefly.no_budget'), $journal['currency_name']),
                 'sum'                     => '0',
@@ -178,7 +178,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],

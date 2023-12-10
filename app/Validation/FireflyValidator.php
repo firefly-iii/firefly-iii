@@ -299,7 +299,7 @@ class FireflyValidator extends Validator
     public function validateRuleActionValue(string $attribute, string $value = null): bool
     {
         // first, get the index from this string:
-        $value = $value ?? '';
+        $value ??= '';
         $parts = explode('.', $attribute);
         $index = (int)($parts[1] ?? '0');
 

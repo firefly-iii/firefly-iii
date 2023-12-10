@@ -89,10 +89,10 @@ class Navigation
 
         if (!array_key_exists($repeatFreq, $functionMap)) {
             Log::error(sprintf(
-                           'The periodicity %s is unknown. Choose one of available periodicity: %s',
-                           $repeatFreq,
-                           implode(', ', array_keys($functionMap))
-                       ));
+                'The periodicity %s is unknown. Choose one of available periodicity: %s',
+                $repeatFreq,
+                implode(', ', array_keys($functionMap))
+            ));
             return $theDate;
         }
 
@@ -352,12 +352,12 @@ class Navigation
     public function diffInPeriods(string $period, int $skip, Carbon $beginning, Carbon $end): int
     {
         Log::debug(sprintf(
-                       'diffInPeriods: %s (skip: %d), between %s and %s.',
-                       $period,
-                       $skip,
-                       $beginning->format('Y-m-d'),
-                       $end->format('Y-m-d')
-                   ));
+            'diffInPeriods: %s (skip: %d), between %s and %s.',
+            $period,
+            $skip,
+            $beginning->format('Y-m-d'),
+            $end->format('Y-m-d')
+        ));
         $map = [
             'daily'     => 'floatDiffInDays',
             'weekly'    => 'floatDiffInWeeks',
@@ -394,11 +394,11 @@ class Navigation
             $parameter = $skip + 1;
             $diff      = ceil($diff / $parameter) * $parameter;
             Log::debug(sprintf(
-                           'diffInPeriods: skip is %d, so param is %d, and diff becomes %d',
-                           $skip,
-                           $parameter,
-                           $diff
-                       ));
+                'diffInPeriods: skip is %d, so param is %d, and diff becomes %d',
+                $skip,
+                $parameter,
+                $diff
+            ));
         }
 
         return (int)$diff;
@@ -705,7 +705,7 @@ class Navigation
      */
     public function subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = null): Carbon
     {
-        $subtract = $subtract ?? 1;
+        $subtract ??= 1;
         $date     = clone $theDate;
         // 1D 1W 1M 3M 6M 1Y
         $functionMap = [

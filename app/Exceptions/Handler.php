@@ -26,15 +26,12 @@ namespace FireflyIII\Exceptions;
 
 use ErrorException;
 use FireflyIII\Jobs\MailError;
-use FireflyIII\Models\ObjectGroup;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
@@ -127,7 +124,7 @@ class Handler extends ExceptionHandler
             $errorCode = 500;
             $errorCode = $e instanceof MethodNotAllowedHttpException ? 405 : $errorCode;
 
-            $isDebug = (bool) config('app.debug', false);
+            $isDebug = (bool)config('app.debug', false);
             if ($isDebug) {
                 app('log')->debug(sprintf('Return JSON %s with debug.', get_class($e)));
                 return response()->json(
@@ -186,7 +183,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $e)
     {
-        $doMailError = (bool) config('firefly.send_error_message');
+        $doMailError = (bool)config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
             parent::report($e);
 
@@ -250,7 +247,7 @@ class Handler extends ExceptionHandler
      *
      * @return JsonResponse| RedirectResponse |\Illuminate\Http\Response
      */
-    protected function invalid($request, LaravelValidationException $exception): JsonResponse| RedirectResponse |\Illuminate\Http\Response
+    protected function invalid($request, LaravelValidationException $exception): JsonResponse | RedirectResponse | \Illuminate\Http\Response
     {
         // protect against open redirect when submitting invalid forms.
         $previous = app('steam')->getSafePreviousUrl();

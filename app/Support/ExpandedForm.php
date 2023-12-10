@@ -49,7 +49,7 @@ class ExpandedForm
      */
     public function amountNoCurrency(string $name, $value = null, array $options = null): string
     {
-        $options         = $options ?? [];
+        $options ??= [];
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);
@@ -83,8 +83,8 @@ class ExpandedForm
      */
     public function checkbox(string $name, int $value = null, $checked = null, array $options = null): string
     {
-        $options            = $options ?? [];
-        $value              = $value ?? 1;
+        $options ??= [];
+        $value ??= 1;
         $options['checked'] = true === $checked;
 
         if (app('session')->has('preFilled')) {
@@ -144,7 +144,7 @@ class ExpandedForm
      */
     public function file(string $name, array $options = null): string
     {
-        $options = $options ?? [];
+        $options ??= [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
@@ -169,12 +169,12 @@ class ExpandedForm
      */
     public function integer(string $name, $value = null, array $options = null): string
     {
-        $options         = $options ?? [];
+        $options ??= [];
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
-        $options['step'] = $options['step'] ?? '1';
+        $options['step'] ??= '1';
         try {
             $html = view('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
         } catch (Throwable $e) {
@@ -196,7 +196,7 @@ class ExpandedForm
      */
     public function location(string $name, $value = null, array $options = null): string
     {
-        $options = $options ?? [];
+        $options ??= [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);

@@ -72,7 +72,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] = $array[$currencyId] ?? [
+            $array[$currencyId] ??= [
                 'budgets'                 => [],
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -82,7 +82,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // info about the budgets:
-            $array[$currencyId]['budgets'][$budgetId] = $array[$currencyId]['budgets'][$budgetId] ?? [
+            $array[$currencyId]['budgets'][$budgetId] ??= [
                 'id'                   => $budgetId,
                 'name'                 => $budgetName,
                 'transaction_journals' => [],

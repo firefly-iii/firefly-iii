@@ -83,7 +83,7 @@ class BillRepository implements BillRepositoryInterface
             $currency   = $bill->transactionCurrency;
             $currencyId = $bill->transaction_currency_id;
 
-            $return[$currencyId] = $return[$currencyId] ?? [
+            $return[$currencyId] ??= [
                 'currency_id'             => (string)$currency->id,
                 'currency_name'           => $currency->name,
                 'currency_symbol'         => $currency->symbol,
@@ -157,7 +157,7 @@ class BillRepository implements BillRepositoryInterface
                 $currencyId                        = $bill->transaction_currency_id;
                 $average                           = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
                 $nativeAverage                     = $converter->convert($currency, $default, $start, $average);
-                $return[$currencyId]               = $return[$currencyId] ?? [
+                $return[$currencyId] ??= [
                     'currency_id'             => (string)$currency->id,
                     'currency_name'           => $currency->name,
                     'currency_symbol'         => $currency->symbol,

@@ -243,8 +243,8 @@ class TagController extends Controller
         $subTitleIcon = 'fa-tag';
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $start        = $start ?? session('start');
-        $end          = $end ?? session('end');
+        $start ??= session('start');
+        $end ??= session('end');
         $location     = $this->repository->getLocation($tag);
         $attachments  = $this->repository->getAttachments($tag);
         $subTitle     = trans(
@@ -257,7 +257,7 @@ class TagController extends Controller
         );
 
         $startPeriod = $this->repository->firstUseDate($tag);
-        $startPeriod = $startPeriod ?? today(config('app.timezone'));
+        $startPeriod ??= today(config('app.timezone'));
         $endPeriod   = clone $end;
         $periods     = $this->getTagPeriodOverview($tag, $startPeriod, $endPeriod);
         $path        = route('tags.show', [$tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);

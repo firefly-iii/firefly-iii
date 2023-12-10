@@ -148,12 +148,12 @@ class BasicController extends Controller
         /** @var array $transactionJournal */
         foreach ($set as $transactionJournal) {
             $currencyId           = (int)$transactionJournal['currency_id'];
-            $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
+            $incomes[$currencyId] ??= '0';
             $incomes[$currencyId] = bcadd(
                 $incomes[$currencyId],
                 bcmul($transactionJournal['amount'], '-1')
             );
-            $sums[$currencyId]    = $sums[$currencyId] ?? '0';
+            $sums[$currencyId]    ??= '0';
             $sums[$currencyId]    = bcadd($sums[$currencyId], bcmul($transactionJournal['amount'], '-1'));
         }
 
@@ -171,9 +171,9 @@ class BasicController extends Controller
         /** @var array $transactionJournal */
         foreach ($set as $transactionJournal) {
             $currencyId            = (int)$transactionJournal['currency_id'];
-            $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
+            $expenses[$currencyId] ??= '0';
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $transactionJournal['amount']);
-            $sums[$currencyId]     = $sums[$currencyId] ?? '0';
+            $sums[$currencyId]     ??= '0';
             $sums[$currencyId]     = bcadd($sums[$currencyId], $transactionJournal['amount']);
         }
 

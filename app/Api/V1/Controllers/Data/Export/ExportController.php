@@ -229,7 +229,7 @@ class ExportController extends Controller
      * @throws ContainerExceptionInterface
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
-     *                                   @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function tags(ExportRequest $request): LaravelResponse
     {

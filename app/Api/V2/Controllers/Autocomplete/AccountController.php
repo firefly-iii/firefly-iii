@@ -102,7 +102,7 @@ class AccountController extends Controller
                 $nameWithBalance = sprintf('%s (%s)', $account->name, app('amount')->formatAnything($currency, $balance, false));
             }
             $type                 = (string)trans(sprintf('firefly.%s', $account->accountType->type));
-            $groupedResult[$type] = $groupedResult[$type] ?? [
+            $groupedResult[$type] ??= [
                 'group ' => $type,
                 'items'  => [],
             ];
@@ -124,8 +124,8 @@ class AccountController extends Controller
         usort(
             $allItems,
             static function (array $left, array $right): int {
-                $order = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
-                $posLeft = (int)array_search($left['type'], $order, true);
+                $order    = [AccountType::ASSET, AccountType::REVENUE, AccountType::EXPENSE];
+                $posLeft  = (int)array_search($left['type'], $order, true);
                 $posRight = (int)array_search($right['type'], $order, true);
 
                 return $posLeft - $posRight;

@@ -75,7 +75,7 @@ class TagController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId          = $account->id;
-            $report[$accountId] = $report[$accountId] ?? [
+            $report[$accountId] ??= [
                 'name'       => $account->name,
                 'id'         => $account->id,
                 'iban'       => $account->iban,
@@ -91,7 +91,7 @@ class TagController extends Controller
             foreach ($currency['tags'] as $tag) {
                 foreach ($tag['transaction_journals'] as $journal) {
                     $sourceAccountId                                     = $journal['source_account_id'];
-                    $report[$sourceAccountId]['currencies'][$currencyId] = $report[$sourceAccountId]['currencies'][$currencyId] ?? [
+                    $report[$sourceAccountId]['currencies'][$currencyId] ??= [
                         'currency_id'             => $currency['currency_id'],
                         'currency_symbol'         => $currency['currency_symbol'],
                         'currency_name'           => $currency['currency_name'],
@@ -100,8 +100,8 @@ class TagController extends Controller
                     ];
 
                     $report[$sourceAccountId]['currencies'][$currencyId]['tags'][$tag['id']]
-                                                                                                      = $report[$sourceAccountId]['currencies'][$currencyId]['tags'][$tag['id']]
-                                                                                                        ??
+                                                                                                      ??= 
+                                                                                                        
                                                                                                         [
                                                                                                             'spent'  => '0',
                                                                                                             'earned' => '0',
@@ -127,8 +127,8 @@ class TagController extends Controller
                 foreach ($tag['transaction_journals'] as $journal) {
                     $destinationId                                                                   = $journal['destination_account_id'];
                     $report[$destinationId]['currencies'][$currencyId]
-                                                                                                     = $report[$destinationId]['currencies'][$currencyId]
-                                                                                                       ?? [
+                                                                                                     ??= 
+                                                                                                        [
                                                                                                            'currency_id'             => $currency['currency_id'],
                                                                                                            'currency_symbol'         => $currency['currency_symbol'],
                                                                                                            'currency_name'           => $currency['currency_name'],
@@ -136,8 +136,8 @@ class TagController extends Controller
                                                                                                            'tags'                    => [],
                                                                                                        ];
                     $report[$destinationId]['currencies'][$currencyId]['tags'][$tag['id']]
-                                                                                                     = $report[$destinationId]['currencies'][$currencyId]['tags'][$tag['id']]
-                                                                                                       ??
+                                                                                                     ??= 
+                                                                                                       
                                                                                                        [
                                                                                                            'spent'  => '0',
                                                                                                            'earned' => '0',
@@ -175,7 +175,7 @@ class TagController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId          = $account->id;
-            $report[$accountId] = $report[$accountId] ?? [
+            $report[$accountId] ??= [
                 'name'       => $account->name,
                 'id'         => $account->id,
                 'iban'       => $account->iban,
@@ -186,7 +186,7 @@ class TagController extends Controller
         // loop expenses.
         foreach ($spent as $currency) {
             $currencyId        = $currency['currency_id'];
-            $sums[$currencyId] = $sums[$currencyId] ?? [
+            $sums[$currencyId] ??= [
                 'currency_id'             => $currency['currency_id'],
                 'currency_symbol'         => $currency['currency_symbol'],
                 'currency_name'           => $currency['currency_name'],
@@ -198,7 +198,7 @@ class TagController extends Controller
             foreach ($currency['tags'] as $tag) {
                 foreach ($tag['transaction_journals'] as $journal) {
                     $sourceAccountId                                              = $journal['source_account_id'];
-                    $report[$sourceAccountId]['currencies'][$currencyId]          = $report[$sourceAccountId]['currencies'][$currencyId] ?? [
+                    $report[$sourceAccountId]['currencies'][$currencyId] ??= [
                         'currency_id'             => $currency['currency_id'],
                         'currency_symbol'         => $currency['currency_symbol'],
                         'currency_name'           => $currency['currency_name'],
@@ -224,7 +224,7 @@ class TagController extends Controller
         // loop income.
         foreach ($earned as $currency) {
             $currencyId        = $currency['currency_id'];
-            $sums[$currencyId] = $sums[$currencyId] ?? [
+            $sums[$currencyId] ??= [
                 'currency_id'             => $currency['currency_id'],
                 'currency_symbol'         => $currency['currency_symbol'],
                 'currency_name'           => $currency['currency_name'],
@@ -236,7 +236,7 @@ class TagController extends Controller
             foreach ($currency['tags'] as $tag) {
                 foreach ($tag['transaction_journals'] as $journal) {
                     $destinationAccountId                                               = $journal['destination_account_id'];
-                    $report[$destinationAccountId]['currencies'][$currencyId]           = $report[$destinationAccountId]['currencies'][$currencyId] ?? [
+                    $report[$destinationAccountId]['currencies'][$currencyId] ??= [
                         'currency_id'             => $currency['currency_id'],
                         'currency_symbol'         => $currency['currency_symbol'],
                         'currency_name'           => $currency['currency_name'],
@@ -280,7 +280,7 @@ class TagController extends Controller
                 foreach ($tag['transaction_journals'] as $journal) {
                     $destinationId = $journal['destination_account_id'];
                     $key           = sprintf('%d-%d', $destinationId, $currency['currency_id']);
-                    $result[$key]  = $result[$key] ?? [
+                    $result[$key] ??= [
                         'transactions'             => 0,
                         'sum'                      => '0',
                         'avg'                      => '0',
@@ -333,7 +333,7 @@ class TagController extends Controller
                 foreach ($tag['transaction_journals'] as $journal) {
                     $sourceId     = $journal['source_account_id'];
                     $key          = sprintf('%d-%d', $sourceId, $currency['currency_id']);
-                    $result[$key] = $result[$key] ?? [
+                    $result[$key] ??= [
                         'transactions'            => 0,
                         'sum'                     => '0',
                         'avg'                     => '0',
@@ -385,7 +385,7 @@ class TagController extends Controller
         /** @var Tag $tag */
         foreach ($tags as $tag) {
             $tagId          = $tag->id;
-            $report[$tagId] = $report[$tagId] ?? [
+            $report[$tagId] ??= [
                 'name'       => $tag->tag,
                 'id'         => $tag->id,
                 'currencies' => [],
@@ -393,7 +393,7 @@ class TagController extends Controller
         }
         foreach ($spent as $currency) {
             $currencyId        = $currency['currency_id'];
-            $sums[$currencyId] = $sums[$currencyId] ?? [
+            $sums[$currencyId] ??= [
                 'currency_id'             => $currency['currency_id'],
                 'currency_symbol'         => $currency['currency_symbol'],
                 'currency_name'           => $currency['currency_name'],
@@ -408,7 +408,7 @@ class TagController extends Controller
 
                 foreach ($tag['transaction_journals'] as $journal) {
                     // add currency info to report array:
-                    $report[$tagId]['currencies'][$currencyId]          = $report[$tagId]['currencies'][$currencyId] ?? [
+                    $report[$tagId]['currencies'][$currencyId] ??= [
                         'spent'                   => '0',
                         'earned'                  => '0',
                         'sum'                     => '0',
@@ -434,7 +434,7 @@ class TagController extends Controller
 
         foreach ($earned as $currency) {
             $currencyId        = $currency['currency_id'];
-            $sums[$currencyId] = $sums[$currencyId] ?? [
+            $sums[$currencyId] ??= [
                 'currency_id'             => $currency['currency_id'],
                 'currency_symbol'         => $currency['currency_symbol'],
                 'currency_name'           => $currency['currency_name'],
@@ -449,7 +449,7 @@ class TagController extends Controller
 
                 foreach ($tag['transaction_journals'] as $journal) {
                     // add currency info to report array:
-                    $report[$tagId]['currencies'][$currencyId]           = $report[$tagId]['currencies'][$currencyId] ?? [
+                    $report[$tagId]['currencies'][$currencyId] ??= [
                         'spent'                   => '0',
                         'earned'                  => '0',
                         'sum'                     => '0',

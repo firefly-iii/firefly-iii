@@ -56,9 +56,9 @@ trait AttachmentCollection
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
                     $result = str_contains(strtolower($attachment['filename']), strtolower($name)) || str_contains(
-                            strtolower($attachment['title']),
-                            strtolower($name)
-                        );
+                        strtolower($attachment['title']),
+                        strtolower($name)
+                    );
                     if (true === $result) {
                         return true;
                     }
@@ -142,9 +142,9 @@ trait AttachmentCollection
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
                     $result = !str_contains(strtolower($attachment['filename']), strtolower($name)) && !str_contains(
-                            strtolower($attachment['title']),
-                            strtolower($name)
-                        );
+                        strtolower($attachment['title']),
+                        strtolower($name)
+                    );
                     if (true === $result) {
                         return true;
                     }
@@ -179,9 +179,9 @@ trait AttachmentCollection
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
                     $result = !str_ends_with(strtolower($attachment['filename']), strtolower($name)) && !str_ends_with(
-                            strtolower($attachment['title']),
-                            strtolower($name)
-                        );
+                        strtolower($attachment['title']),
+                        strtolower($name)
+                    );
                     if (true === $result) {
                         return true;
                     }
@@ -216,9 +216,9 @@ trait AttachmentCollection
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
                     $result = !str_starts_with(strtolower($attachment['filename']), strtolower($name)) && !str_starts_with(
-                            strtolower($attachment['title']),
-                            strtolower($name)
-                        );
+                        strtolower($attachment['title']),
+                        strtolower($name)
+                    );
                     if (true === $result) {
                         return true;
                     }
@@ -246,9 +246,9 @@ trait AttachmentCollection
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
                     $result = str_ends_with(strtolower($attachment['filename']), strtolower($name)) || str_ends_with(
-                            strtolower($attachment['title']),
-                            strtolower($name)
-                        );
+                        strtolower($attachment['title']),
+                        strtolower($name)
+                    );
                     if (true === $result) {
                         return true;
                     }
@@ -330,9 +330,9 @@ trait AttachmentCollection
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
                     $result = str_starts_with(strtolower($attachment['filename']), strtolower($name)) || str_starts_with(
-                            strtolower($attachment['title']),
-                            strtolower($name)
-                        );
+                        strtolower($attachment['title']),
+                        strtolower($name)
+                    );
                     if (true === $result) {
                         return true;
                     }

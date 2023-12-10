@@ -168,7 +168,7 @@ trait RequestInformation
      */
     final protected function parseAttributes(array $attributes): array // parse input + return result
     {
-        $attributes['location'] = $attributes['location'] ?? '';
+        $attributes['location'] ??= '';
         $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get', '', []));
         $date                   = Carbon::createFromFormat('Ymd', $attributes['startDate']);
         if (false === $date) {

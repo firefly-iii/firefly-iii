@@ -54,8 +54,8 @@ class CreateDatabase extends Command
             return 0;
         }
         // try to set up a raw connection:
-        $exists  = false;
-        $dsn     = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', env('DB_HOST', 'localhost'), env('DB_PORT', '3306'));
+        $exists = false;
+        $dsn    = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', env('DB_HOST', 'localhost'), env('DB_PORT', '3306'));
 
         if ('' !== env('DB_SOCKET', '')) {
             $dsn = sprintf('mysql:unix_socket=%s;charset=utf8mb4', env('DB_SOCKET', ''));
@@ -79,7 +79,7 @@ class CreateDatabase extends Command
         // only continue when no error.
         // with PDO, try to list DB's (
         /** @var array $stmt */
-        $stmt    = $pdo->query('SHOW DATABASES;');
+        $stmt = $pdo->query('SHOW DATABASES;');
         // slightly more complex but less error-prone.
         foreach ($stmt as $row) {
             $name = $row['Database'] ?? false;

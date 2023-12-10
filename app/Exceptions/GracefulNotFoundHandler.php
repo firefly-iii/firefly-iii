@@ -140,9 +140,9 @@ class GracefulNotFoundHandler extends ExceptionHandler
     {
         app('log')->debug('404 page is probably a deleted account. Redirect to overview of account types.');
         /** @var User $user */
-        $user  = auth()->user();
-        $route = $request->route();
-        $param = $route->parameter('account');
+        $user      = auth()->user();
+        $route     = $request->route();
+        $param     = $route->parameter('account');
         $accountId = 0;
         if ($param instanceof Account) {
             $accountId = $param->id;

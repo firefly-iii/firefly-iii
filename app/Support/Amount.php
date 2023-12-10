@@ -71,7 +71,7 @@ class Amount
     {
         $locale   = app('steam')->getLocale();
         $rounded  = app('steam')->bcround($amount, $decimalPlaces);
-        $coloured = $coloured ?? true;
+        $coloured ??= true;
 
         $fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
         $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
