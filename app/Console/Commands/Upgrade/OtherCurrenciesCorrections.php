@@ -45,8 +45,8 @@ class OtherCurrenciesCorrections extends Command
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '480_other_currencies';
-    protected                             $description = 'Update all journal currency information.';
-    protected                             $signature   = 'firefly-iii:other-currencies {--F|force : Force the execution of this command.}';
+    protected $description = 'Update all journal currency information.';
+    protected $signature   = 'firefly-iii:other-currencies {--F|force : Force the execution of this command.}';
     private array                         $accountCurrencies;
     private AccountRepositoryInterface    $accountRepos;
     private JournalCLIRepositoryInterface $cliRepos;

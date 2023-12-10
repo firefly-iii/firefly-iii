@@ -232,11 +232,11 @@ class Handler extends ExceptionHandler
     private function shouldntReportLocal(Throwable $e): bool
     {
         return null !== Arr::first(
-                $this->dontReport,
-                static function ($type) use ($e) {
+            $this->dontReport,
+            static function ($type) use ($e) {
                     return $e instanceof $type;
                 }
-            );
+        );
     }
 
     /**

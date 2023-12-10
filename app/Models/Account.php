@@ -127,7 +127,7 @@ class Account extends Model
 
     protected $fillable = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
 
-    protected    $hidden             = ['encrypted'];
+    protected $hidden             = ['encrypted'];
     private bool $joinedAccountTypes = false;
 
     /**

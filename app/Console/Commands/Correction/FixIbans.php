@@ -37,8 +37,8 @@ class FixIbans extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected   $description = 'Removes spaces from IBANs';
-    protected   $signature   = 'firefly-iii:fix-ibans';
+    protected $description = 'Removes spaces from IBANs';
+    protected $signature   = 'firefly-iii:fix-ibans';
     private int $count       = 0;
 
     /**

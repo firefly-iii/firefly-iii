@@ -42,8 +42,8 @@ class TransactionIdentifier extends Command
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '480_transaction_identifier';
-    protected                             $description = 'Fixes transaction identifiers.';
-    protected                             $signature   = 'firefly-iii:transaction-identifiers {--F|force : Force the execution of this command.}';
+    protected $description = 'Fixes transaction identifiers.';
+    protected $signature   = 'firefly-iii:transaction-identifiers {--F|force : Force the execution of this command.}';
     private JournalCLIRepositoryInterface $cliRepository;
     private int                           $count;
 

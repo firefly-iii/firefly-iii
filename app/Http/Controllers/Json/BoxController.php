@@ -86,12 +86,12 @@ class BoxController extends Controller
             static function (AvailableBudget $availableBudget) use ($currency) { // @phpstan-ignore-line
                 if ($availableBudget->transaction_currency_id === $currency->id) {
                     app('log')->debug(sprintf(
-                                          'Will include AB #%d: from %s-%s amount %s',
-                                          $availableBudget->id,
-                                          $availableBudget->start_date->format('Y-m-d'),
-                                          $availableBudget->end_date->format('Y-m-d'),
-                                          $availableBudget->amount
-                                      ));
+                        'Will include AB #%d: from %s-%s amount %s',
+                        $availableBudget->id,
+                        $availableBudget->start_date->format('Y-m-d'),
+                        $availableBudget->end_date->format('Y-m-d'),
+                        $availableBudget->amount
+                    ));
                     return $availableBudget;
                 }
 

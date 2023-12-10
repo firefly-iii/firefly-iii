@@ -326,15 +326,15 @@ class Steam
             $balances[$format] = $currentBalance;
 
             app('log')->debug(sprintf(
-                                  '%s: transaction in %s(!). Conversion rate is %s. %s %s = %s %s',
-                                  $format,
-                                  $currency->code,
-                                  $rate,
-                                  $currency->code,
-                                  $transaction['amount'],
-                                  $native->code,
-                                  $convertedAmount
-                              ));
+                '%s: transaction in %s(!). Conversion rate is %s. %s %s = %s %s',
+                $format,
+                $currency->code,
+                $rate,
+                $currency->code,
+                $transaction['amount'],
+                $native->code,
+                $convertedAmount
+            ));
 
 
         }

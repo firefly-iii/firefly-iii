@@ -42,7 +42,7 @@ class CreateFirstUser extends Command
 
     protected $description = 'Creates a new user and gives admin rights. Outputs the password on the command line. Strictly for testing.';
 
-    protected                       $signature = 'firefly-iii:create-first-user {email}';
+    protected $signature = 'firefly-iii:create-first-user {email}';
     private UserRepositoryInterface $repository;
 
     /**

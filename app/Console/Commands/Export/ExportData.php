@@ -51,7 +51,7 @@ class ExportData extends Command
 
     protected $description = 'Command to export data from Firefly III.';
 
-    protected                          $signature = 'firefly-iii:export-data
+    protected $signature = 'firefly-iii:export-data
     {--user=1 : The user ID that the export should run for.}
     {--token= : The user\'s access token.}
     {--start= : First transaction to export. Defaults to your very first transaction. Only applies to transaction export.}

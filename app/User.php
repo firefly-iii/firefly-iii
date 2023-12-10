@@ -416,37 +416,37 @@ class User extends Authenticatable
                                  ->where('user_group_id', $userGroup->id)->get();
         if (0 === $groupMemberships->count()) {
             app('log')->error(sprintf(
-                                  'User #%d "%s" does not have roles %s in user group #%d "%s"',
-                                  $this->id,
-                                  $this->email,
-                                  implode(', ', $roles),
-                                  $userGroup->id,
-                                  $userGroup->title
-                              ));
+                'User #%d "%s" does not have roles %s in user group #%d "%s"',
+                $this->id,
+                $this->email,
+                implode(', ', $roles),
+                $userGroup->id,
+                $userGroup->title
+            ));
             return false;
         }
         foreach ($groupMemberships as $membership) {
             app('log')->debug(sprintf(
-                                  'User #%d "%s" has role "%s" in user group #%d "%s"',
-                                  $this->id,
-                                  $this->email,
-                                  $membership->userRole->title,
-                                  $userGroup->id,
-                                  $userGroup->title
-                              ));
+                'User #%d "%s" has role "%s" in user group #%d "%s"',
+                $this->id,
+                $this->email,
+                $membership->userRole->title,
+                $userGroup->id,
+                $userGroup->title
+            ));
             if (in_array($membership->userRole->title, $dbRolesTitles, true)) {
                 app('log')->debug(sprintf('Return true, found role "%s"', $membership->userRole->title));
                 return true;
             }
         }
         app('log')->error(sprintf(
-                              'User #%d "%s" does not have roles %s in user group #%d "%s"',
-                              $this->id,
-                              $this->email,
-                              implode(', ', $roles),
-                              $userGroup->id,
-                              $userGroup->title
-                          ));
+            'User #%d "%s" does not have roles %s in user group #%d "%s"',
+            $this->id,
+            $this->email,
+            implode(', ', $roles),
+            $userGroup->id,
+            $userGroup->title
+        ));
         return false;
 
     }
@@ -696,7 +696,7 @@ class User extends Authenticatable
      */
     public function userGroup(): BelongsTo
     {
-        return $this->belongsTo(UserGroup::class,);
+        return $this->belongsTo(UserGroup::class, );
     }
 
     /**

@@ -46,8 +46,8 @@ class AccountCurrencies extends Command
 
     public const string CONFIG_NAME = '480_account_currencies';
 
-    protected                          $description = 'Give all accounts proper currency info.';
-    protected                          $signature   = 'firefly-iii:account-currencies {--F|force : Force the execution of this command.}';
+    protected $description = 'Give all accounts proper currency info.';
+    protected $signature   = 'firefly-iii:account-currencies {--F|force : Force the execution of this command.}';
     private AccountRepositoryInterface $accountRepos;
     private int                        $count;
     private UserRepositoryInterface    $userRepos;

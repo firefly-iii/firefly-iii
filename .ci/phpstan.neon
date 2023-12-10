@@ -13,6 +13,7 @@ parameters:
     - '#is not allowed to extend#'
     - '#switch is forbidden to use#'
     - '#is neither abstract nor final#'
+    - '#on left side of \?\?\= always exists and is not nullable#'
     - '#has a nullable return type declaration#' # perhaps throw errors instead?
     - '#with a nullable type declaration#' # decide what action should be if param is null.
     - '#with null as default value#'

@@ -373,12 +373,12 @@ class BillRepository implements BillRepositoryInterface
 
         return $bill->transactionJournals()
                     ->before($end)->after($start)->get(
-                [
+                        [
                     'transaction_journals.id',
                     'transaction_journals.date',
                     'transaction_journals.transaction_group_id',
                 ]
-            );
+                    );
     }
 
     /**
