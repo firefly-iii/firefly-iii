@@ -10,7 +10,7 @@
         "laravel-vite-plugin": "^0.8.1",
         "sass": "^1.69.4",
         "vite": "^4.5.1",
-        "vite-plugin-manifest-sri": "^0.1.0"
+        "vite-plugin-manifest-sri": "^0.2.0"
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^6.4.0",
