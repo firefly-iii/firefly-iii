@@ -48,7 +48,7 @@ echo '<!DOCTYPE HTML>
     Leaving your web server configured like this is a <span style="color:red;">huge</span> security risk.
 </p>
 <p>
-Please <a href="https://docs.firefly-iii.org/firefly-iii/faq/self_hosted/#i-have-to-visit-firefly-iii-through-public-and-it-gives-me-a-warning">read more on the Github help pages</a>.
+Please <a href="https://docs.firefly-iii.org/references/faq/install/#i-have-to-visit-firefly-iii-through-public-and-it-gives-me-a-warning">read more on the Github help pages</a>.
 </p>
 </body>
 </html>
