@@ -128,8 +128,8 @@ Several users have built pretty awesome stuff around the Firefly III API. [Check
 
 There are many ways to run Firefly III
 1. There is a [demo site](https://demo.firefly-iii.org) with an example financial administration already present.
-2. You can [install it on your server](https://docs.firefly-iii.org/firefly-iii/installation/self-hosted/).
-3. You can [run it using Docker](https://docs.firefly-iii.org/firefly-iii/installation/docker/).
+2. You can [install it on your server](https://docs.firefly-iii.org/how-to/firefly-iii/installation/self-managed/).
+3. You can [run it using Docker](https://docs.firefly-iii.org/how-to/firefly-iii/installation/docker/).
 4. You can [deploy via Kubernetes](https://firefly-iii.github.io/kubernetes/).
 5. You can [install it using Softaculous](https://www.softaculous.com/softaculous/apps/others/Firefly_III).
 6. You can [install it using AMPPS](https://www.ampps.com/).
