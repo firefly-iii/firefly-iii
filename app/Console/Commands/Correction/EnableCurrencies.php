@@ -26,11 +26,15 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\UserGroup;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\Console\Command\Command as CommandAlias;
 
 /**
  * Class EnableCurrencies
@@ -49,35 +53,68 @@ class EnableCurrencies extends Command
      */
     public function handle(): int
     {
-        $found = [];
+        $userGroups = UserGroup::get();
+        foreach ($userGroups as $userGroup) {
+            $this->correctCurrencies($userGroup);
+        }
+        return CommandAlias::SUCCESS;
+    }
+
+    /**
+     * @param UserGroup $userGroup
+     *
+     * @return void
+     */
+    private function correctCurrencies(UserGroup $userGroup): void
+    {
+        /** @var CurrencyRepositoryInterface $repos */
+        $repos = app(CurrencyRepositoryInterface::class);
+
+        // first check if the user has any default currency (not necessarily the case, so can be forced).
+        $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($userGroup);
+
+        Log::debug(sprintf('Now correcting currencies for user group #%d', $userGroup->id));
+        $found = [$defaultCurrency->id];
         // get all meta entries
         /** @var Collection $meta */
-        $meta = AccountMeta::where('name', 'currency_id')->groupBy('data')->get(['data']);
+        $meta = AccountMeta
+            ::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
+            ->where('accounts.user_group_id', $userGroup->id)
+            ->where('account_meta.name', 'currency_id')->groupBy('data')->get(['data']);
         foreach ($meta as $entry) {
             $found[] = (int)$entry->data;
         }
 
         // get all from journals:
-        $journals = TransactionJournal::groupBy('transaction_currency_id')->get(['transaction_currency_id']);
+        $journals = TransactionJournal
+            ::where('user_group_id', $userGroup->id)
+            ->groupBy('transaction_currency_id')->get(['transaction_currency_id']);
         foreach ($journals as $entry) {
             $found[] = (int)$entry->transaction_currency_id;
         }
 
         // get all from transactions
-        $transactions = Transaction::groupBy('transaction_currency_id', 'foreign_currency_id')->get(['transaction_currency_id', 'foreign_currency_id']);
+        $transactions = Transaction
+            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.user_group_id', $userGroup->id)
+            ->groupBy('transactions.transaction_currency_id', 'transactions.foreign_currency_id')
+            ->get(['transactions.transaction_currency_id', 'transactions.foreign_currency_id']);
         foreach ($transactions as $entry) {
             $found[] = (int)$entry->transaction_currency_id;
             $found[] = (int)$entry->foreign_currency_id;
         }
 
         // get all from budget limits
-        $limits = BudgetLimit::groupBy('transaction_currency_id')->get(['transaction_currency_id']);
+        $limits = BudgetLimit
+            ::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+            ->groupBy('transaction_currency_id')
+            ->get(['budget_limits.transaction_currency_id']);
         foreach ($limits as $entry) {
             $found[] = $entry->transaction_currency_id;
         }
 
-        $found    = array_values(array_unique($found));
-        $found    = array_values(
+        $found = array_values(array_unique($found));
+        $found = array_values(
             array_filter(
                 $found,
                 static function (int $currencyId) {
@@ -85,15 +122,24 @@ class EnableCurrencies extends Command
                 }
             )
         );
-        $disabled = TransactionCurrency::whereIn('id', $found)->where('enabled', false)->count();
-        if ($disabled > 0) {
-            $this->friendlyInfo(sprintf('%d currencies were (was) disabled while in use by transactions. This has been corrected.', $disabled));
-        }
-        if (0 === $disabled) {
-            $this->friendlyPositive('All currencies are correctly enabled or disabled.');
-        }
-        TransactionCurrency::whereIn('id', $found)->update(['enabled' => true]);
 
-        return 0;
+        $valid = new Collection();
+        /** @var int $currencyId */
+        foreach ($found as $currencyId) {
+            $currency = $repos->find($currencyId);
+            if (null !== $currency) {
+                $valid->push($currency);
+            }
+        }
+        $ids = $valid->pluck('id')->toArray();
+        Log::debug(sprintf('Found currencies for user group #%d: %s', $userGroup->id, implode(', ', $ids)));
+        $userGroup->currencies()->sync($ids);
+        /** @var GroupMembership $membership */
+        foreach ($userGroup->groupMemberships()->get() as $membership) {
+            // make sure no individual different preferences.
+            $membership->user->currencies()->sync([]);
+        }
+
+
     }
 }

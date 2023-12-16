@@ -44,8 +44,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon|null                          $updated_at
  * @property Carbon|null                          $deleted_at
  * @property bool                                 $enabled
- * @property bool|null                            $userDefault
- * @property bool|null                            $userEnabled
+ * @property bool|null                            $userGroupDefault
+ * @property bool|null                            $userGroupEnabled
  * @property string                               $code
  * @property string                               $name
  * @property string                               $symbol
@@ -82,8 +82,8 @@ class TransactionCurrency extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    public ?bool $userDefault;
-    public ?bool $userEnabled;
+    public ?bool $userGroupDefault;
+    public ?bool $userGroupEnabled;
     protected $casts
         = [
             'created_at'     => 'datetime',
@@ -123,10 +123,10 @@ class TransactionCurrency extends Model
      */
     public function refreshForUser(User $user)
     {
-        $current           = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
-        $default           = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
-        $this->userDefault = $default->id === $this->id;
-        $this->userEnabled = null !== $current;
+        $current                = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
+        $default                = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
+        $this->userGroupDefault = $default->id === $this->id;
+        $this->userGroupEnabled = null !== $current;
     }
 
     /**

@@ -43,7 +43,7 @@
                                                         class="fa fa-fw fa-trash"></span></a>
                                                 {% endif %}
                                                 {# Disable the currency. #}
-                                                {% if currency.userEnabled %}
+                                                {% if currency.userGroupEnabled %}
                                                     <a class="btn btn-default disable-currency" data-code="{{ currency.code }}"
                                                        href="#">
                                                         <span class="fa fa-fw fa-square-o"></span>
@@ -51,7 +51,7 @@
                                                 {% endif %}
 
                                                 {# Enable the currency. #}
-                                                {% if not currency.userEnabled %}
+                                                {% if not currency.userGroupEnabled %}
                                                     <a class="btn btn-default enable-currency" data-code="{{ currency.code }}"
                                                        href="#">
                                                         <span class="fa fa-fw fa-check-square-o"></span>
@@ -66,19 +66,19 @@
                                             </div>
                                         </td>
                                     <td>
-                                        {% if currency.userEnabled == false %}
+                                        {% if currency.userGroupEnabled == false %}
                                         <span class="text-muted">
                                         {% endif %}
                                             {{ currency.name }} ({{ currency.code }}) ({{ currency.symbol|raw }})
                                         {% if currency.id == defaultCurrency.id %}
                                             <span class="label label-success" id="default-currency">{{ 'default_currency'|_ }}</span>
                                         {% endif %}
-                                        {% if currency.userEnabled == false %}
+                                        {% if currency.userGroupEnabled == false %}
 
                                             <span class="label label-default">{{ 'currency_is_disabled'|_ }}</span>
                                             {% endif %}
 
-                                        {% if currency.userEnabled == false %}
+                                        {% if currency.userGroupEnabled == false %}
                                         </span>
                                         {% endif %}
                                     </td>

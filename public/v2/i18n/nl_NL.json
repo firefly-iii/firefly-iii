@@ -24,9 +24,9 @@
             "expense_account": "Crediteur",
             "revenue_account": "Debiteur",
             "budget": "Budget",
-            "account_type_Asset account": "Asset account",
-            "account_type_Expense account": "Expense account",
-            "account_type_Revenue account": "Revenue account",
+            "account_type_Asset account": "Betaalrekening",
+            "account_type_Expense account": "Crediteur",
+            "account_type_Revenue account": "Debiteur",
             "account_type_Debt": "Schuld",
             "account_type_Loan": "Lening",
             "account_type_Mortgage": "Hypotheek"

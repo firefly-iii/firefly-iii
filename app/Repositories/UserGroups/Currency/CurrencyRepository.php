@@ -186,8 +186,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
             $isDefault            = $local->contains(static function (TransactionCurrency $entry) use ($current) {
                 return 1 === (int)$entry->pivot->group_default && $entry->id === $current->id;
             });
-            $current->userEnabled = $hasId;
-            $current->userDefault = $isDefault;
+            $current->userGroupEnabled = $hasId;
+            $current->userGroupDefault = $isDefault;
             return $current;
         });
     }
@@ -199,8 +199,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         $all = $this->userGroup->currencies()->orderBy('code', 'ASC')->withPivot(['group_default'])->get();
         $all->map(static function (TransactionCurrency $current) {
-            $current->userEnabled = true;
-            $current->userDefault = 1 === (int)$current->pivot->group_default;
+            $current->userGroupEnabled = true;
+            $current->userGroupDefault = 1 === (int)$current->pivot->group_default;
             return $current;
         });
         return $all;

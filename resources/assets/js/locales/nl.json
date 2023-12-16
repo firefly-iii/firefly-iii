@@ -30,7 +30,7 @@
         "submit": "Invoeren",
         "amount": "Bedrag",
         "date": "Datum",
-        "is_reconciled_fields_dropped": "Because this transaction is reconciled, you will not be able to update the accounts, nor the amount(s).",
+        "is_reconciled_fields_dropped": "Omdat deze transactie al is afgestemd, kan je het bedrag noch de rekeningen wijzigen.",
         "tags": "Tags",
         "no_budget": "(geen budget)",
         "no_bill": "(geen contract)",
