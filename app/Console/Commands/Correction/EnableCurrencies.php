@@ -31,7 +31,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -72,8 +71,11 @@ class EnableCurrencies extends Command
         $repos = app(CurrencyRepositoryInterface::class);
         $repos->setUserGroup($userGroup);
 
+        // first check if the user has any default currency (not necessarily the case, so can be forced).
+        $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($userGroup);
+
         Log::debug(sprintf('Now correcting currencies for user group #%d', $userGroup->id));
-        $found = [];
+        $found = [$defaultCurrency->id];
         // get all meta entries
         /** @var Collection $meta */
         $meta = AccountMeta
@@ -122,7 +124,6 @@ class EnableCurrencies extends Command
             )
         );
 
-
         $valid = new Collection();
         /** @var int $currencyId */
         foreach ($found as $currencyId) {
@@ -133,7 +134,6 @@ class EnableCurrencies extends Command
         }
         $ids = $valid->pluck('id')->toArray();
         Log::debug(sprintf('Found currencies for user group #%d: %s', $userGroup->id, join(', ', $ids)));
-
         $userGroup->currencies()->sync($ids);
         /** @var GroupMembership $membership */
         foreach ($userGroup->groupMemberships()->get() as $membership) {
