@@ -57,7 +57,7 @@ return [
     'accounts_create_asset_virtual'         => 'Às vezes, ajuda a dar à sua conta um saldo virtual: um valor extra sempre adicionado ou removido do saldo real.',
 
     // budgets index
-    'budgets_index_intro'                   => "Os orçamentos são usados \u{200b}\u{200b}para gerenciar suas finanças e formar uma das principais funções do Firefly III.",
+    'budgets_index_intro'                   => 'Os orçamentos são usados ​​para gerenciar suas finanças e formar uma das principais funções do Firefly III.',
     'budgets_index_set_budget'              => 'Defina seu orçamento total para todos os períodos, de modo que o Firefly III possa lhe dizer se você orçou todo o dinheiro disponível.',
     'budgets_index_see_expenses_bar'        => 'Gastar dinheiro vai preencher lentamente esta barra.',
     'budgets_index_navigate_periods'        => 'Navegue por períodos para definir os orçamentos facilmente antes do tempo.',

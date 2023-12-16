@@ -3,9 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.1.0 - 2023-12-xx
+## 6.1.0 - 2023-12-17
 
-> This release required **PHP 8.3.0** and will not work on earlier releases of PHP
+> ⚠️⚠️ This release required **PHP 8.3.0** and will not work on earlier releases of PHP ⚠️⚠️
 
 ### Added
 
@@ -15,13 +15,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- Requires PHP8.3
+- ⚠️⚠️ Requires PHP8.3 ⚠️⚠️
 - [Issue 8148](https://github.com/firefly-iii/firefly-iii/issues/8148) Slovenian language updates
 - [Issue 8023](https://github.com/firefly-iii/firefly-iii/issues/8023) Top bar is now fixed in place
+- Completely rewrote the documentation.
 
 ### Deprecated
 
-- Support for PHP 8.2
+- ⚠️⚠️ Removed support for PHP 8.2 ⚠️⚠️
 
 ### Fixed
 
@@ -31,6 +32,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 8207](https://github.com/firefly-iii/firefly-iii/issues/8207) Broken links, thanks @Maxco10!
 - [Issue 8138](https://github.com/firefly-iii/firefly-iii/issues/8138) Reconciled transactions can't be "store(d) as new"
 - [Issue 7716](https://github.com/firefly-iii/firefly-iii/issues/7716) Removed bar in budget overview
+- [Issue 8251](https://github.com/firefly-iii/firefly-iii/issues/8251) Removing a budget would not remove available budget
 
 ### API
 

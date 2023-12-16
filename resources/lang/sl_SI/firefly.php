@@ -1531,7 +1531,7 @@ return [
     'profile_save_changes'                      => 'Shrani spremembe',
     'profile_whoops'                            => 'Ups!',
     'profile_something_wrong'                   => 'Nekaj je šlo narobe!',
-    'profile_try_again'                         => "Nekaj \u{200b}\u{200b}je šlo narobe. Prosim poskusite znova.",
+    'profile_try_again'                         => 'Nekaj ​​je šlo narobe. Prosim poskusite znova.',
     'amounts'                                   => 'Zneski',
     'multi_account_warning_unknown'             => 'Odvisno od vrste transakcije, ki jo ustvarite, lahko izvorni in/ali ciljni račun poznejših razdelitev preglasi tisto, kar je definirano v prvi razdelitvi transakcije.',
     'multi_account_warning_withdrawal'          => 'Upoštevajte, da bo izvorni račun poznejših razdelitev preglasilo tisto, kar je definirano v prvi razdelitvi dviga.',
