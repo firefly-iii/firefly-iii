@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
 
 /**
  * Class BudgetObserver
@@ -41,11 +42,18 @@ class BudgetObserver
         foreach ($budget->attachments()->get() as $attachment) {
             $attachment->delete();
         }
-
-        $budget->budgetlimits()->delete();
+        $budgetLimits = $budget->budgetlimits()->get();
+        /** @var BudgetLimit $budgetLimit */
+        foreach($budgetLimits as $budgetLimit) {
+            // this loop exists so several events are fired.
+            $budgetLimit->delete();
+        }
 
         $budget->notes()->delete();
         $budget->autoBudgets()->delete();
+
+        // recalculate available budgets.
+
     }
 
 }
