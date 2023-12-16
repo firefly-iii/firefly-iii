@@ -285,7 +285,7 @@ return [
 
     // API access
     'authorization_request'                => 'Firefly III v:version autorisatieverzoek',
-    'authorization_request_intro'          => 'Applicatie "<strong>:client</strong>" vraagt ​​toestemming om toegang te krijgen tot je financiële administratie. Wil je <strong>:client</strong> autoriseren om toegang te krijgen tot je gegevens?',
+    'authorization_request_intro'          => "Applicatie \"<strong>:client</strong>\" vraagt \u{200b}\u{200b}toestemming om toegang te krijgen tot je financiële administratie. Wil je <strong>:client</strong> autoriseren om toegang te krijgen tot je gegevens?",
     'authorization_request_site'           => 'Je wordt doorgestuurd naar <code>:url</code>, die vervolgens toegang heeft tot je Firefly III-gegevens.',
     'authorization_request_invalid'        => 'Dit toegangsverzoek is ongeldig. Volg deze link niet meer.',
     'scopes_will_be_able'                  => 'Deze applicatie krijgt toegang tot:',
@@ -2288,8 +2288,8 @@ return [
     'account_role_savingAsset'                  => 'Spaarrekening',
     'account_role_ccAsset'                      => 'Credit card',
     'account_role_cashWalletAsset'              => 'Cash',
-    'budget_chart_click'                        => 'Klik op een budgetnaam in de tabel hierboven om een ​​grafiek te zien.',
-    'category_chart_click'                      => 'Klik op een categorienaam in de tabel hierboven om een ​​grafiek te zien.',
+    'budget_chart_click'                        => "Klik op een budgetnaam in de tabel hierboven om een \u{200b}\u{200b}grafiek te zien.",
+    'category_chart_click'                      => "Klik op een categorienaam in de tabel hierboven om een \u{200b}\u{200b}grafiek te zien.",
     'in_out_accounts'                           => 'Inkomsten en uitgaven per combinatie',
     'in_out_accounts_per_asset'                 => 'Inkomsten en uitgaven (per betaalrekening)',
     'in_out_per_category'                       => 'Verdiend en uitgegeven per categorie',

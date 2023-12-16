@@ -1376,7 +1376,7 @@ return [
     'list_page_size_title'                      => 'Sayfa boyutu',
     'list_page_size_help'                       => 'Herhangi bir şeyin listesi (hesaplar, işlemler, vb) sayfa başına en fazla bu kadar gösterebilir.',
     'list_page_size_label'                      => 'Sayfa boyutu',
-    'between_dates'                             => '(:start ​ve :end)',
+    'between_dates'                             => "(:start \u{200b}ve :end)",
     'pref_optional_fields_transaction'          => 'İşlemler için bağlı alanlar',
     'pref_optional_fields_transaction_help'     => 'Yeni bir işlem oluşturulurken (dağınıklık nedeniyle) varsayılan olarak tüm alanlar ektinleştirilmez. Aşağıdan, eğer işinize yarayacağını düşünüyorsanız bu alanları ektinleştirebilirsiniz. Tabii ki, devre dışı bırakılmış ama zaten doldurulmuş alanlar ayarlar ne olursa olsun görünecektir.',
     'optional_tj_date_fields'                   => 'Tarih alanları',

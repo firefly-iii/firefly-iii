@@ -133,7 +133,7 @@ return [
     'iban'                        => 'Numéro IBAN',
     'account_number'              => 'Numéro de compte',
     'creditCardNumber'            => 'Numéro de carte de crédit',
-    'has_headers'                 => 'Entêtes ',
+    'has_headers'                 => "Entêtes\u{a0}",
     'date_format'                 => 'Format de la date',
     'specifix'                    => 'Banque - ou déposer des corrections spécifiques',
     'attachments[]'               => 'Pièces jointes',

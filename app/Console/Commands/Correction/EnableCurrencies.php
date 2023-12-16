@@ -132,7 +132,7 @@ class EnableCurrencies extends Command
             }
         }
         $ids = $valid->pluck('id')->toArray();
-        Log::debug(sprintf('Found currencies for user group #%d: %s', $userGroup->id, join(', ', $ids)));
+        Log::debug(sprintf('Found currencies for user group #%d: %s', $userGroup->id, implode(', ', $ids)));
         $userGroup->currencies()->sync($ids);
         /** @var GroupMembership $membership */
         foreach ($userGroup->groupMemberships()->get() as $membership) {
