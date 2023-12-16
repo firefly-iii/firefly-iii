@@ -69,7 +69,6 @@ class EnableCurrencies extends Command
     {
         /** @var CurrencyRepositoryInterface $repos */
         $repos = app(CurrencyRepositoryInterface::class);
-        $repos->setUserGroup($userGroup);
 
         // first check if the user has any default currency (not necessarily the case, so can be forced).
         $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($userGroup);
