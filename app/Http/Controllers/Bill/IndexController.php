@@ -169,8 +169,9 @@ class IndexController extends Controller
                     'period'                  => $range,
                     'per_period'              => '0',
                 ];
+
                 // only fill in avg when bill is active.
-                if (count($bill['pay_dates']) > 0) {
+                if (null !== $bill['next_expected_match']) {
                     $avg                                   = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
                     $avg                                   = bcmul($avg, (string)count($bill['pay_dates']));
                     $sums[$groupOrder][$currencyId]['avg'] = bcadd($sums[$groupOrder][$currencyId]['avg'], $avg);
