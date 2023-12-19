@@ -98,7 +98,7 @@ trait RuleManagement
                         'rules.partials.trigger',
                         [
                             'oldTrigger'    => OperatorQuerySearch::getRootOperator($oldTrigger['type']),
-                            'oldValue'      => $oldTrigger['value'],
+                            'oldValue'      => $oldTrigger['value'] ?? '',
                             'oldChecked'    => 1 === (int)($oldTrigger['stop_processing'] ?? '0'),
                             'oldProhibited' => 1 === (int)($oldTrigger['prohibited'] ?? '0'),
                             'count'         => $index + 1,
