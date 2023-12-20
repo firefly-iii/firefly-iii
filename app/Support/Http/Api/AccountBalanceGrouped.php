@@ -35,7 +35,6 @@ use Illuminate\Support\Collection;
 class AccountBalanceGrouped
 {
     private array               $accountIds;
-    private Collection          $accounts;
     private string              $carbonFormat;
     private array               $currencies = [];
     private array               $data       = [];
@@ -206,7 +205,6 @@ class AccountBalanceGrouped
      */
     public function setAccounts(Collection $accounts): void
     {
-        $this->accounts   = $accounts;
         $this->accountIds = $accounts->pluck('id')->toArray();
     }
 
