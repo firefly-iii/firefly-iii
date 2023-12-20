@@ -44,6 +44,9 @@ class BillDateCalculator
      */
     public function getPayDates(Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid): array
     {
+        $earliest->startOfDay();
+        $latest->endOfDay();
+        $billStart->startOfDay();
         Log::debug('Now in BillDateCalculator::getPayDates()');
         Log::debug(sprintf('Dates must be between %s and %s.', $earliest->format('Y-m-d'), $latest->format('Y-m-d')));
         Log::debug(sprintf('Bill started on %s, period is "%s", skip is %d, last paid = "%s".', $billStart->format('Y-m-d'), $period, $skip, $lastPaid?->format('Y-m-d')));
