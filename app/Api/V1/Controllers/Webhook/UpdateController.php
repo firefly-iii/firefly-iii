@@ -38,8 +38,6 @@ class UpdateController extends Controller
 {
     private WebhookRepositoryInterface $repository;
 
-    /**
-     */
     public function __construct()
     {
         parent::__construct();
@@ -56,17 +54,13 @@ class UpdateController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/webhooks/updateWebhook
-     *
-     * @param Webhook       $webhook
-     * @param UpdateRequest $request
-     *
-     * @return JsonResponse
      */
     public function update(Webhook $webhook, UpdateRequest $request): JsonResponse
     {
         $data    = $request->getData();
         $webhook = $this->repository->update($webhook, $data);
         $manager = $this->getManager();
+
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
         $transformer->setParameters($this->parameters);

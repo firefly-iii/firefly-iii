@@ -38,10 +38,6 @@ use Psr\Container\NotFoundExceptionInterface;
 trait CronRunner
 {
     /**
-     * @param bool   $force
-     * @param Carbon $date
-     *
-     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -51,6 +47,7 @@ trait CronRunner
         $billWarning = app(BillWarningCronjob::class);
         $billWarning->setForce($force);
         $billWarning->setDate($date);
+
         try {
             $billWarning->fire();
         } catch (FireflyException $e) {
@@ -70,18 +67,13 @@ trait CronRunner
         ];
     }
 
-    /**
-     * @param bool   $force
-     * @param Carbon $date
-     *
-     * @return array
-     */
     protected function exchangeRatesCronJob(bool $force, Carbon $date): array
     {
         /** @var ExchangeRatesCronjob $exchangeRates */
         $exchangeRates = app(ExchangeRatesCronjob::class);
         $exchangeRates->setForce($force);
         $exchangeRates->setDate($date);
+
         try {
             $exchangeRates->fire();
         } catch (FireflyException $e) {
@@ -101,18 +93,13 @@ trait CronRunner
         ];
     }
 
-    /**
-     * @param bool   $force
-     * @param Carbon $date
-     *
-     * @return array
-     */
     protected function runAutoBudget(bool $force, Carbon $date): array
     {
         /** @var AutoBudgetCronjob $autoBudget */
         $autoBudget = app(AutoBudgetCronjob::class);
         $autoBudget->setForce($force);
         $autoBudget->setDate($date);
+
         try {
             $autoBudget->fire();
         } catch (FireflyException $e) {
@@ -133,10 +120,6 @@ trait CronRunner
     }
 
     /**
-     * @param bool   $force
-     * @param Carbon $date
-     *
-     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -146,6 +129,7 @@ trait CronRunner
         $recurring = app(RecurringCronjob::class);
         $recurring->setForce($force);
         $recurring->setDate($date);
+
         try {
             $recurring->fire();
         } catch (FireflyException $e) {

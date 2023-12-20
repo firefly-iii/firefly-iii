@@ -32,11 +32,6 @@ use FireflyIII\Models\AccountType;
  */
 trait OBValidation
 {
-    /**
-     * @param array $array
-     *
-     * @return bool
-     */
     protected function validateOBDestination(array $array): bool
     {
         $result      = null;
@@ -78,20 +73,11 @@ trait OBValidation
         return $result;
     }
 
-    /**
-     * @param array $accountTypes
-     *
-     * @return bool
-     */
     abstract protected function canCreateTypes(array $accountTypes): bool;
 
     /**
      * Source of an opening balance can either be an asset account
      * or an "initial balance account". The latter can be created.
-     *
-     * @param array $array
-     *
-     * @return bool
      */
     protected function validateOBSource(array $array): bool
     {
@@ -138,6 +124,7 @@ trait OBValidation
 
             // set the source to be a (dummy) initial balance account.
             $account = new Account();
+
             /** @var AccountType $accountType */
             $accountType          = AccountType::whereType(AccountType::INITIAL_BALANCE)->first();
             $account->accountType = $accountType;

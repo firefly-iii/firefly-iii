@@ -36,7 +36,6 @@ use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
- *
  * Class EditController
  */
 class EditController extends Controller
@@ -70,11 +69,7 @@ class EditController extends Controller
     /**
      * Edit account overview.
      *
-     * @param Request                    $request
-     * @param Account                    $account
-     * @param AccountRepositoryInterface $repository
-     *
-     * @return Factory|RedirectResponse|Redirector|View
+     * @return Factory|Redirector|RedirectResponse|View
      */
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
@@ -178,10 +173,7 @@ class EditController extends Controller
     /**
      * Update the account.
      *
-     * @param AccountFormRequest $request
-     * @param Account            $account
-     *
-     * @return $this|RedirectResponse|Redirector
+     * @return $this|Redirector|RedirectResponse
      */
     public function update(AccountFormRequest $request, Account $account)
     {
@@ -195,7 +187,7 @@ class EditController extends Controller
         $request->session()->flash('success', (string)trans('firefly.updated_account', ['name' => $account->name]));
 
         // store new attachment(s):
-        /** @var array|null $files */
+        /** @var null|array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($account, $files);

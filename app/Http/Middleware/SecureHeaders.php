@@ -23,13 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use Closure;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Vite;
 
 /**
- *
  * Class SecureHeaders
  */
 class SecureHeaders
@@ -37,13 +34,11 @@ class SecureHeaders
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
-     *
      * @return mixed
-     * @throws Exception
+     *
+     * @throws \Exception
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, \Closure $next)
     {
         // generate and share nonce.
         $nonce = base64_encode(random_bytes(16));
@@ -79,15 +74,15 @@ class SecureHeaders
         $featurePolicies = [
             "geolocation 'none'",
             "midi 'none'",
-            //"notifications 'none'",
-            //"push 'self'",
+            // "notifications 'none'",
+            // "push 'self'",
             "sync-xhr 'self'",
             "microphone 'none'",
             "camera 'none'",
             "magnetometer 'none'",
             "gyroscope 'none'",
-            //"speaker 'none'",
-            //"vibrate 'none'",
+            // "speaker 'none'",
+            // "vibrate 'none'",
             "fullscreen 'self'",
             "payment 'none'",
         ];
@@ -112,8 +107,6 @@ class SecureHeaders
 
     /**
      * Return part of a CSP header allowing scripts from Matomo.
-     *
-     * @return string
      */
     private function getTrackingScriptSource(): string
     {

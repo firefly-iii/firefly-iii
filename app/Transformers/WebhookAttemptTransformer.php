@@ -32,10 +32,6 @@ class WebhookAttemptTransformer extends AbstractTransformer
 {
     /**
      * Transform the preference
-     *
-     * @param WebhookAttempt $attempt
-     *
-     * @return array
      */
     public function transform(WebhookAttempt $attempt): array
     {

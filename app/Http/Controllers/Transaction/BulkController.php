@@ -46,8 +46,6 @@ class BulkController extends Controller
 
     /**
      * BulkController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -68,8 +66,6 @@ class BulkController extends Controller
      * Edit a set of journals in bulk.
      *
      * TODO user wont be able to tell if the journal is part of a split.
-     *
-     * @param array $journals
      *
      * @return Factory|View
      */
@@ -92,9 +88,7 @@ class BulkController extends Controller
     /**
      * Update all journals.
      *
-     * @param BulkEditJournalRequest $request
-     *
-     * @return Application|RedirectResponse|Redirector
+     * @return Application|Redirector|RedirectResponse
      */
     public function update(BulkEditJournalRequest $request)
     {
@@ -114,7 +108,7 @@ class BulkController extends Controller
                 $resultB = $this->updateJournalTags($journal, $tagsAction, explode(',', $request->convertString('tags')));
                 $resultC = $this->updateJournalCategory($journal, $ignoreCategory, $request->convertString('category'));
                 if ($resultA || $resultB || $resultC) {
-                    $count++;
+                    ++$count;
                     $collection->push($journal);
                 }
             }
@@ -133,13 +127,6 @@ class BulkController extends Controller
         return redirect($this->getPreviousUrl('transactions.bulk-edit.url'));
     }
 
-    /**
-     * @param TransactionJournal $journal
-     * @param bool               $ignoreUpdate
-     * @param int                $budgetId
-     *
-     * @return bool
-     */
     private function updateJournalBudget(TransactionJournal $journal, bool $ignoreUpdate, int $budgetId): bool
     {
         if (true === $ignoreUpdate) {
@@ -151,13 +138,6 @@ class BulkController extends Controller
         return true;
     }
 
-    /**
-     * @param TransactionJournal $journal
-     * @param string             $action
-     * @param array              $tags
-     *
-     * @return bool
-     */
     private function updateJournalTags(TransactionJournal $journal, string $action, array $tags): bool
     {
         if ('do_replace' === $action) {
@@ -173,13 +153,6 @@ class BulkController extends Controller
         return true;
     }
 
-    /**
-     * @param TransactionJournal $journal
-     * @param bool               $ignoreUpdate
-     * @param string             $category
-     *
-     * @return bool
-     */
     private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
     {
         if (true === $ignoreUpdate) {

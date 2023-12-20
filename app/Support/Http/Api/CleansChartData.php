@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * CleansChartData.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -37,14 +36,12 @@ trait CleansChartData
      * "main" entry used in the V2 API chart endpoints. This loop makes sure
      * IDs are strings and other values are present (or missing).
      *
-     * @param array $data
-     *
-     * @return array
      * @throws FireflyException
      */
     private function clean(array $data): array
     {
         $return = [];
+
         /**
          * @var mixed $index
          * @var array $array
@@ -67,7 +64,7 @@ trait CleansChartData
             }
             $return[] = $array;
         }
+
         return $return;
     }
-
 }

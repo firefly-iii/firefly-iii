@@ -30,11 +30,6 @@ use FireflyIII\Models\Webhook;
  */
 class WebhookObserver
 {
-    /**
-     * @param Webhook $webhook
-     *
-     * @return void
-     */
     public function deleting(Webhook $webhook): void
     {
         app('log')->debug('Observe "deleting" of a webhook.');
@@ -42,5 +37,4 @@ class WebhookObserver
             $message->delete();
         }
     }
-
 }

@@ -27,24 +27,17 @@ use Eloquent;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Form\FormSupport;
 use Illuminate\Support\Collection;
-use Throwable;
 
 /**
  * Class ExpandedForm.
- *
- *
-
  */
 class ExpandedForm
 {
     use FormSupport;
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param mixed $value
      *
-     * @return string
      * @throws FireflyException
      */
     public function amountNoCurrency(string $name, $value = null, array $options = null): string
@@ -58,14 +51,15 @@ class ExpandedForm
         unset($options['currency'], $options['placeholder']);
 
         // make sure value is formatted nicely:
-        //if (null !== $value && '' !== $value) {
-        //$value = round((float)$value, 8);
-        //}
+        // if (null !== $value && '' !== $value) {
+        // $value = round((float)$value, 8);
+        // }
         try {
             $html = view('form.amount-no-currency', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->error(sprintf('Could not render amountNoCurrency(): %s', $e->getMessage()));
             $html = 'Could not render amountNoCurrency.';
+
             throw new FireflyException($html, 0, $e);
         }
 
@@ -73,12 +67,8 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param int|null   $value
-     * @param mixed      $checked
-     * @param array|null $options
+     * @param mixed $checked
      *
-     * @return string
      * @throws FireflyException
      */
     public function checkbox(string $name, int $value = null, $checked = null, array $options = null): string
@@ -98,11 +88,13 @@ class ExpandedForm
         $value   = $this->fillFieldValue($name, $value);
 
         unset($options['placeholder'], $options['autocomplete'], $options['class']);
+
         try {
             $html = view('form.checkbox', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render checkbox(): %s', $e->getMessage()));
             $html = 'Could not render checkbox.';
+
             throw new FireflyException($html, 0, $e);
         }
 
@@ -110,11 +102,8 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param mixed $value
      *
-     * @return string
      * @throws FireflyException
      */
     public function date(string $name, $value = null, array $options = null): string
@@ -124,11 +113,13 @@ class ExpandedForm
         $classes = $this->getHolderClasses($name);
         $value   = $this->fillFieldValue($name, $value);
         unset($options['placeholder']);
+
         try {
             $html = view('form.date', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render date(): %s', $e->getMessage()));
             $html = 'Could not render date.';
+
             throw new FireflyException($html, 0, $e);
         }
 
@@ -136,10 +127,6 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param array|null $options
-     *
-     * @return string
      * @throws FireflyException
      */
     public function file(string $name, array $options = null): string
@@ -148,11 +135,13 @@ class ExpandedForm
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
+
         try {
             $html = view('form.file', compact('classes', 'name', 'label', 'options'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render file(): %s', $e->getMessage()));
             $html = 'Could not render file.';
+
             throw new FireflyException($html, 0, $e);
         }
 
@@ -160,11 +149,8 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param mixed $value
      *
-     * @return string
      * @throws FireflyException
      */
     public function integer(string $name, $value = null, array $options = null): string
@@ -175,11 +161,13 @@ class ExpandedForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] ??= '1';
+
         try {
             $html = view('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render integer(): %s', $e->getMessage()));
             $html = 'Could not render integer.';
+
             throw new FireflyException($html, 0, $e);
         }
 
@@ -187,11 +175,8 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param mixed $value
      *
-     * @return string
      * @throws FireflyException
      */
     public function location(string $name, $value = null, array $options = null): string
@@ -201,29 +186,26 @@ class ExpandedForm
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
         $value   = $this->fillFieldValue($name, $value);
+
         try {
             $html = view('form.location', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render location(): %s', $e->getMessage()));
             $html = 'Could not render location.';
+
             throw new FireflyException($html, 0, $e);
         }
 
         return $html;
     }
 
-    /**
-     * @param Collection $set
-     *
-     * @return array
-     *
-     */
     public function makeSelectListWithEmpty(Collection $set): array
     {
         $selectList    = [];
         $selectList[0] = '(none)';
         $fields        = ['title', 'name', 'description'];
-        /** @var Eloquent $entry */
+
+        /** @var \Eloquent $entry */
         foreach ($set as $entry) {
             // All Eloquent models have an ID
             $entryId = $entry->id; // @phpstan-ignore-line
@@ -240,12 +222,9 @@ class ExpandedForm
         return $selectList;
     }
 
-
     /**
-     * @param null       $value
-     * @param array|null $options
+     * @param null $value
      *
-     * @return string
      * @throws FireflyException
      */
     public function objectGroup($value = null, array $options = null): string
@@ -263,9 +242,10 @@ class ExpandedForm
 
         try {
             $html = view('form.object_group', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render objectGroup(): %s', $e->getMessage()));
             $html = 'Could not render objectGroup.';
+
             throw new FireflyException($html, 0, $e);
         }
 
@@ -273,19 +253,16 @@ class ExpandedForm
     }
 
     /**
-     * @param string $type
-     * @param string $name
-     *
-     * @return string
      * @throws FireflyException
      */
     public function optionsList(string $type, string $name): string
     {
         try {
             $html = view('form.options', compact('type', 'name'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render select(): %s', $e->getMessage()));
             $html = 'Could not render optionsList.';
+
             throw new FireflyException($html, 0, $e);
         }
 
@@ -293,10 +270,6 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param array|null $options
-     *
-     * @return string
      * @throws FireflyException
      */
     public function password(string $name, array $options = null): string
@@ -304,11 +277,13 @@ class ExpandedForm
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
+
         try {
             $html = view('form.password', compact('classes', 'name', 'label', 'options'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render password(): %s', $e->getMessage()));
             $html = 'Could not render password.';
+
             throw new FireflyException($html, 0, $e);
         }
 
@@ -318,11 +293,8 @@ class ExpandedForm
     /**
      * Function to render a percentage.
      *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param mixed $value
      *
-     * @return string
      * @throws FireflyException
      */
     public function percentage(string $name, $value = null, array $options = null): string
@@ -333,11 +305,13 @@ class ExpandedForm
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
         unset($options['placeholder']);
+
         try {
             $html = view('form.percentage', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render percentage(): %s', $e->getMessage()));
             $html = 'Could not render percentage.';
+
             throw new FireflyException($html, 0, $e);
         }
 
@@ -345,11 +319,8 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param mixed $value
      *
-     * @return string
      * @throws FireflyException
      */
     public function staticText(string $name, $value, array $options = null): string
@@ -357,11 +328,13 @@ class ExpandedForm
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
+
         try {
             $html = view('form.static', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render staticText(): %s', $e->getMessage()));
             $html = 'Could not render staticText.';
+
             throw new FireflyException($html, 0, $e);
         }
 
@@ -369,11 +342,8 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param mixed $value
      *
-     * @return string
      * @throws FireflyException
      */
     public function text(string $name, $value = null, array $options = null): string
@@ -382,11 +352,13 @@ class ExpandedForm
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
         $value   = $this->fillFieldValue($name, $value);
+
         try {
             $html = view('form.text', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render text(): %s', $e->getMessage()));
             $html = 'Could not render text.';
+
             throw new FireflyException($html, 0, $e);
         }
 
@@ -394,11 +366,8 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
+     * @param mixed $value
      *
-     * @return string
      * @throws FireflyException
      */
     public function textarea(string $name, $value = null, array $options = null): string
@@ -415,9 +384,10 @@ class ExpandedForm
 
         try {
             $html = view('form.textarea', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render textarea(): %s', $e->getMessage()));
             $html = 'Could not render textarea.';
+
             throw new FireflyException($html, 0, $e);
         }
 

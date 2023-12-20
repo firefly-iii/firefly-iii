@@ -41,8 +41,6 @@ class IndexController extends Controller
 
     /**
      * IndexController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -74,9 +72,6 @@ class IndexController extends Controller
     }
 
     /**
-     * @param Request     $request
-     * @param ObjectGroup $objectGroup
-     *
      * @return JsonResponse
      */
     public function setOrder(Request $request, ObjectGroup $objectGroup)

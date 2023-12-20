@@ -48,7 +48,6 @@ class MigrateRecurrenceType extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -63,46 +62,39 @@ class MigrateRecurrenceType extends Command
         $this->migrateTypes();
         $this->markAsExecuted();
 
-
         return 0;
     }
 
     /**
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+
         return (bool)$configVar?->data;
     }
 
-    /**
-     *
-     */
     private function migrateTypes(): void
     {
         $set = Recurrence::get();
+
         /** @var Recurrence $recurrence */
         foreach ($set as $recurrence) {
-            if ($recurrence->transactionType->type !== TransactionType::INVALID) {
+            if (TransactionType::INVALID !== $recurrence->transactionType->type) {
                 $this->migrateRecurrence($recurrence);
             }
         }
     }
 
-    /**
-     * @param Recurrence $recurrence
-     *
-     * @return void
-     */
     private function migrateRecurrence(Recurrence $recurrence): void
     {
         $originalType                    = $recurrence->transaction_type_id;
         $newType                         = $this->getInvalidType();
         $recurrence->transaction_type_id = $newType->id;
         $recurrence->save();
+
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions as $transaction) {
             $transaction->transaction_type_id = $originalType;
@@ -111,17 +103,11 @@ class MigrateRecurrenceType extends Command
         $this->friendlyInfo(sprintf('Updated recurrence #%d to new transaction type model.', $recurrence->id));
     }
 
-    /**
-     *
-     */
     private function getInvalidType(): TransactionType
     {
         return TransactionType::whereType(TransactionType::INVALID)->firstOrCreate(['type' => TransactionType::INVALID]);
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

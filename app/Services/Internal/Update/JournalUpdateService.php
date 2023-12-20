@@ -99,20 +99,14 @@ class JournalUpdateService
             'external_url',
         ];
         $this->metaDate               = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date',
-                                         'invoice_date',];
+            'invoice_date', ];
     }
 
-    /**
-     * @param array $data
-     */
     public function setData(array $data): void
     {
         $this->data = $data;
     }
 
-    /**
-     * @param TransactionGroup $transactionGroup
-     */
     public function setTransactionGroup(TransactionGroup $transactionGroup): void
     {
         $this->transactionGroup = $transactionGroup;
@@ -127,22 +121,15 @@ class JournalUpdateService
         $this->sourceTransaction      = null;
     }
 
-    /**
-     * @param TransactionJournal $transactionJournal
-     */
     public function setTransactionJournal(TransactionJournal $transactionJournal): void
     {
         $this->transactionJournal = $transactionJournal;
     }
 
-    /**
-     *
-     */
     public function update(): void
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
         app('log')->debug(sprintf('Now in JournalUpdateService for journal #%d.', $this->transactionJournal->id));
-
 
         $this->data['reconciled'] = array_key_exists('reconciled', $this->data) ? $this->data['reconciled'] : false;
 
@@ -181,17 +168,11 @@ class JournalUpdateService
         $this->transactionJournal->refresh();
     }
 
-    /**
-     * @return bool
-     */
     private function hasValidAccounts(): bool
     {
         return $this->hasValidSourceAccount() && $this->hasValidDestinationAccount();
     }
 
-    /**
-     * @return bool
-     */
     private function hasValidSourceAccount(): bool
     {
         app('log')->debug('Now in hasValidSourceAccount().');
@@ -225,11 +206,6 @@ class JournalUpdateService
         return $result;
     }
 
-    /**
-     * @param array $fields
-     *
-     * @return bool
-     */
     private function hasFields(array $fields): bool
     {
         foreach ($fields as $field) {
@@ -241,9 +217,6 @@ class JournalUpdateService
         return false;
     }
 
-    /**
-     * @return Account
-     */
     private function getOriginalSourceAccount(): Account
     {
         if (null === $this->sourceAccount) {
@@ -254,9 +227,6 @@ class JournalUpdateService
         return $this->sourceAccount;
     }
 
-    /**
-     * @return Transaction
-     */
     private function getSourceTransaction(): Transaction
     {
         if (null === $this->sourceTransaction) {
@@ -277,8 +247,6 @@ class JournalUpdateService
      *
      * If the array contains key 'type' and the value is correct, this is returned. Otherwise, the original type is
      * returned.
-     *
-     * @return string
      */
     private function getExpectedType(): string
     {
@@ -290,9 +258,6 @@ class JournalUpdateService
         return $this->transactionJournal->transactionType->type;
     }
 
-    /**
-     * @return bool
-     */
     private function hasValidDestinationAccount(): bool
     {
         app('log')->debug('Now in hasValidDestinationAccount().');
@@ -332,9 +297,6 @@ class JournalUpdateService
         return $result;
     }
 
-    /**
-     * @return Account
-     */
     private function getOriginalDestinationAccount(): Account
     {
         if (null === $this->destinationAccount) {
@@ -347,8 +309,6 @@ class JournalUpdateService
 
     /**
      * Get destination transaction.
-     *
-     * @return Transaction
      */
     private function getDestinationTransaction(): Transaction
     {
@@ -361,8 +321,6 @@ class JournalUpdateService
 
     /**
      * Does a validation and returns the source account. This method will break if the source isn't really valid.
-     *
-     * @return Account
      */
     private function getValidSourceAccount(): Account
     {
@@ -381,6 +339,7 @@ class JournalUpdateService
         ];
 
         $expectedType = $this->getExpectedType();
+
         try {
             $result = $this->getAccount($expectedType, 'source', $sourceInfo);
         } catch (FireflyException $e) {
@@ -426,8 +385,6 @@ class JournalUpdateService
 
     /**
      * Does a validation and returns the destination account. This method will break if the dest isn't really valid.
-     *
-     * @return Account
      */
     private function getValidDestinationAccount(): Account
     {
@@ -448,6 +405,7 @@ class JournalUpdateService
         // make new account validator.
         $expectedType = $this->getExpectedType();
         app('log')->debug(sprintf('Expected type (new or unchanged) is %s', $expectedType));
+
         try {
             $result = $this->getAccount($expectedType, 'destination', $destInfo);
         } catch (FireflyException $e) {
@@ -513,8 +471,6 @@ class JournalUpdateService
 
     /**
      * Update journal generic field. Cannot be set to NULL.
-     *
-     * @param string $fieldName
      */
     private function updateField(string $fieldName): void
     {
@@ -526,7 +482,7 @@ class JournalUpdateService
                     // update timezone.
                     $value->setTimezone(config('app.timezone'));
                 }
-                if (!($value instanceof Carbon)) {
+                if (!$value instanceof Carbon) {
                     $value = new Carbon($value);
                 }
                 // do some parsing.
@@ -537,19 +493,16 @@ class JournalUpdateService
                     $this->transactionJournal->user,
                     $this->transactionJournal,
                     sprintf('update_%s', $fieldName),
-                    $this->transactionJournal->$fieldName, // @phpstan-ignore-line
+                    $this->transactionJournal->{$fieldName}, // @phpstan-ignore-line
                     $value
                 )
             );
 
-            $this->transactionJournal->$fieldName = $value;// @phpstan-ignore-line
+            $this->transactionJournal->{$fieldName} = $value; // @phpstan-ignore-line
             app('log')->debug(sprintf('Updated %s', $fieldName));
         }
     }
 
-    /**
-     *
-     */
     private function updateCategory(): void
     {
         // update category
@@ -560,9 +513,6 @@ class JournalUpdateService
         }
     }
 
-    /**
-     *
-     */
     private function updateBudget(): void
     {
         // update budget
@@ -576,9 +526,6 @@ class JournalUpdateService
         }
     }
 
-    /**
-     *
-     */
     private function updateTags(): void
     {
         if ($this->hasFields(['tags'])) {
@@ -588,9 +535,6 @@ class JournalUpdateService
         }
     }
 
-    /**
-     *
-     */
     private function updateReconciled(): void
     {
         if (array_key_exists('reconciled', $this->data) && is_bool($this->data['reconciled'])) {
@@ -598,9 +542,6 @@ class JournalUpdateService
         }
     }
 
-    /**
-     *
-     */
     private function updateNotes(): void
     {
         // update notes.
@@ -610,9 +551,6 @@ class JournalUpdateService
         }
     }
 
-    /**
-     *
-     */
     private function updateMeta(): void
     {
         // update meta fields.
@@ -629,9 +567,6 @@ class JournalUpdateService
         }
     }
 
-    /**
-     *
-     */
     private function updateMetaFields(): void
     {
         /** @var TransactionJournalMetaFactory $factory */
@@ -651,9 +586,6 @@ class JournalUpdateService
         }
     }
 
-    /**
-     *
-     */
     private function updateMetaDateFields(): void
     {
         /** @var TransactionJournalMetaFactory $factory */
@@ -679,9 +611,6 @@ class JournalUpdateService
         }
     }
 
-    /**
-     *
-     */
     private function updateCurrency(): void
     {
         // update transactions.
@@ -709,9 +638,6 @@ class JournalUpdateService
         app('log')->debug(sprintf('Updated currency to #%d (%s)', $currency->id, $currency->code));
     }
 
-    /**
-     *
-     */
     private function updateAmount(): void
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
@@ -721,6 +647,7 @@ class JournalUpdateService
 
         $value = $this->data['amount'] ?? '';
         app('log')->debug(sprintf('Amount is now "%s"', $value));
+
         try {
             $amount = $this->getAmount($value);
         } catch (FireflyException $e) {
@@ -740,9 +667,6 @@ class JournalUpdateService
         app('log')->debug(sprintf('Updated amount to "%s"', $amount));
     }
 
-    /**
-     *
-     */
     private function updateForeignAmount(): void
     {
         // amount, foreign currency.

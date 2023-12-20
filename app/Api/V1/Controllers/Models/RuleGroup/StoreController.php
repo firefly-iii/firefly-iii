@@ -42,8 +42,6 @@ class StoreController extends Controller
 
     /**
      * RuleGroupController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -69,10 +67,6 @@ class StoreController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rule_groups/storeRuleGroup
      *
      * Store new object.
-     *
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
      */
     public function store(StoreRequest $request): JsonResponse
     {

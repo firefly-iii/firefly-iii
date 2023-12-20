@@ -46,8 +46,6 @@ class UserController extends Controller
 
     /**
      * UserController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -67,9 +65,6 @@ class UserController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param User $user
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function destroy(User $user): JsonResponse
@@ -85,6 +80,7 @@ class UserController extends Controller
 
             return response()->json([], 204);
         }
+
         throw new FireflyException('200025: No access to function.');
     }
 
@@ -94,7 +90,6 @@ class UserController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function index(): JsonResponse
@@ -110,7 +105,7 @@ class UserController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($users, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.users.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.users.index').$this->buildParams());
 
         // make resource
         /** @var UserTransformer $transformer */
@@ -128,15 +123,12 @@ class UserController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/users/getUser
      *
      * Show a single user.
-     *
-     * @param User $user
-     *
-     * @return JsonResponse
      */
     public function show(User $user): JsonResponse
     {
         // make manager
         $manager = $this->getManager();
+
         // make resource
         /** @var UserTransformer $transformer */
         $transformer = app(UserTransformer::class);
@@ -152,10 +144,6 @@ class UserController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/users/storeUser
      *
      * Store a new user.
-     *
-     * @param UserStoreRequest $request
-     *
-     * @return JsonResponse
      */
     public function store(UserStoreRequest $request): JsonResponse
     {
@@ -179,11 +167,6 @@ class UserController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/users/updateUser
      *
      * Update a user.
-     *
-     * @param UserUpdateRequest $request
-     * @param User              $user
-     *
-     * @return JsonResponse
      */
     public function update(UserUpdateRequest $request, User $user): JsonResponse
     {
@@ -197,6 +180,7 @@ class UserController extends Controller
 
         $user    = $this->repository->update($user, $data);
         $manager = $this->getManager();
+
         // make resource
         /** @var UserTransformer $transformer */
         $transformer = app(UserTransformer::class);

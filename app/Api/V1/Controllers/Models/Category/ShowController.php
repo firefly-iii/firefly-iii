@@ -43,8 +43,6 @@ class ShowController extends Controller
 
     /**
      * CategoryController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,7 +63,6 @@ class ShowController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function index(): JsonResponse
@@ -82,7 +79,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($categories, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.categories.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.categories.index').$this->buildParams());
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
@@ -98,10 +95,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/categories/getCategory
      *
      * Show the category.
-     *
-     * @param Category $category
-     *
-     * @return JsonResponse
      */
     public function show(Category $category): JsonResponse
     {

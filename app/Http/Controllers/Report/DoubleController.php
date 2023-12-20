@@ -33,11 +33,9 @@ use FireflyIII\Support\Http\Controllers\AugumentData;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use Throwable;
 
 /**
  * Class DoubleController
- *
  */
 class DoubleController extends Controller
 {
@@ -51,8 +49,6 @@ class DoubleController extends Controller
 
     /**
      * Constructor for ExpenseController
-     *
-
      */
     public function __construct()
     {
@@ -70,12 +66,8 @@ class DoubleController extends Controller
     }
 
     /**
-     * @param Collection $accounts
-     * @param Collection $doubles
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
      * @return string
+     *
      * @throws FireflyException
      */
     public function avgExpenses(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
@@ -100,7 +92,7 @@ class DoubleController extends Controller
                     'currency_symbol'         => $currency['currency_symbol'],
                     'currency_decimal_places' => $currency['currency_decimal_places'],
                 ];
-                $result[$key]['transactions']++;
+                ++$result[$key]['transactions'];
                 $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
                 $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
                 $result[$key]['avg_float'] = (float)$result[$key]['avg'];
@@ -113,9 +105,10 @@ class DoubleController extends Controller
 
         try {
             $result = view('reports.double.partials.avg-expenses', compact('result'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
+
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -123,12 +116,8 @@ class DoubleController extends Controller
     }
 
     /**
-     * @param Collection $accounts
-     * @param Collection $doubles
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
      * @return string
+     *
      * @throws FireflyException
      */
     public function avgIncome(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
@@ -153,7 +142,7 @@ class DoubleController extends Controller
                     'currency_symbol'          => $currency['currency_symbol'],
                     'currency_decimal_places'  => $currency['currency_decimal_places'],
                 ];
-                $result[$key]['transactions']++;
+                ++$result[$key]['transactions'];
                 $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
                 $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
                 $result[$key]['avg_float'] = (float)$result[$key]['avg'];
@@ -166,9 +155,10 @@ class DoubleController extends Controller
 
         try {
             $result = view('reports.double.partials.avg-income', compact('result'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
+
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -176,11 +166,6 @@ class DoubleController extends Controller
     }
 
     /**
-     * @param Collection $accounts
-     * @param Collection $double
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
      * @return Factory|View
      */
     public function operations(Collection $accounts, Collection $double, Carbon $start, Carbon $end)
@@ -295,36 +280,6 @@ class DoubleController extends Controller
     }
 
     /**
-     * TODO this method is duplicated.
-     *
-     * @param Collection  $accounts
-     * @param int         $id
-     * @param string      $name
-     * @param string|null $iban
-     *
-     * @return string
-     */
-    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
-    {
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if ($account->name === $name && $account->id !== $id) {
-                return $account->name;
-            }
-            if (null !== $account->iban && $account->iban === $iban && $account->id !== $id) {
-                return $account->iban;
-            }
-        }
-
-        return $name;
-    }
-
-    /**
-     * @param Collection $accounts
-     * @param Collection $double
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
      * @return Factory|View
      */
     public function operationsPerAsset(Collection $accounts, Collection $double, Carbon $start, Carbon $end)
@@ -420,12 +375,8 @@ class DoubleController extends Controller
     }
 
     /**
-     * @param Collection $accounts
-     * @param Collection $doubles
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
      * @return string
+     *
      * @throws FireflyException
      */
     public function topExpenses(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
@@ -461,9 +412,10 @@ class DoubleController extends Controller
 
         try {
             $result = view('reports.double.partials.top-expenses', compact('result'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
+
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -471,12 +423,8 @@ class DoubleController extends Controller
     }
 
     /**
-     * @param Collection $accounts
-     * @param Collection $doubles
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
      * @return string
+     *
      * @throws FireflyException
      */
     public function topIncome(Collection $accounts, Collection $doubles, Carbon $start, Carbon $end)
@@ -512,12 +460,31 @@ class DoubleController extends Controller
 
         try {
             $result = view('reports.double.partials.top-income', compact('result'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
+
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
         return $result;
+    }
+
+    /**
+     * TODO this method is duplicated.
+     */
+    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
+    {
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->name === $name && $account->id !== $id) {
+                return $account->name;
+            }
+            if (null !== $account->iban && $account->iban === $iban && $account->id !== $id) {
+                return $account->iban;
+            }
+        }
+
+        return $name;
     }
 }

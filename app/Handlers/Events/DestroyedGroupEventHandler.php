@@ -34,14 +34,12 @@ use Illuminate\Support\Collection;
  */
 class DestroyedGroupEventHandler
 {
-    /**
-     * @param DestroyedTransactionGroup $destroyedGroupEvent
-     */
     public function triggerWebhooks(DestroyedTransactionGroup $destroyedGroupEvent): void
     {
         app('log')->debug('DestroyedTransactionGroup:triggerWebhooks');
         $group = $destroyedGroupEvent->transactionGroup;
         $user  = $group->user;
+
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser($user);

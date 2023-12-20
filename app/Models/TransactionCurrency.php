@@ -39,26 +39,27 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionCurrency
  *
- * @property int                                  $id
- * @property Carbon|null                          $created_at
- * @property Carbon|null                          $updated_at
- * @property Carbon|null                          $deleted_at
- * @property bool                                 $enabled
- * @property bool|null                            $userGroupDefault
- * @property bool|null                            $userGroupEnabled
- * @property string                               $code
- * @property string                               $name
- * @property string                               $symbol
- * @property int                                  $decimal_places
- * @property-read Collection|BudgetLimit[]        $budgetLimits
- * @property-read int|null                        $budget_limits_count
- * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read int|null                        $transaction_journals_count
- * @property-read Collection|Transaction[]        $transactions
- * @property-read int|null                        $transactions_count
+ * @property int                             $id
+ * @property null|Carbon                     $created_at
+ * @property null|Carbon                     $updated_at
+ * @property null|Carbon                     $deleted_at
+ * @property bool                            $enabled
+ * @property null|bool                       $userGroupDefault
+ * @property null|bool                       $userGroupEnabled
+ * @property string                          $code
+ * @property string                          $name
+ * @property string                          $symbol
+ * @property int                             $decimal_places
+ * @property BudgetLimit[]|Collection        $budgetLimits
+ * @property null|int                        $budget_limits_count
+ * @property Collection|TransactionJournal[] $transactionJournals
+ * @property null|int                        $transaction_journals_count
+ * @property Collection|Transaction[]        $transactions
+ * @property null|int                        $transactions_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency newQuery()
- * @method static Builder|TransactionCurrency onlyTrashed()
+ * @method static Builder|TransactionCurrency                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency query()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereCreatedAt($value)
@@ -69,12 +70,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereSymbol($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionCurrency whereUpdatedAt($value)
- * @method static Builder|TransactionCurrency withTrashed()
- * @method static Builder|TransactionCurrency withoutTrashed()
- * @property-read Collection<int, UserGroup>      $userGroups
- * @property-read int|null                        $user_groups_count
- * @property-read Collection<int, User>           $users
- * @property-read int|null                        $users_count
+ * @method static Builder|TransactionCurrency                               withTrashed()
+ * @method static Builder|TransactionCurrency                               withoutTrashed()
+ *
+ * @property Collection<int, UserGroup> $userGroups
+ * @property null|int                   $user_groups_count
+ * @property Collection<int, User>      $users
+ * @property null|int                   $users_count
+ *
  * @mixin Eloquent
  */
 class TransactionCurrency extends Model
@@ -98,9 +101,6 @@ class TransactionCurrency extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return TransactionCurrency
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): self
@@ -110,17 +110,14 @@ class TransactionCurrency extends Model
             $currency   = self::find($currencyId);
             if (null !== $currency) {
                 $currency->refreshForUser(auth()->user());
+
                 return $currency;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @param User $user
-     *
-     * @return void
-     */
     public function refreshForUser(User $user)
     {
         $current                = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
@@ -129,25 +126,16 @@ class TransactionCurrency extends Model
         $this->userGroupEnabled = null !== $current;
     }
 
-    /**
-     * @return HasMany
-     */
     public function budgetLimits(): HasMany
     {
         return $this->hasMany(BudgetLimit::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function transactionJournals(): HasMany
     {
         return $this->hasMany(TransactionJournal::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
@@ -155,8 +143,6 @@ class TransactionCurrency extends Model
 
     /**
      * Link to user groups
-     *
-     * @return BelongsToMany
      */
     public function userGroups(): BelongsToMany
     {
@@ -165,21 +151,16 @@ class TransactionCurrency extends Model
 
     /**
      * Link to users
-     *
-     * @return BelongsToMany
      */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class)->withTimestamps()->withPivot('user_default');
     }
 
-    /**
-     * @return Attribute
-     */
     protected function decimalPlaces(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

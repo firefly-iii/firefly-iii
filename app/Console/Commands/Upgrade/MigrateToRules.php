@@ -58,7 +58,6 @@ class MigrateToRules extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws ContainerExceptionInterface
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
@@ -73,8 +72,8 @@ class MigrateToRules extends Command
             return 0;
         }
 
-
         $users = $this->userRepository->all();
+
         /** @var User $user */
         foreach ($users as $user) {
             $this->migrateUser($user);
@@ -96,8 +95,6 @@ class MigrateToRules extends Command
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
      * be called from the handle method instead of using the constructor to initialize the command.
-     *
-
      */
     private function stupidLaravel(): void
     {
@@ -109,7 +106,6 @@ class MigrateToRules extends Command
     }
 
     /**
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -125,8 +121,6 @@ class MigrateToRules extends Command
 
     /**
      * Migrate bills to new rule structure for a specific user.
-     *
-     * @param User $user
      *
      * @throws FireflyException
      */
@@ -159,11 +153,6 @@ class MigrateToRules extends Command
         }
     }
 
-    /**
-     * @param RuleGroup  $ruleGroup
-     * @param Bill       $bill
-     * @param Preference $language
-     */
     private function migrateBill(RuleGroup $ruleGroup, Bill $bill, Preference $language): void
     {
         if ('MIGRATED_TO_RULES' === $bill->match) {
@@ -228,12 +217,9 @@ class MigrateToRules extends Command
             'active'      => $bill->active,
         ];
         $this->billRepository->update($bill, $newBillData);
-        $this->count++;
+        ++$this->count;
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

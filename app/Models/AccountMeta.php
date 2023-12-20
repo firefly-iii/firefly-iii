@@ -33,13 +33,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Class AccountMeta
  *
- * @property int          $id
- * @property Carbon|null  $created_at
- * @property Carbon|null  $updated_at
- * @property int          $account_id
- * @property string       $name
- * @property mixed        $data
- * @property-read Account $account
+ * @property int         $id
+ * @property null|Carbon $created_at
+ * @property null|Carbon $updated_at
+ * @property int         $account_id
+ * @property string      $name
+ * @property mixed       $data
+ * @property Account     $account
+ *
  * @method static Builder|AccountMeta newModelQuery()
  * @method static Builder|AccountMeta newQuery()
  * @method static Builder|AccountMeta query()
@@ -49,6 +50,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder|AccountMeta whereId($value)
  * @method static Builder|AccountMeta whereName($value)
  * @method static Builder|AccountMeta whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class AccountMeta extends Model
@@ -62,33 +64,22 @@ class AccountMeta extends Model
         ];
 
     protected $fillable = ['account_id', 'name', 'data'];
+
     /** @var string The table to store the data in */
     protected $table = 'account_meta';
 
-    /**
-     * @return BelongsTo
-     */
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return string
-     */
     public function getDataAttribute(mixed $value): string
     {
         return (string)json_decode($value, true);
     }
 
-    /**
-     * @param mixed $value
-     */
     public function setDataAttribute(mixed $value): void
     {
         $this->attributes['data'] = json_encode($value);
     }
-
 }

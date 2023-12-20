@@ -42,17 +42,12 @@ class UpdatePiggybank implements ActionInterface
 
     /**
      * TriggerInterface constructor.
-     *
-     * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
     {
         $this->action = $action;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function actOnArray(array $journal): bool
     {
         app('log')->debug(sprintf('Triggered rule action UpdatePiggybank on journal #%d', $journal['transaction_journal_id']));
@@ -60,6 +55,7 @@ class UpdatePiggybank implements ActionInterface
         // refresh the transaction type.
         /** @var User $user */
         $user = User::find($journal['user_id']);
+
         /** @var TransactionJournal $journalObj */
         $journalObj = $user->transactionJournals()->find($journal['transaction_journal_id']);
 
@@ -69,6 +65,7 @@ class UpdatePiggybank implements ActionInterface
                 sprintf('No piggy bank named "%s", cant execute action #%d of rule #%d', $this->action->action_value, $this->action->id, $this->action->rule_id)
             );
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_piggy', ['name' => $this->action->action_value])));
+
             return false;
         }
 
@@ -76,6 +73,7 @@ class UpdatePiggybank implements ActionInterface
 
         /** @var Transaction $source */
         $source = $journalObj->transactions()->where('amount', '<', 0)->first();
+
         /** @var Transaction $destination */
         $destination = $journalObj->transactions()->where('amount', '>', 0)->first();
 
@@ -129,26 +127,15 @@ class UpdatePiggybank implements ActionInterface
             )
         );
         event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_link_piggy', ['name' => $this->action->action_value])));
+
         return false;
     }
 
-    /**
-     * @param User $user
-     *
-     * @return PiggyBank|null
-     */
     private function findPiggyBank(User $user): ?PiggyBank
     {
         return $user->piggyBanks()->where('piggy_banks.name', $this->action->action_value)->first();
     }
 
-    /**
-     * @param PiggyBank          $piggyBank
-     * @param TransactionJournal $journal
-     * @param string             $amount
-     *
-     * @return void
-     */
     private function removeAmount(PiggyBank $piggyBank, TransactionJournal $journal, string $amount): void
     {
         $repository = app(PiggyBankRepositoryInterface::class);
@@ -180,13 +167,6 @@ class UpdatePiggybank implements ActionInterface
         $repository->removeAmount($piggyBank, $amount, $journal);
     }
 
-    /**
-     * @param PiggyBank          $piggyBank
-     * @param TransactionJournal $journal
-     * @param string             $amount
-     *
-     * @return void
-     */
     private function addAmount(PiggyBank $piggyBank, TransactionJournal $journal, string $amount): void
     {
         $repository = app(PiggyBankRepositoryInterface::class);
@@ -204,7 +184,6 @@ class UpdatePiggybank implements ActionInterface
         if (0 === bccomp($piggyBank->targetamount, '0')) {
             app('log')->debug('Target amount is zero, can add anything.');
         }
-
 
         // if amount is zero, stop.
         if (0 === bccomp('0', $amount)) {

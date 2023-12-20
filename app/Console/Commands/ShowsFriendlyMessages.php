@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * ShowsFriendlyMessages.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -30,64 +29,33 @@ namespace FireflyIII\Console\Commands;
  */
 trait ShowsFriendlyMessages
 {
-    /**
-     * @param string $message
-     *
-     * @return void
-     */
     public function friendlyError(string $message): void
     {
         $this->error(sprintf('  [x]  %s', trim($message)));
     }
 
-    /**
-     * @param string $message
-     *
-     * @return void
-     */
     public function friendlyInfo(string $message): void
     {
         $this->friendlyNeutral($message);
     }
 
-    /**
-     * @param string $message
-     *
-     * @return void
-     */
     public function friendlyNeutral(string $message): void
     {
         $this->line(sprintf('  [i] %s', trim($message)));
     }
 
-    /**
-     * @param string $message
-     *
-     * @return void
-     */
     public function friendlyLine(string $message): void
     {
         $this->line(sprintf('      %s', trim($message)));
     }
 
-    /**
-     * @param string $message
-     *
-     * @return void
-     */
     public function friendlyPositive(string $message): void
     {
         $this->info(sprintf('  [✓] %s', trim($message)));
     }
 
-    /**
-     * @param string $message
-     *
-     * @return void
-     */
     public function friendlyWarning(string $message): void
     {
         $this->warn(sprintf('  [!] %s', trim($message)));
     }
-
 }

@@ -32,10 +32,6 @@ class RuleGroupTransformer extends AbstractTransformer
 {
     /**
      * Transform the rule group
-     *
-     * @param RuleGroup $ruleGroup
-     *
-     * @return array
      */
     public function transform(RuleGroup $ruleGroup): array
     {
@@ -50,7 +46,7 @@ class RuleGroupTransformer extends AbstractTransformer
             'links'       => [
                 [
                     'rel' => 'self',
-                    'uri' => '/rule_groups/' . $ruleGroup->id,
+                    'uri' => '/rule_groups/'.$ruleGroup->id,
                 ],
             ],
         ];

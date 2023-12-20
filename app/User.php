@@ -26,7 +26,6 @@ namespace FireflyIII;
 
 use Carbon\Carbon;
 use Eloquent;
-use Exception;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Exceptions\FireflyException;
@@ -74,45 +73,45 @@ use Laravel\Passport\HasApiTokens;
 use Laravel\Passport\Token;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class User.
  *
- * @property int|string                                                              $id
- * @property string                                                                  $email
- * @property bool                                                                    $isAdmin
- * @property bool                                                                    $has2FA
- * @property array                                                                   $prefs
- * @property string                                                                  $password
- * @property string                                                                  $mfa_secret
- * @property Collection                                                              $roles
- * @property string                                                                  $blocked_code
- * @property bool                                                                    $blocked
- * @property Carbon|null                                                             $created_at
- * @property Carbon|null                                                             $updated_at
- * @property string|null                                                             $remember_token
- * @property string|null                                                             $reset
- * @property-read \Illuminate\Database\Eloquent\Collection|Account[]                 $accounts
- * @property-read \Illuminate\Database\Eloquent\Collection|Attachment[]              $attachments
- * @property-read \Illuminate\Database\Eloquent\Collection|AvailableBudget[]         $availableBudgets
- * @property-read \Illuminate\Database\Eloquent\Collection|Bill[]                    $bills
- * @property-read \Illuminate\Database\Eloquent\Collection|Budget[]                  $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|Category[]                $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|Client[]                  $clients
- * @property-read \Illuminate\Database\Eloquent\Collection|CurrencyExchangeRate[]    $currencyExchangeRates
- * @property-read DatabaseNotificationCollection|DatabaseNotification[]              $notifications
- * @property-read \Illuminate\Database\Eloquent\Collection|PiggyBank[]               $piggyBanks
- * @property-read \Illuminate\Database\Eloquent\Collection|Preference[]              $preferences
- * @property-read \Illuminate\Database\Eloquent\Collection|Recurrence[]              $recurrences
- * @property-read \Illuminate\Database\Eloquent\Collection|RuleGroup[]               $ruleGroups
- * @property-read \Illuminate\Database\Eloquent\Collection|Rule[]                    $rules
- * @property-read \Illuminate\Database\Eloquent\Collection|Tag[]                     $tags
- * @property-read \Illuminate\Database\Eloquent\Collection|Token[]                   $tokens
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionGroup[]        $transactionGroups
- * @property-read \Illuminate\Database\Eloquent\Collection|TransactionJournal[]      $transactionJournals
- * @property-read \Illuminate\Database\Eloquent\Collection|Transaction[]             $transactions
+ * @property int|string                                                      $id
+ * @property string                                                          $email
+ * @property bool                                                            $isAdmin
+ * @property bool                                                            $has2FA
+ * @property array                                                           $prefs
+ * @property string                                                          $password
+ * @property string                                                          $mfa_secret
+ * @property Collection                                                      $roles
+ * @property string                                                          $blocked_code
+ * @property bool                                                            $blocked
+ * @property null|Carbon                                                     $created_at
+ * @property null|Carbon                                                     $updated_at
+ * @property null|string                                                     $remember_token
+ * @property null|string                                                     $reset
+ * @property Account[]|\Illuminate\Database\Eloquent\Collection              $accounts
+ * @property Attachment[]|\Illuminate\Database\Eloquent\Collection           $attachments
+ * @property AvailableBudget[]|\Illuminate\Database\Eloquent\Collection      $availableBudgets
+ * @property Bill[]|\Illuminate\Database\Eloquent\Collection                 $bills
+ * @property Budget[]|\Illuminate\Database\Eloquent\Collection               $budgets
+ * @property Category[]|\Illuminate\Database\Eloquent\Collection             $categories
+ * @property Client[]|\Illuminate\Database\Eloquent\Collection               $clients
+ * @property CurrencyExchangeRate[]|\Illuminate\Database\Eloquent\Collection $currencyExchangeRates
+ * @property DatabaseNotification[]|DatabaseNotificationCollection           $notifications
+ * @property \Illuminate\Database\Eloquent\Collection|PiggyBank[]            $piggyBanks
+ * @property \Illuminate\Database\Eloquent\Collection|Preference[]           $preferences
+ * @property \Illuminate\Database\Eloquent\Collection|Recurrence[]           $recurrences
+ * @property \Illuminate\Database\Eloquent\Collection|RuleGroup[]            $ruleGroups
+ * @property \Illuminate\Database\Eloquent\Collection|Rule[]                 $rules
+ * @property \Illuminate\Database\Eloquent\Collection|Tag[]                  $tags
+ * @property \Illuminate\Database\Eloquent\Collection|Token[]                $tokens
+ * @property \Illuminate\Database\Eloquent\Collection|TransactionGroup[]     $transactionGroups
+ * @property \Illuminate\Database\Eloquent\Collection|TransactionJournal[]   $transactionJournals
+ * @property \Illuminate\Database\Eloquent\Collection|Transaction[]          $transactions
+ *
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
@@ -125,50 +124,60 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereReset($value)
  * @method static Builder|User whereUpdatedAt($value)
- * @property string|null                                                             $objectguid
- * @property-read int|null                                                           $accounts_count
- * @property-read int|null                                                           $attachments_count
- * @property-read int|null                                                           $available_budgets_count
- * @property-read int|null                                                           $bills_count
- * @property-read int|null                                                           $budgets_count
- * @property-read int|null                                                           $categories_count
- * @property-read int|null                                                           $clients_count
- * @property-read int|null                                                           $currency_exchange_rates_count
- * @property-read int|null                                                           $notifications_count
- * @property-read int|null                                                           $piggy_banks_count
- * @property-read int|null                                                           $preferences_count
- * @property-read int|null                                                           $recurrences_count
- * @property-read int|null                                                           $roles_count
- * @property-read int|null                                                           $rule_groups_count
- * @property-read int|null                                                           $rules_count
- * @property-read int|null                                                           $tags_count
- * @property-read int|null                                                           $tokens_count
- * @property-read int|null                                                           $transaction_groups_count
- * @property-read int|null                                                           $transaction_journals_count
- * @property-read int|null                                                           $transactions_count
+ *
+ * @property null|string $objectguid
+ * @property null|int    $accounts_count
+ * @property null|int    $attachments_count
+ * @property null|int    $available_budgets_count
+ * @property null|int    $bills_count
+ * @property null|int    $budgets_count
+ * @property null|int    $categories_count
+ * @property null|int    $clients_count
+ * @property null|int    $currency_exchange_rates_count
+ * @property null|int    $notifications_count
+ * @property null|int    $piggy_banks_count
+ * @property null|int    $preferences_count
+ * @property null|int    $recurrences_count
+ * @property null|int    $roles_count
+ * @property null|int    $rule_groups_count
+ * @property null|int    $rules_count
+ * @property null|int    $tags_count
+ * @property null|int    $tokens_count
+ * @property null|int    $transaction_groups_count
+ * @property null|int    $transaction_journals_count
+ * @property null|int    $transactions_count
+ *
  * @method static Builder|User whereMfaSecret($value)
  * @method static Builder|User whereObjectguid($value)
- * @property string|null                                                             $provider
+ *
+ * @property null|string $provider
+ *
  * @method static Builder|User whereProvider($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|ObjectGroup[]             $objectGroups
- * @property-read int|null                                                           $object_groups_count
- * @property-read \Illuminate\Database\Eloquent\Collection|Webhook[]                 $webhooks
- * @property-read int|null                                                           $webhooks_count
- * @property string|null                                                             $two_factor_secret
- * @property string|null                                                             $two_factor_recovery_codes
- * @property string|null                                                             $guid
- * @property string|null                                                             $domain
+ *
+ * @property \Illuminate\Database\Eloquent\Collection|ObjectGroup[] $objectGroups
+ * @property null|int                                               $object_groups_count
+ * @property \Illuminate\Database\Eloquent\Collection|Webhook[]     $webhooks
+ * @property null|int                                               $webhooks_count
+ * @property null|string                                            $two_factor_secret
+ * @property null|string                                            $two_factor_recovery_codes
+ * @property null|string                                            $guid
+ * @property null|string                                            $domain
+ *
  * @method static Builder|User whereDomain($value)
  * @method static Builder|User whereGuid($value)
  * @method static Builder|User whereTwoFactorRecoveryCodes($value)
  * @method static Builder|User whereTwoFactorSecret($value)
- * @property int|null                                                                $user_group_id
- * @property-read \Illuminate\Database\Eloquent\Collection|GroupMembership[]         $groupMemberships
- * @property-read int|null                                                           $group_memberships_count
- * @property-read UserGroup|null                                                     $userGroup
+ *
+ * @property null|int                                                   $user_group_id
+ * @property GroupMembership[]|\Illuminate\Database\Eloquent\Collection $groupMemberships
+ * @property null|int                                                   $group_memberships_count
+ * @property null|UserGroup                                             $userGroup
+ *
  * @method static Builder|User whereUserGroupId($value)
- * @property-read \Illuminate\Database\Eloquent\Collection<int, TransactionCurrency> $currencies
- * @property-read int|null                                                           $currencies_count
+ *
+ * @property \Illuminate\Database\Eloquent\Collection<int, TransactionCurrency> $currencies
+ * @property null|int                                                           $currencies_count
+ *
  * @mixin Eloquent
  */
 class User extends Authenticatable
@@ -178,18 +187,15 @@ class User extends Authenticatable
 
     protected $casts
                         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'blocked'    => 'boolean',
-        ];
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'blocked'    => 'boolean',
+                        ];
     protected $fillable = ['email', 'password', 'blocked', 'blocked_code'];
     protected $hidden   = ['password', 'remember_token'];
     protected $table    = 'users';
 
     /**
-     * @param string $value
-     *
-     * @return User
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): self
@@ -201,13 +207,12 @@ class User extends Authenticatable
                 return $user;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
     /**
      * Link to accounts.
-     *
-     * @return HasMany
      */
     public function accounts(): HasMany
     {
@@ -216,8 +221,6 @@ class User extends Authenticatable
 
     /**
      * Link to attachments
-     *
-     * @return HasMany
      */
     public function attachments(): HasMany
     {
@@ -226,8 +229,6 @@ class User extends Authenticatable
 
     /**
      * Link to available budgets
-     *
-     * @return HasMany
      */
     public function availableBudgets(): HasMany
     {
@@ -236,8 +237,6 @@ class User extends Authenticatable
 
     /**
      * Link to bills.
-     *
-     * @return HasMany
      */
     public function bills(): HasMany
     {
@@ -246,8 +245,6 @@ class User extends Authenticatable
 
     /**
      * Link to budgets.
-     *
-     * @return HasMany
      */
     public function budgets(): HasMany
     {
@@ -256,8 +253,6 @@ class User extends Authenticatable
 
     /**
      * Link to categories
-     *
-     * @return HasMany
      */
     public function categories(): HasMany
     {
@@ -266,8 +261,6 @@ class User extends Authenticatable
 
     /**
      * Link to currencies
-     *
-     * @return BelongsToMany
      */
     public function currencies(): BelongsToMany
     {
@@ -276,8 +269,6 @@ class User extends Authenticatable
 
     /**
      * Link to currency exchange rates
-     *
-     * @return HasMany
      */
     public function currencyExchangeRates(): HasMany
     {
@@ -287,8 +278,7 @@ class User extends Authenticatable
     /**
      * Generates access token.
      *
-     * @return string
-     * @throws Exception
+     * @throws \Exception
      */
     public function generateAccessToken(): string
     {
@@ -300,7 +290,6 @@ class User extends Authenticatable
     /**
      * A safe method that returns the user's current administration ID (group ID).
      *
-     * @return int
      * @throws FireflyException
      */
     public function getAdministrationId(): int
@@ -309,6 +298,7 @@ class User extends Authenticatable
         if (0 === $groupId) {
             throw new FireflyException('User has no administration ID.');
         }
+
         return $groupId;
     }
 
@@ -316,8 +306,8 @@ class User extends Authenticatable
      * Get the models LDAP domain.
      *
      * @return string
-     * @deprecated
      *
+     * @deprecated
      */
     public function getLdapDomain()
     {
@@ -328,8 +318,8 @@ class User extends Authenticatable
      * Get the database column name of the domain.
      *
      * @return string
-     * @deprecated
      *
+     * @deprecated
      */
     public function getLdapDomainColumn()
     {
@@ -340,8 +330,8 @@ class User extends Authenticatable
      * Get the models LDAP GUID.
      *
      * @return string
-     * @deprecated
      *
+     * @deprecated
      */
     public function getLdapGuid()
     {
@@ -352,8 +342,8 @@ class User extends Authenticatable
      * Get the models LDAP GUID database column name.
      *
      * @return string
-     * @deprecated
      *
+     * @deprecated
      */
     public function getLdapGuidColumn()
     {
@@ -365,96 +355,22 @@ class User extends Authenticatable
      *
      * If $allowOverride is set to true, then the roles FULL or OWNER will also be checked,
      * which means that in most cases the user DOES have access, regardless of the original role submitted in $role.
-     *
-     * @param UserGroup    $userGroup
-     * @param UserRoleEnum $role
-     *
-     * @return bool
      */
     public function hasRoleInGroupOrOwner(UserGroup $userGroup, UserRoleEnum $role): bool
     {
         $roles = [$role->value, UserRoleEnum::OWNER->value, UserRoleEnum::FULL->value];
+
         return $this->hasAnyRoleInGroup($userGroup, $roles);
     }
 
     /**
      * Does the user have role X in group Y?
-     *
-     * @param UserGroup    $userGroup
-     * @param UserRoleEnum $role
-     *
-     * @return bool
      */
     public function hasSpecificRoleInGroup(UserGroup $userGroup, UserRoleEnum $role): bool
     {
         return $this->hasAnyRoleInGroup($userGroup, [$role]);
     }
 
-    /**
-     * Does the user have role X, Y or Z in group A?
-     *
-     * @param UserGroup $userGroup
-     * @param array     $roles
-     *
-     * @return bool
-     */
-    private function hasAnyRoleInGroup(UserGroup $userGroup, array $roles): bool
-    {
-        app('log')->debug(sprintf('in hasAnyRoleInGroup(%s)', implode(', ', $roles)));
-        /** @var Collection $dbRoles */
-        $dbRoles = UserRole::whereIn('title', $roles)->get();
-        if (0 === $dbRoles->count()) {
-            app('log')->error(sprintf('Could not find role(s): %s. Probably migration mishap.', implode(', ', $roles)));
-            return false;
-        }
-        $dbRolesIds    = $dbRoles->pluck('id')->toArray();
-        $dbRolesTitles = $dbRoles->pluck('title')->toArray();
-
-        /** @var Collection $groupMemberships */
-        $groupMemberships = $this->groupMemberships()
-                                 ->whereIn('user_role_id', $dbRolesIds)
-                                 ->where('user_group_id', $userGroup->id)->get();
-        if (0 === $groupMemberships->count()) {
-            app('log')->error(sprintf(
-                'User #%d "%s" does not have roles %s in user group #%d "%s"',
-                $this->id,
-                $this->email,
-                implode(', ', $roles),
-                $userGroup->id,
-                $userGroup->title
-            ));
-            return false;
-        }
-        foreach ($groupMemberships as $membership) {
-            app('log')->debug(sprintf(
-                'User #%d "%s" has role "%s" in user group #%d "%s"',
-                $this->id,
-                $this->email,
-                $membership->userRole->title,
-                $userGroup->id,
-                $userGroup->title
-            ));
-            if (in_array($membership->userRole->title, $dbRolesTitles, true)) {
-                app('log')->debug(sprintf('Return true, found role "%s"', $membership->userRole->title));
-                return true;
-            }
-        }
-        app('log')->error(sprintf(
-            'User #%d "%s" does not have roles %s in user group #%d "%s"',
-            $this->id,
-            $this->email,
-            implode(', ', $roles),
-            $userGroup->id,
-            $userGroup->title
-        ));
-        return false;
-
-    }
-
-    /**
-     *
-     * @return HasMany
-     */
     public function groupMemberships(): HasMany
     {
         return $this->hasMany(GroupMembership::class)->with(['userGroup', 'userRole']);
@@ -462,8 +378,6 @@ class User extends Authenticatable
 
     /**
      * Link to object groups.
-     *
-     * @return HasMany
      */
     public function objectGroups(): HasMany
     {
@@ -472,8 +386,6 @@ class User extends Authenticatable
 
     /**
      * Link to piggy banks.
-     *
-     * @return HasManyThrough
      */
     public function piggyBanks(): HasManyThrough
     {
@@ -482,8 +394,6 @@ class User extends Authenticatable
 
     /**
      * Link to preferences.
-     *
-     * @return HasMany
      */
     public function preferences(): HasMany
     {
@@ -492,8 +402,6 @@ class User extends Authenticatable
 
     /**
      * Link to recurring transactions.
-     *
-     * @return HasMany
      */
     public function recurrences(): HasMany
     {
@@ -504,13 +412,13 @@ class User extends Authenticatable
      * Get the notification routing information for the given driver.
      *
      * @param string            $driver
-     * @param Notification|null $notification
+     * @param null|Notification $notification
      *
      * @return mixed
      */
     public function routeNotificationFor($driver, $notification = null)
     {
-        $method = 'routeNotificationFor' . Str::studly($driver);
+        $method = 'routeNotificationFor'.Str::studly($driver);
         if (method_exists($this, $method)) {
             return $this->{$method}($notification); // @phpstan-ignore-line
         }
@@ -534,20 +442,14 @@ class User extends Authenticatable
 
     /**
      * This method refers to the "global" role a user can have, outside of any group they may be part of.
-     *
-     * @param string $role
-     *
-     * @return bool
      */
     public function hasRole(string $role): bool
     {
-        return $this->roles()->where('name', $role)->count() === 1;
+        return 1 === $this->roles()->where('name', $role)->count();
     }
 
     /**
      * Link to roles.
-     *
-     * @return BelongsToMany
      */
     public function roles(): BelongsToMany
     {
@@ -557,9 +459,6 @@ class User extends Authenticatable
     /**
      * Route notifications for the Slack channel.
      *
-     * @param Notification $notification
-     *
-     * @return string
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -587,13 +486,12 @@ class User extends Authenticatable
         if (is_array($pref)) {
             return '';
         }
+
         return (string)$pref;
     }
 
     /**
      * Link to rule groups.
-     *
-     * @return HasMany
      */
     public function ruleGroups(): HasMany
     {
@@ -602,8 +500,6 @@ class User extends Authenticatable
 
     /**
      * Link to rules.
-     *
-     * @return HasMany
      */
     public function rules(): HasMany
     {
@@ -619,7 +515,7 @@ class User extends Authenticatable
      */
     public function sendPasswordResetNotification($token): void
     {
-        $ipAddress = Request::ip();
+        $ipAddress = \Request::ip();
 
         event(new RequestedNewPassword($this, $token, $ipAddress));
     }
@@ -629,9 +525,7 @@ class User extends Authenticatable
      *
      * @param string $domain
      *
-     * @return void
      * @deprecated
-     *
      */
     public function setLdapDomain($domain)
     {
@@ -643,7 +537,6 @@ class User extends Authenticatable
      *
      * @param string $guid
      *
-     * @return void
      * @deprecated
      */
     public function setLdapGuid($guid)
@@ -653,8 +546,6 @@ class User extends Authenticatable
 
     /**
      * Link to tags.
-     *
-     * @return HasMany
      */
     public function tags(): HasMany
     {
@@ -663,8 +554,6 @@ class User extends Authenticatable
 
     /**
      * Link to transaction groups.
-     *
-     * @return HasMany
      */
     public function transactionGroups(): HasMany
     {
@@ -673,8 +562,6 @@ class User extends Authenticatable
 
     /**
      * Link to transaction journals.
-     *
-     * @return HasMany
      */
     public function transactionJournals(): HasMany
     {
@@ -683,30 +570,83 @@ class User extends Authenticatable
 
     /**
      * Link to transactions.
-     *
-     * @return HasManyThrough
      */
     public function transactions(): HasManyThrough
     {
         return $this->hasManyThrough(Transaction::class, TransactionJournal::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function userGroup(): BelongsTo
     {
-        return $this->belongsTo(UserGroup::class, );
+        return $this->belongsTo(UserGroup::class);
     }
 
     /**
-     *
      * Link to webhooks
-     *
-     * @return HasMany
      */
     public function webhooks(): HasMany
     {
         return $this->hasMany(Webhook::class);
+    }
+
+    /**
+     * Does the user have role X, Y or Z in group A?
+     */
+    private function hasAnyRoleInGroup(UserGroup $userGroup, array $roles): bool
+    {
+        app('log')->debug(sprintf('in hasAnyRoleInGroup(%s)', implode(', ', $roles)));
+
+        /** @var Collection $dbRoles */
+        $dbRoles = UserRole::whereIn('title', $roles)->get();
+        if (0 === $dbRoles->count()) {
+            app('log')->error(sprintf('Could not find role(s): %s. Probably migration mishap.', implode(', ', $roles)));
+
+            return false;
+        }
+        $dbRolesIds    = $dbRoles->pluck('id')->toArray();
+        $dbRolesTitles = $dbRoles->pluck('title')->toArray();
+
+        /** @var Collection $groupMemberships */
+        $groupMemberships = $this->groupMemberships()
+            ->whereIn('user_role_id', $dbRolesIds)
+            ->where('user_group_id', $userGroup->id)->get()
+        ;
+        if (0 === $groupMemberships->count()) {
+            app('log')->error(sprintf(
+                'User #%d "%s" does not have roles %s in user group #%d "%s"',
+                $this->id,
+                $this->email,
+                implode(', ', $roles),
+                $userGroup->id,
+                $userGroup->title
+            ));
+
+            return false;
+        }
+        foreach ($groupMemberships as $membership) {
+            app('log')->debug(sprintf(
+                'User #%d "%s" has role "%s" in user group #%d "%s"',
+                $this->id,
+                $this->email,
+                $membership->userRole->title,
+                $userGroup->id,
+                $userGroup->title
+            ));
+            if (in_array($membership->userRole->title, $dbRolesTitles, true)) {
+                app('log')->debug(sprintf('Return true, found role "%s"', $membership->userRole->title));
+
+                return true;
+            }
+        }
+        app('log')->error(sprintf(
+            'User #%d "%s" does not have roles %s in user group #%d "%s"',
+            $this->id,
+            $this->email,
+            implode(', ', $roles),
+            $userGroup->id,
+            $userGroup->title
+        ));
+
+        return false;
     }
 }

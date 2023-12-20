@@ -42,8 +42,6 @@ class UpdateController extends Controller
 
     /**
      * UpdateController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -66,11 +64,6 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/attachments/updateAttachment
      *
      * Update the specified resource in storage.
-     *
-     * @param UpdateRequest $request
-     * @param Attachment    $attachment
-     *
-     * @return JsonResponse
      */
     public function update(UpdateRequest $request, Attachment $attachment): JsonResponse
     {

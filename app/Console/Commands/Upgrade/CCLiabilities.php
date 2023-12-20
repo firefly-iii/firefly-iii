@@ -46,7 +46,6 @@ class CCLiabilities extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws ContainerExceptionInterface
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
@@ -59,7 +58,6 @@ class CCLiabilities extends Command
             return 0;
         }
 
-
         $ccType   = AccountType::where('type', AccountType::CREDITCARD)->first();
         $debtType = AccountType::where('type', AccountType::DEBT)->first();
         if (null === $ccType || null === $debtType) {
@@ -68,6 +66,7 @@ class CCLiabilities extends Command
 
             return 0;
         }
+
         /** @var Collection $accounts */
         $accounts = Account::where('account_type_id', $ccType->id)->get();
         foreach ($accounts as $account) {
@@ -89,19 +88,16 @@ class CCLiabilities extends Command
     }
 
     /**
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+
         return (bool)$configVar?->data;
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

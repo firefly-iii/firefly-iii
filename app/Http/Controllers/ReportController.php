@@ -44,7 +44,6 @@ use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ReportController.
- *
  */
 class ReportController extends Controller
 {
@@ -76,11 +75,7 @@ class ReportController extends Controller
     /**
      * Show audit report.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Factory|View|string
+     * @return Factory|string|View
      *
      * @throws FireflyException
      */
@@ -111,12 +106,7 @@ class ReportController extends Controller
     /**
      * Show budget report.
      *
-     * @param Collection $accounts
-     * @param Collection $budgets
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Factory|View|string
+     * @return Factory|string|View
      *
      * @throws FireflyException
      */
@@ -148,12 +138,7 @@ class ReportController extends Controller
     /**
      * Show category report.
      *
-     * @param Collection $accounts
-     * @param Collection $categories
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Factory|View|string
+     * @return Factory|string|View
      *
      * @throws FireflyException
      */
@@ -185,11 +170,7 @@ class ReportController extends Controller
     /**
      * Show default report.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Factory|View|string
+     * @return Factory|string|View
      *
      * @throws FireflyException
      */
@@ -221,12 +202,8 @@ class ReportController extends Controller
     /**
      * Show account report.
      *
-     * @param Collection $accounts
-     * @param Collection $expense
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
      * @return string
+     *
      * @throws FireflyException
      */
     public function doubleReport(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
@@ -258,9 +235,8 @@ class ReportController extends Controller
     /**
      * Show index.
      *
-     * @param AccountRepositoryInterface $repository
-     *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -276,6 +252,7 @@ class ReportController extends Controller
 
         // group accounts by role:
         $groupedAccounts = [];
+
         /** @var Account $account */
         foreach ($accounts as $account) {
             $type = $account->accountType->type;
@@ -301,9 +278,8 @@ class ReportController extends Controller
     /**
      * Show options for reports.
      *
-     * @param string $reportType
-     *
      * @return JsonResponse
+     *
      * @throws FireflyException
      */
     public function options(string $reportType)
@@ -322,14 +298,9 @@ class ReportController extends Controller
     /**
      * Process the submit of report.
      *
-     * @param ReportFormRequest $request
-     *
-     * @return RedirectResponse|Redirector|View
-     *
      * @throws FireflyException
-     *
      */
-    public function postIndex(ReportFormRequest $request): RedirectResponse | Redirector | View
+    public function postIndex(ReportFormRequest $request): Redirector|RedirectResponse|View
     {
         // report type:
         $reportType = $request->get('report_type');
@@ -391,12 +362,8 @@ class ReportController extends Controller
     /**
      * Get a tag report.
      *
-     * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @return Factory|string|View
      *
-     * @return Factory|View|string
      * @throws FireflyException
      */
     public function tagReport(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)

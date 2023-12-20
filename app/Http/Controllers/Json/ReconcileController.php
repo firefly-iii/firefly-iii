@@ -34,11 +34,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use JsonException;
-use Throwable;
 
 /**
- *
  * Class ReconcileController
  */
 class ReconcileController extends Controller
@@ -47,8 +44,6 @@ class ReconcileController extends Controller
 
     /**
      * ReconcileController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -69,14 +64,8 @@ class ReconcileController extends Controller
     /**
      * Overview of reconciliation.
      *
-     * @param Request      $request
-     * @param Account|null $account
-     * @param Carbon|null  $start
-     * @param Carbon|null  $end
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function overview(Request $request, Account $account = null, Carbon $start = null, Carbon $end = null): JsonResponse
     {
@@ -99,7 +88,7 @@ class ReconcileController extends Controller
         $clearedJournals = [];
         $clearedIds      = $request->get('cleared') ?? [];
         $journals        = [];
-        /* Collect all submitted journals */
+        // Collect all submitted journals
         if (count($selectedIds) > 0) {
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
@@ -107,7 +96,7 @@ class ReconcileController extends Controller
             $journals = $collector->getExtractedJournals();
         }
 
-        /* Collect all journals already reconciled */
+        // Collect all journals already reconciled
         if (count($clearedIds) > 0) {
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
@@ -116,6 +105,7 @@ class ReconcileController extends Controller
         }
 
         app('log')->debug('Start transaction loop');
+
         /** @var array $journal */
         foreach ($journals as $journal) {
             $amount = $this->processJournal($account, $accountCurrency, $journal, $amount);
@@ -154,10 +144,11 @@ class ReconcileController extends Controller
                     'selectedIds'
                 )
             )->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('View error: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $view = sprintf('Could not render accounts.reconcile.overview: %s', $e->getMessage());
+
             throw new FireflyException($view, 0, $e);
         }
 
@@ -170,55 +161,12 @@ class ReconcileController extends Controller
     }
 
     /**
-     * @param Account             $account
-     * @param TransactionCurrency $currency
-     * @param array               $journal
-     * @param string              $amount
-     *
-     * @return string
-     */
-    private function processJournal(Account $account, TransactionCurrency $currency, array $journal, string $amount): string
-    {
-        $toAdd = '0';
-        app('log')->debug(sprintf('User submitted %s #%d: "%s"', $journal['transaction_type_type'], $journal['transaction_journal_id'], $journal['description']));
-
-        // not much magic below we need to cover using tests.
-
-        if ($account->id === $journal['source_account_id']) {
-            if ($currency->id === $journal['currency_id']) {
-                $toAdd = $journal['amount'];
-            }
-            if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
-                $toAdd = $journal['foreign_amount'];
-            }
-        }
-        if ($account->id === $journal['destination_account_id']) {
-            if ($currency->id === $journal['currency_id']) {
-                $toAdd = bcmul($journal['amount'], '-1');
-            }
-            if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
-                $toAdd = bcmul($journal['foreign_amount'], '-1');
-            }
-        }
-
-
-        app('log')->debug(sprintf('Going to add %s to %s', $toAdd, $amount));
-        $amount = bcadd($amount, $toAdd);
-        app('log')->debug(sprintf('Result is %s', $amount));
-
-        return $amount;
-    }
-
-    /**
      * Returns a list of transactions in a modal.
      *
-     * @param Account     $account
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
      * @return JsonResponse
+     *
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function transactions(Account $account, Carbon $start = null, Carbon $end = null)
     {
@@ -246,8 +194,9 @@ class ReconcileController extends Controller
         $collector = app(GroupCollectorInterface::class);
 
         $collector->setAccounts(new Collection([$account]))
-                  ->setRange($selectionStart, $selectionEnd)
-                  ->withBudgetInformation()->withCategoryInformation()->withAccountInformation();
+            ->setRange($selectionStart, $selectionEnd)
+            ->withBudgetInformation()->withCategoryInformation()->withAccountInformation()
+        ;
         $array    = $collector->getExtractedJournals();
         $journals = $this->processTransactions($account, $array);
 
@@ -256,27 +205,55 @@ class ReconcileController extends Controller
                 'accounts.reconcile.transactions',
                 compact('account', 'journals', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
             )->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->debug(sprintf('Could not render: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $html = sprintf('Could not render accounts.reconcile.transactions: %s', $e->getMessage());
+
             throw new FireflyException($html, 0, $e);
         }
 
         return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
     }
 
+    private function processJournal(Account $account, TransactionCurrency $currency, array $journal, string $amount): string
+    {
+        $toAdd = '0';
+        app('log')->debug(sprintf('User submitted %s #%d: "%s"', $journal['transaction_type_type'], $journal['transaction_journal_id'], $journal['description']));
+
+        // not much magic below we need to cover using tests.
+
+        if ($account->id === $journal['source_account_id']) {
+            if ($currency->id === $journal['currency_id']) {
+                $toAdd = $journal['amount'];
+            }
+            if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
+                $toAdd = $journal['foreign_amount'];
+            }
+        }
+        if ($account->id === $journal['destination_account_id']) {
+            if ($currency->id === $journal['currency_id']) {
+                $toAdd = bcmul($journal['amount'], '-1');
+            }
+            if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
+                $toAdd = bcmul($journal['foreign_amount'], '-1');
+            }
+        }
+
+        app('log')->debug(sprintf('Going to add %s to %s', $toAdd, $amount));
+        $amount = bcadd($amount, $toAdd);
+        app('log')->debug(sprintf('Result is %s', $amount));
+
+        return $amount;
+    }
+
     /**
      * "fix" amounts to make it easier on the reconciliation overview:
-     *
-     * @param Account $account
-     * @param array   $array
-     *
-     * @return array
      */
     private function processTransactions(Account $account, array $array): array
     {
         $journals = [];
+
         /** @var array $journal */
         foreach ($array as $journal) {
             $inverse = false;
@@ -301,7 +278,6 @@ class ReconcileController extends Controller
                     $journal['foreign_amount'] = app('steam')->positive($journal['foreign_amount']);
                 }
             }
-
 
             $journals[] = $journal;
         }

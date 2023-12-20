@@ -50,7 +50,6 @@ class UpgradeLiabilities extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -64,11 +63,11 @@ class UpgradeLiabilities extends Command
         $this->upgradeLiabilities();
 
         $this->markAsExecuted();
+
         return 0;
     }
 
     /**
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -82,27 +81,24 @@ class UpgradeLiabilities extends Command
         return false;
     }
 
-    /**
-     *
-     */
     private function upgradeLiabilities(): void
     {
         $users = User::get();
+
         /** @var User $user */
         foreach ($users as $user) {
             $this->upgradeForUser($user);
         }
     }
 
-    /**
-     * @param User $user
-     */
     private function upgradeForUser(User $user): void
     {
         $accounts = $user->accounts()
-                         ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                         ->whereIn('account_types.type', config('firefly.valid_liabilities'))
-                         ->get(['accounts.*']);
+            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->whereIn('account_types.type', config('firefly.valid_liabilities'))
+            ->get(['accounts.*'])
+        ;
+
         /** @var Account $account */
         foreach ($accounts as $account) {
             $this->upgradeLiability($account);
@@ -112,9 +108,6 @@ class UpgradeLiabilities extends Command
         }
     }
 
-    /**
-     * @param Account $account
-     */
     private function upgradeLiability(Account $account): void
     {
         /** @var AccountRepositoryInterface $repository */
@@ -137,10 +130,6 @@ class UpgradeLiabilities extends Command
         }
     }
 
-    /**
-     * @param Account            $account
-     * @param TransactionJournal $openingBalance
-     */
     private function correctOpeningBalance(Account $account, TransactionJournal $openingBalance): void
     {
         $source      = $this->getSourceTransaction($openingBalance);
@@ -159,29 +148,16 @@ class UpgradeLiabilities extends Command
         }
     }
 
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Transaction|null
-     */
     private function getSourceTransaction(TransactionJournal $journal): ?Transaction
     {
         return $journal->transactions()->where('amount', '<', 0)->first();
     }
 
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Transaction|null
-     */
     private function getDestinationTransaction(TransactionJournal $journal): ?Transaction
     {
         return $journal->transactions()->where('amount', '>', 0)->first();
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

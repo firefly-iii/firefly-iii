@@ -46,7 +46,6 @@ class RenameAccountMeta extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws ContainerExceptionInterface
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
@@ -91,7 +90,6 @@ class RenameAccountMeta extends Command
     }
 
     /**
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -105,9 +103,6 @@ class RenameAccountMeta extends Command
         return false;
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

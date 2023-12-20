@@ -33,7 +33,6 @@ use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use JsonException;
 
 /**
  * Class BillUpdateService
@@ -46,12 +45,8 @@ class BillUpdateService
     protected User $user;
 
     /**
-     * @param Bill  $bill
-     * @param array $data
-     *
-     * @return Bill
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function update(Bill $bill, array $data): Bill
     {
@@ -135,12 +130,6 @@ class BillUpdateService
         return $bill;
     }
 
-    /**
-     * @param Bill  $bill
-     * @param array $data
-     *
-     * @return Bill
-     */
     private function updateBillProperties(Bill $bill, array $data): Bill
     {
         if (array_key_exists('name', $data) && '' !== (string)$data['name']) {
@@ -179,37 +168,30 @@ class BillUpdateService
         return $bill;
     }
 
-    /**
-     * @param Bill $bill
-     * @param int  $oldOrder
-     * @param int  $newOrder
-     */
     private function updateOrder(Bill $bill, int $oldOrder, int $newOrder): void
     {
         if ($newOrder > $oldOrder) {
             $this->user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
-                       ->where('bills.id', '!=', $bill->id)
-                       ->decrement('bills.order');
+                ->where('bills.id', '!=', $bill->id)
+                ->decrement('bills.order')
+            ;
             $bill->order = $newOrder;
             $bill->save();
         }
         if ($newOrder < $oldOrder) {
             $this->user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
-                       ->where('bills.id', '!=', $bill->id)
-                       ->increment('bills.order');
+                ->where('bills.id', '!=', $bill->id)
+                ->increment('bills.order')
+            ;
             $bill->order = $newOrder;
             $bill->save();
         }
     }
 
-    /**
-     * @param Bill  $bill
-     * @param array $oldData
-     * @param array $newData
-     */
     private function updateBillTriggers(Bill $bill, array $oldData, array $newData): void
     {
         app('log')->debug(sprintf('Now in updateBillTriggers(%d, "%s")', $bill->id, $bill->name));
+
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($bill->user);
@@ -232,18 +214,13 @@ class BillUpdateService
             }
             if ($oldData[$field] === $newData[$field]) {
                 app('log')->debug(sprintf('Field %s is unchanged ("%s"), continue.', $field, $oldData[$field]));
+
                 continue;
             }
             $this->updateRules($rules, $ruleTriggerKey, $oldData[$field], $newData[$field]);
         }
     }
 
-    /**
-     * @param Collection $rules
-     * @param string     $key
-     * @param string     $oldValue
-     * @param string     $newValue
-     */
     private function updateRules(Collection $rules, string $key, string $oldValue, string $newValue): void
     {
         /** @var Rule $rule */
@@ -253,6 +230,7 @@ class BillUpdateService
                 app('log')->debug(sprintf('Updated rule trigger #%d from value "%s" to value "%s"', $trigger->id, $oldValue, $newValue));
                 $trigger->trigger_value = $newValue;
                 $trigger->save();
+
                 continue;
             }
             if (null !== $trigger && $trigger->trigger_value !== $oldValue && in_array($key, ['amount_more', 'amount_less'], true)
@@ -264,12 +242,6 @@ class BillUpdateService
         }
     }
 
-    /**
-     * @param Rule   $rule
-     * @param string $key
-     *
-     * @return RuleTrigger|null
-     */
     private function getRuleTrigger(Rule $rule, string $key): ?RuleTrigger
     {
         return $rule->ruleTriggers()->where('trigger_type', $key)->first();

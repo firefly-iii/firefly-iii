@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\TransactionGroup;
 
 use Carbon\Carbon;
-use DB;
-use Exception;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionGroupFactory;
@@ -48,7 +46,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use JsonException;
 
 /**
  * Class TransactionGroupRepository
@@ -57,9 +54,6 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
 {
     private User $user;
 
-    /**
-     * @inheritDoc
-     */
     public function countAttachments(int $journalId): int
     {
         /** @var TransactionJournal $journal */
@@ -70,19 +64,12 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
 
     /**
      * Find a transaction group by its ID.
-     *
-     * @param int $groupId
-     *
-     * @return TransactionGroup|null
      */
     public function find(int $groupId): ?TransactionGroup
     {
         return $this->user->transactionGroups()->find($groupId);
     }
 
-    /**
-     * @param TransactionGroup $group
-     */
     public function destroy(TransactionGroup $group): void
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
@@ -90,13 +77,11 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $service->destroy($group);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function expandGroup(TransactionGroup $group): array
     {
         $result                         = $group->toArray();
         $result['transaction_journals'] = [];
+
         /** @var TransactionJournal $journal */
         foreach ($group->transactionJournals as $journal) {
             $result['transaction_journals'][] = $this->expandJournal($journal);
@@ -106,61 +91,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @return array
-     */
-    private function expandJournal(TransactionJournal $journal): array
-    {
-        $array                      = $journal->toArray();
-        $array['transactions']      = [];
-        $array['meta']              = $journal->transactionJournalMeta->toArray();
-        $array['tags']              = $journal->tags->toArray();
-        $array['categories']        = $journal->categories->toArray();
-        $array['budgets']           = $journal->budgets->toArray();
-        $array['notes']             = $journal->notes->toArray();
-        $array['locations']         = [];
-        $array['attachments']       = $journal->attachments->toArray();
-        $array['links']             = [];
-        $array['piggy_bank_events'] = $journal->piggyBankEvents->toArray();
-
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            $array['transactions'][] = $this->expandTransaction($transaction);
-        }
-
-        return $array;
-    }
-
-    /**
-     * @param Transaction $transaction
-     *
-     * @return array
-     */
-    private function expandTransaction(Transaction $transaction): array
-    {
-        $array               = $transaction->toArray();
-        $array['account']    = $transaction->account->toArray();
-        $array['budgets']    = [];
-        $array['categories'] = [];
-
-        foreach ($transaction->categories as $category) {
-            $array['categories'][] = $category->toArray();
-        }
-
-        foreach ($transaction->budgets as $budget) {
-            $array['budgets'][] = $budget->toArray();
-        }
-
-        return $array;
-    }
-
-    /**
      * Return all attachments for all journals in the group.
-     *
-     * @param TransactionGroup $group
-     *
-     * @return array
      */
     public function getAttachments(TransactionGroup $group): array
     {
@@ -168,11 +99,13 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $repository->setUser($this->user);
         $journals = $group->transactionJournals->pluck('id')->toArray();
         $set      = Attachment::whereIn('attachable_id', $journals)
-                              ->where('attachable_type', TransactionJournal::class)
-                              ->where('uploaded', true)
-                              ->whereNull('deleted_at')->get();
+            ->where('attachable_type', TransactionJournal::class)
+            ->where('uploaded', true)
+            ->whereNull('deleted_at')->get()
+        ;
 
         $result = [];
+
         /** @var Attachment $attachment */
         foreach ($set as $attachment) {
             $journalId              = $attachment->attachable_id;
@@ -188,10 +121,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         return $result;
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof user) {
             $this->user = $user;
@@ -200,17 +130,14 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
 
     /**
      * Get the note text for a journal (by ID).
-     *
-     * @param int $journalId
-     *
-     * @return string|null
      */
     public function getNoteText(int $journalId): ?string
     {
-        /** @var Note|null $note */
+        /** @var null|Note $note */
         $note = Note::where('noteable_id', $journalId)
-                    ->where('noteable_type', TransactionJournal::class)
-                    ->first();
+            ->where('noteable_type', TransactionJournal::class)
+            ->first()
+        ;
         if (null === $note) {
             return null;
         }
@@ -220,10 +147,6 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
 
     /**
      * Return all journal links for all journals in the group.
-     *
-     * @param TransactionGroup $group
-     *
-     * @return array
      */
     public function getLinks(TransactionGroup $group): array
     {
@@ -235,9 +158,11 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                 $q->orWhereIn('destination_id', $journals);
             }
         )
-                                          ->with(['source', 'destination', 'source.transactions'])
-                                          ->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')
-                                          ->get(['journal_links.*', 'link_types.inward', 'link_types.outward', 'link_types.editable']);
+            ->with(['source', 'destination', 'source.transactions'])
+            ->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')
+            ->get(['journal_links.*', 'link_types.inward', 'link_types.outward', 'link_types.editable'])
+        ;
+
         /** @var TransactionJournalLink $entry */
         foreach ($set as $entry) {
             $journalId          = in_array($entry->source_id, $journals, true) ? $entry->source_id : $entry->destination_id;
@@ -276,11 +201,199 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         return $return;
     }
 
+    public function getLocation(int $journalId): ?Location
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $this->user->transactionJournals()->find($journalId);
+
+        return $journal->locations()->first();
+    }
+
     /**
-     * @param TransactionJournal $journal
+     * Return object with all found meta field things as Carbon objects.
      *
-     * @return string
+     * @throws \Exception
      */
+    public function getMetaDateFields(int $journalId, array $fields): NullArrayObject
+    {
+        $query  = \DB::table('journal_meta')
+            ->where('transaction_journal_id', $journalId)
+            ->whereIn('name', $fields)
+            ->whereNull('deleted_at')
+            ->get(['name', 'data'])
+        ;
+        $return = [];
+
+        foreach ($query as $row) {
+            $return[$row->name] = new Carbon(json_decode($row->data, true, 512, JSON_THROW_ON_ERROR));
+        }
+
+        return new NullArrayObject($return);
+    }
+
+    /**
+     * Return object with all found meta field things.
+     */
+    public function getMetaFields(int $journalId, array $fields): NullArrayObject
+    {
+        $query  = \DB::table('journal_meta')
+            ->where('transaction_journal_id', $journalId)
+            ->whereIn('name', $fields)
+            ->whereNull('deleted_at')
+            ->get(['name', 'data'])
+        ;
+        $return = [];
+
+        foreach ($query as $row) {
+            $return[$row->name] = json_decode($row->data);
+        }
+
+        return new NullArrayObject($return);
+    }
+
+    /**
+     * Return all piggy bank events for all journals in the group.
+     *
+     * @throws FireflyException
+     * @throws \JsonException
+     */
+    public function getPiggyEvents(TransactionGroup $group): array
+    {
+        $return   = [];
+        $journals = $group->transactionJournals->pluck('id')->toArray();
+        $currency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
+        $data     = PiggyBankEvent::whereIn('transaction_journal_id', $journals)
+            ->with('piggyBank', 'piggyBank.account')
+            ->get(['piggy_bank_events.*'])
+        ;
+
+        /** @var PiggyBankEvent $row */
+        foreach ($data as $row) {
+            if (null === $row->piggyBank) {
+                continue;
+            }
+            // get currency preference.
+            $currencyPreference = AccountMeta::where('account_id', $row->piggyBank->account_id)
+                ->where('name', 'currency_id')
+                ->first()
+            ;
+            if (null !== $currencyPreference) {
+                $currency = TransactionCurrency::where('id', $currencyPreference->data)->first();
+            }
+            $journalId          = $row->transaction_journal_id;
+            $return[$journalId] ??= [];
+
+            $return[$journalId][] = [
+                'piggy'    => $row->piggyBank->name,
+                'piggy_id' => $row->piggy_bank_id,
+                'amount'   => app('amount')->formatAnything($currency, $row->amount),
+            ];
+        }
+
+        return $return;
+    }
+
+    public function getTagObjects(int $journalId): Collection
+    {
+        /** @var TransactionJournal $journal */
+        $journal = $this->user->transactionJournals()->find($journalId);
+
+        return $journal->tags()->get();
+    }
+
+    /**
+     * Get the tags for a journal (by ID).
+     */
+    public function getTags(int $journalId): array
+    {
+        $result = \DB::table('tag_transaction_journal')
+            ->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id')
+            ->where('tag_transaction_journal.transaction_journal_id', $journalId)
+            ->orderBy('tags.tag', 'ASC')
+            ->get(['tags.tag'])
+        ;
+
+        return $result->pluck('tag')->toArray();
+    }
+
+    /**
+     * @throws DuplicateTransactionException
+     * @throws FireflyException
+     * @throws \JsonException
+     */
+    public function store(array $data): TransactionGroup
+    {
+        /** @var TransactionGroupFactory $factory */
+        $factory = app(TransactionGroupFactory::class);
+        $factory->setUser($this->user);
+
+        try {
+            return $factory->create($data);
+        } catch (DuplicateTransactionException $e) {
+            app('log')->warning('Group repository caught group factory with a duplicate exception!');
+
+            throw new DuplicateTransactionException($e->getMessage(), 0, $e);
+        } catch (FireflyException $e) {
+            app('log')->warning('Group repository caught group factory with an exception!');
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
+
+            throw new FireflyException($e->getMessage(), 0, $e);
+        }
+    }
+
+    /**
+     * @throws DuplicateTransactionException
+     * @throws FireflyException
+     */
+    public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup
+    {
+        /** @var GroupUpdateService $service */
+        $service = app(GroupUpdateService::class);
+
+        return $service->update($transactionGroup, $data);
+    }
+
+    private function expandJournal(TransactionJournal $journal): array
+    {
+        $array                      = $journal->toArray();
+        $array['transactions']      = [];
+        $array['meta']              = $journal->transactionJournalMeta->toArray();
+        $array['tags']              = $journal->tags->toArray();
+        $array['categories']        = $journal->categories->toArray();
+        $array['budgets']           = $journal->budgets->toArray();
+        $array['notes']             = $journal->notes->toArray();
+        $array['locations']         = [];
+        $array['attachments']       = $journal->attachments->toArray();
+        $array['links']             = [];
+        $array['piggy_bank_events'] = $journal->piggyBankEvents->toArray();
+
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $array['transactions'][] = $this->expandTransaction($transaction);
+        }
+
+        return $array;
+    }
+
+    private function expandTransaction(Transaction $transaction): array
+    {
+        $array               = $transaction->toArray();
+        $array['account']    = $transaction->account->toArray();
+        $array['budgets']    = [];
+        $array['categories'] = [];
+
+        foreach ($transaction->categories as $category) {
+            $array['categories'][] = $category->toArray();
+        }
+
+        foreach ($transaction->budgets as $budget) {
+            $array['budgets'][] = $budget->toArray();
+        }
+
+        return $array;
+    }
+
     private function getFormattedAmount(TransactionJournal $journal): string
     {
         /** @var Transaction $transaction */
@@ -299,11 +412,6 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         return $return;
     }
 
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return string
-     */
     private function getFormattedForeignAmount(TransactionJournal $journal): string
     {
         /** @var Transaction $transaction */
@@ -326,179 +434,5 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         }
 
         return $return;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getLocation(int $journalId): ?Location
-    {
-        /** @var TransactionJournal $journal */
-        $journal = $this->user->transactionJournals()->find($journalId);
-
-        return $journal->locations()->first();
-    }
-
-    /**
-     * Return object with all found meta field things as Carbon objects.
-     *
-     * @param int   $journalId
-     * @param array $fields
-     *
-     * @return NullArrayObject
-     * @throws Exception
-     */
-    public function getMetaDateFields(int $journalId, array $fields): NullArrayObject
-    {
-        $query  = DB::table('journal_meta')
-                    ->where('transaction_journal_id', $journalId)
-                    ->whereIn('name', $fields)
-                    ->whereNull('deleted_at')
-                    ->get(['name', 'data']);
-        $return = [];
-
-        foreach ($query as $row) {
-            $return[$row->name] = new Carbon(json_decode($row->data, true, 512, JSON_THROW_ON_ERROR));
-        }
-
-        return new NullArrayObject($return);
-    }
-
-    /**
-     * Return object with all found meta field things.
-     *
-     * @param int   $journalId
-     * @param array $fields
-     *
-     * @return NullArrayObject
-     */
-    public function getMetaFields(int $journalId, array $fields): NullArrayObject
-    {
-        $query  = DB::table('journal_meta')
-                    ->where('transaction_journal_id', $journalId)
-                    ->whereIn('name', $fields)
-                    ->whereNull('deleted_at')
-                    ->get(['name', 'data']);
-        $return = [];
-
-        foreach ($query as $row) {
-            $return[$row->name] = json_decode($row->data);
-        }
-
-        return new NullArrayObject($return);
-    }
-
-    /**
-     * Return all piggy bank events for all journals in the group.
-     *
-     * @param TransactionGroup $group
-     *
-     * @return array
-     * @throws FireflyException
-     * @throws JsonException
-     */
-    public function getPiggyEvents(TransactionGroup $group): array
-    {
-        $return   = [];
-        $journals = $group->transactionJournals->pluck('id')->toArray();
-        $currency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
-        $data     = PiggyBankEvent::whereIn('transaction_journal_id', $journals)
-                                  ->with('piggyBank', 'piggyBank.account')
-                                  ->get(['piggy_bank_events.*']);
-        /** @var PiggyBankEvent $row */
-        foreach ($data as $row) {
-            if (null === $row->piggyBank) {
-                continue;
-            }
-            // get currency preference.
-            $currencyPreference = AccountMeta::where('account_id', $row->piggyBank->account_id)
-                                             ->where('name', 'currency_id')
-                                             ->first();
-            if (null !== $currencyPreference) {
-                $currency = TransactionCurrency::where('id', $currencyPreference->data)->first();
-            }
-            $journalId          = $row->transaction_journal_id;
-            $return[$journalId] ??= [];
-
-            $return[$journalId][] = [
-                'piggy'    => $row->piggyBank->name,
-                'piggy_id' => $row->piggy_bank_id,
-                'amount'   => app('amount')->formatAnything($currency, $row->amount),
-            ];
-        }
-
-        return $return;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getTagObjects(int $journalId): Collection
-    {
-        /** @var TransactionJournal $journal */
-        $journal = $this->user->transactionJournals()->find($journalId);
-
-        return $journal->tags()->get();
-    }
-
-    /**
-     * Get the tags for a journal (by ID).
-     *
-     * @param int $journalId
-     *
-     * @return array
-     */
-    public function getTags(int $journalId): array
-    {
-        $result = DB::table('tag_transaction_journal')
-                    ->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id')
-                    ->where('tag_transaction_journal.transaction_journal_id', $journalId)
-                    ->orderBy('tags.tag', 'ASC')
-                    ->get(['tags.tag']);
-
-        return $result->pluck('tag')->toArray();
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return TransactionGroup
-     * @throws DuplicateTransactionException
-     * @throws FireflyException
-     * @throws JsonException
-     */
-    public function store(array $data): TransactionGroup
-    {
-        /** @var TransactionGroupFactory $factory */
-        $factory = app(TransactionGroupFactory::class);
-        $factory->setUser($this->user);
-        try {
-            return $factory->create($data);
-        } catch (DuplicateTransactionException $e) {
-            app('log')->warning('Group repository caught group factory with a duplicate exception!');
-            throw new DuplicateTransactionException($e->getMessage(), 0, $e);
-        } catch (FireflyException $e) {
-            app('log')->warning('Group repository caught group factory with an exception!');
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
-            throw new FireflyException($e->getMessage(), 0, $e);
-        }
-    }
-
-    /**
-     * @param TransactionGroup $transactionGroup
-     * @param array            $data
-     *
-     * @return TransactionGroup
-     *
-     * @throws DuplicateTransactionException
-     * @throws FireflyException
-     */
-    public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup
-    {
-        /** @var GroupUpdateService $service */
-        $service = app(GroupUpdateService::class);
-
-        return $service->update($transactionGroup, $data);
     }
 }

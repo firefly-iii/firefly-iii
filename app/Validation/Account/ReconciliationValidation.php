@@ -34,11 +34,6 @@ trait ReconciliationValidation
     public ?Account $destination;
     public ?Account $source;
 
-    /**
-     * @param array $array
-     *
-     * @return bool
-     */
     protected function validateReconciliationDestination(array $array): bool
     {
         $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
@@ -71,10 +66,6 @@ trait ReconciliationValidation
 
     /**
      * Basically the same check
-     *
-     * @param array $array
-     *
-     * @return bool
      */
     protected function validateReconciliationSource(array $array): bool
     {
@@ -86,6 +77,7 @@ trait ReconciliationValidation
         if (null === $accountId && null === $accountName) {
             app('log')->debug('The source is valid because ID and name are NULL.');
             $this->setSource(new Account());
+
             return true;
         }
 

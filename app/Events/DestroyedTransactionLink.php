@@ -37,8 +37,6 @@ class DestroyedTransactionLink extends Event
 
     /**
      * DestroyedTransactionLink constructor.
-     *
-     * @param TransactionJournalLink $link
      */
     public function __construct(TransactionJournalLink $link)
     {

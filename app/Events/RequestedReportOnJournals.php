@@ -32,8 +32,6 @@ use Illuminate\Support\Collection;
 
 /**
  * Class RequestedReportOnJournals
- *
-
  */
 class RequestedReportOnJournals
 {
@@ -46,9 +44,6 @@ class RequestedReportOnJournals
 
     /**
      * Create a new event instance.
-     *
-     * @param int        $userId
-     * @param Collection $groups
      */
     public function __construct(int $userId, Collection $groups)
     {

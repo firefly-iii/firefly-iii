@@ -33,7 +33,6 @@ use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use JsonException;
 use League\Fractal\Resource\Item;
 
 /**
@@ -48,8 +47,6 @@ class StoreController extends Controller
 
     /**
      * CurrencyRepository constructor.
-     *
-
      */
     public function __construct()
     {
@@ -70,11 +67,8 @@ class StoreController extends Controller
      *
      * Store new currency.
      *
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function store(StoreRequest $request): JsonResponse
     {

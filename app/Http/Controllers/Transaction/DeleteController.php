@@ -45,8 +45,6 @@ class DeleteController extends Controller
 
     /**
      * IndexController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -68,9 +66,7 @@ class DeleteController extends Controller
     /**
      * Shows the form that allows a user to delete a transaction journal.
      *
-     * @param TransactionGroup $group
-     *
-     * @return Factory|View|Redirector|RedirectResponse
+     * @return Factory|Redirector|RedirectResponse|View
      */
     public function delete(TransactionGroup $group)
     {
@@ -85,7 +81,7 @@ class DeleteController extends Controller
             throw new NotFoundHttpException();
         }
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle   = (string)trans('firefly.delete_' . $objectType, ['description' => $group->title ?? $journal->description]);
+        $subTitle   = (string)trans('firefly.delete_'.$objectType, ['description' => $group->title ?? $journal->description]);
         $previous   = app('steam')->getSafePreviousUrl();
         // put previous url in session
         app('log')->debug('Will try to remember previous URL');
@@ -96,12 +92,8 @@ class DeleteController extends Controller
 
     /**
      * Actually destroys the journal.
-     *
-     * @param TransactionGroup $group
-     *
-     * @return RedirectResponse|Redirector
      */
-    public function destroy(TransactionGroup $group): RedirectResponse | Redirector
+    public function destroy(TransactionGroup $group): Redirector|RedirectResponse
     {
         app('log')->debug(sprintf('Now in %s(#%d).', __METHOD__, $group->id));
         if (!$this->isEditableGroup($group)) {
@@ -113,10 +105,11 @@ class DeleteController extends Controller
             throw new NotFoundHttpException();
         }
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        session()->flash('success', (string)trans('firefly.deleted_' . strtolower($objectType), ['description' => $group->title ?? $journal->description]));
+        session()->flash('success', (string)trans('firefly.deleted_'.strtolower($objectType), ['description' => $group->title ?? $journal->description]));
 
         // grab asset account(s) from group:
         $accounts = [];
+
         /** @var TransactionJournal $currentJournal */
         foreach ($group->transactionJournals as $currentJournal) {
             /** @var Transaction $transaction */
@@ -137,7 +130,6 @@ class DeleteController extends Controller
             event(new UpdatedAccount($account));
         }
         app('preferences')->mark();
-
 
         return redirect($this->getPreviousUrl('transactions.delete.url'));
     }

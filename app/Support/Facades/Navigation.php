@@ -30,10 +30,10 @@ use Illuminate\Support\Facades\Facade;
  * Class Navigation.
  *
  * @method Carbon addPeriod(Carbon $theDate, string $repeatFreq, int $skip)
- * @method array blockPeriods(Carbon $start, Carbon $end, string $range)
+ * @method array  blockPeriods(Carbon $start, Carbon $end, string $range)
  * @method Carbon endOfPeriod(Carbon $end, string $repeatFreq)
  * @method Carbon endOfX(Carbon $theCurrentEnd, string $repeatFreq, Carbon $maxDate = null)
- * @method array listOfPeriods(Carbon $start, Carbon $end)
+ * @method array  listOfPeriods(Carbon $start, Carbon $end)
  * @method string periodShow(Carbon $theDate, string $repeatFrequency)
  * @method string preferredCarbonFormat(Carbon $start, Carbon $end)
  * @method string preferredCarbonLocalizedFormat(Carbon $start, Carbon $end)
@@ -49,8 +49,6 @@ class Navigation extends Facade
 {
     /**
      * Get the registered name of the component.
-     *
-     * @return string
      */
     protected static function getFacadeAccessor(): string
     {

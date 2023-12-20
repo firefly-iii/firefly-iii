@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
-use DB;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 
@@ -41,8 +40,6 @@ class RenameMetaFields extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -69,18 +66,16 @@ class RenameMetaFields extends Command
         if (0 !== $this->count) {
             $this->friendlyInfo(sprintf('Renamed %d meta field(s).', $this->count));
         }
+
         return 0;
     }
 
-    /**
-     * @param string $original
-     * @param string $update
-     */
     private function rename(string $original, string $update): void
     {
-        $total       = DB::table('journal_meta')
-                         ->where('name', '=', $original)
-                         ->update(['name' => $update]);
+        $total       = \DB::table('journal_meta')
+            ->where('name', '=', $original)
+            ->update(['name' => $update])
+        ;
         $this->count += $total;
     }
 }

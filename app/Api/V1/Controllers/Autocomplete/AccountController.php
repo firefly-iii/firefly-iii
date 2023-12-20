@@ -32,7 +32,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use JsonException;
 
 /**
  * Class AccountController
@@ -61,17 +60,14 @@ class AccountController extends Controller
                 return $next($request);
             }
         );
-        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,];
+        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
     }
 
     /**
      * Documentation for this endpoint:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getAccountsAC
      *
-     * @param AutocompleteRequest $request
-     *
-     * @return JsonResponse
-     * @throws JsonException
+     * @throws \JsonException
      * @throws FireflyException
      * @throws FireflyException
      */

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * UpgradeCurrencyPreferences.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -48,8 +47,6 @@ class UpgradeCurrencyPreferences extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -67,9 +64,6 @@ class UpgradeCurrencyPreferences extends Command
         return 0;
     }
 
-    /**
-     * @return bool
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
@@ -83,27 +77,25 @@ class UpgradeCurrencyPreferences extends Command
     private function runUpgrade(): void
     {
         $groups = UserGroup::get();
+
         /** @var UserGroup $group */
         foreach ($groups as $group) {
             $this->upgradeGroupPreferences($group);
         }
 
         $users = User::get();
+
         /** @var User $user */
         foreach ($users as $user) {
             $this->upgradeUserPreferences($user);
         }
     }
 
-    /**
-     * @param UserGroup $group
-     *
-     * @return void
-     */
     private function upgradeGroupPreferences(UserGroup $group)
     {
         $currencies = TransactionCurrency::get();
         $enabled    = new Collection();
+
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {
             if ($currency->enabled) {
@@ -113,15 +105,11 @@ class UpgradeCurrencyPreferences extends Command
         $group->currencies()->sync($enabled->pluck('id')->toArray());
     }
 
-    /**
-     * @param User $user
-     *
-     * @return void
-     */
     private function upgradeUserPreferences(User $user): void
     {
         $currencies = TransactionCurrency::get();
         $enabled    = new Collection();
+
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {
             if ($currency->enabled) {
@@ -141,11 +129,6 @@ class UpgradeCurrencyPreferences extends Command
         $user->userGroup->currencies()->updateExistingPivot($defaultCurrency->id, ['group_default' => true]);
     }
 
-    /**
-     * @param User $user
-     *
-     * @return string
-     */
     private function getPreference(User $user): string
     {
         $preference = Preference::where('user_id', $user->id)->where('name', 'currencyPreference')->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at']);
@@ -157,12 +140,10 @@ class UpgradeCurrencyPreferences extends Command
         if (null !== $preference->data && !is_array($preference->data)) {
             return (string)$preference->data;
         }
+
         return 'EUR';
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

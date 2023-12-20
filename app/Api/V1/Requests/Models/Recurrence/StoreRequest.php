@@ -48,8 +48,6 @@ class StoreRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -74,68 +72,7 @@ class StoreRequest extends FormRequest
     }
 
     /**
-     * Returns the transaction data as it is found in the submitted data. It's a complex method according to code
-     * standards but it just has a lot of ??-statements because of the fields that may or may not exist.
-     *
-     * @return array
-     */
-    private function getTransactionData(): array
-    {
-        $return = [];
-        // transaction data:
-        /** @var array|null $transactions */
-        $transactions = $this->get('transactions');
-        if (null === $transactions) {
-            return [];
-        }
-        /** @var array $transaction */
-        foreach ($transactions as $transaction) {
-            $return[] = $this->getSingleTransactionData($transaction);
-        }
-
-        return $return;
-    }
-
-    /**
-     * Returns the repetition data as it is found in the submitted data.
-     *
-     * @return array
-     */
-    private function getRepetitionData(): array
-    {
-        $return = [];
-        // repetition data:
-        /** @var array|null $repetitions */
-        $repetitions = $this->get('repetitions');
-        if (null === $repetitions) {
-            return [];
-        }
-        /** @var array $repetition */
-        foreach ($repetitions as $repetition) {
-            $current = [];
-            if (array_key_exists('type', $repetition)) {
-                $current['type'] = $repetition['type'];
-            }
-            if (array_key_exists('moment', $repetition)) {
-                $current['moment'] = $repetition['moment'];
-            }
-            if (array_key_exists('skip', $repetition)) {
-                $current['skip'] = (int)$repetition['skip'];
-            }
-            if (array_key_exists('weekend', $repetition)) {
-                $current['weekend'] = (int)$repetition['weekend'];
-            }
-
-            $return[] = $current;
-        }
-
-        return $return;
-    }
-
-    /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -179,10 +116,6 @@ class StoreRequest extends FormRequest
 
     /**
      * Configure the validator instance.
-     *
-     * @param Validator $validator
-     *
-     * @return void
      */
     public function withValidator(Validator $validator): void
     {
@@ -197,5 +130,64 @@ class StoreRequest extends FormRequest
                 $this->validateAccountInformation($validator);
             }
         );
+    }
+
+    /**
+     * Returns the transaction data as it is found in the submitted data. It's a complex method according to code
+     * standards but it just has a lot of ??-statements because of the fields that may or may not exist.
+     */
+    private function getTransactionData(): array
+    {
+        $return = [];
+
+        // transaction data:
+        /** @var null|array $transactions */
+        $transactions = $this->get('transactions');
+        if (null === $transactions) {
+            return [];
+        }
+
+        /** @var array $transaction */
+        foreach ($transactions as $transaction) {
+            $return[] = $this->getSingleTransactionData($transaction);
+        }
+
+        return $return;
+    }
+
+    /**
+     * Returns the repetition data as it is found in the submitted data.
+     */
+    private function getRepetitionData(): array
+    {
+        $return = [];
+
+        // repetition data:
+        /** @var null|array $repetitions */
+        $repetitions = $this->get('repetitions');
+        if (null === $repetitions) {
+            return [];
+        }
+
+        /** @var array $repetition */
+        foreach ($repetitions as $repetition) {
+            $current = [];
+            if (array_key_exists('type', $repetition)) {
+                $current['type'] = $repetition['type'];
+            }
+            if (array_key_exists('moment', $repetition)) {
+                $current['moment'] = $repetition['moment'];
+            }
+            if (array_key_exists('skip', $repetition)) {
+                $current['skip'] = (int)$repetition['skip'];
+            }
+            if (array_key_exists('weekend', $repetition)) {
+                $current['weekend'] = (int)$repetition['weekend'];
+            }
+
+            $return[] = $current;
+        }
+
+        return $return;
     }
 }

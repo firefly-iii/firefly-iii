@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * UserGroupRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -35,50 +34,17 @@ use Illuminate\Support\Collection;
  */
 interface UserGroupRepositoryInterface
 {
-    /**
-     * @param UserGroup $userGroup
-     *
-     * @return void
-     */
     public function destroy(UserGroup $userGroup): void;
 
-    /**
-     * @return Collection
-     */
     public function get(): Collection;
 
-    /**
-     * @return Collection
-     */
     public function getAll(): Collection;
 
-    /**
-     * @param User|Authenticatable|null $user
-     *
-     * @return void
-     */
-    public function setUser(User | Authenticatable | null $user): void;
+    public function setUser(null|Authenticatable|User $user): void;
 
-    /**
-     * @param array $data
-     *
-     * @return UserGroup
-     */
     public function store(array $data): UserGroup;
 
-    /**
-     * @param UserGroup $userGroup
-     * @param array     $data
-     *
-     * @return UserGroup
-     */
     public function update(UserGroup $userGroup, array $data): UserGroup;
 
-    /**
-     * @param UserGroup $userGroup
-     * @param array     $data
-     *
-     * @return UserGroup
-     */
     public function updateMembership(UserGroup $userGroup, array $data): UserGroup;
 }

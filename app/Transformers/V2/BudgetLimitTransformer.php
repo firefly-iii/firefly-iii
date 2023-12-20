@@ -37,9 +37,6 @@ class BudgetLimitTransformer extends AbstractTransformer
             'budget',
         ];
 
-    /**
-     * @inheritDoc
-     */
     public function collectMetaData(Collection $objects): void
     {
         // TODO: Implement collectMetaData() method.
@@ -47,8 +44,6 @@ class BudgetLimitTransformer extends AbstractTransformer
 
     /**
      * Include Budget
-     *
-     * @param BudgetLimit $limit
      *
      * @return Item
      */
@@ -59,10 +54,6 @@ class BudgetLimitTransformer extends AbstractTransformer
 
     /**
      * Transform the note.
-     *
-     * @param BudgetLimit $budgetLimit
-     *
-     * @return array
      */
     public function transform(BudgetLimit $budgetLimit): array
     {
@@ -102,7 +93,7 @@ class BudgetLimitTransformer extends AbstractTransformer
             'currency_symbol'         => $currencySymbol,
             'amount'                  => $amount,
             'period'                  => $budgetLimit->period,
-            //'spent'                   => $expenses[$currencyId]['sum'] ?? '0',
+            // 'spent'                   => $expenses[$currencyId]['sum'] ?? '0',
             'links'                   => [
                 [
                     'rel' => 'self',

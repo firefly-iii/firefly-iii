@@ -27,7 +27,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Throwable;
 
 /**
  * Class AccountForm
@@ -43,16 +42,10 @@ class AccountForm
 
     /**
      * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
-     *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
-     *
-     * @return string
      */
     public function activeDepositDestinations(string $name, mixed $value = null, array $options = null): string
     {
-        $types                    = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::REVENUE,];
+        $types                    = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::REVENUE];
         $repository               = $this->getAccountRepository();
         $grouped                  = $this->getAccountsGrouped($types, $repository);
         $cash                     = $repository->getCashAccount();
@@ -63,18 +56,85 @@ class AccountForm
     }
 
     /**
-     * @param array                           $types
-     * @param AccountRepositoryInterface|null $repository
-     *
-     * @return array
+     * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
      */
+    public function activeWithdrawalDestinations(string $name, mixed $value = null, array $options = null): string
+    {
+        $types      = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::EXPENSE];
+        $repository = $this->getAccountRepository();
+        $grouped    = $this->getAccountsGrouped($types, $repository);
+
+        $cash                     = $repository->getCashAccount();
+        $key                      = (string)trans('firefly.cash_account_type');
+        $grouped[$key][$cash->id] = sprintf('(%s)', (string)trans('firefly.cash'));
+
+        return $this->select($name, $grouped, $value, $options);
+    }
+
+    /**
+     * Check list of asset accounts.
+     *
+     * @throws FireflyException
+     */
+    public function assetAccountCheckList(string $name, array $options = null): string
+    {
+        $options  ??= [];
+        $label    = $this->label($name, $options);
+        $options  = $this->expandOptionArray($name, $label, $options);
+        $classes  = $this->getHolderClasses($name);
+        $selected = request()->old($name) ?? [];
+
+        // get all asset accounts:
+        $types   = [AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT];
+        $grouped = $this->getAccountsGrouped($types);
+
+        unset($options['class']);
+
+        try {
+            $html = view('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
+        } catch (\Throwable $e) {
+            app('log')->debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
+            $html = 'Could not render assetAccountCheckList.';
+
+            throw new FireflyException($html, 0, $e);
+        }
+
+        return $html;
+    }
+
+    /**
+     * Basic list of asset accounts.
+     *
+     * @param mixed $value
+     */
+    public function assetAccountList(string $name, $value = null, array $options = null): string
+    {
+        $types   = [AccountType::ASSET, AccountType::DEFAULT];
+        $grouped = $this->getAccountsGrouped($types);
+
+        return $this->select($name, $grouped, $value, $options);
+    }
+
+    /**
+     * Same list but all liabilities as well.
+     *
+     * @param mixed $value
+     */
+    public function longAccountList(string $name, $value = null, array $options = null): string
+    {
+        $types   = [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
+        $grouped = $this->getAccountsGrouped($types);
+
+        return $this->select($name, $grouped, $value, $options);
+    }
+
     private function getAccountsGrouped(array $types, AccountRepositoryInterface $repository = null): array
     {
         if (null === $repository) {
             $repository = $this->getAccountRepository();
         }
         $accountList    = $repository->getActiveAccountsByType($types);
-        $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,];
+        $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
         $grouped        = [];
 
         /** @var Account $account */
@@ -97,94 +157,5 @@ class AccountForm
         }
 
         return $grouped;
-    }
-
-    /**
-     * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
-     *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
-     *
-     * @return string
-     */
-    public function activeWithdrawalDestinations(string $name, mixed $value = null, array $options = null): string
-    {
-        $types      = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN, AccountType::EXPENSE,];
-        $repository = $this->getAccountRepository();
-        $grouped    = $this->getAccountsGrouped($types, $repository);
-
-        $cash                     = $repository->getCashAccount();
-        $key                      = (string)trans('firefly.cash_account_type');
-        $grouped[$key][$cash->id] = sprintf('(%s)', (string)trans('firefly.cash'));
-
-        return $this->select($name, $grouped, $value, $options);
-    }
-
-    /**
-     * Check list of asset accounts.
-     *
-     * @param string     $name
-     * @param array|null $options
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public function assetAccountCheckList(string $name, array $options = null): string
-    {
-        $options  ??= [];
-        $label    = $this->label($name, $options);
-        $options  = $this->expandOptionArray($name, $label, $options);
-        $classes  = $this->getHolderClasses($name);
-        $selected = request()->old($name) ?? [];
-
-        // get all asset accounts:
-        $types   = [AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT];
-        $grouped = $this->getAccountsGrouped($types);
-
-        unset($options['class']);
-        try {
-            $html = view('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
-        } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
-            $html = 'Could not render assetAccountCheckList.';
-            throw new FireflyException($html, 0, $e);
-        }
-
-        return $html;
-    }
-
-    /**
-     * Basic list of asset accounts.
-     *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
-     *
-     * @return string
-     */
-    public function assetAccountList(string $name, $value = null, array $options = null): string
-    {
-        $types   = [AccountType::ASSET, AccountType::DEFAULT];
-        $grouped = $this->getAccountsGrouped($types);
-
-        return $this->select($name, $grouped, $value, $options);
-    }
-
-    /**
-     * Same list but all liabilities as well.
-     *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
-     *
-     * @return string
-     */
-    public function longAccountList(string $name, $value = null, array $options = null): string
-    {
-        $types   = [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,];
-        $grouped = $this->getAccountsGrouped($types);
-
-        return $this->select($name, $grouped, $value, $options);
     }
 }

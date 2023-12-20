@@ -32,11 +32,6 @@ use FireflyIII\Models\AccountType;
  */
 trait LiabilityValidation
 {
-    /**
-     * @param array $array
-     *
-     * @return bool
-     */
     protected function validateLCDestination(array $array): bool
     {
         app('log')->debug('Now in validateLCDestination', $array);
@@ -50,30 +45,31 @@ trait LiabilityValidation
         if (null !== $accountId) {
             if (AccountType::LIABILITY_CREDIT !== $this->source?->accountType?->type) {
                 app('log')->error('Source account is not a liability.');
+
                 return false;
             }
             $result = $this->findExistingAccount($validTypes, $array);
             if (null === $result) {
                 app('log')->error('Destination account is not a liability.');
+
                 return false;
             }
+
             return true;
         }
 
         if (null !== $accountName && '' !== $accountName) {
             app('log')->debug('Destination ID is null, now we can assume the destination is a (new) liability credit account.');
+
             return true;
         }
         app('log')->error('Destination ID is null, but destination name is also NULL.');
+
         return false;
     }
 
     /**
      * Source of a liability credit must be a liability or liability credit account.
-     *
-     * @param array $array
-     *
-     * @return bool
      */
     protected function validateLCSource(array $array): bool
     {
@@ -87,10 +83,12 @@ trait LiabilityValidation
             $result = $this->findExistingAccount(config('firefly.valid_liabilities'), $array);
             if (null === $result) {
                 app('log')->error('Did not find a liability account, return false.');
+
                 return false;
             }
             app('log')->debug(sprintf('Return true, found #%d ("%s")', $result->id, $result->name));
             $this->setSource($result);
+
             return true;
         }
 

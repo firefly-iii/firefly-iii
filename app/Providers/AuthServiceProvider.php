@@ -41,9 +41,8 @@ class AuthServiceProvider extends ServiceProvider
 
     /**
      * Register any authentication / authorization services.
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
-     * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function boot(): void
     {

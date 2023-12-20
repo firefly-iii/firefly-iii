@@ -37,21 +37,17 @@ class SetNotes implements ActionInterface
 
     /**
      * TriggerInterface constructor.
-     *
-     * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
     {
         $this->action = $action;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function actOnArray(array $journal): bool
     {
         $dbNote = Note::where('noteable_id', $journal['transaction_journal_id'])
-                      ->where('noteable_type', TransactionJournal::class)->first();
+            ->where('noteable_type', TransactionJournal::class)->first()
+        ;
         if (null === $dbNote) {
             $dbNote                = new Note();
             $dbNote->noteable_id   = $journal['transaction_journal_id'];

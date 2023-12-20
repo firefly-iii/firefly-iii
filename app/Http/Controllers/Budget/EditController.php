@@ -35,7 +35,6 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 /**
- *
  * Class EditController
  */
 class EditController extends Controller
@@ -45,8 +44,6 @@ class EditController extends Controller
 
     /**
      * EditController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -66,9 +63,6 @@ class EditController extends Controller
 
     /**
      * Budget edit form.
-     *
-     * @param Request $request
-     * @param Budget  $budget
      *
      * @return Factory|View
      */
@@ -121,11 +115,6 @@ class EditController extends Controller
 
     /**
      * Budget update routine.
-     *
-     * @param BudgetFormUpdateRequest $request
-     * @param Budget                  $budget
-     *
-     * @return RedirectResponse
      */
     public function update(BudgetFormUpdateRequest $request, Budget $budget): RedirectResponse
     {
@@ -139,7 +128,7 @@ class EditController extends Controller
         $redirect = redirect($this->getPreviousUrl('budgets.edit.url'));
 
         // store new attachment(s):
-        /** @var array|null $files */
+        /** @var null|array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($budget, $files);

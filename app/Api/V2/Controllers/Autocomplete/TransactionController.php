@@ -64,9 +64,6 @@ class TransactionController extends Controller
      *  3. Request includes user_group_id
      *  4. Endpoint is documented.
      *  5. Collector uses user_group_id
-     *
-     *
-     * @return JsonResponse
      */
     public function transactionDescriptions(AutocompleteRequest $request): JsonResponse
     {
@@ -88,7 +85,5 @@ class TransactionController extends Controller
         }
 
         return response()->json($array);
-
     }
-
 }

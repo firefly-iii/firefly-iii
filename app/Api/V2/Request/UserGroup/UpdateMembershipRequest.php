@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * StoreRequest.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -40,9 +39,6 @@ class UpdateMembershipRequest extends FormRequest
 
     protected array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
 
-    /**
-     * @return array
-     */
     public function getAll(): array
     {
         return [
@@ -52,19 +48,17 @@ class UpdateMembershipRequest extends FormRequest
         ];
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         $validRoles = [];
         foreach (UserRoleEnum::cases() as $role) {
             $validRoles[] = $role->value;
         }
+
         return [
             'id'      => 'exists:users,id|required_without:email',
             'email'   => 'exists:users,email|required_without:id',
-            'roles.*' => 'required|in:' . implode(',', $validRoles),
+            'roles.*' => 'required|in:'.implode(',', $validRoles),
         ];
     }
 }

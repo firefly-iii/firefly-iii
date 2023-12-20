@@ -31,8 +31,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
-use JsonException;
-use Throwable;
 
 /**
  * Class MonthReportGenerator.
@@ -46,15 +44,15 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Generates the report.
      *
-     * @return string
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function generate(): string
     {
         $auditData = [];
         $dayBefore = clone $this->start;
         $dayBefore->subDay();
+
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             // balance the day before:
@@ -92,14 +90,17 @@ class MonthReportGenerator implements ReportGeneratorInterface
             'payment_date',
             'invoice_date',
         ];
+
         try {
             $result = view('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
                 ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
-                ->render();
-        } catch (Throwable $e) {
+                ->render()
+            ;
+        } catch (\Throwable $e) {
             app('log')->error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());
+
             throw new FireflyException($result, 0, $e);
         }
 
@@ -109,12 +110,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     /**
      * Get the audit report.
      *
-     * @param Account $account
-     * @param Carbon  $date
-     *
-     * @return array
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function getAuditReport(Account $account, Carbon $date): array
     {
@@ -129,7 +126,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end)->withAccountInformation()
-                  ->withBudgetInformation()->withCategoryInformation()->withBillInformation();
+            ->withBudgetInformation()->withCategoryInformation()->withBillInformation()
+        ;
         $journals         = $collector->getExtractedJournals();
         $journals         = array_reverse($journals, true);
         $dayBeforeBalance = app('steam')->balance($account, $date);
@@ -180,10 +178,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * Account collection setter.
-     *
-     * @param Collection $accounts
-     *
-     * @return ReportGeneratorInterface
      */
     public function setAccounts(Collection $accounts): ReportGeneratorInterface
     {
@@ -194,10 +188,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * Budget collection setter.
-     *
-     * @param Collection $budgets
-     *
-     * @return ReportGeneratorInterface
      */
     public function setBudgets(Collection $budgets): ReportGeneratorInterface
     {
@@ -206,10 +196,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * Category collection setter.
-     *
-     * @param Collection $categories
-     *
-     * @return ReportGeneratorInterface
      */
     public function setCategories(Collection $categories): ReportGeneratorInterface
     {
@@ -218,10 +204,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * End date setter.
-     *
-     * @param Carbon $date
-     *
-     * @return ReportGeneratorInterface
      */
     public function setEndDate(Carbon $date): ReportGeneratorInterface
     {
@@ -232,10 +214,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * Expenses collection setter.
-     *
-     * @param Collection $expense
-     *
-     * @return ReportGeneratorInterface
      */
     public function setExpense(Collection $expense): ReportGeneratorInterface
     {
@@ -245,10 +223,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * Start date collection setter.
-     *
-     * @param Carbon $date
-     *
-     * @return ReportGeneratorInterface
      */
     public function setStartDate(Carbon $date): ReportGeneratorInterface
     {
@@ -259,10 +233,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
     /**
      * Tags collection setter.
-     *
-     * @param Collection $tags
-     *
-     * @return ReportGeneratorInterface
      */
     public function setTags(Collection $tags): ReportGeneratorInterface
     {

@@ -47,7 +47,6 @@ class MigrateTagLocations extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -65,7 +64,6 @@ class MigrateTagLocations extends Command
     }
 
     /**
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -79,12 +77,10 @@ class MigrateTagLocations extends Command
         return false;
     }
 
-    /**
-     * @return void
-     */
     private function migrateTagLocations(): void
     {
         $tags = Tag::get();
+
         /** @var Tag $tag */
         foreach ($tags as $tag) {
             if ($this->hasLocationDetails($tag)) {
@@ -93,19 +89,11 @@ class MigrateTagLocations extends Command
         }
     }
 
-    /**
-     * @param Tag $tag
-     *
-     * @return bool
-     */
     private function hasLocationDetails(Tag $tag): bool
     {
         return null !== $tag->latitude && null !== $tag->longitude && null !== $tag->zoomLevel;
     }
 
-    /**
-     * @param Tag $tag
-     */
     private function migrateLocationDetails(Tag $tag): void
     {
         $location             = new Location();
@@ -121,9 +109,6 @@ class MigrateTagLocations extends Command
         $tag->save();
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

@@ -27,14 +27,9 @@ use FireflyIII\Models\TransactionCurrency;
 
 /**
  * Class CurrencyDestroyService
- *
-
  */
 class CurrencyDestroyService
 {
-    /**
-     * @param TransactionCurrency $currency
-     */
     public function destroy(TransactionCurrency $currency): void
     {
         $currency->delete();

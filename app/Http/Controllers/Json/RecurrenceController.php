@@ -41,8 +41,6 @@ class RecurrenceController extends Controller
 
     /**
      * RecurrenceController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -60,10 +58,6 @@ class RecurrenceController extends Controller
 
     /**
      * Shows all events for a repetition. Used in calendar.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      *
      * @throws FireflyException
      */
@@ -126,7 +120,7 @@ class RecurrenceController extends Controller
         foreach ($occurrences as $current) {
             if ($current->gte($start)) {
                 $event    = [
-                    'id'        => $repetitionType . $firstDate->format('Ymd'),
+                    'id'        => $repetitionType.$firstDate->format('Ymd'),
                     'title'     => 'X',
                     'allDay'    => true,
                     'start'     => $current->format('Y-m-d'),
@@ -143,15 +137,12 @@ class RecurrenceController extends Controller
 
     /**
      * Suggests repetition moments.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
      */
     public function suggest(Request $request): JsonResponse
     {
         $string = '' === (string)$request->get('date') ? date('Y-m-d') : (string)$request->get('date');
         $today  = today(config('app.timezone'))->startOfDay();
+
         try {
             $date = Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
         } catch (InvalidFormatException $e) {

@@ -69,9 +69,7 @@ class UserController extends Controller
     }
 
     /**
-     * @param User $user
-     *
-     * @return Application|Factory|RedirectResponse|Redirector|View
+     * @return Application|Factory|Redirector|RedirectResponse|View
      */
     public function delete(User $user)
     {
@@ -86,31 +84,26 @@ class UserController extends Controller
         return view('admin.users.delete', compact('user', 'subTitle'));
     }
 
-    /**
-     * @param InvitedUser $invitedUser
-     *
-     * @return JsonResponse
-     */
     public function deleteInvite(InvitedUser $invitedUser): JsonResponse
     {
         app('log')->debug('Will now delete invitation');
         if ($invitedUser->redeemed) {
             app('log')->debug('Is already redeemed.');
             session()->flash('error', trans('firefly.invite_is_already_redeemed', ['address' => $invitedUser->email]));
+
             return response()->json(['success' => false]);
         }
         app('log')->debug('Delete!');
         session()->flash('success', trans('firefly.invite_is_deleted', ['address' => $invitedUser->email]));
         $this->repository->deleteInvite($invitedUser);
+
         return response()->json(['success' => true]);
     }
 
     /**
      * Destroy a user.
      *
-     * @param User $user
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function destroy(User $user)
     {
@@ -127,8 +120,6 @@ class UserController extends Controller
 
     /**
      * Edit user form.
-     *
-     * @param User $user
      *
      * @return Factory|View
      */
@@ -162,6 +153,7 @@ class UserController extends Controller
      * Show index of user manager.
      *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -190,11 +182,6 @@ class UserController extends Controller
         return view('admin.users.index', compact('subTitle', 'subTitleIcon', 'users', 'allowInvites', 'invitedUsers'));
     }
 
-    /**
-     * @param InviteUserFormRequest $request
-     *
-     * @return RedirectResponse
-     */
     public function invite(InviteUserFormRequest $request): RedirectResponse
     {
         $address = (string)$request->get('invited_user');
@@ -209,8 +196,6 @@ class UserController extends Controller
 
     /**
      * Show single user.
-     *
-     * @param User $user
      *
      * @return Factory|View
      */
@@ -238,17 +223,14 @@ class UserController extends Controller
     /**
      * Update single user.
      *
-     * @param UserFormRequest $request
-     * @param User            $user
-     *
-     * @return $this|RedirectResponse|Redirector
+     * @return $this|Redirector|RedirectResponse
      */
     public function update(UserFormRequest $request, User $user)
     {
         app('log')->debug('Actually here');
         $data = $request->getUserData();
 
-        //var_dump($data);
+        // var_dump($data);
 
         // update password
         if (array_key_exists('password', $data) && '' !== $data['password']) {

@@ -37,9 +37,6 @@ class CreateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    /**
-     * @return array
-     */
     public function getData(): array
     {
         $triggers   = Webhook::getTriggersForValidation();
@@ -57,17 +54,15 @@ class CreateRequest extends FormRequest
 
         // this is the way.
         $return             = $this->getAllData($fields);
-        $return['trigger']  = $triggers[$return['trigger']] ?? (int)($return['trigger']);
-        $return['response'] = $responses[$return['response']] ?? (int)($return['response']);
-        $return['delivery'] = $deliveries[$return['delivery']] ?? (int)($return['delivery']);
+        $return['trigger']  = $triggers[$return['trigger']] ?? (int)$return['trigger'];
+        $return['response'] = $responses[$return['response']] ?? (int)$return['response'];
+        $return['delivery'] = $deliveries[$return['delivery']] ?? (int)$return['delivery'];
 
         return $return;
     }
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -75,6 +70,7 @@ class CreateRequest extends FormRequest
         $responses      = implode(',', array_keys(Webhook::getResponsesForValidation()));
         $deliveries     = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
         $validProtocols = config('firefly.valid_url_protocols');
+
         return [
             'title'    => 'required|between:1,512|uniqueObjectForUser:webhooks,title',
             'active'   => [new IsBoolean()],

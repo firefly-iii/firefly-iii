@@ -53,9 +53,6 @@ class CreditRecalculateService
         $this->work    = [];
     }
 
-    /**
-     *
-     */
     public function recalculate(): void
     {
         if (true !== config('firefly.feature_flags.handle_debts')) {
@@ -74,9 +71,16 @@ class CreditRecalculateService
         $this->processWork();
     }
 
-    /**
-     *
-     */
+    public function setAccount(?Account $account): void
+    {
+        $this->account = $account;
+    }
+
+    public function setGroup(TransactionGroup $group): void
+    {
+        $this->group = $group;
+    }
+
     private function processGroup(): void
     {
         /** @var TransactionJournal $journal */
@@ -91,8 +95,6 @@ class CreditRecalculateService
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
      * @throws FireflyException
      */
     private function findByJournal(TransactionJournal $journal): void
@@ -111,9 +113,6 @@ class CreditRecalculateService
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @return Account
      * @throws FireflyException
      */
     private function getSourceAccount(TransactionJournal $journal): Account
@@ -122,20 +121,17 @@ class CreditRecalculateService
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param string             $direction
-     *
-     * @return Account
      * @throws FireflyException
      */
     private function getAccountByDirection(TransactionJournal $journal, string $direction): Account
     {
-        /** @var Transaction|null $transaction */
+        /** @var null|Transaction $transaction */
         $transaction = $journal->transactions()->where('amount', $direction, '0')->first();
         if (null === $transaction) {
             throw new FireflyException(sprintf('Cannot find "%s"-transaction of journal #%d', $direction, $journal->id));
         }
-        /** @var Account|null $foundAccount */
+
+        /** @var null|Account $foundAccount */
         $foundAccount = $transaction->account;
         if (null === $foundAccount) {
             throw new FireflyException(sprintf('Cannot find "%s"-account of transaction #%d of journal #%d', $direction, $transaction->id, $journal->id));
@@ -145,9 +141,6 @@ class CreditRecalculateService
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @return Account
      * @throws FireflyException
      */
     private function getDestinationAccount(TransactionJournal $journal): Account
@@ -155,9 +148,6 @@ class CreditRecalculateService
         return $this->getAccountByDirection($journal, '>');
     }
 
-    /**
-     *
-     */
     private function processAccount(): void
     {
         $valid = config('firefly.valid_liabilities');
@@ -166,9 +156,6 @@ class CreditRecalculateService
         }
     }
 
-    /**
-     *
-     */
     private function processWork(): void
     {
         $this->repository = app(AccountRepositoryInterface::class);
@@ -177,9 +164,6 @@ class CreditRecalculateService
         }
     }
 
-    /**
-     * @param Account $account
-     */
     private function processWorkAccount(Account $account): void
     {
         app('log')->debug(sprintf('Now processing account #%d ("%s")', $account->id, $account->name));
@@ -210,11 +194,13 @@ class CreditRecalculateService
 
         // now loop all transactions (except opening balance and credit thing)
         $transactions = $account->transactions()
-                                ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                ->orderBy('transaction_journals.date', 'ASC')
-                                ->get(['transactions.*']);
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->orderBy('transaction_journals.date', 'ASC')
+            ->get(['transactions.*'])
+        ;
         $total        = $transactions->count();
         app('log')->debug(sprintf('Found %d transaction(s) to process.', $total));
+
         /** @var Transaction $transaction */
         foreach ($transactions as $index => $transaction) {
             app('log')->debug(sprintf('[%d/%d] Processing transaction.', $index + 1, $total));
@@ -226,16 +212,12 @@ class CreditRecalculateService
 
     /**
      * If account direction is "debit" ("I owe this amount") the opening balance must always be AWAY from the account:
-     *
-     * @param Account            $account
-     * @param TransactionJournal $openingBalance
-     *
-     * @return void
      */
     private function validateOpeningBalance(Account $account, TransactionJournal $openingBalance)
     {
         /** @var Transaction $source */
         $source = $openingBalance->transactions()->where('amount', '<', 0)->first();
+
         /** @var Transaction $dest */
         $dest = $openingBalance->transactions()->where('amount', '>', 0)->first();
         if ($source->account_id !== $account->id) {
@@ -255,19 +237,12 @@ class CreditRecalculateService
             }
             $source->save();
             $dest->save();
+
             return;
         }
         app('log')->debug('Opening balance is valid');
     }
 
-    /**
-     * @param Account     $account
-     * @param string      $direction
-     * @param Transaction $transaction
-     * @param string      $leftOfDebt
-     *
-     * @return string
-     */
     private function processTransaction(Account $account, string $direction, Transaction $transaction, string $leftOfDebt): string
     {
         $journal         = $transaction->transactionJournal;
@@ -275,20 +250,23 @@ class CreditRecalculateService
         $accountCurrency = $this->repository->getAccountCurrency($account);
         $decimals        = $accountCurrency->decimal_places;
         $type            = $journal->transactionType->type;
+
         /** @var Transaction $destTransaction */
         $destTransaction = $journal->transactions()->where('amount', '>', '0')->first();
+
         /** @var Transaction $sourceTransaction */
         $sourceTransaction = $journal->transactions()->where('amount', '<', '0')->first();
-
 
         app('log')->debug(sprintf('Left of debt is: %s', app('steam')->bcround($leftOfDebt, $decimals)));
 
         if ('' === $direction) {
             app('log')->warning('Direction is empty, so do nothing.');
+
             return $leftOfDebt;
         }
         if (TransactionType::LIABILITY_CREDIT === $type || TransactionType::OPENING_BALANCE === $type) {
             app('log')->warning(sprintf('Transaction type is "%s", so do nothing.', $type));
+
             return $leftOfDebt;
         }
 
@@ -305,7 +283,7 @@ class CreditRecalculateService
         // if it's a credit ("I am owed"), this increases the amount due,
         // because we're lending person X more money
         if (
-            $type === TransactionType::WITHDRAWAL
+            TransactionType::WITHDRAWAL === $type
             && $account->id === $transaction->account_id
             && 1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
@@ -313,6 +291,7 @@ class CreditRecalculateService
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcadd($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 1 (withdrawal into credit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
+
             return $result;
         }
 
@@ -321,7 +300,7 @@ class CreditRecalculateService
         // if it's a credit ("I am owed"), this decreases the amount due,
         // because we're sending money away from the loan (like loan forgiveness)
         if (
-            $type === TransactionType::WITHDRAWAL
+            TransactionType::WITHDRAWAL === $type
             && $account->id === $sourceTransaction->account_id
             && -1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
@@ -329,6 +308,7 @@ class CreditRecalculateService
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcsub($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 2 (withdrawal away from liability): %s - %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
+
             return $result;
         }
 
@@ -337,7 +317,7 @@ class CreditRecalculateService
         // if it's a credit ("I am owed") this decreases the amount due.
         // because the person is paying us back.
         if (
-            $type === TransactionType::DEPOSIT
+            TransactionType::DEPOSIT === $type
             && $account->id === $transaction->account_id
             && -1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
@@ -345,6 +325,7 @@ class CreditRecalculateService
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcsub($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 3 (deposit away from liability): %s - %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
+
             return $result;
         }
 
@@ -353,7 +334,7 @@ class CreditRecalculateService
         // if it's a credit ("I am owed") this increases the amount due.
         // because the person is having to pay more money.
         if (
-            $type === TransactionType::DEPOSIT
+            TransactionType::DEPOSIT === $type
             && $account->id === $destTransaction->account_id
             && 1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
@@ -361,13 +342,14 @@ class CreditRecalculateService
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcadd($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 4 (deposit into credit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
+
             return $result;
         }
         // case 5: transfer into loan (from other loan).
         // if it's a credit ("I am owed") this increases the amount due,
         // because the person has to pay more back.
         if (
-            $type === TransactionType::TRANSFER
+            TransactionType::TRANSFER === $type
             && $account->id === $destTransaction->account_id
             && 1 === bccomp($usedAmount, '0')
             && 'credit' === $direction
@@ -375,6 +357,7 @@ class CreditRecalculateService
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcadd($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 5 (transfer into credit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
+
             return $result;
         }
         // Case 6
@@ -382,7 +365,7 @@ class CreditRecalculateService
         // if it's a debit ("I owe this amount"), this decreases the amount due,
         // because we're paying off the debt
         if (
-            $type === TransactionType::WITHDRAWAL
+            TransactionType::WITHDRAWAL === $type
             && $account->id === $transaction->account_id
             && 1 === bccomp($usedAmount, '0')
             && 'debit' === $direction
@@ -390,6 +373,7 @@ class CreditRecalculateService
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcsub($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 6 (withdrawal into debit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
+
             return $result;
         }
         // case 7
@@ -397,7 +381,7 @@ class CreditRecalculateService
         // if it's a credit ("I am owed") this increases the amount due.
         // because we are borrowing more money.
         if (
-            $type === TransactionType::DEPOSIT
+            TransactionType::DEPOSIT === $type
             && $account->id === $transaction->account_id
             && -1 === bccomp($usedAmount, '0')
             && 'debit' === $direction
@@ -405,6 +389,7 @@ class CreditRecalculateService
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcadd($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 7 (deposit away from liability): %s - %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
+
             return $result;
         }
         // case 8
@@ -412,7 +397,7 @@ class CreditRecalculateService
         // if it's a debit ("I owe this amount") this increase the amount due.
         // because we are paying interest.
         if (
-            $type === TransactionType::WITHDRAWAL
+            TransactionType::WITHDRAWAL === $type
             && $account->id === $transaction->account_id
             && -1 === bccomp($usedAmount, '0')
             && 'debit' === $direction
@@ -420,36 +405,21 @@ class CreditRecalculateService
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcadd($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 8 (withdrawal away from liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
+
             return $result;
         }
-
 
         // in any other case, remove amount from left of debt.
         if (in_array($type, [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER], true)) {
             $usedAmount = app('steam')->negative($usedAmount);
             $result     = bcadd($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case X (all other cases): %s + %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
+
             return $result;
         }
 
         app('log')->warning(sprintf('[-1] Catch-all, should not happen. Left of debt = %s', app('steam')->bcround($leftOfDebt, $decimals)));
 
         return $leftOfDebt;
-    }
-
-    /**
-     * @param Account|null $account
-     */
-    public function setAccount(?Account $account): void
-    {
-        $this->account = $account;
-    }
-
-    /**
-     * @param TransactionGroup $group
-     */
-    public function setGroup(TransactionGroup $group): void
-    {
-        $this->group = $group;
     }
 }

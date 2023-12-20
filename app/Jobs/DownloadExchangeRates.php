@@ -55,9 +55,6 @@ class DownloadExchangeRates implements ShouldQueue
 
     /**
      * Create a new job instance.
-     *
-     *
-     * @param Carbon|null $date
      */
     public function __construct(?Carbon $date)
     {
@@ -91,10 +88,14 @@ class DownloadExchangeRates implements ShouldQueue
         }
     }
 
+    public function setDate(Carbon $date): void
+    {
+        $newDate = clone $date;
+        $newDate->startOfDay();
+        $this->date = $newDate;
+    }
+
     /**
-     * @param TransactionCurrency $currency
-     *
-     * @return void
      * @throws GuzzleException
      */
     private function downloadRates(TransactionCurrency $currency): void
@@ -103,21 +104,25 @@ class DownloadExchangeRates implements ShouldQueue
         $base   = sprintf('%s/%s/%s', (string)config('cer.url'), $this->date->year, $this->date->isoWeek);
         $client = new Client();
         $url    = sprintf('%s/%s.json', $base, $currency->code);
+
         try {
             $res = $client->get($url);
         } catch (RequestException $e) {
             app('log')->warning(sprintf('Trying to grab "%s" resulted in error "%d".', $url, $e->getMessage()));
+
             return;
         }
         $statusCode = $res->getStatusCode();
         if (200 !== $statusCode) {
             app('log')->warning(sprintf('Trying to grab "%s" resulted in status code %d.', $url, $statusCode));
+
             return;
         }
         $body = (string)$res->getBody();
         $json = json_decode($body, true);
         if (false === $json || null === $json) {
             app('log')->warning(sprintf('Trying to grab "%s" resulted in bad JSON.', $url));
+
             return;
         }
         $date = Carbon::createFromFormat('Y-m-d', $json['date'], config('app.timezone'));
@@ -127,19 +132,13 @@ class DownloadExchangeRates implements ShouldQueue
         $this->saveRates($currency, $date, $json['rates']);
     }
 
-    /**
-     * @param TransactionCurrency $currency
-     * @param Carbon              $date
-     * @param array               $rates
-     *
-     * @return void
-     */
     private function saveRates(TransactionCurrency $currency, Carbon $date, array $rates): void
     {
         foreach ($rates as $code => $rate) {
             $to = $this->getCurrency($code);
             if (null === $to) {
                 app('log')->debug(sprintf('Currency %s is not in use, do not save rate.', $code));
+
                 continue;
             }
             app('log')->debug(sprintf('Currency %s is in use.', $code));
@@ -147,16 +146,12 @@ class DownloadExchangeRates implements ShouldQueue
         }
     }
 
-    /**
-     * @param string $code
-     *
-     * @return TransactionCurrency|null
-     */
     private function getCurrency(string $code): ?TransactionCurrency
     {
         // if we have it already, don't bother searching for it again.
         if (array_key_exists($code, $this->active)) {
             app('log')->debug(sprintf('Already know what the result is of searching for %s', $code));
+
             return $this->active[$code];
         }
         // find it in the database.
@@ -164,11 +159,13 @@ class DownloadExchangeRates implements ShouldQueue
         if (null === $currency) {
             app('log')->debug(sprintf('Did not find currency %s.', $code));
             $this->active[$code] = null;
+
             return null;
         }
         if (false === $currency->enabled) {
             app('log')->debug(sprintf('Currency %s is not enabled.', $code));
             $this->active[$code] = null;
+
             return null;
         }
         app('log')->debug(sprintf('Currency %s is enabled.', $code));
@@ -177,14 +174,6 @@ class DownloadExchangeRates implements ShouldQueue
         return $currency;
     }
 
-    /**
-     * @param TransactionCurrency $from
-     * @param TransactionCurrency $to
-     * @param Carbon              $date
-     * @param float               $rate
-     *
-     * @return void
-     */
     private function saveRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date, float $rate): void
     {
         foreach ($this->users as $user) {
@@ -195,15 +184,5 @@ class DownloadExchangeRates implements ShouldQueue
                 $this->repository->setExchangeRate($from, $to, $date, $rate);
             }
         }
-    }
-
-    /**
-     * @param Carbon $date
-     */
-    public function setDate(Carbon $date): void
-    {
-        $newDate = clone $date;
-        $newDate->startOfDay();
-        $this->date = $newDate;
     }
 }

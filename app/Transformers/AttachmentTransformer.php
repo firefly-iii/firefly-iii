@@ -35,8 +35,6 @@ class AttachmentTransformer extends AbstractTransformer
 
     /**
      * BillTransformer constructor.
-     *
-
      */
     public function __construct()
     {
@@ -45,10 +43,6 @@ class AttachmentTransformer extends AbstractTransformer
 
     /**
      * Transform attachment.
-     *
-     * @param Attachment $attachment
-     *
-     * @return array
      */
     public function transform(Attachment $attachment): array
     {
@@ -71,7 +65,7 @@ class AttachmentTransformer extends AbstractTransformer
             'links'           => [
                 [
                     'rel' => 'self',
-                    'uri' => '/attachment/' . $attachment->id,
+                    'uri' => '/attachment/'.$attachment->id,
                 ],
             ],
         ];

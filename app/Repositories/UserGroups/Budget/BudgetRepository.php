@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * BudgetRepository.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -35,14 +34,12 @@ class BudgetRepository implements BudgetRepositoryInterface
 {
     use UserGroupTrait;
 
-    /**
-     * @inheritDoc
-     */
     public function getActiveBudgets(): Collection
     {
         return $this->userGroup->budgets()->where('active', true)
-                               ->orderBy('order', 'ASC')
-                               ->orderBy('name', 'ASC')
-                               ->get();
+            ->orderBy('order', 'ASC')
+            ->orderBy('name', 'ASC')
+            ->get()
+        ;
     }
 }

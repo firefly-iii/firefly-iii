@@ -43,8 +43,6 @@ class ShowController extends Controller
 
     /**
      * RecurrenceController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,7 +63,6 @@ class ShowController extends Controller
      *
      * List all of them.
      *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function index(): JsonResponse
@@ -82,7 +79,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.recurrences.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.recurrences.index').$this->buildParams());
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
@@ -99,10 +96,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/recurrences/getRecurrence
      *
      * List single resource.
-     *
-     * @param Recurrence $recurrence
-     *
-     * @return JsonResponse
      */
     public function show(Recurrence $recurrence): JsonResponse
     {

@@ -58,10 +58,6 @@ class TagController extends Controller
     /**
      * This endpoint is documented at:
      * * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getTagAC
-     *
-     * @param AutocompleteRequest $request
-     *
-     * @return JsonResponse
      */
     public function tags(AutocompleteRequest $request): JsonResponse
     {
@@ -69,6 +65,7 @@ class TagController extends Controller
 
         $result = $this->repository->searchTags($data['query'], $this->parameters->get('limit'));
         $array  = [];
+
         /** @var Tag $tag */
         foreach ($result as $tag) {
             $array[] = [

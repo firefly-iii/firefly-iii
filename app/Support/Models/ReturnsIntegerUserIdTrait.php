@@ -32,23 +32,18 @@ trait ReturnsIntegerUserIdTrait
 {
     /**
      * Get the user group ID
-     *
-     * @return Attribute
      */
     protected function userGroupId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
-    /**
-     * @return Attribute
-     */
     protected function userId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

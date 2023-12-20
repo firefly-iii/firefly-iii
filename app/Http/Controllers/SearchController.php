@@ -30,7 +30,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Throwable;
 
 /**
  * Class SearchController.
@@ -56,9 +55,6 @@ class SearchController extends Controller
 
     /**
      * Do the search.
-     *
-     * @param Request         $request
-     * @param SearchInterface $searcher
      *
      * @return Factory|View
      */
@@ -98,10 +94,6 @@ class SearchController extends Controller
     /**
      * JSON request that does the work.
      *
-     * @param Request         $request
-     * @param SearchInterface $searcher
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
@@ -120,15 +112,16 @@ class SearchController extends Controller
         $hasPages   = $groups->hasPages();
         $searchTime = round($searcher->searchTime(), 3); // in seconds
         $parameters = ['search' => $fullQuery];
-        $url        = route('search.index') . '?' . http_build_query($parameters);
+        $url        = route('search.index').'?'.http_build_query($parameters);
         $groups->setPath($url);
 
         try {
             $html = view('search.search', compact('groups', 'hasPages', 'searchTime'))->render();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             app('log')->error(sprintf('Cannot render search.search: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
             $html = 'Could not render view.';
+
             throw new FireflyException($html, 0, $e);
         }
 

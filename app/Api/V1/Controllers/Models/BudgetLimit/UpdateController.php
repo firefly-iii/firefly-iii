@@ -46,8 +46,6 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/updateBudgetLimit
      *
      * BudgetLimitController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -69,11 +67,6 @@ class UpdateController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/updateBudgetLimit
      *
-     * @param UpdateRequest $request
-     * @param Budget        $budget
-     * @param BudgetLimit   $budgetLimit
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function update(UpdateRequest $request, Budget $budget, BudgetLimit $budgetLimit): JsonResponse

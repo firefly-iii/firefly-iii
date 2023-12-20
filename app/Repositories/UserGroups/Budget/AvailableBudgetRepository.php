@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * AvailableBudgetRepository.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -37,20 +36,16 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 {
     use UserGroupTrait;
 
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array
     {
         $return           = [];
         $converter        = new ExchangeRateConverter();
         $default          = app('amount')->getDefaultCurrency();
         $availableBudgets = $this->userGroup->availableBudgets()
-                                            ->where('start_date', $start->format('Y-m-d'))
-                                            ->where('end_date', $end->format('Y-m-d'))->get();
+            ->where('start_date', $start->format('Y-m-d'))
+            ->where('end_date', $end->format('Y-m-d'))->get()
+        ;
+
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {
             $currencyId                           = $availableBudget->transaction_currency_id;
@@ -72,6 +67,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
             $return[$currencyId]['amount']        = bcadd($return[$currencyId]['amount'], $availableBudget->amount);
             $return[$currencyId]['native_amount'] = bcadd($return[$currencyId]['native_amount'], $nativeAmount);
         }
+
         return $return;
     }
 }

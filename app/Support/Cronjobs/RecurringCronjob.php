@@ -43,6 +43,7 @@ class RecurringCronjob extends AbstractCronjob
     public function fire(): void
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
+
         /** @var Configuration $config */
         $config        = app('fireflyconfig')->get('last_rt_job', 0);
         $lastTime      = (int)$config->data;
@@ -76,12 +77,10 @@ class RecurringCronjob extends AbstractCronjob
         app('preferences')->mark();
     }
 
-    /**
-     *
-     */
     private function fireRecurring(): void
     {
         app('log')->info(sprintf('Will now fire recurring cron job task for date "%s".', $this->date->format('Y-m-d H:i:s')));
+
         /** @var CreateRecurringTransactions $job */
         $job = app(CreateRecurringTransactions::class);
         $job->setDate($this->date);

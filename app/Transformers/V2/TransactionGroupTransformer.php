@@ -35,7 +35,6 @@ use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use stdClass;
 
 /**
  * Class TransactionGroupTransformer
@@ -49,20 +48,19 @@ class TransactionGroupTransformer extends AbstractTransformer
     private array                 $notes;
     private array                 $tags;
 
-    /**
-     * @inheritDoc
-     */
     public function collectMetaData(Collection $objects): void
     {
         // start with currencies:
         $currencies = [];
         $journals   = [];
+
         /** @var array $object */
         foreach ($objects as $object) {
             foreach ($object['sums'] as $sum) {
                 $id              = (int)$sum['currency_id'];
                 $currencies[$id] ??= TransactionCurrency::find($sum['currency_id']);
             }
+
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 $id            = (int)$transaction['transaction_journal_id'];
@@ -74,6 +72,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         // grab meta for all journals:
         $meta = TransactionJournalMeta::whereIn('transaction_journal_id', array_keys($journals))->get();
+
         /** @var TransactionJournalMeta $entry */
         foreach ($meta as $entry) {
             $id                            = $entry->transaction_journal_id;
@@ -82,6 +81,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         // grab all notes for all journals:
         $notes = Note::whereNoteableType(TransactionJournal::class)->whereIn('noteable_id', array_keys($journals))->get();
+
         /** @var Note $note */
         foreach ($notes as $note) {
             $id               = $note->noteable_id;
@@ -90,10 +90,12 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         // grab all tags for all journals:
         $tags = DB::table('tag_transaction_journal')
-                  ->leftJoin('tags', 'tags.id', 'tag_transaction_journal.tag_id')
-                  ->whereIn('tag_transaction_journal.transaction_journal_id', array_keys($journals))
-                  ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag']);
-        /** @var stdClass $tag */
+            ->leftJoin('tags', 'tags.id', 'tag_transaction_journal.tag_id')
+            ->whereIn('tag_transaction_journal.transaction_journal_id', array_keys($journals))
+            ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag'])
+        ;
+
+        /** @var \stdClass $tag */
         foreach ($tags as $tag) {
             $id                = (int)$tag->transaction_journal_id;
             $this->tags[$id][] = $tag->tag;
@@ -103,14 +105,10 @@ class TransactionGroupTransformer extends AbstractTransformer
         $this->converter = new ExchangeRateConverter();
     }
 
-    /**
-     * @param array $group
-     *
-     * @return array
-     */
     public function transform(array $group): array
     {
         $first = reset($group['transactions']);
+
         return [
             'id'           => (string)$group['id'],
             'created_at'   => $first['created_at']->toAtomString(),
@@ -128,25 +126,19 @@ class TransactionGroupTransformer extends AbstractTransformer
         ];
     }
 
-    /**
-     * @param array $transactions
-     *
-     * @return array
-     */
     private function transformTransactions(array $transactions): array
     {
         $return = [];
+
         /** @var array $transaction */
         foreach ($transactions as $transaction) {
             $return[] = $this->transformTransaction($transaction);
         }
+
         return $return;
     }
 
     /**
-     * @param array $transaction
-     *
-     * @return array
      * @throws FireflyException
      */
     private function transformTransaction(array $transaction): array
@@ -258,16 +250,10 @@ class TransactionGroupTransformer extends AbstractTransformer
      *
      * Used to extract a value from the given array, and fall back on a sensible default or NULL
      * if it can't be helped.
-     *
-     * @param NullArrayObject $array
-     * @param string          $key
-     * @param string|null     $default
-     *
-     * @return string|null
      */
     private function stringFromArray(NullArrayObject $array, string $key, ?string $default): ?string
     {
-        //app('log')->debug(sprintf('%s: %s', $key, var_export($array[$key], true)));
+        // app('log')->debug(sprintf('%s: %s', $key, var_export($array[$key], true)));
         if (null === $array[$key] && null === $default) {
             return null;
         }
@@ -288,11 +274,6 @@ class TransactionGroupTransformer extends AbstractTransformer
         return null;
     }
 
-    /**
-     * @param string|null $string
-     *
-     * @return Carbon|null
-     */
     private function date(?string $string): ?Carbon
     {
         if (null === $string) {
@@ -304,6 +285,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             if (false === $res) {
                 return null;
             }
+
             return $res;
         }
         if (25 === strlen($string)) {
@@ -314,6 +296,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             if (false === $res) {
                 return null;
             }
+
             return $res;
         }
 
@@ -322,6 +305,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (false === $res) {
             return null;
         }
+
         return $res;
     }
 }

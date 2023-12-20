@@ -23,18 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
 
-use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Message;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Mail;
 use Symfony\Component\Mailer\Exception\TransportException;
 
 /**
  * Class MailError.
- *
-
  */
 class MailError extends Job implements ShouldQueue
 {
@@ -48,11 +44,6 @@ class MailError extends Job implements ShouldQueue
 
     /**
      * MailError constructor.
-     *
-     * @param array  $userData
-     * @param string $destination
-     * @param string $ipAddress
-     * @param array  $exceptionData
      */
     public function __construct(array $userData, string $destination, string $ipAddress, array $exceptionData)
     {
@@ -61,14 +52,13 @@ class MailError extends Job implements ShouldQueue
         $this->ipAddress   = $ipAddress;
         $this->exception   = $exceptionData;
         $debug             = $exceptionData;
-        unset($debug['stackTrace']);
-        unset($debug['headers']);
+        unset($debug['stackTrace'], $debug['headers']);
+
         app('log')->error(sprintf('Exception is: %s', json_encode($debug)));
     }
 
     /**
      * Execute the job.
-     *
      */
     public function handle(): void
     {
@@ -78,9 +68,9 @@ class MailError extends Job implements ShouldQueue
         $args['user']     = $this->userData;
         $args['ip']       = $this->ipAddress;
         $args['token']    = config('firefly.ipinfo_token');
-        if ($this->attempts() < 3 && $email !== '') {
+        if ($this->attempts() < 3 && '' !== $email) {
             try {
-                Mail::send(
+                \Mail::send(
                     ['emails.error-html', 'emails.error-text'],
                     $args,
                     static function (Message $message) use ($email) {
@@ -89,14 +79,16 @@ class MailError extends Job implements ShouldQueue
                         }
                     }
                 );
-            } catch (Exception | TransportException $e) { // @phpstan-ignore-line
+            } catch (\Exception|TransportException $e) { // @phpstan-ignore-line
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
                     app('log')->warning('[Bcc] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
+
                     return;
                 }
                 if (str_contains($message, 'RFC 2822')) {
                     app('log')->warning('[RFC] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
+
                     return;
                 }
                 app('log')->error($e->getMessage());

@@ -28,13 +28,10 @@ use Illuminate\Console\Command;
 
 /**
  * Class UpgradeFireflyInstructions.
- *
-
  */
 class UpgradeFireflyInstructions extends Command
 {
     use GeneratesInstallationId;
-
 
     protected $description = 'Instructions in case of upgrade trouble.';
 
@@ -62,9 +59,11 @@ class UpgradeFireflyInstructions extends Command
     private function updateInstructions(): void
     {
         $version = (string)config('firefly.version');
+
         /** @var array $config */
         $config = config('upgrade.text.upgrade');
         $text   = '';
+
         /** @var string $compare */
         foreach (array_keys($config) as $compare) {
             // if string starts with:
@@ -97,8 +96,6 @@ class UpgradeFireflyInstructions extends Command
 
     /**
      * The logo takes up 8 lines of code. So 8 colors can be used.
-     *
-     * @return void
      */
     private function showLogo(): void
     {
@@ -146,27 +143,23 @@ class UpgradeFireflyInstructions extends Command
 
     /**
      * Show a nice box.
-     *
-     * @param string $text
      */
     private function boxed(string $text): void
     {
         $parts = explode("\n", wordwrap($text));
         foreach ($parts as $string) {
-            $this->line('| ' . sprintf('%-77s', $string) . '|');
+            $this->line('| '.sprintf('%-77s', $string).'|');
         }
     }
 
     /**
      * Show a nice info box.
-     *
-     * @param string $text
      */
     private function boxedInfo(string $text): void
     {
         $parts = explode("\n", wordwrap($text));
         foreach ($parts as $string) {
-            $this->info('| ' . sprintf('%-77s', $string) . '|');
+            $this->info('| '.sprintf('%-77s', $string).'|');
         }
     }
 
@@ -176,9 +169,11 @@ class UpgradeFireflyInstructions extends Command
     private function installInstructions(): void
     {
         $version = (string)config('firefly.version');
+
         /** @var array $config */
         $config = config('upgrade.text.install');
         $text   = '';
+
         /** @var string $compare */
         foreach (array_keys($config) as $compare) {
             // if string starts with:

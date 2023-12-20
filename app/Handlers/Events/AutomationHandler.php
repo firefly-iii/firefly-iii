@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Exception;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
@@ -40,27 +39,28 @@ class AutomationHandler
     /**
      * Respond to the creation of X journals.
      *
-     * @param RequestedReportOnJournals $event
-     *
      * @throws FireflyException
      */
     public function reportJournals(RequestedReportOnJournals $event): void
     {
         app('log')->debug('In reportJournals.');
+
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->find($event->userId);
+
         /** @var bool $sendReport */
         $sendReport = app('preferences')->getForUser($user, 'notification_transaction_creation', false)->data;
 
         if (false === $sendReport) {
             app('log')->debug('Not sending report, because config says so.');
+
             return;
         }
 
-
         if (null === $user || 0 === $event->groups->count()) {
             app('log')->debug('No transaction groups in event, nothing to email about.');
+
             return;
         }
         app('log')->debug('Continue with message!');
@@ -69,20 +69,24 @@ class AutomationHandler
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
         $groups      = [];
+
         /** @var TransactionGroup $group */
         foreach ($event->groups as $group) {
             $groups[] = $transformer->transformObject($group);
         }
+
         try {
             Notification::send($user, new TransactionCreation($groups));
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (\Exception $e) { // @phpstan-ignore-line
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
                 return;
             }
             if (str_contains($message, 'RFC 2822')) {
                 app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
                 return;
             }
             app('log')->error($e->getMessage());

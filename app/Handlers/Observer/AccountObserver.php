@@ -32,10 +32,6 @@ class AccountObserver
 {
     /**
      * Also delete related objects.
-     *
-     * @param Account $account
-     *
-     * @return void
      */
     public function deleting(Account $account): void
     {
@@ -52,7 +48,5 @@ class AccountObserver
         }
         $account->notes()->delete();
         $account->locations()->delete();
-
     }
-
 }

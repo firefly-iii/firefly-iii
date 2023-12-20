@@ -44,8 +44,6 @@ class ShowController extends Controller
 
     /**
      * AvailableBudgetController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -68,7 +66,6 @@ class ShowController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function index(): JsonResponse
@@ -88,7 +85,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($availableBudgets, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.available-budgets.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.available-budgets.index').$this->buildParams());
 
         /** @var AvailableBudgetTransformer $transformer */
         $transformer = app(AvailableBudgetTransformer::class);
@@ -105,10 +102,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/available_budgets/getAvailableBudget
      *
      * Display the specified resource.
-     *
-     * @param AvailableBudget $availableBudget
-     *
-     * @return JsonResponse
      */
     public function show(AvailableBudget $availableBudget): JsonResponse
     {

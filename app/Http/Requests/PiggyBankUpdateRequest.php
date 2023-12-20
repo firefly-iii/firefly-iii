@@ -38,8 +38,6 @@ class PiggyBankUpdateRequest extends FormRequest
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getPiggyBankData(): array
     {
@@ -56,8 +54,6 @@ class PiggyBankUpdateRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {

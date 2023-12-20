@@ -28,17 +28,11 @@ use Illuminate\Support\Collection;
 
 /**
  * Trait ApiSupport
- *
-
  */
 trait ApiSupport
 {
     /**
      * Small helper function for the revenue and expense account charts.
-     *
-     * @param array $names
-     *
-     * @return array
      */
     protected function expandNames(array $names): array
     {
@@ -52,14 +46,11 @@ trait ApiSupport
 
     /**
      * Small helper function for the revenue and expense account charts.
-     *
-     * @param Collection $accounts
-     *
-     * @return array
      */
     protected function extractNames(Collection $accounts): array
     {
         $return = [];
+
         /** @var Account $account */
         foreach ($accounts as $account) {
             $return[$account->id] = $account->name;

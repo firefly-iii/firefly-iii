@@ -31,18 +31,16 @@ use FireflyIII\User;
  * Trait VerifiesAccessToken.
  *
  * Verifies user access token for sensitive commands.
- *
-
  */
 trait VerifiesAccessToken
 {
     /**
-     * @return User
      * @throws FireflyException
      */
     public function getUser(): User
     {
         $userId = (int)$this->option('user');
+
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->find($userId);
@@ -56,7 +54,7 @@ trait VerifiesAccessToken
     /**
      * Abstract method to make sure trait knows about method "option".
      *
-     * @param string|null $key
+     * @param null|string $key
      *
      * @return mixed
      */
@@ -65,13 +63,13 @@ trait VerifiesAccessToken
     /**
      * Returns false when given token does not match given user token.
      *
-     * @return bool
      * @throws FireflyException
      */
     protected function verifyAccessToken(): bool
     {
         $userId = (int)$this->option('user');
         $token  = (string)$this->option('token');
+
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         $user       = $repository->find($userId);

@@ -51,9 +51,6 @@ class FrontpageChartGenerator
 
     /**
      * FrontpageChartGenerator constructor.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
      */
     public function __construct(Carbon $start, Carbon $end)
     {
@@ -66,9 +63,6 @@ class FrontpageChartGenerator
         $this->noCatRepos   = app(NoCategoryRepositoryInterface::class);
     }
 
-    /**
-     * @return array
-     */
     public function generate(): array
     {
         $categories = $this->repository->getCategories();
@@ -78,6 +72,7 @@ class FrontpageChartGenerator
 
         // get expenses + income per category:
         $collection = [];
+
         /** @var Category $category */
         foreach ($categories as $category) {
             // get expenses
@@ -98,12 +93,6 @@ class FrontpageChartGenerator
         return $this->insertValues($currencyData, $tempData);
     }
 
-    /**
-     * @param Category   $category
-     * @param Collection $accounts
-     *
-     * @return array
-     */
     private function collectExpenses(Category $category, Collection $accounts): array
     {
         $spent    = $this->opsRepos->sumExpenses($this->start, $this->end, $accounts, new Collection([$category]));
@@ -121,9 +110,6 @@ class FrontpageChartGenerator
         return $tempData;
     }
 
-    /**
-     * @param array $currency
-     */
     private function addCurrency(array $currency): void
     {
         $currencyId = (int)$currency['currency_id'];
@@ -137,11 +123,6 @@ class FrontpageChartGenerator
         ];
     }
 
-    /**
-     * @param Collection $accounts
-     *
-     * @return array
-     */
     private function collectNoCatExpenses(Collection $accounts): array
     {
         $noCatExp = $this->noCatRepos->sumExpenses($this->start, $this->end, $accounts);
@@ -159,15 +140,11 @@ class FrontpageChartGenerator
         return $tempData;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
     private function createCurrencyGroups(array $data): array
     {
         $return = [];
         $names  = $this->expandNames($data);
+
         /**
          * @var array $currency
          */
@@ -184,12 +161,6 @@ class FrontpageChartGenerator
         return $return;
     }
 
-    /**
-     * @param array $currencyData
-     * @param array $monetaryData
-     *
-     * @return array
-     */
     private function insertValues(array $currencyData, array $monetaryData): array
     {
         /** @var array $array */

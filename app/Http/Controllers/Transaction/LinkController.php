@@ -45,8 +45,6 @@ class LinkController extends Controller
 
     /**
      * LinkController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -68,8 +66,6 @@ class LinkController extends Controller
     /**
      * Delete a link.
      *
-     * @param TransactionJournalLink $link
-     *
      * @return Factory|View
      */
     public function delete(TransactionJournalLink $link)
@@ -84,9 +80,7 @@ class LinkController extends Controller
     /**
      * Actually destroy it.
      *
-     * @param TransactionJournalLink $link
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function destroy(TransactionJournalLink $link)
     {
@@ -99,8 +93,6 @@ class LinkController extends Controller
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
      * @return Factory|View
      */
     public function modal(TransactionJournal $journal)
@@ -113,10 +105,7 @@ class LinkController extends Controller
     /**
      * Store a new link.
      *
-     * @param JournalLinkRequest $request
-     * @param TransactionJournal $journal
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function store(JournalLinkRequest $request, TransactionJournal $journal)
     {
@@ -153,9 +142,7 @@ class LinkController extends Controller
     /**
      * Switch link from A <> B to B <> A.
      *
-     * @param Request $request
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function switchLink(Request $request)
     {

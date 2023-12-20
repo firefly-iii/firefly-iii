@@ -42,8 +42,6 @@ class FixAccountOrder extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -64,8 +62,6 @@ class FixAccountOrder extends Command
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
      * be called from the handle method instead of using the constructor to initialize the command.
-     *
-
      */
     private function stupidLaravel(): void
     {

@@ -38,11 +38,7 @@ class PiggyBankForm
     /**
      * TODO cleanup and describe
      *
-     * @param string     $name
-     * @param mixed      $value
-     * @param array|null $options
-     *
-     * @return string
+     * @param mixed $value
      */
     public function piggyBankList(string $name, $value = null, array $options = null): string
     {
@@ -62,6 +58,7 @@ class PiggyBankForm
                 ],
             ],
         ];
+
         /** @var PiggyBank $piggy */
         foreach ($piggyBanks as $piggy) {
             $group      = $piggy->objectGroups->first();

@@ -28,18 +28,12 @@ use Carbon\Carbon;
 use FireflyIII\Events\NewVersionAvailable;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use JsonException;
 
 /**
  * Class UpdateRequest
  */
 class UpdateRequest implements UpdateRequestInterface
 {
-    /**
-     * @param string $channel
-     *
-     * @return array
-     */
     public function getUpdateInformation(string $channel): array
     {
         app('log')->debug(sprintf('Now in getUpdateInformation(%s)', $channel));
@@ -62,11 +56,6 @@ class UpdateRequest implements UpdateRequestInterface
         return $this->parseResult($updateInfo);
     }
 
-    /**
-     * @param string $channel
-     *
-     * @return array
-     */
     private function contactServer(string $channel): array
     {
         app('log')->debug(sprintf('Now in contactServer(%s)', $channel));
@@ -80,6 +69,7 @@ class UpdateRequest implements UpdateRequestInterface
 
         $url = config('firefly.update_endpoint');
         app('log')->debug(sprintf('Going to call %s', $url));
+
         try {
             $client  = new Client();
             $options = [
@@ -106,9 +96,10 @@ class UpdateRequest implements UpdateRequestInterface
             return $return;
         }
         $body = (string)$res->getBody();
+
         try {
             $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
+        } catch (\JsonException $e) {
             app('log')->error('Body is not valid JSON');
             app('log')->error($body);
             $return['message'] = 'Invalid JSON :(';
@@ -137,11 +128,6 @@ class UpdateRequest implements UpdateRequestInterface
         return $return;
     }
 
-    /**
-     * @param array $information
-     *
-     * @return array
-     */
     private function parseResult(array $information): array
     {
         app('log')->debug('Now in parseResult()', $information);

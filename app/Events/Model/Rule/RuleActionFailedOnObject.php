@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * RuleActionFailedOnObject.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -40,11 +39,6 @@ class RuleActionFailedOnObject
     public TransactionJournal $journal;
     public RuleAction         $ruleAction;
 
-    /**
-     * @param RuleAction         $ruleAction
-     * @param TransactionJournal $journal
-     * @param string             $error
-     */
     public function __construct(RuleAction $ruleAction, TransactionJournal $journal, string $error)
     {
         app('log')->debug('Created new RuleActionFailedOnObject');

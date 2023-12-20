@@ -48,19 +48,21 @@ class BoxController extends Controller
      * 0) If the user has available amount this period and has overspent: overspent box.
      * 1) If the user has available amount this period and has NOT overspent: left to spend box.
      * 2) if the user has no available amount set this period: spent per day
-     *
-     * @return JsonResponse
      */
     public function available(): JsonResponse
     {
         app('log')->debug('Now in available()');
+
         /** @var OperationsRepositoryInterface $opsRepository */
         $opsRepository = app(OperationsRepositoryInterface::class);
+
         /** @var AvailableBudgetRepositoryInterface $abRepository */
         $abRepository = app(AvailableBudgetRepositoryInterface::class);
         $abRepository->cleanup();
+
         /** @var Carbon $start */
         $start = session('start', today(config('app.timezone'))->startOfMonth());
+
         /** @var Carbon $end */
         $end      = session('end', today(config('app.timezone'))->endOfMonth());
         $today    = today(config('app.timezone'));
@@ -92,6 +94,7 @@ class BoxController extends Controller
                         $availableBudget->end_date->format('Y-m-d'),
                         $availableBudget->amount
                     ));
+
                     return $availableBudget;
                 }
 
@@ -139,21 +142,19 @@ class BoxController extends Controller
 
         $cache->store($return);
         app('log')->debug('Now done with available()');
+
         return response()->json($return);
     }
 
     /**
      * Current total balance.
-     *
-     * @param CurrencyRepositoryInterface $repository
-     *
-     * @return JsonResponse
      */
     public function balance(CurrencyRepositoryInterface $repository): JsonResponse
     {
         // Cache result, return cache if present.
         /** @var Carbon $start */
         $start = session('start', today(config('app.timezone'))->startOfMonth());
+
         /** @var Carbon $end */
         $end   = session('end', today(config('app.timezone'))->endOfMonth());
         $cache = new CacheProperties();
@@ -173,8 +174,10 @@ class BoxController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)
-                  ->setTypes([TransactionType::DEPOSIT]);
+            ->setTypes([TransactionType::DEPOSIT])
+        ;
         $set = $collector->getExtractedJournals();
+
         /** @var array $journal */
         foreach ($set as $journal) {
             $currencyId           = (int)$journal['currency_id'];
@@ -189,8 +192,10 @@ class BoxController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)
-                  ->setTypes([TransactionType::WITHDRAWAL]);
+            ->setTypes([TransactionType::WITHDRAWAL])
+        ;
         $set = $collector->getExtractedJournals();
+
         /** @var array $journal */
         foreach ($set as $journal) {
             $currencyId            = (int)$journal['currency_id'];
@@ -229,8 +234,6 @@ class BoxController extends Controller
 
     /**
      * Total user net worth.
-     *
-     * @return JsonResponse
      */
     public function netWorth(): JsonResponse
     {

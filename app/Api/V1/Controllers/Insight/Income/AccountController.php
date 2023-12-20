@@ -32,7 +32,6 @@ use FireflyIII\Support\Http\Api\ApiSupport;
 use Illuminate\Http\JsonResponse;
 
 /**
- *
  * Class AccountController
  *
  * Shows income information grouped or limited by date.
@@ -47,8 +46,6 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -70,10 +67,6 @@ class AccountController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightIncomeAsset
-     *
-     * @param GenericRequest $request
-     *
-     * @return JsonResponse
      */
     public function asset(GenericRequest $request): JsonResponse
     {
@@ -82,6 +75,7 @@ class AccountController extends Controller
         $assetAccounts = $request->getAssetAccounts();
         $income        = $this->opsRepository->sumIncomeByDestination($start, $end, $assetAccounts);
         $result        = [];
+
         /** @var array $entry */
         foreach ($income as $entry) {
             $result[] = [
@@ -100,10 +94,6 @@ class AccountController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightIncomeRevenue
-     *
-     * @param GenericRequest $request
-     *
-     * @return JsonResponse
      */
     public function revenue(GenericRequest $request): JsonResponse
     {

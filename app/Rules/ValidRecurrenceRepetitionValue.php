@@ -24,27 +24,17 @@ declare(strict_types=1);
 namespace FireflyIII\Rules;
 
 use Carbon\Carbon;
-use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use InvalidArgumentException;
 
 /**
  * Class ValidRecurrenceRepetitionValue
- *
-
  */
 class ValidRecurrenceRepetitionValue implements ValidationRule
 {
     /**
-     * @param string  $attribute
-     * @param mixed   $value
-     * @param Closure $fail
-     *
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function validate(string $attribute, mixed $value, Closure $fail): void
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         $value = (string)$value;
 
@@ -75,11 +65,6 @@ class ValidRecurrenceRepetitionValue implements ValidationRule
         $fail('validation.valid_recurrence_rep_type')->translate();
     }
 
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
     private function validateMonthly(string $value): bool
     {
         $dayOfMonth = (int)substr($value, 8);
@@ -87,12 +72,6 @@ class ValidRecurrenceRepetitionValue implements ValidationRule
         return $dayOfMonth > 0 && $dayOfMonth < 32;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return bool
-     *
-     */
     private function validateNdom(string $value): bool
     {
         $parameters = explode(',', substr($value, 5));
@@ -108,11 +87,6 @@ class ValidRecurrenceRepetitionValue implements ValidationRule
         return $dayOfWeek > 0 && $dayOfWeek < 8;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
     private function validateWeekly(string $value): bool
     {
         $dayOfWeek = (int)substr($value, 7);
@@ -120,18 +94,14 @@ class ValidRecurrenceRepetitionValue implements ValidationRule
         return $dayOfWeek > 0 && $dayOfWeek < 8;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
     private function validateYearly(string $value): bool
     {
         // rest of the string must be valid date:
         $dateString = substr($value, 7);
+
         try {
             Carbon::createFromFormat('Y-m-d', $dateString);
-        } catch (InvalidArgumentException $e) { // @phpstan-ignore-line
+        } catch (\InvalidArgumentException $e) { // @phpstan-ignore-line
             app('log')->debug(sprintf('Could not parse date %s: %s', $dateString, $e->getMessage()));
 
             return false;

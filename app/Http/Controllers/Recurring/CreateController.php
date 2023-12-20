@@ -40,7 +40,6 @@ use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
- *
  * Class CreateController
  */
 class CreateController extends Controller
@@ -52,8 +51,6 @@ class CreateController extends Controller
 
     /**
      * CreateController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -78,8 +75,6 @@ class CreateController extends Controller
 
     /**
      * Create a new recurring transaction.
-     *
-     * @param Request $request
      *
      * @return Factory|View
      */
@@ -124,9 +119,6 @@ class CreateController extends Controller
     }
 
     /**
-     * @param Request            $request
-     * @param TransactionJournal $journal
-     *
      * @return Factory|\Illuminate\Contracts\View\View
      */
     public function createFromJournal(Request $request, TransactionJournal $journal)
@@ -155,12 +147,12 @@ class CreateController extends Controller
             RecurrenceRepetition::WEEKEND_TO_MONDAY     => (string)trans('firefly.jump_to_monday'),
         ];
 
-
         // fill prefilled with journal info
         $type = strtolower($journal->transactionType->type);
 
         /** @var Transaction $source */
         $source = $journal->transactions()->where('amount', '<', 0)->first();
+
         /** @var Transaction $dest */
         $dest        = $journal->transactions()->where('amount', '>', 0)->first();
         $category    = null !== $journal->categories()->first() ? $journal->categories()->first()->name : '';
@@ -221,14 +213,14 @@ class CreateController extends Controller
     /**
      * Store a recurring transaction.
      *
-     * @param RecurrenceFormRequest $request
+     * @return Redirector|RedirectResponse
      *
-     * @return RedirectResponse|Redirector
      * @throws FireflyException
      */
     public function store(RecurrenceFormRequest $request)
     {
         $data = $request->getAll();
+
         try {
             $recurrence = $this->recurring->store($data);
         } catch (FireflyException $e) {
@@ -241,7 +233,7 @@ class CreateController extends Controller
         app('preferences')->mark();
 
         // store attachment(s):
-        /** @var array|null $files */
+        /** @var null|array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($recurrence, $files);

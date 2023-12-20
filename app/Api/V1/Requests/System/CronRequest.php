@@ -29,8 +29,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class CronRequest
- *
-
  */
 class CronRequest extends FormRequest
 {
@@ -38,8 +36,6 @@ class CronRequest extends FormRequest
 
     /**
      * Verify the request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -48,8 +44,6 @@ class CronRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -69,8 +63,6 @@ class CronRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {

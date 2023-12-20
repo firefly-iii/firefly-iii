@@ -33,9 +33,6 @@ use FireflyIII\Models\Configuration;
  */
 class AutoBudgetCronjob extends AbstractCronjob
 {
-    /**
-     * @inheritDoc
-     */
     public function fire(): void
     {
         /** @var Configuration $config */
@@ -66,12 +63,10 @@ class AutoBudgetCronjob extends AbstractCronjob
         app('preferences')->mark();
     }
 
-    /**
-     *
-     */
     private function fireAutoBudget(): void
     {
         app('log')->info(sprintf('Will now fire auto budget cron job task for date "%s".', $this->date->format('Y-m-d')));
+
         /** @var CreateAutoBudgetLimits $job */
         $job = app(CreateAutoBudgetLimits::class, [$this->date]);
         $job->setDate($this->date);

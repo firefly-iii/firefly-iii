@@ -29,18 +29,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-/**
- *
- */
 class AcceptHeaders
 {
     /**
      * Handle the incoming requests.
      *
-     * @param Request  $request
-     * @param callable $next
-     *
      * @return Response
+     *
      * @throws BadHttpHeaderException
      */
     public function handle(Request $request, callable $next): mixed
@@ -50,7 +45,6 @@ class AcceptHeaders
         $contentTypes = ['application/x-www-form-urlencoded', 'application/json', 'application/vnd.api+json', 'application/octet-stream'];
         $submitted    = (string)$request->header('Content-Type');
 
-
         // if bad Accept header, send error.
         if (!$request->accepts($accepts)) {
             throw new BadHttpHeaderException(sprintf('Accept header "%s" is not something this server can provide.', $request->header('Accept')));
@@ -59,34 +53,31 @@ class AcceptHeaders
         if (('POST' === $method || 'PUT' === $method) && !$request->hasHeader('Content-Type')) {
             $error             = new BadHttpHeaderException('Content-Type header cannot be empty.');
             $error->statusCode = 415;
+
             throw $error;
         }
         if (('POST' === $method || 'PUT' === $method) && !$this->acceptsHeader($submitted, $contentTypes)) {
             $error             = new BadHttpHeaderException(sprintf('Content-Type cannot be "%s"', $submitted));
             $error->statusCode = 415;
+
             throw $error;
         }
 
         // throw bad request if trace id is not a UUID
         $uuid = $request->header('X-Trace-Id');
-        if (is_string($uuid) && '' !== trim($uuid) && (preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', trim($uuid)) !== 1)) {
+        if (is_string($uuid) && '' !== trim($uuid) && (1 !== preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', trim($uuid)))) {
             throw new BadRequestHttpException('Bad X-Trace-Id header.');
         }
 
         return $next($request);
     }
 
-    /**
-     * @param string $content
-     * @param array  $accepted
-     *
-     * @return bool
-     */
     private function acceptsHeader(string $content, array $accepted): bool
     {
         if (str_contains($content, ';')) {
             $content = trim(explode(';', $content)[0]);
         }
+
         return in_array($content, $accepted, true);
     }
 }

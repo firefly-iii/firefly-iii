@@ -31,8 +31,6 @@ use Illuminate\Queue\SerializesModels;
  * Class ConfirmEmailChangeMail
  *
  * Sends message to new address to confirm change.
- *
-
  */
 class ConfirmEmailChangeMail extends Mailable
 {
@@ -45,10 +43,6 @@ class ConfirmEmailChangeMail extends Mailable
 
     /**
      * ConfirmEmailChangeMail constructor.
-     *
-     * @param string $newEmail
-     * @param string $oldEmail
-     * @param string $url
      */
     public function __construct(string $newEmail, string $oldEmail, string $url)
     {
@@ -65,9 +59,10 @@ class ConfirmEmailChangeMail extends Mailable
     public function build(): self
     {
         return $this
-            //->view('emails.confirm-email-change-html')
-            //->text('emails.confirm-email-change-text')
+            // ->view('emails.confirm-email-change-html')
+            // ->text('emails.confirm-email-change-text')
             ->markdown('emails.confirm-email-change')
-            ->subject((string)trans('email.email_change_subject'));
+            ->subject((string)trans('email.email_change_subject'))
+        ;
     }
 }

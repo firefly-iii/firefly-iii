@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Closure;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -38,10 +37,6 @@ class UniqueIban implements ValidationRule
 
     /**
      * Create a new rule instance.
-     *
-     *
-     * @param Account|null $account
-     * @param string|null  $expectedType
      */
     public function __construct(?Account $account, ?string $expectedType)
     {
@@ -68,19 +63,13 @@ class UniqueIban implements ValidationRule
 
     /**
      * Get the validation error message.
-     *
-     *
-     * @return string
      */
     public function message(): string
     {
         return (string)trans('validation.unique_iban_for_user');
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function validate(string $attribute, mixed $value, Closure $fail): void
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         if (!$this->passes($attribute, $value)) {
             $fail((string)trans('validation.unique_iban_for_user'));
@@ -93,10 +82,7 @@ class UniqueIban implements ValidationRule
      * @param string $attribute
      * @param mixed  $value
      *
-     * @return bool
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
      */
     public function passes($attribute, $value): bool
     {
@@ -129,10 +115,6 @@ class UniqueIban implements ValidationRule
         return true;
     }
 
-    /**
-     * @return array
-     *
-     */
     private function getMaxOccurrences(): array
     {
         $maxCounts = [
@@ -156,12 +138,6 @@ class UniqueIban implements ValidationRule
         return $maxCounts;
     }
 
-    /**
-     * @param string $type
-     * @param string $iban
-     *
-     * @return int
-     */
     private function countHits(string $type, string $iban): int
     {
         $typesArray = [$type];
@@ -170,10 +146,11 @@ class UniqueIban implements ValidationRule
         }
         $query
             = auth()->user()
-                    ->accounts()
-                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->where('accounts.iban', $iban)
-                    ->whereIn('account_types.type', $typesArray);
+                ->accounts()
+                ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                ->where('accounts.iban', $iban)
+                ->whereIn('account_types.type', $typesArray)
+        ;
 
         if (null !== $this->account) {
             $query->where('accounts.id', '!=', $this->account->id);

@@ -35,37 +35,16 @@ use Illuminate\Support\Collection;
 interface NoBudgetRepositoryInterface
 {
     /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
      * @deprecated
      */
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array;
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void;
+    public function setUser(null|Authenticatable|User $user): void;
 
     /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
      * @deprecated
      */
     public function spentInPeriodWoBudgetMc(Collection $accounts, Carbon $start, Carbon $end): array;
 
-    /**
-     * @param Carbon                   $start
-     * @param Carbon                   $end
-     * @param Collection|null          $accounts
-     * @param TransactionCurrency|null $currency
-     *
-     * @return array
-     */
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array;
 }

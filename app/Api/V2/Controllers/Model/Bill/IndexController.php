@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * ShowController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -60,10 +59,7 @@ class IndexController extends Controller
     }
 
     /**
-     *
      * TODO see autocomplete/accountcontroller for list.
-     *
-     * @return JsonResponse
      */
     public function index(): JsonResponse
     {
@@ -78,6 +74,7 @@ class IndexController extends Controller
 
         return response()
             ->json($this->jsonApiList('subscriptions', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

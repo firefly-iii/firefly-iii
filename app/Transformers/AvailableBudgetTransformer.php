@@ -39,8 +39,6 @@ class AvailableBudgetTransformer extends AbstractTransformer
 
     /**
      * CurrencyTransformer constructor.
-     *
-
      */
     public function __construct()
     {
@@ -51,10 +49,6 @@ class AvailableBudgetTransformer extends AbstractTransformer
 
     /**
      * Transform the note.
-     *
-     * @param AvailableBudget $availableBudget
-     *
-     * @return array
      */
     public function transform(AvailableBudget $availableBudget): array
     {
@@ -77,7 +71,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/available_budgets/' . $availableBudget->id,
+                    'uri' => '/available_budgets/'.$availableBudget->id,
                 ],
             ],
         ];
@@ -91,9 +85,6 @@ class AvailableBudgetTransformer extends AbstractTransformer
         return $data;
     }
 
-    /**
-     * @return array
-     */
     private function getSpentInBudgets(): array
     {
         $allActive = $this->repository->getActiveBudgets();
@@ -102,9 +93,6 @@ class AvailableBudgetTransformer extends AbstractTransformer
         return array_values($sums);
     }
 
-    /**
-     * @return array
-     */
     private function spentOutsideBudgets(): array
     {
         $sums = $this->noBudgetRepository->sumExpenses($this->parameters->get('start'), $this->parameters->get('end'));

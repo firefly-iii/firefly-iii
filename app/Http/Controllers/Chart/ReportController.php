@@ -36,7 +36,6 @@ use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use JsonException;
 
 /**
  * Class ReportController.
@@ -51,8 +50,6 @@ class ReportController extends Controller
 
     /**
      * ReportController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -64,12 +61,6 @@ class ReportController extends Controller
     /**
      * This chart, by default, is shown on the multi-year and year report pages,
      * which means that giving it a 2 week "period" should be enough granularity.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return JsonResponse
      */
     public function netWorth(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -85,6 +76,7 @@ class ReportController extends Controller
         $locale    = app('steam')->getLocale();
         $current   = clone $start;
         $chartData = [];
+
         /** @var NetWorthInterface $helper */
         $helper = app(NetWorthInterface::class);
         $helper->setUser(auth()->user());
@@ -120,7 +112,7 @@ class ReportController extends Controller
                 $label      = $current->isoFormat((string)trans('config.month_and_day_js', [], $locale));
                 if (!array_key_exists($currencyId, $chartData)) {
                     $chartData[$currencyId] = [
-                        'label'           => 'Net worth in ' . $netWorthItem['currency_name'],
+                        'label'           => 'Net worth in '.$netWorthItem['currency_name'],
                         'type'            => 'line',
                         'currency_symbol' => $netWorthItem['currency_symbol'],
                         'currency_code'   => $netWorthItem['currency_code'],
@@ -141,12 +133,7 @@ class ReportController extends Controller
     /**
      * Shows income and expense, debit/credit: operations.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return JsonResponse
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -168,8 +155,8 @@ class ReportController extends Controller
         // get journals for entire period:
         $data      = [];
         $chartData = [
-
         ];
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withAccountInformation();
@@ -202,9 +189,8 @@ class ReportController extends Controller
             // transfer or reconcile or opening balance, and these accounts are the destination.
             if (
                 TransactionType::DEPOSIT === $journal['transaction_type_type']
-                ||
 
-                (
+                || (
                     (
                         TransactionType::TRANSFER === $journal['transaction_type_type']
                         || TransactionType::RECONCILIATION === $journal['transaction_type_type']
@@ -238,15 +224,14 @@ class ReportController extends Controller
                 'currency_symbol' => $currency['currency_symbol'],
                 'currency_code'   => $currency['currency_code'],
                 'entries'         => [],
-
             ];
             // loop all possible periods between $start and $end
             $currentStart = clone $start;
             while ($currentStart <= $end) {
                 $key                        = $currentStart->format($format);
                 $title                      = $currentStart->isoFormat($titleFormat);
-                $income['entries'][$title]  = app('steam')->bcround(($currency[$key]['earned'] ?? '0'), $currency['currency_decimal_places']);
-                $expense['entries'][$title] = app('steam')->bcround(($currency[$key]['spent'] ?? '0'), $currency['currency_decimal_places']);
+                $income['entries'][$title]  = app('steam')->bcround($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);
+                $expense['entries'][$title] = app('steam')->bcround($currency[$key]['spent'] ?? '0', $currency['currency_decimal_places']);
                 $currentStart               = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
             }
 

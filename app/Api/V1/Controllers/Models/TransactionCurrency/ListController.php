@@ -69,10 +69,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listAccountByCurrency
      * Display a list of accounts.
      *
-     * @param Request             $request
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function accounts(Request $request, TransactionCurrency $currency): JsonResponse
@@ -106,7 +102,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.accounts', [$currency->code]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.currencies.accounts', [$currency->code]).$this->buildParams());
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
@@ -123,9 +119,6 @@ class ListController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function availableBudgets(TransactionCurrency $currency): JsonResponse
@@ -143,7 +136,7 @@ class ListController extends Controller
         $availableBudgets = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         // make paginator:
         $paginator = new LengthAwarePaginator($availableBudgets, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.available-budgets', [$currency->code]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.currencies.available-budgets', [$currency->code]).$this->buildParams());
 
         /** @var AvailableBudgetTransformer $transformer */
         $transformer = app(AvailableBudgetTransformer::class);
@@ -161,9 +154,6 @@ class ListController extends Controller
      *
      * List all bills
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function bills(TransactionCurrency $currency): JsonResponse
@@ -186,7 +176,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.bills', [$currency->code]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.currencies.bills', [$currency->code]).$this->buildParams());
 
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);
@@ -204,9 +194,6 @@ class ListController extends Controller
      *
      * List all budget limits
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function budgetLimits(TransactionCurrency $currency): JsonResponse
@@ -220,7 +207,7 @@ class ListController extends Controller
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.budget-limits', [$currency->code]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.currencies.budget-limits', [$currency->code]).$this->buildParams());
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
@@ -238,9 +225,6 @@ class ListController extends Controller
      *
      * List all recurring transactions.
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function recurrences(TransactionCurrency $currency): JsonResponse
@@ -272,7 +256,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.recurrences', [$currency->code]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.currencies.recurrences', [$currency->code]).$this->buildParams());
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
@@ -290,9 +274,6 @@ class ListController extends Controller
      *
      * List all of them.
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function rules(TransactionCurrency $currency): JsonResponse
@@ -323,7 +304,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rules.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.rules.index').$this->buildParams());
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
@@ -341,11 +322,6 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @param Request             $request
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function transactions(Request $request, TransactionCurrency $currency): JsonResponse
@@ -374,7 +350,8 @@ class ListController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes($types);
+            ->setTypes($types)
+        ;
         if (null !== $this->parameters->get('start')) {
             $collector->setStart($this->parameters->get('start'));
         }
@@ -382,7 +359,7 @@ class ListController extends Controller
             $collector->setEnd($this->parameters->get('end'));
         }
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.currencies.transactions', [$currency->code]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.currencies.transactions', [$currency->code]).$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */

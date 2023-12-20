@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Summary;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DateRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -56,8 +55,6 @@ class BasicController extends Controller
 
     /**
      * BasicController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -89,10 +86,7 @@ class BasicController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/summary/getBasicSummary
      *
-     * @param DateRequest $request
-     *
-     * @return JsonResponse
-     * @throws Exception
+     * @throws \Exception
      */
     public function basic(DateRequest $request): JsonResponse
     {
@@ -121,11 +115,22 @@ class BasicController extends Controller
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
+     * Check if date is outside session range.
      */
+    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
+    {
+        $result = false;
+        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
+            $result = true;
+        }
+        // start and end in the past? use $end
+        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
+            $result = true;
+        }
+
+        return $result;
+    }
+
     private function getBalanceInformation(Carbon $start, Carbon $end): array
     {
         // prep some arrays:
@@ -142,9 +147,11 @@ class BasicController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes([TransactionType::DEPOSIT]);
+            ->setTypes([TransactionType::DEPOSIT])
+        ;
 
         $set = $collector->getExtractedJournals();
+
         /** @var array $transactionJournal */
         foreach ($set as $transactionJournal) {
             $currencyId           = (int)$transactionJournal['currency_id'];
@@ -165,7 +172,8 @@ class BasicController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes([TransactionType::WITHDRAWAL]);
+            ->setTypes([TransactionType::WITHDRAWAL])
+        ;
         $set = $collector->getExtractedJournals();
 
         /** @var array $transactionJournal */
@@ -195,8 +203,8 @@ class BasicController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
                 'value_parsed'            => app('amount')->formatAnything($currency, $sums[$currencyId] ?? '0', false),
                 'local_icon'              => 'balance-scale',
-                'sub_title'               => app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false) .
-                                             ' + ' . app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false),
+                'sub_title'               => app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false).
+                                             ' + '.app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false),
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
@@ -227,12 +235,6 @@ class BasicController extends Controller
         return $return;
     }
 
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
     private function getBillInformation(Carbon $start, Carbon $end): array
     {
         app('log')->debug(sprintf('Now in getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
@@ -244,6 +246,7 @@ class BasicController extends Controller
         $unpaidAmount = $this->billRepository->sumUnpaidInRange($start, $end);
 
         $return = [];
+
         /**
          * @var array $info
          */
@@ -282,15 +285,12 @@ class BasicController extends Controller
             ];
         }
         app('log')->debug(sprintf('Done with getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
+
         return $return;
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
@@ -334,12 +334,6 @@ class BasicController extends Controller
         return $return;
     }
 
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
     private function getNetWorthInfo(Carbon $start, Carbon $end): array
     {
         /** @var User $user */
@@ -391,30 +385,7 @@ class BasicController extends Controller
                 'sub_title'               => '',
             ];
         }
+
         return $return;
-    }
-
-    /**
-     * Check if date is outside session range.
-     *
-     * @param Carbon $date
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return bool
-     */
-    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
-    {
-        $result = false;
-        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
-            $result = true;
-        }
-        // start and end in the past? use $end
-        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
-            $result = true;
-        }
-
-        return $result;
     }
 }

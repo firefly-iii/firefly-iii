@@ -41,29 +41,30 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Attachment
  *
- * @property int                 $id
- * @property Carbon|null         $created_at
- * @property Carbon|null         $updated_at
- * @property Carbon|null         $deleted_at
- * @property int                 $user_id
- * @property int                 $attachable_id
- * @property string              $attachable_type
- * @property bool                $file_exists
- * @property string              $md5
- * @property string              $filename
- * @property string|null         $title
- * @property string|null         $description
- * @property string              $mime
- * @property int|string          $size
- * @property bool                $uploaded
- * @property string              $notes_text
- * @property-read Model|Eloquent $attachable
- * @property Collection|Note[]   $notes
- * @property-read int|null       $notes_count
- * @property-read User           $user
+ * @property int               $id
+ * @property null|Carbon       $created_at
+ * @property null|Carbon       $updated_at
+ * @property null|Carbon       $deleted_at
+ * @property int               $user_id
+ * @property int               $attachable_id
+ * @property string            $attachable_type
+ * @property bool              $file_exists
+ * @property string            $md5
+ * @property string            $filename
+ * @property null|string       $title
+ * @property null|string       $description
+ * @property string            $mime
+ * @property int|string        $size
+ * @property bool              $uploaded
+ * @property string            $notes_text
+ * @property \Eloquent|Model   $attachable
+ * @property Collection|Note[] $notes
+ * @property null|int          $notes_count
+ * @property User              $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment newQuery()
- * @method static Builder|Attachment onlyTrashed()
+ * @method static Builder|Attachment                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment query()
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereAttachableId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereAttachableType($value)
@@ -79,10 +80,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUploaded($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUserId($value)
- * @method static Builder|Attachment withTrashed()
- * @method static Builder|Attachment withoutTrashed()
- * @property int                 $user_group_id
+ * @method static Builder|Attachment                               withTrashed()
+ * @method static Builder|Attachment                               withoutTrashed()
+ *
+ * @property int $user_group_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Attachment whereUserGroupId($value)
+ *
  * @mixin Eloquent
  */
 class Attachment extends Model
@@ -104,29 +108,26 @@ class Attachment extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return Attachment
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $attachmentId = (int)$value;
+
             /** @var User $user */
             $user = auth()->user();
-            /** @var Attachment|null $attachment */
+
+            /** @var null|Attachment $attachment */
             $attachment = $user->attachments()->find($attachmentId);
             if (null !== $attachment) {
                 return $attachment;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -134,9 +135,6 @@ class Attachment extends Model
 
     /**
      * Get all of the owning attachable models.
-     *
-     *
-     * @return MorphTo
      */
     public function attachable(): MorphTo
     {
@@ -145,8 +143,6 @@ class Attachment extends Model
 
     /**
      * Returns the expected filename for this attachment.
-     *
-     * @return string
      */
     public function fileName(): string
     {
@@ -161,14 +157,10 @@ class Attachment extends Model
         return $this->morphMany(Note::class, 'noteable');
     }
 
-    /**
-     * @return Attribute
-     */
     protected function attachableId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
-
 }

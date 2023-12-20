@@ -35,27 +35,10 @@ use Illuminate\Support\Collection;
  */
 interface CategoryRepositoryInterface
 {
-    /**
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return Collection
-     */
     public function categoryEndsWith(string $query, int $limit): Collection;
 
-    /**
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return Collection
-     */
     public function categoryStartsWith(string $query, int $limit): Collection;
 
-    /**
-     * @param Category $category
-     *
-     * @return bool
-     */
     public function destroy(Category $category): bool;
 
     /**
@@ -65,116 +48,52 @@ interface CategoryRepositoryInterface
 
     /**
      * Find a category or return NULL
-     *
-     * @param int $categoryId
-     *
-     * @return Category|null
      */
     public function find(int $categoryId): ?Category;
 
     /**
      * Find a category.
-     *
-     * @param string $name
-     *
-     * @return Category|null
      */
     public function findByName(string $name): ?Category;
 
-    /**
-     * @param int|null    $categoryId
-     * @param string|null $categoryName
-     *
-     * @return Category|null
-     */
     public function findCategory(?int $categoryId, ?string $categoryName): ?Category;
 
-    /**
-     * @param Category $category
-     *
-     * @return Carbon|null
-     */
     public function firstUseDate(Category $category): ?Carbon;
 
-    /**
-     * @param Category $category
-     *
-     * @return Collection
-     */
     public function getAttachments(Category $category): Collection;
 
     /**
      * Get all categories with ID's.
-     *
-     * @param array $categoryIds
-     *
-     * @return Collection
      */
     public function getByIds(array $categoryIds): Collection;
 
     /**
      * Returns a list of all the categories belonging to a user.
-     *
-     * @return Collection
      */
     public function getCategories(): Collection;
 
-    /**
-     * @param Category $category
-     *
-     * @return string|null
-     */
     public function getNoteText(Category $category): ?string;
 
     /**
      * Return most recent transaction(journal) date or null when never used before.
-     *
-     * @param Category   $category
-     * @param Collection $accounts
-     *
-     * @return Carbon|null
      */
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon;
 
     /**
      * Remove notes.
-     *
-     * @param Category $category
      */
     public function removeNotes(Category $category): void;
 
-    /**
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return Collection
-     */
     public function searchCategory(string $query, int $limit): Collection;
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void;
+    public function setUser(null|Authenticatable|User $user): void;
 
     /**
-     * @param array $data
-     *
-     * @return Category
      * @throws FireflyException
      */
     public function store(array $data): Category;
 
-    /**
-     * @param Category $category
-     * @param array    $data
-     *
-     * @return Category
-     */
     public function update(Category $category, array $data): Category;
 
-    /**
-     * @param Category $category
-     * @param string   $notes
-     */
     public function updateNotes(Category $category, string $notes): void;
 }

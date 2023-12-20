@@ -47,7 +47,6 @@ class MigrateAttachments extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws ContainerExceptionInterface
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
@@ -60,7 +59,6 @@ class MigrateAttachments extends Command
 
             return 0;
         }
-
 
         $attachments = Attachment::get();
         $count       = 0;
@@ -84,7 +82,7 @@ class MigrateAttachments extends Command
                 $att->save();
 
                 app('log')->debug(sprintf('Migrated attachment #%s description to note #%d.', $att->id, $note->id));
-                $count++;
+                ++$count;
             }
         }
         if (0 === $count) {
@@ -101,7 +99,6 @@ class MigrateAttachments extends Command
     }
 
     /**
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -115,9 +112,6 @@ class MigrateAttachments extends Command
         return false;
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

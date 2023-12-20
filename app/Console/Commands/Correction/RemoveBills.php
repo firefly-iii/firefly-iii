@@ -40,17 +40,16 @@ class RemoveBills extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
-        /** @var TransactionType|null $withdrawal */
+        /** @var null|TransactionType $withdrawal */
         $withdrawal = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
         if (null === $withdrawal) {
             return 0;
         }
         $journals = TransactionJournal::whereNotNull('bill_id')->where('transaction_type_id', '!=', $withdrawal->id)->get();
+
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $this->friendlyWarning(sprintf('Transaction journal #%d will be unlinked from bill #%d.', $journal->id, $journal->bill_id));

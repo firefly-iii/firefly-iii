@@ -43,6 +43,7 @@ class BillWarningCronjob extends AbstractCronjob
     public function fire(): void
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
+
         /** @var Configuration $config */
         $config        = app('fireflyconfig')->get('last_bw_job', 0);
         $lastTime      = (int)$config->data;
@@ -77,12 +78,10 @@ class BillWarningCronjob extends AbstractCronjob
         app('preferences')->mark();
     }
 
-    /**
-     *
-     */
     private function fireWarnings(): void
     {
         app('log')->info(sprintf('Will now fire bill warning job task for date "%s".', $this->date->format('Y-m-d H:i:s')));
+
         /** @var WarnAboutBills $job */
         $job = app(WarnAboutBills::class);
         $job->setDate($this->date);

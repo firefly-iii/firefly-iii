@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * StoreController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -38,9 +37,6 @@ class StoreController extends Controller
 {
     private UserGroupRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -53,11 +49,6 @@ class StoreController extends Controller
         );
     }
 
-    /**
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
-     */
     public function store(StoreRequest $request): JsonResponse
     {
         $all         = $request->getAll();
@@ -67,7 +58,7 @@ class StoreController extends Controller
 
         return response()
             ->api($this->jsonApiObject('user-groups', $userGroup, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
-
 }

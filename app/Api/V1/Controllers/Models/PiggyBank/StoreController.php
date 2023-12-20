@@ -40,8 +40,6 @@ class StoreController extends Controller
 
     /**
      * Constructor.
-     *
-
      */
     public function __construct()
     {
@@ -62,9 +60,6 @@ class StoreController extends Controller
      *
      * Store new object.
      *
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function store(StoreRequest $request): JsonResponse

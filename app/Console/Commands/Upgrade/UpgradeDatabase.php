@@ -30,8 +30,6 @@ use Illuminate\Console\Command;
 
 /**
  * Class UpgradeDatabase
- *
-
  */
 class UpgradeDatabase extends Command
 {
@@ -42,8 +40,6 @@ class UpgradeDatabase extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -89,9 +85,6 @@ class UpgradeDatabase extends Command
         return 0;
     }
 
-    /**
-     * @return void
-     */
     private function callInitialCommands(): void
     {
         $this->call('migrate', ['--seed' => true, '--force' => true, '--no-interaction' => true]);

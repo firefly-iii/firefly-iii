@@ -34,12 +34,6 @@ trait CalculateXOccurrences
     /**
      * Calculates the number of daily occurrences for a recurring transaction, starting at the date, until $count is
      * reached. It will skip over $skipMod -1 recurrences.
-     *
-     * @param Carbon $date
-     * @param int    $count
-     * @param int    $skipMod
-     *
-     * @return array
      */
     protected function getXDailyOccurrences(Carbon $date, int $count, int $skipMod): array
     {
@@ -51,9 +45,9 @@ trait CalculateXOccurrences
             $mutator->addDay();
             if (0 === $attempts % $skipMod) {
                 $return[] = clone $mutator;
-                $total++;
+                ++$total;
             }
-            $attempts++;
+            ++$attempts;
         }
 
         return $return;
@@ -62,13 +56,6 @@ trait CalculateXOccurrences
     /**
      * Calculates the number of monthly occurrences for a recurring transaction, starting at the date, until $count is
      * reached. It will skip over $skipMod -1 recurrences.
-     *
-     * @param Carbon $date
-     * @param int    $count
-     * @param int    $skipMod
-     * @param string $moment
-     *
-     * @return array
      */
     protected function getXMonthlyOccurrences(Carbon $date, int $count, int $skipMod, string $moment): array
     {
@@ -87,9 +74,9 @@ trait CalculateXOccurrences
             $mutator->day = $domCorrected;
             if (0 === $attempts % $skipMod) {
                 $return[] = clone $mutator;
-                $total++;
+                ++$total;
             }
-            $attempts++;
+            ++$attempts;
             $mutator->endOfMonth()->addDay();
         }
 
@@ -99,13 +86,6 @@ trait CalculateXOccurrences
     /**
      * Calculates the number of NDOM occurrences for a recurring transaction, starting at the date, until $count is
      * reached. It will skip over $skipMod -1 recurrences.
-     *
-     * @param Carbon $date
-     * @param int    $count
-     * @param int    $skipMod
-     * @param string $moment
-     *
-     * @return array
      */
     protected function getXNDomOccurrences(Carbon $date, int $count, int $skipMod, string $moment): array
     {
@@ -116,8 +96,8 @@ trait CalculateXOccurrences
         $mutator->addDay(); // always assume today has passed.
         $mutator->startOfMonth();
         // this feels a bit like a cop out but why reinvent the wheel?
-        $counters   = [1 => 'first', 2 => 'second', 3 => 'third', 4 => 'fourth', 5 => 'fifth',];
-        $daysOfWeek = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday',];
+        $counters   = [1 => 'first', 2 => 'second', 3 => 'third', 4 => 'fourth', 5 => 'fifth'];
+        $daysOfWeek = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday'];
         $parts      = explode(',', $moment);
 
         while ($total < $count) {
@@ -125,9 +105,9 @@ trait CalculateXOccurrences
             $newCarbon = new Carbon($string);
             if (0 === $attempts % $skipMod) {
                 $return[] = clone $newCarbon;
-                $total++;
+                ++$total;
             }
-            $attempts++;
+            ++$attempts;
             $mutator->endOfMonth()->addDay();
         }
 
@@ -137,13 +117,6 @@ trait CalculateXOccurrences
     /**
      * Calculates the number of weekly occurrences for a recurring transaction, starting at the date, until $count is
      * reached. It will skip over $skipMod -1 recurrences.
-     *
-     * @param Carbon $date
-     * @param int    $count
-     * @param int    $skipMod
-     * @param string $moment
-     *
-     * @return array
      */
     protected function getXWeeklyOccurrences(Carbon $date, int $count, int $skipMod, string $moment): array
     {
@@ -167,9 +140,9 @@ trait CalculateXOccurrences
         while ($total < $count) {
             if (0 === $attempts % $skipMod) {
                 $return[] = clone $mutator;
-                $total++;
+                ++$total;
             }
-            $attempts++;
+            ++$attempts;
             $mutator->addWeek();
         }
 
@@ -179,13 +152,6 @@ trait CalculateXOccurrences
     /**
      * Calculates the number of yearly occurrences for a recurring transaction, starting at the date, until $count is
      * reached. It will skip over $skipMod -1 recurrences.
-     *
-     * @param Carbon $date
-     * @param int    $count
-     * @param int    $skipMod
-     * @param string $moment
-     *
-     * @return array
      */
     protected function getXYearlyOccurrences(Carbon $date, int $count, int $skipMod, string $moment): array
     {
@@ -202,10 +168,10 @@ trait CalculateXOccurrences
         while ($total < $count) {
             if (0 === $attempts % $skipMod) {
                 $return[] = clone $obj;
-                $total++;
+                ++$total;
             }
             $obj->addYears();
-            $attempts++;
+            ++$attempts;
         }
 
         return $return;

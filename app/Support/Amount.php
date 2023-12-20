@@ -23,18 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use NumberFormatter;
 
 /**
  * Class Amount.
- *
-
  */
 class Amount
 {
@@ -42,11 +38,6 @@ class Amount
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
      *
-     * @param TransactionCurrency $format
-     * @param string              $amount
-     * @param bool                $coloured
-     *
-     * @return string
      * @throws FireflyException
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
@@ -58,13 +49,6 @@ class Amount
      * This method will properly format the given number, in color or "black and white",
      * as a currency, given two things: the currency required and the current locale.
      *
-     * @param string $symbol
-     * @param int    $decimalPlaces
-     * @param string $amount
-     * @param bool   $coloured
-     *
-     * @return string
-     *
      * @throws FireflyException
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string
@@ -73,10 +57,10 @@ class Amount
         $rounded  = app('steam')->bcround($amount, $decimalPlaces);
         $coloured ??= true;
 
-        $fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-        $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
-        $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
-        $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
+        $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+        $fmt->setSymbol(\NumberFormatter::CURRENCY_SYMBOL, $symbol);
+        $fmt->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
+        $fmt->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
         $result = (string)$fmt->format((float)$rounded); // intentional float
 
         if (true === $coloured) {
@@ -93,26 +77,20 @@ class Amount
         return $result;
     }
 
-    /**
-     * @return Collection
-     */
     public function getAllCurrencies(): Collection
     {
         return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
 
-    /**
-     * @return Collection
-     */
     public function getCurrencies(): Collection
     {
         /** @var User $user */
         $user = auth()->user();
+
         return $user->currencies()->orderBy('code', 'ASC')->get();
     }
 
     /**
-     * @return TransactionCurrency
      * @throws FireflyException
      */
     public function getDefaultCurrency(): TransactionCurrency
@@ -123,11 +101,6 @@ class Amount
         return $this->getDefaultCurrencyByUserGroup($user->userGroup);
     }
 
-    /**
-     * @param UserGroup $userGroup
-     *
-     * @return TransactionCurrency
-     */
     public function getDefaultCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
     {
         $cache = new CacheProperties();
@@ -147,19 +120,13 @@ class Amount
         return $default;
     }
 
-    /**
-     * @return TransactionCurrency
-     */
     public function getSystemCurrency(): TransactionCurrency
     {
         return TransactionCurrency::where('code', 'EUR')->first();
     }
 
     /**
-     * @param User $user
-     *
-     * @return TransactionCurrency
-     * @deprecated use getDefaultCurrencyByUserGroup instead.
+     * @deprecated use getDefaultCurrencyByUserGroup instead
      */
     public function getDefaultCurrencyByUser(User $user): TransactionCurrency
     {
@@ -172,7 +139,6 @@ class Amount
      *
      * Used only in one place.
      *
-     * @return array
      * @throws FireflyException
      */
     public function getJsConfig(): array
@@ -193,58 +159,10 @@ class Amount
     }
 
     /**
-     * @return array
-     * @throws FireflyException
-     */
-    private function getLocaleInfo(): array
-    {
-        // get config from preference, not from translation:
-        $locale = app('steam')->getLocale();
-        $array  = app('steam')->getLocaleArray($locale);
-
-        setlocale(LC_MONETARY, $array);
-        $info = localeconv();
-
-        // correct variables
-        $info['n_cs_precedes'] = $this->getLocaleField($info, 'n_cs_precedes');
-        $info['p_cs_precedes'] = $this->getLocaleField($info, 'p_cs_precedes');
-
-        $info['n_sep_by_space'] = $this->getLocaleField($info, 'n_sep_by_space');
-        $info['p_sep_by_space'] = $this->getLocaleField($info, 'p_sep_by_space');
-
-        $fmt = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-
-        $info['mon_decimal_point'] = $fmt->getSymbol(NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
-        $info['mon_thousands_sep'] = $fmt->getSymbol(NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL);
-
-        return $info;
-    }
-
-    /**
-     * @param array  $info
-     * @param string $field
-     *
-     * @return bool
-     */
-    private function getLocaleField(array $info, string $field): bool
-    {
-        return (is_bool($info[$field]) && true === $info[$field])
-               || (is_int($info[$field]) && 1 === $info[$field]);
-    }
-
-    /**
      * bool $sepBySpace is $localeconv['n_sep_by_space']
      * int $signPosn = $localeconv['n_sign_posn']
      * string $sign = $localeconv['negative_sign']
      * bool $csPrecedes = $localeconv['n_cs_precedes'].
-     *
-     * @param bool   $sepBySpace
-     * @param int    $signPosn
-     * @param string $sign
-     * @param bool   $csPrecedes
-     *
-     * @return string
-     *
      */
     public static function getAmountJsConfig(bool $sepBySpace, int $signPosn, string $sign, bool $csPrecedes): string
     {
@@ -277,32 +195,73 @@ class Amount
                 // ( and ) around the whole thing
                 $posA = '(';
                 $posE = ')';
+
                 break;
+
             case 1:
                 // The sign string precedes the quantity and currency_symbol
                 $posA = $sign;
+
                 break;
+
             case 2:
                 // The sign string succeeds the quantity and currency_symbol
                 $posE = $sign;
+
                 break;
+
             case 3:
                 // The sign string immediately precedes the currency_symbol
                 $posB = $sign;
+
                 break;
+
             case 4:
                 // The sign string immediately succeeds the currency_symbol
                 $posC = $sign;
         }
 
         // default is amount before currency
-        $format = $posA . $posD . '%v' . $space . $posB . '%s' . $posC . $posE;
+        $format = $posA.$posD.'%v'.$space.$posB.'%s'.$posC.$posE;
 
         if ($csPrecedes) {
             // alternative is currency before amount
-            $format = $posA . $posB . '%s' . $posC . $space . $posD . '%v' . $posE;
+            $format = $posA.$posB.'%s'.$posC.$space.$posD.'%v'.$posE;
         }
 
         return $format;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function getLocaleInfo(): array
+    {
+        // get config from preference, not from translation:
+        $locale = app('steam')->getLocale();
+        $array  = app('steam')->getLocaleArray($locale);
+
+        setlocale(LC_MONETARY, $array);
+        $info = localeconv();
+
+        // correct variables
+        $info['n_cs_precedes'] = $this->getLocaleField($info, 'n_cs_precedes');
+        $info['p_cs_precedes'] = $this->getLocaleField($info, 'p_cs_precedes');
+
+        $info['n_sep_by_space'] = $this->getLocaleField($info, 'n_sep_by_space');
+        $info['p_sep_by_space'] = $this->getLocaleField($info, 'p_sep_by_space');
+
+        $fmt = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+
+        $info['mon_decimal_point'] = $fmt->getSymbol(\NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
+        $info['mon_thousands_sep'] = $fmt->getSymbol(\NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL);
+
+        return $info;
+    }
+
+    private function getLocaleField(array $info, string $field): bool
+    {
+        return (is_bool($info[$field]) && true === $info[$field])
+               || (is_int($info[$field]) && 1 === $info[$field]);
     }
 }

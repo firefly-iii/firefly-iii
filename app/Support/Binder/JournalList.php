@@ -34,11 +34,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class JournalList implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
-     *
-     * @return array
-     *
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value, Route $route): array
@@ -59,14 +54,10 @@ class JournalList implements BinderInterface
 
             return $result;
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @param string $value
-     *
-     * @return array
-     */
     protected static function parseList(string $value): array
     {
         $list = array_unique(array_map('\intval', explode(',', $value)));

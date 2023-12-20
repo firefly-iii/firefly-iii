@@ -34,7 +34,6 @@ use FireflyIII\Services\Internal\Support\LocationServiceTrait;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
-use JsonException;
 
 /**
  * Factory to create or return accounts.
@@ -56,8 +55,6 @@ class AccountFactory
 
     /**
      * AccountFactory constructor.
-     *
-
      */
     public function __construct()
     {
@@ -70,12 +67,8 @@ class AccountFactory
     }
 
     /**
-     * @param string $accountName
-     * @param string $accountType
-     *
-     * @return Account
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function findOrCreate(string $accountName, string $accountType): Account
     {
@@ -107,11 +100,8 @@ class AccountFactory
     }
 
     /**
-     * @param array $data
-     *
-     * @return Account
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function create(array $data): Account
     {
@@ -133,10 +123,22 @@ class AccountFactory
         return $return;
     }
 
+    public function find(string $accountName, string $accountType): ?Account
+    {
+        app('log')->debug(sprintf('Now in AccountFactory::find("%s", "%s")', $accountName, $accountType));
+        $type = AccountType::whereType($accountType)->first();
+
+        // @var Account|null
+        return $this->user->accounts()->where('account_type_id', $type->id)->where('name', $accountName)->first();
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+        $this->accountRepository->setUser($user);
+    }
+
     /**
-     * @param array $data
-     *
-     * @return AccountType|null
      * @throws FireflyException
      */
     protected function getAccountType(array $data): ?AccountType
@@ -161,6 +163,7 @@ class AccountFactory
         }
         if (null === $result) {
             app('log')->warning(sprintf('Found NO account type based on %d and "%s"', $accountTypeId, $accountTypeName));
+
             throw new FireflyException(sprintf('AccountFactory::create() was unable to find account type #%d ("%s").', $accountTypeId, $accountTypeName));
         }
         app('log')->debug(sprintf('Found account type based on %d and "%s": "%s"', $accountTypeId, $accountTypeName, $result->type));
@@ -169,27 +172,8 @@ class AccountFactory
     }
 
     /**
-     * @param string $accountName
-     * @param string $accountType
-     *
-     * @return Account|null
-     */
-    public function find(string $accountName, string $accountType): ?Account
-    {
-        app('log')->debug(sprintf('Now in AccountFactory::find("%s", "%s")', $accountName, $accountType));
-        $type = AccountType::whereType($accountType)->first();
-
-        /** @var Account|null */
-        return $this->user->accounts()->where('account_type_id', $type->id)->where('name', $accountName)->first();
-    }
-
-    /**
-     * @param AccountType $type
-     * @param array       $data
-     *
-     * @return Account
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     private function createAccount(AccountType $type, array $data): Account
     {
@@ -257,12 +241,8 @@ class AccountFactory
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
-     *
-     * @return array
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     private function cleanMetaDataArray(Account $account, array $data): array
     {
@@ -272,7 +252,7 @@ class AccountFactory
         $currency     = $this->getCurrency($currencyId, $currencyCode);
 
         // only asset account may have a role:
-        if ($account->accountType->type !== AccountType::ASSET) {
+        if (AccountType::ASSET !== $account->accountType->type) {
             $accountRole = '';
         }
         // only liability may have direction:
@@ -285,17 +265,13 @@ class AccountFactory
         return $data;
     }
 
-    /**
-     * @param Account $account
-     * @param array   $data
-     */
     private function storeMetaData(Account $account, array $data): void
     {
         $fields = $this->validFields;
-        if ($account->accountType->type === AccountType::ASSET) {
+        if (AccountType::ASSET === $account->accountType->type) {
             $fields = $this->validAssetFields;
         }
-        if ($account->accountType->type === AccountType::ASSET && 'ccAsset' === $data['account_role']) {
+        if (AccountType::ASSET === $account->accountType->type && 'ccAsset' === $data['account_role']) {
             $fields = $this->validCCFields;
         }
 
@@ -304,7 +280,7 @@ class AccountFactory
         $list = config('firefly.valid_currency_account_types');
         if (!in_array($type, $list, true)) {
             $pos = array_search('currency_id', $fields, true);
-            if ($pos !== false) {
+            if (false !== $pos) {
                 unset($fields[$pos]);
             }
         }
@@ -329,9 +305,6 @@ class AccountFactory
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
-     *
      * @throws FireflyException
      */
     private function storeOpeningBalance(Account $account, array $data): void
@@ -351,9 +324,6 @@ class AccountFactory
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
-     *
      * @throws FireflyException
      */
     private function storeCreditLiability(Account $account, array $data): void
@@ -380,9 +350,6 @@ class AccountFactory
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
-     *
      * @throws FireflyException
      */
     private function storeOrder(Account $account, array $data): void
@@ -401,14 +368,5 @@ class AccountFactory
         $updateService = app(AccountUpdateService::class);
         $updateService->setUser($account->user);
         $updateService->update($account, ['order' => $order]);
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-        $this->accountRepository->setUser($user);
     }
 }

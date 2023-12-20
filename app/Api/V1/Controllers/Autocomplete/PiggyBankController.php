@@ -62,10 +62,6 @@ class PiggyBankController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getPiggiesAC
-     *
-     * @param AutocompleteRequest $request
-     *
-     * @return JsonResponse
      */
     public function piggyBanks(AutocompleteRequest $request): JsonResponse
     {
@@ -97,10 +93,6 @@ class PiggyBankController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getPiggiesBalanceAC
-     *
-     * @param AutocompleteRequest $request
-     *
-     * @return JsonResponse
      */
     public function piggyBanksWithBalance(AutocompleteRequest $request): JsonResponse
     {
@@ -108,6 +100,7 @@ class PiggyBankController extends Controller
         $piggies         = $this->piggyRepository->searchPiggyBank($data['query'], $this->parameters->get('limit'));
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $response        = [];
+
         /** @var PiggyBank $piggy */
         foreach ($piggies as $piggy) {
             $currency      = $this->accountRepository->getAccountCurrency($piggy->account) ?? $defaultCurrency;

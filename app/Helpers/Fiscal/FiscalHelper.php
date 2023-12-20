@@ -44,9 +44,8 @@ class FiscalHelper implements FiscalHelperInterface
     }
 
     /**
-     * @param Carbon $date
-     *
      * @return Carbon date object
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -68,9 +67,8 @@ class FiscalHelper implements FiscalHelperInterface
     }
 
     /**
-     * @param Carbon $date
-     *
      * @return Carbon date object
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

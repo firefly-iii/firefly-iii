@@ -46,12 +46,11 @@ class AccountBalanceGrouped
 
     /**
      * Convert the given input to a chart compatible array.
-     *
-     * @return array
      */
     public function convertToChartData(): array
     {
         $chartData = [];
+
         // loop2: loop this data, make chart bars for each currency:
         /** @var array $currency */
         foreach ($this->data as $currency) {
@@ -87,7 +86,6 @@ class AccountBalanceGrouped
                 'period'                  => $this->preferredRange,
                 'entries'                 => [],
                 'native_entries'          => [],
-
             ];
             // loop all possible periods between $start and $end, and add them to the correct dataset.
             $currentStart = clone $this->start;
@@ -95,12 +93,12 @@ class AccountBalanceGrouped
                 $key   = $currentStart->format($this->carbonFormat);
                 $label = $currentStart->toAtomString();
                 // normal entries
-                $income['entries'][$label]  = app('steam')->bcround(($currency[$key]['earned'] ?? '0'), $currency['currency_decimal_places']);
-                $expense['entries'][$label] = app('steam')->bcround(($currency[$key]['spent'] ?? '0'), $currency['currency_decimal_places']);
+                $income['entries'][$label]  = app('steam')->bcround($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);
+                $expense['entries'][$label] = app('steam')->bcround($currency[$key]['spent'] ?? '0', $currency['currency_decimal_places']);
 
                 // converted entries
-                $income['native_entries'][$label]  = app('steam')->bcround(($currency[$key]['native_earned'] ?? '0'), $currency['native_decimal_places']);
-                $expense['native_entries'][$label] = app('steam')->bcround(($currency[$key]['native_spent'] ?? '0'), $currency['native_decimal_places']);
+                $income['native_entries'][$label]  = app('steam')->bcround($currency[$key]['native_earned'] ?? '0', $currency['native_decimal_places']);
+                $expense['native_entries'][$label] = app('steam')->bcround($currency[$key]['native_spent'] ?? '0', $currency['native_decimal_places']);
 
                 // next loop
                 $currentStart = app('navigation')->addPeriod($currentStart, $this->preferredRange, 0);
@@ -109,18 +107,18 @@ class AccountBalanceGrouped
             $chartData[] = $income;
             $chartData[] = $expense;
         }
+
         return $chartData;
     }
 
     /**
      * Group the given journals by currency and then by period.
      * If they are part of a set of accounts this basically means it's balance chart.
-     *
-     * @return void
      */
     public function groupByCurrencyAndPeriod(): void
     {
         $converter = new ExchangeRateConverter();
+
         // loop. group by currency and by period.
         /** @var array $journal */
         foreach ($this->journals as $journal) {
@@ -159,9 +157,8 @@ class AccountBalanceGrouped
             // transfer or reconcile or opening balance, and these accounts are the destination.
             if (
                 TransactionType::DEPOSIT === $journal['transaction_type_type']
-                ||
 
-                (
+                || (
                     (
                         TransactionType::TRANSFER === $journal['transaction_type_type']
                         || TransactionType::RECONCILIATION === $journal['transaction_type_type']
@@ -173,6 +170,7 @@ class AccountBalanceGrouped
                 $key    = 'earned';
                 $amount = app('steam')->positive($journal['amount']);
             }
+
             // get conversion rate
             try {
                 $rate = $converter->getCurrencyRate($currency, $this->default, $journal['date']);
@@ -195,29 +193,18 @@ class AccountBalanceGrouped
             $convertedKey                                    = sprintf('native_%s', $key);
             $this->data[$currencyId][$period][$convertedKey] = bcadd($this->data[$currencyId][$period][$convertedKey], $amountConverted);
         }
-
     }
 
-    /**
-     * @param Collection $accounts
-     *
-     * @return void
-     */
     public function setAccounts(Collection $accounts): void
     {
         $this->accountIds = $accounts->pluck('id')->toArray();
     }
 
-    /**
-     * @param TransactionCurrency $default
-     *
-     * @return void
-     */
     public function setDefault(TransactionCurrency $default): void
     {
         $this->default                  = $default;
         $defaultCurrencyId              = $default->id;
-        $this->currencies               = [$default->id => $default,]; // currency cache
+        $this->currencies               = [$default->id => $default]; // currency cache
         $this->data[$defaultCurrencyId] = [
             'currency_id'             => (string)$defaultCurrencyId,
             'currency_symbol'         => $default->symbol,
@@ -232,47 +219,24 @@ class AccountBalanceGrouped
         ];
     }
 
-    /**
-     * @param Carbon $end
-     *
-     * @return void
-     */
     public function setEnd(Carbon $end): void
     {
         $this->end = $end;
     }
 
-    /**
-     * @param array $journals
-     *
-     * @return void
-     */
     public function setJournals(array $journals): void
     {
         $this->journals = $journals;
     }
 
-    /**
-     * @param string $preferredRange
-     *
-     * @return void
-     */
     public function setPreferredRange(string $preferredRange): void
     {
         $this->preferredRange = $preferredRange;
         $this->carbonFormat   = app('navigation')->preferredCarbonFormatByPeriod($preferredRange);
-
     }
 
-    /**
-     * @param Carbon $start
-     *
-     * @return void
-     */
     public function setStart(Carbon $start): void
     {
         $this->start = $start;
     }
-
-
 }

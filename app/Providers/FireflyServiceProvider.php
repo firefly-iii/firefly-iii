@@ -72,13 +72,9 @@ use FireflyIII\TransactionRules\Engine\SearchRuleEngine;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use Validator;
 
 /**
- *
  * Class FireflyServiceProvider.
- *
- *
  */
 class FireflyServiceProvider extends ServiceProvider
 {
@@ -87,7 +83,7 @@ class FireflyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Validator::resolver(
+        \Validator::resolver(
             static function ($translator, $data, $rules, $messages) {
                 return new FireflyValidator($translator, $data, $rules, $messages);
             }
@@ -96,7 +92,6 @@ class FireflyServiceProvider extends ServiceProvider
 
     /**
      * Register stuff.
-     *
      */
     public function register(): void
     {

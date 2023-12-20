@@ -34,62 +34,31 @@ interface PopupReportInterface
 {
     /**
      * Get balances for budget.
-     *
-     * @param Budget  $budget
-     * @param Account $account
-     * @param array   $attributes
-     *
-     * @return array
      */
     public function balanceForBudget(Budget $budget, Account $account, array $attributes): array;
 
     /**
      * Get balances for transactions without a budget.
-     *
-     * @param Account $account
-     * @param array   $attributes
-     *
-     * @return array
      */
     public function balanceForNoBudget(Account $account, array $attributes): array;
 
     /**
      * Group by budget.
-     *
-     * @param Budget $budget
-     * @param array  $attributes
-     *
-     * @return array
      */
     public function byBudget(Budget $budget, array $attributes): array;
 
     /**
      * Group by category.
-     *
-     * @param Category|null $category
-     * @param array         $attributes
-     *
-     * @return array
      */
     public function byCategory(?Category $category, array $attributes): array;
 
     /**
      * Do something with expense. Sorry, I am not very inspirational here.
-     *
-     * @param Account $account
-     * @param array   $attributes
-     *
-     * @return array
      */
     public function byExpenses(Account $account, array $attributes): array;
 
     /**
      * Do something with income. Sorry, I am not very inspirational here.
-     *
-     * @param Account $account
-     * @param array   $attributes
-     *
-     * @return array
      */
     public function byIncome(Account $account, array $attributes): array;
 }

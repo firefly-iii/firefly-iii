@@ -30,18 +30,9 @@ use FireflyIII\Models\WebhookMessage;
  */
 interface WebhookSenderInterface
 {
-    /**
-     * @return int
-     */
     public function getVersion(): int;
 
-    /**
-     *
-     */
     public function send(): void;
 
-    /**
-     * @param WebhookMessage $message
-     */
     public function setMessage(WebhookMessage $message): void;
 }

@@ -28,7 +28,6 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use League\Flysystem\FilesystemException;
-use Storage;
 
 /**
  * Class VerifySecurityAlerts
@@ -37,7 +36,6 @@ class VerifySecurityAlerts extends Command
 {
     use ShowsFriendlyMessages;
 
-
     protected $description = 'Verify security alerts';
 
     protected $signature = 'firefly-iii:verify-security-alerts';
@@ -45,7 +43,6 @@ class VerifySecurityAlerts extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws FilesystemException
      */
     public function handle(): int
@@ -54,7 +51,7 @@ class VerifySecurityAlerts extends Command
 
         // check for security advisories.
         $version = config('firefly.version');
-        $disk    = Storage::disk('resources');
+        $disk    = \Storage::disk('resources');
         // Next line is ignored because it's a Laravel Facade.
         if (!$disk->has('alerts.json')) { // @phpstan-ignore-line
             app('log')->debug('No alerts.json file present.');
@@ -100,12 +97,10 @@ class VerifySecurityAlerts extends Command
         }
         app('log')->debug(sprintf('No security alerts for version %s', $version));
         $this->friendlyPositive(sprintf('No security alerts for version %s', $version));
+
         return 0;
     }
 
-    /**
-     * @return void
-     */
     private function removeOldAdvisory(): void
     {
         try {
@@ -116,11 +111,6 @@ class VerifySecurityAlerts extends Command
         }
     }
 
-    /**
-     * @param array $array
-     *
-     * @return void
-     */
     private function saveSecurityAdvisory(array $array): void
     {
         try {

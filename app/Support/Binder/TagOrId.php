@@ -33,12 +33,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class TagOrId implements BinderInterface
 {
-    /**
-     * @param string $value
-     * @param Route  $route
-     *
-     * @return Tag
-     */
     public static function routeBinder(string $value, Route $route): Tag
     {
         if (auth()->check()) {
@@ -54,9 +48,11 @@ class TagOrId implements BinderInterface
                 return $result;
             }
             app('log')->error('TagOrId: tag not found.');
+
             throw new NotFoundHttpException();
         }
         app('log')->error('TagOrId: user is not logged in.');
+
         throw new NotFoundHttpException();
     }
 }

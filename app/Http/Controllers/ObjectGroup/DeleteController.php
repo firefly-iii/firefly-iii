@@ -40,8 +40,6 @@ class DeleteController extends Controller
 
     /**
      * PiggyBankController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -62,8 +60,6 @@ class DeleteController extends Controller
     /**
      * Delete a piggy bank.
      *
-     * @param ObjectGroup $objectGroup
-     *
      * @return Factory|View
      */
     public function delete(ObjectGroup $objectGroup)
@@ -79,10 +75,6 @@ class DeleteController extends Controller
 
     /**
      * Destroy the piggy bank.
-     *
-     * @param ObjectGroup $objectGroup
-     *
-     * @return RedirectResponse
      */
     public function destroy(ObjectGroup $objectGroup): RedirectResponse
     {

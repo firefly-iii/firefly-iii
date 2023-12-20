@@ -37,9 +37,6 @@ class UpdateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    /**
-     * @return array
-     */
     public function getData(): array
     {
         $triggers   = Webhook::getTriggersForValidation();
@@ -76,8 +73,6 @@ class UpdateRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -85,6 +80,7 @@ class UpdateRequest extends FormRequest
         $responses      = implode(',', array_keys(Webhook::getResponsesForValidation()));
         $deliveries     = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
         $validProtocols = config('firefly.valid_url_protocols');
+
         /** @var Webhook $webhook */
         $webhook = $this->route()->parameter('webhook');
 

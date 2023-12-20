@@ -31,16 +31,16 @@ use Illuminate\Support\Facades\Facade;
 /**
  * Class Preferences.
  *
- * @method Collection beginsWith(User $user, string $search)
- * @method bool delete(string $name)
- * @method Collection findByName(string $name)
- * @method Preference get(string $name, $value = null)
- * @method array getArrayForUser(User $user, array $list)
- * @method Preference|null getForUser(User $user, string $name, $default = null)
- * @method string lastActivity()
- * @method void mark()
- * @method Preference set(string $name, $value)
- * @method Preference setForUser(User $user, string $name, $value)
+ * @method Collection      beginsWith(User $user, string $search)
+ * @method bool            delete(string $name)
+ * @method Collection      findByName(string $name)
+ * @method Preference      get(string $name, $value = null)
+ * @method array           getArrayForUser(User $user, array $list)
+ * @method null|Preference getForUser(User $user, string $name, $default = null)
+ * @method string          lastActivity()
+ * @method void            mark()
+ * @method Preference      set(string $name, $value)
+ * @method Preference      setForUser(User $user, string $name, $value)
  */
 class Preferences extends Facade
 {
@@ -51,8 +51,6 @@ class Preferences extends Facade
 
     /**
      * Get the registered name of the component.
-     *
-     * @return string
      */
     protected static function getFacadeAccessor(): string
     {

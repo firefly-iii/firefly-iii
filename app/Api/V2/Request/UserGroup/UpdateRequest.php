@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * StoreRequest.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -41,9 +40,6 @@ class UpdateRequest extends FormRequest
 
     protected array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
 
-    /**
-     * @return array
-     */
     public function getAll(): array
     {
         return [
@@ -51,13 +47,11 @@ class UpdateRequest extends FormRequest
         ];
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         /** @var UserGroup $userGroup */
         $userGroup = $this->route()->parameter('userGroup');
+
         return [
             'title' => sprintf('required|min:2|max:255|unique:user_groups,title,%d', $userGroup->id),
         ];

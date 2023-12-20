@@ -41,11 +41,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View as IlluminateView;
-use InvalidArgumentException;
 
 /**
  * Class MassController.
- *
  */
 class MassController extends Controller
 {
@@ -53,8 +51,6 @@ class MassController extends Controller
 
     /**
      * MassController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -73,10 +69,6 @@ class MassController extends Controller
 
     /**
      * Mass delete transactions.
-     *
-     * @param array $journals
-     *
-     * @return IlluminateView
      */
     public function delete(array $journals): IlluminateView
     {
@@ -91,10 +83,7 @@ class MassController extends Controller
     /**
      * Do the mass delete.
      *
-     * @param MassDeleteJournalRequest $request
-     *
      * @return Application|Redirector|RedirectResponse
-     *
      */
     public function destroy(MassDeleteJournalRequest $request)
     {
@@ -103,15 +92,18 @@ class MassController extends Controller
         $count = 0;
         if (is_array($ids)) {
             app('log')->debug('Array of IDs', $ids);
+
             /** @var string $journalId */
             foreach ($ids as $journalId) {
                 app('log')->debug(sprintf('Searching for ID #%d', $journalId));
-                /** @var TransactionJournal|null $journal */
+
+                /** @var null|TransactionJournal $journal */
                 $journal = $this->repository->find((int)$journalId);
                 if (null !== $journal && (int)$journalId === $journal->id) {
                     $this->repository->destroyJournal($journal);
                     ++$count;
                     app('log')->debug(sprintf('Deleted transaction journal #%d', $journalId));
+
                     continue;
                 }
                 app('log')->debug(sprintf('Could not find transaction journal #%d', $journalId));
@@ -126,10 +118,6 @@ class MassController extends Controller
 
     /**
      * Mass edit of journals.
-     *
-     * @param array $journals
-     *
-     * @return IlluminateView
      */
     public function edit(array $journals): IlluminateView
     {
@@ -165,9 +153,8 @@ class MassController extends Controller
     /**
      * Mass update of journals.
      *
-     * @param MassEditJournalRequest $request
+     * @return Redirector|RedirectResponse
      *
-     * @return RedirectResponse|Redirector
      * @throws FireflyException
      */
     public function update(MassEditJournalRequest $request)
@@ -178,12 +165,14 @@ class MassController extends Controller
             throw new FireflyException('This is not an array.');
         }
         $count = 0;
+
         /** @var string $journalId */
         foreach ($journalIds as $journalId) {
             $integer = (int)$journalId;
+
             try {
                 $this->updateJournal($integer, $request);
-                $count++;
+                ++$count;
             } catch (FireflyException $e) {
                 // @ignoreException
             }
@@ -197,9 +186,6 @@ class MassController extends Controller
     }
 
     /**
-     * @param int                    $journalId
-     * @param MassEditJournalRequest $request
-     *
      * @throws FireflyException
      */
     private function updateJournal(int $journalId, MassEditJournalRequest $request): void
@@ -233,13 +219,6 @@ class MassController extends Controller
         event(new UpdatedTransactionGroup($journal->transactionGroup, true, true));
     }
 
-    /**
-     * @param MassEditJournalRequest $request
-     * @param int                    $journalId
-     * @param string                 $key
-     *
-     * @return Carbon|null
-     */
     private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $key): ?Carbon
     {
         $value = $request->get($key);
@@ -249,9 +228,10 @@ class MassController extends Controller
         if (!array_key_exists($journalId, $value)) {
             return null;
         }
+
         try {
             $carbon = Carbon::parse($value[$journalId]);
-        } catch (InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
             Log::warning(sprintf('Could not parse "%s" but dont mind', $value[$journalId]));
             Log::warning($e->getMessage());
 
@@ -261,13 +241,6 @@ class MassController extends Controller
         return $carbon;
     }
 
-    /**
-     * @param MassEditJournalRequest $request
-     * @param int                    $journalId
-     * @param string                 $string
-     *
-     * @return string|null
-     */
     private function getStringFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?string
     {
         $value = $request->get($string);
@@ -281,13 +254,6 @@ class MassController extends Controller
         return (string)$value[$journalId];
     }
 
-    /**
-     * @param MassEditJournalRequest $request
-     * @param int                    $journalId
-     * @param string                 $string
-     *
-     * @return int|null
-     */
     private function getIntFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?int
     {
         $value = $request->get($string);

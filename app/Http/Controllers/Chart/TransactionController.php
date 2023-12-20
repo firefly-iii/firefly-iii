@@ -50,9 +50,6 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
      * @return JsonResponse
      */
     public function budgets(Carbon $start, Carbon $end)
@@ -64,6 +61,7 @@ class TransactionController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end);
@@ -92,10 +90,6 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param string $objectType
-     * @param Carbon $start
-     * @param Carbon $end
-     *
      * @return JsonResponse
      */
     public function categories(string $objectType, Carbon $start, Carbon $end)
@@ -108,6 +102,7 @@ class TransactionController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end);
@@ -145,10 +140,6 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param string $objectType
-     * @param Carbon $start
-     * @param Carbon $end
-     *
      * @return JsonResponse
      */
     public function destinationAccounts(string $objectType, Carbon $start, Carbon $end)
@@ -161,6 +152,7 @@ class TransactionController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end);
@@ -198,10 +190,6 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param string $objectType
-     * @param Carbon $start
-     * @param Carbon $end
-     *
      * @return JsonResponse
      */
     public function sourceAccounts(string $objectType, Carbon $start, Carbon $end)
@@ -214,6 +202,7 @@ class TransactionController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end);

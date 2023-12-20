@@ -30,7 +30,6 @@ use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
 use Illuminate\Support\MessageBag;
-use JsonException;
 
 /**
  * Class RecurrenceFactory
@@ -45,8 +44,6 @@ class RecurrenceFactory
 
     /**
      * Constructor.
-     *
-
      */
     public function __construct()
     {
@@ -54,11 +51,8 @@ class RecurrenceFactory
     }
 
     /**
-     * @param array $data
-     *
-     * @return Recurrence
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function create(array $data): Recurrence
     {
@@ -125,6 +119,7 @@ class RecurrenceFactory
         }
 
         $this->createRepetitions($recurrence, $data['repetitions'] ?? []);
+
         try {
             $this->createTransactions($recurrence, $data['transactions'] ?? []);
         } catch (FireflyException $e) {
@@ -133,24 +128,18 @@ class RecurrenceFactory
             $recurrence->forceDelete();
             $message = sprintf('Could not create recurring transaction: %s', $e->getMessage());
             $this->errors->add('store', $message);
+
             throw new FireflyException($message, 0, $e);
         }
-
 
         return $recurrence;
     }
 
-    /**
-     * @return MessageBag
-     */
     public function getErrors(): MessageBag
     {
         return $this->errors;
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user): void
     {
         $this->user = $user;

@@ -29,27 +29,18 @@ namespace FireflyIII\Repositories\ObjectGroup;
  */
 trait OrganisesObjectGroups
 {
-    /**
-     *
-     */
     protected function cleanupObjectGroups(): void
     {
         $this->deleteEmptyObjectGroups();
         $this->sortObjectGroups();
     }
 
-    /**
-     *
-     */
     private function deleteEmptyObjectGroups(): void
     {
         $repository = app(ObjectGroupRepositoryInterface::class);
         $repository->deleteEmpty();
     }
 
-    /**
-     *
-     */
     private function sortObjectGroups(): void
     {
         $repository = app(ObjectGroupRepositoryInterface::class);

@@ -29,6 +29,4 @@ use FireflyIII\Api\V2\Controllers\Controller;
 /**
  * Class DebugController
  */
-class DebugController extends Controller
-{
-}
+class DebugController extends Controller {}

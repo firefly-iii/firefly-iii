@@ -44,8 +44,6 @@ class HomeController extends Controller
 {
     /**
      * ConfigurationController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -57,6 +55,7 @@ class HomeController extends Controller
      * Index of the admin.
      *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -81,11 +80,6 @@ class HomeController extends Controller
         return view('admin.index', compact('title', 'mainTitleIcon', 'email', 'notifications', 'slackUrl'));
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     public function notifications(Request $request): RedirectResponse
     {
         foreach (config('firefly.admin_notifications') as $item) {
@@ -104,17 +98,19 @@ class HomeController extends Controller
         }
 
         session()->flash('success', (string)trans('firefly.notification_settings_saved'));
+
         return redirect(route('admin.index'));
     }
 
     /**
      * Send a test message to the admin.
      *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function testMessage()
     {
         Log::channel('audit')->info('User sends test message.');
+
         /** @var User $user */
         $user = auth()->user();
         app('log')->debug('Now in testMessage() controller.');

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Calculator.php
  * Copyright (c) 2023 Antonio Spinelli https://github.com/tonicospinelli
@@ -27,7 +26,6 @@ namespace FireflyIII\Support\Calendar;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\IntervalException;
-use SplObjectStorage;
 
 /**
  * Class Calculator
@@ -35,15 +33,10 @@ use SplObjectStorage;
 class Calculator
 {
     public const int DEFAULT_INTERVAL = 1;
-    private static ?SplObjectStorage $intervalMap = null;
+    private static ?\SplObjectStorage $intervalMap = null;
     private static array             $intervals   = [];
 
     /**
-     * @param Carbon      $epoch
-     * @param Periodicity $periodicity
-     * @param int         $skipInterval
-     *
-     * @return Carbon
      * @throws IntervalException
      */
     public function nextDateByInterval(Carbon $epoch, Periodicity $periodicity, int $skipInterval = 0): Carbon
@@ -55,54 +48,37 @@ class Calculator
         /** @var Periodicity\Interval $periodicity */
         $periodicity = self::$intervalMap->offsetGet($periodicity);
         $interval    = $this->skipInterval($skipInterval);
+
         return $periodicity->nextDate($epoch->clone(), $interval);
     }
 
-    /**
-     * @param Periodicity $periodicity
-     *
-     * @return bool
-     */
     public function isAvailablePeriodicity(Periodicity $periodicity): bool
     {
         return self::containsInterval($periodicity);
     }
 
-    /**
-     * @param Periodicity $periodicity
-     *
-     * @return bool
-     */
     private static function containsInterval(Periodicity $periodicity): bool
     {
         return self::loadIntervalMap()->contains($periodicity);
     }
 
-    /**
-     * @return SplObjectStorage
-     */
-    private static function loadIntervalMap(): SplObjectStorage
+    private static function loadIntervalMap(): \SplObjectStorage
     {
-        if (self::$intervalMap !== null) {
+        if (null !== self::$intervalMap) {
             return self::$intervalMap;
         }
-        self::$intervalMap = new SplObjectStorage();
+        self::$intervalMap = new \SplObjectStorage();
         foreach (Periodicity::cases() as $interval) {
-            $periodicityClass  = __NAMESPACE__ . "\\Periodicity\\{$interval->name}";
+            $periodicityClass  = __NAMESPACE__."\\Periodicity\\{$interval->name}";
             self::$intervals[] = $interval->name;
             self::$intervalMap->attach($interval, new $periodicityClass());
         }
+
         return self::$intervalMap;
     }
 
-    /**
-     * @param int $skip
-     *
-     * @return int
-     */
     private function skipInterval(int $skip): int
     {
         return self::DEFAULT_INTERVAL + $skip;
     }
-
 }

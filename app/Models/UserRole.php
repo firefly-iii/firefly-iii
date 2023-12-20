@@ -35,13 +35,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * Class UserRole
  *
- * @property int                               $id
- * @property Carbon|null                       $created_at
- * @property Carbon|null                       $updated_at
- * @property string|null                       $deleted_at
- * @property string                            $title
- * @property-read Collection|GroupMembership[] $groupMemberships
- * @property-read int|null                     $group_memberships_count
+ * @property int                          $id
+ * @property null|Carbon                  $created_at
+ * @property null|Carbon                  $updated_at
+ * @property null|string                  $deleted_at
+ * @property string                       $title
+ * @property Collection|GroupMembership[] $groupMemberships
+ * @property null|int                     $group_memberships_count
+ *
  * @method static Builder|UserRole newModelQuery()
  * @method static Builder|UserRole newQuery()
  * @method static Builder|UserRole query()
@@ -50,6 +51,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static Builder|UserRole whereId($value)
  * @method static Builder|UserRole whereTitle($value)
  * @method static Builder|UserRole whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class UserRole extends Model
@@ -58,10 +60,6 @@ class UserRole extends Model
 
     protected $fillable = ['title'];
 
-    /**
-     *
-     * @return HasMany
-     */
     public function groupMemberships(): HasMany
     {
         return $this->hasMany(GroupMembership::class);

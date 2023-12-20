@@ -45,8 +45,6 @@ class StoreController extends Controller
 
     /**
      * StoreController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -70,9 +68,6 @@ class StoreController extends Controller
      *
      * Store a newly created resource in storage.
      *
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function store(StoreRequest $request): JsonResponse
@@ -93,12 +88,6 @@ class StoreController extends Controller
 
     /**
      * Upload an attachment.
-     *
-     *
-     * @param Request    $request
-     * @param Attachment $attachment
-     *
-     * @return JsonResponse
      */
     public function upload(Request $request, Attachment $attachment): JsonResponse
     {

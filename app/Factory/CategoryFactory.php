@@ -36,10 +36,6 @@ class CategoryFactory
     private User $user;
 
     /**
-     * @param int|null    $categoryId
-     * @param null|string $categoryName
-     *
-     * @return Category|null
      * @throws FireflyException
      */
     public function findOrCreate(?int $categoryId, ?string $categoryName): ?Category
@@ -54,7 +50,7 @@ class CategoryFactory
         }
         // first by ID:
         if ($categoryId > 0) {
-            /** @var Category|null $category */
+            /** @var null|Category $category */
             $category = $this->user->categories()->find($categoryId);
             if (null !== $category) {
                 return $category;
@@ -66,6 +62,7 @@ class CategoryFactory
             if (null !== $category) {
                 return $category;
             }
+
             try {
                 return Category::create(
                     [
@@ -77,6 +74,7 @@ class CategoryFactory
             } catch (QueryException $e) {
                 app('log')->error($e->getMessage());
                 app('log')->error($e->getTraceAsString());
+
                 throw new FireflyException('400003: Could not store new category.', 0, $e);
             }
         }
@@ -84,19 +82,11 @@ class CategoryFactory
         return null;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return Category|null
-     */
     public function findByName(string $name): ?Category
     {
         return $this->user->categories()->where('name', $name)->first();
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user): void
     {
         $this->user = $user;

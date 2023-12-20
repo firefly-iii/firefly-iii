@@ -49,9 +49,6 @@ class AccountController extends Controller
 
     private AccountRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -79,18 +76,17 @@ class AccountController extends Controller
      *
      * TODO validate and set user_group_id from request
      *
-     * @param DashboardChartRequest $request
-     *
-     * @return JsonResponse
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws FireflyException
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function dashboard(DashboardChartRequest $request): JsonResponse
     {
         /** @var Carbon $start */
         $start = $this->parameters->get('start');
+
         /** @var Carbon $end */
         $end = $this->parameters->get('end');
         $end->endOfDay();
@@ -98,6 +94,7 @@ class AccountController extends Controller
         /** @var TransactionCurrency $default */
         $default = app('amount')->getDefaultCurrency();
         $params  = $request->getAll();
+
         /** @var Collection $accounts */
         $accounts  = $params['accounts'];
         $chartData = [];
@@ -174,5 +171,4 @@ class AccountController extends Controller
 
         return response()->json($this->clean($chartData));
     }
-
 }

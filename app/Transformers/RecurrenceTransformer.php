@@ -37,7 +37,6 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 
 /**
- *
  * Class RecurringTransactionTransformer
  */
 class RecurrenceTransformer extends AbstractTransformer
@@ -50,8 +49,6 @@ class RecurrenceTransformer extends AbstractTransformer
 
     /**
      * RecurrenceTransformer constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,9 +62,6 @@ class RecurrenceTransformer extends AbstractTransformer
     /**
      * Transform the recurring transaction.
      *
-     * @param Recurrence $recurrence
-     *
-     * @return array
      * @throws FireflyException
      */
     public function transform(Recurrence $recurrence): array
@@ -104,16 +98,13 @@ class RecurrenceTransformer extends AbstractTransformer
             'links'             => [
                 [
                     'rel' => 'self',
-                    'uri' => '/recurring/' . $recurrence->id,
+                    'uri' => '/recurring/'.$recurrence->id,
                 ],
             ],
         ];
     }
 
     /**
-     * @param Recurrence $recurrence
-     *
-     * @return array
      * @throws FireflyException
      */
     private function getRepetitions(Recurrence $recurrence): array
@@ -138,6 +129,7 @@ class RecurrenceTransformer extends AbstractTransformer
 
             // get the (future) occurrences for this specific type of repetition:
             $occurrences = $this->repository->getXOccurrencesSince($repetition, $fromDate, new Carbon(), 5);
+
             /** @var Carbon $carbon */
             foreach ($occurrences as $carbon) {
                 $repetitionArray['occurrences'][] = $carbon->toAtomString();
@@ -150,21 +142,20 @@ class RecurrenceTransformer extends AbstractTransformer
     }
 
     /**
-     * @param Recurrence $recurrence
-     *
-     * @return array
      * @throws FireflyException
      */
     private function getTransactions(Recurrence $recurrence): array
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
         $return = [];
+
         // get all transactions:
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions()->get() as $transaction) {
-            /** @var Account|null $sourceAccount */
+            /** @var null|Account $sourceAccount */
             $sourceAccount = $transaction->sourceAccount;
-            /** @var Account|null $destinationAccount */
+
+            /** @var null|Account $destinationAccount */
             $destinationAccount    = $transaction->destinationAccount;
             $foreignCurrencyCode   = null;
             $foreignCurrencySymbol = null;
@@ -240,10 +231,6 @@ class RecurrenceTransformer extends AbstractTransformer
     }
 
     /**
-     * @param RecurrenceTransaction $transaction
-     * @param array                 $array
-     *
-     * @return array
      * @throws FireflyException
      */
     private function getTransactionMeta(RecurrenceTransaction $transaction, array $array): array
@@ -264,43 +251,55 @@ class RecurrenceTransformer extends AbstractTransformer
             switch ($transactionMeta->name) {
                 default:
                     throw new FireflyException(sprintf('Recurrence transformer cant handle field "%s"', $transactionMeta->name));
+
                 case 'bill_id':
                     $bill = $this->billRepos->find((int)$transactionMeta->value);
                     if (null !== $bill) {
                         $array['bill_id']   = (string)$bill->id;
                         $array['bill_name'] = $bill->name;
                     }
+
                     break;
+
                 case 'tags':
                     $array['tags'] = json_decode($transactionMeta->value);
+
                     break;
+
                 case 'piggy_bank_id':
                     $piggy = $this->piggyRepos->find((int)$transactionMeta->value);
                     if (null !== $piggy) {
                         $array['piggy_bank_id']   = (string)$piggy->id;
                         $array['piggy_bank_name'] = $piggy->name;
                     }
+
                     break;
+
                 case 'category_id':
                     $category = $this->factory->findOrCreate((int)$transactionMeta->value, null);
                     if (null !== $category) {
                         $array['category_id']   = (string)$category->id;
                         $array['category_name'] = $category->name;
                     }
+
                     break;
+
                 case 'category_name':
                     $category = $this->factory->findOrCreate(null, $transactionMeta->value);
                     if (null !== $category) {
                         $array['category_id']   = (string)$category->id;
                         $array['category_name'] = $category->name;
                     }
+
                     break;
+
                 case 'budget_id':
                     $budget = $this->budgetRepos->find((int)$transactionMeta->value);
                     if (null !== $budget) {
                         $array['budget_id']   = (string)$budget->id;
                         $array['budget_name'] = $budget->name;
                     }
+
                     break;
             }
         }

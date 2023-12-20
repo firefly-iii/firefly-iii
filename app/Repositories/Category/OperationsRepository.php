@@ -31,7 +31,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
- *
  * Class OperationsRepository
  */
 class OperationsRepository implements OperationsRepositoryInterface
@@ -44,13 +43,6 @@ class OperationsRepository implements OperationsRepositoryInterface
      * as possible. Amounts are always negative.
      *
      * First currency, then categories.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $categories
-     *
-     * @return array
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
@@ -116,10 +108,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $array;
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;
@@ -127,26 +116,9 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * Returns a list of all the categories belonging to a user.
-     *
-     * @return Collection
-     */
-    private function getCategories(): Collection
-    {
-        return $this->user->categories()->get();
-    }
-
-    /**
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have the specified category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $categories
-     *
-     * @return array
      */
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
@@ -211,15 +183,13 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $array;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function listTransferredIn(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::TRANSFER])
-                  ->setDestinationAccounts($accounts)->excludeSourceAccounts($accounts);
+            ->setDestinationAccounts($accounts)->excludeSourceAccounts($accounts)
+        ;
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
@@ -276,15 +246,13 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $array;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function listTransferredOut(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::TRANSFER])
-                  ->setSourceAccounts($accounts)->excludeDestinationAccounts($accounts);
+            ->setSourceAccounts($accounts)->excludeDestinationAccounts($accounts)
+        ;
         if (null !== $categories && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
@@ -343,20 +311,14 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * Sum of withdrawal journals in period for a set of categories, grouped per currency. Amounts are always negative.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $categories
-     *
-     * @return array
      */
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)
-                  ->setTypes([TransactionType::WITHDRAWAL]);
+            ->setTypes([TransactionType::WITHDRAWAL])
+        ;
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
@@ -387,20 +349,14 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * Sum of income journals in period for a set of categories, grouped per currency. Amounts are always positive.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $categories
-     *
-     * @return array
      */
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)
-                  ->setTypes([TransactionType::DEPOSIT]);
+            ->setTypes([TransactionType::DEPOSIT])
+        ;
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
@@ -430,20 +386,14 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * Sum of income journals in period for a set of categories, grouped per currency. Amounts are always positive.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $categories
-     *
-     * @return array
      */
     public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)
-                  ->setTypes([TransactionType::TRANSFER]);
+            ->setTypes([TransactionType::TRANSFER])
+        ;
 
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
@@ -469,5 +419,13 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
 
         return $array;
+    }
+
+    /**
+     * Returns a list of all the categories belonging to a user.
+     */
+    private function getCategories(): Collection
+    {
+        return $this->user->categories()->get();
     }
 }

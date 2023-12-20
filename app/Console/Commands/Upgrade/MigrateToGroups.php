@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
-use DB;
-use Exception;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Models\Budget;
@@ -62,7 +60,6 @@ class MigrateToGroups extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -79,7 +76,6 @@ class MigrateToGroups extends Command
         if (true === $this->option('force')) {
             $this->friendlyWarning('Forcing the migration.');
         }
-
 
         $this->makeGroupsFromSplitJournals();
         $this->makeGroupsFromAll();
@@ -99,8 +95,6 @@ class MigrateToGroups extends Command
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
      * be called from the handle method instead of using the constructor to initialize the command.
-     *
-
      */
     private function stupidLaravel(): void
     {
@@ -112,7 +106,6 @@ class MigrateToGroups extends Command
     }
 
     /**
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -127,13 +120,14 @@ class MigrateToGroups extends Command
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function makeGroupsFromSplitJournals(): void
     {
         $splitJournals = $this->cliRepository->getSplitJournals();
         if ($splitJournals->count() > 0) {
             $this->friendlyLine(sprintf('Going to convert %d split transaction(s). Please hold..', $splitJournals->count()));
+
             /** @var TransactionJournal $journal */
             foreach ($splitJournals as $journal) {
                 $this->makeMultiGroup($journal);
@@ -142,9 +136,7 @@ class MigrateToGroups extends Command
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @throws Exception
+     * @throws \Exception
      */
     private function makeMultiGroup(TransactionJournal $journal): void
     {
@@ -207,6 +199,7 @@ class MigrateToGroups extends Command
                         $transaction->id
                     )
                 );
+
                 continue;
             }
 
@@ -262,7 +255,7 @@ class MigrateToGroups extends Command
         // delete the old transaction journal.
         $this->service->destroy($journal);
 
-        $this->count++;
+        ++$this->count;
 
         // report on result:
         app('log')->debug(
@@ -283,11 +276,6 @@ class MigrateToGroups extends Command
         );
     }
 
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
-     */
     private function getDestinationTransactions(TransactionJournal $journal): Collection
     {
         return $journal->transactions->filter(
@@ -297,12 +285,6 @@ class MigrateToGroups extends Command
         );
     }
 
-    /**
-     * @param TransactionJournal $journal
-     * @param Transaction        $transaction
-     *
-     * @return Transaction|null
-     */
     private function findOpposingTransaction(TransactionJournal $journal, Transaction $transaction): ?Transaction
     {
         $set = $journal->transactions->filter(
@@ -319,18 +301,12 @@ class MigrateToGroups extends Command
         return $set->first();
     }
 
-    /**
-     * @param Transaction $left
-     * @param Transaction $right
-     *
-     * @return int|null
-     */
     private function getTransactionBudget(Transaction $left, Transaction $right): ?int
     {
         app('log')->debug('Now in getTransactionBudget()');
 
         // try to get a budget ID from the left transaction:
-        /** @var Budget|null $budget */
+        /** @var null|Budget $budget */
         $budget = $left->budgets()->first();
         if (null !== $budget) {
             app('log')->debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $left->id));
@@ -339,7 +315,7 @@ class MigrateToGroups extends Command
         }
 
         // try to get a budget ID from the right transaction:
-        /** @var Budget|null $budget */
+        /** @var null|Budget $budget */
         $budget = $right->budgets()->first();
         if (null !== $budget) {
             app('log')->debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $right->id));
@@ -352,18 +328,12 @@ class MigrateToGroups extends Command
         return null;
     }
 
-    /**
-     * @param Transaction $left
-     * @param Transaction $right
-     *
-     * @return int|null
-     */
     private function getTransactionCategory(Transaction $left, Transaction $right): ?int
     {
         app('log')->debug('Now in getTransactionCategory()');
 
         // try to get a category ID from the left transaction:
-        /** @var Category|null $category */
+        /** @var null|Category $category */
         $category = $left->categories()->first();
         if (null !== $category) {
             app('log')->debug(sprintf('Return category #%d, from transaction #%d', $category->id, $left->id));
@@ -372,7 +342,7 @@ class MigrateToGroups extends Command
         }
 
         // try to get a category ID from the left transaction:
-        /** @var Category|null $category */
+        /** @var null|Category $category */
         $category = $right->categories()->first();
         if (null !== $category) {
             app('log')->debug(sprintf('Return category #%d, from transaction #%d', $category->id, $category->id));
@@ -395,6 +365,7 @@ class MigrateToGroups extends Command
         if ($total > 0) {
             app('log')->debug(sprintf('Going to convert %d transaction journals. Please hold..', $total));
             $this->friendlyInfo(sprintf('Going to convert %d transaction journals. Please hold..', $total));
+
             /** @var array $array */
             foreach ($orphanedJournals as $array) {
                 $this->giveGroup($array);
@@ -405,12 +376,9 @@ class MigrateToGroups extends Command
         }
     }
 
-    /**
-     * @param array $array
-     */
     private function giveGroup(array $array): void
     {
-        $groupId = DB::table('transaction_groups')->insertGetId(
+        $groupId = \DB::table('transaction_groups')->insertGetId(
             [
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
@@ -418,13 +386,10 @@ class MigrateToGroups extends Command
                 'user_id'    => $array['user_id'],
             ]
         );
-        DB::table('transaction_journals')->where('id', $array['id'])->update(['transaction_group_id' => $groupId]);
-        $this->count++;
+        \DB::table('transaction_journals')->where('id', $array['id'])->update(['transaction_group_id' => $groupId]);
+        ++$this->count;
     }
 
-    /**
-     *
-     */
     private function markAsMigrated(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

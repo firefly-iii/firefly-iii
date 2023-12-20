@@ -50,9 +50,6 @@ class CategoryReportGenerator
         $this->noCatRepository = app(NoCategoryRepositoryInterface::class);
     }
 
-    /**
-     * @return array
-     */
     public function getReport(): array
     {
         return $this->report;
@@ -85,10 +82,29 @@ class CategoryReportGenerator
         }
     }
 
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->noCatRepository->setUser($user);
+        $this->opsRepository->setUser($user);
+    }
+
     /**
      * Process one of the spent arrays from the operations method.
-     *
-     * @param array $data
      */
     private function processOpsArray(array $data): void
     {
@@ -101,10 +117,6 @@ class CategoryReportGenerator
         }
     }
 
-    /**
-     * @param int   $currencyId
-     * @param array $currencyRow
-     */
     private function processCurrencyArray(int $currencyId, array $currencyRow): void
     {
         $this->report['sums'][$currencyId] ??= [
@@ -127,12 +139,6 @@ class CategoryReportGenerator
         }
     }
 
-    /**
-     * @param int   $currencyId
-     * @param array $currencyRow
-     * @param int   $categoryId
-     * @param array $categoryRow
-     */
     private function processCategoryRow(int $currencyId, array $currencyRow, int $categoryId, array $categoryRow): void
     {
         $key                              = sprintf('%s-%s', $currencyId, $categoryId);
@@ -176,38 +182,5 @@ class CategoryReportGenerator
                 $journal['amount']
             ) : $this->report['categories'][$key]['earned'];
         }
-    }
-
-    /**
-     * @param Collection $accounts
-     */
-    public function setAccounts(Collection $accounts): void
-    {
-        $this->accounts = $accounts;
-    }
-
-    /**
-     * @param Carbon $end
-     */
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    /**
-     * @param Carbon $start
-     */
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->noCatRepository->setUser($user);
-        $this->opsRepository->setUser($user);
     }
 }

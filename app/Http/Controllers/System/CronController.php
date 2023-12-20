@@ -33,7 +33,7 @@ use Illuminate\Http\Response;
 class CronController
 {
     /**
-     * @return Application|ResponseFactory|Response
+     * @return Application|Response|ResponseFactory
      */
     public function cron()
     {

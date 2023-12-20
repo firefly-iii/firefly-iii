@@ -43,10 +43,6 @@ class InvitationMail extends Mailable
 
     /**
      * OAuthTokenCreatedMail constructor.
-     *
-     * @param string $invitee
-     * @param string $admin
-     * @param string $url
      */
     public function __construct(string $invitee, string $admin, string $url)
     {
@@ -65,6 +61,7 @@ class InvitationMail extends Mailable
     {
         return $this
             ->markdown('emails.invitation')
-            ->subject((string)trans('email.invite_user_subject'));
+            ->subject((string)trans('email.invite_user_subject'))
+        ;
     }
 }

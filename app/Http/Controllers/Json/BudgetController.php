@@ -46,8 +46,6 @@ class BudgetController extends Controller
 
     /**
      * IndexController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -67,13 +65,6 @@ class BudgetController extends Controller
         );
     }
 
-    /**
-     * @param TransactionCurrency $currency
-     * @param Carbon              $start
-     * @param Carbon              $end
-     *
-     * @return JsonResponse
-     */
     public function getBudgetInformation(TransactionCurrency $currency, Carbon $start, Carbon $end): JsonResponse
     {
         $budgeted        = $this->blRepository->budgeted($start, $end, $currency);

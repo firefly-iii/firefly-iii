@@ -41,8 +41,6 @@ class UpdateController extends Controller
 
     /**
      * RuleController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,11 +63,6 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/updateRule
      *
      * Update a rule.
-     *
-     * @param UpdateRequest $request
-     * @param Rule          $rule
-     *
-     * @return JsonResponse
      */
     public function update(UpdateRequest $request, Rule $rule): JsonResponse
     {

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * BalanceController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -34,7 +33,6 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\Http\Api\AccountBalanceGrouped;
 use FireflyIII\Support\Http\Api\CleansChartData;
-use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
@@ -57,21 +55,22 @@ class BalanceController extends Controller
      * TODO validate and set user_group_id
      * TODO collector set group, not user
      *
-     * @param BalanceChartRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function balance(BalanceChartRequest $request): JsonResponse
     {
         $params = $request->getAll();
+
         /** @var Carbon $start */
         $start = $this->parameters->get('start');
+
         /** @var Carbon $end */
         $end = $this->parameters->get('end');
         $end->endOfDay();
+
         /** @var Collection $accounts */
         $accounts       = $params['accounts'];
+
         /** @var string $preferredRange */
         $preferredRange = $params['period'];
 
@@ -99,5 +98,4 @@ class BalanceController extends Controller
 
         return response()->json($this->clean($chartData));
     }
-
 }

@@ -29,7 +29,6 @@ use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Trait UpdateTrait
- *
  */
 trait UpdateTrait
 {
@@ -38,13 +37,13 @@ trait UpdateTrait
      * 'message' => 'A new version is available.
      * 'level' => 'info' / 'success' / 'error'
      *
-     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public function getLatestRelease(): array
     {
         app('log')->debug('Now in getLatestRelease()');
+
         /** @var UpdateRequestInterface $checker */
         $checker       = app(UpdateRequestInterface::class);
         $channelConfig = app('fireflyconfig')->get('update_channel', 'stable');

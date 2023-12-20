@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use Closure;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionCurrency;
@@ -40,13 +39,9 @@ class InterestingMessage
     /**
      * Flashes the user an interesting message if the URL parameters warrant it.
      *
-     * @param Request $request
-     * @param Closure $next
-     *
      * @return mixed
-     *
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, \Closure $next)
     {
         if ($this->testing()) {
             return $next($request);
@@ -76,20 +71,12 @@ class InterestingMessage
         return $next($request);
     }
 
-    /**
-     * @return bool
-     */
     private function testing(): bool
     {
         // ignore middleware in test environment.
         return 'testing' === config('app.env') || !auth()->check();
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return bool
-     */
     private function groupMessage(Request $request): bool
     {
         // get parameters from request.
@@ -99,9 +86,6 @@ class InterestingMessage
         return null !== $transactionGroupId && null !== $message;
     }
 
-    /**
-     * @param Request $request
-     */
     private function handleGroupMessage(Request $request): void
     {
         // get parameters from request.
@@ -109,7 +93,7 @@ class InterestingMessage
         $message            = $request->get('message');
 
         // send message about newly created transaction group.
-        /** @var TransactionGroup|null $group */
+        /** @var null|TransactionGroup $group */
         $group = auth()->user()->transactionGroups()->with(['transactionJournals', 'transactionJournals.transactionType'])->find((int)$transactionGroupId);
 
         if (null === $group) {
@@ -118,7 +102,7 @@ class InterestingMessage
 
         $count = $group->transactionJournals->count();
 
-        /** @var TransactionJournal|null $journal */
+        /** @var null|TransactionJournal $journal */
         $journal = $group->transactionJournals->first();
         if (null === $journal) {
             return;
@@ -140,11 +124,6 @@ class InterestingMessage
         }
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return bool
-     */
     private function accountMessage(Request $request): bool
     {
         // get parameters from request.
@@ -154,16 +133,13 @@ class InterestingMessage
         return null !== $accountId && null !== $message;
     }
 
-    /**
-     * @param Request $request
-     */
     private function handleAccountMessage(Request $request): void
     {
         // get parameters from request.
         $accountId = $request->get('account_id');
         $message   = $request->get('message');
 
-        /** @var Account|null $account */
+        /** @var null|Account $account */
         $account = auth()->user()->accounts()->withTrashed()->find($accountId);
 
         if (null === $account) {
@@ -180,11 +156,6 @@ class InterestingMessage
         }
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return bool
-     */
     private function billMessage(Request $request): bool
     {
         // get parameters from request.
@@ -194,16 +165,13 @@ class InterestingMessage
         return null !== $billId && null !== $message;
     }
 
-    /**
-     * @param Request $request
-     */
     private function handleBillMessage(Request $request): void
     {
         // get parameters from request.
         $billId  = $request->get('bill_id');
         $message = $request->get('message');
 
-        /** @var Bill|null $bill */
+        /** @var null|Bill $bill */
         $bill = auth()->user()->bills()->withTrashed()->find($billId);
 
         if (null === $bill) {
@@ -217,11 +185,6 @@ class InterestingMessage
         }
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return bool
-     */
     private function webhookMessage(Request $request): bool
     {
         // get parameters from request.
@@ -231,16 +194,13 @@ class InterestingMessage
         return null !== $webhookId && null !== $message;
     }
 
-    /**
-     * @param Request $request
-     */
     private function handleWebhookMessage(Request $request): void
     {
         // get parameters from request.
         $webhookId = $request->get('webhook_id');
         $message   = $request->get('message');
 
-        /** @var Webhook|null $webhook */
+        /** @var null|Webhook $webhook */
         $webhook = auth()->user()->webhooks()->withTrashed()->find($webhookId);
 
         if (null === $webhook) {
@@ -257,11 +217,6 @@ class InterestingMessage
         }
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return bool
-     */
     private function currencyMessage(Request $request): bool
     {
         // get parameters from request.
@@ -271,11 +226,6 @@ class InterestingMessage
         return null !== $code && null !== $message;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return void
-     */
     private function handleCurrencyMessage(Request $request): void
     {
         // params:
@@ -283,7 +233,7 @@ class InterestingMessage
         $code    = $request->get('code');
         $message = $request->get('message');
 
-        /** @var TransactionCurrency|null $currency */
+        /** @var null|TransactionCurrency $currency */
         $currency = TransactionCurrency::whereCode($code)->first();
 
         if (null === $currency) {

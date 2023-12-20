@@ -39,10 +39,6 @@ interface CurrencyRepositoryInterface
      * Find by currency code, return NULL if unfound.
      *
      * Used in the download exchange rates cron job. Does not require user object.
-     *
-     * @param string $currencyCode
-     *
-     * @return TransactionCurrency|null
      */
     public function findByCode(string $currencyCode): ?TransactionCurrency;
 
@@ -51,8 +47,6 @@ interface CurrencyRepositoryInterface
      * no user object.
      *
      * Used by the download exchange rate cron job.
-     *
-     * @return Collection
      */
     public function getCompleteSet(): Collection;
 
@@ -60,12 +54,6 @@ interface CurrencyRepositoryInterface
      * Get currency exchange rate.
      *
      * Used in the download exchange rate cron job. Needs the user object!
-     *
-     * @param TransactionCurrency $fromCurrency
-     * @param TransactionCurrency $toCurrency
-     * @param Carbon              $date
-     *
-     * @return CurrencyExchangeRate|null
      */
     public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate;
 
@@ -73,19 +61,8 @@ interface CurrencyRepositoryInterface
      * Set currency exchange rate.
      *
      * Used in download exchange rate cron job. Needs the user object!
-     *
-     * @param TransactionCurrency $fromCurrency
-     * @param TransactionCurrency $toCurrency
-     * @param Carbon              $date
-     * @param float               $rate
-     *
-     * @return CurrencyExchangeRate
      */
     public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate;
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void;
-
+    public function setUser(null|Authenticatable|User $user): void;
 }

@@ -59,18 +59,12 @@ class SearchRuleEngine implements RuleEngineInterface
         $this->refreshTriggers = true;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function addOperator(array $operator): void
     {
         app('log')->debug('Add extra operator: ', $operator);
         $this->operators[] = $operator;
     }
 
-    /**
-     *
-     */
     public function find(): Collection
     {
         app('log')->debug('SearchRuleEngine::find()');
@@ -89,12 +83,79 @@ class SearchRuleEngine implements RuleEngineInterface
         return $collection->unique();
     }
 
+    public function setUser(User $user): void
+    {
+        $this->user      = $user;
+        $this->operators = [];
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    public function fire(): void
+    {
+        $this->resultCount = [];
+        app('log')->debug('SearchRuleEngine::fire()!');
+
+        // if rules and no rule groups, file each rule separately.
+        if (0 !== $this->rules->count()) {
+            app('log')->debug(sprintf('SearchRuleEngine:: found %d rule(s) to fire.', $this->rules->count()));
+            foreach ($this->rules as $rule) {
+                $this->fireRule($rule);
+            }
+            app('log')->debug('SearchRuleEngine:: done processing all rules!');
+
+            return;
+        }
+        if (0 !== $this->groups->count()) {
+            app('log')->debug(sprintf('SearchRuleEngine:: found %d rule group(s) to fire.', $this->groups->count()));
+
+            // fire each group:
+            /** @var RuleGroup $group */
+            foreach ($this->groups as $group) {
+                $this->fireGroup($group);
+            }
+        }
+        app('log')->debug('SearchRuleEngine:: done processing all rules!');
+    }
+
+    /**
+     * Return the number of changed transactions from the previous "fire" action.
+     */
+    public function getResults(): int
+    {
+        return count($this->resultCount);
+    }
+
+    public function setRefreshTriggers(bool $refreshTriggers): void
+    {
+        $this->refreshTriggers = $refreshTriggers;
+    }
+
+    public function setRuleGroups(Collection $ruleGroups): void
+    {
+        app('log')->debug(__METHOD__);
+        foreach ($ruleGroups as $group) {
+            if ($group instanceof RuleGroup) {
+                app('log')->debug(sprintf('Adding a rule group to the SearchRuleEngine: #%d ("%s")', $group->id, $group->title));
+                $this->groups->push($group);
+            }
+        }
+    }
+
+    public function setRules(Collection $rules): void
+    {
+        app('log')->debug(__METHOD__);
+        foreach ($rules as $rule) {
+            if ($rule instanceof Rule) {
+                app('log')->debug(sprintf('Adding a rule to the SearchRuleEngine: #%d ("%s")', $rule->id, $rule->title));
+                $this->rules->push($rule);
+            }
+        }
+    }
+
     /**
      * Finds the transactions a strict rule will execute on.
-     *
-     * @param Rule $rule
-     *
-     * @return Collection
      */
     private function findStrictRule(Rule $rule): Collection
     {
@@ -125,7 +186,6 @@ class SearchRuleEngine implements RuleEngineInterface
                 $searchArray[$ruleTrigger->trigger_type][] = sprintf('"%s"', $ruleTrigger->trigger_value);
             }
         }
-
 
         // add local operators:
         foreach ($this->operators as $operator) {
@@ -161,10 +221,6 @@ class SearchRuleEngine implements RuleEngineInterface
      * Search in the triggers of this particular search and if it contains
      * one search operator for "journal_id" it means the date ranges
      * in the search may need to be updated.
-     *
-     * @param array $array
-     *
-     * @return bool
      */
     private function hasSpecificJournalTrigger(array $array): bool
     {
@@ -187,18 +243,13 @@ class SearchRuleEngine implements RuleEngineInterface
         return $result;
     }
 
-    /**
-     * @param array $array
-     *
-     * @return Carbon
-     */
     private function setDateFromJournalTrigger(array $array): Carbon
     {
         app('log')->debug('Now in setDateFromJournalTrigger()');
         $journalId = 0;
         foreach ($array as $triggerName => $values) {
             if ('journal_id' === $triggerName && is_array($values) && 1 === count($values)) {
-                $journalId = (int)trim(($values[0] ?? '"0"'), '"'); // follows format "123".
+                $journalId = (int)trim($values[0] ?? '"0"', '"'); // follows format "123".
                 app('log')->debug(sprintf('Found journal ID #%d', $journalId));
             }
         }
@@ -218,20 +269,6 @@ class SearchRuleEngine implements RuleEngineInterface
         return today(config('app.timezone'));
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function setUser(User $user): void
-    {
-        $this->user      = $user;
-        $this->operators = [];
-    }
-
-    /**
-     * @param Rule $rule
-     *
-     * @return Collection
-     */
     private function findNonStrictRule(Rule $rule): Collection
     {
         // start a search query for individual each trigger:
@@ -252,6 +289,7 @@ class SearchRuleEngine implements RuleEngineInterface
             }
             if ('user_action' === $ruleTrigger->trigger_type) {
                 app('log')->debug('Skip trigger type.');
+
                 continue;
             }
             $searchArray  = [];
@@ -286,7 +324,7 @@ class SearchRuleEngine implements RuleEngineInterface
             app('log')->debug(sprintf('Found in this run, %d transactions', $collection->count()));
             $total = $total->merge($collection);
             app('log')->debug(sprintf('Total collection is now %d transactions', $total->count()));
-            $count++;
+            ++$count;
         }
         app('log')->debug(sprintf('Total collection is now %d transactions', $total->count()));
         app('log')->debug(sprintf('Done running %d trigger(s)', $count));
@@ -298,10 +336,9 @@ class SearchRuleEngine implements RuleEngineInterface
                 foreach ($group['transactions'] as $transaction) {
                     $str = sprintf('%s%d', $str, $transaction['transaction_journal_id']);
                 }
-                $key = sprintf('%d%s', $group['id'], $str);
-                //app('log')->debug(sprintf('Return key: %s ', $key));
 
-                return $key;
+                return sprintf('%d%s', $group['id'], $str);
+                // app('log')->debug(sprintf('Return key: %s ', $key));
             }
         );
 
@@ -311,41 +348,8 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * @inheritDoc
-     * @throws FireflyException
-     */
-    public function fire(): void
-    {
-        $this->resultCount = [];
-        app('log')->debug('SearchRuleEngine::fire()!');
-
-        // if rules and no rule groups, file each rule separately.
-        if (0 !== $this->rules->count()) {
-            app('log')->debug(sprintf('SearchRuleEngine:: found %d rule(s) to fire.', $this->rules->count()));
-            foreach ($this->rules as $rule) {
-                $this->fireRule($rule);
-            }
-            app('log')->debug('SearchRuleEngine:: done processing all rules!');
-
-            return;
-        }
-        if (0 !== $this->groups->count()) {
-            app('log')->debug(sprintf('SearchRuleEngine:: found %d rule group(s) to fire.', $this->groups->count()));
-            // fire each group:
-            /** @var RuleGroup $group */
-            foreach ($this->groups as $group) {
-                $this->fireGroup($group);
-            }
-        }
-        app('log')->debug('SearchRuleEngine:: done processing all rules!');
-    }
-
-    /**
      * Returns true if the rule has been triggered.
      *
-     * @param Rule $rule
-     *
-     * @return bool
      * @throws FireflyException
      */
     private function fireRule(Rule $rule): bool
@@ -369,9 +373,6 @@ class SearchRuleEngine implements RuleEngineInterface
     /**
      * Return true if the rule is fired (the collection is larger than zero).
      *
-     * @param Rule $rule
-     *
-     * @return bool
      * @throws FireflyException
      */
     private function fireStrictRule(Rule $rule): bool
@@ -394,14 +395,12 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * @param Rule       $rule
-     * @param Collection $collection
-     *
      * @throws FireflyException
      */
     private function processResults(Rule $rule, Collection $collection): void
     {
         app('log')->debug(sprintf('SearchRuleEngine:: Going to process %d results.', $collection->count()));
+
         /** @var array $group */
         foreach ($collection as $group) {
             $this->processTransactionGroup($rule, $group);
@@ -409,14 +408,12 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * @param Rule  $rule
-     * @param array $group
-     *
      * @throws FireflyException
      */
     private function processTransactionGroup(Rule $rule, array $group): void
     {
         app('log')->debug(sprintf('SearchRuleEngine:: Will now execute actions on transaction group #%d', $group['id']));
+
         /** @var array $transaction */
         foreach ($group['transactions'] as $transaction) {
             $this->processTransactionJournal($rule, $transaction);
@@ -424,15 +421,13 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * @param Rule  $rule
-     * @param array $transaction
-     *
      * @throws FireflyException
      */
     private function processTransactionJournal(Rule $rule, array $transaction): void
     {
         app('log')->debug(sprintf('SearchRuleEngine:: Will now execute actions on transaction journal #%d', $transaction['transaction_journal_id']));
         $actions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
+
         /** @var RuleAction $ruleAction */
         foreach ($actions as $ruleAction) {
             if (false === $ruleAction->active) {
@@ -446,10 +441,6 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * @param RuleAction $ruleAction
-     * @param array      $transaction
-     *
-     * @return bool
      * @throws FireflyException
      */
     private function processRuleAction(RuleAction $ruleAction, array $transaction): bool
@@ -486,9 +477,6 @@ class SearchRuleEngine implements RuleEngineInterface
     /**
      * Return true if the rule is fired (the collection is larger than zero).
      *
-     * @param Rule $rule
-     *
-     * @return bool
      * @throws FireflyException
      */
     private function fireNonStrictRule(Rule $rule): bool
@@ -503,14 +491,12 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * @param RuleGroup $group
-     *
-     * @return void
      * @throws FireflyException
      */
     private function fireGroup(RuleGroup $group): void
     {
         app('log')->debug(sprintf('Going to fire group #%d with %d rule(s)', $group->id, $group->rules->count()));
+
         /** @var Rule $rule */
         foreach ($group->rules as $rule) {
             app('log')->debug(sprintf('Going to fire rule #%d from group #%d', $rule->id, $group->id));
@@ -519,52 +505,6 @@ class SearchRuleEngine implements RuleEngineInterface
                 app('log')->debug(sprintf('The rule was triggered and rule->stop_processing = true, so group #%d will stop processing further rules.', $group->id));
 
                 return;
-            }
-        }
-    }
-
-    /**
-     * Return the number of changed transactions from the previous "fire" action.
-     *
-     * @return int
-     */
-    public function getResults(): int
-    {
-        return count($this->resultCount);
-    }
-
-    /**
-     * @param bool $refreshTriggers
-     */
-    public function setRefreshTriggers(bool $refreshTriggers): void
-    {
-        $this->refreshTriggers = $refreshTriggers;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setRuleGroups(Collection $ruleGroups): void
-    {
-        app('log')->debug(__METHOD__);
-        foreach ($ruleGroups as $group) {
-            if ($group instanceof RuleGroup) {
-                app('log')->debug(sprintf('Adding a rule group to the SearchRuleEngine: #%d ("%s")', $group->id, $group->title));
-                $this->groups->push($group);
-            }
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setRules(Collection $rules): void
-    {
-        app('log')->debug(__METHOD__);
-        foreach ($rules as $rule) {
-            if ($rule instanceof Rule) {
-                app('log')->debug(sprintf('Adding a rule to the SearchRuleEngine: #%d ("%s")', $rule->id, $rule->title));
-                $this->rules->push($rule);
             }
         }
     }

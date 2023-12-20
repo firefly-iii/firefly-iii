@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use Closure;
 use FireflyIII\Support\Domain;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Http\Request;
@@ -40,6 +39,7 @@ class Binder
      * @var Auth
      */
     protected $auth;
+
     /**
      * The binders.
      *
@@ -49,8 +49,6 @@ class Binder
 
     /**
      * Binder constructor.
-     *
-     * @param Auth $auth
      */
     public function __construct(Auth $auth)
     {
@@ -62,12 +60,10 @@ class Binder
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param Closure $next
      *
      * @return mixed
-     *
      */
-    public function handle($request, Closure $next)
+    public function handle($request, \Closure $next)
     {
         foreach ($request->route()->parameters() as $key => $value) {
             if (array_key_exists($key, $this->binders)) {
@@ -81,10 +77,6 @@ class Binder
 
     /**
      * Do the binding.
-     *
-     * @param string $key
-     * @param string $value
-     * @param Route  $route
      *
      * @return mixed
      */

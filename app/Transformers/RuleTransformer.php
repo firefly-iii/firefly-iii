@@ -39,8 +39,6 @@ class RuleTransformer extends AbstractTransformer
 
     /**
      * CurrencyTransformer constructor.
-     *
-
      */
     public function __construct()
     {
@@ -50,9 +48,6 @@ class RuleTransformer extends AbstractTransformer
     /**
      * Transform the rule.
      *
-     * @param Rule $rule
-     *
-     * @return array
      * @throws FireflyException
      */
     public function transform(Rule $rule): array
@@ -77,22 +72,20 @@ class RuleTransformer extends AbstractTransformer
             'links'            => [
                 [
                     'rel' => 'self',
-                    'uri' => '/rules/' . $rule->id,
+                    'uri' => '/rules/'.$rule->id,
                 ],
             ],
         ];
     }
 
     /**
-     * @param Rule $rule
-     *
-     * @return string
      * @throws FireflyException
      */
     private function getRuleTrigger(Rule $rule): string
     {
         $moment   = null;
         $triggers = $this->ruleRepository->getRuleTriggers($rule);
+
         /** @var RuleTrigger $ruleTrigger */
         foreach ($triggers as $ruleTrigger) {
             if ('user_action' === $ruleTrigger->trigger_type) {
@@ -106,15 +99,11 @@ class RuleTransformer extends AbstractTransformer
         return $moment;
     }
 
-    /**
-     * @param Rule $rule
-     *
-     * @return array
-     */
     private function triggers(Rule $rule): array
     {
         $result   = [];
         $triggers = $this->ruleRepository->getRuleTriggers($rule);
+
         /** @var RuleTrigger $ruleTrigger */
         foreach ($triggers as $ruleTrigger) {
             if ('user_action' === $ruleTrigger->trigger_type) {
@@ -135,15 +124,11 @@ class RuleTransformer extends AbstractTransformer
         return $result;
     }
 
-    /**
-     * @param Rule $rule
-     *
-     * @return array
-     */
     private function actions(Rule $rule): array
     {
         $result  = [];
         $actions = $this->ruleRepository->getRuleActions($rule);
+
         /** @var RuleAction $ruleAction */
         foreach ($actions as $ruleAction) {
             $result[] = [

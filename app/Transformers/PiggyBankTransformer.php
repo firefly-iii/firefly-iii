@@ -28,7 +28,6 @@ use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use JsonException;
 
 /**
  * Class PiggyBankTransformer
@@ -40,8 +39,6 @@ class PiggyBankTransformer extends AbstractTransformer
 
     /**
      * PiggyBankTransformer constructor.
-     *
-
      */
     public function __construct()
     {
@@ -52,11 +49,8 @@ class PiggyBankTransformer extends AbstractTransformer
     /**
      * Transform the piggy bank.
      *
-     * @param PiggyBank $piggyBank
-     *
-     * @return array
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function transform(PiggyBank $piggyBank): array
     {
@@ -76,7 +70,8 @@ class PiggyBankTransformer extends AbstractTransformer
         $objectGroupId    = null;
         $objectGroupOrder = null;
         $objectGroupTitle = null;
-        /** @var ObjectGroup|null $objectGroup */
+
+        /** @var null|ObjectGroup $objectGroup */
         $objectGroup = $piggyBank->objectGroups->first();
         if (null !== $objectGroup) {
             $objectGroupId    = $objectGroup->id;
@@ -129,7 +124,7 @@ class PiggyBankTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/piggy_banks/' . $piggyBank->id,
+                    'uri' => '/piggy_banks/'.$piggyBank->id,
                 ],
             ],
         ];

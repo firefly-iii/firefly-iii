@@ -33,7 +33,6 @@ use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -47,9 +46,6 @@ class JavascriptController extends Controller
     /**
      * Show info about accounts.
      *
-     * @param AccountRepositoryInterface $repository
-     *
-     * @return Response
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -72,20 +68,18 @@ class JavascriptController extends Controller
 
         return response()
             ->view('javascript.accounts', $data)
-            ->header('Content-Type', 'text/javascript');
+            ->header('Content-Type', 'text/javascript')
+        ;
     }
 
     /**
      * Get info about currencies.
-     *
-     * @param CurrencyRepositoryInterface $repository
-     *
-     * @return Response
      */
     public function currencies(CurrencyRepositoryInterface $repository): Response
     {
         $currencies = $repository->get();
         $data       = ['currencies' => []];
+
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {
             $currencyId                      = $currency->id;
@@ -95,18 +89,15 @@ class JavascriptController extends Controller
 
         return response()
             ->view('javascript.currencies', $data)
-            ->header('Content-Type', 'text/javascript');
+            ->header('Content-Type', 'text/javascript')
+        ;
     }
 
     /**
      * Show some common variables to be used in scripts.
      *
-     * @param Request                    $request
-     * @param AccountRepositoryInterface $repository
-     *
-     * @return Response
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -139,18 +130,18 @@ class JavascriptController extends Controller
 
         return response()
             ->view('javascript.variables', $data)
-            ->header('Content-Type', 'text/javascript');
+            ->header('Content-Type', 'text/javascript')
+        ;
     }
 
     /**
      * Bit of a hack but OK.
-     *
-     * @return Response
      */
     public function variablesV2(): Response
     {
         /** @var Carbon $start */
         $start = clone session('start', today(config('app.timezone'))->startOfMonth());
+
         /** @var Carbon $end */
         $end = clone session('end', today(config('app.timezone'))->endOfMonth());
 

@@ -30,15 +30,9 @@ use FireflyIII\Models\Transaction;
  */
 class TransactionObserver
 {
-    /**
-     * @param Transaction|null $transaction
-     *
-     * @return void
-     */
     public function deleting(?Transaction $transaction): void
     {
         app('log')->debug('Observe "deleting" of a transaction.');
         $transaction?->transactionJournal?->delete();
     }
-
 }

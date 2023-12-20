@@ -44,8 +44,6 @@ class IndexController extends Controller
 
     /**
      * CategoryController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,9 +63,8 @@ class IndexController extends Controller
     /**
      * Show all categories.
      *
-     * @param Request $request
-     *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

@@ -47,8 +47,6 @@ class IndexController extends Controller
 
     /**
      * RuleController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -79,13 +77,6 @@ class IndexController extends Controller
         return view('rules.index', compact('ruleGroups'));
     }
 
-    /**
-     * @param Request   $request
-     * @param Rule      $rule
-     * @param RuleGroup $ruleGroup
-     *
-     * @return JsonResponse
-     */
     public function moveRule(Request $request, Rule $rule, RuleGroup $ruleGroup): JsonResponse
     {
         $order = (int)$request->get('order');
@@ -94,11 +85,6 @@ class IndexController extends Controller
         return response()->json([]);
     }
 
-    /**
-     * @param Rule $rule
-     *
-     * @return RedirectResponse
-     */
     public function search(Rule $rule): RedirectResponse
     {
         $route = route('search.index');

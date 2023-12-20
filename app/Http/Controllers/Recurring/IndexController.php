@@ -39,7 +39,6 @@ use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- *
  * Class IndexController
  */
 class IndexController extends Controller
@@ -50,8 +49,6 @@ class IndexController extends Controller
 
     /**
      * IndexController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -74,9 +71,8 @@ class IndexController extends Controller
      * TODO the notes of a recurrence are pretty pointless at this moment.
      * Show all recurring transactions.
      *
-     * @param Request $request
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -98,6 +94,7 @@ class IndexController extends Controller
         $transformer->setParameters(new ParameterBag());
 
         $recurring = [];
+
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
             $year->addYear();

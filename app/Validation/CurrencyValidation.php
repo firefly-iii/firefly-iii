@@ -37,8 +37,6 @@ trait CurrencyValidation
 
     /**
      * If the transactions contain foreign amounts, there must also be foreign currency information.
-     *
-     * @param Validator $validator
      */
     protected function validateForeignCurrencyInformation(Validator $validator): void
     {
@@ -62,7 +60,7 @@ trait CurrencyValidation
                 && 0 !== bccomp('0', $transaction['foreign_amount'])
             ) {
                 $validator->errors()->add(
-                    'transactions.' . $index . '.foreign_amount',
+                    'transactions.'.$index.'.foreign_amount',
                     (string)trans('validation.require_currency_info')
                 );
             }
@@ -73,17 +71,12 @@ trait CurrencyValidation
                     $transaction
                 )) {
                 $validator->errors()->add(
-                    'transactions.' . $index . '.foreign_amount',
+                    'transactions.'.$index.'.foreign_amount',
                     (string)trans('validation.require_currency_amount')
                 );
             }
         }
     }
 
-    /**
-     * @param Validator $validator
-     *
-     * @return array
-     */
     abstract protected function getTransactionsArray(Validator $validator): array;
 }

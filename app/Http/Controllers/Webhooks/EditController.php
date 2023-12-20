@@ -36,8 +36,6 @@ class EditController extends Controller
 {
     /**
      * DeleteController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -58,9 +56,7 @@ class EditController extends Controller
     /**
      * Delete account screen.
      *
-     * @param Webhook $webhook
-     *
-     * @return Factory|Application|View
+     * @return Application|Factory|View
      */
     public function index(Webhook $webhook)
     {

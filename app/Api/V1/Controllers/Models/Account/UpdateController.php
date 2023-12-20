@@ -42,8 +42,6 @@ class UpdateController extends Controller
 
     /**
      * AccountController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -63,17 +61,12 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/updateAccount
      *
      * Update account.
-     *
-     * @param UpdateRequest $request
-     * @param Account       $account
-     *
-     * @return JsonResponse
      */
     public function update(UpdateRequest $request, Account $account): JsonResponse
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
         $data         = $request->getUpdateData();
-        $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $data['type'] = config('firefly.shortNamesByFullName.'.$account->accountType->type);
         $account      = $this->repository->update($account, $data);
         $manager      = $this->getManager();
         $account->refresh();

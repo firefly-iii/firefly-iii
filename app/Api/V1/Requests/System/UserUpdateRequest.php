@@ -41,8 +41,6 @@ class UserUpdateRequest extends FormRequest
 
     /**
      * Logged in + owner
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -51,8 +49,6 @@ class UserUpdateRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -71,8 +67,6 @@ class UserUpdateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -89,14 +83,10 @@ class UserUpdateRequest extends FormRequest
 
     /**
      * Configure the validator instance.
-     *
-     * @param Validator $validator
-     *
-     * @return void
      */
     public function withValidator(Validator $validator): void
     {
-        /** @var User|null $current */
+        /** @var null|User $current */
         $current = $this->route()->parameter('user');
         $validator->after(
             static function (Validator $validator) use ($current) {

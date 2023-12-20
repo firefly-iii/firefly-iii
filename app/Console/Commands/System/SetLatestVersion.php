@@ -34,15 +34,12 @@ class SetLatestVersion extends Command
 {
     use ShowsFriendlyMessages;
 
-
     protected $description = 'Set latest version in DB.';
 
     protected $signature = 'firefly-iii:set-latest-version {--james-is-cool}';
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {

@@ -29,6 +29,6 @@ namespace FireflyIII\Enums;
  */
 enum WebhookDelivery: int
 {
-    //case XML = 200;
+    // case XML = 200;
     case JSON = 300;
 }

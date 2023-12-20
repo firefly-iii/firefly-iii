@@ -34,7 +34,6 @@ use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use JsonException;
 use League\Fractal\Resource\Item;
 
 /**
@@ -49,8 +48,6 @@ class UpdateController extends Controller
 
     /**
      * CurrencyRepository constructor.
-     *
-
      */
     public function __construct()
     {
@@ -71,11 +68,8 @@ class UpdateController extends Controller
      *
      * Disable a currency.
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function disable(TransactionCurrency $currency): JsonResponse
     {
@@ -87,6 +81,7 @@ class UpdateController extends Controller
         if (1 === $this->repository->get()->count()) {
             return response()->json([], 409);
         }
+
         /** @var User $user */
         $user = auth()->user();
         $this->repository->disable($currency);
@@ -109,9 +104,6 @@ class UpdateController extends Controller
      *
      * Make the currency a default currency.
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function makeDefault(TransactionCurrency $currency): JsonResponse
@@ -141,16 +133,14 @@ class UpdateController extends Controller
      *
      * Enable a currency.
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function enable(TransactionCurrency $currency): JsonResponse
     {
         $this->repository->enable($currency);
         $manager = $this->getManager();
+
         /** @var User $user */
         $user = auth()->user();
 
@@ -171,12 +161,8 @@ class UpdateController extends Controller
      *
      * Update a currency.
      *
-     * @param UpdateRequest       $request
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function update(UpdateRequest $request, TransactionCurrency $currency): JsonResponse
     {
@@ -189,7 +175,6 @@ class UpdateController extends Controller
         $set = $this->repository->get();
         if (array_key_exists('enabled', $data) && false === $data['enabled'] && 1 === count($set) && $set->first()->id === $currency->id) {
             return response()->json([], 409);
-
         }
         $currency = $this->repository->update($currency, $data);
 

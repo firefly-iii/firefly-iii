@@ -32,9 +32,6 @@ use Ramsey\Uuid\Uuid;
  */
 trait GeneratesInstallationId
 {
-    /**
-     *
-     */
     protected function generateInstallationId(): void
     {
         try {

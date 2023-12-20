@@ -50,7 +50,6 @@ class PreferencesController extends Controller
      *
      * List all of them.
      *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function index(): JsonResponse
@@ -63,7 +62,7 @@ class PreferencesController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($preferences, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.preferences.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.preferences.index').$this->buildParams());
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
@@ -80,14 +79,11 @@ class PreferencesController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/preferences/getPreference
      *
      * Return a single preference by name.
-     *
-     * @param Preference $preference
-     *
-     * @return JsonResponse
      */
     public function show(Preference $preference): JsonResponse
     {
         $manager = $this->getManager();
+
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -101,9 +97,6 @@ class PreferencesController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/preferences/storePreference
      *
-     * @param PreferenceStoreRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function store(PreferenceStoreRequest $request): JsonResponse
@@ -125,10 +118,6 @@ class PreferencesController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/preferences/updatePreference
      *
-     * @param PreferenceUpdateRequest $request
-     * @param Preference              $preference
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function update(PreferenceUpdateRequest $request, Preference $preference): JsonResponse

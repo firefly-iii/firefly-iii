@@ -24,13 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
 
-use Exception;
-
 /**
  * Class ValidationExceptions.
- *
-
  */
-class ValidationException extends Exception
-{
-}
+class ValidationException extends \Exception {}

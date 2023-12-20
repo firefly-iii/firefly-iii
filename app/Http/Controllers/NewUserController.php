@@ -62,7 +62,7 @@ class NewUserController extends Controller
     /**
      * Form the user gets when he has no data in the system.
      *
-     * @return RedirectResponse|Redirector|Factory|View
+     * @return Factory|Redirector|RedirectResponse|View
      */
     public function index()
     {
@@ -84,10 +84,8 @@ class NewUserController extends Controller
     /**
      * Store his new settings.
      *
-     * @param NewUserFormRequest          $request
-     * @param CurrencyRepositoryInterface $currencyRepository
+     * @return Redirector|RedirectResponse
      *
-     * @return RedirectResponse|Redirector
      * @throws FireflyException
      */
     public function submit(NewUserFormRequest $request, CurrencyRepositoryInterface $currencyRepository)

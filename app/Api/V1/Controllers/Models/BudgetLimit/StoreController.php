@@ -41,8 +41,6 @@ class StoreController extends Controller
 
     /**
      * BudgetLimitController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -64,11 +62,6 @@ class StoreController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/storeBudgetLimit
      *
      * Store a newly created resource in storage.
-     *
-     * @param StoreRequest $request
-     * @param Budget       $budget
-     *
-     * @return JsonResponse
      */
     public function store(StoreRequest $request, Budget $budget): JsonResponse
     {
@@ -79,6 +72,7 @@ class StoreController extends Controller
 
         $budgetLimit = $this->blRepository->store($data);
         $manager     = $this->getManager();
+
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
         $transformer->setParameters($this->parameters);

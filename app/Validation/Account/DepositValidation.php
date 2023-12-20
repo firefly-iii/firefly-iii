@@ -31,11 +31,6 @@ use FireflyIII\Models\AccountType;
  */
 trait DepositValidation
 {
-    /**
-     * @param array $array
-     *
-     * @return bool
-     */
     protected function validateDepositDestination(array $array): bool
     {
         $result      = null;
@@ -79,26 +74,10 @@ trait DepositValidation
         return $result;
     }
 
-    /**
-     * @param array $accountTypes
-     *
-     * @return bool
-     */
     abstract protected function canCreateTypes(array $accountTypes): bool;
 
-    /**
-     * @param array $validTypes
-     * @param array $data
-     *
-     * @return Account|null
-     */
     abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
 
-    /**
-     * @param array $array
-     *
-     * @return bool
-     */
     protected function validateDepositSource(array $array): bool
     {
         $accountId     = array_key_exists('id', $array) ? $array['id'] : null;
@@ -113,11 +92,11 @@ trait DepositValidation
 
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);
-        if (null === $accountId &&
-            null === $accountName &&
-            null === $accountIban &&
-            null === $accountNumber &&
-            false === $this->canCreateTypes($validTypes)) {
+        if (null === $accountId
+            && null === $accountName
+            && null === $accountIban
+            && null === $accountNumber
+            && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL return false,
             // because the source of a deposit can't be created.
             // (this never happens).
@@ -131,6 +110,7 @@ trait DepositValidation
             $existing = $this->findExistingAccount($validTypes, ['iban' => $accountIban], true);
             if (null !== $existing) {
                 $this->sourceError = (string)trans('validation.deposit_src_iban_exists');
+
                 return false;
             }
         }

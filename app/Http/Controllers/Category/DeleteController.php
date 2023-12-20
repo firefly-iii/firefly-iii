@@ -42,8 +42,6 @@ class DeleteController extends Controller
 
     /**
      * CategoryController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -63,8 +61,6 @@ class DeleteController extends Controller
     /**
      * Delete a category.
      *
-     * @param Category $category
-     *
      * @return Factory|View
      */
     public function delete(Category $category)
@@ -80,10 +76,7 @@ class DeleteController extends Controller
     /**
      * Destroy a category.
      *
-     * @param Request  $request
-     * @param Category $category
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function destroy(Request $request, Category $category)
     {

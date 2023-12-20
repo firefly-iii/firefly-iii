@@ -47,8 +47,6 @@ class PurgeController extends Controller
      * TODO cleanup and use repositories.
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/purgeData
-     *
-     * @return JsonResponse
      */
     public function purge(): JsonResponse
     {
@@ -65,7 +63,9 @@ class PurgeController extends Controller
 
         // piggies
         $set = PiggyBank::leftJoin('accounts', 'accounts.id', 'piggy_banks.account_id')
-                        ->where('accounts.user_id', $user->id)->onlyTrashed()->get(['piggy_banks.*']);
+            ->where('accounts.user_id', $user->id)->onlyTrashed()->get(['piggy_banks.*'])
+        ;
+
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
             $piggy->forceDelete();
@@ -85,7 +85,6 @@ class PurgeController extends Controller
 
         // tags
         Tag::whereUserId($user->id)->onlyTrashed()->forceDelete();
-
 
         // accounts
         Account::whereUserId($user->id)->onlyTrashed()->forceDelete();

@@ -41,8 +41,6 @@ class StoreController extends Controller
 
     /**
      * AccountController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -62,10 +60,6 @@ class StoreController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/storeAccount
      *
      * Store a new instance.
-     *
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
      */
     public function store(StoreRequest $request): JsonResponse
     {

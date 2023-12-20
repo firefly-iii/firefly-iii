@@ -34,10 +34,6 @@ trait AmountCollection
 {
     /**
      * Get transactions with a specific amount.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
      */
     public function amountIs(string $amount): GroupCollectorInterface
     {
@@ -50,9 +46,6 @@ trait AmountCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function amountIsNot(string $amount): GroupCollectorInterface
     {
         $this->query->where(
@@ -66,10 +59,6 @@ trait AmountCollection
 
     /**
      * Get transactions where the amount is less than.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
      */
     public function amountLess(string $amount): GroupCollectorInterface
     {
@@ -84,10 +73,6 @@ trait AmountCollection
 
     /**
      * Get transactions where the amount is more than.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
      */
     public function amountMore(string $amount): GroupCollectorInterface
     {
@@ -102,10 +87,6 @@ trait AmountCollection
 
     /**
      * Get transactions with a specific foreign amount.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
      */
     public function foreignAmountIs(string $amount): GroupCollectorInterface
     {
@@ -121,10 +102,6 @@ trait AmountCollection
 
     /**
      * Get transactions with a specific foreign amount.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
      */
     public function foreignAmountIsNot(string $amount): GroupCollectorInterface
     {
@@ -140,10 +117,6 @@ trait AmountCollection
 
     /**
      * Get transactions where the amount is less than.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
      */
     public function foreignAmountLess(string $amount): GroupCollectorInterface
     {
@@ -159,10 +132,6 @@ trait AmountCollection
 
     /**
      * Get transactions where the amount is more than.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
      */
     public function foreignAmountMore(string $amount): GroupCollectorInterface
     {

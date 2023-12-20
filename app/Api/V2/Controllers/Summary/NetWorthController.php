@@ -43,9 +43,6 @@ class NetWorthController extends Controller
     private NetWorthInterface          $netWorth;
     private AccountRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -68,10 +65,6 @@ class NetWorthController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/net-worth/getNetWorth
-     *
-     * @param SingleDateRequest $request
-     *
-     * @return JsonResponse
      */
     public function get(SingleDateRequest $request): JsonResponse
     {

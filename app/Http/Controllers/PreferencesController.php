@@ -34,7 +34,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
-use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -45,8 +44,6 @@ class PreferencesController extends Controller
 {
     /**
      * PreferencesController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,9 +62,8 @@ class PreferencesController extends Controller
     /**
      * Show overview of preferences.
      *
-     * @param AccountRepositoryInterface $repository
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -79,6 +75,7 @@ class PreferencesController extends Controller
 
         // group accounts
         $groupedAccounts = [];
+
         /** @var Account $account */
         foreach ($accounts as $account) {
             $type = $account->accountType->type;
@@ -130,7 +127,7 @@ class PreferencesController extends Controller
 
         try {
             $locales = json_decode((string)file_get_contents(resource_path(sprintf('lang/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
+        } catch (\JsonException $e) {
             app('log')->error($e->getMessage());
             $locales = [];
         }
@@ -174,9 +171,8 @@ class PreferencesController extends Controller
     /**
      * Store new preferences.
      *
-     * @param Request $request
+     * @return Redirector|RedirectResponse
      *
-     * @return RedirectResponse|Redirector
      * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -211,7 +207,6 @@ class PreferencesController extends Controller
         session()->forget('end');
         session()->forget('range');
 
-
         // slack URL:
         if (!auth()->user()->hasRole('demo')) {
             $url = (string)$request->get('slackUrl');
@@ -231,7 +226,6 @@ class PreferencesController extends Controller
             app('preferences')->set('customFiscalYear', $customFiscalYear);
             app('preferences')->set('fiscalYearStart', $fiscalYearStart);
         }
-
 
         // save page size:
         app('preferences')->set('listPageSize', 50);

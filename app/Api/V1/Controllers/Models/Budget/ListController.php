@@ -40,9 +40,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 
-/***
- * Class ListController
- */
+// Class ListController
 class ListController extends Controller
 {
     use TransactionFilter;
@@ -52,8 +50,6 @@ class ListController extends Controller
 
     /**
      * ListController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -74,9 +70,6 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listAttachmentByBudget
      *
-     * @param Budget $budget
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function attachments(Budget $budget): JsonResponse
@@ -90,7 +83,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budgets.attachments', [$budget->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.attachments', [$budget->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -108,9 +101,6 @@ class ListController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @param Budget $budget
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function budgetLimits(Budget $budget): JsonResponse
@@ -122,7 +112,7 @@ class ListController extends Controller
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budgets.budget-limits', [$budget->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.budget-limits', [$budget->id]).$this->buildParams());
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
@@ -139,11 +129,6 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @param Request $request
-     *
-     * @param Budget  $budget
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function transactions(Request $request, Budget $budget): JsonResponse
@@ -173,7 +158,8 @@ class ListController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes($types);
+            ->setTypes($types)
+        ;
 
         if (null !== $this->parameters->get('start')) {
             $collector->setStart($this->parameters->get('start'));
@@ -183,7 +169,7 @@ class ListController extends Controller
         }
 
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.budgets.transactions', [$budget->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.transactions', [$budget->id]).$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */
@@ -201,9 +187,6 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @param Request $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function withoutBudget(Request $request): JsonResponse
@@ -233,7 +216,8 @@ class ListController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes($types);
+            ->setTypes($types)
+        ;
 
         if (null !== $this->parameters->get('start')) {
             $collector->setStart($this->parameters->get('start'));
@@ -243,7 +227,7 @@ class ListController extends Controller
         }
 
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.budgets.without-budget') . $this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.without-budget').$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */

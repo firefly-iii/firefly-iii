@@ -33,63 +33,27 @@ use Illuminate\Support\Collection;
  */
 interface SearchInterface
 {
-    /**
-     * @return array
-     */
     public function getInvalidOperators(): array;
 
-    /**
-     * @return Collection
-     */
     public function getModifiers(): Collection;
 
-    /**
-     * @return Collection
-     */
     public function getOperators(): Collection;
 
-    /**
-     * @return string
-     */
     public function getWordsAsString(): string;
 
-    /**
-     * @return bool
-     */
     public function hasModifiers(): bool;
 
-    /**
-     * @param string $query
-     */
     public function parseQuery(string $query): void;
 
-    /**
-     * @return float
-     */
     public function searchTime(): float;
 
-    /**
-     * @return LengthAwarePaginator
-     */
     public function searchTransactions(): LengthAwarePaginator;
 
-    /**
-     * @param Carbon $date
-     */
     public function setDate(Carbon $date): void;
 
-    /**
-     * @param int $limit
-     */
     public function setLimit(int $limit): void;
 
-    /**
-     * @param int $page
-     */
     public function setPage(int $page): void;
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user): void;
 }

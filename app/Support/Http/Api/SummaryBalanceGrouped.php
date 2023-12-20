@@ -25,15 +25,14 @@ namespace FireflyIII\Support\Http\Api;
 
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
-use Log;
 
 class SummaryBalanceGrouped
 {
+    private const string SUM = 'sum';
     private TransactionCurrency $default;
     private array               $amounts = [];
     private array               $keys;
     private array               $currencies;
-    private const string SUM = 'sum';
     private CurrencyRepositoryInterface $currencyRepository;
 
     public function __construct()
@@ -45,14 +44,10 @@ class SummaryBalanceGrouped
 
     /**
      * TODO remember to do -1 for deposits.
-     *
-     * @param array $journals
-     *
-     * @return void
      */
     public function groupTransactions(string $key, array $journals): void
     {
-        Log::debug(sprintf('Now in groupTransactions with key "%s" and %d journal(s)', $key, count($journals)));
+        \Log::debug(sprintf('Now in groupTransactions with key "%s" and %d journal(s)', $key, count($journals)));
         $converter    = new ExchangeRateConverter();
         $this->keys[] = $key;
         $multiplier   = 'income' === $key ? '-1' : '1';
@@ -81,18 +76,14 @@ class SummaryBalanceGrouped
             $this->amounts[self::SUM][$currencyId] = bcadd($this->amounts[self::SUM][$currencyId], $amount);
             $this->amounts[$key]['native']         = bcadd($this->amounts[$key]['native'], $nativeAmount);
             $this->amounts[self::SUM]['native']    = bcadd($this->amounts[self::SUM]['native'], $nativeAmount);
-
         }
         app('log')->debug(sprintf('this->amounts[%s][native] is now %s', $key, $this->amounts[$key]['native']));
         app('log')->debug(sprintf('this->amounts[%s][native] is now %s', self::SUM, $this->amounts[$key]['native']));
     }
 
-    /**
-     * @return array
-     */
     public function groupData(): array
     {
-        Log::debug('Now going to group data.');
+        \Log::debug('Now going to group data.');
         $return = [];
         foreach ($this->keys as $key) {
             $title    = match ($key) {
@@ -138,6 +129,7 @@ class SummaryBalanceGrouped
                 ];
             }
         }
+
         return $return;
     }
 
@@ -145,6 +137,4 @@ class SummaryBalanceGrouped
     {
         $this->default = $default;
     }
-
-
 }

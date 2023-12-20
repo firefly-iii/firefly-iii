@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\ObjectGroup;
 
-use DB;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\User;
@@ -38,12 +37,10 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
 {
     private User $user;
 
-    /**
-     * @inheritDoc
-     */
     public function deleteAll(): void
     {
         $all = $this->get();
+
         /** @var ObjectGroup $group */
         foreach ($all as $group) {
             $group->piggyBanks()->sync([]);
@@ -52,38 +49,32 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function get(): Collection
     {
         return $this->user->objectGroups()
-                          ->with(['piggyBanks', 'bills'])
-                          ->orderBy('order', 'ASC')
-                          ->orderBy('title', 'ASC')->get();
+            ->with(['piggyBanks', 'bills'])
+            ->orderBy('order', 'ASC')
+            ->orderBy('title', 'ASC')->get()
+        ;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function deleteEmpty(): void
     {
         $all = $this->get();
+
         /** @var ObjectGroup $group */
         foreach ($all as $group) {
-            $count = DB::table('object_groupables')->where('object_groupables.object_group_id', $group->id)->count();
+            $count = \DB::table('object_groupables')->where('object_groupables.object_group_id', $group->id)->count();
             if (0 === $count) {
                 $group->delete();
             }
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function destroy(ObjectGroup $objectGroup): void
     {
         $list = $objectGroup->piggyBanks;
+
         /** @var PiggyBank $piggy */
         foreach ($list as $piggy) {
             $piggy->objectGroups()->sync([]);
@@ -92,30 +83,22 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
         $objectGroup->delete();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getBills(ObjectGroup $objectGroup): Collection
     {
         return $objectGroup->bills;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getPiggyBanks(ObjectGroup $objectGroup): Collection
     {
         return $objectGroup->piggyBanks;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function resetOrder(): void
     {
         app('log')->debug('Now in resetOrder');
         $list  = $this->get();
         $index = 1;
+
         /** @var ObjectGroup $objectGroup */
         foreach ($list as $objectGroup) {
             if ($index !== $objectGroup->order) {
@@ -125,16 +108,10 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
                 $objectGroup->order = $index;
                 $objectGroup->save();
             }
-            $index++;
+            ++$index;
         }
     }
 
-    /**
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return Collection
-     */
     public function search(string $query, int $limit): Collection
     {
         $dbQuery = $this->user->objectGroups()->orderBy('order', 'ASC')->orderBy('title', 'ASC');
@@ -150,19 +127,13 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
         return $dbQuery->take($limit)->get(['object_groups.*']);
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function update(ObjectGroup $objectGroup, array $data): ObjectGroup
     {
         if (array_key_exists('title', $data)) {
@@ -178,25 +149,24 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface
         return $objectGroup;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setOrder(ObjectGroup $objectGroup, int $newOrder): ObjectGroup
     {
         $oldOrder = $objectGroup->order;
 
         if ($newOrder > $oldOrder) {
             $this->user->objectGroups()->where('object_groups.order', '<=', $newOrder)->where('object_groups.order', '>', $oldOrder)
-                       ->where('object_groups.id', '!=', $objectGroup->id)
-                       ->decrement('object_groups.order');
+                ->where('object_groups.id', '!=', $objectGroup->id)
+                ->decrement('object_groups.order')
+            ;
 
             $objectGroup->order = $newOrder;
             $objectGroup->save();
         }
         if ($newOrder < $oldOrder) {
             $this->user->objectGroups()->where('object_groups.order', '>=', $newOrder)->where('object_groups.order', '<', $oldOrder)
-                       ->where('object_groups.id', '!=', $objectGroup->id)
-                       ->increment('object_groups.order');
+                ->where('object_groups.id', '!=', $objectGroup->id)
+                ->increment('object_groups.order')
+            ;
 
             $objectGroup->order = $newOrder;
             $objectGroup->save();

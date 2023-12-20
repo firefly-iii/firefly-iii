@@ -45,8 +45,6 @@ class AccountFormRequest extends FormRequest
 
     /**
      * Get all data.
-     *
-     * @return array
      */
     public function getAccountData(): array
     {
@@ -95,8 +93,6 @@ class AccountFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -112,22 +108,22 @@ class AccountFormRequest extends FormRequest
             'virtual_balance'                    => 'numeric|nullable|max:1000000000',
             'currency_id'                        => 'exists:transaction_currencies,id',
             'account_number'                     => 'between:1,255|uniqueAccountNumberForUser|nullable',
-            'account_role'                       => 'in:' . $accountRoles,
+            'account_role'                       => 'in:'.$accountRoles,
             'active'                             => 'boolean',
-            'cc_type'                            => 'in:' . $ccPaymentTypes,
+            'cc_type'                            => 'in:'.$ccPaymentTypes,
             'amount_currency_id_opening_balance' => 'exists:transaction_currencies,id',
             'amount_currency_id_virtual_balance' => 'exists:transaction_currencies,id',
-            'what'                               => 'in:' . $types,
+            'what'                               => 'in:'.$types,
             'interest_period'                    => 'in:daily,monthly,yearly',
         ];
         $rules          = Location::requestRules($rules);
 
-        /** @var Account|null $account */
+        /** @var null|Account $account */
         $account = $this->route()->parameter('account');
         if (null !== $account) {
             // add rules:
             $rules['id']   = 'belongsToUser:accounts';
-            $rules['name'] = 'required|max:1024|min:1|uniqueAccountForUser:' . $account->id;
+            $rules['name'] = 'required|max:1024|min:1|uniqueAccountForUser:'.$account->id;
             $rules['iban'] = ['iban', 'nullable', new UniqueIban($account, $account->accountType->type)];
         }
 

@@ -36,86 +36,49 @@ interface JournalCLIRepositoryInterface
 {
     /**
      * Get all transaction journals with a specific type, regardless of user.
-     *
-     * @param array $types
-     *
-     * @return Collection
      */
     public function getAllJournals(array $types): Collection;
 
     /**
      * Return the ID of the budget linked to the journal (if any) or the transactions (if any).
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return int
      */
     public function getJournalBudgetId(TransactionJournal $journal): int;
 
     /**
      * Return the ID of the category linked to the journal (if any) or to the transactions (if any).
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return int
      */
     public function getJournalCategoryId(TransactionJournal $journal): int;
 
     /**
      * Return all journals without a group, used in an upgrade routine.
-     *
-     * @return array
      */
     public function getJournalsWithoutGroup(): array;
 
     /**
      * Return Carbon value of a meta field (or NULL).
-     *
-     * @param TransactionJournal $journal
-     * @param string             $field
-     *
-     * @return null|Carbon
      */
     public function getMetaDate(TransactionJournal $journal, string $field): ?Carbon;
 
     /**
      * Return value of a meta field (or NULL).
-     *
-     * @param TransactionJournal $journal
-     * @param string             $field
-     *
-     * @return null|string
      */
     public function getMetaField(TransactionJournal $journal, string $field): ?string;
 
     /**
      * Return text of a note attached to journal, or NULL
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return string|null
      */
     public function getNoteText(TransactionJournal $journal): ?string;
 
     /**
      * Returns all journals with more than 2 transactions. Should only return empty collections
      * in Firefly III > v4.8,0.
-     *
-     * @return Collection
      */
     public function getSplitJournals(): Collection;
 
     /**
      * Return all tags as strings in an array.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return array
      */
     public function getTags(TransactionJournal $journal): array;
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void;
+    public function setUser(null|Authenticatable|User $user): void;
 }

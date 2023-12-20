@@ -27,24 +27,17 @@ use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- *
  * Class AbstractTransformer
  */
 abstract class AbstractTransformer extends TransformerAbstract
 {
     protected ParameterBag $parameters;
 
-    /**
-     * @return ParameterBag
-     */
     final public function getParameters(): ParameterBag
     {
         return $this->parameters;
     }
 
-    /**
-     * @param ParameterBag $parameters
-     */
     final public function setParameters(ParameterBag $parameters): void
     {
         $this->parameters = $parameters;

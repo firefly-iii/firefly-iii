@@ -50,8 +50,6 @@ class ListController extends Controller
 
     /**
      * BillController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -72,9 +70,6 @@ class ListController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @param Bill $bill
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function attachments(Bill $bill): JsonResponse
@@ -88,7 +83,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.bills.attachments', [$bill->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.bills.attachments', [$bill->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -106,9 +101,6 @@ class ListController extends Controller
      *
      * List all of them.
      *
-     * @param Bill $bill
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function rules(Bill $bill): JsonResponse
@@ -125,7 +117,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.bills.rules', [$bill->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.bills.rules', [$bill->id]).$this->buildParams());
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
@@ -142,11 +134,6 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @param Request $request
-     *
-     * @param Bill    $bill
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function transactions(Request $request, Bill $bill): JsonResponse
@@ -175,7 +162,8 @@ class ListController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes($types);
+            ->setTypes($types)
+        ;
 
         if (null !== $this->parameters->get('start')) {
             $collector->setStart($this->parameters->get('start'));
@@ -186,7 +174,7 @@ class ListController extends Controller
 
         // get paginator.
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.bills.transactions', [$bill->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.bills.transactions', [$bill->id]).$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */

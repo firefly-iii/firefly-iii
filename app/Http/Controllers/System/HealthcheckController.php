@@ -34,12 +34,11 @@ class HealthcheckController extends Controller
 {
     /**
      * Sends 'OK' info when app is alive
-     *
-     * @return Response
      */
     public function check(): Response
     {
         User::count(); // sanity check for database health. Will crash if not OK.
+
         return response('OK', 200);
     }
 }

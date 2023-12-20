@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * StoreRequest.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -40,9 +39,6 @@ class StoreRequest extends FormRequest
 
     protected array $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
 
-    /**
-     * @return array
-     */
     public function getAll(): array
     {
         return [
@@ -50,9 +46,6 @@ class StoreRequest extends FormRequest
         ];
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return [

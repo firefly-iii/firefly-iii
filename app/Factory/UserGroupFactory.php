@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * UserGroupFactory.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -37,9 +36,6 @@ use FireflyIII\Models\UserRole;
 class UserGroupFactory
 {
     /**
-     * @param array $data
-     *
-     * @return UserGroup
      * @throws FireflyException
      */
     public function create(array $data): UserGroup
@@ -62,5 +58,4 @@ class UserGroupFactory
 
         return $userGroup;
     }
-
 }

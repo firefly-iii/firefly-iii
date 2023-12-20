@@ -30,7 +30,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use JsonException;
 
 /**
  * Trait ChartGeneration
@@ -40,13 +39,8 @@ trait ChartGeneration
     /**
      * Shows an overview of the account balances for a set of accounts.
      *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {
@@ -61,6 +55,7 @@ trait ChartGeneration
         }
         app('log')->debug('Regenerate chart.account.account-balance-chart from scratch.');
         $locale = app('steam')->getLocale();
+
         /** @var GeneratorInterface $generator */
         $generator = app(GeneratorInterface::class);
 
@@ -69,6 +64,7 @@ trait ChartGeneration
 
         $default   = app('amount')->getDefaultCurrency();
         $chartData = [];
+
         /** @var Account $account */
         foreach ($accounts as $account) {
             // TODO we can use getAccountCurrency instead.

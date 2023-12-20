@@ -46,7 +46,6 @@ class MigrateJournalNotes extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -62,6 +61,7 @@ class MigrateJournalNotes extends Command
 
         $count = 0;
         $set   = TransactionJournalMeta::whereName('notes')->get();
+
         /** @var TransactionJournalMeta $meta */
         foreach ($set as $meta) {
             $journal = $meta->transactionJournal;
@@ -76,7 +76,7 @@ class MigrateJournalNotes extends Command
             app('log')->debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
             $meta->delete();
 
-            $count++;
+            ++$count;
         }
 
         if (0 === $count) {
@@ -94,7 +94,6 @@ class MigrateJournalNotes extends Command
     }
 
     /**
-     * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -108,9 +107,6 @@ class MigrateJournalNotes extends Command
         return false;
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

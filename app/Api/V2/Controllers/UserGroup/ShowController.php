@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * ShowController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -40,9 +39,6 @@ class ShowController extends Controller
 {
     private UserGroupRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -55,9 +51,6 @@ class ShowController extends Controller
         );
     }
 
-    /**
-     * @return JsonResponse
-     */
     public function index(): JsonResponse
     {
         $collection = new Collection();
@@ -78,14 +71,10 @@ class ShowController extends Controller
 
         return response()
             ->json($this->jsonApiList('user-groups', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 
-    /**
-     * @param UserGroup $userGroup
-     *
-     * @return JsonResponse
-     */
     public function show(UserGroup $userGroup): JsonResponse
     {
         $transformer = new UserGroupTransformer();
@@ -93,6 +82,7 @@ class ShowController extends Controller
 
         return response()
             ->api($this->jsonApiObject('user-groups', $userGroup, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

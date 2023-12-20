@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Closure;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -35,30 +34,25 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class IsTransferAccount implements ValidationRule
 {
     /**
-     * @param string  $attribute
-     * @param mixed   $value
-     * @param Closure $fail
-     *
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function validate(string $attribute, mixed $value, Closure $fail): void
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         app('log')->debug(sprintf('Now in %s(%s)', __METHOD__, $value));
+
         /** @var AccountValidator $validator */
         $validator = app(AccountValidator::class);
         $validator->setTransactionType(TransactionType::TRANSFER);
         $validator->setUser(auth()->user());
 
-        $validAccount = $validator->validateSource(['name' => (string)$value,]);
+        $validAccount = $validator->validateSource(['name' => (string)$value]);
         if (true === $validAccount) {
             app('log')->debug('Found account based on name. Return true.');
 
             // found by name, use repos to return.
             return;
         }
-        $validAccount = $validator->validateSource(['id' => (int)$value,]);
+        $validAccount = $validator->validateSource(['id' => (int)$value]);
         app('log')->debug(sprintf('Search by id (%d), result is %s.', (int)$value, var_export($validAccount, true)));
 
         if (false === $validAccount) {

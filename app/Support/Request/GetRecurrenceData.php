@@ -28,11 +28,6 @@ namespace FireflyIII\Support\Request;
  */
 trait GetRecurrenceData
 {
-    /**
-     * @param array $transaction
-     *
-     * @return array
-     */
     protected function getSingleTransactionData(array $transaction): array
     {
         $return = [];

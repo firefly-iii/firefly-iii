@@ -38,9 +38,6 @@ class MoveTransactionsRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    /**
-     * @return array
-     */
     public function getAll(): array
     {
         return [
@@ -63,10 +60,8 @@ class MoveTransactionsRequest extends FormRequest
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
      *
-     * @param Validator $validator
-     * TODO this is duplicate.
-     *
-     * @return void
+     * @param validator $validator
+     *                             TODO this is duplicate
      */
     public function withValidator(Validator $validator): void
     {
@@ -81,11 +76,6 @@ class MoveTransactionsRequest extends FormRequest
         );
     }
 
-    /**
-     * @param Validator $validator
-     *
-     * @return void
-     */
     private function validateMove(Validator $validator): void
     {
         $data       = $validator->getData();

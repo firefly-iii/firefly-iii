@@ -35,147 +35,60 @@ use Illuminate\Support\Collection;
  */
 interface LinkTypeRepositoryInterface
 {
-    /**
-     * @param LinkType $linkType
-     *
-     * @return int
-     */
     public function countJournals(LinkType $linkType): int;
 
-    /**
-     * @param LinkType      $linkType
-     * @param LinkType|null $moveTo
-     *
-     * @return bool
-     */
     public function destroy(LinkType $linkType, LinkType $moveTo = null): bool;
 
-    /**
-     * @param TransactionJournalLink $link
-     *
-     * @return bool
-     */
     public function destroyLink(TransactionJournalLink $link): bool;
 
-    /**
-     * @param int $linkTypeId
-     *
-     * @return LinkType|null
-     */
     public function find(int $linkTypeId): ?LinkType;
 
     /**
      * Find link type by name.
-     *
-     * @param string|null $name
-     *
-     * @return LinkType|null
      */
     public function findByName(string $name = null): ?LinkType;
 
     /**
      * Check if link exists between journals.
-     *
-     * @param TransactionJournal $one
-     * @param TransactionJournal $two
-     *
-     * @return bool
      */
     public function findLink(TransactionJournal $one, TransactionJournal $two): bool;
 
     /**
      * See if such a link already exists (and get it).
-     *
-     * @param LinkType           $linkType
-     * @param TransactionJournal $inward
-     * @param TransactionJournal $outward
-     *
-     * @return TransactionJournalLink|null
      */
     public function findSpecificLink(LinkType $linkType, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink;
 
-    /**
-     * @return Collection
-     */
     public function get(): Collection;
 
     /**
      * Return array of all journal ID's for this type of link.
-     *
-     * @param LinkType $linkType
-     *
-     * @return array
      */
     public function getJournalIds(LinkType $linkType): array;
 
-    /**
-     * @param LinkType|null $linkType
-     *
-     * @return Collection
-     */
     public function getJournalLinks(LinkType $linkType = null): Collection;
 
     /**
      * Return list of existing connections.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
      */
     public function getLinks(TransactionJournal $journal): Collection;
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void;
+    public function setUser(null|Authenticatable|User $user): void;
 
-    /**
-     * @param array $data
-     *
-     * @return LinkType
-     */
     public function store(array $data): LinkType;
 
     /**
      * Store link between two journals.
-     *
-     * @param array              $information
-     * @param TransactionJournal $inward
-     * @param TransactionJournal $outward
-     *
-     * @return TransactionJournalLink|null
      */
     public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink;
 
-    /**
-     * @param TransactionJournalLink $link
-     *
-     * @return bool
-     */
     public function switchLink(TransactionJournalLink $link): bool;
 
-    /**
-     * @param int $linkId
-     *
-     * @return bool
-     */
     public function switchLinkById(int $linkId): bool;
 
-    /**
-     * @param LinkType $linkType
-     * @param array    $data
-     *
-     * @return LinkType
-     */
     public function update(LinkType $linkType, array $data): LinkType;
 
     /**
      * Update an existing transaction journal link.
-     *
-     * @param TransactionJournalLink $journalLink
-     * @param array                  $data
-     *
-     * @return TransactionJournalLink
      */
     public function updateLink(TransactionJournalLink $journalLink, array $data): TransactionJournalLink;
 }

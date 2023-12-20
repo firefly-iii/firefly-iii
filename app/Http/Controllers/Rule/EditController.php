@@ -37,7 +37,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
-use Throwable;
 
 /**
  * Class EditController
@@ -51,8 +50,6 @@ class EditController extends Controller
 
     /**
      * RuleController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -73,10 +70,8 @@ class EditController extends Controller
     /**
      * Edit a rule.
      *
-     * @param Request $request
-     * @param Rule    $rule
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
      */
     public function edit(Request $request, Rule $rule)
@@ -120,7 +115,6 @@ class EditController extends Controller
             'active'          => $hasOldInput ? (bool)$request->old('active') : $rule->active,
             'stop_processing' => $hasOldInput ? (bool)$request->old('stop_processing') : $rule->stop_processing,
             'strict'          => $hasOldInput ? (bool)$request->old('strict') : $rule->strict,
-
         ];
 
         // get rule trigger for update / store-journal:
@@ -139,9 +133,29 @@ class EditController extends Controller
     }
 
     /**
-     * @param array $submittedOperators
+     * Update the rule.
      *
-     * @return array
+     * @return Redirector|RedirectResponse
+     */
+    public function update(RuleFormRequest $request, Rule $rule)
+    {
+        $data = $request->getRuleData();
+
+        $this->ruleRepos->update($rule, $data);
+
+        session()->flash('success', (string)trans('firefly.updated_rule', ['title' => $rule->title]));
+        app('preferences')->mark();
+        $redirect = redirect($this->getPreviousUrl('rules.edit.url'));
+        if (1 === (int)$request->get('return_to_edit')) {
+            session()->put('rules.edit.fromUpdate', true);
+
+            $redirect = redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
+        }
+
+        return $redirect;
+    }
+
+    /**
      * @throws FireflyException
      */
     private function parseFromOperators(array $submittedOperators): array
@@ -170,41 +184,16 @@ class EditController extends Controller
                         'triggers'   => $triggers,
                     ]
                 )->render();
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 $message = sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage());
                 app('log')->debug($message);
                 app('log')->error($e->getTraceAsString());
+
                 throw new FireflyException($message, 0, $e);
             }
-            $index++;
+            ++$index;
         }
 
         return $renderedEntries;
-    }
-
-    /**
-     * Update the rule.
-     *
-     * @param RuleFormRequest $request
-     * @param Rule            $rule
-     *
-     * @return RedirectResponse|Redirector
-     */
-    public function update(RuleFormRequest $request, Rule $rule)
-    {
-        $data = $request->getRuleData();
-
-        $this->ruleRepos->update($rule, $data);
-
-        session()->flash('success', (string)trans('firefly.updated_rule', ['title' => $rule->title]));
-        app('preferences')->mark();
-        $redirect = redirect($this->getPreviousUrl('rules.edit.url'));
-        if (1 === (int)$request->get('return_to_edit')) {
-            session()->put('rules.edit.fromUpdate', true);
-
-            $redirect = redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
-        }
-
-        return $redirect;
     }
 }

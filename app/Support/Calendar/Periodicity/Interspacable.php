@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Interspacable.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
@@ -32,11 +31,5 @@ use Carbon\Carbon;
  */
 interface Interspacable
 {
-    /**
-     * @param Carbon $date
-     * @param int    $interval
-     *
-     * @return Carbon
-     */
     public function nextDate(Carbon $date, int $interval = 1): Carbon;
 }

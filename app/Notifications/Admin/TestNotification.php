@@ -41,8 +41,6 @@ class TestNotification extends Notification
 
     /**
      * Create a new notification instance.
-     *
-     * @return void
      */
     public function __construct(string $address)
     {
@@ -53,6 +51,7 @@ class TestNotification extends Notification
      * Get the array representation of the notification.
      *
      * @param mixed $notifiable
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return array
@@ -60,7 +59,6 @@ class TestNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
         ];
     }
 
@@ -68,6 +66,7 @@ class TestNotification extends Notification
      * Get the mail representation of the notification.
      *
      * @param mixed $notifiable
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return MailMessage
@@ -76,13 +75,15 @@ class TestNotification extends Notification
     {
         return (new MailMessage())
             ->markdown('emails.admin-test', ['email' => $this->address])
-            ->subject((string)trans('email.admin_test_subject'));
+            ->subject((string)trans('email.admin_test_subject'))
+        ;
     }
 
     /**
      * Get the Slack representation of the notification.
      *
      * @param mixed $notifiable
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return SlackMessage
@@ -94,6 +95,7 @@ class TestNotification extends Notification
 
     /**
      * Get the notification's delivery channels.
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @param mixed $notifiable
@@ -106,6 +108,7 @@ class TestNotification extends Notification
         if (UrlValidator::isValidWebhookURL($slackUrl)) {
             return ['mail', 'slack'];
         }
+
         return ['mail'];
     }
 }

@@ -33,7 +33,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -46,8 +45,6 @@ class CreateController extends Controller
 
     /**
      * CreateController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -64,11 +61,6 @@ class CreateController extends Controller
         );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function cloneGroup(Request $request): JsonResponse
     {
         $groupId = (int)$request->get('id');
@@ -103,11 +95,10 @@ class CreateController extends Controller
     /**
      * Create a new transaction group.
      *
-     * @param string|null $objectType
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

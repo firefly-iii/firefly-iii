@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use DB;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
@@ -42,34 +41,32 @@ class SetSourceToCashAccount implements ActionInterface
 
     /**
      * TriggerInterface constructor.
-     *
-     * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
     {
         $this->action = $action;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */
         $user = User::find($journal['user_id']);
-        /** @var TransactionJournal|null $object */
+
+        /** @var null|TransactionJournal $object */
         $object     = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
         $repository = app(AccountRepositoryInterface::class);
 
         if (null === $object) {
             app('log')->error('Could not find journal.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_such_journal')));
+
             return false;
         }
         $type = $object->transactionType->type;
         if (TransactionType::DEPOSIT !== $type) {
             app('log')->error('Transaction must be deposit.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.not_deposit')));
+
             return false;
         }
 
@@ -78,17 +75,19 @@ class SetSourceToCashAccount implements ActionInterface
         $cashAccount = $repository->getCashAccount();
 
         // new source account must be different from the current destination account:
-        /** @var Transaction|null $destination */
+        /** @var null|Transaction $destination */
         $destination = $object->transactions()->where('amount', '>', 0)->first();
         if (null === $destination) {
             app('log')->error('Could not find destination transaction.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_destination_transaction')));
+
             return false;
         }
         // account must not be deleted (in the meantime):
         if (null === $destination->account) {
             app('log')->error('Could not find destination transaction account.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_destination_transaction_account')));
+
             return false;
         }
         if ($cashAccount->id === $destination->account_id) {
@@ -101,16 +100,18 @@ class SetSourceToCashAccount implements ActionInterface
             );
 
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_has_source', ['name' => $cashAccount->name])));
+
             return false;
         }
 
         event(new TriggeredAuditLog($this->action->rule, $object, 'set_source', null, $cashAccount->name));
 
         // update destination transaction with new destination account:
-        DB::table('transactions')
-          ->where('transaction_journal_id', '=', $object->id)
-          ->where('amount', '<', 0)
-          ->update(['account_id' => $cashAccount->id]);
+        \DB::table('transactions')
+            ->where('transaction_journal_id', '=', $object->id)
+            ->where('amount', '<', 0)
+            ->update(['account_id' => $cashAccount->id])
+        ;
 
         app('log')->debug(sprintf('Updated journal #%d (group #%d) and gave it new source account ID.', $object->id, $object->transaction_group_id));
 

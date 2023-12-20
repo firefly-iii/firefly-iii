@@ -33,8 +33,6 @@ use Illuminate\Validation\Validator;
 
 /**
  * Class UpdateRequest
- *
-
  */
 class UpdateRequest extends FormRequest
 {
@@ -43,8 +41,6 @@ class UpdateRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -71,8 +67,6 @@ class UpdateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -97,10 +91,6 @@ class UpdateRequest extends FormRequest
 
     /**
      * Configure the validator instance.
-     *
-     * @param Validator $validator
-     *
-     * @return void
      */
     public function withValidator(Validator $validator): void
     {

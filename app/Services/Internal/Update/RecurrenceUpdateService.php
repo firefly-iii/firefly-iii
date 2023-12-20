@@ -32,12 +32,9 @@ use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
-use JsonException;
 
 /**
  * Class RecurrenceUpdateService
- *
-
  */
 class RecurrenceUpdateService
 {
@@ -51,10 +48,6 @@ class RecurrenceUpdateService
      *
      * TODO if the user updates the type, the accounts must be validated again.
      *
-     * @param Recurrence $recurrence
-     * @param array      $data
-     *
-     * @return Recurrence
      * @throws FireflyException
      */
     public function update(Recurrence $recurrence, array $data): Recurrence
@@ -111,10 +104,6 @@ class RecurrenceUpdateService
         return $recurrence;
     }
 
-    /**
-     * @param Recurrence $recurrence
-     * @param string     $text
-     */
     private function setNoteText(Recurrence $recurrence, string $text): void
     {
         $dbNote = $recurrence->notes()->first();
@@ -132,10 +121,6 @@ class RecurrenceUpdateService
     }
 
     /**
-     *
-     * @param Recurrence $recurrence
-     * @param array      $repetitions
-     *
      * @throws FireflyException
      */
     private function updateRepetitions(Recurrence $recurrence, array $repetitions): void
@@ -168,25 +153,20 @@ class RecurrenceUpdateService
             ];
             foreach ($fields as $field => $column) {
                 if (array_key_exists($field, $current)) {
-                    $match->$column = $current[$field];
+                    $match->{$column} = $current[$field];
                     $match->save();
                 }
             }
         }
     }
 
-    /**
-     * @param Recurrence $recurrence
-     * @param array      $data
-     *
-     * @return RecurrenceRepetition|null
-     */
     private function matchRepetition(Recurrence $recurrence, array $data): ?RecurrenceRepetition
     {
         $originalCount = $recurrence->recurrenceRepetitions()->count();
         if (1 === $originalCount) {
             app('log')->debug('Return the first one');
-            /** @var RecurrenceRepetition|null */
+
+            // @var RecurrenceRepetition|null
             return $recurrence->recurrenceRepetitions()->first();
         }
         // find it:
@@ -203,18 +183,16 @@ class RecurrenceUpdateService
                 $query->where($column, $data[$field]);
             }
         }
-        /** @var RecurrenceRepetition|null */
+
+        // @var RecurrenceRepetition|null
         return $query->first();
     }
 
     /**
      * TODO this method is very complex.
      *
-     * @param Recurrence $recurrence
-     * @param array      $transactions
-     *
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     private function updateTransactions(Recurrence $recurrence, array $transactions): void
     {
@@ -224,13 +202,12 @@ class RecurrenceUpdateService
         if (0 === count($transactions)) {
             // won't drop transactions, rather avoid.
             app('log')->warning('No transactions to update, too scared to continue!');
+
             return;
         }
         $combinations         = [];
         $originalTransactions = $recurrence->recurrenceTransactions()->get()->toArray();
-        /**
-         * First, make sure to loop all existing transactions and match them to a counterpart in the submitted transactions array.
-         */
+        // First, make sure to loop all existing transactions and match them to a counterpart in the submitted transactions array.
         foreach ($originalTransactions as $i => $originalTransaction) {
             foreach ($transactions as $ii => $submittedTransaction) {
                 if (array_key_exists('id', $submittedTransaction) && (int)$originalTransaction['id'] === (int)$submittedTransaction['id']) {
@@ -239,14 +216,11 @@ class RecurrenceUpdateService
                         'original'  => $originalTransaction,
                         'submitted' => $submittedTransaction,
                     ];
-                    unset($originalTransactions[$i]);
-                    unset($transactions[$ii]);
+                    unset($originalTransactions[$i], $transactions[$ii]);
                 }
             }
         }
-        /**
-         * If one left of both we can match those as well and presto.
-         */
+        // If one left of both we can match those as well and presto.
         if (1 === count($originalTransactions) && 1 === count($transactions)) {
             $first = array_shift($originalTransactions);
             app('log')->debug(sprintf('One left of each, link them (ID is #%d)', $first['id']));
@@ -271,16 +245,11 @@ class RecurrenceUpdateService
         $this->createTransactions($recurrence, $transactions);
     }
 
-    /**
-     * @param Recurrence $recurrence
-     * @param array      $combination
-     *
-     * @return void
-     */
     private function updateCombination(Recurrence $recurrence, array $combination): void
     {
         $original  = $combination['original'];
         $submitted = $combination['submitted'];
+
         /** @var RecurrenceTransaction $transaction */
         $transaction = $recurrence->recurrenceTransactions()->find($original['id']);
         app('log')->debug(sprintf('Now in updateCombination(#%d)', $original['id']));
@@ -327,7 +296,7 @@ class RecurrenceUpdateService
         ];
         foreach ($fields as $field => $column) {
             if (array_key_exists($field, $submitted)) {
-                $transaction->$column = $submitted[$field];
+                $transaction->{$column} = $submitted[$field];
                 $transaction->save();
             }
         }
@@ -359,12 +328,6 @@ class RecurrenceUpdateService
         }
     }
 
-    /**
-     * @param Recurrence $recurrence
-     * @param int        $transactionId
-     *
-     * @return void
-     */
     private function deleteTransaction(Recurrence $recurrence, int $transactionId): void
     {
         app('log')->debug(sprintf('Will delete transaction #%d in recurrence #%d.', $transactionId, $recurrence->id));

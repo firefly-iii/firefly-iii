@@ -34,12 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class UserGroupBill implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
-     *
-     * @return Bill
      * @throws NotFoundHttpException
-     *
      */
     public static function routeBinder(string $value, Route $route): Bill
     {
@@ -47,12 +42,14 @@ class UserGroupBill implements BinderInterface
             /** @var User $user */
             $user     = auth()->user();
             $currency = Bill::where('id', (int)$value)
-                            ->where('user_group_id', $user->user_group_id)
-                            ->first();
+                ->where('user_group_id', $user->user_group_id)
+                ->first()
+            ;
             if (null !== $currency) {
                 return $currency;
             }
         }
+
         throw new NotFoundHttpException();
     }
 }

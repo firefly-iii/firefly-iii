@@ -66,6 +66,7 @@ class UpdateGroupInformation extends Command
         // recurrences, rule groups, rules, tags, transaction groups, transaction journals, webhooks
 
         $users = User::get();
+
         /** @var User $user */
         foreach ($users as $user) {
             $this->updateGroupInfo($user);
@@ -74,11 +75,6 @@ class UpdateGroupInformation extends Command
         return 0;
     }
 
-    /**
-     * @param User $user
-     *
-     * @return void
-     */
     private function updateGroupInfo(User $user): void
     {
         $group = $user->userGroup;
@@ -109,13 +105,6 @@ class UpdateGroupInformation extends Command
         }
     }
 
-    /**
-     * @param User      $user
-     * @param UserGroup $group
-     * @param string    $className
-     *
-     * @return void
-     */
     private function updateGroupInfoForObject(User $user, UserGroup $group, string $className): void
     {
         try {

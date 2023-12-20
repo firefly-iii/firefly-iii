@@ -35,7 +35,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
- *
  * Class OperationsRepository
  */
 class OperationsRepository implements OperationsRepositoryInterface
@@ -45,10 +44,6 @@ class OperationsRepository implements OperationsRepositoryInterface
     /**
      * A method that returns the amount of money budgeted per day for this budget,
      * on average.
-     *
-     * @param Budget $budget
-     *
-     * @return string
      */
     public function budgetedPerDay(Budget $budget): string
     {
@@ -61,7 +56,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             $amount = $limit->amount;
             $perDay = bcdiv($amount, (string)$diff);
             $total  = bcadd($total, $perDay);
-            $count++;
+            ++$count;
             app('log')->debug(sprintf('Found %d budget limits. Per day is %s, total is %s', $count, $perDay, $total));
         }
         $avg = $total;
@@ -77,18 +72,13 @@ class OperationsRepository implements OperationsRepositoryInterface
      * This method is being used to generate the budget overview in the year/multi-year report. Its used
      * in both the year/multi-year budget overview AND in the accompanying chart.
      *
-     * @param Collection $budgets
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
      * @deprecated
      */
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
         $carbonFormat = app('navigation')->preferredCarbonFormat($start, $end);
         $data         = [];
+
         // get all transactions:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -127,13 +117,6 @@ class OperationsRepository implements OperationsRepositoryInterface
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
      * which have the specified budget set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $budgets
-     *
-     * @return array
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array
     {
@@ -199,10 +182,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $array;
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;
@@ -210,24 +190,6 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @return Collection
-     */
-    private function getBudgets(): Collection
-    {
-        /** @var BudgetRepositoryInterface $repos */
-        $repos = app(BudgetRepositoryInterface::class);
-
-        return $repos->getActiveBudgets();
-    }
-
-    /**
-     * @param Carbon                   $start
-     * @param Carbon                   $end
-     * @param Collection|null          $accounts
-     * @param Collection|null          $budgets
-     * @param TransactionCurrency|null $currency
-     *
-     * @return array
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function sumExpenses(
@@ -236,9 +198,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?Collection          $accounts = null,
         ?Collection          $budgets = null,
         ?TransactionCurrency $currency = null
-    ): array
-    {
-        //app('log')->debug(sprintf('Now in %s', __METHOD__));
+    ): array {
+        // app('log')->debug(sprintf('Now in %s', __METHOD__));
         $start->startOfDay();
         $end->endOfDay();
 
@@ -251,6 +212,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         $repository->setUser($this->user);
         $subset    = $repository->getAccountsByType(config('firefly.valid_liabilities'));
         $selection = new Collection();
+
         /** @var Account $account */
         foreach ($subset as $account) {
             if ('credit' === $repository->getMetaValue($account, 'liability_direction')) {
@@ -258,13 +220,13 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
         }
 
-
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)
-                  ->setRange($start, $end)
-                  ->excludeDestinationAccounts($selection)
-                  ->setTypes([TransactionType::WITHDRAWAL]);
+            ->setRange($start, $end)
+            ->excludeDestinationAccounts($selection)
+            ->setTypes([TransactionType::WITHDRAWAL])
+        ;
 
         if (null !== $accounts) {
             $collector->setAccounts($accounts);
@@ -280,17 +242,18 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         // same but for foreign currencies:
         if (null !== $currency) {
-            //app('log')->debug(sprintf('Currency is "%s".', $currency->name));
+            // app('log')->debug(sprintf('Currency is "%s".', $currency->name));
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
             $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])
-                      ->setForeignCurrency($currency)->setBudgets($budgets);
+                ->setForeignCurrency($currency)->setBudgets($budgets)
+            ;
 
             if (null !== $accounts) {
                 $collector->setAccounts($accounts);
             }
             $result = $collector->getExtractedJournals();
-            //app('log')->debug(sprintf('Found %d journals with currency %s.', count($result), $currency->code));
+            // app('log')->debug(sprintf('Found %d journals with currency %s.', count($result), $currency->code));
             // do not use array_merge because you want keys to overwrite (otherwise you get double results):
             $journals = $result + $journals;
         }
@@ -326,4 +289,11 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $array;
     }
 
+    private function getBudgets(): Collection
+    {
+        /** @var BudgetRepositoryInterface $repos */
+        $repos = app(BudgetRepositoryInterface::class);
+
+        return $repos->getActiveBudgets();
+    }
 }

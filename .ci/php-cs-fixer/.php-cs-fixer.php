@@ -23,11 +23,11 @@ $current = __DIR__;
 
 $paths = [
     $current . '/../../app',
-    $current . '/../../config',
-    $current . '/../../database',
-    $current . '/../../routes',
-    $current . '/../../tests',
-    $current . '/../../resources/lang',
+//    $current . '/../../config',
+//    $current . '/../../database',
+//    $current . '/../../routes',
+//    $current . '/../../tests',
+//    $current . '/../../resources/lang',
 ];
 
 $finder = PhpCsFixer\Finder::create()
@@ -36,15 +36,27 @@ $finder = PhpCsFixer\Finder::create()
 
 $config = new PhpCsFixer\Config();
 return $config->setRules([
-                             '@PHP83Migration'             => true,
-                             '@PhpCsFixer:risky'           => true,
-                             '@PSR12:risky'                => true,
-                             'declare_strict_types'        => true,
-                             'strict_param'                => true,
-                             'comment_to_phpdoc'           => false, // breaks phpstan lines in combination with PHPStorm.
-                             'array_syntax'                => ['syntax' => 'short'],
-                             'native_function_invocation'  => false, // annoying
-                             'php_unit_data_provider_name' => false, // bloody annoying long test names
-                             'static_lambda'               => false, // breaks the Response macro for API's.
+                             'no_unused_imports'             => true,
+                             '@PhpCsFixer'                   => true,
+                             '@PHP83Migration'               => true,
+                             '@PhpCsFixer:risky'             => true,
+                             '@PSR12:risky'                  => true,
+                             'declare_strict_types'          => true,
+                             'strict_param'                  => true,
+                             'comment_to_phpdoc'             => false, // breaks phpstan lines in combination with PHPStorm.
+                             'array_syntax'                  => ['syntax' => 'short'],
+                             'native_function_invocation'    => false, // annoying
+                             'php_unit_data_provider_name'   => false, // bloody annoying long test names
+                             'static_lambda'                 => false, // breaks the Response macro for API's.
+                             'phpdoc_summary'                => false, // annoying.
+                             'single_space_around_construct' => [
+                                 'constructs_followed_by_a_single_space' => [
+                                     'protected',
+                                 ],
+                             ],
+                             'statement_indentation'         => true,
+                             'type_declaration_spaces'       => false,
+                             'cast_spaces'                   => false,
+                             'binary_operator_spaces' => false,
                          ])
               ->setFinder($finder);

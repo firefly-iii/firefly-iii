@@ -29,8 +29,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class TestRuleFormRequest.
- *
-
  */
 class TestRuleFormRequest extends FormRequest
 {
@@ -40,8 +38,6 @@ class TestRuleFormRequest extends FormRequest
     /**
      * Rules for this request.
      * TODO these rules are not valid anymore.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -49,7 +45,7 @@ class TestRuleFormRequest extends FormRequest
         $validTriggers = $this->getTriggers();
 
         return [
-            'rule-trigger.*'       => 'required|max:1024|min:1|in:' . implode(',', $validTriggers),
+            'rule-trigger.*'       => 'required|max:1024|min:1|in:'.implode(',', $validTriggers),
             'rule-trigger-value.*' => 'required|max:1024|min:1|ruleTriggerValue',
         ];
     }

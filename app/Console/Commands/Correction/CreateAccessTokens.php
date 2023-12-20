@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
-use Exception;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
@@ -43,8 +42,7 @@ class CreateAccessTokens extends Command
     /**
      * Execute the console command.
      *
-     * @return int
-     * @throws Exception
+     * @throws \Exception
      */
     public function handle(): int
     {
@@ -54,6 +52,7 @@ class CreateAccessTokens extends Command
 
         $count = 0;
         $users = $repository->all();
+
         /** @var User $user */
         foreach ($users as $user) {
             $pref = app('preferences')->getForUser($user, 'access_token');

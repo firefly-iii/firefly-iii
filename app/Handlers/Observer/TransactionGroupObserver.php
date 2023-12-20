@@ -37,5 +37,4 @@ class TransactionGroupObserver
             $journal->delete();
         }
     }
-
 }

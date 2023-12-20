@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * BalanceChartRequest.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -42,8 +41,6 @@ class BalanceChartRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -55,8 +52,6 @@ class BalanceChartRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -68,11 +63,6 @@ class BalanceChartRequest extends FormRequest
         ];
     }
 
-    /**
-     * @param Validator $validator
-     *
-     * @return void
-     */
     public function withValidator(Validator $validator): void
     {
         $validator->after(
@@ -81,6 +71,7 @@ class BalanceChartRequest extends FormRequest
                 $data = $validator->getData();
                 if (!array_key_exists('accounts', $data)) {
                     $validator->errors()->add('accounts', trans('validation.filled', ['attribute' => 'accounts']));
+
                     return;
                 }
                 if (!is_array($data['accounts'])) {

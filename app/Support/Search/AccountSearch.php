@@ -36,12 +36,16 @@ class AccountSearch implements GenericSearchInterface
 {
     /** @var string */
     public const string SEARCH_ALL = 'all';
+
     /** @var string */
     public const string SEARCH_IBAN = 'iban';
+
     /** @var string */
     public const string SEARCH_ID = 'id';
+
     /** @var string */
     public const string SEARCH_NAME = 'name';
+
     /** @var string */
     public const string SEARCH_NUMBER = 'number';
     private string $field;
@@ -54,17 +58,16 @@ class AccountSearch implements GenericSearchInterface
         $this->types = [];
     }
 
-    /**
-     * @return Collection
-     */
     public function search(): Collection
     {
         $searchQuery   = $this->user->accounts()
-                                    ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
-                                    ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
-                                    ->whereIn('account_types.type', $this->types);
+            ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
+            ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
+            ->whereIn('account_types.type', $this->types)
+        ;
         $like          = sprintf('%%%s%%', $this->query);
         $originalQuery = $this->query;
+
         switch ($this->field) {
             default:
             case self::SEARCH_ALL:
@@ -83,16 +86,24 @@ class AccountSearch implements GenericSearchInterface
                         $q->where('account_meta.data', 'LIKE', $json);
                     }
                 );
+
                 break;
+
             case self::SEARCH_ID:
                 $searchQuery->where('accounts.id', '=', (int)$originalQuery);
+
                 break;
+
             case self::SEARCH_NAME:
                 $searchQuery->where('accounts.name', 'LIKE', $like);
+
                 break;
+
             case self::SEARCH_IBAN:
                 $searchQuery->where('accounts.iban', 'LIKE', $like);
+
                 break;
+
             case self::SEARCH_NUMBER:
                 // meta data:
                 $searchQuery->Where(
@@ -102,42 +113,29 @@ class AccountSearch implements GenericSearchInterface
                         $q->where('account_meta.data', $json);
                     }
                 );
+
                 break;
         }
 
         return $searchQuery->distinct()->get(['accounts.*']);
     }
 
-    /**
-     * @param string $field
-     */
     public function setField(string $field): void
     {
         $this->field = $field;
     }
 
-    /**
-     * @param string $query
-     */
     public function setQuery(string $query): void
     {
         $this->query = $query;
     }
 
-    /**
-     * @param array $types
-     */
     public function setTypes(array $types): void
     {
         $this->types = $types;
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     *
-     * @return void
-     */
-    public function setUser(User | Authenticatable | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;

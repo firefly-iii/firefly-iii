@@ -63,10 +63,6 @@ class TransactionController extends Controller
     /**
      * This endpoint is documented at:
      * * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getTransactionsAC
-     *
-     * @param AutocompleteRequest $request
-     *
-     * @return JsonResponse
      */
     public function transactions(AutocompleteRequest $request): JsonResponse
     {
@@ -93,10 +89,6 @@ class TransactionController extends Controller
     /**
      * This endpoint is documented at:
      * * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getTransactionsIDAC
-     *
-     * @param AutocompleteRequest $request
-     *
-     * @return JsonResponse
      */
     public function transactionsWithID(AutocompleteRequest $request): JsonResponse
     {

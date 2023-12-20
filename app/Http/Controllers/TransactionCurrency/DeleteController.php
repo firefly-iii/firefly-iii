@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * DeleteController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -47,8 +46,6 @@ class DeleteController extends Controller
 
     /**
      * CurrencyController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -66,14 +63,10 @@ class DeleteController extends Controller
         );
     }
 
-
     /**
      * Deletes a currency.
      *
-     * @param Request             $request
-     * @param TransactionCurrency $currency
-     *
-     * @return Factory|RedirectResponse|Redirector|View
+     * @return Factory|Redirector|RedirectResponse|View
      */
     public function delete(Request $request, TransactionCurrency $currency)
     {
@@ -106,10 +99,7 @@ class DeleteController extends Controller
     /**
      * Destroys a currency.
      *
-     * @param Request             $request
-     * @param TransactionCurrency $currency
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function destroy(Request $request, TransactionCurrency $currency)
     {
@@ -143,5 +133,4 @@ class DeleteController extends Controller
 
         return redirect($this->getPreviousUrl('currencies.delete.url'));
     }
-
 }

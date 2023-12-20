@@ -29,8 +29,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class SelectTransactionsRequest.
- *
-
  */
 class SelectTransactionsRequest extends FormRequest
 {
@@ -38,8 +36,6 @@ class SelectTransactionsRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -50,8 +46,8 @@ class SelectTransactionsRequest extends FormRequest
         $today        = today(config('app.timezone'))->addDay()->format('Y-m-d');
 
         return [
-            'start'      => 'required|date|after:' . $first,
-            'end'        => 'required|date|before:' . $today,
+            'start'      => 'required|date|after:'.$first,
+            'end'        => 'required|date|before:'.$today,
             'accounts'   => 'required',
             'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
         ];

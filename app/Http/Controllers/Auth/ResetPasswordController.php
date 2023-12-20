@@ -43,8 +43,6 @@ use Psr\Container\NotFoundExceptionInterface;
  * This controller is responsible for handling password reset requests
  * and uses a simple trait to include this behavior. You're free to
  * explore this trait and override any methods you wish to tweak.
- *
-
  */
 class ResetPasswordController extends Controller
 {
@@ -73,11 +71,9 @@ class ResetPasswordController extends Controller
     /**
      * Reset the given user's password.
      *
-     * @param Request $request
-     *
      * @return Factory|JsonResponse|RedirectResponse|View
-     * @throws ValidationException
      *
+     * @throws ValidationException
      */
     public function reset(Request $request)
     {
@@ -107,7 +103,7 @@ class ResetPasswordController extends Controller
         // If the password was successfully reset, we will redirect the user back to
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
-        return $response === Password::PASSWORD_RESET
+        return Password::PASSWORD_RESET === $response
             ? $this->sendResetResponse($request, $response)
             : $this->sendResetFailedResponse($request, $response);
     }
@@ -117,10 +113,10 @@ class ResetPasswordController extends Controller
      *
      * If no token is present, display the link request form.
      *
-     * @param Request $request
-     * @param null    $token
+     * @param null $token
      *
      * @return Factory|View
+     *
      * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use DB;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
@@ -38,17 +37,12 @@ class ClearBudget implements ActionInterface
 
     /**
      * TriggerInterface constructor.
-     *
-     * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
     {
         $this->action = $action;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function actOnArray(array $journal): bool
     {
         /** @var TransactionJournal $object */
@@ -57,10 +51,11 @@ class ClearBudget implements ActionInterface
         if (null === $budget) {
             app('log')->debug(sprintf('RuleAction ClearBudget, no budget in journal #%d.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_already_no_budget')));
+
             return false;
         }
 
-        DB::table('budget_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
+        \DB::table('budget_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
 
         event(new TriggeredAuditLog($this->action->rule, $object, 'clear_budget', $budget->name, null));
 

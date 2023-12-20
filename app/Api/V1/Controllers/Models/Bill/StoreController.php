@@ -43,8 +43,6 @@ class StoreController extends Controller
 
     /**
      * BillController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,9 +63,6 @@ class StoreController extends Controller
      *
      * Store a bill.
      *
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function store(StoreRequest $request): JsonResponse

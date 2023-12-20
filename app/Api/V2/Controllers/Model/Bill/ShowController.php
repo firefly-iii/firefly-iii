@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * ShowController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -69,6 +68,7 @@ class ShowController extends Controller
 
         return response()
             ->api($this->jsonApiObject('subscriptions', $bill, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

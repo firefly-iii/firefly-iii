@@ -40,8 +40,6 @@ class ConfigurationController extends Controller
 {
     /**
      * ConfigurationController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -62,6 +60,7 @@ class ConfigurationController extends Controller
      * Show configuration index.
      *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -86,10 +85,6 @@ class ConfigurationController extends Controller
 
     /**
      * Store new configuration values.
-     *
-     * @param ConfigurationRequest $request
-     *
-     * @return RedirectResponse
      */
     public function postIndex(ConfigurationRequest $request): RedirectResponse
     {

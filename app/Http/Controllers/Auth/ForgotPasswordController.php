@@ -37,8 +37,6 @@ use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ForgotPasswordController
- *
-
  */
 class ForgotPasswordController extends Controller
 {
@@ -60,9 +58,6 @@ class ForgotPasswordController extends Controller
     /**
      * Send a reset link to the given user.
      *
-     * @param Request                 $request
-     * @param UserRepositoryInterface $repository
-     *
      * @return Factory|RedirectResponse|View
      */
     public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
@@ -75,11 +70,10 @@ class ForgotPasswordController extends Controller
             return view('error', compact('message'));
         }
 
-
         $this->validateEmail($request);
 
         // verify if the user is not a demo user. If so, we give him back an error.
-        /** @var User|null $user */
+        /** @var null|User $user */
         $user = User::where('email', $request->get('email'))->first();
 
         if (null !== $user && $repository->hasRole($user, 'demo')) {
@@ -103,8 +97,8 @@ class ForgotPasswordController extends Controller
     /**
      * Show form for email recovery.
      *
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

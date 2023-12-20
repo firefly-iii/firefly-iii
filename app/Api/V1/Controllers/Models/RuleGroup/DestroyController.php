@@ -38,8 +38,6 @@ class DestroyController extends Controller
 
     /**
      * RuleGroupController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -62,10 +60,6 @@ class DestroyController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rule_groups/deleteRuleGroup
      *
      * Delete the resource.
-     *
-     * @param RuleGroup $ruleGroup
-     *
-     * @return JsonResponse
      */
     public function destroy(RuleGroup $ruleGroup): JsonResponse
     {

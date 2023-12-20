@@ -35,18 +35,19 @@ use Illuminate\Database\Query\Builder;
 /**
  * FireflyIII\Models\Note
  *
- * @property int                 $id
- * @property Carbon|null         $created_at
- * @property Carbon|null         $updated_at
- * @property Carbon|null         $deleted_at
- * @property int                 $noteable_id
- * @property string              $noteable_type
- * @property string|null         $title
- * @property string|null         $text
- * @property-read Model|Eloquent $noteable
+ * @property int             $id
+ * @property null|Carbon     $created_at
+ * @property null|Carbon     $updated_at
+ * @property null|Carbon     $deleted_at
+ * @property int             $noteable_id
+ * @property string          $noteable_type
+ * @property null|string     $title
+ * @property null|string     $text
+ * @property \Eloquent|Model $noteable
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Note newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Note newQuery()
- * @method static Builder|Note onlyTrashed()
+ * @method static Builder|Note                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Note query()
  * @method static \Illuminate\Database\Eloquent\Builder|Note whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Note whereDeletedAt($value)
@@ -56,15 +57,15 @@ use Illuminate\Database\Query\Builder;
  * @method static \Illuminate\Database\Eloquent\Builder|Note whereText($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Note whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Note whereUpdatedAt($value)
- * @method static Builder|Note withTrashed()
- * @method static Builder|Note withoutTrashed()
+ * @method static Builder|Note                               withTrashed()
+ * @method static Builder|Note                               withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class Note extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
-
 
     protected $casts
         = [
@@ -76,7 +77,6 @@ class Note extends Model
     protected $fillable = ['title', 'text', 'noteable_id', 'noteable_type'];
 
     /**
-     *
      * Get all the owning noteable models.
      */
     public function noteable(): MorphTo
@@ -84,15 +84,10 @@ class Note extends Model
         return $this->morphTo();
     }
 
-    /**
-     * @return Attribute
-     */
     protected function noteableId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
-
-
 }

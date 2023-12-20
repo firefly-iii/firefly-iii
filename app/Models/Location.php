@@ -37,18 +37,19 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 /**
  * FireflyIII\Models\Location
  *
- * @property int                       $id
- * @property Carbon|null               $created_at
- * @property Carbon|null               $updated_at
- * @property Carbon|null               $deleted_at
- * @property int                       $locatable_id
- * @property string                    $locatable_type
- * @property float|null                $latitude
- * @property float|null                $longitude
- * @property int|null                  $zoom_level
- * @property-read Collection|Account[] $accounts
- * @property-read int|null             $accounts_count
- * @property-read Model|Eloquent       $locatable
+ * @property int                  $id
+ * @property null|Carbon          $created_at
+ * @property null|Carbon          $updated_at
+ * @property null|Carbon          $deleted_at
+ * @property int                  $locatable_id
+ * @property string               $locatable_type
+ * @property null|float           $latitude
+ * @property null|float           $longitude
+ * @property null|int             $zoom_level
+ * @property Account[]|Collection $accounts
+ * @property null|int             $accounts_count
+ * @property \Eloquent|Model      $locatable
+ *
  * @method static Builder|Location newModelQuery()
  * @method static Builder|Location newQuery()
  * @method static Builder|Location query()
@@ -61,6 +62,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @method static Builder|Location whereLongitude($value)
  * @method static Builder|Location whereUpdatedAt($value)
  * @method static Builder|Location whereZoomLevel($value)
+ *
  * @mixin Eloquent
  */
 class Location extends Model
@@ -81,10 +83,6 @@ class Location extends Model
 
     /**
      * Add rules for locations.
-     *
-     * @param array $rules
-     *
-     * @return array
      */
     public static function requestRules(array $rules): array
     {
@@ -105,24 +103,16 @@ class Location extends Model
 
     /**
      * Get all the owning attachable models.
-     *
-     *
-     * @return MorphTo
      */
     public function locatable(): MorphTo
     {
         return $this->morphTo();
     }
 
-    /**
-     * @return Attribute
-     */
     protected function locatableId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
-
-
 }

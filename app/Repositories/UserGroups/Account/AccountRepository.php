@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * AccountRepository.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -40,9 +39,6 @@ class AccountRepository implements AccountRepositoryInterface
 {
     use UserGroupTrait;
 
-    /**
-     * @inheritDoc
-     */
     public function findByAccountNumber(string $number, array $types): ?Account
     {
         $dbQuery = $this->userGroup
@@ -55,22 +51,18 @@ class AccountRepository implements AccountRepositoryInterface
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
                 }
-            );
+            )
+        ;
 
         if (0 !== count($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $dbQuery->whereIn('account_types.type', $types);
         }
-        /** @var Account|null */
+
+        // @var Account|null
         return $dbQuery->first(['accounts.*']);
     }
 
-    /**
-     * @param string $iban
-     * @param array  $types
-     *
-     * @return Account|null
-     */
     public function findByIbanNull(string $iban, array $types): ?Account
     {
         $query = $this->userGroup->accounts()->where('iban', '!=', '')->whereNotNull('iban');
@@ -80,13 +72,10 @@ class AccountRepository implements AccountRepositoryInterface
             $query->whereIn('account_types.type', $types);
         }
 
-        /** @var Account|null */
+        // @var Account|null
         return $query->where('iban', $iban)->first(['accounts.*']);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function findByName(string $name, array $types): ?Account
     {
         $query = $this->userGroup->accounts();
@@ -98,7 +87,8 @@ class AccountRepository implements AccountRepositoryInterface
         app('log')->debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
 
         $query->where('accounts.name', $name);
-        /** @var Account|null $account */
+
+        /** @var null|Account $account */
         $account = $query->first(['accounts.*']);
         if (null === $account) {
             app('log')->debug(sprintf('There is no account with name "%s" of types', $name), $types);
@@ -110,11 +100,6 @@ class AccountRepository implements AccountRepositoryInterface
         return $account;
     }
 
-    /**
-     * @param Account $account
-     *
-     * @return TransactionCurrency|null
-     */
     public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
         $type = $account->accountType->type;
@@ -134,11 +119,6 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * Return meta value for account. Null if not found.
-     *
-     * @param Account $account
-     * @param string  $field
-     *
-     * @return null|string
      */
     public function getMetaValue(Account $account, string $field): ?string
     {
@@ -157,25 +137,16 @@ class AccountRepository implements AccountRepositoryInterface
         return null;
     }
 
-    /**
-     * @param int $accountId
-     *
-     * @return Account|null
-     */
     public function find(int $accountId): ?Account
     {
         $account = $this->user->accounts()->find($accountId);
         if (null === $account) {
             $account = $this->userGroup->accounts()->find($accountId);
         }
+
         return $account;
     }
 
-    /**
-     * @param array $accountIds
-     *
-     * @return Collection
-     */
     public function getAccountsById(array $accountIds): Collection
     {
         $query = $this->userGroup->accounts();
@@ -190,9 +161,6 @@ class AccountRepository implements AccountRepositoryInterface
         return $query->get(['accounts.*']);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getAccountsByType(array $types, ?array $sort = []): Collection
     {
         $res   = array_intersect([AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], $types);
@@ -215,14 +183,10 @@ class AccountRepository implements AccountRepositoryInterface
             $query->orderBy('accounts.active', 'DESC');
             $query->orderBy('accounts.name', 'ASC');
         }
+
         return $query->get(['accounts.*']);
     }
 
-    /**
-     * @param array $types
-     *
-     * @return Collection
-     */
     public function getActiveAccountsByType(array $types): Collection
     {
         $query = $this->userGroup->accounts();
@@ -237,18 +201,16 @@ class AccountRepository implements AccountRepositoryInterface
         return $query->get(['accounts.*']);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function searchAccount(string $query, array $types, int $limit): Collection
     {
         // search by group, not by user
         $dbQuery = $this->userGroup->accounts()
-                                   ->where('active', true)
-                                   ->orderBy('accounts.order', 'ASC')
-                                   ->orderBy('accounts.account_type_id', 'ASC')
-                                   ->orderBy('accounts.name', 'ASC')
-                                   ->with(['accountType']);
+            ->where('active', true)
+            ->orderBy('accounts.order', 'ASC')
+            ->orderBy('accounts.account_type_id', 'ASC')
+            ->orderBy('accounts.name', 'ASC')
+            ->with(['accountType'])
+        ;
         if ('' !== $query) {
             // split query on spaces just in case:
             $parts = explode(' ', $query);

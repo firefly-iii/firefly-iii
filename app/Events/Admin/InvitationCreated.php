@@ -42,8 +42,6 @@ class InvitationCreated extends Event
 
     /**
      * Create a new event instance.
-     *
-     * @param InvitedUser $invitee
      */
     public function __construct(InvitedUser $invitee)
     {

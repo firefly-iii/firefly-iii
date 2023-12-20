@@ -30,7 +30,6 @@ use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
-use JsonException;
 
 /**
  * Class BillFactory
@@ -43,11 +42,8 @@ class BillFactory
     private User $user;
 
     /**
-     * @param array $data
-     *
-     * @return Bill|null
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function create(array $data): ?Bill
     {
@@ -59,6 +55,7 @@ class BillFactory
         try {
             $skip   = array_key_exists('skip', $data) ? $data['skip'] : 0;
             $active = array_key_exists('active', $data) ? $data['active'] : 0;
+
             /** @var Bill $bill */
             $bill = Bill::create(
                 [
@@ -81,6 +78,7 @@ class BillFactory
         } catch (QueryException $e) {
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
+
             throw new FireflyException('400000: Could not store bill.', 0, $e);
         }
 
@@ -108,12 +106,6 @@ class BillFactory
         return $bill;
     }
 
-    /**
-     * @param int|null    $billId
-     * @param null|string $billName
-     *
-     * @return Bill|null
-     */
     public function find(?int $billId, ?string $billName): ?Bill
     {
         $billId   = (int)$billId;
@@ -133,19 +125,11 @@ class BillFactory
         return $bill;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return Bill|null
-     */
     public function findByName(string $name): ?Bill
     {
         return $this->user->bills()->where('name', 'LIKE', sprintf('%%%s%%', $name))->first();
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user): void
     {
         $this->user = $user;

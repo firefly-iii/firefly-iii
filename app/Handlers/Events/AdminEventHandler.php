@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Exception;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\AdminRequestedTestMessage;
 use FireflyIII\Events\NewVersionAvailable;
@@ -38,11 +37,6 @@ use Illuminate\Support\Facades\Notification;
  */
 class AdminEventHandler
 {
-    /**
-     * @param InvitationCreated $event
-     *
-     * @return void
-     */
     public function sendInvitationNotification(InvitationCreated $event): void
     {
         $sendMail = app('fireflyconfig')->get('notification_invite_created', true)->data;
@@ -57,14 +51,16 @@ class AdminEventHandler
             if ($repository->hasRole($user, 'owner')) {
                 try {
                     Notification::send($user, new UserInvitation($event->invitee));
-                } catch (Exception $e) { // @phpstan-ignore-line
+                } catch (\Exception $e) { // @phpstan-ignore-line
                     $message = $e->getMessage();
                     if (str_contains($message, 'Bcc')) {
                         app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
                         return;
                     }
                     if (str_contains($message, 'RFC 2822')) {
                         app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
                         return;
                     }
                     app('log')->error($e->getMessage());
@@ -76,10 +72,6 @@ class AdminEventHandler
 
     /**
      * Send new version message to admin.
-     *
-     * @param NewVersionAvailable $event
-     *
-     * @return void
      */
     public function sendNewVersion(NewVersionAvailable $event): void
     {
@@ -95,14 +87,16 @@ class AdminEventHandler
             if ($repository->hasRole($user, 'owner')) {
                 try {
                     Notification::send($user, new VersionCheckResult($event->message));
-                } catch (Exception $e) {// @phpstan-ignore-line
+                } catch (\Exception $e) {// @phpstan-ignore-line
                     $message = $e->getMessage();
                     if (str_contains($message, 'Bcc')) {
                         app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
                         return;
                     }
                     if (str_contains($message, 'RFC 2822')) {
                         app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
                         return;
                     }
                     app('log')->error($e->getMessage());
@@ -114,10 +108,6 @@ class AdminEventHandler
 
     /**
      * Sends a test message to an administrator.
-     *
-     * @param AdminRequestedTestMessage $event
-     *
-     * @return void
      */
     public function sendTestMessage(AdminRequestedTestMessage $event): void
     {
@@ -127,16 +117,19 @@ class AdminEventHandler
         if (!$repository->hasRole($event->user, 'owner')) {
             return;
         }
+
         try {
             Notification::send($event->user, new TestNotification($event->user->email));
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (\Exception $e) { // @phpstan-ignore-line
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
                 app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
                 return;
             }
             if (str_contains($message, 'RFC 2822')) {
                 app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
                 return;
             }
             app('log')->error($e->getMessage());

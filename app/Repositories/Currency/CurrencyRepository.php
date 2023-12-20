@@ -37,55 +37,42 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 {
     private User $user;
 
-
     /**
      * Find by currency code, return NULL if unfound.
-     *
-     * @param string $currencyCode
-     *
-     * @return TransactionCurrency|null
      */
     public function findByCode(string $currencyCode): ?TransactionCurrency
     {
         return TransactionCurrency::where('code', $currencyCode)->first();
     }
 
-
     /**
      * Returns the complete set of transactions but needs
      * no user object.
-     *
-     * @return Collection
      */
     public function getCompleteSet(): Collection
     {
         return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
 
-
     /**
      * Get currency exchange rate.
-     *
-     * @param TransactionCurrency $fromCurrency
-     * @param TransactionCurrency $toCurrency
-     * @param Carbon              $date
-     *
-     * @return CurrencyExchangeRate|null
      */
     public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate
     {
         if ($fromCurrency->id === $toCurrency->id) {
             $rate       = new CurrencyExchangeRate();
-            $rate->rate = "1";
+            $rate->rate = '1';
             $rate->id   = 0;
 
             return $rate;
         }
-        /** @var CurrencyExchangeRate|null $rate */
+
+        /** @var null|CurrencyExchangeRate $rate */
         $rate = $this->user->currencyExchangeRates()
-                           ->where('from_currency_id', $fromCurrency->id)
-                           ->where('to_currency_id', $toCurrency->id)
-                           ->where('date', $date->format('Y-m-d'))->first();
+            ->where('from_currency_id', $fromCurrency->id)
+            ->where('to_currency_id', $toCurrency->id)
+            ->where('date', $date->format('Y-m-d'))->first()
+        ;
         if (null !== $rate) {
             app('log')->debug(sprintf('Found cached exchange rate in database for %s to %s on %s', $fromCurrency->code, $toCurrency->code, $date->format('Y-m-d')));
 
@@ -97,13 +84,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     /**
      * TODO must be a factory
-     *
-     * @param TransactionCurrency $fromCurrency
-     * @param TransactionCurrency $toCurrency
-     * @param Carbon              $date
-     * @param float               $rate
-     *
-     * @return CurrencyExchangeRate
      */
     public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate
     {
@@ -118,14 +98,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         );
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;
         }
     }
-
 }

@@ -42,8 +42,6 @@ class DeleteController extends Controller
 
     /**
      * DeleteController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,8 +63,6 @@ class DeleteController extends Controller
     /**
      * Delete a recurring transaction form.
      *
-     * @param Recurrence $recurrence
-     *
      * @return Factory|View
      */
     public function delete(Recurrence $recurrence)
@@ -83,16 +79,12 @@ class DeleteController extends Controller
     /**
      * Destroy the recurring transaction.
      *
-     * @param RecurringRepositoryInterface $repository
-     * @param Request                      $request
-     * @param Recurrence                   $recurrence
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function destroy(RecurringRepositoryInterface $repository, Request $request, Recurrence $recurrence)
     {
         $repository->destroy($recurrence);
-        $request->session()->flash('success', (string)trans('firefly.' . 'recurrence_deleted', ['title' => $recurrence->title]));
+        $request->session()->flash('success', (string)trans('firefly.recurrence_deleted', ['title' => $recurrence->title]));
         app('preferences')->mark();
 
         return redirect($this->getPreviousUrl('recurrences.delete.url'));

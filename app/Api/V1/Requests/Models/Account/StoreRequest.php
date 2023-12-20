@@ -35,8 +35,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class StoreRequest
- *
-
  */
 class StoreRequest extends FormRequest
 {
@@ -44,9 +42,6 @@ class StoreRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    /**
-     * @return array
-     */
     public function getAllAccountData(): array
     {
         $active          = true;
@@ -93,8 +88,6 @@ class StoreRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -104,7 +97,7 @@ class StoreRequest extends FormRequest
         $type           = $this->convertString('type');
         $rules          = [
             'name'                 => 'required|max:1024|min:1|uniqueAccountForUser',
-            'type'                 => 'required|max:1024|min:1|' . sprintf('in:%s', $types),
+            'type'                 => 'required|max:1024|min:1|'.sprintf('in:%s', $types),
             'iban'                 => ['iban', 'nullable', new UniqueIban(null, $type)],
             'bic'                  => 'bic|nullable',
             'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber(null, $type)],

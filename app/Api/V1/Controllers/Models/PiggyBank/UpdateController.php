@@ -40,8 +40,6 @@ class UpdateController extends Controller
 
     /**
      * Constructor.
-     *
-
      */
     public function __construct()
     {
@@ -61,11 +59,6 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/updatePiggyBank
      *
      * Update piggy bank.
-     *
-     * @param UpdateRequest $request
-     * @param PiggyBank     $piggyBank
-     *
-     * @return JsonResponse
      */
     public function update(UpdateRequest $request, PiggyBank $piggyBank): JsonResponse
     {
@@ -77,6 +70,7 @@ class UpdateController extends Controller
         }
 
         $manager = $this->getManager();
+
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
         $transformer->setParameters($this->parameters);

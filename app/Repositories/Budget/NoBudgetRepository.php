@@ -32,7 +32,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
- *
  * Class NoBudgetRepository
  */
 class NoBudgetRepository implements NoBudgetRepositoryInterface
@@ -40,13 +39,6 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
     /** @var User */
     private $user;
 
-    /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $carbonFormat = app('navigation')->preferredCarbonFormat($start, $end);
@@ -87,11 +79,6 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
     }
 
     /**
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
      * @deprecated
      */
     public function spentInPeriodWoBudgetMc(Collection $accounts, Carbon $start, Carbon $end): array
@@ -109,6 +96,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         $return     = [];
         $total      = [];
         $currencies = [];
+
         /** @var array $journal */
         foreach ($journals as $journal) {
             $code = $journal['currency_code'];
@@ -138,10 +126,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         return $return;
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;
@@ -151,13 +136,6 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
     /**
      * TODO this method does not include multi currency. It just counts.
      * TODO this probably also applies to the other "sumExpenses" methods.
-     *
-     * @param Carbon                   $start
-     * @param Carbon                   $end
-     * @param Collection|null          $accounts
-     * @param TransactionCurrency|null $currency
-     *
-     * @return array
      */
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
     {

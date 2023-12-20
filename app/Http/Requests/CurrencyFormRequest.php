@@ -38,8 +38,6 @@ class CurrencyFormRequest extends FormRequest
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getCurrencyData(): array
     {
@@ -54,8 +52,6 @@ class CurrencyFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -68,7 +64,7 @@ class CurrencyFormRequest extends FormRequest
             'enabled'        => 'in:0,1',
         ];
 
-        /** @var TransactionCurrency|null $currency */
+        /** @var null|TransactionCurrency $currency */
         $currency = $this->route()->parameter('currency');
 
         if (null !== $currency) {

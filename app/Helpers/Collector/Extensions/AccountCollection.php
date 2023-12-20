@@ -35,10 +35,6 @@ trait AccountCollection
 {
     /**
      * These accounts must not be included.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function excludeAccounts(Collection $accounts): GroupCollectorInterface
     {
@@ -55,10 +51,6 @@ trait AccountCollection
 
     /**
      * These accounts must not be destination accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function excludeDestinationAccounts(Collection $accounts): GroupCollectorInterface
     {
@@ -74,10 +66,6 @@ trait AccountCollection
 
     /**
      * These accounts must not be source accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function excludeSourceAccounts(Collection $accounts): GroupCollectorInterface
     {
@@ -93,10 +81,6 @@ trait AccountCollection
 
     /**
      * Define which accounts can be part of the source and destination transactions.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function setAccounts(Collection $accounts): GroupCollectorInterface
     {
@@ -108,7 +92,7 @@ trait AccountCollection
                     $query->orWhereIn('destination.account_id', $accountIds);
                 }
             );
-            //app('log')->debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
+            // app('log')->debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -116,10 +100,6 @@ trait AccountCollection
 
     /**
      * Both source AND destination must be in this list of accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function setBothAccounts(Collection $accounts): GroupCollectorInterface
     {
@@ -139,10 +119,6 @@ trait AccountCollection
 
     /**
      * Define which accounts can be part of the source and destination transactions.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface
     {
@@ -158,10 +134,6 @@ trait AccountCollection
 
     /**
      * Define which accounts can NOT be part of the source and destination transactions.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function setNotAccounts(Collection $accounts): GroupCollectorInterface
     {
@@ -173,7 +145,7 @@ trait AccountCollection
                     $query->whereNotIn('destination.account_id', $accountIds);
                 }
             );
-            //app('log')->debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
+            // app('log')->debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -181,10 +153,6 @@ trait AccountCollection
 
     /**
      * Define which accounts can be part of the source and destination transactions.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function setSourceAccounts(Collection $accounts): GroupCollectorInterface
     {
@@ -200,10 +168,6 @@ trait AccountCollection
 
     /**
      * Either account can be set, but NOT both. This effectively excludes internal transfers.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function setXorAccounts(Collection $accounts): GroupCollectorInterface
     {
@@ -237,8 +201,6 @@ trait AccountCollection
 
     /**
      * Will include the source and destination account names and types.
-     *
-     * @return GroupCollectorInterface
      */
     public function withAccountInformation(): GroupCollectorInterface
     {

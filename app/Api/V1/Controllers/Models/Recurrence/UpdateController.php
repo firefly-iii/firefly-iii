@@ -40,8 +40,6 @@ class UpdateController extends Controller
 
     /**
      * RecurrenceController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -61,11 +59,6 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/recurrences/updateRecurrence
      *
      * Update single recurrence.
-     *
-     * @param UpdateRequest $request
-     * @param Recurrence    $recurrence
-     *
-     * @return JsonResponse
      */
     public function update(UpdateRequest $request, Recurrence $recurrence): JsonResponse
     {

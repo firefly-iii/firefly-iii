@@ -33,11 +33,6 @@ use FireflyIII\Repositories\AuditLogEntry\ALERepositoryInterface;
  */
 class AuditEventHandler
 {
-    /**
-     * @param TriggeredAuditLog $event
-     *
-     * @return void
-     */
     public function storeAuditEvent(TriggeredAuditLog $event): void
     {
         $array = [

@@ -42,31 +42,31 @@ class FixLongDescriptions extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
         $journals = TransactionJournal::get(['id', 'description']);
         $count    = 0;
+
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             if (strlen($journal->description) > self::MAX_LENGTH) {
                 $journal->description = substr($journal->description, 0, self::MAX_LENGTH);
                 $journal->save();
                 $this->friendlyWarning(sprintf('Truncated description of transaction journal #%d', $journal->id));
-                $count++;
+                ++$count;
             }
         }
 
         $groups = TransactionGroup::get(['id', 'title']);
+
         /** @var TransactionGroup $group */
         foreach ($groups as $group) {
             if (strlen((string)$group->title) > self::MAX_LENGTH) {
                 $group->title = substr($group->title, 0, self::MAX_LENGTH);
                 $group->save();
                 $this->friendlyWarning(sprintf('Truncated description of transaction group #%d', $group->id));
-                $count++;
+                ++$count;
             }
         }
         if (0 === $count) {

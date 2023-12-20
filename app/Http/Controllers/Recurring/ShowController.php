@@ -38,7 +38,6 @@ use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- *
  * Class ShowController
  */
 class ShowController extends Controller
@@ -50,8 +49,6 @@ class ShowController extends Controller
 
     /**
      * IndexController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -74,14 +71,14 @@ class ShowController extends Controller
     /**
      * Show a single recurring transaction.
      *
-     * @param Recurrence $recurrence
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
      */
     public function show(Recurrence $recurrence)
     {
         $repos = app(AttachmentRepositoryInterface::class);
+
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag());
@@ -108,12 +105,12 @@ class ShowController extends Controller
         $attachments           = $recurrence->attachments()->get();
         $array['attachments']  = [];
         $attachmentTransformer = app(AttachmentTransformer::class);
+
         /** @var Attachment $attachment */
         foreach ($attachments as $attachment) {
             $item                   = $attachmentTransformer->transform($attachment);
             $item['file_exists']    = $repos->exists($attachment); // TODO this should be part of the transformer
             $array['attachments'][] = $item;
-
         }
 
         $subTitle = (string)trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);

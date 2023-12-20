@@ -36,10 +36,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class Date implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
-     *
-     * @return Carbon
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value, Route $route): Carbon
@@ -75,6 +71,7 @@ class Date implements BinderInterface
         } catch (InvalidDateException|InvalidFormatException $e) { // @phpstan-ignore-line
             $message = sprintf('Could not parse date "%s" for user #%d: %s', $value, auth()->user()->id, $e->getMessage());
             app('log')->error($message);
+
             throw new NotFoundHttpException('Could not parse value', $e);
         }
 

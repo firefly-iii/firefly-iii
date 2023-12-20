@@ -38,9 +38,6 @@ class AttachmentFactory
     private User $user;
 
     /**
-     * @param array $data
-     *
-     * @return Attachment|null
      * @throws FireflyException
      */
     public function create(array $data): ?Attachment
@@ -51,7 +48,7 @@ class AttachmentFactory
 
         // get journal instead of transaction.
         if (Transaction::class === $model) {
-            /** @var Transaction|null $transaction */
+            /** @var null|Transaction $transaction */
             $transaction = $this->user->transactions()->find((int)$data['attachable_id']);
             if (null === $transaction) {
                 throw new FireflyException('Unexpectedly could not find transaction');
@@ -86,9 +83,6 @@ class AttachmentFactory
         return $attachment;
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user): void
     {
         $this->user = $user;

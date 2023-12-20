@@ -62,6 +62,7 @@ class UpdateController extends Controller
      * Show page with update options.
      *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -91,9 +92,7 @@ class UpdateController extends Controller
     /**
      * Post new settings.
      *
-     * @param Request $request
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function post(Request $request)
     {

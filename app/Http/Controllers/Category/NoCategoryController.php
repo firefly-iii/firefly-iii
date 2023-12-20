@@ -38,7 +38,6 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
- *
  * Class NoCategoryController
  */
 class NoCategoryController extends Controller
@@ -49,8 +48,6 @@ class NoCategoryController extends Controller
 
     /**
      * CategoryController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -71,11 +68,8 @@ class NoCategoryController extends Controller
     /**
      * Show transactions without a category.
      *
-     * @param Request     $request
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -83,9 +77,9 @@ class NoCategoryController extends Controller
     public function show(Request $request, Carbon $start = null, Carbon $end = null)
     {
         app('log')->debug('Start of noCategory()');
-        /** @var Carbon $start */
+        // @var Carbon $start
         $start ??= session('start');
-        /** @var Carbon $end */
+        // @var Carbon $end
         $end      ??= session('end');
         $page     = (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
@@ -101,9 +95,10 @@ class NoCategoryController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)
-                  ->setLimit($pageSize)->setPage($page)->withoutCategory()
-                  ->withAccountInformation()->withBudgetInformation()
-                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
+            ->setLimit($pageSize)->setPage($page)->withoutCategory()
+            ->withAccountInformation()->withBudgetInformation()
+            ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER])
+        ;
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
 
@@ -113,9 +108,8 @@ class NoCategoryController extends Controller
     /**
      * Show all transactions without a category.
      *
-     * @param Request $request
-     *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -138,8 +132,9 @@ class NoCategoryController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()
-                  ->withAccountInformation()->withBudgetInformation()
-                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
+            ->withAccountInformation()->withBudgetInformation()
+            ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER])
+        ;
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category.all'));
 

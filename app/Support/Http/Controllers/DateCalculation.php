@@ -27,7 +27,6 @@ use Carbon\Carbon;
 
 /**
  * Trait DateCalculation
- *
  */
 trait DateCalculation
 {
@@ -37,11 +36,6 @@ trait DateCalculation
      *
      * If both are in the past OR both are in the future, simply return the number of days in the period with a minimum
      * of 1
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return int
      */
     public function activeDaysLeft(Carbon $start, Carbon $end): int
     {
@@ -59,11 +53,6 @@ trait DateCalculation
      * Calculate the number of days passed between two dates. Will take the current moment into consideration.
      *
      * If both are in the past OR both are in the future, simply return the period between them with a minimum of 1
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return int
      */
     protected function activeDaysPassed(Carbon $start, Carbon $end): int
     {
@@ -77,12 +66,6 @@ trait DateCalculation
         return $difference;
     }
 
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return string
-     */
     protected function calculateStep(Carbon $start, Carbon $end): string
     {
         $step   = '1D';
@@ -103,16 +86,12 @@ trait DateCalculation
     /**
      * Get a list of the periods that will occur after this date. For example,
      * March 2018, April 2018, etc.
-     *
-     * @param Carbon $date
-     * @param string $range
-     *
-     * @return array
      */
     protected function getNextPeriods(Carbon $date, string $range): array
     {
         // select thing for next 12 periods:
         $loop = [];
+
         /** @var Carbon $current */
         $current = app('navigation')->startOfPeriod($date, $range);
         $current = app('navigation')->endOfPeriod($current, $range);
@@ -139,16 +118,12 @@ trait DateCalculation
     /**
      * Get a list of the periods that occurred before the start date. For example,
      * March 2018, February 2018, etc.
-     *
-     * @param Carbon $date
-     * @param string $range
-     *
-     * @return array
      */
     protected function getPreviousPeriods(Carbon $date, string $range): array
     {
         // select thing for last 12 periods:
         $loop = [];
+
         /** @var Carbon $current */
         $current = app('navigation')->startOfPeriod($date, $range);
         $count   = 0;

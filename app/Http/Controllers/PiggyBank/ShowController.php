@@ -32,7 +32,6 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Transformers\PiggyBankTransformer;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
-use JsonException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -44,8 +43,6 @@ class ShowController extends Controller
 
     /**
      * PiggyBankController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -66,11 +63,10 @@ class ShowController extends Controller
     /**
      * Show a single piggy bank.
      *
-     * @param PiggyBank $piggyBank
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function show(PiggyBank $piggyBank)
     {

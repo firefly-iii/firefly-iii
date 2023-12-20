@@ -41,8 +41,6 @@ class StoreRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -57,8 +55,6 @@ class StoreRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -73,10 +69,6 @@ class StoreRequest extends FormRequest
 
     /**
      * Configure the validator instance.
-     *
-     * @param Validator $validator
-     *
-     * @return void
      */
     public function withValidator(Validator $validator): void
     {
@@ -87,13 +79,11 @@ class StoreRequest extends FormRequest
         );
     }
 
-    /**
-     * @param Validator $validator
-     */
     private function validateExistingLink(Validator $validator): void
     {
         /** @var User $user */
         $user = auth()->user();
+
         /** @var LinkTypeRepositoryInterface $repository */
         $repository = app(LinkTypeRepositoryInterface::class);
         $repository->setUser($user);

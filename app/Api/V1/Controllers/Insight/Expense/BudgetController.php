@@ -43,8 +43,6 @@ class BudgetController extends Controller
 
     /**
      * AccountController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -67,10 +65,6 @@ class BudgetController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightExpenseBudget
-     *
-     * @param GenericRequest $request
-     *
-     * @return JsonResponse
      */
     public function budget(GenericRequest $request): JsonResponse
     {
@@ -82,9 +76,11 @@ class BudgetController extends Controller
         if (0 === $budgets->count()) {
             $budgets = $this->repository->getActiveBudgets();
         }
+
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
             $expenses = $this->opsRepository->sumExpenses($start, $end, $assetAccounts, new Collection([$budget]));
+
             /** @var array $expense */
             foreach ($expenses as $expense) {
                 $result[] = [
@@ -104,10 +100,6 @@ class BudgetController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightExpenseNoBudget
-     *
-     * @param GenericRequest $request
-     *
-     * @return JsonResponse
      */
     public function noBudget(GenericRequest $request): JsonResponse
     {
@@ -116,6 +108,7 @@ class BudgetController extends Controller
         $assetAccounts = $request->getAssetAccounts();
         $result        = [];
         $expenses      = $this->noRepository->sumExpenses($start, $end, $assetAccounts);
+
         /** @var array $expense */
         foreach ($expenses as $expense) {
             $result[] = [

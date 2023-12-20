@@ -34,12 +34,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * FireflyIII\Models\AccountType
  *
- * @property int                       $id
- * @property Carbon|null               $created_at
- * @property Carbon|null               $updated_at
- * @property string                    $type
- * @property-read Collection|Account[] $accounts
- * @property-read int|null             $accounts_count
+ * @property int                  $id
+ * @property null|Carbon          $created_at
+ * @property null|Carbon          $updated_at
+ * @property string               $type
+ * @property Account[]|Collection $accounts
+ * @property null|int             $accounts_count
+ *
  * @method static Builder|AccountType newModelQuery()
  * @method static Builder|AccountType newQuery()
  * @method static Builder|AccountType query()
@@ -47,6 +48,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static Builder|AccountType whereId($value)
  * @method static Builder|AccountType whereType($value)
  * @method static Builder|AccountType whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class AccountType extends Model
@@ -68,7 +70,6 @@ class AccountType extends Model
     public const string RECONCILIATION   = 'Reconciliation account';
     public const string REVENUE          = 'Revenue account';
 
-
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -77,13 +78,8 @@ class AccountType extends Model
 
     protected $fillable = ['type'];
 
-    /**
-     * @return HasMany
-     */
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class);
     }
-
-
 }

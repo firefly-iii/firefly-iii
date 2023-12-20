@@ -35,53 +35,51 @@ trait FiltersWeekends
 {
     /**
      * Filters out all weekend entries, if necessary.
-     *
-     * @param RecurrenceRepetition $repetition
-     * @param array                $dates
-     *
-     * @return array
-     *
      */
     protected function filterWeekends(RecurrenceRepetition $repetition, array $dates): array
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
-        if ($repetition->weekend === RecurrenceRepetition::WEEKEND_DO_NOTHING) {
+        if (RecurrenceRepetition::WEEKEND_DO_NOTHING === $repetition->weekend) {
             app('log')->debug('Repetition will not be filtered on weekend days.');
 
             return $dates;
         }
         $return = [];
+
         /** @var Carbon $date */
         foreach ($dates as $date) {
             $isWeekend = $date->isWeekend();
             if (!$isWeekend) {
                 $return[] = clone $date;
-                //app('log')->debug(sprintf('Date is %s, not a weekend date.', $date->format('D d M Y')));
+
+                // app('log')->debug(sprintf('Date is %s, not a weekend date.', $date->format('D d M Y')));
                 continue;
             }
 
             // is weekend and must set back to Friday?
-            if ($repetition->weekend === RecurrenceRepetition::WEEKEND_TO_FRIDAY) {
+            if (RecurrenceRepetition::WEEKEND_TO_FRIDAY === $repetition->weekend) {
                 $clone = clone $date;
                 $clone->addDays(5 - $date->dayOfWeekIso);
                 app('log')->debug(
                     sprintf('Date is %s, and this is in the weekend, so corrected to %s (Friday).', $date->format('D d M Y'), $clone->format('D d M Y'))
                 );
                 $return[] = clone $clone;
+
                 continue;
             }
 
             // postpone to Monday?
-            if ($repetition->weekend === RecurrenceRepetition::WEEKEND_TO_MONDAY) {
+            if (RecurrenceRepetition::WEEKEND_TO_MONDAY === $repetition->weekend) {
                 $clone = clone $date;
                 $clone->addDays(8 - $date->dayOfWeekIso);
                 app('log')->debug(
                     sprintf('Date is %s, and this is in the weekend, so corrected to %s (Monday).', $date->format('D d M Y'), $clone->format('D d M Y'))
                 );
                 $return[] = $clone;
+
                 continue;
             }
-            //app('log')->debug(sprintf('Date is %s, removed from final result', $date->format('D d M Y')));
+            // app('log')->debug(sprintf('Date is %s, removed from final result', $date->format('D d M Y')));
         }
 
         // filter unique dates

@@ -59,9 +59,6 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportAccounts
      *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
      * @throws ContainerExceptionInterface
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
@@ -76,9 +73,144 @@ class ExportController extends Controller
     }
 
     /**
-     * @param string $key
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBills
      *
-     * @return LaravelResponse
+     * @throws ContainerExceptionInterface
+     * @throws FireflyException
+     * @throws NotFoundExceptionInterface
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function bills(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportBills(true);
+
+        return $this->returnExport('bills');
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBudgets
+     *
+     * @throws ContainerExceptionInterface
+     * @throws FireflyException
+     * @throws NotFoundExceptionInterface
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function budgets(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportBudgets(true);
+
+        return $this->returnExport('budgets');
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportCategories
+     *
+     * @throws ContainerExceptionInterface
+     * @throws FireflyException
+     * @throws NotFoundExceptionInterface
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function categories(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportCategories(true);
+
+        return $this->returnExport('categories');
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportPiggies
+     *
+     * @throws ContainerExceptionInterface
+     * @throws FireflyException
+     * @throws NotFoundExceptionInterface
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function piggyBanks(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportPiggies(true);
+
+        return $this->returnExport('piggies');
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRecurring
+     *
+     * @throws ContainerExceptionInterface
+     * @throws FireflyException
+     * @throws NotFoundExceptionInterface
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function recurring(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportRecurring(true);
+
+        return $this->returnExport('recurrences');
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRules
+     *
+     * @throws ContainerExceptionInterface
+     * @throws FireflyException
+     * @throws NotFoundExceptionInterface
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function rules(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportRules(true);
+
+        return $this->returnExport('rules');
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTags
+     *
+     * @throws ContainerExceptionInterface
+     * @throws FireflyException
+     * @throws NotFoundExceptionInterface
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function tags(ExportRequest $request): LaravelResponse
+    {
+        $this->exporter->setExportTags(true);
+
+        return $this->returnExport('tags');
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTransactions
+     *
+     * @throws ContainerExceptionInterface
+     * @throws FireflyException
+     * @throws NotFoundExceptionInterface
+     */
+    public function transactions(ExportRequest $request): LaravelResponse
+    {
+        $params = $request->getAll();
+        $this->exporter->setStart($params['start']);
+        $this->exporter->setEnd($params['end']);
+        $this->exporter->setAccounts($params['accounts']);
+        $this->exporter->setExportTransactions(true);
+
+        return $this->returnExport('transactions');
+    }
+
+    /**
      * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -94,169 +226,15 @@ class ExportController extends Controller
         $response
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'application/octet-stream')
-            ->header('Content-Disposition', 'attachment; filename=' . $fileName)
+            ->header('Content-Disposition', 'attachment; filename='.$fileName)
             ->header('Content-Transfer-Encoding', 'binary')
             ->header('Connection', 'Keep-Alive')
             ->header('Expires', '0')
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Pragma', 'public')
-            ->header('Content-Length', (string)strlen($data[$key]));
+            ->header('Content-Length', (string)strlen($data[$key]))
+        ;
 
         return $response;
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBills
-     *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
-     * @throws FireflyException
-     * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function bills(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportBills(true);
-
-        return $this->returnExport('bills');
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBudgets
-     *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
-     * @throws FireflyException
-     * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function budgets(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportBudgets(true);
-
-        return $this->returnExport('budgets');
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportCategories
-     *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
-     * @throws FireflyException
-     * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function categories(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportCategories(true);
-
-        return $this->returnExport('categories');
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportPiggies
-     *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
-     * @throws FireflyException
-     * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function piggyBanks(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportPiggies(true);
-
-        return $this->returnExport('piggies');
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRecurring
-     *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
-     * @throws FireflyException
-     * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function recurring(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportRecurring(true);
-
-        return $this->returnExport('recurrences');
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRules
-     *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
-     * @throws FireflyException
-     * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function rules(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportRules(true);
-
-        return $this->returnExport('rules');
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTags
-     *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
-     * @throws FireflyException
-     * @throws NotFoundExceptionInterface
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function tags(ExportRequest $request): LaravelResponse
-    {
-        $this->exporter->setExportTags(true);
-
-        return $this->returnExport('tags');
-    }
-
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTransactions
-     *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
-     * @throws FireflyException
-     * @throws NotFoundExceptionInterface
-     */
-    public function transactions(ExportRequest $request): LaravelResponse
-    {
-        $params = $request->getAll();
-        $this->exporter->setStart($params['start']);
-        $this->exporter->setEnd($params['end']);
-        $this->exporter->setAccounts($params['accounts']);
-        $this->exporter->setExportTransactions(true);
-
-        return $this->returnExport('transactions');
     }
 }

@@ -44,8 +44,6 @@ class ShowController extends Controller
 
     /**
      * TagController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -69,7 +67,6 @@ class ShowController extends Controller
      *
      * List all of them.
      *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function index(): JsonResponse
@@ -85,7 +82,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.tags.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.tags.index').$this->buildParams());
 
         /** @var TagTransformer $transformer */
         $transformer = app(TagTransformer::class);
@@ -102,14 +99,11 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/tags/getTag
      *
      * List single resource.
-     *
-     * @param Tag $tag
-     *
-     * @return JsonResponse
      */
     public function show(Tag $tag): JsonResponse
     {
         $manager = $this->getManager();
+
         /** @var TagTransformer $transformer */
         $transformer = app(TagTransformer::class);
         $transformer->setParameters($this->parameters);

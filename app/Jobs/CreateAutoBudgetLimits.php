@@ -51,9 +51,6 @@ class CreateAutoBudgetLimits implements ShouldQueue
 
     /**
      * Create a new job instance.
-     *
-     *
-     * @param Carbon|null $date
      */
     public function __construct(?Carbon $date)
     {
@@ -80,9 +77,14 @@ class CreateAutoBudgetLimits implements ShouldQueue
         }
     }
 
+    public function setDate(Carbon $date): void
+    {
+        $newDate = clone $date;
+        $newDate->startOfDay();
+        $this->date = $newDate;
+    }
+
     /**
-     * @param AutoBudget $autoBudget
-     *
      * @throws FireflyException
      */
     private function handleAutoBudget(AutoBudget $autoBudget): void
@@ -158,9 +160,6 @@ class CreateAutoBudgetLimits implements ShouldQueue
     }
 
     /**
-     * @param AutoBudget $autoBudget
-     *
-     * @return bool
      * @throws FireflyException
      */
     private function isMagicDay(AutoBudget $autoBudget): bool
@@ -194,16 +193,10 @@ class CreateAutoBudgetLimits implements ShouldQueue
 
             return '01-01' === $value;
         }
+
         throw new FireflyException(sprintf('isMagicDay() can\'t handle period "%s"', $autoBudget->period));
     }
 
-    /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return BudgetLimit|null
-     */
     private function findBudgetLimit(Budget $budget, Carbon $start, Carbon $end): ?BudgetLimit
     {
         app('log')->debug(
@@ -217,16 +210,11 @@ class CreateAutoBudgetLimits implements ShouldQueue
         );
 
         return $budget->budgetlimits()
-                      ->where('start_date', $start->format('Y-m-d'))
-                      ->where('end_date', $end->format('Y-m-d'))->first();
+            ->where('start_date', $start->format('Y-m-d'))
+            ->where('end_date', $end->format('Y-m-d'))->first()
+        ;
     }
 
-    /**
-     * @param AutoBudget  $autoBudget
-     * @param Carbon      $start
-     * @param Carbon      $end
-     * @param string|null $amount
-     */
     private function createBudgetLimit(AutoBudget $autoBudget, Carbon $start, Carbon $end, ?string $amount = null): void
     {
         app('log')->debug(sprintf('No budget limit exist. Must create one for auto-budget #%d', $autoBudget->id));
@@ -247,8 +235,6 @@ class CreateAutoBudgetLimits implements ShouldQueue
     }
 
     /**
-     * @param AutoBudget $autoBudget
-     *
      * @throws FireflyException
      */
     private function createRollover(AutoBudget $autoBudget): void
@@ -311,11 +297,6 @@ class CreateAutoBudgetLimits implements ShouldQueue
         app('log')->debug(sprintf('Done with auto budget #%d', $autoBudget->id));
     }
 
-    /**
-     * @param AutoBudget $autoBudget
-     *
-     * @return void
-     */
     private function createAdjustedLimit(AutoBudget $autoBudget): void
     {
         app('log')->debug(sprintf('Will now manage rollover for auto budget #%d', $autoBudget->id));
@@ -344,6 +325,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
             app('log')->debug('No budget limit exists in previous period, so create one.');
             // if not, create standard amount, and we're done.
             $this->createBudgetLimit($autoBudget, $start, $end);
+
             return;
         }
         app('log')->debug('Budget limit exists for previous period.');
@@ -363,7 +345,6 @@ class CreateAutoBudgetLimits implements ShouldQueue
         $totalAmount     = $autoBudget->amount;
         app('log')->debug(sprintf('Total amount available for current budget period is %s', $budgetAvailable));
 
-
         if (-1 !== bccomp($budgetAvailable, $totalAmount)) {
             app('log')->info(sprintf('There is no overspending, no need to adjust. Budget limit amount will be %s.', $budgetAvailable));
             // create budget limit:
@@ -380,15 +361,5 @@ class CreateAutoBudgetLimits implements ShouldQueue
             $this->createBudgetLimit($autoBudget, $start, $end, '1');
         }
         app('log')->debug(sprintf('Done with auto budget #%d', $autoBudget->id));
-    }
-
-    /**
-     * @param Carbon $date
-     */
-    public function setDate(Carbon $date): void
-    {
-        $newDate = clone $date;
-        $newDate->startOfDay();
-        $this->date = $newDate;
     }
 }

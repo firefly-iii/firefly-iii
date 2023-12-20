@@ -32,9 +32,6 @@ use Twig\TwigFunction;
  */
 class Translation extends AbstractExtension
 {
-    /**
-     * @inheritDoc
-     */
     public function getFilters(): array
     {
         return [
@@ -48,9 +45,6 @@ class Translation extends AbstractExtension
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions(): array
     {
         return [
@@ -58,9 +52,6 @@ class Translation extends AbstractExtension
         ];
     }
 
-    /**
-     * @return TwigFunction
-     */
     public function journalLinkTranslation(): TwigFunction
     {
         return new TwigFunction(

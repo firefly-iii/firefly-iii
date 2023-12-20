@@ -32,7 +32,6 @@ use FireflyIII\Events\Model\BudgetLimit\Created;
 use FireflyIII\Events\Model\BudgetLimit\Deleted;
 use FireflyIII\Events\Model\BudgetLimit\Updated;
 use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
-use FireflyIII\Events\Model\PiggyBank\ChangedPiggyBankAmount;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Events\NewVersionAvailable;
@@ -86,8 +85,6 @@ use Laravel\Passport\Events\AccessTokenCreated;
 
 /**
  * Class EventServiceProvider.
- *
-
  */
 class EventServiceProvider extends ServiceProvider
 {
@@ -206,7 +203,6 @@ class EventServiceProvider extends ServiceProvider
             RuleActionFailedOnObject::class     => [
                 'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailedOnObject',
             ],
-
         ];
 
     /**
@@ -217,9 +213,6 @@ class EventServiceProvider extends ServiceProvider
         $this->registerObservers();
     }
 
-    /**
-     * @return void
-     */
     private function registerObservers(): void
     {
         Attachment::observe(new AttachmentObserver());

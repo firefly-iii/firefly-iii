@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
-use DB;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Attachment;
@@ -38,7 +36,6 @@ use FireflyIII\Services\Internal\Update\CategoryUpdateService;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use Storage;
 
 /**
  * Class CategoryRepository.
@@ -47,9 +44,6 @@ class CategoryRepository implements CategoryRepositoryInterface
 {
     private User $user;
 
-    /**
-     * @inheritDoc
-     */
     public function categoryEndsWith(string $query, int $limit): Collection
     {
         $search = $this->user->categories();
@@ -60,9 +54,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $search->take($limit)->get();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function categoryStartsWith(string $query, int $limit): Collection
     {
         $search = $this->user->categories();
@@ -73,13 +64,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $search->take($limit)->get();
     }
 
-    /**
-     * @param Category $category
-     *
-     * @return bool
-     *
-
-     */
     public function destroy(Category $category): bool
     {
         /** @var CategoryDestroyService $service */
@@ -95,10 +79,11 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function destroyAll(): void
     {
         $categories = $this->getCategories();
+
         /** @var Category $category */
         foreach ($categories as $category) {
-            DB::table('category_transaction')->where('category_id', $category->id)->delete();
-            DB::table('category_transaction_journal')->where('category_id', $category->id)->delete();
+            \DB::table('category_transaction')->where('category_id', $category->id)->delete();
+            \DB::table('category_transaction_journal')->where('category_id', $category->id)->delete();
             RecurrenceTransactionMeta::where('name', 'category_id')->where('value', $category->id)->delete();
             RuleAction::where('action_type', 'set_category')->where('action_value', $category->name)->delete();
             $category->delete();
@@ -107,8 +92,6 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     /**
      * Returns a list of all the categories belonging to a user.
-     *
-     * @return Collection
      */
     public function getCategories(): Collection
     {
@@ -116,10 +99,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param int|null    $categoryId
-     * @param string|null $categoryName
-     *
-     * @return Category|null
      * @throws FireflyException
      */
     public function findCategory(?int $categoryId, ?string $categoryName): ?Category
@@ -145,10 +124,6 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     /**
      * Find a category or return NULL
-     *
-     * @param int $categoryId
-     *
-     * @return Category|null
      */
     public function find(int $categoryId): ?Category
     {
@@ -157,10 +132,6 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     /**
      * Find a category.
-     *
-     * @param string $name
-     *
-     * @return Category|null
      */
     public function findByName(string $name): ?Category
     {
@@ -168,9 +139,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param array $data
-     *
-     * @return Category
      * @throws FireflyException
      */
     public function store(array $data): Category
@@ -195,27 +163,18 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $category;
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;
         }
     }
 
-    /**
-     * @param Category $category
-     */
     public function removeNotes(Category $category): void
     {
         $category->notes()->delete();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function updateNotes(Category $category, string $notes): void
     {
         $dbNote = $category->notes()->first();
@@ -227,12 +186,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         $dbNote->save();
     }
 
-    /**
-     * @param Category $category
-     *
-     * @return Carbon|null
-     *
-     */
     public function firstUseDate(Category $category): ?Carbon
     {
         $firstJournalDate     = $this->getFirstJournalDate($category);
@@ -255,52 +208,12 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $firstJournalDate;
     }
 
-    /**
-     * @param Category $category
-     *
-     * @return Carbon|null
-     */
-    private function getFirstJournalDate(Category $category): ?Carbon
-    {
-        $query  = $category->transactionJournals()->orderBy('date', 'ASC');
-        $result = $query->first(['transaction_journals.*']);
-
-        if (null !== $result) {
-            return $result->date;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param Category $category
-     *
-     * @return Carbon|null
-     */
-    private function getFirstTransactionDate(Category $category): ?Carbon
-    {
-        // check transactions:
-        $query = $category->transactions()
-                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                          ->orderBy('transaction_journals.date', 'ASC');
-
-        $lastTransaction = $query->first(['transaction_journals.*']);
-        if (null !== $lastTransaction) {
-            return new Carbon($lastTransaction->date);
-        }
-
-        return null;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getAttachments(Category $category): Collection
     {
         $set = $category->attachments()->get();
 
-        /** @var Storage $disk */
-        $disk = Storage::disk('upload');
+        /** @var \Storage $disk */
+        $disk = \Storage::disk('upload');
 
         return $set->each(
             static function (Attachment $attachment) use ($disk) {
@@ -315,19 +228,12 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     /**
      * Get all categories with ID's.
-     *
-     * @param array $categoryIds
-     *
-     * @return Collection
      */
     public function getByIds(array $categoryIds): Collection
     {
         return $this->user->categories()->whereIn('id', $categoryIds)->get();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getNoteText(Category $category): ?string
     {
         $dbNote = $category->notes()->first();
@@ -339,11 +245,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Category   $category
-     * @param Collection $accounts
-     *
-     * @return Carbon|null
-     * @throws Exception
+     * @throws \Exception
      */
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon
     {
@@ -367,12 +269,56 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $lastJournalDate;
     }
 
+    public function searchCategory(string $query, int $limit): Collection
+    {
+        $search = $this->user->categories();
+        if ('' !== $query) {
+            $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
+        }
+
+        return $search->take($limit)->get();
+    }
+
     /**
-     * @param Category   $category
-     * @param Collection $accounts
-     *
-     * @return Carbon|null
+     * @throws \Exception
      */
+    public function update(Category $category, array $data): Category
+    {
+        /** @var CategoryUpdateService $service */
+        $service = app(CategoryUpdateService::class);
+        $service->setUser($this->user);
+
+        return $service->update($category, $data);
+    }
+
+    private function getFirstJournalDate(Category $category): ?Carbon
+    {
+        $query  = $category->transactionJournals()->orderBy('date', 'ASC');
+        $result = $query->first(['transaction_journals.*']);
+
+        if (null !== $result) {
+            return $result->date;
+        }
+
+        return null;
+    }
+
+    private function getFirstTransactionDate(Category $category): ?Carbon
+    {
+        // check transactions:
+        $query = $category->transactions()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->orderBy('transaction_journals.date', 'ASC')
+        ;
+
+        $lastTransaction = $query->first(['transaction_journals.*']);
+        if (null !== $lastTransaction) {
+            return new Carbon($lastTransaction->date);
+        }
+
+        return null;
+    }
+
     private function getLastJournalDate(Category $category, Collection $accounts): ?Carbon
     {
         $query = $category->transactionJournals()->orderBy('date', 'DESC');
@@ -392,18 +338,15 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Category   $category
-     * @param Collection $accounts
-     *
-     * @return Carbon|null
-     * @throws Exception
+     * @throws \Exception
      */
     private function getLastTransactionDate(Category $category, Collection $accounts): ?Carbon
     {
         // check transactions:
         $query = $category->transactions()
-                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                          ->orderBy('transaction_journals.date', 'DESC');
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->orderBy('transaction_journals.date', 'DESC')
+        ;
         if ($accounts->count() > 0) {
             // filter journals:
             $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
@@ -415,37 +358,5 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         return null;
-    }
-
-    /**
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return Collection
-     */
-    public function searchCategory(string $query, int $limit): Collection
-    {
-        $search = $this->user->categories();
-        if ('' !== $query) {
-            $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
-        }
-
-        return $search->take($limit)->get();
-    }
-
-    /**
-     * @param Category $category
-     * @param array    $data
-     *
-     * @return Category
-     * @throws Exception
-     */
-    public function update(Category $category, array $data): Category
-    {
-        /** @var CategoryUpdateService $service */
-        $service = app(CategoryUpdateService::class);
-        $service->setUser($this->user);
-
-        return $service->update($category, $data);
     }
 }

@@ -42,8 +42,6 @@ class DeleteController extends Controller
 
     /**
      * DeleteController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,9 +63,7 @@ class DeleteController extends Controller
     /**
      * Delete account screen.
      *
-     * @param Account $account
-     *
-     * @return Factory|RedirectResponse|Redirector|View
+     * @return Factory|Redirector|RedirectResponse|View
      */
     public function delete(Account $account)
     {
@@ -90,10 +86,7 @@ class DeleteController extends Controller
     /**
      * Delete the account.
      *
-     * @param Request $request
-     * @param Account $account
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function destroy(Request $request, Account $account)
     {

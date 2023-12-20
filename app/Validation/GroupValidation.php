@@ -42,8 +42,6 @@ trait GroupValidation
      * TODO This should prevent errors down the road but I'm not yet sure what I'm validating here
      * TODO so I disabled this on 2023-10-22 to see if it causes any issues.
      *
-     * @param Validator $validator
-     *
      * @throws FireflyException
      */
     protected function preventNoAccountInfo(Validator $validator): void
@@ -59,7 +57,8 @@ trait GroupValidation
             'source_number',
             'destination_number',
         ];
-        /** @var array|null $transaction */
+
+        /** @var null|array $transaction */
         foreach ($transactions as $index => $transaction) {
             if (!is_array($transaction)) {
                 throw new FireflyException('Invalid data submitted: transaction is not array.');
@@ -86,35 +85,26 @@ trait GroupValidation
         // only an issue if there is no transaction_journal_id
     }
 
-    /**
-     * @param Validator $validator
-     *
-     * @return array
-     */
     abstract protected function getTransactionsArray(Validator $validator): array;
 
-    /**
-     * @param Validator        $validator
-     * @param TransactionGroup $transactionGroup
-     *
-     * @return void
-     */
     protected function preventUpdateReconciled(Validator $validator, TransactionGroup $transactionGroup): void
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
 
         $count = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
-                            ->leftJoin('transaction_groups', 'transaction_groups.id', 'transaction_journals.transaction_group_id')
-                            ->where('transaction_journals.transaction_group_id', $transactionGroup->id)
-                            ->where('transactions.reconciled', 1)->where('transactions.amount', '<', 0)->count('transactions.id');
+            ->leftJoin('transaction_groups', 'transaction_groups.id', 'transaction_journals.transaction_group_id')
+            ->where('transaction_journals.transaction_group_id', $transactionGroup->id)
+            ->where('transactions.reconciled', 1)->where('transactions.amount', '<', 0)->count('transactions.id')
+        ;
         if (0 === $count) {
             app('log')->debug(sprintf('Transaction is not reconciled, done with %s', __METHOD__));
+
             return;
         }
         $data      = $validator->getData();
         $forbidden = ['amount', 'foreign_amount', 'currency_code', 'currency_id', 'foreign_currency_code', 'foreign_currency_id',
-                      'source_id', 'source_name', 'source_number', 'source_iban',
-                      'destination_id', 'destination_name', 'destination_number', 'destination_iban',
+            'source_id', 'source_name', 'source_number', 'source_iban',
+            'destination_id', 'destination_name', 'destination_number', 'destination_iban',
         ];
         foreach ($data['transactions'] as $index => $row) {
             foreach ($forbidden as $key) {
@@ -133,8 +123,6 @@ trait GroupValidation
     /**
      * Adds an error to the "description" field when the user has submitted no descriptions and no
      * journal description.
-     *
-     * @param Validator $validator
      */
     protected function validateDescriptions(Validator $validator): void
     {
@@ -146,7 +134,7 @@ trait GroupValidation
         $validDescriptions = 0;
         foreach ($transactions as $transaction) {
             if ('' !== (string)($transaction['description'] ?? null)) {
-                $validDescriptions++;
+                ++$validDescriptions;
             }
         }
 
@@ -159,9 +147,6 @@ trait GroupValidation
         }
     }
 
-    /**
-     * @param Validator $validator
-     */
     protected function validateGroupDescription(Validator $validator): void
     {
         if ($validator->errors()->count() > 0) {
@@ -181,9 +166,6 @@ trait GroupValidation
      * This method validates if the user has submitted transaction journal ID's for each array they submit, if they've
      * submitted more than 1 transaction journal. This check is necessary because Firefly III isn't able to distinguish
      * between journals without the ID.
-     *
-     * @param Validator        $validator
-     * @param TransactionGroup $transactionGroup
      */
     protected function validateJournalIds(Validator $validator, TransactionGroup $transactionGroup): void
     {
@@ -196,6 +178,7 @@ trait GroupValidation
 
             return;
         }
+
         // check each array:
         /**
          * @var int   $index
@@ -208,12 +191,6 @@ trait GroupValidation
 
     /**
      * Do the validation required by validateJournalIds.
-     *
-     * @param Validator        $validator
-     * @param int              $index
-     * @param array            $transaction
-     * @param TransactionGroup $transactionGroup
-     *
      */
     private function validateJournalId(Validator $validator, int $index, array $transaction, TransactionGroup $transactionGroup): void
     {

@@ -100,7 +100,6 @@ class ExportDataGenerator
     }
 
     /**
-     * @return array
      * @throws ContainerExceptionInterface
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
@@ -139,8 +138,82 @@ class ExportDataGenerator
         return $return;
     }
 
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function get(string $key, mixed $default = null): mixed
+    {
+        return null;
+    }
+
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
+    public function has(mixed $key): mixed
+    {
+        return null;
+    }
+
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    public function setExportAccounts(bool $exportAccounts): void
+    {
+        $this->exportAccounts = $exportAccounts;
+    }
+
+    public function setExportBills(bool $exportBills): void
+    {
+        $this->exportBills = $exportBills;
+    }
+
+    public function setExportBudgets(bool $exportBudgets): void
+    {
+        $this->exportBudgets = $exportBudgets;
+    }
+
+    public function setExportCategories(bool $exportCategories): void
+    {
+        $this->exportCategories = $exportCategories;
+    }
+
+    public function setExportPiggies(bool $exportPiggies): void
+    {
+        $this->exportPiggies = $exportPiggies;
+    }
+
+    public function setExportRecurring(bool $exportRecurring): void
+    {
+        $this->exportRecurring = $exportRecurring;
+    }
+
+    public function setExportRules(bool $exportRules): void
+    {
+        $this->exportRules = $exportRules;
+    }
+
+    public function setExportTags(bool $exportTags): void
+    {
+        $this->exportTags = $exportTags;
+    }
+
+    public function setExportTransactions(bool $exportTransactions): void
+    {
+        $this->exportTransactions = $exportTransactions;
+    }
+
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
     /**
-     * @return string
      * @throws CannotInsertRecord
      * @throws Exception
      * @throws FireflyException
@@ -166,11 +239,13 @@ class ExportDataGenerator
             'interest',
             'interest_period',
         ];
+
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
         $allAccounts = $repository->getAccountsByType([]);
         $records     = [];
+
         /** @var Account $account */
         foreach ($allAccounts as $account) {
             $currency  = $repository->getAccountCurrency($account);
@@ -195,23 +270,24 @@ class ExportDataGenerator
             ];
         }
 
-        //load the CSV document from a string
+        // load the CSV document from a string
         $csv = Writer::createFromString();
 
-        //insert the header
+        // insert the header
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
             throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
-        //insert all the records
+        // insert all the records
         $csv->insertAll($records);
 
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
             app('log')->error($e->getMessage());
+
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -219,15 +295,6 @@ class ExportDataGenerator
     }
 
     /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @return string
      * @throws CannotInsertRecord
      * @throws Exception
      * @throws FireflyException
@@ -272,23 +339,24 @@ class ExportDataGenerator
             ];
         }
 
-        //load the CSV document from a string
+        // load the CSV document from a string
         $csv = Writer::createFromString();
 
-        //insert the header
+        // insert the header
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
             throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
-        //insert all the records
+        // insert all the records
         $csv->insertAll($records);
 
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
             app('log')->error($e->getMessage());
+
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -296,7 +364,6 @@ class ExportDataGenerator
     }
 
     /**
-     * @return string
      * @throws CannotInsertRecord
      * @throws Exception
      * @throws FireflyException
@@ -320,9 +387,11 @@ class ExportDataGenerator
         $limitRepos = app(BudgetLimitRepositoryInterface::class);
         $budgets    = $budgetRepos->getBudgets();
         $records    = [];
+
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
             $limits = $limitRepos->getBudgetLimits($budget);
+
             /** @var BudgetLimit $limit */
             foreach ($limits as $limit) {
                 $records[] = [
@@ -339,23 +408,24 @@ class ExportDataGenerator
             }
         }
 
-        //load the CSV document from a string
+        // load the CSV document from a string
         $csv = Writer::createFromString();
 
-        //insert the header
+        // insert the header
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
             throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
-        //insert all the records
+        // insert all the records
         $csv->insertAll($records);
 
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
             app('log')->error($e->getMessage());
+
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -363,7 +433,6 @@ class ExportDataGenerator
     }
 
     /**
-     * @return string
      * @throws CannotInsertRecord
      * @throws Exception
      * @throws FireflyException
@@ -390,23 +459,24 @@ class ExportDataGenerator
             ];
         }
 
-        //load the CSV document from a string
+        // load the CSV document from a string
         $csv = Writer::createFromString();
 
-        //insert the header
+        // insert the header
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
             throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
-        //insert all the records
+        // insert all the records
         $csv->insertAll($records);
 
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
             app('log')->error($e->getMessage());
+
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -414,7 +484,6 @@ class ExportDataGenerator
     }
 
     /**
-     * @return string
      * @throws CannotInsertRecord
      * @throws Exception
      * @throws FireflyException
@@ -470,23 +539,24 @@ class ExportDataGenerator
             ];
         }
 
-        //load the CSV document from a string
+        // load the CSV document from a string
         $csv = Writer::createFromString();
 
-        //insert the header
+        // insert the header
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
             throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
-        //insert all the records
+        // insert all the records
         $csv->insertAll($records);
 
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
             app('log')->error($e->getMessage());
+
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -494,7 +564,6 @@ class ExportDataGenerator
     }
 
     /**
-     * @return string
      * @throws CannotInsertRecord
      * @throws Exception
      * @throws FireflyException
@@ -542,6 +611,7 @@ class ExportDataGenerator
         ];
         $records     = [];
         $recurrences = $recurringRepos->getAll();
+
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
             // add recurrence:
@@ -561,6 +631,7 @@ class ExportDataGenerator
                 $recurrence->apply_rules,
                 $recurrence->active,
             ];
+
             // add new row for each repetition
             /** @var RecurrenceRepetition $repetition */
             foreach ($recurrence->recurrenceRepetitions as $repetition) {
@@ -588,6 +659,7 @@ class ExportDataGenerator
                     $repetition->weekend,
                 ];
             }
+
             /** @var RecurrenceTransaction $transaction */
             foreach ($recurrence->recurrenceTransactions as $transaction) {
                 $categoryName = $recurringRepos->getCategoryName($transaction);
@@ -634,23 +706,24 @@ class ExportDataGenerator
                 ];
             }
         }
-        //load the CSV document from a string
+        // load the CSV document from a string
         $csv = Writer::createFromString();
 
-        //insert the header
+        // insert the header
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
             throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
-        //insert all the records
+        // insert all the records
         $csv->insertAll($records);
 
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
             app('log')->error($e->getMessage());
+
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -658,7 +731,6 @@ class ExportDataGenerator
     }
 
     /**
-     * @return string
      * @throws CannotInsertRecord
      * @throws Exception
      * @throws FireflyException
@@ -694,6 +766,7 @@ class ExportDataGenerator
         $ruleRepos->setUser($this->user);
         $rules   = $ruleRepos->getAll();
         $records = [];
+
         /** @var Rule $rule */
         foreach ($rules as $rule) {
             $records[] = [
@@ -711,6 +784,7 @@ class ExportDataGenerator
                 $rule->stop_processing,
                 $rule->strict,
             ];
+
             /** @var RuleTrigger $trigger */
             foreach ($rule->ruleTriggers as $trigger) {
                 $records[] = [
@@ -765,23 +839,24 @@ class ExportDataGenerator
             }
         }
 
-        //load the CSV document from a string
+        // load the CSV document from a string
         $csv = Writer::createFromString();
 
-        //insert the header
+        // insert the header
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
             throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
-        //insert all the records
+        // insert all the records
         $csv->insertAll($records);
 
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
             app('log')->error($e->getMessage());
+
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -789,7 +864,6 @@ class ExportDataGenerator
     }
 
     /**
-     * @return string
      * @throws CannotInsertRecord
      * @throws ContainerExceptionInterface
      * @throws Exception
@@ -804,6 +878,7 @@ class ExportDataGenerator
         $tagRepos->setUser($this->user);
         $tags    = $tagRepos->get();
         $records = [];
+
         /** @var Tag $tag */
         foreach ($tags as $tag) {
             $records[] = [
@@ -820,23 +895,24 @@ class ExportDataGenerator
             ];
         }
 
-        //load the CSV document from a string
+        // load the CSV document from a string
         $csv = Writer::createFromString();
 
-        //insert the header
+        // insert the header
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
             throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
-        //insert all the records
+        // insert all the records
         $csv->insertAll($records);
 
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
             app('log')->error($e->getMessage());
+
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
@@ -844,15 +920,6 @@ class ExportDataGenerator
     }
 
     /**
-     * @inheritDoc
-     */
-    public function get(string $key, mixed $default = null): mixed
-    {
-        return null;
-    }
-
-    /**
-     * @return string
      * @throws CannotInsertRecord
      * @throws Exception
      * @throws FireflyException
@@ -895,7 +962,8 @@ class ExportDataGenerator
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);
         $collector->setRange($this->start, $this->end)->withAccountInformation()->withCategoryInformation()->withBillInformation()
-                  ->withBudgetInformation()->withTagInformation()->withNotes();
+            ->withBudgetInformation()->withTagInformation()->withNotes()
+        ;
         if (0 !== $this->accounts->count()) {
             $collector->setAccounts($this->accounts);
         }
@@ -907,6 +975,7 @@ class ExportDataGenerator
         $repository->setUser($this->user);
 
         $records = [];
+
         /** @var array $journal */
         foreach ($journals as $journal) {
             $metaData  = $repository->getMetaFields($journal['transaction_journal_id'], $metaFields);
@@ -973,42 +1042,30 @@ class ExportDataGenerator
             ];
         }
 
-        //load the CSV document from a string
+        // load the CSV document from a string
         $csv = Writer::createFromString();
 
-        //insert the header
+        // insert the header
         try {
             $csv->insertOne($header);
         } catch (CannotInsertRecord $e) {
             throw new FireflyException(sprintf(self::ADD_RECORD_ERR, $e->getMessage()), 0, $e);
         }
 
-        //insert all the records
+        // insert all the records
         $csv->insertAll($records);
 
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
             app('log')->error($e->getMessage());
+
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
 
         return $string;
     }
 
-    /**
-     * @param Collection $accounts
-     */
-    public function setAccounts(Collection $accounts): void
-    {
-        $this->accounts = $accounts;
-    }
-
-    /**
-     * @param array $tags
-     *
-     * @return string
-     */
     private function mergeTags(array $tags): string
     {
         if (0 === count($tags)) {
@@ -1020,101 +1077,5 @@ class ExportDataGenerator
         }
 
         return implode(',', $smol);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function has(mixed $key): mixed
-    {
-        return null;
-    }
-
-    /**
-     * @param Carbon $end
-     */
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    /**
-     * @param bool $exportAccounts
-     */
-    public function setExportAccounts(bool $exportAccounts): void
-    {
-        $this->exportAccounts = $exportAccounts;
-    }
-
-    /**
-     * @param bool $exportBills
-     */
-    public function setExportBills(bool $exportBills): void
-    {
-        $this->exportBills = $exportBills;
-    }
-
-    /**
-     * @param bool $exportBudgets
-     */
-    public function setExportBudgets(bool $exportBudgets): void
-    {
-        $this->exportBudgets = $exportBudgets;
-    }
-
-    /**
-     * @param bool $exportCategories
-     */
-    public function setExportCategories(bool $exportCategories): void
-    {
-        $this->exportCategories = $exportCategories;
-    }
-
-    /**
-     * @param bool $exportPiggies
-     */
-    public function setExportPiggies(bool $exportPiggies): void
-    {
-        $this->exportPiggies = $exportPiggies;
-    }
-
-    /**
-     * @param bool $exportRecurring
-     */
-    public function setExportRecurring(bool $exportRecurring): void
-    {
-        $this->exportRecurring = $exportRecurring;
-    }
-
-    /**
-     * @param bool $exportRules
-     */
-    public function setExportRules(bool $exportRules): void
-    {
-        $this->exportRules = $exportRules;
-    }
-
-    /**
-     * @param bool $exportTags
-     */
-    public function setExportTags(bool $exportTags): void
-    {
-        $this->exportTags = $exportTags;
-    }
-
-    /**
-     * @param bool $exportTransactions
-     */
-    public function setExportTransactions(bool $exportTransactions): void
-    {
-        $this->exportTransactions = $exportTransactions;
-    }
-
-    /**
-     * @param Carbon $start
-     */
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
     }
 }

@@ -40,9 +40,6 @@ class ListRequest extends FormRequest
     use ConvertsDataTypes;
     use TransactionFilter;
 
-    /**
-     * @return string
-     */
     public function buildParams(int $pageSize): string
     {
         $array = [
@@ -56,46 +53,34 @@ class ListRequest extends FormRequest
             $array['start'] = $start->format('Y-m-d');
             $array['end']   = $end->format('Y-m-d');
         }
+
         return http_build_query($array);
     }
 
-    /**
-     * @return int
-     */
     public function getPage(): int
     {
         $page = $this->convertInteger('page');
+
         return 0 === $page || $page > 65536 ? 1 : $page;
     }
 
-    /**
-     * @return Carbon|null
-     */
     public function getStartDate(): ?Carbon
     {
         return $this->getCarbonDate('start');
     }
 
-    /**
-     * @return Carbon|null
-     */
     public function getEndDate(): ?Carbon
     {
         return $this->getCarbonDate('end');
     }
 
-    /**
-     * @return array
-     */
     public function getTransactionTypes(): array
     {
         $type = (string)$this->get('type', 'default');
+
         return $this->mapTransactionTypes($type);
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return [

@@ -52,8 +52,6 @@ class CreateController extends Controller
 
     /**
      * RuleController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -74,10 +72,8 @@ class CreateController extends Controller
     /**
      * Create a new rule. It will be stored under the given $ruleGroup.
      *
-     * @param Request        $request
-     * @param RuleGroup|null $ruleGroup
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
      */
     public function create(Request $request, RuleGroup $ruleGroup = null)
@@ -105,7 +101,7 @@ class CreateController extends Controller
             }
             $oldTriggers = $this->parseFromOperators($operators);
         }
-        //var_dump($oldTriggers);exit;
+        // var_dump($oldTriggers);exit;
 
         // restore actions and triggers from old input:
         if (is_array($request->old()) && count($request->old()) > 0) {
@@ -141,10 +137,8 @@ class CreateController extends Controller
     /**
      * Create a new rule. It will be stored under the given $ruleGroup.
      *
-     * @param Request $request
-     * @param Bill    $bill
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
      */
     public function createFromBill(Request $request, Bill $bill)
@@ -193,10 +187,8 @@ class CreateController extends Controller
     }
 
     /**
-     * @param Request            $request
-     * @param TransactionJournal $journal
-     *
      * @return Factory|\Illuminate\Contracts\View\View
+     *
      * @throws FireflyException
      */
     public function createFromJournal(Request $request, TransactionJournal $journal)
@@ -243,11 +235,6 @@ class CreateController extends Controller
         );
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
     public function duplicate(Request $request): JsonResponse
     {
         $ruleId = (int)$request->get('id');
@@ -262,10 +249,7 @@ class CreateController extends Controller
     /**
      * Store the new rule.
      *
-     * @param RuleFormRequest $request
-     *
-     * @return RedirectResponse|Redirector
-     *
+     * @return Redirector|RedirectResponse
      */
     public function store(RuleFormRequest $request)
     {

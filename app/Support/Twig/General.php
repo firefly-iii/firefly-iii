@@ -39,9 +39,6 @@ use Twig\TwigFunction;
  */
 class General extends AbstractExtension
 {
-    /**
-     * @inheritDoc
-     */
     public function getFilters(): array
     {
         return [
@@ -53,10 +50,24 @@ class General extends AbstractExtension
         ];
     }
 
+    public function getFunctions(): array
+    {
+        return [
+            $this->phpdate(),
+            $this->activeRouteStrict(),
+            $this->activeRoutePartial(),
+            $this->activeRoutePartialObjectType(),
+            $this->menuOpenRoutePartial(),
+            $this->formatDate(),
+            $this->getMetaField(),
+            $this->hasRole(),
+            $this->getRootSearchOperator(),
+            $this->carbonize(),
+        ];
+    }
+
     /**
      * Show account balance. Only used on the front page of Firefly III.
-     *
-     * @return TwigFilter
      */
     protected function balance(): TwigFilter
     {
@@ -66,6 +77,7 @@ class General extends AbstractExtension
                 if (null === $account) {
                     return '0';
                 }
+
                 /** @var Carbon $date */
                 $date = session('end', today(config('app.timezone'))->endOfMonth());
 
@@ -76,8 +88,6 @@ class General extends AbstractExtension
 
     /**
      * Used to convert 1024 to 1kb etc.
-     *
-     * @return TwigFilter
      */
     protected function formatFilesize(): TwigFilter
     {
@@ -86,23 +96,21 @@ class General extends AbstractExtension
             static function (int $size): string {
                 // less than one GB, more than one MB
                 if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-                    return round($size / (1024 * 1024), 2) . ' MB';
+                    return round($size / (1024 * 1024), 2).' MB';
                 }
 
                 // less than one MB
                 if ($size < (1024 * 1024)) {
-                    return round($size / 1024, 2) . ' KB';
+                    return round($size / 1024, 2).' KB';
                 }
 
-                return $size . ' bytes';
+                return $size.' bytes';
             }
         );
     }
 
     /**
      * Show icon with attachment.
-     *
-     * @return TwigFilter
      */
     protected function mimeIcon(): TwigFilter
     {
@@ -112,9 +120,11 @@ class General extends AbstractExtension
                 switch ($string) {
                     default:
                         return 'fa-file-o';
+
                     case 'application/pdf':
                         return 'fa-file-pdf-o';
-                    /* image */
+
+                        // image
                     case 'image/png':
                     case 'image/jpeg':
                     case 'image/svg+xml':
@@ -122,7 +132,8 @@ class General extends AbstractExtension
                     case 'image/heic-sequence':
                     case 'application/vnd.oasis.opendocument.image':
                         return 'fa-file-image-o';
-                    /* MS word */
+
+                        // MS word
                     case 'application/msword':
                     case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
                     case 'application/vnd.openxmlformats-officedocument.wordprocessingml.template':
@@ -137,7 +148,8 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.text-web':
                     case 'application/vnd.oasis.opendocument.text-master':
                         return 'fa-file-word-o';
-                    /* MS excel */
+
+                        // MS excel
                     case 'application/vnd.ms-excel':
                     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
                     case 'application/vnd.openxmlformats-officedocument.spreadsheetml.template':
@@ -147,7 +159,8 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.spreadsheet':
                     case 'application/vnd.oasis.opendocument.spreadsheet-template':
                         return 'fa-file-excel-o';
-                    /* MS powerpoint */
+
+                        // MS powerpoint
                     case 'application/vnd.ms-powerpoint':
                     case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
                     case 'application/vnd.openxmlformats-officedocument.presentationml.template':
@@ -158,12 +171,14 @@ class General extends AbstractExtension
                     case 'application/vnd.oasis.opendocument.presentation':
                     case 'application/vnd.oasis.opendocument.presentation-template':
                         return 'fa-file-powerpoint-o';
-                    /* calc */
+
+                        // calc
                     case 'application/vnd.sun.xml.draw':
                     case 'application/vnd.sun.xml.draw.template':
                     case 'application/vnd.stardivision.draw':
                     case 'application/vnd.oasis.opendocument.chart':
                         return 'fa-paint-brush';
+
                     case 'application/vnd.oasis.opendocument.graphics':
                     case 'application/vnd.oasis.opendocument.graphics-template':
                     case 'application/vnd.sun.xml.math':
@@ -177,9 +192,6 @@ class General extends AbstractExtension
         );
     }
 
-    /**
-     * @return TwigFilter
-     */
     protected function markdown(): TwigFilter
     {
         return new TwigFilter(
@@ -201,8 +213,6 @@ class General extends AbstractExtension
 
     /**
      * Show URL host name
-     *
-     * @return TwigFilter
      */
     protected function phpHostName(): TwigFilter
     {
@@ -218,28 +228,7 @@ class General extends AbstractExtension
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getFunctions(): array
-    {
-        return [
-            $this->phpdate(),
-            $this->activeRouteStrict(),
-            $this->activeRoutePartial(),
-            $this->activeRoutePartialObjectType(),
-            $this->menuOpenRoutePartial(),
-            $this->formatDate(),
-            $this->getMetaField(),
-            $this->hasRole(),
-            $this->getRootSearchOperator(),
-            $this->carbonize(),
-        ];
-    }
-
-    /**
      * Basic example thing for some views.
-     *
-     * @return TwigFunction
      */
     protected function phpdate(): TwigFunction
     {
@@ -254,8 +243,6 @@ class General extends AbstractExtension
     /**
      * Will return "active" when the current route matches the given argument
      * exactly.
-     *
-     * @return TwigFunction
      */
     protected function activeRouteStrict(): TwigFunction
     {
@@ -265,7 +252,7 @@ class General extends AbstractExtension
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
 
-                if (Route::getCurrentRoute()->getName() === $route) {
+                if (\Route::getCurrentRoute()->getName() === $route) {
                     return 'active';
                 }
 
@@ -277,8 +264,6 @@ class General extends AbstractExtension
     /**
      * Will return "active" when a part of the route matches the argument.
      * ie. "accounts" will match "accounts.index".
-     *
-     * @return TwigFunction
      */
     protected function activeRoutePartial(): TwigFunction
     {
@@ -287,7 +272,7 @@ class General extends AbstractExtension
             static function (): string {
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
-                $name  = Route::getCurrentRoute()->getName() ?? '';
+                $name  = \Route::getCurrentRoute()->getName() ?? '';
                 if (str_contains($name, $route)) {
                     return 'active';
                 }
@@ -300,8 +285,6 @@ class General extends AbstractExtension
     /**
      * This function will return "active" when the current route matches the first argument (even partly)
      * but, the variable $objectType has been set and matches the second argument.
-     *
-     * @return TwigFunction
      */
     protected function activeRoutePartialObjectType(): TwigFunction
     {
@@ -313,7 +296,7 @@ class General extends AbstractExtension
 
                 if ($objectType === $activeObjectType
                     && false !== stripos(
-                        Route::getCurrentRoute()->getName(),
+                        \Route::getCurrentRoute()->getName(),
                         $route
                     )) {
                     return 'active';
@@ -328,8 +311,6 @@ class General extends AbstractExtension
     /**
      * Will return "menu-open" when a part of the route matches the argument.
      * ie. "accounts" will match "accounts.index".
-     *
-     * @return TwigFunction
      */
     protected function menuOpenRoutePartial(): TwigFunction
     {
@@ -338,7 +319,7 @@ class General extends AbstractExtension
             static function (): string {
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
-                $name  = Route::getCurrentRoute()->getName() ?? '';
+                $name  = \Route::getCurrentRoute()->getName() ?? '';
                 if (str_contains($name, $route)) {
                     return 'menu-open';
                 }
@@ -350,8 +331,6 @@ class General extends AbstractExtension
 
     /**
      * Formats a string as a thing by converting it to a Carbon first.
-     *
-     * @return TwigFunction
      */
     protected function formatDate(): TwigFunction
     {
@@ -366,8 +345,8 @@ class General extends AbstractExtension
     }
 
     /**
-     * @return TwigFunction
-     * TODO remove me when layout v1 is deprecated.
+     * @return twigFunction
+     *                      TODO remove me when layout v1 is deprecated
      */
     protected function getMetaField(): TwigFunction
     {
@@ -388,8 +367,6 @@ class General extends AbstractExtension
 
     /**
      * Will return true if the user is of role X.
-     *
-     * @return TwigFunction
      */
     protected function hasRole(): TwigFunction
     {
@@ -406,9 +383,6 @@ class General extends AbstractExtension
         );
     }
 
-    /**
-     * @return TwigFunction
-     */
     protected function getRootSearchOperator(): TwigFunction
     {
         return new TwigFunction(
@@ -421,9 +395,6 @@ class General extends AbstractExtension
         );
     }
 
-    /**
-     * @return TwigFunction
-     */
     protected function carbonize(): TwigFunction
     {
         return new TwigFunction(

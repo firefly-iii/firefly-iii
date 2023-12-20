@@ -39,9 +39,6 @@ use Illuminate\Support\Collection;
  */
 trait MetaCollection
 {
-    /**
-     * @inheritDoc
-     */
     public function excludeBills(Collection $bills): GroupCollectorInterface
     {
         $this->withBillInformation();
@@ -55,8 +52,6 @@ trait MetaCollection
 
     /**
      * Will include bill name + ID, if any.
-     *
-     * @return GroupCollectorInterface
      */
     public function withBillInformation(): GroupCollectorInterface
     {
@@ -74,10 +69,6 @@ trait MetaCollection
 
     /**
      * Exclude a specific budget.
-     *
-     * @param Budget $budget
-     *
-     * @return GroupCollectorInterface
      */
     public function excludeBudget(Budget $budget): GroupCollectorInterface
     {
@@ -93,8 +84,6 @@ trait MetaCollection
 
     /**
      * Will include budget ID + name, if any.
-     *
-     * @return GroupCollectorInterface
      */
     public function withBudgetInformation(): GroupCollectorInterface
     {
@@ -112,9 +101,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function excludeBudgets(Collection $budgets): GroupCollectorInterface
     {
         if ($budgets->count() > 0) {
@@ -128,9 +114,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function excludeCategories(Collection $categories): GroupCollectorInterface
     {
         if ($categories->count() > 0) {
@@ -146,8 +129,6 @@ trait MetaCollection
 
     /**
      * Will include category ID + name, if any.
-     *
-     * @return GroupCollectorInterface
      */
     public function withCategoryInformation(): GroupCollectorInterface
     {
@@ -167,10 +148,6 @@ trait MetaCollection
 
     /**
      * Exclude a specific category.
-     *
-     * @param Category $category
-     *
-     * @return GroupCollectorInterface
      */
     public function excludeCategory(Category $category): GroupCollectorInterface
     {
@@ -184,9 +161,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function excludeExternalId(string $externalId): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -196,22 +170,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * Join table to get tag information.
-     */
-    protected function joinMetaDataTables(): void
-    {
-        if (false === $this->hasJoinedMetaTables) {
-            $this->hasJoinedMetaTables = true;
-            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
-            $this->fields[] = 'journal_meta.name as meta_name';
-            $this->fields[] = 'journal_meta.data as meta_data';
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function excludeExternalUrl(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -221,9 +179,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function excludeInternalReference(string $internalReference): GroupCollectorInterface
     {
         $internalReference = (string)json_encode($internalReference);
@@ -236,9 +191,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function excludeRecurrenceId(string $recurringId): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -248,9 +200,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function externalIdContains(string $externalId): GroupCollectorInterface
     {
         $externalId = (string)json_encode($externalId);
@@ -263,9 +212,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function externalIdDoesNotContain(string $externalId): GroupCollectorInterface
     {
         $externalId = (string)json_encode($externalId);
@@ -278,9 +224,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function externalIdDoesNotEnd(string $externalId): GroupCollectorInterface
     {
         $externalId = (string)json_encode($externalId);
@@ -293,9 +236,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function externalIdDoesNotStart(string $externalId): GroupCollectorInterface
     {
         $externalId = (string)json_encode($externalId);
@@ -308,9 +248,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function externalIdEnds(string $externalId): GroupCollectorInterface
     {
         $externalId = (string)json_encode($externalId);
@@ -323,9 +260,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function externalIdStarts(string $externalId): GroupCollectorInterface
     {
         $externalId = (string)json_encode($externalId);
@@ -338,11 +272,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return GroupCollectorInterface
-     */
     public function externalUrlContains(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -354,11 +283,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return GroupCollectorInterface
-     */
     public function externalUrlDoesNotContain(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -370,11 +294,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return GroupCollectorInterface
-     */
     public function externalUrlDoesNotEnd(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -386,17 +305,12 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return GroupCollectorInterface
-     */
     public function externalUrlDoesNotStart(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
         $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', rtrim($url, '"'));
-        //var_dump($url);
+        // var_dump($url);
 
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%s%%', $url));
@@ -404,11 +318,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return GroupCollectorInterface
-     */
     public function externalUrlEnds(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -420,17 +329,12 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return GroupCollectorInterface
-     */
     public function externalUrlStarts(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
         $url = (string)json_encode($url);
         $url = str_replace('\\', '\\\\', rtrim($url, '"'));
-        //var_dump($url);
+        // var_dump($url);
 
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('%s%%', $url));
@@ -440,8 +344,6 @@ trait MetaCollection
 
     /**
      * Where has no tags.
-     *
-     * @return GroupCollectorInterface
      */
     public function hasAnyTag(): GroupCollectorInterface
     {
@@ -451,9 +353,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @return GroupCollectorInterface
-     */
     public function withTagInformation(): GroupCollectorInterface
     {
         $this->fields[] = 'tags.id as tag_id';
@@ -469,28 +368,12 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * Join table to get tag information.
-     */
-    protected function joinTagTables(): void
-    {
-        if (false === $this->hasJoinedTagTables) {
-            // join some extra tables:
-            $this->hasJoinedTagTables = true;
-            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function internalReferenceContains(string $internalReference): GroupCollectorInterface
     {
         $internalReference = (string)json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
-        //var_dump($internalReference);
-        //exit;
+        // var_dump($internalReference);
+        // exit;
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
@@ -499,9 +382,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function internalReferenceDoesNotContain(string $internalReference): GroupCollectorInterface
     {
         $internalReference = (string)json_encode($internalReference);
@@ -514,9 +394,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function internalReferenceDoesNotEnd(string $internalReference): GroupCollectorInterface
     {
         $internalReference = (string)json_encode($internalReference);
@@ -529,9 +406,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function internalReferenceDoesNotStart(string $internalReference): GroupCollectorInterface
     {
         $internalReference = (string)json_encode($internalReference);
@@ -544,9 +418,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function internalReferenceEnds(string $internalReference): GroupCollectorInterface
     {
         $internalReference = (string)json_encode($internalReference);
@@ -559,9 +430,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function internalReferenceStarts(string $internalReference): GroupCollectorInterface
     {
         $internalReference = (string)json_encode($internalReference);
@@ -574,11 +442,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesContain(string $value): GroupCollectorInterface
     {
         $this->withNotes();
@@ -587,9 +450,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function withNotes(): GroupCollectorInterface
     {
         if (false === $this->hasNotesInformation) {
@@ -610,11 +470,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesDoNotContain(string $value): GroupCollectorInterface
     {
         $this->withNotes();
@@ -626,11 +481,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesDontEndWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
@@ -642,11 +492,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesDontStartWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
@@ -658,11 +503,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesEndWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
@@ -671,11 +511,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesExactly(string $value): GroupCollectorInterface
     {
         $this->withNotes();
@@ -684,11 +519,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesExactlyNot(string $value): GroupCollectorInterface
     {
         $this->withNotes();
@@ -700,11 +530,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return GroupCollectorInterface
-     */
     public function notesStartWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
@@ -715,10 +540,6 @@ trait MetaCollection
 
     /**
      * Limit the search to a specific bill.
-     *
-     * @param Bill $bill
-     *
-     * @return GroupCollectorInterface
      */
     public function setBill(Bill $bill): GroupCollectorInterface
     {
@@ -730,10 +551,6 @@ trait MetaCollection
 
     /**
      * Limit the search to a specific set of bills.
-     *
-     * @param Collection $bills
-     *
-     * @return GroupCollectorInterface
      */
     public function setBills(Collection $bills): GroupCollectorInterface
     {
@@ -745,10 +562,6 @@ trait MetaCollection
 
     /**
      * Limit the search to a specific budget.
-     *
-     * @param Budget $budget
-     *
-     * @return GroupCollectorInterface
      */
     public function setBudget(Budget $budget): GroupCollectorInterface
     {
@@ -760,10 +573,6 @@ trait MetaCollection
 
     /**
      * Limit the search to a specific set of budgets.
-     *
-     * @param Collection $budgets
-     *
-     * @return GroupCollectorInterface
      */
     public function setBudgets(Collection $budgets): GroupCollectorInterface
     {
@@ -777,10 +586,6 @@ trait MetaCollection
 
     /**
      * Limit the search to a specific bunch of categories.
-     *
-     * @param Collection $categories
-     *
-     * @return GroupCollectorInterface
      */
     public function setCategories(Collection $categories): GroupCollectorInterface
     {
@@ -794,10 +599,6 @@ trait MetaCollection
 
     /**
      * Limit the search to a specific category.
-     *
-     * @param Category $category
-     *
-     * @return GroupCollectorInterface
      */
     public function setCategory(Category $category): GroupCollectorInterface
     {
@@ -807,9 +608,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setExternalId(string $externalId): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -819,9 +617,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setExternalUrl(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -831,9 +626,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setInternalReference(string $internalReference): GroupCollectorInterface
     {
         $internalReference = (string)json_encode($internalReference);
@@ -846,9 +638,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setRecurrenceId(string $recurringId): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -858,9 +647,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setSepaCT(string $sepaCT): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -873,10 +659,6 @@ trait MetaCollection
 
     /**
      * Limit results to a specific tag.
-     *
-     * @param Tag $tag
-     *
-     * @return GroupCollectorInterface
      */
     public function setTag(Tag $tag): GroupCollectorInterface
     {
@@ -888,10 +670,6 @@ trait MetaCollection
 
     /**
      * Limit results to a specific set of tags.
-     *
-     * @param Collection $tags
-     *
-     * @return GroupCollectorInterface
      */
     public function setTags(Collection $tags): GroupCollectorInterface
     {
@@ -904,10 +682,6 @@ trait MetaCollection
 
     /**
      * Without tags
-     *
-     * @param Collection $tags
-     *
-     * @return GroupCollectorInterface
      */
     public function setWithoutSpecificTags(Collection $tags): GroupCollectorInterface
     {
@@ -924,17 +698,14 @@ trait MetaCollection
                     }
                 }
             }
+
             return true;
         };
         $this->postFilters[] = $filter;
 
-
         return $this;
     }
 
-    /**
-     * @return GroupCollectorInterface
-     */
     public function withAnyNotes(): GroupCollectorInterface
     {
         $this->withNotes();
@@ -945,8 +716,6 @@ trait MetaCollection
 
     /**
      * Limit results to transactions without a bill.
-     *
-     * @return GroupCollectorInterface
      */
     public function withBill(): GroupCollectorInterface
     {
@@ -958,8 +727,6 @@ trait MetaCollection
 
     /**
      * Limit results to a transactions without a budget..
-     *
-     * @return GroupCollectorInterface
      */
     public function withBudget(): GroupCollectorInterface
     {
@@ -971,8 +738,6 @@ trait MetaCollection
 
     /**
      * Limit results to a transactions without a category.
-     *
-     * @return GroupCollectorInterface
      */
     public function withCategory(): GroupCollectorInterface
     {
@@ -982,9 +747,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function withExternalId(): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -994,9 +756,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function withExternalUrl(): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -1008,8 +767,6 @@ trait MetaCollection
 
     /**
      * Limit results to a transactions without a bill.
-     *
-     * @return GroupCollectorInterface
      */
     public function withoutBill(): GroupCollectorInterface
     {
@@ -1020,8 +777,6 @@ trait MetaCollection
 
     /**
      * Limit results to a transactions without a budget..
-     *
-     * @return GroupCollectorInterface
      */
     public function withoutBudget(): GroupCollectorInterface
     {
@@ -1033,8 +788,6 @@ trait MetaCollection
 
     /**
      * Limit results to a transactions without a category.
-     *
-     * @return GroupCollectorInterface
      */
     public function withoutCategory(): GroupCollectorInterface
     {
@@ -1044,9 +797,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function withoutExternalId(): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -1065,9 +815,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function withoutExternalUrl(): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -1086,9 +833,6 @@ trait MetaCollection
         return $this;
     }
 
-    /**
-     * @return GroupCollectorInterface
-     */
     public function withoutNotes(): GroupCollectorInterface
     {
         $this->withNotes();
@@ -1102,8 +846,6 @@ trait MetaCollection
 
     /**
      * Where has no tags.
-     *
-     * @return GroupCollectorInterface
      */
     public function withoutTags(): GroupCollectorInterface
     {
@@ -1111,5 +853,31 @@ trait MetaCollection
         $this->query->whereNull('tag_transaction_journal.tag_id');
 
         return $this;
+    }
+
+    /**
+     * Join table to get tag information.
+     */
+    protected function joinMetaDataTables(): void
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+            $this->fields[] = 'journal_meta.name as meta_name';
+            $this->fields[] = 'journal_meta.data as meta_data';
+        }
+    }
+
+    /**
+     * Join table to get tag information.
+     */
+    protected function joinTagTables(): void
+    {
+        if (false === $this->hasJoinedTagTables) {
+            // join some extra tables:
+            $this->hasJoinedTagTables = true;
+            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
+        }
     }
 }

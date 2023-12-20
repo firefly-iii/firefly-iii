@@ -30,7 +30,6 @@ use FireflyIII\Models\WebhookMessage;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
-use JsonException;
 
 /**
  * Class StandardWebhookSender
@@ -40,17 +39,11 @@ class StandardWebhookSender implements WebhookSenderInterface
     private WebhookMessage $message;
     private int            $version = 1;
 
-    /**
-     * @inheritDoc
-     */
     public function getVersion(): int
     {
         return $this->version;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function send(): void
     {
         // have the signature generator generate a signature. If it fails, the error thrown will
@@ -58,6 +51,7 @@ class StandardWebhookSender implements WebhookSenderInterface
         $signatureGenerator  = app(SignatureGeneratorInterface::class);
         $this->message->sent = true;
         $this->message->save();
+
         try {
             $signature = $signatureGenerator->generate($this->message);
         } catch (FireflyException $e) {
@@ -80,7 +74,7 @@ class StandardWebhookSender implements WebhookSenderInterface
 
         try {
             $json = json_encode($this->message->message, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
+        } catch (\JsonException $e) {
             app('log')->error('Did not send message because of a JSON error.');
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
@@ -107,13 +101,13 @@ class StandardWebhookSender implements WebhookSenderInterface
             ],
         ];
         $client  = new Client();
+
         try {
             $res = $client->request('POST', $this->message->webhook->url, $options);
-        } catch (RequestException | ConnectException $e) {
+        } catch (ConnectException|RequestException $e) {
             app('log')->error('The webhook could NOT be submitted but Firefly III caught the error below.');
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
-
 
             $logs = sprintf("%s\n%s", $e->getMessage(), $e->getTraceAsString());
 
@@ -143,9 +137,6 @@ class StandardWebhookSender implements WebhookSenderInterface
         app('log')->debug(sprintf('Response body: %s', $res->getBody()));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setMessage(WebhookMessage $message): void
     {
         $this->message = $message;

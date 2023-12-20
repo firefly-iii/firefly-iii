@@ -53,9 +53,6 @@ class Controller extends BaseController
     protected const string CONTENT_TYPE = 'application/vnd.api+json';
     protected ParameterBag $parameters;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->middleware(
@@ -65,22 +62,57 @@ class Controller extends BaseController
                 return $next($request);
             }
         );
+    }
 
+    final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
+    {
+        $manager = new Manager();
+        $baseUrl = request()->getSchemeAndHttpHost().'/api/v2';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $objects = $paginator->getCollection();
+
+        // the transformer, at this point, needs to collect information that ALL items in the collection
+        // require, like meta-data and stuff like that, and save it for later.
+        $transformer->collectMetaData($objects);
+
+        $resource = new FractalCollection($objects, $transformer, $key);
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return $manager->createData($resource)->toArray();
+    }
+
+    /**
+     * Returns a JSON API object and returns it.
+     *
+     * @param Model $object
+     */
+    final protected function jsonApiObject(string $key, array|Model $object, AbstractTransformer $transformer): array
+    {
+        // create some objects:
+        $manager = new Manager();
+        $baseUrl = request()->getSchemeAndHttpHost().'/api/v2';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $transformer->collectMetaData(new Collection([$object]));
+
+        $resource = new Item($object, $transformer, $key);
+
+        return $manager->createData($resource)->toArray();
     }
 
     /**
      * TODO duplicate from V1 controller
      * Method to grab all parameters from the URL.
-     *
-     * @return ParameterBag
      */
     private function getParameters(): ParameterBag
     {
         $bag = new ParameterBag();
         $bag->set('limit', 50);
+
         try {
             $page = (int)request()->get('page');
-        } catch (ContainerExceptionInterface | NotFoundExceptionInterface $e) {
+        } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
             $page = 1;
         }
 
@@ -99,6 +131,7 @@ class Controller extends BaseController
         foreach ($dates as $field) {
             $date = null;
             $obj  = null;
+
             try {
                 $date = request()->query->get($field);
             } catch (BadRequestException $e) {
@@ -109,7 +142,7 @@ class Controller extends BaseController
             if (null !== $date) {
                 try {
                     $obj = Carbon::parse((string)$date, config('app.timezone'));
-                } catch (InvalidDateException | InvalidFormatException $e) {
+                } catch (InvalidDateException|InvalidFormatException $e) {
                     // don't care
                     app('log')->warning(sprintf('Ignored invalid date "%s" in API v2 controller parameter check: %s', substr((string)$date, 0, 20), $e->getMessage()));
                 }
@@ -145,53 +178,5 @@ class Controller extends BaseController
         //   return $this->getSortParameters($bag);
 
         return $bag;
-    }
-
-    /**
-     * @param string               $key
-     * @param LengthAwarePaginator $paginator
-     * @param AbstractTransformer  $transformer
-     *
-     * @return array
-     */
-    final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
-    {
-        $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v2';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        $objects = $paginator->getCollection();
-
-        // the transformer, at this point, needs to collect information that ALL items in the collection
-        // require, like meta-data and stuff like that, and save it for later.
-        $transformer->collectMetaData($objects);
-
-        $resource = new FractalCollection($objects, $transformer, $key);
-        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-
-        return $manager->createData($resource)->toArray();
-    }
-
-    /**
-     * Returns a JSON API object and returns it.
-     *
-     * @param string              $key
-     * @param Model               $object
-     * @param AbstractTransformer $transformer
-     *
-     * @return array
-     */
-    final protected function jsonApiObject(string $key, array | Model $object, AbstractTransformer $transformer): array
-    {
-        // create some objects:
-        $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v2';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        $transformer->collectMetaData(new Collection([$object]));
-
-        $resource = new Item($object, $transformer, $key);
-
-        return $manager->createData($resource)->toArray();
     }
 }

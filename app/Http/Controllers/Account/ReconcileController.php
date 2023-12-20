@@ -39,7 +39,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
-use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -53,8 +52,6 @@ class ReconcileController extends Controller
 
     /**
      * ReconcileController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -76,13 +73,10 @@ class ReconcileController extends Controller
     /**
      * Reconciliation overview.
      *
-     * @param Account     $account
-     * @param Carbon|null $start
-     * @param Carbon|null $end
+     * @return Factory|Redirector|RedirectResponse|View
      *
-     * @return Factory|RedirectResponse|Redirector|View
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -106,6 +100,7 @@ class ReconcileController extends Controller
         if (null === $start && null === $end) {
             /** @var Carbon $start */
             $start = clone session('start', app('navigation')->startOfPeriod(new Carbon(), $range));
+
             /** @var Carbon $end */
             $end = clone session('end', app('navigation')->endOfPeriod(new Carbon(), $range));
         }
@@ -153,14 +148,10 @@ class ReconcileController extends Controller
     /**
      * Submit a new reconciliation.
      *
-     * @param ReconciliationStoreRequest $request
-     * @param Account                    $account
-     * @param Carbon                     $start
-     * @param Carbon                     $end
+     * @return Redirector|RedirectResponse
      *
-     * @return RedirectResponse|Redirector
      * @throws DuplicateTransactionException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end)
     {
@@ -202,14 +193,8 @@ class ReconcileController extends Controller
     /**
      * Creates a reconciliation group.
      *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     * @param string  $difference
-     *
-     * @return string
      * @throws DuplicateTransactionException
-     * @throws JsonException
+     * @throws \JsonException
      */
     private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference): string
     {
@@ -258,11 +243,14 @@ class ReconcileController extends Controller
                 ],
             ],
         ];
+
         /** @var TransactionGroupFactory $factory */
         $factory = app(TransactionGroupFactory::class);
+
         /** @var User $user */
         $user = auth()->user();
         $factory->setUser($user);
+
         try {
             $factory->create($submission);
         } catch (FireflyException $e) {

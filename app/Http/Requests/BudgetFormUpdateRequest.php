@@ -41,8 +41,6 @@ class BudgetFormUpdateRequest extends FormRequest
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getBudgetData(): array
     {
@@ -58,18 +56,16 @@ class BudgetFormUpdateRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
         $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name';
 
-        /** @var Budget|null $budget */
+        /** @var null|Budget $budget */
         $budget = $this->route()->parameter('budget');
 
         if (null !== $budget) {
-            $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name,' . $budget->id;
+            $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name,'.$budget->id;
         }
 
         return [
@@ -84,10 +80,6 @@ class BudgetFormUpdateRequest extends FormRequest
 
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
-     *
-     * @param Validator $validator
-     *
-     * @return void
      */
     public function withValidator(Validator $validator): void
     {

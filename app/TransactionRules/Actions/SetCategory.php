@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use DB;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Factory\CategoryFactory;
@@ -40,25 +39,21 @@ class SetCategory implements ActionInterface
 
     /**
      * TriggerInterface constructor.
-     *
-     * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
     {
         $this->action = $action;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function actOnArray(array $journal): bool
     {
-        /** @var User|null $user */
+        /** @var null|User $user */
         $user   = User::find($journal['user_id']);
         $search = $this->action->action_value;
         if (null === $user) {
             app('log')->error(sprintf('Journal has no valid user ID so action SetCategory("%s") cannot be applied', $search), $journal);
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_such_journal')));
+
             return false;
         }
 
@@ -75,6 +70,7 @@ class SetCategory implements ActionInterface
                 )
             );
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_category', ['name' => $search])));
+
             return false;
         }
 
@@ -94,11 +90,12 @@ class SetCategory implements ActionInterface
         $oldCategoryName = $oldCategory?->name;
         if ((int)$oldCategory?->id === $category->id) {
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_linked_to_category', ['name' => $category->name])));
+
             return false;
         }
 
-        DB::table('category_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
-        DB::table('category_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'category_id' => $category->id]);
+        \DB::table('category_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
+        \DB::table('category_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'category_id' => $category->id]);
 
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);

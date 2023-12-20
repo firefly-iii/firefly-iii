@@ -37,8 +37,6 @@ class BulkEditJournalRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {

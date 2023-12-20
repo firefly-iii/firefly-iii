@@ -44,8 +44,6 @@ class CreateController extends Controller
 
     /**
      * PiggyBankController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -86,9 +84,8 @@ class CreateController extends Controller
     /**
      * Store a new piggy bank.
      *
-     * @param PiggyBankStoreRequest $request
+     * @return Redirector|RedirectResponse
      *
-     * @return RedirectResponse|Redirector
      * @throws FireflyException
      */
     public function store(PiggyBankStoreRequest $request)
@@ -103,7 +100,7 @@ class CreateController extends Controller
         app('preferences')->mark();
 
         // store attachment(s):
-        /** @var array|null $files */
+        /** @var null|array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($piggyBank, $files);

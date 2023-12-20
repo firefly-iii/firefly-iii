@@ -25,7 +25,6 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
-use Exception;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -46,8 +45,6 @@ class HomeController extends Controller
 {
     /**
      * HomeController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -60,15 +57,13 @@ class HomeController extends Controller
     /**
      * Change index date range.
      *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     * @throws Exception
+     * @throws \Exception
      */
     public function dateRange(Request $request): JsonResponse
     {
         $stringStart = '';
         $stringEnd   = '';
+
         try {
             $stringStart = e((string)$request->get('start'));
             $start       = Carbon::createFromFormat('Y-m-d', $stringStart);
@@ -76,6 +71,7 @@ class HomeController extends Controller
             app('log')->error(sprintf('Start: could not parse date string "%s" so ignore it.', $stringStart));
             $start = Carbon::now()->startOfMonth();
         }
+
         try {
             $stringEnd = e((string)$request->get('end'));
             $end       = Carbon::createFromFormat('Y-m-d', $stringEnd);
@@ -120,9 +116,6 @@ class HomeController extends Controller
     /**
      * Show index.
      *
-     * @param AccountRepositoryInterface $repository
-     *
-     * @return mixed
      * @throws FireflyException
      */
     public function index(AccountRepositoryInterface $repository): mixed
@@ -142,9 +135,9 @@ class HomeController extends Controller
             $frontPageArray = [];
         }
 
-
         /** @var Carbon $start */
         $start = session('start', today(config('app.timezone'))->startOfMonth());
+
         /** @var Carbon $end */
         $end      = session('end', today(config('app.timezone'))->endOfMonth());
         $accounts = $repository->getAccountsById($frontPageArray);

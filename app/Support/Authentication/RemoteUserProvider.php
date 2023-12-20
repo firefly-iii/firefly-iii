@@ -30,25 +30,19 @@ use FireflyIII\Models\Role;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
-use Str;
 
 /**
  * Class RemoteUserProvider
  */
 class RemoteUserProvider implements UserProvider
 {
-    /**
-     * @inheritDoc
-     */
     public function retrieveByCredentials(array $credentials)
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
+
         throw new FireflyException(sprintf('Did not implement %s', __METHOD__));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function retrieveById($identifier): User
     {
         app('log')->debug(sprintf('Now at %s(%s)', __METHOD__, $identifier));
@@ -60,7 +54,7 @@ class RemoteUserProvider implements UserProvider
                     'blocked'      => false,
                     'blocked_code' => null,
                     'email'        => $identifier,
-                    'password'     => bcrypt(Str::random(64)),
+                    'password'     => bcrypt(\Str::random(64)),
                 ]
             );
             // if this is the first user, give them admin as well.
@@ -76,30 +70,24 @@ class RemoteUserProvider implements UserProvider
         return $user;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function retrieveByToken($identifier, $token)
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
+
         throw new FireflyException(sprintf('A) Did not implement %s', __METHOD__));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function updateRememberToken(Authenticatable $user, $token)
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
+
         throw new FireflyException(sprintf('B) Did not implement %s', __METHOD__));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
+
         throw new FireflyException(sprintf('C) Did not implement %s', __METHOD__));
     }
 }

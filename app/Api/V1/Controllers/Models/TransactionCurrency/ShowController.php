@@ -34,7 +34,6 @@ use FireflyIII\Transformers\CurrencyTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
-use JsonException;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -51,8 +50,6 @@ class ShowController extends Controller
 
     /**
      * CurrencyRepository constructor.
-     *
-
      */
     public function __construct()
     {
@@ -73,9 +70,8 @@ class ShowController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function index(): JsonResponse
     {
@@ -86,7 +82,7 @@ class ShowController extends Controller
         // slice them:
         $currencies = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator  = new LengthAwarePaginator($currencies, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.currencies.index').$this->buildParams());
         $manager = $this->getManager();
 
         /** @var CurrencyTransformer $transformer */
@@ -105,11 +101,8 @@ class ShowController extends Controller
      *
      * Show a currency.
      *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function show(TransactionCurrency $currency): JsonResponse
     {
@@ -137,9 +130,8 @@ class ShowController extends Controller
      *
      * Show a currency.
      *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function showDefault(): JsonResponse
     {

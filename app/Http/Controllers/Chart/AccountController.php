@@ -40,13 +40,11 @@ use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class AccountController.
- *
  */
 class AccountController extends Controller
 {
@@ -60,8 +58,6 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -83,13 +79,13 @@ class AccountController extends Controller
      *
      * This chart is (multi) currency aware.
      *
-     * @return JsonResponse
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function expenseAccounts(): JsonResponse
     {
         /** @var Carbon $start */
         $start = clone session('start', today(config('app.timezone'))->startOfMonth());
+
         /** @var Carbon $end */
         $end   = clone session('end', today(config('app.timezone'))->endOfMonth());
         $cache = new CacheProperties();
@@ -150,12 +146,12 @@ class AccountController extends Controller
         foreach ($currencies as $currencyId => $currency) {
             $dataSet
                                     = [
-                'label'           => (string)trans('firefly.spent'),
-                'type'            => 'bar',
-                'currency_symbol' => $currency->symbol,
-                'currency_code'   => $currency->code,
-                'entries'         => $this->expandNames($tempData),
-            ];
+                                        'label'           => (string)trans('firefly.spent'),
+                                        'type'            => 'bar',
+                                        'currency_symbol' => $currency->symbol,
+                                        'currency_code'   => $currency->code,
+                                        'entries'         => $this->expandNames($tempData),
+                                    ];
             $chartData[$currencyId] = $dataSet;
         }
 
@@ -174,11 +170,6 @@ class AccountController extends Controller
 
     /**
      * Expenses per budget for all time, as shown on account overview.
-     *
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
-     *
-     * @return JsonResponse
      */
     public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
@@ -190,12 +181,6 @@ class AccountController extends Controller
 
     /**
      * Expenses per budget, as shown on account overview.
-     *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return JsonResponse
      */
     public function expenseBudget(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -207,6 +192,7 @@ class AccountController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withBudgetInformation()->setTypes([TransactionType::WITHDRAWAL]);
@@ -214,6 +200,7 @@ class AccountController extends Controller
         $chartData = [];
         $result    = [];
         $budgetIds = [];
+
         /** @var array $journal */
         foreach ($journals as $journal) {
             $budgetId    = (int)$journal['budget_id'];
@@ -248,11 +235,6 @@ class AccountController extends Controller
 
     /**
      * Expenses grouped by category for account.
-     *
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
-     *
-     * @return JsonResponse
      */
     public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
@@ -264,12 +246,6 @@ class AccountController extends Controller
 
     /**
      * Expenses per category for one single account.
-     *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return JsonResponse
      */
     public function expenseCategory(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -321,11 +297,8 @@ class AccountController extends Controller
     /**
      * Shows the balances for all the user's frontpage accounts.
      *
-     * @param AccountRepositoryInterface $repository
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -349,11 +322,6 @@ class AccountController extends Controller
 
     /**
      * Shows the income grouped by category for an account, in all time.
-     *
-     * @param AccountRepositoryInterface $repository
-     * @param Account                    $account
-     *
-     * @return JsonResponse
      */
     public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
@@ -365,12 +333,6 @@ class AccountController extends Controller
 
     /**
      * Shows all income per account for each category.
-     *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return JsonResponse
      */
     public function incomeCategory(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -391,6 +353,7 @@ class AccountController extends Controller
         $journals  = $collector->getExtractedJournals();
         $result    = [];
         $chartData = [];
+
         /** @var array $journal */
         foreach ($journals as $journal) {
             $key = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
@@ -422,14 +385,8 @@ class AccountController extends Controller
     /**
      * Shows overview of account during a single period.
      *
-     * @param Account $account
-     * @param Carbon  $start
-     *
-     * @param Carbon  $end
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -461,77 +418,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Carbon              $start
-     * @param Carbon              $end
-     * @param Account             $account
-     * @param TransactionCurrency $currency
-     *
-     * @return array
-     * @throws FireflyException
-     * @throws JsonException
-     */
-    private function periodByCurrency(Carbon $start, Carbon $end, Account $account, TransactionCurrency $currency): array
-    {
-        app('log')->debug(sprintf('Now in periodByCurrency("%s", "%s", %s, "%s")', $start->format('Y-m-d'), $end->format('Y-m-d'), $account->id, $currency->code));
-        $locale  = app('steam')->getLocale();
-        $step    = $this->calculateStep($start, $end);
-        $result  = [
-            'label'           => sprintf('%s (%s)', $account->name, $currency->symbol),
-            'currency_symbol' => $currency->symbol,
-            'currency_code'   => $currency->code,
-        ];
-        $entries = [];
-        $current = clone $start;
-        app('log')->debug(sprintf('Step is %s', $step));
-
-        // fix for issue https://github.com/firefly-iii/firefly-iii/issues/8041
-        // have to make sure this chart is always based on the balance at the END of the period.
-        // This period depends on the size of the chart
-        $current = app('navigation')->endOfX($current, $step, null);
-        app('log')->debug(sprintf('$current date is %s', $current->format('Y-m-d')));
-        if ('1D' === $step) {
-            // per day the entire period, balance for every day.
-            $format   = (string)trans('config.month_and_day_js', [], $locale);
-            $range    = app('steam')->balanceInRange($account, $start, $end, $currency);
-            $previous = array_values($range)[0];
-            while ($end >= $current) {
-                $theDate         = $current->format('Y-m-d');
-                $balance         = $range[$theDate] ?? $previous;
-                $label           = $current->isoFormat($format);
-                $entries[$label] = (float)$balance;
-                $previous        = $balance;
-                $current->addDay();
-            }
-        }
-        if ('1W' === $step || '1M' === $step || '1Y' === $step) {
-            while ($end >= $current) {
-                app('log')->debug(sprintf('Current is: %s', $current->format('Y-m-d')));
-                $balance         = (float)app('steam')->balance($account, $current, $currency);
-                $label           = app('navigation')->periodShow($current, $step);
-                $entries[$label] = $balance;
-                $current         = app('navigation')->addPeriod($current, $step, 0);
-                // here too, to fix #8041, the data is corrected to the end of the period.
-                $current = app('navigation')->endOfX($current, $step, null);
-            }
-        }
-        $result['entries'] = $entries;
-
-        return $result;
-    }
-
-    /**
      * Shows the balances for a given set of dates and accounts.
      *
      * TODO this chart is not multi currency aware.
      *
-     * @param Collection $accounts
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function report(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -543,13 +435,13 @@ class AccountController extends Controller
      *
      * This chart is multi-currency aware.
      *
-     * @return JsonResponse
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function revenueAccounts(): JsonResponse
     {
         /** @var Carbon $start */
         $start = clone session('start', today(config('app.timezone'))->startOfMonth());
+
         /** @var Carbon $end */
         $end   = clone session('end', today(config('app.timezone'))->endOfMonth());
         $cache = new CacheProperties();
@@ -610,12 +502,12 @@ class AccountController extends Controller
         foreach ($currencies as $currencyId => $currency) {
             $dataSet
                                     = [
-                'label'           => (string)trans('firefly.earned'),
-                'type'            => 'bar',
-                'currency_symbol' => $currency->symbol,
-                'currency_code'   => $currency->code,
-                'entries'         => $this->expandNames($tempData),
-            ];
+                                        'label'           => (string)trans('firefly.earned'),
+                                        'type'            => 'bar',
+                                        'currency_symbol' => $currency->symbol,
+                                        'currency_code'   => $currency->code,
+                                        'entries'         => $this->expandNames($tempData),
+                                    ];
             $chartData[$currencyId] = $dataSet;
         }
 
@@ -630,5 +522,58 @@ class AccountController extends Controller
         $cache->store($data);
 
         return response()->json($data);
+    }
+
+    /**
+     * @throws FireflyException
+     * @throws \JsonException
+     */
+    private function periodByCurrency(Carbon $start, Carbon $end, Account $account, TransactionCurrency $currency): array
+    {
+        app('log')->debug(sprintf('Now in periodByCurrency("%s", "%s", %s, "%s")', $start->format('Y-m-d'), $end->format('Y-m-d'), $account->id, $currency->code));
+        $locale  = app('steam')->getLocale();
+        $step    = $this->calculateStep($start, $end);
+        $result  = [
+            'label'           => sprintf('%s (%s)', $account->name, $currency->symbol),
+            'currency_symbol' => $currency->symbol,
+            'currency_code'   => $currency->code,
+        ];
+        $entries = [];
+        $current = clone $start;
+        app('log')->debug(sprintf('Step is %s', $step));
+
+        // fix for issue https://github.com/firefly-iii/firefly-iii/issues/8041
+        // have to make sure this chart is always based on the balance at the END of the period.
+        // This period depends on the size of the chart
+        $current = app('navigation')->endOfX($current, $step, null);
+        app('log')->debug(sprintf('$current date is %s', $current->format('Y-m-d')));
+        if ('1D' === $step) {
+            // per day the entire period, balance for every day.
+            $format   = (string)trans('config.month_and_day_js', [], $locale);
+            $range    = app('steam')->balanceInRange($account, $start, $end, $currency);
+            $previous = array_values($range)[0];
+            while ($end >= $current) {
+                $theDate         = $current->format('Y-m-d');
+                $balance         = $range[$theDate] ?? $previous;
+                $label           = $current->isoFormat($format);
+                $entries[$label] = (float)$balance;
+                $previous        = $balance;
+                $current->addDay();
+            }
+        }
+        if ('1W' === $step || '1M' === $step || '1Y' === $step) {
+            while ($end >= $current) {
+                app('log')->debug(sprintf('Current is: %s', $current->format('Y-m-d')));
+                $balance         = (float)app('steam')->balance($account, $current, $currency);
+                $label           = app('navigation')->periodShow($current, $step);
+                $entries[$label] = $balance;
+                $current         = app('navigation')->addPeriod($current, $step, 0);
+                // here too, to fix #8041, the data is corrected to the end of the period.
+                $current = app('navigation')->endOfX($current, $step, null);
+            }
+        }
+        $result['entries'] = $entries;
+
+        return $result;
     }
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * ExchangeRateConverter.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -36,43 +35,29 @@ use FireflyIII\Support\CacheProperties;
  */
 class ExchangeRateConverter
 {
-    //use ConvertsExchangeRates;
+    // use ConvertsExchangeRates;
 
     /**
-     * @param TransactionCurrency $from
-     * @param TransactionCurrency $to
-     * @param Carbon              $date
-     * @param string              $amount
-     *
-     * @return string
      * @throws FireflyException
      */
     public function convert(TransactionCurrency $from, TransactionCurrency $to, Carbon $date, string $amount): string
     {
         $rate = $this->getCurrencyRate($from, $to, $date);
+
         return bcmul($amount, $rate);
     }
 
     /**
-     * @param TransactionCurrency $from
-     * @param TransactionCurrency $to
-     * @param Carbon              $date
-     *
-     * @return string
      * @throws FireflyException
      */
     public function getCurrencyRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
     {
         $rate = $this->getRate($from, $to, $date);
+
         return '0' === $rate ? '1' : $rate;
     }
 
     /**
-     * @param TransactionCurrency $from
-     * @param TransactionCurrency $to
-     * @param Carbon              $date
-     *
-     * @return string
      * @throws FireflyException
      */
     private function getRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
@@ -98,16 +83,10 @@ class ExchangeRateConverter
         }
 
         $second = bcdiv('1', $second);
+
         return bcmul($first, $second);
     }
 
-    /**
-     * @param int    $from
-     * @param int    $to
-     * @param string $date
-     *
-     * @return string|null
-     */
     private function getFromDB(int $from, int $to, string $date): ?string
     {
         $key = sprintf('cer-%d-%d-%s', $from, $to, $date);
@@ -119,34 +98,31 @@ class ExchangeRateConverter
             if ('' === $rate) {
                 return null;
             }
+
             return $rate;
         }
         app('log')->debug(sprintf('Going to get rate #%d->#%d (%s) from DB.', $from, $to, $date));
 
-        /** @var CurrencyExchangeRate|null $result */
+        /** @var null|CurrencyExchangeRate $result */
         $result = auth()->user()
-                        ->currencyExchangeRates()
-                        ->where('from_currency_id', $from)
-                        ->where('to_currency_id', $to)
-                        ->where('date', '<=', $date)
-                        ->orderBy('date', 'DESC')
-                        ->first();
+            ->currencyExchangeRates()
+            ->where('from_currency_id', $from)
+            ->where('to_currency_id', $to)
+            ->where('date', '<=', $date)
+            ->orderBy('date', 'DESC')
+            ->first()
+        ;
         $rate   = (string)$result?->rate;
         $cache->store($rate);
         if ('' === $rate) {
             return null;
         }
+
         return $rate;
     }
 
-
     /**
-     * @param TransactionCurrency $currency
-     * @param Carbon              $date
-     *
-     * @return string
      * @throws FireflyException
-     *
      */
     private function getEuroRate(TransactionCurrency $currency, Carbon $date): string
     {
@@ -164,23 +140,21 @@ class ExchangeRateConverter
         if (null !== $rate) {
             return bcdiv('1', $rate);
             //            app('log')->debug(sprintf('Inverted rate for %s to EUR is %s.', $currency->code, $rate));
-            //return $rate;
+            // return $rate;
         }
         // grab backup values from config file:
         $backup = config(sprintf('cer.rates.%s', $currency->code));
         if (null !== $backup) {
             return bcdiv('1', (string)$backup);
             // app('log')->debug(sprintf('Backup rate for %s to EUR is %s.', $currency->code, $backup));
-            //return $backup;
+            // return $backup;
         }
 
         //        app('log')->debug(sprintf('No rate for %s to EUR.', $currency->code));
         return '0';
     }
 
-
     /**
-     * @return int
      * @throws FireflyException
      */
     private function getEuroId(): int
@@ -195,6 +169,7 @@ class ExchangeRateConverter
             throw new FireflyException('Cannot find EUR in system, cannot do currency conversion.');
         }
         $cache->store($euro->id);
+
         return $euro->id;
     }
 }

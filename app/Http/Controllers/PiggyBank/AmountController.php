@@ -44,8 +44,6 @@ class AmountController extends Controller
 
     /**
      * PiggyBankController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -67,8 +65,6 @@ class AmountController extends Controller
     /**
      * Add money to piggy bank.
      *
-     * @param PiggyBank $piggyBank
-     *
      * @return Factory|View
      */
     public function add(PiggyBank $piggyBank)
@@ -87,8 +83,6 @@ class AmountController extends Controller
 
     /**
      * Add money to piggy bank (for mobile devices).
-     *
-     * @param PiggyBank $piggyBank
      *
      * @return Factory|View
      */
@@ -111,11 +105,6 @@ class AmountController extends Controller
 
     /**
      * Add money to piggy bank.
-     *
-     * @param Request   $request
-     * @param PiggyBank $piggyBank
-     *
-     * @return RedirectResponse
      */
     public function postAdd(Request $request, PiggyBank $piggyBank): RedirectResponse
     {
@@ -139,7 +128,7 @@ class AmountController extends Controller
             return redirect(route('piggy-banks.index'));
         }
 
-        app('log')->error('Cannot add ' . $amount . ' because canAddAmount returned false.');
+        app('log')->error('Cannot add '.$amount.' because canAddAmount returned false.');
         session()->flash(
             'error',
             (string)trans(
@@ -153,11 +142,6 @@ class AmountController extends Controller
 
     /**
      * Remove money from piggy bank.
-     *
-     * @param Request   $request
-     * @param PiggyBank $piggyBank
-     *
-     * @return RedirectResponse
      */
     public function postRemove(Request $request, PiggyBank $piggyBank): RedirectResponse
     {
@@ -196,8 +180,6 @@ class AmountController extends Controller
     /**
      * Remove money from piggy bank form.
      *
-     * @param PiggyBank $piggyBank
-     *
      * @return Factory|View
      */
     public function remove(PiggyBank $piggyBank)
@@ -210,8 +192,6 @@ class AmountController extends Controller
 
     /**
      * Remove money from piggy bank (for mobile devices).
-     *
-     * @param PiggyBank $piggyBank
      *
      * @return Factory|View
      */

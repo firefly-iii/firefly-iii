@@ -66,6 +66,7 @@ class PiggyBankServiceProvider extends ServiceProvider
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $repository->setUser(auth()->user());
                 }
+
                 return $repository;
             }
         );

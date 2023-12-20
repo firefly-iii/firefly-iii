@@ -42,8 +42,6 @@ class UserInvitation extends Notification
 
     /**
      * Create a new notification instance.
-     *
-     * @return void
      */
     public function __construct(InvitedUser $invitee)
     {
@@ -56,12 +54,12 @@ class UserInvitation extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
         return [
-            //
         ];
     }
 
@@ -71,13 +69,15 @@ class UserInvitation extends Notification
      * @param mixed $notifiable
      *
      * @return MailMessage
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail($notifiable)
     {
         return (new MailMessage())
             ->markdown('emails.invitation-created', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
-            ->subject((string)trans('email.invitation_created_subject'));
+            ->subject((string)trans('email.invitation_created_subject'))
+        ;
     }
 
     /**
@@ -86,6 +86,7 @@ class UserInvitation extends Notification
      * @param mixed $notifiable
      *
      * @return SlackMessage
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toSlack($notifiable)
@@ -101,6 +102,7 @@ class UserInvitation extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)
@@ -109,6 +111,7 @@ class UserInvitation extends Notification
         if (UrlValidator::isValidWebhookURL($slackUrl)) {
             return ['mail', 'slack'];
         }
+
         return ['mail'];
     }
 }

@@ -29,8 +29,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class AttachmentFormRequest.
- *
-
  */
 class AttachmentFormRequest extends FormRequest
 {
@@ -39,8 +37,6 @@ class AttachmentFormRequest extends FormRequest
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getAttachmentData(): array
     {
@@ -52,8 +48,6 @@ class AttachmentFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {

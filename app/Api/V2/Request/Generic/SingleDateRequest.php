@@ -41,8 +41,6 @@ class SingleDateRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return Carbon
      */
     public function getDate(): Carbon
     {
@@ -51,8 +49,6 @@ class SingleDateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {

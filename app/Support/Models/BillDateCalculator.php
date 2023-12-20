@@ -32,14 +32,6 @@ class BillDateCalculator
     /**
      * Returns the dates a bill needs to be paid.
      *
-     * @param Carbon      $earliest
-     * @param Carbon      $latest
-     * @param Carbon      $billStart
-     * @param string      $period
-     * @param int         $skip
-     * @param Carbon|null $lastPaid
-     *
-     * @return array
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function getPayDates(Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid): array
@@ -50,7 +42,6 @@ class BillDateCalculator
         Log::debug('Now in BillDateCalculator::getPayDates()');
         Log::debug(sprintf('Dates must be between %s and %s.', $earliest->format('Y-m-d'), $latest->format('Y-m-d')));
         Log::debug(sprintf('Bill started on %s, period is "%s", skip is %d, last paid = "%s".', $billStart->format('Y-m-d'), $period, $skip, $lastPaid?->format('Y-m-d')));
-
 
         $set          = new Collection();
         $currentStart = clone $earliest;
@@ -69,10 +60,12 @@ class BillDateCalculator
                 Log::debug('Next expected match is after $latest.');
                 if ($set->count() > 0) {
                     Log::debug(sprintf('Already have %d date(s), so we can safely break.', $set->count()));
+
                     break;
                 }
                 Log::debug('Add date to set anyway, since we had no dates yet.');
                 $set->push(clone $nextExpectedMatch);
+
                 continue;
             }
 
@@ -91,9 +84,10 @@ class BillDateCalculator
             $nextExpectedMatch->addDay();
             $currentStart = clone $nextExpectedMatch;
 
-            $loop++;
+            ++$loop;
             if ($loop > 12) {
                 Log::debug('Loop is more than 12, so we break.');
+
                 break;
             }
         }
@@ -106,7 +100,6 @@ class BillDateCalculator
         Log::debug(sprintf('Found %d pay dates', $set->count()), $simple->toArray());
 
         return $simple->toArray();
-
     }
 
     /**
@@ -114,31 +107,25 @@ class BillDateCalculator
      * transaction given the earliest date this could happen.
      *
      * That date must be AFTER $billStartDate, as a sanity check.
-     *
-     * @param Carbon $earliest
-     * @param Carbon $billStartDate
-     * @param string $period
-     * @param int    $skip
-     *
-     * @return Carbon
      */
     protected function nextDateMatch(Carbon $earliest, Carbon $billStartDate, string $period, int $skip): Carbon
     {
         Log::debug(sprintf('Bill start date is %s', $billStartDate->format('Y-m-d')));
         if ($earliest->lt($billStartDate)) {
             Log::debug('Earliest possible date is after bill start, so just return bill start date.');
+
             return $billStartDate;
         }
 
         $steps  = app('navigation')->diffInPeriods($period, $skip, $earliest, $billStartDate);
         $result = clone $billStartDate;
         if ($steps > 0) {
-            $steps -= 1;
+            --$steps;
             Log::debug(sprintf('Steps is %d, because addPeriod already adds 1.', $steps));
             $result = app('navigation')->addPeriod($billStartDate, $period, $steps);
         }
         Log::debug(sprintf('Number of steps is %d, added to %s, result is %s', $steps, $billStartDate->format('Y-m-d'), $result->format('Y-m-d')));
+
         return $result;
     }
-
 }

@@ -35,10 +35,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class TagList implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
-     *
-     * @return Collection
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value, Route $route): Collection
@@ -46,17 +42,18 @@ class TagList implements BinderInterface
         if (auth()->check()) {
             if ('allTags' === $value) {
                 return auth()->user()->tags()
-                             ->orderBy('tag', 'ASC')
-                             ->get();
+                    ->orderBy('tag', 'ASC')
+                    ->get()
+                ;
             }
             $list = array_unique(array_map('\strtolower', explode(',', $value)));
             app('log')->debug('List of tags is', $list);
 
             if (0 === count($list)) { // @phpstan-ignore-line
                 app('log')->error('Tag list is empty.');
+
                 throw new NotFoundHttpException();
             }
-
 
             /** @var TagRepositoryInterface $repository */
             $repository = app(TagRepositoryInterface::class);
@@ -81,6 +78,7 @@ class TagList implements BinderInterface
             }
         }
         app('log')->error('TagList: user is not logged in.');
+
         throw new NotFoundHttpException();
     }
 }

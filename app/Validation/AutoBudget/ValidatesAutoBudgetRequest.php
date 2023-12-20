@@ -30,9 +30,6 @@ use Illuminate\Validation\Validator;
  */
 trait ValidatesAutoBudgetRequest
 {
-    /**
-     * @param Validator $validator
-     */
     protected function validateAutoBudgetAmount(Validator $validator): void
     {
         $data         = $validator->getData();
@@ -66,6 +63,7 @@ trait ValidatesAutoBudgetRequest
         // too big amount
         if ((int)$amount > 268435456) {
             $validator->errors()->add('auto_budget_amount', (string)trans('validation.amount_required_for_auto_budget'));
+
             return;
         }
     }

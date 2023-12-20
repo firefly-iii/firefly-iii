@@ -27,7 +27,6 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use JsonException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -38,10 +37,7 @@ class AccountTransformer extends AbstractTransformer
     protected AccountRepositoryInterface $repository;
 
     /**
-     *
      * AccountTransformer constructor.
-     *
-
      */
     public function __construct()
     {
@@ -52,11 +48,8 @@ class AccountTransformer extends AbstractTransformer
     /**
      * Transform the account.
      *
-     * @param Account $account
-     *
-     * @return array
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     public function transform(Account $account): array
     {
@@ -133,19 +126,12 @@ class AccountTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/accounts/' . $account->id,
+                    'uri' => '/accounts/'.$account->id,
                 ],
             ],
         ];
     }
 
-    /**
-     * @param Account $account
-     *
-     * @param string  $accountType
-     *
-     * @return string|null
-     */
     private function getAccountRole(Account $account, string $accountType): ?string
     {
         $accountRole = $this->repository->getMetaValue($account, 'account_role');
@@ -158,8 +144,6 @@ class AccountTransformer extends AbstractTransformer
 
     /**
      * TODO duplicated in the V2 transformer.
-     *
-     * @return Carbon
      */
     private function getDate(): Carbon
     {
@@ -172,11 +156,8 @@ class AccountTransformer extends AbstractTransformer
     }
 
     /**
-     * @param Account $account
-     *
-     * @return array
      * @throws FireflyException
-     * @throws JsonException
+     * @throws \JsonException
      */
     private function getCurrency(Account $account): array
     {
@@ -194,13 +175,6 @@ class AccountTransformer extends AbstractTransformer
         return [$currencyId, $currencyCode, $currencySymbol, $decimalPlaces];
     }
 
-    /**
-     * @param Account     $account
-     * @param string|null $accountRole
-     * @param string      $accountType
-     *
-     * @return array
-     */
     private function getCCInfo(Account $account, ?string $accountRole, string $accountType): array
     {
         $monthlyPaymentDate = null;
@@ -227,12 +201,9 @@ class AccountTransformer extends AbstractTransformer
     }
 
     /**
-     * @param Account $account
-     * @param string  $accountType
-     *
      * @return array
      *
-     * TODO refactor call to get~OpeningBalanceAmount / Date because it is a lot of queries.
+     * TODO refactor call to get~OpeningBalanceAmount / Date because it is a lot of queries
      */
     private function getOpeningBalance(Account $account, string $accountType): array
     {
@@ -249,18 +220,11 @@ class AccountTransformer extends AbstractTransformer
                 $object = today(config('app.timezone'));
             }
             $openingBalanceDate = $object->toAtomString();
-
         }
 
         return [$openingBalance, $openingBalanceDate];
     }
 
-    /**
-     * @param Account $account
-     * @param string  $accountType
-     *
-     * @return array
-     */
     private function getInterest(Account $account, string $accountType): array
     {
         $interest       = null;

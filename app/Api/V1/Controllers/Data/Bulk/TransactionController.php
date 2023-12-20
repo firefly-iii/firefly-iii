@@ -44,9 +44,6 @@ class TransactionController extends Controller
 {
     private AccountRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -63,10 +60,6 @@ class TransactionController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/bulkUpdateTransactions
-     *
-     * @param TransactionRequest $request
-     *
-     * @return JsonResponse
      */
     public function update(TransactionRequest $request): JsonResponse
     {
@@ -90,8 +83,6 @@ class TransactionController extends Controller
 
     /**
      * @param array $params <array<string, array<string, int|string>>>
-     *
-     * @return bool
      */
     private function isUpdateTransactionAccount(array $params): bool
     {

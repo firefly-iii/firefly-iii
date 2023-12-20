@@ -57,10 +57,6 @@ class TagController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightTransferNoTag
-     *
-     * @param GenericRequest $request
-     *
-     * @return JsonResponse
      */
     public function noTag(GenericRequest $request): JsonResponse
     {
@@ -113,10 +109,6 @@ class TagController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightTransferTag
      *
      * Transfers per tag, possibly filtered by tag and account.
-     *
-     * @param GenericRequest $request
-     *
-     * @return JsonResponse
      */
     public function tag(GenericRequest $request): JsonResponse
     {
@@ -136,6 +128,7 @@ class TagController extends Controller
         $collector->setTypes([TransactionType::TRANSFER])->setRange($start, $end)->setDestinationAccounts($accounts);
         $collector->setTags($tags);
         $genericSet = $collector->getExtractedJournals();
+
         /** @var array $journal */
         foreach ($genericSet as $journal) {
             $currencyId        = (int)$journal['currency_id'];
