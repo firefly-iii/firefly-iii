@@ -31,9 +31,7 @@
  *
  */
 
-
 declare(strict_types=1);
-
 
 return [
     'failed'   => 'Bu kimlik bilgileri kayıtlarımızla uyuşmuyor.',

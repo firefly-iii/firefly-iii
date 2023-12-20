@@ -31,9 +31,7 @@
  *
  */
 
-
 declare(strict_types=1);
-
 
 return [
     'failed'   => 'Aquestes credencials no es corresponen a les que tenim registrades.',

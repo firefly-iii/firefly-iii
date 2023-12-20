@@ -31,9 +31,7 @@
  *
  */
 
-
 declare(strict_types=1);
-
 
 return [
     'failed'   => 'Me kunne ikkje finna nokon konto som har dei oppgitte detaljene.',
