@@ -31,13 +31,15 @@ class SummaryBalanceGrouped
 {
     private TransactionCurrency $default;
     private array               $amounts = [];
-    private array               $keys    = [];
+    private array               $keys;
+    private array               $currencies;
     private const string SUM = 'sum';
     private CurrencyRepositoryInterface $currencyRepository;
 
     public function __construct()
     {
         $this->keys               = [self::SUM];
+        $this->currencies         = [];
         $this->currencyRepository = app(CurrencyRepositoryInterface::class);
     }
 
@@ -58,11 +60,11 @@ class SummaryBalanceGrouped
         /** @var array $journal */
         foreach ($journals as $journal) {
             // transaction info:
-            $currencyId              = (int)$journal['currency_id'];
-            $amount                  = bcmul($journal['amount'], $multiplier);
-            $currency                = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
-            $currencies[$currencyId] = $currency;
-            $nativeAmount            = $converter->convert($currency, $this->default, $journal['date'], $amount);
+            $currencyId                    = (int)$journal['currency_id'];
+            $amount                        = bcmul($journal['amount'], $multiplier);
+            $currency                      = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
+            $this->currencies[$currencyId] = $currency;
+            $nativeAmount                  = $converter->convert($currency, $this->default, $journal['date'], $amount);
             if ((int)$journal['foreign_currency_id'] === $this->default->id) {
                 // use foreign amount instead
                 $nativeAmount = $journal['foreign_amount'];
@@ -115,8 +117,9 @@ class SummaryBalanceGrouped
                 // skip native entries.
                 continue;
             }
-            $currency                = $currencies[$currencyId] ?? $this->currencyRepository->find($currencyId);
-            $currencies[$currencyId] = $currency;
+            $currencyId                    = (int)$currencyId;
+            $currency                      = $this->currencies[$currencyId] ?? $this->currencyRepository->find($currencyId);
+            $this->currencies[$currencyId] = $currency;
             // create objects for big array.
             foreach ($this->keys as $key) {
                 $title    = match ($key) {
