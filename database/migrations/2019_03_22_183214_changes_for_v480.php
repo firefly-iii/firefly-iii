@@ -35,8 +35,6 @@ class ChangesForV480 extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {
@@ -56,9 +54,10 @@ class ChangesForV480 extends Migration
                                 app('log')->error('If the foreign ID does not exist (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
                             }
                         }
+
                         try {
                             $table->dropColumn('transaction_group_id');
-                        } catch (QueryException | ColumnDoesNotExist $e) {
+                        } catch (ColumnDoesNotExist|QueryException $e) {
                             app('log')->error(sprintf('Could not drop column: %s', $e->getMessage()));
                             app('log')->error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
                         }
@@ -78,7 +77,7 @@ class ChangesForV480 extends Migration
                     static function (Blueprint $table) {
                         try {
                             $table->dropColumn('stop_processing');
-                        } catch (QueryException | ColumnDoesNotExist $e) {
+                        } catch (ColumnDoesNotExist|QueryException $e) {
                             app('log')->error(sprintf('Could not drop column: %s', $e->getMessage()));
                             app('log')->error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
                         }
@@ -98,7 +97,7 @@ class ChangesForV480 extends Migration
                     static function (Blueprint $table) {
                         try {
                             $table->dropColumn('mfa_secret');
-                        } catch (QueryException | ColumnDoesNotExist $e) {
+                        } catch (ColumnDoesNotExist|QueryException $e) {
                             app('log')->error(sprintf('Could not drop column: %s', $e->getMessage()));
                             app('log')->error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
                         }
@@ -113,8 +112,8 @@ class ChangesForV480 extends Migration
 
     /**
      * Run the migrations.
+     *
      * @SuppressWarnings(PHPMD.ShortMethodName)
-     * @return void
      */
     public function up(): void
     {
@@ -128,7 +127,8 @@ class ChangesForV480 extends Migration
 
                         // add column "group_id" after "transaction_type_id"
                         $table->integer('transaction_group_id', false, true)
-                              ->nullable()->default(null)->after('transaction_type_id');
+                            ->nullable()->default(null)->after('transaction_type_id')
+                        ;
 
                         // add foreign key for "transaction_group_id"
                         try {

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * 2023_10_21_113213_add_currency_pivot_tables.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -28,7 +27,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
     /**
      * @SuppressWarnings(PHPMD.ShortMethodName)
      * Run the migrations.

@@ -34,18 +34,13 @@ class ExtendCurrencyInfo extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down(): void
-    {
-        //
-    }
+    public function down(): void {}
 
     /**
      * Run the migrations.
+     *
      * @SuppressWarnings(PHPMD.ShortMethodName)
-     * @return void
      */
     public function up(): void
     {

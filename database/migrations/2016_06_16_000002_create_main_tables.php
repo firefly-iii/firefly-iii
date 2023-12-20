@@ -72,8 +72,8 @@ class CreateMainTables extends Migration
 
     /**
      * Run the migrations.
-     * @SuppressWarnings(PHPMD.ShortMethodName)
      *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -252,8 +252,6 @@ class CreateMainTables extends Migration
         }
     }
 
-    /**
-     */
     private function createBudgetTables(): void
     {
         if (!Schema::hasTable('budgets')) {
@@ -317,9 +315,6 @@ class CreateMainTables extends Migration
         }
     }
 
-    /**
-     * @return void
-     */
     private function createCategoriesTable(): void
     {
         if (!Schema::hasTable('categories')) {
@@ -368,9 +363,6 @@ class CreateMainTables extends Migration
         }
     }
 
-    /**
-     * @return void
-     */
     private function createRoleTable(): void
     {
         if (!Schema::hasTable('role_user')) {
@@ -499,9 +491,6 @@ class CreateMainTables extends Migration
         }
     }
 
-    /**
-     * @return void
-     */
     private function createTagsTable(): void
     {
         if (!Schema::hasTable('tags')) {
@@ -533,9 +522,6 @@ class CreateMainTables extends Migration
         }
     }
 
-    /**
-     * @return void
-     */
     private function createTransactionTables(): void
     {
         if (!Schema::hasTable('transaction_journals')) {

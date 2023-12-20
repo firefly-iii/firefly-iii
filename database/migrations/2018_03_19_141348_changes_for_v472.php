@@ -36,8 +36,6 @@ class ChangesForV472 extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {
@@ -63,7 +61,7 @@ class ChangesForV472 extends Migration
                         $table->dropColumn('order');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -73,7 +71,6 @@ class ChangesForV472 extends Migration
     /**
      * Run the migrations.
      *
-     * @return void
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
@@ -86,7 +83,7 @@ class ChangesForV472 extends Migration
                         $table->dropColumn('notes');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }

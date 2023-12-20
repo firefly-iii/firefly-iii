@@ -27,7 +27,6 @@ namespace Database\Seeders;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\UserRole;
 use Illuminate\Database\Seeder;
-use PDOException;
 
 /**
  * Class UserRoleSeeder
@@ -36,8 +35,6 @@ class UserRoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
     public function run()
     {
@@ -50,7 +47,7 @@ class UserRoleSeeder extends Seeder
         foreach ($roles as $role) {
             try {
                 UserRole::create(['title' => $role]);
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 // @ignoreException
             }
         }

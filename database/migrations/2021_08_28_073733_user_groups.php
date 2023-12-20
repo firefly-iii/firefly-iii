@@ -53,8 +53,6 @@ class UserGroups extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {
@@ -74,7 +72,7 @@ class UserGroups extends Migration
                             }
                         }
                     );
-                } catch (QueryException | ColumnDoesNotExist $e) {
+                } catch (ColumnDoesNotExist|QueryException $e) {
                     app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                     app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
                 }
@@ -94,7 +92,7 @@ class UserGroups extends Migration
                         }
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -107,8 +105,8 @@ class UserGroups extends Migration
 
     /**
      * Run the migrations.
+     *
      * @SuppressWarnings(PHPMD.ShortMethodName)
-     * @return void
      */
     public function up(): void
     {
@@ -175,6 +173,7 @@ class UserGroups extends Migration
                 app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
             }
         }
+
         try {
             Schema::table(
                 'users',
@@ -191,6 +190,7 @@ class UserGroups extends Migration
             app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
             app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
         }
+
         // ADD columns to tables
         /** @var string $tableName */
         foreach ($this->tables as $tableName) {
