@@ -43,10 +43,7 @@ return [
     'key'             => env('APP_KEY'),
     'cipher'          => 'AES-256-CBC',
     'providers'       => [
-
-        /*
-         * Laravel Framework Service Providers...
-         */
+        // Laravel Framework Service Providers...
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -70,13 +67,9 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
-        /*
-         * Package Service Providers...
-         */
+        // Package Service Providers...
 
-        /*
-         * Application Service Providers...
-         */
+        // Application Service Providers...
         FireflyIII\Providers\AppServiceProvider::class,
         FireflyIII\Providers\AuthServiceProvider::class,
         // FireflyIII\Providers\BroadcastServiceProvider::class,
@@ -87,9 +80,7 @@ return [
         PragmaRX\Google2FALaravel\ServiceProvider::class,
         TwigBridge\ServiceProvider::class,
 
-        /*
-         * More service providers.
-        */
+        // More service providers.
         FireflyIII\Providers\AccountServiceProvider::class,
         FireflyIII\Providers\AttachmentServiceProvider::class,
         FireflyIII\Providers\BillServiceProvider::class,
@@ -173,5 +164,4 @@ return [
     */
 
     'faker_locale' => 'en_US',
-
 ];

@@ -31,6 +31,8 @@ trait AppendsLocationData
     /**
      * Abstract method.
      *
+     * @param mixed $key
+     *
      * @return bool
      */
     abstract public function has($key);

@@ -23,7 +23,6 @@
 declare(strict_types=1);
 
 return [
-
     'url'              => 'https://ff3exchangerates.z6.web.core.windows.net',
     'enabled'          => true,
     'download_enabled' => env('ENABLE_EXTERNAL_RATES', false),
@@ -35,7 +34,6 @@ return [
 
     // all rates are from EUR to $currency:
     'rates'            => [
-
         // europa
         'EUR' => 1,
         'HUF' => 387.9629,

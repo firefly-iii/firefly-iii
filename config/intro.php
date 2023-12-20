@@ -21,9 +21,7 @@
 
 declare(strict_types=1);
 
-/*
- * Always make sure intro is the first element (if any) and outro is the last one.
- */
+// Always make sure intro is the first element (if any) and outro is the last one.
 
 return [
     // index
@@ -73,7 +71,6 @@ return [
         'new_budget'       => ['element' => '#createBudgetBox'],
         'list_of_budgets'  => ['element' => '#budgetList'],
         'outro'            => [],
-
     ],
     // reports: index, default report, audit, budget, cat, tag
     'reports_index'                => [
@@ -94,7 +91,6 @@ return [
         'intro'                  => [],
         'pieCharts'              => ['element' => '#pieCharts'],
         'incomeAndExpensesChart' => ['element' => '#incomeAndExpensesChart', 'position' => 'top'],
-
     ],
     'reports_report_tag'           => [
         'intro'                  => [],
@@ -116,7 +112,6 @@ return [
     'piggy-banks_create'           => [
         'name' => ['element' => '#ffInput_name'],
         'date' => ['element' => '#ffInput_targetdate'],
-
     ],
     'piggy-banks_show'             => [
         'piggyChart'   => ['element' => '#piggyChart'],
@@ -133,7 +128,7 @@ return [
     'bills_create'                 => [
         'intro'              => [],
         'name'               => ['element' => '#name_holder'],
-        //'match'              => ['element' => '#match_holder'],
+        // 'match'              => ['element' => '#match_holder'],
         'amount_min_holder'  => ['element' => '#amount_min_holder'],
         'repeat_freq_holder' => ['element' => '#repeat_freq_holder'],
         'skip_holder'        => ['element' => '#skip_holder'],
@@ -142,7 +137,6 @@ return [
         'billInfo'    => ['element' => '#billInfo'],
         'billButtons' => ['element' => '#billButtons'],
         'billChart'   => ['element' => '#billChart', 'position' => 'top'],
-
     ],
     // rules: index, create-rule, edit-rule
     'rules_index'                  => [

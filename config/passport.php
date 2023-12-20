@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * passport.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -24,7 +23,6 @@
 declare(strict_types=1);
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Passport Guard
@@ -81,5 +79,4 @@ return [
         'id'     => env('PASSPORT_PERSONAL_ACCESS_CLIENT_ID'),
         'secret' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET'),
     ],
-
 ];
