@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Http\Api;
 
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use Log;
 
 class SummaryBalanceGrouped
 {
@@ -49,13 +50,16 @@ class SummaryBalanceGrouped
      */
     public function groupTransactions(string $key, array $journals): void
     {
+        Log::debug(sprintf('Now in groupTransactions with key "%s" and %d journal(s)', $key, count($journals)));
         $converter    = new ExchangeRateConverter();
         $this->keys[] = $key;
+        $multiplier   = 'income' === $key ? '-1' : '1';
+
         /** @var array $journal */
         foreach ($journals as $journal) {
             // transaction info:
             $currencyId              = (int)$journal['currency_id'];
-            $amount                  = $journal['amount'];
+            $amount                  = bcmul($journal['amount'], $multiplier);
             $currency                = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
             $currencies[$currencyId] = $currency;
             $nativeAmount            = $converter->convert($currency, $this->default, $journal['date'], $amount);
@@ -75,7 +79,10 @@ class SummaryBalanceGrouped
             $this->amounts[self::SUM][$currencyId] = bcadd($this->amounts[self::SUM][$currencyId], $amount);
             $this->amounts[$key]['native']         = bcadd($this->amounts[$key]['native'], $nativeAmount);
             $this->amounts[self::SUM]['native']    = bcadd($this->amounts[self::SUM]['native'], $nativeAmount);
+
         }
+        app('log')->debug(sprintf('this->amounts[%s][native] is now %s', $key, $this->amounts[$key]['native']));
+        app('log')->debug(sprintf('this->amounts[%s][native] is now %s', self::SUM, $this->amounts[$key]['native']));
     }
 
     /**
@@ -83,6 +90,7 @@ class SummaryBalanceGrouped
      */
     public function groupData(): array
     {
+        Log::debug('Now going to group data.');
         $return = [];
         foreach ($this->keys as $key) {
             $title    = match ($key) {
@@ -91,10 +99,9 @@ class SummaryBalanceGrouped
                 'income'  => 'earned',
                 default   => 'something'
             };
-            $amount   = 'income' === $key ? bcsub($this->amounts[$key]['native'], '-1') : $this->amounts[$key]['native'];
             $return[] = [
                 'key'                     => sprintf('%s-in-native', $title),
-                'value'                   => $amount,
+                'value'                   => $this->amounts[$key]['native'],
                 'currency_id'             => (string)$this->default->id,
                 'currency_code'           => $this->default->code,
                 'currency_symbol'         => $this->default->symbol,
@@ -118,11 +125,9 @@ class SummaryBalanceGrouped
                     'income'  => 'earned',
                     default   => 'something'
                 };
-                $amount   = $this->amounts[$key][$currencyId] ?? '0';
-                $amount   = 'income' === $key ? bcsub($amount, '-1') : $amount;
                 $return[] = [
                     'key'                     => sprintf('%s-in-%s', $title, $currency->code),
-                    'value'                   => $amount,
+                    'value'                   => $this->amounts[$key][$currencyId] ?? '0',
                     'currency_id'             => (string)$currency->id,
                     'currency_code'           => $currency->code,
                     'currency_symbol'         => $currency->symbol,

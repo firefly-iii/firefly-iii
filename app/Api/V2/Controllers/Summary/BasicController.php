@@ -126,10 +126,8 @@ class BasicController extends Controller
      */
     private function getBalanceInformation(Carbon $start, Carbon $end): array
     {
-        $return     = [];
-        $currencies = [];
-        $object     = new SummaryBalanceGrouped();
-        $default    = app('amount')->getDefaultCurrency();
+        $object  = new SummaryBalanceGrouped();
+        $default = app('amount')->getDefaultCurrency();
 
         $object->setDefault($default);
         /** @var User $user */
