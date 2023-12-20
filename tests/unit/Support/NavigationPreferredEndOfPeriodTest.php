@@ -32,8 +32,12 @@ use PHPUnit\Framework\TestCase;
  * @group unit-test
  * @group support
  * @group navigation
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class NavigationPreferredEndOfPeriodTest extends TestCase
+final class NavigationPreferredEndOfPeriodTest extends TestCase
 {
     private Navigation $navigation;
 

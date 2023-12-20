@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * CalculatorTest.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
@@ -44,8 +43,12 @@ use Tests\unit\Support\Calendar\Periodicity\YearlyTest;
  * @group support
  * @group calendar
  * @group calculator
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class CalculatorTest extends TestCase
+final class CalculatorTest extends TestCase
 {
     public static function provideAllPeriodicity(): iterable
     {
@@ -65,18 +68,6 @@ class CalculatorTest extends TestCase
         }
     }
 
-    private static function convert(Periodicity $periodicity, array $intervals): array
-    {
-        $periodicityIntervals = [];
-        /** @var IntervalProvider $interval */
-        foreach ($intervals as $index => $interval) {
-            $calculator = CalculatorProvider::from($periodicity, $interval);
-
-            $periodicityIntervals["#{$index} {$calculator->label}"] = [$calculator];
-        }
-        return $periodicityIntervals;
-    }
-
     public static function provideSkippedIntervals(): iterable
     {
         return CalculatorProvider::providePeriodicityWithSkippedIntervals();
@@ -84,6 +75,7 @@ class CalculatorTest extends TestCase
 
     /**
      * @dataProvider provideAllPeriodicity
+     *
      * @throws IntervalException
      */
     public function testGivenADailyPeriodicityWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider)
@@ -95,6 +87,7 @@ class CalculatorTest extends TestCase
 
     /**
      * @dataProvider provideSkippedIntervals
+     *
      * @throws IntervalException
      */
     public function testGivenAnEpochWithSkipIntervalNumberWhenCallTheNextDateBySkippedIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider)
@@ -102,5 +95,19 @@ class CalculatorTest extends TestCase
         $calculator = new Calculator();
         $period     = $calculator->nextDateByInterval($provider->epoch(), $provider->periodicity, $provider->skip);
         self::assertSame($provider->expected()->toDateString(), $period->toDateString());
+    }
+
+    private static function convert(Periodicity $periodicity, array $intervals): array
+    {
+        $periodicityIntervals = [];
+
+        /** @var IntervalProvider $interval */
+        foreach ($intervals as $index => $interval) {
+            $calculator = CalculatorProvider::from($periodicity, $interval);
+
+            $periodicityIntervals["#{$index} {$calculator->label}"] = [$calculator];
+        }
+
+        return $periodicityIntervals;
     }
 }

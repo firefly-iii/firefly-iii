@@ -22,9 +22,7 @@
 
 declare(strict_types=1);
 
-/**
- * V2 API route for Summary boxes
- */
+// V2 API route for Summary boxes
 // BASIC
 Route::group(
     [
@@ -36,9 +34,7 @@ Route::group(
         Route::get('basic', ['uses' => 'BasicController@basic', 'as' => 'basic']);
     }
 );
-/**
- * V2 API route for TransactionList API endpoints
- */
+// V2 API route for TransactionList API endpoints
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Transaction\List',
@@ -51,9 +47,7 @@ Route::group(
     }
 );
 
-/**
- * V2 API routes for auto complete
- */
+// V2 API routes for auto complete
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Autocomplete',
@@ -67,9 +61,7 @@ Route::group(
     }
 );
 
-/**
- * V2 API route for net worth endpoint(s);
- */
+// V2 API route for net worth endpoint(s);
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Summary',
@@ -81,9 +73,7 @@ Route::group(
     }
 );
 
-/**
- * V2 API routes for charts
- */
+// V2 API routes for charts
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Chart',
@@ -98,9 +88,7 @@ Route::group(
     }
 );
 
-/**
- * V2 API route for accounts.
- */
+// V2 API route for accounts.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Account',
@@ -112,9 +100,7 @@ Route::group(
     }
 );
 
-/**
- * V2 API route for subscriptions.
- */
+// V2 API route for subscriptions.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Bill',
@@ -129,9 +115,7 @@ Route::group(
     }
 );
 
-/**
- * V2 API route for piggy banks.
- */
+// V2 API route for piggy banks.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Model\PiggyBank',
@@ -143,9 +127,7 @@ Route::group(
     }
 );
 
-/**
- * V2 API route for transaction currencies
- */
+// V2 API route for transaction currencies
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Currency',
@@ -157,9 +139,7 @@ Route::group(
     }
 );
 
-/**
- * V2 API route for transactions
- */
+// V2 API route for transactions
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Transaction',
@@ -171,9 +151,7 @@ Route::group(
     }
 );
 
-/**
- * V2 API route for budgets and budget limits:
- */
+// V2 API route for budgets and budget limits:
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Model',
@@ -186,14 +164,12 @@ Route::group(
         Route::get('{budget}/limits', ['uses' => 'BudgetLimit\IndexController@index', 'as' => 'budget-limits.index']);
         Route::get('sum/budgeted', ['uses' => 'Budget\IndexController@budgeted', 'as' => 'sum.budgeted']);
         Route::get('sum/spent', ['uses' => 'Budget\IndexController@spent', 'as' => 'sum.spent']);
-        //Route::get('{budget}/budgeted', ['uses' => 'Budget\ShowController@budgeted', 'as' => 'budget.budgeted']);
-        //Route::get('{budget}/spent', ['uses' => 'Budget\ShowController@spent', 'as' => 'budget.spent']);
+        // Route::get('{budget}/budgeted', ['uses' => 'Budget\ShowController@budgeted', 'as' => 'budget.budgeted']);
+        // Route::get('{budget}/spent', ['uses' => 'Budget\ShowController@spent', 'as' => 'budget.spent']);
     }
 );
 
-/**
- * V2 API route for system
- */
+// V2 API route for system
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\System',
@@ -205,9 +181,7 @@ Route::group(
     }
 );
 
-/**
- * V2 API route for user groups (administrations).
- */
+// V2 API route for user groups (administrations).
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\UserGroup',
@@ -226,9 +200,7 @@ Route::group(
 
 // down here is v1
 
-/**
- * Autocomplete controllers
- */
+// Autocomplete controllers
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Autocomplete',
@@ -256,9 +228,7 @@ Route::group(
     }
 );
 
-/**
- * CHART ROUTES.
- */
+// CHART ROUTES.
 // Accounts
 Route::group(
     [
@@ -271,9 +241,7 @@ Route::group(
     }
 );
 
-/**
- * DATA ROUTES
- */
+// DATA ROUTES
 // Export data API routes
 Route::group(
     [
@@ -327,9 +295,7 @@ Route::group(
     }
 );
 
-/**
- * INSIGHTS ROUTES
- */
+// INSIGHTS ROUTES
 
 // Insight in expenses:
 Route::group(
@@ -401,9 +367,7 @@ Route::group(
         // TODO Transfers for piggies
     }
 );
-/**
- * SUMMARY CONTROLLER
- */
+// SUMMARY CONTROLLER
 // BASIC
 Route::group(
     [
@@ -416,9 +380,7 @@ Route::group(
     }
 );
 
-/**
- * MODELS
- */
+// MODELS
 // Accounts API routes:
 Route::group(
     [
@@ -486,10 +448,10 @@ Route::group(
     ],
     static function () {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
-        //Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        // Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{availableBudget}', ['uses' => 'ShowController@show', 'as' => 'show']);
-        //Route::put('{availableBudget}', ['uses' => 'UpdateController@update', 'as' => 'update']);
-        //Route::delete('{availableBudget}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
+        // Route::put('{availableBudget}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        // Route::delete('{availableBudget}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
     }
 );
 
@@ -763,9 +725,7 @@ Route::group(
     }
 );
 
-/**
- * SEARCH ENDPOINTS
- */
+// SEARCH ENDPOINTS
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Search',
@@ -778,9 +738,7 @@ Route::group(
     }
 );
 
-/**
- * SYSTEM END POINTS
- */
+// SYSTEM END POINTS
 // About Firefly III API routes:
 Route::group(
     [
@@ -823,9 +781,7 @@ Route::group(
     }
 );
 
-/**
- * USER
- */
+// USER
 
 // Preference API routes:
 Route::group(

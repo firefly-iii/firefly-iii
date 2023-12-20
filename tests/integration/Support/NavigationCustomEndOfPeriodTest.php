@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * NavigationCustomEndOfPeriodTest.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -29,7 +28,12 @@ use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
 use Tests\integration\TestCase;
 
-class NavigationCustomEndOfPeriodTest extends TestCase
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+final class NavigationCustomEndOfPeriodTest extends TestCase
 {
     /**
      * @preserveGlobalState disabled

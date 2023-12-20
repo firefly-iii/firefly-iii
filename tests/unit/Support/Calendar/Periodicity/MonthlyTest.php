@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * MonthlyTest.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
@@ -34,8 +33,12 @@ use FireflyIII\Support\Calendar\Periodicity\Interval;
  * @group support
  * @group calendar
  * @group periodicity
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class MonthlyTest extends IntervalTestCase
+final class MonthlyTest extends IntervalTestCase
 {
     public static function factory(): Interval
     {
@@ -55,7 +58,7 @@ class MonthlyTest extends IntervalTestCase
             new IntervalProvider(Carbon::parse('2021-01-31'), Carbon::parse('2021-02-28')),
             new IntervalProvider(Carbon::parse('2023-03-31'), Carbon::parse('2023-04-30')),
             new IntervalProvider(Carbon::parse('2023-05-31'), Carbon::parse('2023-06-30')),
-            //new IntervalProvider(Carbon::parse('2023-08-31'), Carbon::parse('2023-09-30')),
+            // new IntervalProvider(Carbon::parse('2023-08-31'), Carbon::parse('2023-09-30')),
             new IntervalProvider(Carbon::parse('2023-10-31'), Carbon::parse('2023-11-30')),
         ];
     }

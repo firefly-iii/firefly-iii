@@ -48,10 +48,6 @@ use Illuminate\Support\Arr;
 if (!function_exists('limitStringLength')) {
     /**
      * Cuts away the middle of a string when it's very long.
-     *
-     * @param string $string
-     *
-     * @return string
      */
     function limitStringLength(string $string): string
     {
@@ -86,14 +82,14 @@ Breadcrumbs::for(
     'accounts.index',
     static function (Generator $breadcrumbs, string $what) {
         $breadcrumbs->parent('home');
-        $breadcrumbs->push(trans('firefly.' . strtolower(e($what)) . '_accounts'), route('accounts.index', [$what]));
+        $breadcrumbs->push(trans('firefly.'.strtolower(e($what)).'_accounts'), route('accounts.index', [$what]));
     }
 );
 Breadcrumbs::for( // inactive
     'accounts.inactive.index',
     static function (Generator $breadcrumbs, string $what) {
         $breadcrumbs->parent('home');
-        $breadcrumbs->push(trans('firefly.' . strtolower(e($what)) . '_accounts_inactive'), route('accounts.inactive.index', [$what]));
+        $breadcrumbs->push(trans('firefly.'.strtolower(e($what)).'_accounts_inactive'), route('accounts.inactive.index', [$what]));
     }
 );
 
@@ -101,14 +97,14 @@ Breadcrumbs::for(
     'accounts.create',
     static function (Generator $breadcrumbs, string $what) {
         $breadcrumbs->parent('accounts.index', $what);
-        $breadcrumbs->push(trans('firefly.new_' . strtolower(e($what)) . '_account'), route('accounts.create', [$what]));
+        $breadcrumbs->push(trans('firefly.new_'.strtolower(e($what)).'_account'), route('accounts.create', [$what]));
     }
 );
 
 Breadcrumbs::for(
     'accounts.show',
     static function (Generator $breadcrumbs, Account $account, Carbon $start = null, Carbon $end = null) {
-        $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $what = config('firefly.shortNamesByFullName.'.$account->accountType->type);
 
         $breadcrumbs->parent('accounts.index', $what);
         $breadcrumbs->push(limitStringLength($account->name), route('accounts.show.all', [$account->id]));
@@ -128,7 +124,7 @@ Breadcrumbs::for(
 Breadcrumbs::for(
     'accounts.show.all',
     static function (Generator $breadcrumbs, Account $account) {
-        $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $what = config('firefly.shortNamesByFullName.'.$account->accountType->type);
 
         $breadcrumbs->parent('accounts.index', $what);
         $breadcrumbs->push(limitStringLength($account->name), route('accounts.show', [$account->id]));
@@ -147,7 +143,7 @@ Breadcrumbs::for(
     'accounts.reconcile.show',
     static function (Generator $breadcrumbs, Account $account, TransactionJournal $journal) {
         $breadcrumbs->parent('accounts.show', $account);
-        $title = trans('firefly.reconciliation') . ' "' . $journal->description . '"';
+        $title = trans('firefly.reconciliation').' "'.$journal->description.'"';
         $breadcrumbs->push($title, route('accounts.reconcile.show', [$journal->id]));
     }
 );
@@ -164,10 +160,10 @@ Breadcrumbs::for(
     'accounts.edit',
     static function (Generator $breadcrumbs, Account $account) {
         $breadcrumbs->parent('accounts.show', $account);
-        $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $what = config('firefly.shortNamesByFullName.'.$account->accountType->type);
 
         $breadcrumbs->push(
-            trans('firefly.edit_' . $what . '_account', ['name' => limitStringLength($account->name)]),
+            trans('firefly.edit_'.$what.'_account', ['name' => limitStringLength($account->name)]),
             route('accounts.edit', [$account->id])
         );
     }
@@ -1066,7 +1062,7 @@ Breadcrumbs::for(
     'transactions.index',
     static function (Generator $breadcrumbs, string $what, Carbon $start = null, Carbon $end = null) {
         $breadcrumbs->parent('home');
-        $breadcrumbs->push(trans('breadcrumbs.' . $what . '_list'), route('transactions.index', [$what]));
+        $breadcrumbs->push(trans('breadcrumbs.'.$what.'_list'), route('transactions.index', [$what]));
 
         if (null !== $start && null !== $end) {
             // add date range:
@@ -1086,7 +1082,7 @@ Breadcrumbs::for(
     'transactions.index.all',
     static function (Generator $breadcrumbs, string $what) {
         $breadcrumbs->parent('home');
-        $breadcrumbs->push(trans('breadcrumbs.' . $what . '_list'), route('transactions.index', [$what]));
+        $breadcrumbs->push(trans('breadcrumbs.'.$what.'_list'), route('transactions.index', [$what]));
     }
 );
 

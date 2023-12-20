@@ -32,8 +32,12 @@ use PHPUnit\Framework\TestCase;
  * @group unit-test
  * @group support
  * @group navigation
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class NavigationPreferredCarbonFormatTest extends TestCase
+final class NavigationPreferredCarbonFormatTest extends TestCase
 {
     private Navigation $navigation;
 

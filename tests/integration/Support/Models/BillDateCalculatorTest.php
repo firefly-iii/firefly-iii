@@ -29,8 +29,12 @@ use Tests\integration\TestCase;
 
 /**
  * Class BillDateCalculatorTest
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class BillDateCalculatorTest extends TestCase
+final class BillDateCalculatorTest extends TestCase
 {
     private BillDateCalculator $calculator;
 

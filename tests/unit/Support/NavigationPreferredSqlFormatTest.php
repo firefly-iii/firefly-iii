@@ -32,8 +32,12 @@ use PHPUnit\Framework\TestCase;
  * @group unit-test
  * @group support
  * @group navigation
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class NavigationPreferredSqlFormatTest extends TestCase
+final class NavigationPreferredSqlFormatTest extends TestCase
 {
     private Navigation $navigation;
 

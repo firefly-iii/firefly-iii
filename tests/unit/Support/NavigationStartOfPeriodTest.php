@@ -33,8 +33,12 @@ use PHPUnit\Framework\TestCase;
  * @group unit-test
  * @group support
  * @group navigation
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class NavigationStartOfPeriodTest extends TestCase
+final class NavigationStartOfPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
@@ -98,8 +102,9 @@ class NavigationStartOfPeriodTest extends TestCase
     public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(string $frequency, Carbon $from, Carbon $expected)
     {
         Log::shouldReceive('error')
-           ->with(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $frequency))
-           ->andReturnNull();
+            ->with(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $frequency))
+            ->andReturnNull()
+        ;
 
         $period = $this->navigation->startOfPeriod($from, $frequency);
         self::assertSame($expected->toDateString(), $period->toDateString());

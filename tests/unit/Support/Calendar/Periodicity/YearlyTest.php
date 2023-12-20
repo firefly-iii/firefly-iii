@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * YearlyTest.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
@@ -34,8 +33,12 @@ use FireflyIII\Support\Calendar\Periodicity\Interval;
  * @group support
  * @group calendar
  * @group periodicity
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class YearlyTest extends IntervalTestCase
+final class YearlyTest extends IntervalTestCase
 {
     public static function factory(): Interval
     {

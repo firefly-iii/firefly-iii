@@ -27,15 +27,18 @@ namespace Tests\unit\Support;
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
 use FireflyIII\Support\Navigation;
-use Generator;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @group unit-test
  * @group support
  * @group navigation
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class NavigationAddPeriodTest extends TestCase
+final class NavigationAddPeriodTest extends TestCase
 {
     private Navigation $navigation;
 

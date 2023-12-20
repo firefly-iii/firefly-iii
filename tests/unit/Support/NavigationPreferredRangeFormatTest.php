@@ -32,8 +32,12 @@ use PHPUnit\Framework\TestCase;
  * @group unit-test
  * @group support
  * @group navigation
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class NavigationPreferredRangeFormatTest extends TestCase
+final class NavigationPreferredRangeFormatTest extends TestCase
 {
     private Navigation $navigation;
 

@@ -27,8 +27,12 @@ use Tests\integration\TestCase;
 
 /**
  * Class AccountControllerTest
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class AccountControllerTest extends TestCase
+final class AccountControllerTest extends TestCase
 {
     /**
      * @covers \FireflyIII\Api\V1\Controllers\Autocomplete\AccountController
