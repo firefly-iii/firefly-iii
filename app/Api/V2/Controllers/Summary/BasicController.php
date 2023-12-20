@@ -33,7 +33,6 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
@@ -43,6 +42,7 @@ use FireflyIII\Repositories\UserGroups\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
+use FireflyIII\Support\Http\Api\SummaryBalanceGrouped;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -126,20 +126,12 @@ class BasicController extends Controller
      */
     private function getBalanceInformation(Carbon $start, Carbon $end): array
     {
-        // prep some arrays:
-        $incomes    = [
-            'native' => '0',
-        ];
-        $expenses   = [
-            'native' => '0',
-        ];
-        $sums       = [
-            'native' => '0',
-        ];
         $return     = [];
         $currencies = [];
-        $converter  = new ExchangeRateConverter();
+        $object     = new SummaryBalanceGrouped();
         $default    = app('amount')->getDefaultCurrency();
+
+        $object->setDefault($default);
         /** @var User $user */
         $user = auth()->user();
 
@@ -156,30 +148,8 @@ class BasicController extends Controller
             ->setRange($start, $end);
 
         $set = $collector->getExtractedJournals();
-        /** @var array $transactionJournal */
-        foreach ($set as $transactionJournal) {
-            // transaction info:
-            $currencyId              = (int)$transactionJournal['currency_id'];
-            $amount                  = bcmul($transactionJournal['amount'], '-1');
-            $currency                = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
-            $currencies[$currencyId] = $currency;
-            $nativeAmount            = $converter->convert($currency, $default, $transactionJournal['date'], $amount);
-            if ((int)$transactionJournal['foreign_currency_id'] === $default->id) {
-                // use foreign amount instead
-                $nativeAmount = $transactionJournal['foreign_amount'];
-            }
-            // prep the arrays
-            $incomes[$currencyId] ??= '0';
-            $incomes['native']    ??= '0';
-            $sums[$currencyId]    ??= '0';
-            $sums['native']       ??= '0';
+        $object->groupTransactions('income', $set);
 
-            // add values:
-            $incomes[$currencyId] = bcadd($incomes[$currencyId], $amount);
-            $sums[$currencyId]    = bcadd($sums[$currencyId], $amount);
-            $incomes['native']    = bcadd($incomes['native'], $nativeAmount);
-            $sums['native']       = bcadd($sums['native'], $nativeAmount);
-        }
 
         // collect expenses of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
@@ -193,95 +163,9 @@ class BasicController extends Controller
             ->setTypes([TransactionType::WITHDRAWAL])
             ->setRange($start, $end);
         $set = $collector->getExtractedJournals();
+        $object->groupTransactions('expense', $set);
 
-        /** @var array $transactionJournal */
-        foreach ($set as $transactionJournal) {
-            // transaction info
-            $currencyId              = (int)$transactionJournal['currency_id'];
-            $amount                  = $transactionJournal['amount'];
-            $currency                = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
-            $currencies[$currencyId] = $currency;
-            $nativeAmount            = $converter->convert($currency, $default, $transactionJournal['date'], $amount);
-            if ((int)$transactionJournal['foreign_currency_id'] === $default->id) {
-                // use foreign amount instead
-                $nativeAmount = $transactionJournal['foreign_amount'];
-            }
-
-            // prep arrays
-            $expenses[$currencyId] ??= '0';
-            $expenses['native']    ??= '0';
-            $sums[$currencyId]     ??= '0';
-            $sums['native']        ??= '0';
-
-            // add values
-            $expenses[$currencyId] = bcadd($expenses[$currencyId], $amount);
-            $sums[$currencyId]     = bcadd($sums[$currencyId], $amount);
-            $expenses['native']    = bcadd($expenses['native'], $nativeAmount);
-            $sums['native']        = bcadd($sums['native'], $nativeAmount);
-        }
-
-        // create special array for native currency:
-        $return[] = [
-            'key'                     => 'balance-in-native',
-            'value'                   => $sums['native'],
-            'currency_id'             => (string)$default->id,
-            'currency_code'           => $default->code,
-            'currency_symbol'         => $default->symbol,
-            'currency_decimal_places' => $default->decimal_places,
-        ];
-        $return[] = [
-            'key'                     => 'spent-in-native',
-            'value'                   => $expenses['native'],
-            'currency_id'             => (string)$default->id,
-            'currency_code'           => $default->code,
-            'currency_symbol'         => $default->symbol,
-            'currency_decimal_places' => $default->decimal_places,
-        ];
-        $return[] = [
-            'key'                     => 'earned-in-native',
-            'value'                   => $incomes['native'],
-            'currency_id'             => (string)$default->id,
-            'currency_code'           => $default->code,
-            'currency_symbol'         => $default->symbol,
-            'currency_decimal_places' => $default->decimal_places,
-        ];
-
-        // format amounts:
-        $keys = array_keys($sums);
-        foreach ($keys as $currencyId) {
-            if ('native' === $currencyId) {
-                // skip native entries.
-                continue;
-            }
-            $currency                = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
-            $currencies[$currencyId] = $currency;
-            // create objects for big array.
-            $return[] = [
-                'key'                     => sprintf('balance-in-%s', $currency->code),
-                'value'                   => $sums[$currencyId] ?? '0',
-                'currency_id'             => (string)$currency->id,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-            ];
-            $return[] = [
-                'key'                     => sprintf('spent-in-%s', $currency->code),
-                'value'                   => $expenses[$currencyId] ?? '0',
-                'currency_id'             => (string)$currency->id,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-            ];
-            $return[] = [
-                'key'                     => sprintf('earned-in-%s', $currency->code),
-                'value'                   => $incomes[$currencyId] ?? '0',
-                'currency_id'             => (string)$currency->id,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-            ];
-        }
-        return $return;
+        return $object->groupData();
     }
 
     /**
