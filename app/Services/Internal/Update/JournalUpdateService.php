@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Internal\Update;
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
+use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TagFactory;
@@ -662,7 +663,7 @@ class JournalUpdateService
             if ($this->hasFields([$field])) {
                 try {
                     $value = '' === (string)$this->data[$field] ? null : new Carbon($this->data[$field]);
-                } catch (InvalidDateException $e) { // @phpstan-ignore-line
+                } catch (InvalidDateException|InvalidFormatException $e) { // @phpstan-ignore-line
                     app('log')->debug(sprintf('%s is not a valid date value: %s', $this->data[$field], $e->getMessage()));
 
                     return;
