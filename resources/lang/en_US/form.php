@@ -200,7 +200,6 @@ return [
     'album'                       => 'Album',
     'song'                        => 'Song',
 
-
     // admin
     'domain'                      => 'Domain',
     'single_user_mode'            => 'Disable user registration',

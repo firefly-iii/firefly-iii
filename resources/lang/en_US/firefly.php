@@ -467,7 +467,6 @@ return [
     'search_modifier_date_after_month'                    => 'Transaction is in or after month ":value"',
     'search_modifier_date_after_day'                      => 'Transaction is after or on day of month ":value"',
 
-
     // new
     'search_modifier_tag_is_not'                          => 'No tag is ":value"',
     'search_modifier_not_tag_is_not'                      => 'Tag is ":value"',
@@ -788,7 +787,6 @@ return [
     'rule_trigger_store_journal'                          => 'When a transaction is created',
     'rule_trigger_update_journal'                         => 'When a transaction is updated',
     'rule_trigger_user_action'                            => 'User action is ":trigger_value"',
-
 
     // OLD values (remove non-doubles later):
     'rule_trigger_source_account_starts_choice'           => 'Source account name starts with..',
@@ -1273,7 +1271,6 @@ return [
     'deleted_x_tags'                            => 'Deleted :count tag.|Deleted :count tags.',
     'create_rule_from_transaction'              => 'Create rule based on transaction',
     'create_recurring_from_transaction'         => 'Create recurring transaction based on transaction',
-
 
     // preferences
     'dark_mode_option_browser'                  => 'Let your browser decide',
@@ -1993,7 +1990,6 @@ return [
     'first_split_overrules_destination'         => 'The first split may overrule the destination account',
     'spent_x_of_y'                              => 'Spent {amount} of {total}',
 
-
     // new user:
     'welcome'                                   => 'Welcome to Firefly III!',
     'submit'                                    => 'Submit',
@@ -2383,14 +2379,12 @@ return [
     'save_notification_settings'               => 'Save settings',
     'notification_settings_saved'              => 'The notification settings have been saved',
 
-
     'split_transaction_title'               => 'Description of the split transaction',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'you_create_transfer'                   => 'You\'re creating a transfer.',
     'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
     'you_create_deposit'                    => 'You\'re creating a deposit.',
-
 
     // links
     'journal_link_configuration'            => 'Transaction links configuration',
@@ -2662,7 +2656,6 @@ return [
     // dashboard
     'enable_auto_convert'                => 'Enable currency conversion',
     'disable_auto_convert'               => 'Disable currency conversion',
-
 ];
 
 // Ignore this comment

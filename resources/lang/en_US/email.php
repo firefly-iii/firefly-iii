@@ -133,6 +133,5 @@ return [
     'bill_warning_end_date_zero'              => 'Your bill **":name"** is due to end on :date. This moment will pass **TODAY!**',
     'bill_warning_extension_date_zero'        => 'Your bill **":name"** is due to be extended or cancelled on :date. This moment will pass **TODAY!**',
     'bill_warning_please_action'              => 'Please take the appropriate action.',
-
 ];
 // Ignore this comment

@@ -155,6 +155,5 @@ return [
     'delivery'            => 'Delivery',
     'url'                 => 'URL',
     'secret'              => 'Secret',
-
 ];
 // Ignore this comment

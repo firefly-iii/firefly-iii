@@ -118,7 +118,7 @@ return [
     // create bill
     'bills_create_intro'                                      => 'Use bills to track the amount of money you\'re due every period. Think about expenses like rent, insurance or mortgage payments.',
     'bills_create_name'                                       => 'Use a descriptive name such as "Rent" or "Health insurance".',
-    //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
+    // 'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Select a minimum and maximum amount for this bill.',
     'bills_create_repeat_freq_holder'                         => 'Most bills repeat monthly, but you can set another frequency here.',
     'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks, the "skip"-field should be set to "1" to skip every other week.',
