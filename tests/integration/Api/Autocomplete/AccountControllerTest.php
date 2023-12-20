@@ -32,7 +32,6 @@ class AccountControllerTest extends TestCase
 {
     /**
      * @covers \FireflyIII\Api\V1\Controllers\Autocomplete\AccountController
-     * @runInSeparateProcess
      */
     public function testGivenAnUnauthenticatedRequestWhenCallingTheAccountsEndpointThenReturns401HttpCode(): void
     {
