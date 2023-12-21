@@ -522,6 +522,9 @@ class CreateMainTables extends Migration
         }
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     private function createTransactionTables(): void
     {
         if (!Schema::hasTable('transaction_journals')) {

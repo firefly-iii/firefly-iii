@@ -34,7 +34,7 @@ class Calculator
 {
     public const int DEFAULT_INTERVAL = 1;
     private static ?\SplObjectStorage $intervalMap = null;
-    private static array             $intervals   = [];
+    private static array              $intervals   = [];
 
     /**
      * @throws IntervalException
@@ -62,6 +62,9 @@ class Calculator
         return self::loadIntervalMap()->contains($periodicity);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.MissingImport)
+     */
     private static function loadIntervalMap(): \SplObjectStorage
     {
         if (null !== self::$intervalMap) {

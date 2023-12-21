@@ -41,6 +41,8 @@ class CreateDatabase extends Command
 
     /**
      * Execute the console command.
+     *
+     * @suppressWarnings(PHPMD.MissingImport)
      */
     public function handle(): int
     {

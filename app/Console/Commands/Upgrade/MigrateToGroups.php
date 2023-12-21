@@ -34,8 +34,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * This command will take split transactions and migrate them to "transaction groups".
@@ -59,9 +57,6 @@ class MigrateToGroups extends Command
 
     /**
      * Execute the console command.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -105,10 +100,6 @@ class MigrateToGroups extends Command
         $this->cliRepository     = app(JournalCLIRepositoryInterface::class);
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isMigrated(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
@@ -142,7 +133,7 @@ class MigrateToGroups extends Command
     {
         // double check transaction count.
         if ($journal->transactions->count() <= 2) {
-            app('log')->debug(sprintf('Will not try to convert journal #%d because it has 2 or less transactions.', $journal->id));
+            app('log')->debug(sprintf('Will not try to convert journal #%d because it has 2 or fewer transactions.', $journal->id));
 
             return;
         }
@@ -158,95 +149,12 @@ class MigrateToGroups extends Command
             'transactions' => [],
         ];
         $destTransactions = $this->getDestinationTransactions($journal);
-        $budgetId         = $this->cliRepository->getJournalBudgetId($journal);
-        $categoryId       = $this->cliRepository->getJournalCategoryId($journal);
-        $notes            = $this->cliRepository->getNoteText($journal);
-        $tags             = $this->cliRepository->getTags($journal);
-        $internalRef      = $this->cliRepository->getMetaField($journal, 'internal-reference');
-        $sepaCC           = $this->cliRepository->getMetaField($journal, 'sepa_cc');
-        $sepaCtOp         = $this->cliRepository->getMetaField($journal, 'sepa_ct_op');
-        $sepaCtId         = $this->cliRepository->getMetaField($journal, 'sepa_ct_id');
-        $sepaDb           = $this->cliRepository->getMetaField($journal, 'sepa_db');
-        $sepaCountry      = $this->cliRepository->getMetaField($journal, 'sepa_country');
-        $sepaEp           = $this->cliRepository->getMetaField($journal, 'sepa_ep');
-        $sepaCi           = $this->cliRepository->getMetaField($journal, 'sepa_ci');
-        $sepaBatchId      = $this->cliRepository->getMetaField($journal, 'sepa_batch_id');
-        $externalId       = $this->cliRepository->getMetaField($journal, 'external-id');
-        $originalSource   = $this->cliRepository->getMetaField($journal, 'original-source');
-        $recurrenceId     = $this->cliRepository->getMetaField($journal, 'recurrence_id');
-        $bunq             = $this->cliRepository->getMetaField($journal, 'bunq_payment_id');
-        $hash             = $this->cliRepository->getMetaField($journal, 'import_hash');
-        $hashTwo          = $this->cliRepository->getMetaField($journal, 'import_hash_v2');
-        $interestDate     = $this->cliRepository->getMetaDate($journal, 'interest_date');
-        $bookDate         = $this->cliRepository->getMetaDate($journal, 'book_date');
-        $processDate      = $this->cliRepository->getMetaDate($journal, 'process_date');
-        $dueDate          = $this->cliRepository->getMetaDate($journal, 'due_date');
-        $paymentDate      = $this->cliRepository->getMetaDate($journal, 'payment_date');
-        $invoiceDate      = $this->cliRepository->getMetaDate($journal, 'invoice_date');
 
         app('log')->debug(sprintf('Will use %d positive transactions to create a new group.', $destTransactions->count()));
 
         /** @var Transaction $transaction */
         foreach ($destTransactions as $transaction) {
-            app('log')->debug(sprintf('Now going to add transaction #%d to the array.', $transaction->id));
-            $opposingTr = $this->findOpposingTransaction($journal, $transaction);
-
-            if (null === $opposingTr) {
-                $this->friendlyError(
-                    sprintf(
-                        'Journal #%d has no opposing transaction for transaction #%d. Cannot upgrade this entry.',
-                        $journal->id,
-                        $transaction->id
-                    )
-                );
-
-                continue;
-            }
-
-            // overrule journal category with transaction category.
-            $budgetId   = $this->getTransactionBudget($transaction, $opposingTr) ?? $budgetId;
-            $categoryId = $this->getTransactionCategory($transaction, $opposingTr) ?? $categoryId;
-
-            $tArray = [
-                'type'                => strtolower($journal->transactionType->type),
-                'date'                => $journal->date,
-                'user'                => $journal->user_id,
-                'currency_id'         => $transaction->transaction_currency_id,
-                'foreign_currency_id' => $transaction->foreign_currency_id,
-                'amount'              => $transaction->amount,
-                'foreign_amount'      => $transaction->foreign_amount,
-                'description'         => $transaction->description ?? $journal->description,
-                'source_id'           => $opposingTr->account_id,
-                'destination_id'      => $transaction->account_id,
-                'budget_id'           => $budgetId,
-                'category_id'         => $categoryId,
-                'bill_id'             => $journal->bill_id,
-                'notes'               => $notes,
-                'tags'                => $tags,
-                'internal_reference'  => $internalRef,
-                'sepa_cc'             => $sepaCC,
-                'sepa_ct_op'          => $sepaCtOp,
-                'sepa_ct_id'          => $sepaCtId,
-                'sepa_db'             => $sepaDb,
-                'sepa_country'        => $sepaCountry,
-                'sepa_ep'             => $sepaEp,
-                'sepa_ci'             => $sepaCi,
-                'sepa_batch_id'       => $sepaBatchId,
-                'external_id'         => $externalId,
-                'original-source'     => $originalSource,
-                'recurrence_id'       => $recurrenceId,
-                'bunq_payment_id'     => $bunq,
-                'import_hash'         => $hash,
-                'import_hash_v2'      => $hashTwo,
-                'interest_date'       => $interestDate,
-                'book_date'           => $bookDate,
-                'process_date'        => $processDate,
-                'due_date'            => $dueDate,
-                'payment_date'        => $paymentDate,
-                'invoice_date'        => $invoiceDate,
-            ];
-
-            $data['transactions'][] = $tArray;
+            $data['transactions'][] = $this->generateTransaction($journal, $transaction);
         }
         app('log')->debug(sprintf('Now calling transaction journal factory (%d transactions in array)', count($data['transactions'])));
         $group = $this->groupFactory->create($data);
@@ -299,6 +207,93 @@ class MigrateToGroups extends Command
         );
 
         return $set->first();
+    }
+
+    private function generateTransaction(TransactionJournal $journal, Transaction $transaction): array
+    {
+        app('log')->debug(sprintf('Now going to add transaction #%d to the array.', $transaction->id));
+        $opposingTr = $this->findOpposingTransaction($journal, $transaction);
+
+        if (null === $opposingTr) {
+            $this->friendlyError(
+                sprintf(
+                    'Journal #%d has no opposing transaction for transaction #%d. Cannot upgrade this entry.',
+                    $journal->id,
+                    $transaction->id
+                )
+            );
+
+            return [];
+        }
+
+        $budgetId         = $this->cliRepository->getJournalBudgetId($journal);
+        $categoryId       = $this->cliRepository->getJournalCategoryId($journal);
+        $notes            = $this->cliRepository->getNoteText($journal);
+        $tags             = $this->cliRepository->getTags($journal);
+        $internalRef      = $this->cliRepository->getMetaField($journal, 'internal-reference');
+        $sepaCC           = $this->cliRepository->getMetaField($journal, 'sepa_cc');
+        $sepaCtOp         = $this->cliRepository->getMetaField($journal, 'sepa_ct_op');
+        $sepaCtId         = $this->cliRepository->getMetaField($journal, 'sepa_ct_id');
+        $sepaDb           = $this->cliRepository->getMetaField($journal, 'sepa_db');
+        $sepaCountry      = $this->cliRepository->getMetaField($journal, 'sepa_country');
+        $sepaEp           = $this->cliRepository->getMetaField($journal, 'sepa_ep');
+        $sepaCi           = $this->cliRepository->getMetaField($journal, 'sepa_ci');
+        $sepaBatchId      = $this->cliRepository->getMetaField($journal, 'sepa_batch_id');
+        $externalId       = $this->cliRepository->getMetaField($journal, 'external-id');
+        $originalSource   = $this->cliRepository->getMetaField($journal, 'original-source');
+        $recurrenceId     = $this->cliRepository->getMetaField($journal, 'recurrence_id');
+        $bunq             = $this->cliRepository->getMetaField($journal, 'bunq_payment_id');
+        $hash             = $this->cliRepository->getMetaField($journal, 'import_hash');
+        $hashTwo          = $this->cliRepository->getMetaField($journal, 'import_hash_v2');
+        $interestDate     = $this->cliRepository->getMetaDate($journal, 'interest_date');
+        $bookDate         = $this->cliRepository->getMetaDate($journal, 'book_date');
+        $processDate      = $this->cliRepository->getMetaDate($journal, 'process_date');
+        $dueDate          = $this->cliRepository->getMetaDate($journal, 'due_date');
+        $paymentDate      = $this->cliRepository->getMetaDate($journal, 'payment_date');
+        $invoiceDate      = $this->cliRepository->getMetaDate($journal, 'invoice_date');
+
+        // overrule journal category with transaction category.
+        $budgetId   = $this->getTransactionBudget($transaction, $opposingTr) ?? $budgetId;
+        $categoryId = $this->getTransactionCategory($transaction, $opposingTr) ?? $categoryId;
+
+        return [
+            'type'                => strtolower($journal->transactionType->type),
+            'date'                => $journal->date,
+            'user'                => $journal->user_id,
+            'currency_id'         => $transaction->transaction_currency_id,
+            'foreign_currency_id' => $transaction->foreign_currency_id,
+            'amount'              => $transaction->amount,
+            'foreign_amount'      => $transaction->foreign_amount,
+            'description'         => $transaction->description ?? $journal->description,
+            'source_id'           => $opposingTr->account_id,
+            'destination_id'      => $transaction->account_id,
+            'budget_id'           => $budgetId,
+            'category_id'         => $categoryId,
+            'bill_id'             => $journal->bill_id,
+            'notes'               => $notes,
+            'tags'                => $tags,
+            'internal_reference'  => $internalRef,
+            'sepa_cc'             => $sepaCC,
+            'sepa_ct_op'          => $sepaCtOp,
+            'sepa_ct_id'          => $sepaCtId,
+            'sepa_db'             => $sepaDb,
+            'sepa_country'        => $sepaCountry,
+            'sepa_ep'             => $sepaEp,
+            'sepa_ci'             => $sepaCi,
+            'sepa_batch_id'       => $sepaBatchId,
+            'external_id'         => $externalId,
+            'original-source'     => $originalSource,
+            'recurrence_id'       => $recurrenceId,
+            'bunq_payment_id'     => $bunq,
+            'import_hash'         => $hash,
+            'import_hash_v2'      => $hashTwo,
+            'interest_date'       => $interestDate,
+            'book_date'           => $bookDate,
+            'process_date'        => $processDate,
+            'due_date'            => $dueDate,
+            'payment_date'        => $paymentDate,
+            'invoice_date'        => $invoiceDate,
+        ];
     }
 
     private function getTransactionBudget(Transaction $left, Transaction $right): ?int

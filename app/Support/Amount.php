@@ -50,6 +50,8 @@ class Amount
      * as a currency, given two things: the currency required and the current locale.
      *
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.MissingImport)
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string
     {
@@ -61,7 +63,7 @@ class Amount
         $fmt->setSymbol(\NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result = (string)$fmt->format((float)$rounded); // intentional float
+        $result = (string) $fmt->format((float) $rounded); // intentional float
 
         if (true === $coloured) {
             if (1 === bccomp($rounded, '0')) {
@@ -234,6 +236,8 @@ class Amount
 
     /**
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.MissingImport)
      */
     private function getLocaleInfo(): array
     {
