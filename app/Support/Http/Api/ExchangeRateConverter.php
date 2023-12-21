@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\CacheProperties;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ExchangeRateConverter
@@ -78,7 +79,9 @@ class ExchangeRateConverter
         $second = $this->getEuroRate($to, $date);
 
         // combined (if present), they can be used to calculate the necessary conversion rate.
-        if ('0' === $first || '0' === $second) {
+        if (0 === bccomp('0', $first) || 0 === bccomp('0', $second)) {
+            Log::warning(sprintf('$first is "%s" and $second is "%s"', $first, $second));
+
             return '0';
         }
 
@@ -112,7 +115,7 @@ class ExchangeRateConverter
             ->orderBy('date', 'DESC')
             ->first()
         ;
-        $rate   = (string)$result?->rate;
+        $rate   = (string) $result?->rate;
         $cache->store($rate);
         if ('' === $rate) {
             return null;
@@ -145,7 +148,7 @@ class ExchangeRateConverter
         // grab backup values from config file:
         $backup = config(sprintf('cer.rates.%s', $currency->code));
         if (null !== $backup) {
-            return bcdiv('1', (string)$backup);
+            return bcdiv('1', (string) $backup);
             // app('log')->debug(sprintf('Backup rate for %s to EUR is %s.', $currency->code, $backup));
             // return $backup;
         }
@@ -162,7 +165,7 @@ class ExchangeRateConverter
         $cache = new CacheProperties();
         $cache->addProperty('cer-euro-id');
         if ($cache->has()) {
-            return (int)$cache->get();
+            return (int) $cache->get();
         }
         $euro = TransactionCurrency::whereCode('EUR')->first();
         if (null === $euro) {
