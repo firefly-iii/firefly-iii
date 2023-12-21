@@ -135,6 +135,8 @@ class ExchangeRateConverter
         }
         $rate = $this->getFromDB($currency->id, $euroId, $date->format('Y-m-d'));
 
+        
+
         if (null !== $rate) {
             //            app('log')->debug(sprintf('Rate for %s to EUR is %s.', $currency->code, $rate));
             return $rate;
