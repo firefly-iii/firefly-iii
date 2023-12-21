@@ -143,6 +143,9 @@ class ExportDataGenerator
         $this->user = $user;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function get(string $key, mixed $default = null): mixed
     {
         return null;
@@ -153,6 +156,9 @@ class ExportDataGenerator
         $this->accounts = $accounts;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function has(mixed $key): mixed
     {
         return null;

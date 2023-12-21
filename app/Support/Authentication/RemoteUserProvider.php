@@ -38,6 +38,8 @@ class RemoteUserProvider implements UserProvider
 {
     /**
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function retrieveByCredentials(array $credentials): null|Authenticatable
     {
@@ -83,6 +85,8 @@ class RemoteUserProvider implements UserProvider
      * @param mixed $token
      *
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function retrieveByToken($identifier, $token): null|Authenticatable
     {
@@ -91,6 +95,13 @@ class RemoteUserProvider implements UserProvider
         throw new FireflyException(sprintf('A) Did not implement %s', __METHOD__));
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param mixed $token
+     *
+     * @throws FireflyException
+     */
     public function updateRememberToken(Authenticatable $user, $token): void
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
@@ -100,6 +111,8 @@ class RemoteUserProvider implements UserProvider
 
     /**
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function validateCredentials(Authenticatable $user, array $credentials): bool
     {

@@ -162,6 +162,11 @@ class RemoteUserGuard implements Guard
         app('log')->error(sprintf('Did not set user at %s', __METHOD__));
     }
 
+    /**
+     * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function validate(array $credentials = []): bool
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
