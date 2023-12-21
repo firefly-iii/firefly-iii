@@ -249,14 +249,9 @@ class ParseDateString
 
     /**
      * Returns true if this matches regex for xxxx-xx-DD:
-     *
-     * @param string $date
-     *
-     * @return bool
      */
     protected function isDayRange(string $date): bool
     {
-
         $pattern = '/^xxxx-xx-(0[1-9]|[12]\d|3[01])$/';
         $result  = preg_match($pattern, $date);
         if (false !== $result && 0 !== $result) {

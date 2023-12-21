@@ -162,7 +162,7 @@ class RemoteUserGuard implements Guard
         app('log')->error(sprintf('Did not set user at %s', __METHOD__));
     }
 
-    public function validate(array $credentials = []): void
+    public function validate(array $credentials = []): bool
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 

@@ -36,13 +36,21 @@ use Illuminate\Contracts\Auth\UserProvider;
  */
 class RemoteUserProvider implements UserProvider
 {
-    public function retrieveByCredentials(array $credentials): void
+    /**
+     * @throws FireflyException
+     */
+    public function retrieveByCredentials(array $credentials): null|Authenticatable
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 
         throw new FireflyException(sprintf('Did not implement %s', __METHOD__));
     }
 
+    /**
+     * @param mixed $identifier
+     *
+     * @throws FireflyException
+     */
     public function retrieveById($identifier): User
     {
         app('log')->debug(sprintf('Now at %s(%s)', __METHOD__, $identifier));
@@ -70,7 +78,13 @@ class RemoteUserProvider implements UserProvider
         return $user;
     }
 
-    public function retrieveByToken($identifier, $token): void
+    /**
+     * @param mixed $identifier
+     * @param mixed $token
+     *
+     * @throws FireflyException
+     */
+    public function retrieveByToken($identifier, $token): null|Authenticatable
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 
@@ -84,7 +98,10 @@ class RemoteUserProvider implements UserProvider
         throw new FireflyException(sprintf('B) Did not implement %s', __METHOD__));
     }
 
-    public function validateCredentials(Authenticatable $user, array $credentials): void
+    /**
+     * @throws FireflyException
+     */
+    public function validateCredentials(Authenticatable $user, array $credentials): bool
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 

@@ -697,10 +697,6 @@ class Steam
 
     /**
      * Get user's locale.
-     *
-     * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function getLocale(): string // get preference
     {

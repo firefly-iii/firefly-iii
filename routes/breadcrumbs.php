@@ -291,6 +291,7 @@ Breadcrumbs::for(
 Breadcrumbs::for(
     'attachments.edit',
     static function (Generator $breadcrumbs, Attachment $attachment): void {
+        /** @var Account|Bill|TransactionJournal $object */
         $object = $attachment->attachable;
         if ($object instanceof TransactionJournal) {
             $group = $object->transactionGroup;
@@ -311,6 +312,7 @@ Breadcrumbs::for(
 Breadcrumbs::for(
     'attachments.delete',
     static function (Generator $breadcrumbs, Attachment $attachment): void {
+        /** @var Account|Bill|TransactionJournal $object */
         $object = $attachment->attachable;
         if ($object instanceof TransactionJournal) {
             $breadcrumbs->parent('transactions.show', $object->transactionGroup);
