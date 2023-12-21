@@ -82,7 +82,8 @@ class ParseDateString
 
         // if regex for YYYY-MM-DD:
         $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/';
-        if (false !== preg_match($pattern, $date)) {
+        $result = preg_match($pattern, $date);
+        if (false !== $result && 0 !== $result) {
             return $this->parseDefaultDate($date);
         }
 
@@ -108,7 +109,7 @@ class ParseDateString
             return new Carbon('1984-09-17');
         }
         // maybe a year, nothing else?
-        if (4 === strlen($date) && is_numeric($date) && (int)$date > 1000 && (int)$date <= 3000) {
+        if (4 === strlen($date) && is_numeric($date) && (int) $date > 1000 && (int) $date <= 3000) {
             return new Carbon(sprintf('%d-01-01', $date));
         }
 
@@ -223,15 +224,15 @@ class ParseDateString
 
             // verify if correct
             $pattern = '/[+-]\d+[wqmdy]/';
-            $res     = preg_match($pattern, $part);
-            if (0 === $res || false === $res) {
+            $result     = preg_match($pattern, $part);
+            if (0 === $result || false === $result) {
                 app('log')->error(sprintf('Part "%s" does not match regular expression. Will be skipped.', $part));
 
                 continue;
             }
             $direction = str_starts_with($part, '+') ? 1 : 0;
             $period    = $part[strlen($part) - 1];
-            $number    = (int)substr($part, 1, -1);
+            $number    = (int) substr($part, 1, -1);
             if (!array_key_exists($period, $functions[$direction])) {
                 app('log')->error(sprintf('No method for direction %d and period "%s".', $direction, $period));
 
@@ -246,11 +247,19 @@ class ParseDateString
         return $today;
     }
 
+    /**
+     * Returns true if this matches regex for xxxx-xx-DD:
+     *
+     * @param string $date
+     *
+     * @return bool
+     */
     protected function isDayRange(string $date): bool
     {
-        // if regex for xxxx-xx-DD:
+
         $pattern = '/^xxxx-xx-(0[1-9]|[12]\d|3[01])$/';
-        if (false !== preg_match($pattern, $date)) {
+        $result  = preg_match($pattern, $date);
+        if (false !== $result && 0 !== $result) {
             app('log')->debug(sprintf('"%s" is a day range.', $date));
 
             return true;
@@ -276,7 +285,8 @@ class ParseDateString
     {
         // if regex for xxxx-MM-xx:
         $pattern = '/^xxxx-(0[1-9]|1[012])-xx$/';
-        if (false !== preg_match($pattern, $date)) {
+        $result = preg_match($pattern, $date);
+        if (false !== $result && 0 !== $result) {
             app('log')->debug(sprintf('"%s" is a month range.', $date));
 
             return true;
@@ -303,7 +313,8 @@ class ParseDateString
     {
         // if regex for YYYY-xx-xx:
         $pattern = '/^(19|20)\d\d-xx-xx$/';
-        if (false !== preg_match($pattern, $date)) {
+        $result = preg_match($pattern, $date);
+        if (false !== $result && 0 !== $result) {
             app('log')->debug(sprintf('"%s" is a year range.', $date));
 
             return true;
@@ -330,7 +341,8 @@ class ParseDateString
     {
         // if regex for xxxx-MM-DD:
         $pattern = '/^xxxx-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/';
-        if (false !== preg_match($pattern, $date)) {
+        $result = preg_match($pattern, $date);
+        if (false !== $result && 0 !== $result) {
             app('log')->debug(sprintf('"%s" is a month/day range.', $date));
 
             return true;
@@ -344,7 +356,8 @@ class ParseDateString
     {
         // if regex for YYYY-xx-DD:
         $pattern = '/^(19|20)\d\d-xx-(0[1-9]|[12]\d|3[01])$/';
-        if (false !== preg_match($pattern, $date)) {
+        $result = preg_match($pattern, $date);
+        if (false !== $result && 0 !== $result) {
             app('log')->debug(sprintf('"%s" is a day/year range.', $date));
 
             return true;
@@ -358,7 +371,8 @@ class ParseDateString
     {
         // if regex for YYYY-MM-xx:
         $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-xx$/';
-        if (false !== preg_match($pattern, $date)) {
+        $result = preg_match($pattern, $date);
+        if (false !== $result && 0 !== $result) {
             app('log')->debug(sprintf('"%s" is a month/year range.', $date));
 
             return true;
