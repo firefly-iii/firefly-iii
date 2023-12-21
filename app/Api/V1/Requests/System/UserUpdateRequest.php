@@ -89,7 +89,7 @@ class UserUpdateRequest extends FormRequest
         /** @var null|User $current */
         $current = $this->route()->parameter('user');
         $validator->after(
-            static function (Validator $validator) use ($current) {
+            static function (Validator $validator) use ($current): void {
                 $isAdmin = auth()->user()->hasRole('owner');
                 // not admin, and not own user?
                 if (auth()->check() && false === $isAdmin && $current?->id !== auth()->user()->id) {

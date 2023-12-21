@@ -237,7 +237,7 @@ class ForceDecimalSize extends Command
             ->where('account_meta.name', 'currency_id')
             ->where('account_meta.data', json_encode((string)$currency->id))
         ;
-        $query->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression) {
+        $query->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression): void {
             foreach ($fields as $field) {
                 $q->orWhere(
                     DB::raw(sprintf('CAST(accounts.%s AS %s)', $field, $cast)), // @phpstan-ignore-line
@@ -283,7 +283,7 @@ class ForceDecimalSize extends Command
 
         /** @var Builder $query */
         $query = $class::where('transaction_currency_id', $currency->id)->where(
-            static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression) {
+            static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression): void {
                 /** @var string $field */
                 foreach ($fields as $field) {
                     $q->orWhere(
@@ -334,7 +334,7 @@ class ForceDecimalSize extends Command
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('account_meta.name', 'currency_id')
             ->where('account_meta.data', json_encode((string)$currency->id))
-            ->where(static function (Builder $q) use ($fields, $currency, $cast, $operator, $regularExpression) {
+            ->where(static function (Builder $q) use ($fields, $currency, $cast, $operator, $regularExpression): void {
                 foreach ($fields as $field) {
                     $q->orWhere(
                         DB::raw(sprintf('CAST(piggy_bank_events.%s AS %s)', $field, $cast)), // @phpstan-ignore-line
@@ -387,7 +387,7 @@ class ForceDecimalSize extends Command
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('account_meta.name', 'currency_id')
             ->where('account_meta.data', json_encode((string)$currency->id))
-            ->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression) {
+            ->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression): void {
                 foreach ($fields as $field) {
                     $q->orWhere(
                         DB::raw(sprintf('CAST(piggy_bank_repetitions.%s AS %s)', $field, $cast)), // @phpstan-ignore-line
@@ -438,7 +438,7 @@ class ForceDecimalSize extends Command
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('account_meta.name', 'currency_id')
             ->where('account_meta.data', json_encode((string)$currency->id))
-            ->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression) {
+            ->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression): void {
                 foreach ($fields as $field) {
                     $q->orWhere(
                         DB::raw(sprintf('CAST(piggy_banks.%s AS %s)', $field, $cast)), // @phpstan-ignore-line

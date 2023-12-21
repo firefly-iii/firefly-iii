@@ -145,9 +145,9 @@ class GroupCollector implements GroupCollectorInterface
     public function descriptionDoesNotEnd(array $array): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($array) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($array): void { // @phpstan-ignore-line
                 $q->where(
-                    static function (EloquentBuilder $q1) use ($array) {
+                    static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s', $word);
                             $q1->where('transaction_journals.description', 'NOT LIKE', $keyword);
@@ -155,7 +155,7 @@ class GroupCollector implements GroupCollectorInterface
                     }
                 );
                 $q->where(
-                    static function (EloquentBuilder $q2) use ($array) {
+                    static function (EloquentBuilder $q2) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s', $word);
                             $q2->where('transaction_groups.title', 'NOT LIKE', $keyword);
@@ -172,9 +172,9 @@ class GroupCollector implements GroupCollectorInterface
     public function descriptionDoesNotStart(array $array): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($array) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($array): void { // @phpstan-ignore-line
                 $q->where(
-                    static function (EloquentBuilder $q1) use ($array) {
+                    static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%s%%', $word);
                             $q1->where('transaction_journals.description', 'NOT LIKE', $keyword);
@@ -182,7 +182,7 @@ class GroupCollector implements GroupCollectorInterface
                     }
                 );
                 $q->where(
-                    static function (EloquentBuilder $q2) use ($array) {
+                    static function (EloquentBuilder $q2) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%s%%', $word);
                             $q2->where('transaction_groups.title', 'NOT LIKE', $keyword);
@@ -199,9 +199,9 @@ class GroupCollector implements GroupCollectorInterface
     public function descriptionEnds(array $array): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($array) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($array): void { // @phpstan-ignore-line
                 $q->where(
-                    static function (EloquentBuilder $q1) use ($array) {
+                    static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s', $word);
                             $q1->where('transaction_journals.description', 'LIKE', $keyword);
@@ -209,7 +209,7 @@ class GroupCollector implements GroupCollectorInterface
                     }
                 );
                 $q->orWhere(
-                    static function (EloquentBuilder $q2) use ($array) {
+                    static function (EloquentBuilder $q2) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s', $word);
                             $q2->where('transaction_groups.title', 'LIKE', $keyword);
@@ -225,7 +225,7 @@ class GroupCollector implements GroupCollectorInterface
     public function descriptionIs(string $value): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($value) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($value): void { // @phpstan-ignore-line
                 $q->where('transaction_journals.description', '=', $value);
                 $q->orWhere('transaction_groups.title', '=', $value);
             }
@@ -237,10 +237,10 @@ class GroupCollector implements GroupCollectorInterface
     public function descriptionIsNot(string $value): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($value) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($value): void { // @phpstan-ignore-line
                 $q->where('transaction_journals.description', '!=', $value);
                 $q->where(
-                    static function (EloquentBuilder $q2) use ($value) {
+                    static function (EloquentBuilder $q2) use ($value): void {
                         $q2->where('transaction_groups.title', '!=', $value);
                         $q2->orWhereNull('transaction_groups.title');
                     }
@@ -254,9 +254,9 @@ class GroupCollector implements GroupCollectorInterface
     public function descriptionStarts(array $array): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($array) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($array): void { // @phpstan-ignore-line
                 $q->where(
-                    static function (EloquentBuilder $q1) use ($array) {
+                    static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%s%%', $word);
                             $q1->where('transaction_journals.description', 'LIKE', $keyword);
@@ -264,7 +264,7 @@ class GroupCollector implements GroupCollectorInterface
                     }
                 );
                 $q->orWhere(
-                    static function (EloquentBuilder $q2) use ($array) {
+                    static function (EloquentBuilder $q2) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%s%%', $word);
                             $q2->where('transaction_groups.title', 'LIKE', $keyword);
@@ -310,10 +310,10 @@ class GroupCollector implements GroupCollectorInterface
     public function excludeCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($currency) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($currency): void { // @phpstan-ignore-line
                 $q->where('source.transaction_currency_id', '!=', $currency->id);
                 $q->where(
-                    static function (EloquentBuilder $q2) use ($currency) {
+                    static function (EloquentBuilder $q2) use ($currency): void {
                         $q2->where('source.foreign_currency_id', '!=', $currency->id);
                         $q2->orWhereNull('source.foreign_currency_id');
                     }
@@ -326,7 +326,7 @@ class GroupCollector implements GroupCollectorInterface
 
     public function excludeForeignCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
-        $this->query->where(static function (EloquentBuilder $q2) use ($currency) { // @phpstan-ignore-line
+        $this->query->where(static function (EloquentBuilder $q2) use ($currency): void { // @phpstan-ignore-line
             $q2->where('source.foreign_currency_id', '!=', $currency->id);
             $q2->orWhereNull('source.foreign_currency_id');
         });
@@ -368,9 +368,9 @@ class GroupCollector implements GroupCollectorInterface
             return $this;
         }
         $this->query->where(
-            static function (EloquentBuilder $q) use ($array) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($array): void { // @phpstan-ignore-line
                 $q->where(
-                    static function (EloquentBuilder $q1) use ($array) {
+                    static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s%%', $word);
                             $q1->where('transaction_journals.description', 'NOT LIKE', $keyword);
@@ -378,7 +378,7 @@ class GroupCollector implements GroupCollectorInterface
                     }
                 );
                 $q->where(
-                    static function (EloquentBuilder $q2) use ($array) {
+                    static function (EloquentBuilder $q2) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s%%', $word);
                             $q2->where('transaction_groups.title', 'NOT LIKE', $keyword);
@@ -519,7 +519,7 @@ class GroupCollector implements GroupCollectorInterface
     public function setCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($currency) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($currency): void { // @phpstan-ignore-line
                 $q->where('source.transaction_currency_id', $currency->id);
                 $q->orWhere('source.foreign_currency_id', $currency->id);
             }
@@ -588,9 +588,9 @@ class GroupCollector implements GroupCollectorInterface
             return $this;
         }
         $this->query->where(
-            static function (EloquentBuilder $q) use ($array) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($array): void { // @phpstan-ignore-line
                 $q->where(
-                    static function (EloquentBuilder $q1) use ($array) {
+                    static function (EloquentBuilder $q1) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s%%', $word);
                             $q1->where('transaction_journals.description', 'LIKE', $keyword);
@@ -598,7 +598,7 @@ class GroupCollector implements GroupCollectorInterface
                     }
                 );
                 $q->orWhere(
-                    static function (EloquentBuilder $q2) use ($array) {
+                    static function (EloquentBuilder $q2) use ($array): void {
                         foreach ($array as $word) {
                             $keyword = sprintf('%%%s%%', $word);
                             $q2->where('transaction_groups.title', 'LIKE', $keyword);
@@ -972,7 +972,7 @@ class GroupCollector implements GroupCollectorInterface
             // join source transaction.
             ->leftJoin(
                 'transactions as source',
-                static function (JoinClause $join) {
+                static function (JoinClause $join): void {
                     $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
                         ->where('source.amount', '<', 0)
                     ;
@@ -981,7 +981,7 @@ class GroupCollector implements GroupCollectorInterface
             // join destination transaction
             ->leftJoin(
                 'transactions as destination',
-                static function (JoinClause $join) {
+                static function (JoinClause $join): void {
                     $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
                         ->where('destination.amount', '>', 0)
                     ;
@@ -1016,7 +1016,7 @@ class GroupCollector implements GroupCollectorInterface
             // join source transaction.
             ->leftJoin(
                 'transactions as source',
-                static function (JoinClause $join) {
+                static function (JoinClause $join): void {
                     $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
                         ->where('source.amount', '<', 0)
                     ;
@@ -1025,7 +1025,7 @@ class GroupCollector implements GroupCollectorInterface
             // join destination transaction
             ->leftJoin(
                 'transactions as destination',
-                static function (JoinClause $join) {
+                static function (JoinClause $join): void {
                     $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
                         ->where('destination.amount', '>', 0)
                     ;

@@ -87,7 +87,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
     {
         $events = $journal->piggyBankEvents()->get();
         $events->each(
-            static function (PiggyBankEvent $event) {
+            static function (PiggyBankEvent $event): void {
                 $event->piggyBank = $event->piggyBank()->withTrashed()->first();
             }
         );

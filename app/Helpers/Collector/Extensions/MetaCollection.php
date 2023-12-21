@@ -42,7 +42,7 @@ trait MetaCollection
     public function excludeBills(Collection $bills): GroupCollectorInterface
     {
         $this->withBillInformation();
-        $this->query->where(static function (EloquentBuilder $q1) use ($bills) { // @phpstan-ignore-line
+        $this->query->where(static function (EloquentBuilder $q1) use ($bills): void { // @phpstan-ignore-line
             $q1->whereNotIn('transaction_journals.bill_id', $bills->pluck('id')->toArray());
             $q1->orWhereNull('transaction_journals.bill_id');
         });
@@ -74,7 +74,7 @@ trait MetaCollection
     {
         $this->withBudgetInformation();
 
-        $this->query->where(static function (EloquentBuilder $q2) use ($budget) { // @phpstan-ignore-line
+        $this->query->where(static function (EloquentBuilder $q2) use ($budget): void { // @phpstan-ignore-line
             $q2->where('budgets.id', '!=', $budget->id);
             $q2->orWhereNull('budgets.id');
         });
@@ -105,7 +105,7 @@ trait MetaCollection
     {
         if ($budgets->count() > 0) {
             $this->withBudgetInformation();
-            $this->query->where(static function (EloquentBuilder $q1) use ($budgets) { // @phpstan-ignore-line
+            $this->query->where(static function (EloquentBuilder $q1) use ($budgets): void { // @phpstan-ignore-line
                 $q1->whereNotIn('budgets.id', $budgets->pluck('id')->toArray());
                 $q1->orWhereNull('budgets.id');
             });
@@ -118,7 +118,7 @@ trait MetaCollection
     {
         if ($categories->count() > 0) {
             $this->withCategoryInformation();
-            $this->query->where(static function (EloquentBuilder $q1) use ($categories) { // @phpstan-ignore-line
+            $this->query->where(static function (EloquentBuilder $q1) use ($categories): void { // @phpstan-ignore-line
                 $q1->whereNotIn('categories.id', $categories->pluck('id')->toArray());
                 $q1->orWhereNull('categories.id');
             });
@@ -153,7 +153,7 @@ trait MetaCollection
     {
         $this->withCategoryInformation();
 
-        $this->query->where(static function (EloquentBuilder $q2) use ($category) { // @phpstan-ignore-line
+        $this->query->where(static function (EloquentBuilder $q2) use ($category): void { // @phpstan-ignore-line
             $q2->where('categories.id', '!=', $category->id);
             $q2->orWhereNull('categories.id');
         });
@@ -456,7 +456,7 @@ trait MetaCollection
             // join bill table
             $this->query->leftJoin(
                 'notes',
-                static function (JoinClause $join) {
+                static function (JoinClause $join): void {
                     $join->on('notes.noteable_id', '=', 'transaction_journals.id');
                     $join->where('notes.noteable_type', '=', 'FireflyIII\Models\TransactionJournal');
                     $join->whereNull('notes.deleted_at');
@@ -473,7 +473,7 @@ trait MetaCollection
     public function notesDoNotContain(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value) { // @phpstan-ignore-line
+        $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', 'NOT LIKE', sprintf('%%%s%%', $value));
         });
@@ -484,7 +484,7 @@ trait MetaCollection
     public function notesDontEndWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value) { // @phpstan-ignore-line
+        $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', 'NOT LIKE', sprintf('%%%s', $value));
         });
@@ -495,7 +495,7 @@ trait MetaCollection
     public function notesDontStartWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value) { // @phpstan-ignore-line
+        $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', 'NOT LIKE', sprintf('%s%%', $value));
         });
@@ -522,7 +522,7 @@ trait MetaCollection
     public function notesExactlyNot(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value) { // @phpstan-ignore-line
+        $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', '!=', sprintf('%s', $value));
         });
@@ -801,13 +801,13 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         // TODO not sure if this will work properly.
-        $this->query->where(static function (Builder $q1) { // @phpstan-ignore-line
-            $q1->where(static function (Builder $q2) {
+        $this->query->where(static function (Builder $q1): void { // @phpstan-ignore-line
+            $q1->where(static function (Builder $q2): void {
                 $q2->where('journal_meta.name', '=', 'external_id');
                 $q2->whereNull('journal_meta.data');
-            })->orWhere(static function (Builder $q3) {
+            })->orWhere(static function (Builder $q3): void {
                 $q3->where('journal_meta.name', '!=', 'external_id');
-            })->orWhere(static function (Builder $q4) {
+            })->orWhere(static function (Builder $q4): void {
                 $q4->whereNull('journal_meta.name');
             });
         });
@@ -819,13 +819,13 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         // TODO not sure if this will work properly.
-        $this->query->where(static function (Builder $q1) { // @phpstan-ignore-line
-            $q1->where(static function (Builder $q2) {
+        $this->query->where(static function (Builder $q1): void { // @phpstan-ignore-line
+            $q1->where(static function (Builder $q2): void {
                 $q2->where('journal_meta.name', '=', 'external_url');
                 $q2->whereNull('journal_meta.data');
-            })->orWhere(static function (Builder $q3) {
+            })->orWhere(static function (Builder $q3): void {
                 $q3->where('journal_meta.name', '!=', 'external_url');
-            })->orWhere(static function (Builder $q4) {
+            })->orWhere(static function (Builder $q4): void {
                 $q4->whereNull('journal_meta.name');
             });
         });
@@ -836,7 +836,7 @@ trait MetaCollection
     public function withoutNotes(): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) { // @phpstan-ignore-line
+        $this->query->where(static function (Builder $q): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', '');
         });

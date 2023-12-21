@@ -151,7 +151,7 @@ class RemoteUserGuard implements Guard
         return $this->user?->id;
     }
 
-    public function setUser(null|Authenticatable|User $user)
+    public function setUser(null|Authenticatable|User $user): void
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
         if ($user instanceof User) {
@@ -162,7 +162,7 @@ class RemoteUserGuard implements Guard
         app('log')->error(sprintf('Did not set user at %s', __METHOD__));
     }
 
-    public function validate(array $credentials = [])
+    public function validate(array $credentials = []): void
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 

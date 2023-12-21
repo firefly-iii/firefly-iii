@@ -63,13 +63,13 @@ class FixAccountTypes extends Command
         $query = TransactionJournal::leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
             ->leftJoin(
                 'transactions as source',
-                static function (JoinClause $join) {
+                static function (JoinClause $join): void {
                     $join->on('transaction_journals.id', '=', 'source.transaction_journal_id')->where('source.amount', '<', 0);
                 }
             )
             ->leftJoin(
                 'transactions as destination',
-                static function (JoinClause $join) {
+                static function (JoinClause $join): void {
                     $join->on('transaction_journals.id', '=', 'destination.transaction_journal_id')->where('destination.amount', '>', 0);
                 }
             )
@@ -80,11 +80,11 @@ class FixAccountTypes extends Command
         ;
 
         // list all valid combinations, those are allowed. So we select those which are broken.
-        $query->where(static function (Builder $q) use ($expected) {
+        $query->where(static function (Builder $q) use ($expected): void {
             foreach ($expected as $transactionType => $info) {
                 foreach ($info as $source => $destinations) {
                     foreach ($destinations as $destination) {
-                        $q->whereNot(static function (Builder $q1) use ($transactionType, $source, $destination) {
+                        $q->whereNot(static function (Builder $q1) use ($transactionType, $source, $destination): void {
                             $q1->where('transaction_types.type', $transactionType);
                             $q1->where('source_account_type.type', $source);
                             $q1->where('destination_account_type.type', $destination);

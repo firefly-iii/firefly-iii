@@ -36,7 +36,7 @@ use Illuminate\Contracts\Auth\UserProvider;
  */
 class RemoteUserProvider implements UserProvider
 {
-    public function retrieveByCredentials(array $credentials)
+    public function retrieveByCredentials(array $credentials): void
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 
@@ -70,21 +70,21 @@ class RemoteUserProvider implements UserProvider
         return $user;
     }
 
-    public function retrieveByToken($identifier, $token)
+    public function retrieveByToken($identifier, $token): void
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 
         throw new FireflyException(sprintf('A) Did not implement %s', __METHOD__));
     }
 
-    public function updateRememberToken(Authenticatable $user, $token)
+    public function updateRememberToken(Authenticatable $user, $token): void
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 
         throw new FireflyException(sprintf('B) Did not implement %s', __METHOD__));
     }
 
-    public function validateCredentials(Authenticatable $user, array $credentials)
+    public function validateCredentials(Authenticatable $user, array $credentials): void
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
 

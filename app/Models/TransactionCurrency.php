@@ -118,7 +118,7 @@ class TransactionCurrency extends Model
         throw new NotFoundHttpException();
     }
 
-    public function refreshForUser(User $user)
+    public function refreshForUser(User $user): void
     {
         $current                = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
         $default                = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);

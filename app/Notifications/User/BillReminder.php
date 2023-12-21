@@ -110,7 +110,7 @@ class BillReminder extends Notification
 
         return (new SlackMessage())
             ->warning()
-            ->attachment(static function ($attachment) use ($bill, $url) {
+            ->attachment(static function ($attachment) use ($bill, $url): void {
                 $attachment->title((string)trans('firefly.visit_bill', ['name' => $bill->name]), $url);
             })
             ->content($message)

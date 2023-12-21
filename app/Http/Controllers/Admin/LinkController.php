@@ -171,7 +171,7 @@ class LinkController extends Controller
 
         Log::channel('audit')->info('User on index of link types in admin.');
         $linkTypes->each(
-            function (LinkType $linkType) {
+            function (LinkType $linkType): void {
                 $linkType->journalCount = $this->repository->countJournals($linkType);
             }
         );

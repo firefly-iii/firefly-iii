@@ -87,7 +87,7 @@ trait AccountCollection
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->where(
-                static function (EloquentBuilder $query) use ($accountIds) { // @phpstan-ignore-line
+                static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
                     $query->whereIn('source.account_id', $accountIds);
                     $query->orWhereIn('destination.account_id', $accountIds);
                 }
@@ -106,7 +106,7 @@ trait AccountCollection
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->where(
-                static function (EloquentBuilder $query) use ($accountIds) { // @phpstan-ignore-line
+                static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
                     $query->whereIn('source.account_id', $accountIds);
                     $query->whereIn('destination.account_id', $accountIds);
                 }
@@ -140,7 +140,7 @@ trait AccountCollection
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->where(
-                static function (EloquentBuilder $query) use ($accountIds) { // @phpstan-ignore-line
+                static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
                     $query->whereNotIn('source.account_id', $accountIds);
                     $query->whereNotIn('destination.account_id', $accountIds);
                 }
@@ -174,18 +174,18 @@ trait AccountCollection
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->where(
-                static function (EloquentBuilder $q1) use ($accountIds) { // @phpstan-ignore-line
+                static function (EloquentBuilder $q1) use ($accountIds): void { // @phpstan-ignore-line
                     // sourceAccount is in the set, and destination is NOT.
 
                     $q1->where(
-                        static function (EloquentBuilder $q2) use ($accountIds) {
+                        static function (EloquentBuilder $q2) use ($accountIds): void {
                             $q2->whereIn('source.account_id', $accountIds);
                             $q2->whereNotIn('destination.account_id', $accountIds);
                         }
                     );
                     // destination is in the set, and source is NOT
                     $q1->orWhere(
-                        static function (EloquentBuilder $q3) use ($accountIds) {
+                        static function (EloquentBuilder $q3) use ($accountIds): void {
                             $q3->whereNotIn('source.account_id', $accountIds);
                             $q3->whereIn('destination.account_id', $accountIds);
                         }

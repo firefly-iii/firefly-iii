@@ -158,7 +158,7 @@ trait RecurrenceValidation
         }
     }
 
-    public function validateRecurringConfig(Validator $validator)
+    public function validateRecurringConfig(Validator $validator): void
     {
         $data        = $validator->getData();
         $reps        = array_key_exists('nr_of_repetitions', $data) ? (int)$data['nr_of_repetitions'] : null;

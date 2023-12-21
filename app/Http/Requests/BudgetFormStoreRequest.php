@@ -74,7 +74,7 @@ class BudgetFormStoreRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator) {
+            function (Validator $validator): void {
                 // validate all account info
                 $this->validateAutoBudgetAmount($validator);
             }

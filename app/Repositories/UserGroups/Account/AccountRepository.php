@@ -46,7 +46,7 @@ class AccountRepository implements AccountRepositoryInterface
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('accounts.active', true)
             ->where(
-                static function (EloquentBuilder $q1) use ($number) { // @phpstan-ignore-line
+                static function (EloquentBuilder $q1) use ($number): void { // @phpstan-ignore-line
                     $json = json_encode($number);
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);

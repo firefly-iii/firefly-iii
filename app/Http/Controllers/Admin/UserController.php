@@ -173,7 +173,7 @@ class UserController extends Controller
 
         // add meta stuff.
         $users->each(
-            function (User $user) {
+            function (User $user): void {
                 $user->isAdmin = $this->repository->hasRole($user, 'owner');
                 $user->has2FA  = null !== $user->mfa_secret;
             }

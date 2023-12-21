@@ -232,7 +232,7 @@ class GroupUpdateService
             );
         }
         $collection->each(
-            static function (TransactionJournal $journal) use ($transactionGroup) {
+            static function (TransactionJournal $journal) use ($transactionGroup): void {
                 $transactionGroup->transactionJournals()->save($journal);
             }
         );

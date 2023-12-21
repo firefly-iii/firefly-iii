@@ -66,7 +66,7 @@ class BalanceChartRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            static function (Validator $validator) {
+            static function (Validator $validator): void {
                 // validate transaction query data.
                 $data = $validator->getData();
                 if (!array_key_exists('accounts', $data)) {

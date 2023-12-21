@@ -157,7 +157,7 @@ class AccountCurrencies extends Command
             $openingBalance->transaction_currency_id = $accountCurrency;
             $openingBalance->save();
             $openingBalance->transactions->each(
-                static function (Transaction $transaction) use ($accountCurrency) {
+                static function (Transaction $transaction) use ($accountCurrency): void {
                     $transaction->transaction_currency_id = $accountCurrency;
                     $transaction->save();
                 }

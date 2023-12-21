@@ -64,7 +64,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         $query = $this->user->availableBudgets()->with(['transactionCurrency']);
         if (null !== $start && null !== $end) {
             $query->where(
-                static function (Builder $q1) use ($start, $end) { // @phpstan-ignore-line
+                static function (Builder $q1) use ($start, $end): void { // @phpstan-ignore-line
                     $q1->where('start_date', '=', $start->format('Y-m-d'));
                     $q1->where('end_date', '=', $end->format('Y-m-d'));
                 }

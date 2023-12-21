@@ -179,7 +179,7 @@ class Handler extends ExceptionHandler
      *
      * @throws \Throwable
      */
-    public function report(\Throwable $e)
+    public function report(\Throwable $e): void
     {
         $doMailError = (bool)config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {

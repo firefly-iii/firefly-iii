@@ -158,7 +158,7 @@ class AccountDestroyService
     private function destroyRecurrences(Account $account): void
     {
         $recurrences = RecurrenceTransaction::where(
-            static function (Builder $q) use ($account) {
+            static function (Builder $q) use ($account): void {
                 $q->where('source_id', $account->id);
                 $q->orWhere('destination_id', $account->id);
             }

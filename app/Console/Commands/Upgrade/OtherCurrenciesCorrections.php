@@ -154,7 +154,7 @@ class OtherCurrenciesCorrections extends Command
         }
         // fix each transaction:
         $journal->transactions->each(
-            static function (Transaction $transaction) use ($currency) {
+            static function (Transaction $transaction) use ($currency): void {
                 if (null === $transaction->transaction_currency_id) {
                     $transaction->transaction_currency_id = $currency->id;
                     $transaction->save();

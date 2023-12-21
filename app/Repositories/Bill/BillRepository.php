@@ -203,13 +203,13 @@ class BillRepository implements BillRepositoryInterface
         return $this->user->bills()
             ->leftJoin(
                 'transaction_journals',
-                static function (JoinClause $join) {
+                static function (JoinClause $join): void {
                     $join->on('transaction_journals.bill_id', '=', 'bills.id')->whereNull('transaction_journals.deleted_at');
                 }
             )
             ->leftJoin(
                 'transactions',
-                static function (JoinClause $join) {
+                static function (JoinClause $join): void {
                     $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
                 }
             )

@@ -239,7 +239,7 @@ class UpdateRequest extends FormRequest
         /** @var TransactionGroup $transactionGroup */
         $transactionGroup = $this->route()->parameter('transactionGroup');
         $validator->after(
-            function (Validator $validator) use ($transactionGroup) {
+            function (Validator $validator) use ($transactionGroup): void {
                 // if more than one, verify that there are journal ID's present.
                 $this->validateJournalIds($validator, $transactionGroup);
 

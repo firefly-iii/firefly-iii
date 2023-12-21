@@ -212,13 +212,13 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
             ->orderBy('order', 'ASC')
             ->with(
                 [
-                    'rules'              => static function (HasMany $query) {
+                    'rules'              => static function (HasMany $query): void {
                         $query->orderBy('order', 'ASC');
                     },
-                    'rules.ruleTriggers' => static function (HasMany $query) {
+                    'rules.ruleTriggers' => static function (HasMany $query): void {
                         $query->orderBy('order', 'ASC');
                     },
-                    'rules.ruleActions'  => static function (HasMany $query) {
+                    'rules.ruleActions'  => static function (HasMany $query): void {
                         $query->orderBy('order', 'ASC');
                     },
                 ]
@@ -268,13 +268,13 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
             ->where('active', true)
             ->with(
                 [
-                    'rules'              => static function (HasMany $query) {
+                    'rules'              => static function (HasMany $query): void {
                         $query->orderBy('order', 'ASC');
                     },
-                    'rules.ruleTriggers' => static function (HasMany $query) {
+                    'rules.ruleTriggers' => static function (HasMany $query): void {
                         $query->orderBy('order', 'ASC');
                     },
-                    'rules.ruleActions'  => static function (HasMany $query) {
+                    'rules.ruleActions'  => static function (HasMany $query): void {
                         $query->orderBy('order', 'ASC');
                     },
                 ]

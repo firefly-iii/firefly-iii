@@ -104,7 +104,7 @@ class AccountRepository implements AccountRepositoryInterface
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('accounts.active', true)
             ->where(
-                static function (EloquentBuilder $q1) use ($number) { // @phpstan-ignore-line
+                static function (EloquentBuilder $q1) use ($number): void { // @phpstan-ignore-line
                     $json = json_encode($number);
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
@@ -184,7 +184,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $query = $this->user->accounts()->with(
             [
-                'accountmeta' => static function (HasMany $query) {
+                'accountmeta' => static function (HasMany $query): void {
                     $query->where('name', 'account_role');
                 },
                 'attachments',
@@ -257,7 +257,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $query = $this->user->accounts()->with(
             [
-                'accountmeta' => static function (HasMany $query) {
+                'accountmeta' => static function (HasMany $query): void {
                     $query->where('name', 'account_role');
                 },
             ]
@@ -597,10 +597,10 @@ class AccountRepository implements AccountRepositoryInterface
             foreach ($parts as $part) {
                 $search = sprintf('%%%s%%', $part);
                 $dbQuery->where(
-                    static function (EloquentBuilder $q1) use ($search) { // @phpstan-ignore-line
+                    static function (EloquentBuilder $q1) use ($search): void { // @phpstan-ignore-line
                         $q1->where('accounts.iban', 'LIKE', $search);
                         $q1->orWhere(
-                            static function (EloquentBuilder $q2) use ($search) {
+                            static function (EloquentBuilder $q2) use ($search): void {
                                 $q2->where('account_meta.name', '=', 'account_number');
                                 $q2->where('account_meta.data', 'LIKE', $search);
                             }

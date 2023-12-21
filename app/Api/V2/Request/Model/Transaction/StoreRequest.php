@@ -180,7 +180,7 @@ class StoreRequest extends FormRequest
         /** @var UserGroup $userGroup */
         $userGroup = $this->getUserGroup();
         $validator->after(
-            function (Validator $validator) use ($user, $userGroup) {
+            function (Validator $validator) use ($user, $userGroup): void {
                 // must be valid array.
                 $this->validateTransactionArray($validator); // does not need group validation.
 

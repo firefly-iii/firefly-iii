@@ -77,7 +77,7 @@ class IndexController extends Controller
         $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
 
         $collection->each(
-            function (Category $category) {
+            function (Category $category): void {
                 $category->lastActivity = $this->repository->lastUseDate($category, new Collection());
             }
         );

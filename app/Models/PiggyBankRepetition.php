@@ -88,13 +88,13 @@ class PiggyBankRepetition extends Model
     public function scopeRelevantOnDate(EloquentBuilder $query, Carbon $date)
     {
         return $query->where(
-            static function (EloquentBuilder $q) use ($date) {
+            static function (EloquentBuilder $q) use ($date): void {
                 $q->where('startdate', '<=', $date->format('Y-m-d 00:00:00'));
                 $q->orWhereNull('startdate');
             }
         )
             ->where(
-                static function (EloquentBuilder $q) use ($date) {
+                static function (EloquentBuilder $q) use ($date): void {
                     $q->where('targetdate', '>=', $date->format('Y-m-d 00:00:00'));
                     $q->orWhereNull('targetdate');
                 }

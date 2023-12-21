@@ -153,7 +153,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $return   = [];
         $journals = $group->transactionJournals->pluck('id')->toArray();
         $set      = TransactionJournalLink::where(
-            static function (Builder $q) use ($journals) {
+            static function (Builder $q) use ($journals): void {
                 $q->whereIn('source_id', $journals);
                 $q->orWhereIn('destination_id', $journals);
             }

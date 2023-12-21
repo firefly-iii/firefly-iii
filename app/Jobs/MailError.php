@@ -73,7 +73,7 @@ class MailError extends Job implements ShouldQueue
                 \Mail::send(
                     ['emails.error-html', 'emails.error-text'],
                     $args,
-                    static function (Message $message) use ($email) {
+                    static function (Message $message) use ($email): void {
                         if ('mail@example.com' !== $email) {
                             $message->to($email, $email)->subject((string)trans('email.error_subject'));
                         }

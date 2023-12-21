@@ -36,7 +36,7 @@ class AuditLogger
     /**
      * Customize the given logger instance.
      */
-    public function __invoke(Logger $logger)
+    public function __invoke(Logger $logger): void
     {
         $processor = new AuditProcessor();
 

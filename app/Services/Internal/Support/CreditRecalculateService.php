@@ -213,7 +213,7 @@ class CreditRecalculateService
     /**
      * If account direction is "debit" ("I owe this amount") the opening balance must always be AWAY from the account:
      */
-    private function validateOpeningBalance(Account $account, TransactionJournal $openingBalance)
+    private function validateOpeningBalance(Account $account, TransactionJournal $openingBalance): void
     {
         /** @var Transaction $source */
         $source = $openingBalance->transactions()->where('amount', '<', 0)->first();
