@@ -78,7 +78,7 @@ final class CalculatorTest extends TestCase
      *
      * @throws IntervalException
      */
-    public function testGivenADailyPeriodicityWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider)
+    public function testGivenADailyPeriodicityWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider): void
     {
         $calculator = new Calculator();
         $period     = $calculator->nextDateByInterval($provider->epoch(), $provider->periodicity);
@@ -90,7 +90,7 @@ final class CalculatorTest extends TestCase
      *
      * @throws IntervalException
      */
-    public function testGivenAnEpochWithSkipIntervalNumberWhenCallTheNextDateBySkippedIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider)
+    public function testGivenAnEpochWithSkipIntervalNumberWhenCallTheNextDateBySkippedIntervalMethodThenReturnsTheExpectedDateSuccessful(CalculatorProvider $provider): void
     {
         $calculator = new Calculator();
         $period     = $calculator->nextDateByInterval($provider->epoch(), $provider->periodicity, $provider->skip);

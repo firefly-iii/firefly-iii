@@ -45,7 +45,7 @@ class ChangesForV550 extends Migration
             try {
                 Schema::create(
                     'jobs',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         // straight from Laravel (this is the OLD table)
                         $table->bigIncrements('id');
                         $table->string('queue');
@@ -69,7 +69,7 @@ class ChangesForV550 extends Migration
             try {
                 Schema::table(
                     'budget_transaction_journal',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         if ('sqlite' !== config('database.default')) {
                             $table->dropForeign('budget_id_foreign');
                         }
@@ -91,7 +91,7 @@ class ChangesForV550 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('period');
                     }
                 );
@@ -104,7 +104,7 @@ class ChangesForV550 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('generated');
                     }
                 );
@@ -134,7 +134,7 @@ class ChangesForV550 extends Migration
             try {
                 Schema::create(
                     'jobs',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->bigIncrements('id');
                         $table->string('queue')->index();
                         $table->longText('payload');
@@ -157,7 +157,7 @@ class ChangesForV550 extends Migration
             try {
                 Schema::create(
                     'failed_jobs',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->bigIncrements('id');
                         $table->string('uuid')->unique();
                         $table->text('connection');
@@ -178,7 +178,7 @@ class ChangesForV550 extends Migration
             try {
                 Schema::table(
                     'budget_transaction_journal',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         if (!Schema::hasColumn('budget_transaction_journal', 'budget_limit_id')) {
                             $table->integer('budget_limit_id', false, true)->nullable()->default(null)->after('budget_id');
                             $table->foreign('budget_limit_id', 'budget_id_foreign')->references('id')->on('budget_limits')->onDelete('set null');
@@ -197,7 +197,7 @@ class ChangesForV550 extends Migration
         try {
             Schema::table(
                 'budget_limits',
-                static function (Blueprint $table) {
+                static function (Blueprint $table): void {
                     if (!Schema::hasColumn('budget_limits', 'period')) {
                         $table->string('period', 12)->nullable();
                     }
@@ -216,7 +216,7 @@ class ChangesForV550 extends Migration
             try {
                 Schema::create(
                     'webhooks',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -243,7 +243,7 @@ class ChangesForV550 extends Migration
             try {
                 Schema::create(
                     'webhook_messages',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -267,7 +267,7 @@ class ChangesForV550 extends Migration
             try {
                 Schema::create(
                     'webhook_attempts',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();

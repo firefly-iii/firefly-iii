@@ -42,7 +42,7 @@ class ChangesForV550b2 extends Migration
             try {
                 Schema::table(
                     'recurrences_transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         if ('sqlite' !== config('database.default')) {
                             $table->dropForeign('type_foreign');
                         }
@@ -70,7 +70,7 @@ class ChangesForV550b2 extends Migration
             try {
                 Schema::table(
                     'recurrences_transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         if (!Schema::hasColumn('recurrences_transactions', 'transaction_type_id')) {
                             $table->integer('transaction_type_id', false, true)->nullable()->after('transaction_currency_id');
                             $table->foreign('transaction_type_id', 'type_foreign')->references('id')->on('transaction_types')->onDelete('set null');

@@ -31,7 +31,7 @@ Route::group(
         'as'        => 'installer.',
         'prefix'    => 'install',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'InstallController@index', 'as' => 'index']);
         Route::post('runCommand', ['uses' => 'InstallController@runCommand', 'as' => 'runCommand']);
     }
@@ -39,14 +39,14 @@ Route::group(
 
 Route::group(
     ['middleware' => 'binders-only', 'namespace' => 'FireflyIII\Http\Controllers\System', 'as' => 'cron.', 'prefix' => 'cron'],
-    static function () {
+    static function (): void {
         Route::get('run/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'cron']);
     }
 );
 
 Route::group(
     ['middleware' => 'binders-only', 'namespace' => 'FireflyIII\Http\Controllers\System'],
-    static function () {
+    static function (): void {
         Route::get('offline', static fn () => view('errors.offline'));
         Route::get('health', ['uses' => 'HealthcheckController@check', 'as' => 'healthcheck']);
     }
@@ -55,7 +55,7 @@ Route::group(
 // These routes only work when the user is NOT logged in.
 Route::group(
     ['middleware' => 'user-not-logged-in', 'namespace' => 'FireflyIII\Http\Controllers'],
-    static function () {
+    static function (): void {
         // Authentication Routes...
         Route::get('login', ['uses' => 'Auth\LoginController@showLoginForm', 'as' => 'login']);
         Route::post('login', ['uses' => 'Auth\LoginController@login', 'as' => 'login.post']);
@@ -80,7 +80,7 @@ Route::group(
 // For some other routes, it is only relevant that the user is authenticated.
 Route::group(
     ['middleware' => 'user-simple-auth', 'namespace' => 'FireflyIII\Http\Controllers'],
-    static function () {
+    static function (): void {
         Route::get('error', ['uses' => 'DebugController@displayError', 'as' => 'error']);
         Route::post('logout', ['uses' => 'Auth\LoginController@logout', 'as' => 'logout']);
         Route::get('flush', ['uses' => 'DebugController@flush', 'as' => 'flush']);
@@ -92,7 +92,7 @@ Route::group(
 // For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
 Route::group(
     ['middleware' => 'user-logged-in-no-2fa', 'prefix' => 'two-factor', 'as' => 'two-factor.', 'namespace' => 'FireflyIII\Http\Controllers\Auth'],
-    static function () {
+    static function (): void {
         Route::post('submit', ['uses' => 'TwoFactorController@submitMFA', 'as' => 'submit']);
         Route::get('lost', ['uses' => 'TwoFactorController@lostTwoFactor', 'as' => 'lost']); // can be removed when v2 is live.
     }
@@ -103,7 +103,7 @@ Route::group(
 // Home Controller.
 Route::group(
     ['middleware' => ['user-full-auth'], 'namespace' => 'FireflyIII\Http\Controllers'],
-    static function () {
+    static function (): void {
         Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
         Route::get('/flash', ['uses' => 'DebugController@testFlash', 'as' => 'test-flash']);
         Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
@@ -119,7 +119,7 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'inactive-accounts', 'as' => 'accounts.'],
-    static function () {
+    static function (): void {
         Route::get('{objectType}', ['uses' => 'Account\IndexController@inactive', 'as' => 'inactive.index'])->where(
             'objectType',
             'revenue|asset|expense|liabilities'
@@ -128,7 +128,7 @@ Route::group(
 );
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'accounts', 'as' => 'accounts.'],
-    static function () {
+    static function (): void {
         // show:
         Route::get('{objectType}', ['uses' => 'Account\IndexController@index', 'as' => 'index'])->where('objectType', 'revenue|asset|expense|liabilities');
 
@@ -182,7 +182,7 @@ Route::group(
 // Attachment Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'attachments', 'as' => 'attachments.'],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'AttachmentController@index', 'as' => 'index']);
         Route::get('edit/{attachment}', ['uses' => 'AttachmentController@edit', 'as' => 'edit']);
         Route::get('delete/{attachment}', ['uses' => 'AttachmentController@delete', 'as' => 'delete']);
@@ -197,7 +197,7 @@ Route::group(
 // Bills Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'bills', 'as' => 'bills.'],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'Bill\IndexController@index', 'as' => 'index']);
         Route::post('rescan/{bill}', ['uses' => 'Bill\ShowController@rescan', 'as' => 'rescan']);
         Route::get('create', ['uses' => 'Bill\CreateController@create', 'as' => 'create']);
@@ -215,7 +215,7 @@ Route::group(
 
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'subscriptions', 'as' => 'subscriptions.'],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'Bill\IndexController@index', 'as' => 'index']);
         Route::post('rescan/{bill}', ['uses' => 'Bill\ShowController@rescan', 'as' => 'rescan']);
         Route::get('create', ['uses' => 'Bill\CreateController@create', 'as' => 'create']);
@@ -234,7 +234,7 @@ Route::group(
 // Budget Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'budgets', 'as' => 'budgets.'],
-    static function () {
+    static function (): void {
         // delete
         Route::get('delete/{budget}', ['uses' => 'Budget\DeleteController@delete', 'as' => 'delete']);
         Route::post('destroy/{budget}', ['uses' => 'Budget\DeleteController@destroy', 'as' => 'destroy']);
@@ -270,7 +270,7 @@ Route::group(
 // Budget Limit Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'budget-limits', 'as' => 'budget-limits.'],
-    static function () {
+    static function (): void {
         Route::get('create/{budget}/{start_date}/{end_date}', ['uses' => 'Budget\BudgetLimitController@create', 'as' => 'create'])
             ->where(['start_date' => DATEFORMAT])
             ->where(['end_date' => DATEFORMAT])
@@ -286,7 +286,7 @@ Route::group(
 // Category Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'categories', 'as' => 'categories.'],
-    static function () {
+    static function (): void {
         // index:
         Route::get('', ['uses' => 'Category\IndexController@index', 'as' => 'index']);
 
@@ -321,7 +321,7 @@ Route::group(
 // Currency Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\TransactionCurrency', 'prefix' => 'currencies', 'as' => 'currencies.'],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
         Route::get('create', ['uses' => 'CreateController@create', 'as' => 'create']);
         Route::get('edit/{currency}', ['uses' => 'EditController@edit', 'as' => 'edit']);
@@ -336,7 +336,7 @@ Route::group(
 // Chart\Account Controller (default report).
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/account', 'as' => 'chart.account.'],
-    static function () {
+    static function (): void {
         Route::get('frontpage', ['uses' => 'AccountController@frontpage', 'as' => 'frontpage']);
         Route::get('expense', ['uses' => 'AccountController@expenseAccounts', 'as' => 'expense']);
         Route::get('revenue', ['uses' => 'AccountController@revenueAccounts', 'as' => 'revenue']);
@@ -371,7 +371,7 @@ Route::group(
 // Chart\Bill Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/bill', 'as' => 'chart.bill.'],
-    static function () {
+    static function (): void {
         Route::get('frontpage', ['uses' => 'BillController@frontpage', 'as' => 'frontpage']);
         Route::get('single/{bill}', ['uses' => 'BillController@single', 'as' => 'single']);
     }
@@ -380,7 +380,7 @@ Route::group(
 // Chart\Budget Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/budget', 'as' => 'chart.budget.'],
-    static function () {
+    static function (): void {
         Route::get('frontpage', ['uses' => 'BudgetController@frontpage', 'as' => 'frontpage']);
         Route::get('period/0/{currency}/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@periodNoBudget', 'as' => 'period.no-budget'])
             ->where(['start_date' => DATEFORMAT])
@@ -431,7 +431,7 @@ Route::group(
 // Chart\Category Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/category', 'as' => 'chart.category.'],
-    static function () {
+    static function (): void {
         Route::get('frontpage', ['uses' => 'CategoryController@frontPage', 'as' => 'frontpage']);
         Route::get('period/{category}', ['uses' => 'CategoryController@currentPeriod', 'as' => 'current']);
         Route::get('period/{category}/{date}', ['uses' => 'CategoryController@specificPeriod', 'as' => 'specific']);
@@ -501,7 +501,7 @@ Route::group(
 // Chart\Tag Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/tag', 'as' => 'chart.tag.'],
-    static function () {
+    static function (): void {
         Route::get('tag/expense/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagReportController@tagExpense', 'as' => 'tag-expense'])
             ->where(['start_date' => DATEFORMAT])
             ->where(['end_date' => DATEFORMAT])
@@ -565,7 +565,7 @@ Route::group(
 // Chart\Double Controller (for expense/revenue report).
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/double', 'as' => 'chart.double.'],
-    static function () {
+    static function (): void {
         Route::get('main/{accountList}/{account}/{start_date}/{end_date}', ['uses' => 'DoubleReportController@mainChart', 'as' => 'main'])->where(
             ['start_date' => DATEFORMAT]
         )
@@ -609,7 +609,7 @@ Route::group(
 // Chart\PiggyBank Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/piggy-bank', 'as' => 'chart.piggy-bank.'],
-    static function () {
+    static function (): void {
         Route::get('{piggyBank}', ['uses' => 'PiggyBankController@history', 'as' => 'history']);
     }
 );
@@ -617,7 +617,7 @@ Route::group(
 // Chart\Report Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/report', 'as' => 'chart.report.'],
-    static function () {
+    static function (): void {
         Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@operations', 'as' => 'operations'])->where(
             ['start_date' => DATEFORMAT]
         )
@@ -634,7 +634,7 @@ Route::group(
 // Chart\Transactions Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/transactions', 'as' => 'chart.transactions.'],
-    static function () {
+    static function (): void {
         Route::get('categories/{objectType}/{start_date}/{end_date}', ['uses' => 'TransactionController@categories', 'as' => 'categories'])->where(
             ['start_date' => DATEFORMAT]
         )
@@ -660,7 +660,7 @@ Route::group(
 // Export controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'export', 'as' => 'export.'],
-    static function () {
+    static function (): void {
         // index
         Route::get('', ['uses' => 'Export\IndexController@index', 'as' => 'index']);
         Route::post('export', ['uses' => 'Export\IndexController@export', 'as' => 'export']);
@@ -669,7 +669,7 @@ Route::group(
 // Object group controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'groups', 'as' => 'object-groups.'],
-    static function () {
+    static function (): void {
         // index
         Route::get('', ['uses' => 'ObjectGroup\IndexController@index', 'as' => 'index']);
         Route::post('set-order/{objectGroup}', ['uses' => 'ObjectGroup\IndexController@setOrder', 'as' => 'set-order']);
@@ -687,7 +687,7 @@ Route::group(
 // JScript Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'v1/jscript', 'as' => 'javascript.'],
-    static function () {
+    static function (): void {
         Route::get('variables', ['uses' => 'JavascriptController@variables', 'as' => 'variables']);
         Route::get('accounts', ['uses' => 'JavascriptController@accounts', 'as' => 'accounts']);
         Route::get('currencies', ['uses' => 'JavascriptController@currencies', 'as' => 'currencies']);
@@ -697,7 +697,7 @@ Route::group(
 // JScript Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'v2/jscript', 'as' => 'javascript.v2.'],
-    static function () {
+    static function (): void {
         Route::get('variables', ['uses' => 'JavascriptController@variablesV2', 'as' => 'variables']);
     }
 );
@@ -705,7 +705,7 @@ Route::group(
 // JSON Controller(s).
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'json', 'as' => 'json.'],
-    static function () {
+    static function (): void {
         // budgets:
         Route::get(
             'budget/total-budgeted/{currency}/{start_date}/{end_date}',
@@ -738,7 +738,7 @@ Route::group(
 // NewUser Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'new-user', 'as' => 'new-user.'],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'NewUserController@index', 'as' => 'index']);
         Route::post('submit', ['uses' => 'NewUserController@submit', 'as' => 'submit']);
     }
@@ -747,7 +747,7 @@ Route::group(
 // Piggy Bank Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'piggy-banks', 'as' => 'piggy-banks.'],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'PiggyBank\IndexController@index', 'as' => 'index']);
         Route::get('add/{piggyBank}', ['uses' => 'PiggyBank\AmountController@add', 'as' => 'add-money']);
         Route::get('remove/{piggyBank}', ['uses' => 'PiggyBank\AmountController@remove', 'as' => 'remove-money']);
@@ -770,7 +770,7 @@ Route::group(
 // Preferences Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'preferences', 'as' => 'preferences.'],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'PreferencesController@postIndex', 'as' => 'update']);
     }
@@ -779,7 +779,7 @@ Route::group(
 // Profile Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'profile', 'as' => 'profile.'],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ProfileController@index', 'as' => 'index']);
         Route::get('change-email', ['uses' => 'ProfileController@changeEmail', 'as' => 'change-email']);
         Route::get('change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
@@ -805,7 +805,7 @@ Route::group(
 // Recurring Transactions Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'recurring', 'as' => 'recurring.'],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'Recurring\IndexController@index', 'as' => 'index']);
 
         Route::get('show/{recurrence}', ['uses' => 'Recurring\ShowController@show', 'as' => 'show']);
@@ -828,7 +828,7 @@ Route::group(
 // Report Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'reports', 'as' => 'reports.'],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ReportController@index', 'as' => 'index']);
         Route::get('options/{reportType}', ['uses' => 'ReportController@options', 'as' => 'options']);
         Route::get('default/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@defaultReport', 'as' => 'report.default']);
@@ -848,7 +848,7 @@ Route::group(
 // Report Data AccountController.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Report', 'prefix' => 'report-data/account', 'as' => 'report-data.account.'],
-    static function () {
+    static function (): void {
         Route::get('general/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@general', 'as' => 'general'])->where(
             ['start_date' => DATEFORMAT]
         )
@@ -860,7 +860,7 @@ Route::group(
 // Report Data Bill Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Report', 'prefix' => 'report-data/bill', 'as' => 'report-data.bills.'],
-    static function () {
+    static function (): void {
         Route::get('overview/{accountList}/{start_date}/{end_date}', ['uses' => 'BillController@overview', 'as' => 'overview'])->where(
             ['start_date' => DATEFORMAT]
         )
@@ -872,7 +872,7 @@ Route::group(
 // Report Double Data Expense / Revenue Account Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Report', 'prefix' => 'report-data/double', 'as' => 'report-data.double.'],
-    static function () {
+    static function (): void {
         // spent + earned per combination.
         Route::get('operations/{accountList}/{doubleList}/{start_date}/{end_date}', ['uses' => 'DoubleController@operations', 'as' => 'operations'])->where(
             ['start_date' => DATEFORMAT]
@@ -920,7 +920,7 @@ Route::group(
         'prefix'     => 'report-data/operations',
         'as'         => 'report-data.operations.',
     ],
-    static function () {
+    static function (): void {
         Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'OperationsController@operations', 'as' => 'operations'])->where(
             ['start_date' => DATEFORMAT]
         )
@@ -947,7 +947,7 @@ Route::group(
         'prefix'     => 'report-data/category',
         'as'         => 'report-data.category.',
     ],
-    static function () {
+    static function (): void {
         // TODO three routes still in use?
         Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@operations', 'as' => 'operations'])->where(
             ['start_date' => DATEFORMAT]
@@ -1016,7 +1016,7 @@ Route::group(
         'prefix'     => 'report-data/tag',
         'as'         => 'report-data.tag.',
     ],
-    static function () {
+    static function (): void {
         Route::get('accounts/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagController@accounts', 'as' => 'accounts'])->where(
             ['start_date' => DATEFORMAT]
         )
@@ -1061,7 +1061,7 @@ Route::group(
 // Report Data Balance Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Report', 'prefix' => 'report-data/balance', 'as' => 'report-data.balance.'],
-    static function () {
+    static function (): void {
         Route::get('general/{accountList}/{start_date}/{end_date}', ['uses' => 'BalanceController@general', 'as' => 'general'])->where(
             ['start_date' => DATEFORMAT]
         )
@@ -1073,7 +1073,7 @@ Route::group(
 // Report Data Budget Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Report', 'prefix' => 'report-data/budget', 'as' => 'report-data.budget.'],
-    static function () {
+    static function (): void {
         Route::get('general/{accountList}/{start_date}/{end_date}/', ['uses' => 'BudgetController@general', 'as' => 'general'])->where(
             ['start_date' => DATEFORMAT]
         )
@@ -1118,7 +1118,7 @@ Route::group(
 // Rules Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'rules', 'as' => 'rules.'],
-    static function () {
+    static function (): void {
         // create controller
         Route::get('create/{ruleGroup?}', ['uses' => 'Rule\CreateController@create', 'as' => 'create']);
         Route::get('create-from-bill/{bill}', ['uses' => 'Rule\CreateController@createFromBill', 'as' => 'create-from-bill']);
@@ -1150,7 +1150,7 @@ Route::group(
 // Rule Groups Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'rule-groups', 'as' => 'rule-groups.'],
-    static function () {
+    static function (): void {
         Route::get('create', ['uses' => 'RuleGroup\CreateController@create', 'as' => 'create']);
         Route::get('edit/{ruleGroup}', ['uses' => 'RuleGroup\EditController@edit', 'as' => 'edit']);
         Route::get('delete/{ruleGroup}', ['uses' => 'RuleGroup\DeleteController@delete', 'as' => 'delete']);
@@ -1169,7 +1169,7 @@ Route::group(
 // Search Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'search', 'as' => 'search.'],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'SearchController@index', 'as' => 'index']);
         Route::any('search', ['uses' => 'SearchController@search', 'as' => 'search']);
     }
@@ -1178,7 +1178,7 @@ Route::group(
 // Tag Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'tags', 'as' => 'tags.'],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'TagController@index', 'as' => 'index']);
         Route::get('create', ['uses' => 'TagController@create', 'as' => 'create']);
 
@@ -1200,7 +1200,7 @@ Route::group(
 // Transaction Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'transactions', 'as' => 'transactions.'],
-    static function () {
+    static function (): void {
         // show groups:
         // TODO improve these routes
         Route::get('{what}/all', ['uses' => 'Transaction\IndexController@indexAll', 'as' => 'index.all'])->where(
@@ -1239,7 +1239,7 @@ Route::group(
 // Transaction Mass Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/mass', 'as' => 'transactions.mass.'],
-    static function () {
+    static function (): void {
         Route::get('edit/{journalList}', ['uses' => 'MassController@edit', 'as' => 'edit']);
         Route::get('delete/{journalList}', ['uses' => 'MassController@delete', 'as' => 'delete']);
         Route::post('update', ['uses' => 'MassController@update', 'as' => 'update']);
@@ -1250,7 +1250,7 @@ Route::group(
 // Transaction Bulk Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/bulk', 'as' => 'transactions.bulk.'],
-    static function () {
+    static function (): void {
         Route::get('edit/{journalList}', ['uses' => 'BulkController@edit', 'as' => 'edit']);
         Route::post('update', ['uses' => 'BulkController@update', 'as' => 'update']);
     }
@@ -1264,7 +1264,7 @@ Route::group(
         'prefix'     => 'transactions/convert',
         'as'         => 'transactions.convert.',
     ],
-    static function () {
+    static function (): void {
         Route::get('{transactionType}/{transactionGroup}', ['uses' => 'ConvertController@index', 'as' => 'index']);
         Route::post('{transactionType}/{transactionGroup}', ['uses' => 'ConvertController@postIndex', 'as' => 'index.post']);
     }
@@ -1273,7 +1273,7 @@ Route::group(
 // Transaction Link Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/link', 'as' => 'transactions.link.'],
-    static function () {
+    static function (): void {
         Route::get('modal/{tj}', ['uses' => 'LinkController@modal', 'as' => 'modal']);
 
         // TODO improve this route
@@ -1287,7 +1287,7 @@ Route::group(
 // Report Popup Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Popup', 'prefix' => 'popup', 'as' => 'popup.'],
-    static function () {
+    static function (): void {
         Route::get('general', ['uses' => 'ReportController@general', 'as' => 'general']);
     }
 );
@@ -1295,7 +1295,7 @@ Route::group(
 // Webhooks management
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Webhooks', 'prefix' => 'webhooks', 'as' => 'webhooks.'],
-    static function () {
+    static function (): void {
         Route::get('index', ['uses' => 'IndexController@index', 'as' => 'index']);
         Route::get('create', ['uses' => 'CreateController@index', 'as' => 'create']);
         Route::get('edit/{webhook}', ['uses' => 'EditController@index', 'as' => 'edit']);
@@ -1307,7 +1307,7 @@ Route::group(
 // For the admin routes, the user must be logged in and have the role of 'owner'.
 Route::group(
     ['middleware' => 'admin', 'namespace' => 'FireflyIII\Http\Controllers\Admin', 'prefix' => 'admin', 'as' => 'admin.'],
-    static function () {
+    static function (): void {
         // admin home
         Route::get('', ['uses' => 'HomeController@index', 'as' => 'index']);
         Route::post('test-message', ['uses' => 'HomeController@testMessage', 'as' => 'test-message']);

@@ -37,7 +37,7 @@ return new class() extends Migration {
         // transaction_currency_user
         if (!Schema::hasTable('transaction_currency_user')) {
             try {
-                Schema::create('transaction_currency_user', static function (Blueprint $table) {
+                Schema::create('transaction_currency_user', static function (Blueprint $table): void {
                     $table->id();
                     $table->timestamps();
                     $table->integer('user_id', false, true);
@@ -56,7 +56,7 @@ return new class() extends Migration {
         // transaction_currency_user_group
         if (!Schema::hasTable('transaction_currency_user_group')) {
             try {
-                Schema::create('transaction_currency_user_group', static function (Blueprint $table) {
+                Schema::create('transaction_currency_user_group', static function (Blueprint $table): void {
                     $table->id();
                     $table->timestamps();
                     $table->bigInteger('user_group_id', false, true);

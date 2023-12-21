@@ -37,7 +37,7 @@ return new class() extends Migration {
     {
         if (!Schema::hasTable('invited_users')) {
             try {
-                Schema::create('invited_users', static function (Blueprint $table) {
+                Schema::create('invited_users', static function (Blueprint $table): void {
                     $table->id();
                     $table->timestamps();
                     $table->integer('user_id', false, true);

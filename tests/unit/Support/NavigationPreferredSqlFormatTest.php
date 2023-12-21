@@ -68,7 +68,7 @@ final class NavigationPreferredSqlFormatTest extends TestCase
     /**
      * @dataProvider provideDates
      */
-    public function testGivenStartAndEndDatesWhenCallPreferredSqlFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected)
+    public function testGivenStartAndEndDatesWhenCallPreferredSqlFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
     {
         $formatPeriod = $this->navigation->preferredSqlFormat($start, $end);
         self::assertSame($expected, $formatPeriod);

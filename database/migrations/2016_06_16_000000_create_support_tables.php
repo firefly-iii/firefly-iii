@@ -77,7 +77,7 @@ class CreateSupportTables extends Migration
             try {
                 Schema::create(
                     'account_types',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->string('type', 50);
@@ -99,7 +99,7 @@ class CreateSupportTables extends Migration
             try {
                 Schema::create(
                     'transaction_currencies',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -124,7 +124,7 @@ class CreateSupportTables extends Migration
             try {
                 Schema::create(
                     'transaction_types',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -147,7 +147,7 @@ class CreateSupportTables extends Migration
             try {
                 Schema::create(
                     'jobs',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         // straight from Laravel
                         $table->bigIncrements('id');
                         $table->string('queue');
@@ -173,7 +173,7 @@ class CreateSupportTables extends Migration
             try {
                 Schema::create(
                     'password_resets',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         // straight from laravel
                         $table->string('email')->index();
                         $table->string('token')->index();
@@ -193,7 +193,7 @@ class CreateSupportTables extends Migration
             try {
                 Schema::create(
                     'permissions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->string('name')->unique();
@@ -214,7 +214,7 @@ class CreateSupportTables extends Migration
             try {
                 Schema::create(
                     'roles',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->string('name')->unique();
@@ -235,7 +235,7 @@ class CreateSupportTables extends Migration
             try {
                 Schema::create(
                     'permission_role',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->integer('permission_id')->unsigned();
                         $table->integer('role_id')->unsigned();
 
@@ -258,7 +258,7 @@ class CreateSupportTables extends Migration
             try {
                 Schema::create(
                     'sessions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->string('id')->unique();
                         $table->integer('user_id')->nullable();
                         $table->string('ip_address', 45)->nullable();
@@ -280,7 +280,7 @@ class CreateSupportTables extends Migration
             try {
                 Schema::create(
                     'configuration',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();

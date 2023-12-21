@@ -63,7 +63,7 @@ class UserGroups extends Migration
                 try {
                     Schema::table(
                         $tableName,
-                        static function (Blueprint $table) use ($tableName) {
+                        static function (Blueprint $table) use ($tableName): void {
                             if ('sqlite' !== config('database.default')) {
                                 $table->dropForeign(sprintf('%s_to_ugi', $tableName));
                             }
@@ -83,7 +83,7 @@ class UserGroups extends Migration
             try {
                 Schema::table(
                     'users',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         if ('sqlite' !== config('database.default')) {
                             $table->dropForeign('type_user_group_id');
                         }
@@ -118,7 +118,7 @@ class UserGroups extends Migration
             try {
                 Schema::create(
                     'user_groups',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->bigIncrements('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -136,7 +136,7 @@ class UserGroups extends Migration
             try {
                 Schema::create(
                     'user_roles',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->bigIncrements('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -154,7 +154,7 @@ class UserGroups extends Migration
             try {
                 Schema::create(
                     'group_memberships',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->bigIncrements('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -177,7 +177,7 @@ class UserGroups extends Migration
         try {
             Schema::table(
                 'users',
-                static function (Blueprint $table) {
+                static function (Blueprint $table): void {
                     if (!Schema::hasColumn('users', 'user_group_id')) {
                         $table->bigInteger('user_group_id', false, true)->nullable();
                         $table->foreign('user_group_id', 'type_user_group_id')->references('id')->on('user_groups')->onDelete('set null')->onUpdate(
@@ -197,7 +197,7 @@ class UserGroups extends Migration
             try {
                 Schema::table(
                     $tableName,
-                    static function (Blueprint $table) use ($tableName) {
+                    static function (Blueprint $table) use ($tableName): void {
                         if (!Schema::hasColumn($tableName, 'user_group_id')) {
                             $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
                             $table->foreign('user_group_id', sprintf('%s_to_ugi', $tableName))->references('id')->on('user_groups')->onDelete(

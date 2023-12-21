@@ -56,7 +56,7 @@ class ChangesForV4712 extends Migration
         try {
             Schema::table(
                 'transaction_journals',
-                static function (Blueprint $table) {
+                static function (Blueprint $table): void {
                     $table->dateTime('date')->change();
                 }
             );

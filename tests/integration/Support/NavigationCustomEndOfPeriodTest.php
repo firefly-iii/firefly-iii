@@ -38,7 +38,7 @@ final class NavigationCustomEndOfPeriodTest extends TestCase
     /**
      * @preserveGlobalState disabled
      */
-    public function testGivenADateAndCustomFrequencyWhenCalculateTheDateThenReturnsTheEndOfMonthSuccessful()
+    public function testGivenADateAndCustomFrequencyWhenCalculateTheDateThenReturnsTheEndOfMonthSuccessful(): void
     {
         $from       = Carbon::parse('2023-08-05');
         $expected   = Carbon::parse('2023-09-04');

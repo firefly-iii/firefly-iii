@@ -43,7 +43,7 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->string('repeat_freq', 30)->nullable();
                     }
                 );
@@ -56,7 +56,7 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->boolean('repeats')->default(0);
                     }
                 );
@@ -70,7 +70,7 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->renameColumn('start_date', 'startdate');
                     }
                 );
@@ -85,7 +85,7 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('end_date');
                     }
                 );
@@ -99,7 +99,7 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'transaction_currencies',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('decimal_places');
                     }
                 );
@@ -122,7 +122,7 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'transaction_currencies',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->smallInteger('decimal_places', false, true)->default(2);
                     }
                 );
@@ -137,7 +137,7 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->renameColumn('startdate', 'start_date');
                     }
                 );
@@ -152,7 +152,7 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->date('end_date')->nullable()->after('start_date');
                     }
                 );
@@ -167,7 +167,7 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('repeats');
                     }
                 );
@@ -180,7 +180,7 @@ class ChangesForV431 extends Migration
             try {
                 Schema::table(
                     'budget_limits',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('repeat_freq');
                     }
                 );

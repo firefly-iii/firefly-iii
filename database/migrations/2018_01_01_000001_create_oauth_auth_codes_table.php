@@ -53,7 +53,7 @@ class CreateOauthAuthCodesTable extends Migration
             try {
                 Schema::create(
                     'oauth_auth_codes',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->string('id', 100)->primary();
                         $table->integer('user_id');
                         $table->integer('client_id');

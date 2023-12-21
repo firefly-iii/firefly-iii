@@ -41,7 +41,7 @@ class ChangesForV420 extends Migration
             try {
                 Schema::table(
                     'journal_meta',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropSoftDeletes();
                     }
                 );
@@ -63,7 +63,7 @@ class ChangesForV420 extends Migration
             try {
                 Schema::table(
                     'journal_meta',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->softDeletes();
                     }
                 );

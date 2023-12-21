@@ -43,7 +43,7 @@ class ChangesForV440 extends Migration
         try {
             Schema::table(
                 'transactions',
-                static function (Blueprint $table) {
+                static function (Blueprint $table): void {
                     if (Schema::hasColumn('transactions', 'transaction_currency_id')) {
                         // cannot drop foreign keys in SQLite:
                         if ('sqlite' !== config('database.default')) {
@@ -70,7 +70,7 @@ class ChangesForV440 extends Migration
             try {
                 Schema::create(
                     'currency_exchange_rates',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();
@@ -95,7 +95,7 @@ class ChangesForV440 extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         if (!Schema::hasColumn('transactions', 'transaction_currency_id')) {
                             $table->integer('transaction_currency_id', false, true)->after('description')->nullable();
                             $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');

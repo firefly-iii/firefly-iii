@@ -30,7 +30,7 @@ Route::group(
         'prefix'    => 'v2/summary',
         'as'        => 'api.v2.summary.',
     ],
-    static function () {
+    static function (): void {
         Route::get('basic', ['uses' => 'BasicController@basic', 'as' => 'basic']);
     }
 );
@@ -41,7 +41,7 @@ Route::group(
         'prefix'    => 'v2',
         'as'        => 'api.v2.',
     ],
-    static function () {
+    static function (): void {
         Route::get('transactions', ['uses' => 'TransactionController@list', 'as' => 'transactions.list']);
         Route::get('accounts/{userGroupAccount}/transactions', ['uses' => 'AccountController@list', 'as' => 'accounts.transactions']);
     }
@@ -54,7 +54,7 @@ Route::group(
         'prefix'    => 'v2/autocomplete',
         'as'        => 'api.v2.autocomplete.',
     ],
-    static function () {
+    static function (): void {
         // Auto complete routes
         Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
         Route::get('transaction-descriptions', ['uses' => 'TransactionController@transactionDescriptions', 'as' => 'transaction-descriptions']);
@@ -68,7 +68,7 @@ Route::group(
         'prefix'    => 'v2/net-worth',
         'as'        => 'api.v2.net-worth.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'NetWorthController@get', 'as' => 'index']);
     }
 );
@@ -80,7 +80,7 @@ Route::group(
         'prefix'    => 'v2/chart',
         'as'        => 'api.v1.chart.',
     ],
-    static function () {
+    static function (): void {
         Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'account.dashboard']);
         Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
         Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
@@ -95,7 +95,7 @@ Route::group(
         'prefix'    => 'v2/accounts',
         'as'        => 'api.v2.accounts.',
     ],
-    static function () {
+    static function (): void {
         Route::get('{account}', ['uses' => 'ShowController@show', 'as' => 'show']);
     }
 );
@@ -107,7 +107,7 @@ Route::group(
         'prefix'    => 'v2/subscriptions',
         'as'        => 'api.v2.subscriptions.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
         Route::get('{userGroupBill}', ['uses' => 'ShowController@show', 'as' => 'show']);
         Route::get('sum/paid', ['uses' => 'SumController@paid', 'as' => 'sum.paid']);
@@ -122,7 +122,7 @@ Route::group(
         'prefix'    => 'v2/piggy-banks',
         'as'        => 'api.v2.piggy-banks.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
     }
 );
@@ -134,7 +134,7 @@ Route::group(
         'prefix'    => 'v2/currencies',
         'as'        => 'api.v2.currencies.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
     }
 );
@@ -146,7 +146,7 @@ Route::group(
         'prefix'    => 'v2/transactions',
         'as'        => 'api.v2.transactions.',
     ],
-    static function () {
+    static function (): void {
         Route::post('', ['uses' => 'StoreController@post', 'as' => 'store']);
     }
 );
@@ -158,7 +158,7 @@ Route::group(
         'prefix'    => 'v2/budgets',
         'as'        => 'api.v2.budgets',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);
         Route::get('{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
         Route::get('{budget}/limits', ['uses' => 'BudgetLimit\IndexController@index', 'as' => 'budget-limits.index']);
@@ -176,7 +176,7 @@ Route::group(
         'prefix'    => 'v2',
         'as'        => 'api.v2.system.',
     ],
-    static function () {
+    static function (): void {
         Route::get('preferences/{preference}', ['uses' => 'PreferencesController@get', 'as' => 'preferences.get']);
     }
 );
@@ -188,7 +188,7 @@ Route::group(
         'prefix'    => 'v2/user-groups',
         'as'        => 'api.v2.user-groups.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{userGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -207,7 +207,7 @@ Route::group(
         'prefix'    => 'v1/autocomplete',
         'as'        => 'api.v1.autocomplete.',
     ],
-    static function () {
+    static function (): void {
         // Auto complete routes
         Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
         Route::get('bills', ['uses' => 'BillController@bills', 'as' => 'bills']);
@@ -236,7 +236,7 @@ Route::group(
         'prefix'    => 'v1/chart/account',
         'as'        => 'api.v1.chart.account.',
     ],
-    static function () {
+    static function (): void {
         Route::get('overview', ['uses' => 'AccountController@overview', 'as' => 'overview']);
     }
 );
@@ -249,7 +249,7 @@ Route::group(
         'prefix'    => 'v1/data/export',
         'as'        => 'api.v1.data.export.',
     ],
-    static function () {
+    static function (): void {
         Route::get('accounts', ['uses' => 'ExportController@accounts', 'as' => 'accounts']);
         Route::get('bills', ['uses' => 'ExportController@bills', 'as' => 'bills']);
         Route::get('budgets', ['uses' => 'ExportController@budgets', 'as' => 'budgets']);
@@ -268,7 +268,7 @@ Route::group(
         'prefix'    => 'v1/data/destroy',
         'as'        => 'api.v1.data.',
     ],
-    static function () {
+    static function (): void {
         Route::delete('', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
     }
 );
@@ -278,7 +278,7 @@ Route::group(
         'prefix'    => 'v1/data/purge',
         'as'        => 'api.v1.data.',
     ],
-    static function () {
+    static function (): void {
         Route::delete('', ['uses' => 'PurgeController@purge', 'as' => 'purge']);
     }
 );
@@ -290,7 +290,7 @@ Route::group(
         'prefix'    => 'v1/data/bulk',
         'as'        => 'api.v1.data.bulk.',
     ],
-    static function () {
+    static function (): void {
         Route::post('transactions', ['uses' => 'TransactionController@update', 'as' => 'transactions']);
     }
 );
@@ -304,7 +304,7 @@ Route::group(
         'prefix'    => 'v1/insight/expense',
         'as'        => 'api.v1.insight.expense.',
     ],
-    static function () {
+    static function (): void {
         // Insight in expenses per account:
         Route::get('expense', ['uses' => 'AccountController@expense', 'as' => 'expense']);
         Route::get('asset', ['uses' => 'AccountController@asset', 'as' => 'asset']);
@@ -331,7 +331,7 @@ Route::group(
         'prefix'    => 'v1/insight/income',
         'as'        => 'api.v1.insight.income.',
     ],
-    static function () {
+    static function (): void {
         // Insight in expenses per account:
         Route::get('revenue', ['uses' => 'AccountController@revenue', 'as' => 'revenue']);
         Route::get('asset', ['uses' => 'AccountController@asset', 'as' => 'asset']);
@@ -356,7 +356,7 @@ Route::group(
         'prefix'    => 'v1/insight/transfer',
         'as'        => 'api.v1.insight.transfer.',
     ],
-    static function () {
+    static function (): void {
         // Insight in expenses per account:
         Route::get('asset', ['uses' => 'AccountController@asset', 'as' => 'asset']);
         Route::get('category', ['uses' => 'CategoryController@category', 'as' => 'category']);
@@ -375,7 +375,7 @@ Route::group(
         'prefix'    => 'v1/summary',
         'as'        => 'api.v1.summary.',
     ],
-    static function () {
+    static function (): void {
         Route::get('basic', ['uses' => 'BasicController@basic', 'as' => 'basic']);
     }
 );
@@ -388,7 +388,7 @@ Route::group(
         'prefix'    => 'v1/accounts',
         'as'        => 'api.v1.accounts.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{account}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -408,7 +408,7 @@ Route::group(
         'prefix'    => 'v1/attachments',
         'as'        => 'api.v1.attachments.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{attachment}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -426,7 +426,7 @@ Route::group(
         'prefix'    => 'v1/bills',
         'as'        => 'api.v1.bills.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{bill}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -446,7 +446,7 @@ Route::group(
         'prefix'    => 'v1/available-budgets',
         'as'        => 'api.v1.available-budgets.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         // Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{availableBudget}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -462,7 +462,7 @@ Route::group(
         'prefix'    => 'v1/budgets',
         'as'        => 'api.v1.budgets.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'Budget\ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'Budget\StoreController@store', 'as' => 'store']);
         Route::get('transactions-without-budget', ['uses' => 'Budget\ListController@withoutBudget', 'as' => 'without-budget']);
@@ -490,7 +490,7 @@ Route::group(
         'prefix'    => 'v1/budget-limits',
         'as'        => 'api.v1.budget-limits.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@indexAll', 'as' => 'index']);
     }
 );
@@ -502,7 +502,7 @@ Route::group(
         'prefix'    => 'v1/categories',
         'as'        => 'api.v1.categories.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{category}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -521,7 +521,7 @@ Route::group(
         'prefix'    => 'v1/object-groups',
         'as'        => 'api.v1.object-groups.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::get('{objectGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
         Route::put('{objectGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
@@ -539,7 +539,7 @@ Route::group(
         'prefix'    => 'v1/piggy-banks',
         'as'        => 'api.v1.piggy-banks.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{piggyBank}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -558,7 +558,7 @@ Route::group(
         'prefix'    => 'v1/recurrences',
         'as'        => 'api.v1.recurrences.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{recurrence}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -577,7 +577,7 @@ Route::group(
         'prefix'    => 'v1/rules',
         'as'        => 'api.v1.rules.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{rule}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -598,7 +598,7 @@ Route::group(
         'prefix'    => 'v1/rule-groups',
         'as'        => 'api.v1.rule-groups.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{ruleGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -618,7 +618,7 @@ Route::group(
         'prefix'    => 'v1/tags',
         'as'        => 'api.v1.tags.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{tagOrId}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -636,7 +636,7 @@ Route::group(
         'prefix'    => 'v1/transactions',
         'as'        => 'api.v1.transactions.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{transactionGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -654,7 +654,7 @@ Route::group(
         'prefix'    => 'v1/transaction-journals',
         'as'        => 'api.v1.transaction-journals.',
     ],
-    static function () {
+    static function (): void {
         Route::get('{tj}', ['uses' => 'ShowController@showJournal', 'as' => 'show']);
         Route::delete('{tj}', ['uses' => 'DestroyController@destroyJournal', 'as' => 'delete']);
 
@@ -669,7 +669,7 @@ Route::group(
         'prefix'    => 'v1/currencies',
         'as'        => 'api.v1.currencies.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('default', ['uses' => 'ShowController@showDefault', 'as' => 'show.default']);
@@ -699,7 +699,7 @@ Route::group(
         'prefix'    => 'v1/transaction-links',
         'as'        => 'api.v1.transaction-links.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{journalLink}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -715,7 +715,7 @@ Route::group(
         'prefix'    => 'v1/link-types',
         'as'        => 'api.v1.link-types.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{linkType}', ['uses' => 'ShowController@show', 'as' => 'show']);
@@ -732,7 +732,7 @@ Route::group(
         'prefix'    => 'v1/search',
         'as'        => 'api.v1.search.',
     ],
-    static function () {
+    static function (): void {
         Route::get('transactions', ['uses' => 'TransactionController@search', 'as' => 'transactions']);
         Route::get('accounts', ['uses' => 'AccountController@search', 'as' => 'accounts']);
     }
@@ -746,7 +746,7 @@ Route::group(
         'prefix'    => 'v1/about',
         'as'        => 'api.v1.about.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'AboutController@about', 'as' => 'index']);
         Route::get('user', ['uses' => 'AboutController@user', 'as' => 'user']);
     }
@@ -758,7 +758,7 @@ Route::group(
         'prefix'    => 'v1/configuration',
         'as'        => 'api.v1.configuration.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ConfigurationController@index', 'as' => 'index']);
         Route::get('{eitherConfigKey}', ['uses' => 'ConfigurationController@show', 'as' => 'show']);
         Route::put('{dynamicConfigKey}', ['uses' => 'ConfigurationController@update', 'as' => 'update']);
@@ -772,7 +772,7 @@ Route::group(
         'prefix'     => 'v1/users',
         'as'         => 'api.v1.users.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'UserController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'UserController@store', 'as' => 'store']);
         Route::get('{user}', ['uses' => 'UserController@show', 'as' => 'show']);
@@ -790,7 +790,7 @@ Route::group(
         'prefix'    => 'v1/preferences',
         'as'        => 'api.v1.preferences.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'PreferencesController@store', 'as' => 'store']);
         Route::get('{preference}', ['uses' => 'PreferencesController@show', 'as' => 'show']);
@@ -805,7 +805,7 @@ Route::group(
         'prefix'    => 'v1/webhooks',
         'as'        => 'api.v1.webhooks.',
     ],
-    static function () {
+    static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{webhook}', ['uses' => 'ShowController@show', 'as' => 'show']);

@@ -80,7 +80,7 @@ final class NavigationEndOfPeriodTest extends TestCase
     /**
      * @dataProvider provideDates
      */
-    public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected)
+    public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->endOfPeriod($from, $frequency);
         self::assertSame($expected->toDateString(), $period->toDateString());
@@ -98,7 +98,7 @@ final class NavigationEndOfPeriodTest extends TestCase
     /**
      * @dataProvider provideUnknownFrequencies
      */
-    public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(string $frequency, Carbon $from, Carbon $expected)
+    public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
         Log::spy();
 

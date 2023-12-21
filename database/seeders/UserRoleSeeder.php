@@ -36,7 +36,7 @@ class UserRoleSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run()
+    public function run(): void
     {
         $roles = [];
         foreach (UserRoleEnum::cases() as $role) {

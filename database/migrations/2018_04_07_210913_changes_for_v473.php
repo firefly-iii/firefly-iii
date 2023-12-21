@@ -44,7 +44,7 @@ class ChangesForV473 extends Migration
             try {
                 Schema::table(
                     'bills',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         // cannot drop foreign keys in SQLite:
                         if ('sqlite' !== config('database.default')) {
                             $table->dropForeign('bills_transaction_currency_id_foreign');
@@ -62,7 +62,7 @@ class ChangesForV473 extends Migration
             try {
                 Schema::table(
                     'rules',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('strict');
                     }
                 );
@@ -84,7 +84,7 @@ class ChangesForV473 extends Migration
             try {
                 Schema::table(
                     'bills',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->integer('transaction_currency_id', false, true)->nullable()->after('user_id');
                         $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
                     }
@@ -98,7 +98,7 @@ class ChangesForV473 extends Migration
             try {
                 Schema::table(
                     'rules',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->boolean('strict')->default(true);
                     }
                 );

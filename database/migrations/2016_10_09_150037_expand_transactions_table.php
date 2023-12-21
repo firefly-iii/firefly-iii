@@ -42,7 +42,7 @@ class ExpandTransactionsTable extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('identifier');
                     }
                 );
@@ -64,7 +64,7 @@ class ExpandTransactionsTable extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->smallInteger('identifier', false, true)->default(0);
                     }
                 );

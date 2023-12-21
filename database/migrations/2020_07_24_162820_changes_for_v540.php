@@ -44,7 +44,7 @@ class ChangesForV540 extends Migration
             try {
                 Schema::table(
                     'oauth_clients',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('provider');
                     }
                 );
@@ -58,7 +58,7 @@ class ChangesForV540 extends Migration
             try {
                 Schema::table(
                     'accounts',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('order');
                     }
                 );
@@ -72,7 +72,7 @@ class ChangesForV540 extends Migration
             try {
                 Schema::table(
                     'bills',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('end_date');
                     }
                 );
@@ -85,7 +85,7 @@ class ChangesForV540 extends Migration
             try {
                 Schema::table(
                     'bills',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('extension_date');
                     }
                 );
@@ -107,7 +107,7 @@ class ChangesForV540 extends Migration
             try {
                 Schema::table(
                     'accounts',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->integer('order', false, true)->default(0);
                     }
                 );
@@ -121,7 +121,7 @@ class ChangesForV540 extends Migration
             try {
                 Schema::table(
                     'oauth_clients',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->string('provider')->nullable();
                     }
                 );
@@ -135,7 +135,7 @@ class ChangesForV540 extends Migration
             try {
                 Schema::table(
                     'bills',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->date('end_date')->nullable()->after('date');
                         $table->date('extension_date')->nullable()->after('end_date');
                     }
@@ -150,7 +150,7 @@ class ChangesForV540 extends Migration
         try {
             Schema::table(
                 'oauth_clients',
-                static function (Blueprint $table) {
+                static function (Blueprint $table): void {
                     $table->string('secret', 100)->nullable()->change();
                 }
             );

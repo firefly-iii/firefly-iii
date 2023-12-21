@@ -51,7 +51,7 @@ class ChangesForV430 extends Migration
             try {
                 Schema::create(
                     'available_budgets',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->increments('id');
                         $table->timestamps();
                         $table->softDeletes();

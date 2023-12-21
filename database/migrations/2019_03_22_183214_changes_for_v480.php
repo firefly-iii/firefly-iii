@@ -43,7 +43,7 @@ class ChangesForV480 extends Migration
             try {
                 Schema::table(
                     'transaction_journals',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         // drop transaction_group_id + foreign key.
                         // cannot drop foreign keys in SQLite:
                         if ('sqlite' !== config('database.default')) {
@@ -74,7 +74,7 @@ class ChangesForV480 extends Migration
             try {
                 Schema::table(
                     'rule_groups',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         try {
                             $table->dropColumn('stop_processing');
                         } catch (ColumnDoesNotExist|QueryException $e) {
@@ -94,7 +94,7 @@ class ChangesForV480 extends Migration
             try {
                 Schema::table(
                     'users',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         try {
                             $table->dropColumn('mfa_secret');
                         } catch (ColumnDoesNotExist|QueryException $e) {
@@ -122,7 +122,7 @@ class ChangesForV480 extends Migration
             try {
                 Schema::table(
                     'transaction_journals',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->integer('transaction_currency_id', false, true)->nullable()->change();
 
                         // add column "group_id" after "transaction_type_id"
@@ -152,7 +152,7 @@ class ChangesForV480 extends Migration
             try {
                 Schema::table(
                     'rule_groups',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->boolean('stop_processing')->default(false);
                     }
                 );
@@ -167,7 +167,7 @@ class ChangesForV480 extends Migration
             try {
                 Schema::table(
                     'users',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->string('mfa_secret', 50)->nullable();
                     }
                 );

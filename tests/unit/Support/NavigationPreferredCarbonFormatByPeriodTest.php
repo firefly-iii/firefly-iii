@@ -61,7 +61,7 @@ final class NavigationPreferredCarbonFormatByPeriodTest extends TestCase
     /**
      * @dataProvider providePeriods
      */
-    public function testGivenAPeriodWhenCallPreferredCarbonFormatByPeriodThenReturnsExpectedFormat(string $period, string $expected)
+    public function testGivenAPeriodWhenCallPreferredCarbonFormatByPeriodThenReturnsExpectedFormat(string $period, string $expected): void
     {
         $formatPeriod = $this->navigation->preferredCarbonFormatByPeriod($period);
         self::assertSame($expected, $formatPeriod);

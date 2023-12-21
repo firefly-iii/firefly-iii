@@ -43,7 +43,7 @@ class ChangesForV470a extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('reconciled');
                     }
                 );
@@ -65,7 +65,7 @@ class ChangesForV470a extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->boolean('reconciled')->after('deleted_at')->default(0);
                     }
                 );

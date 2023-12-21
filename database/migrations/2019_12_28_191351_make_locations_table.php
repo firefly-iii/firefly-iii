@@ -53,7 +53,7 @@ class MakeLocationsTable extends Migration
             try {
                 Schema::create(
                     'locations',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->bigIncrements('id');
                         $table->timestamps();
                         $table->softDeletes();

@@ -43,7 +43,7 @@ class ChangesForV472 extends Migration
             try {
                 Schema::table(
                     'attachments',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->text('notes')->nullable();
                     }
                 );
@@ -57,7 +57,7 @@ class ChangesForV472 extends Migration
             try {
                 Schema::table(
                     'budgets',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('order');
                     }
                 );
@@ -79,7 +79,7 @@ class ChangesForV472 extends Migration
             try {
                 Schema::table(
                     'attachments',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('notes');
                     }
                 );
@@ -93,7 +93,7 @@ class ChangesForV472 extends Migration
             try {
                 Schema::table(
                     'budgets',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->mediumInteger('order', false, true)->default(0);
                     }
                 );

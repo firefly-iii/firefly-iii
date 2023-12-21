@@ -43,7 +43,7 @@ class ChangesForV479 extends Migration
             try {
                 Schema::table(
                     'transaction_currencies',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn(['enabled']);
                     }
                 );
@@ -65,7 +65,7 @@ class ChangesForV479 extends Migration
             try {
                 Schema::table(
                     'transaction_currencies',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->boolean('enabled')->default(0)->after('deleted_at');
                     }
                 );

@@ -43,7 +43,7 @@ class FixLdapConfiguration extends Migration
             try {
                 Schema::table(
                     'users',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn(['objectguid']);
                     }
                 );
@@ -69,7 +69,7 @@ class FixLdapConfiguration extends Migration
             try {
                 Schema::table(
                     'users',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->uuid('objectguid')->nullable()->after('id');
                     }
                 );

@@ -43,7 +43,7 @@ class ChangesForV450 extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('foreign_amount');
                     }
                 );
@@ -56,7 +56,7 @@ class ChangesForV450 extends Migration
         try {
             Schema::table(
                 'transactions',
-                static function (Blueprint $table) {
+                static function (Blueprint $table): void {
                     // cannot drop foreign keys in SQLite:
                     if ('sqlite' !== config('database.default')) {
                         $table->dropForeign('transactions_foreign_currency_id_foreign');
@@ -71,7 +71,7 @@ class ChangesForV450 extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('foreign_currency_id');
                     }
                 );
@@ -94,7 +94,7 @@ class ChangesForV450 extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->decimal('foreign_amount', 32, 12)->nullable()->after('amount');
                     }
                 );
@@ -109,7 +109,7 @@ class ChangesForV450 extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->integer('foreign_currency_id', false, true)->default(null)->after('foreign_amount')->nullable();
                         $table->foreign('foreign_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
                     }

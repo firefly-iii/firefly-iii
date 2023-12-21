@@ -44,7 +44,7 @@ class ChangesForV530a extends Migration
             try {
                 Schema::table(
                     'bills',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('order');
                     }
                 );
@@ -66,7 +66,7 @@ class ChangesForV530a extends Migration
             try {
                 Schema::table(
                     'bills',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->integer('order', false, true)->default(0);
                     }
                 );

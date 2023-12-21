@@ -37,7 +37,7 @@ return new class() extends Migration {
     {
         if (!Schema::hasTable('notifications')) {
             try {
-                Schema::create('notifications', static function (Blueprint $table) {
+                Schema::create('notifications', static function (Blueprint $table): void {
                     $table->uuid('id')->primary();
                     $table->string('type');
                     $table->morphs('notifiable');

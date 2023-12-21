@@ -37,7 +37,7 @@ return new class() extends Migration {
     {
         if (!Schema::hasTable('audit_log_entries')) {
             try {
-                Schema::create('audit_log_entries', static function (Blueprint $table) {
+                Schema::create('audit_log_entries', static function (Blueprint $table): void {
                     $table->id();
                     $table->timestamps();
                     $table->softDeletes();
