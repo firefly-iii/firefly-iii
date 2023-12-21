@@ -222,7 +222,7 @@ class LoginController extends Controller
      *
      * @throws ValidationException
      */
-    protected function sendFailedLoginResponse(Request $request)
+    protected function sendFailedLoginResponse(Request $request): void
     {
         $exception             = ValidationException::withMessages(
             [

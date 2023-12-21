@@ -58,5 +58,6 @@ return $config->setRules([
                              'type_declaration_spaces'       => false,
                              'cast_spaces'                   => false,
                              'binary_operator_spaces'        => false,
+                             'void_return'                   => true,
                          ])
               ->setFinder($finder);

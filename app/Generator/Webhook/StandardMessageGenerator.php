@@ -180,6 +180,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 break;
 
             case WebhookResponse::TRANSACTIONS->value:
+                /** @var TransactionGroup $model */
                 $transformer = new TransactionGroupTransformer();
 
                 try {
@@ -196,6 +197,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 break;
 
             case WebhookResponse::ACCOUNTS->value:
+                /** @var TransactionGroup $model */
                 $accounts = $this->collectAccounts($model);
                 foreach ($accounts as $account) {
                     $transformer = new AccountTransformer();

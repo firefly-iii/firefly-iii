@@ -374,7 +374,7 @@ class ForceDecimalSize extends Command
     /**
      * This method fixes all piggy bank repetitions in currency $currency.
      */
-    private function correctPiggyRepetitionAmounts(TransactionCurrency $currency, array $fields)
+    private function correctPiggyRepetitionAmounts(TransactionCurrency $currency, array $fields): void
     {
         $operator          = $this->operator;
         $cast              = $this->cast;

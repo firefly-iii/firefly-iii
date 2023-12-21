@@ -92,7 +92,7 @@ class StoreRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            static function (Validator $validator) {
+            static function (Validator $validator): void {
                 $data = $validator->getData();
                 $min  = (string)($data['amount_min'] ?? '0');
                 $max  = (string)($data['amount_max'] ?? '0');

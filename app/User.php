@@ -527,7 +527,7 @@ class User extends Authenticatable
      *
      * @deprecated
      */
-    public function setLdapDomain($domain)
+    public function setLdapDomain($domain): void
     {
         $this->{$this->getLdapDomainColumn()} = $domain;
     }
@@ -539,7 +539,7 @@ class User extends Authenticatable
      *
      * @deprecated
      */
-    public function setLdapGuid($guid)
+    public function setLdapGuid($guid): void
     {
         $this->{$this->getLdapGuidColumn()} = $guid;
     }

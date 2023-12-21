@@ -95,7 +95,7 @@ class UpdateRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            static function (Validator $validator) {
+            static function (Validator $validator): void {
                 $data = $validator->getData();
                 if (array_key_exists('amount_min', $data) && array_key_exists('amount_max', $data)) {
                     $min = $data['amount_min'] ?? '0';

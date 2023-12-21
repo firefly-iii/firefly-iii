@@ -91,7 +91,7 @@ class UpgradeCurrencyPreferences extends Command
         }
     }
 
-    private function upgradeGroupPreferences(UserGroup $group)
+    private function upgradeGroupPreferences(UserGroup $group): void
     {
         $currencies = TransactionCurrency::get();
         $enabled    = new Collection();

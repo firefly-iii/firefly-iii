@@ -51,7 +51,7 @@ class FixAccountTypes extends Command
     /**
      * Execute the console command.
      *
-     * @throws FireflyException|\JsonException
+     * @throws FireflyException
      */
     public function handle(): int
     {
@@ -373,7 +373,7 @@ class FixAccountTypes extends Command
         $this->inspectJournal($journal);
     }
 
-    private function giveNewExpense(TransactionJournal $journal, Transaction $destination)
+    private function giveNewExpense(TransactionJournal $journal, Transaction $destination): void
     {
         app('log')->debug(sprintf('An account of type "%s" could be a valid destination.', AccountTypeEnum::EXPENSE->value));
         $this->factory->setUser($journal->user);

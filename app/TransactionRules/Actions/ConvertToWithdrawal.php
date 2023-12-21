@@ -86,7 +86,7 @@ class ConvertToWithdrawal implements ActionInterface
 
             try {
                 $res = $this->convertDepositArray($object);
-            } catch (FireflyException|\JsonException $e) {
+            } catch (FireflyException $e) {
                 app('log')->debug('Could not convert transfer to deposit.');
                 app('log')->error($e->getMessage());
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
@@ -102,7 +102,7 @@ class ConvertToWithdrawal implements ActionInterface
 
         try {
             $res = $this->convertTransferArray($object);
-        } catch (FireflyException|\JsonException $e) {
+        } catch (FireflyException $e) {
             app('log')->debug('Could not convert transfer to deposit.');
             app('log')->error($e->getMessage());
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));

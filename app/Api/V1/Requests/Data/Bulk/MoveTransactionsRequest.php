@@ -66,7 +66,7 @@ class MoveTransactionsRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator) {
+            function (Validator $validator): void {
                 // validate start before end only if both are there.
                 $data = $validator->getData();
                 if (array_key_exists('original_account', $data) && array_key_exists('destination_account', $data)) {

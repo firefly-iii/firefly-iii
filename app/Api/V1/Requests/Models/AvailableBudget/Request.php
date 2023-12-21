@@ -74,7 +74,7 @@ class Request extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            static function (Validator $validator) {
+            static function (Validator $validator): void {
                 // validate start before end only if both are there.
                 $data = $validator->getData();
                 if (array_key_exists('start', $data) && array_key_exists('end', $data)) {
