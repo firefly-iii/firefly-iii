@@ -183,6 +183,14 @@ class ExchangeRateConverter
         ;
         ++$this->queryCount;
         $rate = (string) $result?->rate;
+
+        if ('' === $rate) {
+            return null;
+        }
+        if('0' === $rate) {
+            return null;
+        }
+
         $cache->store($rate);
 
         // if the rate has not been cached during this particular run, save it
@@ -197,10 +205,6 @@ class ExchangeRateConverter
                 $from => bcdiv('1', $rate),
             ],
         ];
-
-        if ('' === $rate) {
-            return null;
-        }
 
         return $rate;
     }
