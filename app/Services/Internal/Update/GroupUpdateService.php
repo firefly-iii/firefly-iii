@@ -80,6 +80,7 @@ class GroupUpdateService
                 sprintf('Will now update journal #%d (only journal in group #%d)', $first->id, $transactionGroup->id)
             );
             $this->updateTransactionJournal($transactionGroup, $first, reset($transactions));
+            $transactionGroup->touch();
             $transactionGroup->refresh();
             app('preferences')->mark();
 
@@ -94,6 +95,7 @@ class GroupUpdateService
 
         if (0 === count($updated)) {
             app('log')->error('There were no transactions updated or created. Will not delete anything.');
+            $transactionGroup->touch();
             $transactionGroup->refresh();
             app('preferences')->mark();
 
@@ -115,6 +117,7 @@ class GroupUpdateService
         }
 
         app('preferences')->mark();
+        $transactionGroup->touch();
         $transactionGroup->refresh();
 
         return $transactionGroup;
