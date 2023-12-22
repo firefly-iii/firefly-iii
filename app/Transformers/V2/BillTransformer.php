@@ -47,6 +47,11 @@ class BillTransformer extends AbstractTransformer
     private array                 $notes;
     private array                 $paidDates;
 
+    /**
+     * @throws \FireflyIII\Exceptions\FireflyException
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function collectMetaData(Collection $objects): void
     {
         $currencies      = [];
@@ -55,7 +60,6 @@ class BillTransformer extends AbstractTransformer
         $this->groups    = [];
         $this->paidDates = [];
 
-        // start with currencies:
         /** @var Bill $object */
         foreach ($objects as $object) {
             $id              = $object->transaction_currency_id;
@@ -63,9 +67,7 @@ class BillTransformer extends AbstractTransformer
             $currencies[$id] ??= TransactionCurrency::find($id);
         }
         $this->currencies = $currencies;
-
-        // continue with notes
-        $notes = Note::whereNoteableType(Bill::class)->whereIn('noteable_id', array_keys($bills))->get();
+        $notes            = Note::whereNoteableType(Bill::class)->whereIn('noteable_id', array_keys($bills))->get();
 
         /** @var Note $note */
         foreach ($notes as $note) {
@@ -81,8 +83,8 @@ class BillTransformer extends AbstractTransformer
 
         /** @var ObjectGroup $entry */
         foreach ($set as $entry) {
-            $billId                = (int)$entry->object_groupable_id;
-            $id                    = (int)$entry->object_group_id;
+            $billId                = (int) $entry->object_groupable_id;
+            $id                    = (int) $entry->object_group_id;
             $order                 = $entry->order;
             $this->groups[$billId] = [
                 'object_group_id'    => $id,
@@ -103,11 +105,10 @@ class BillTransformer extends AbstractTransformer
             $journalIds = $journals->pluck('id')->toArray();
 
             // grab transactions for amount:
-            $set = Transaction::whereIn('transaction_journal_id', $journalIds)
+            $set          = Transaction::whereIn('transaction_journal_id', $journalIds)
                 ->where('transactions.amount', '<', 0)
                 ->get(['transactions.id', 'transactions.transaction_journal_id', 'transactions.amount', 'transactions.foreign_amount', 'transactions.transaction_currency_id', 'transactions.foreign_currency_id'])
             ;
-            // convert to array for easy finding:
             $transactions = [];
 
             /** @var Transaction $transaction */
@@ -120,8 +121,8 @@ class BillTransformer extends AbstractTransformer
             foreach ($journals as $journal) {
                 app('log')->debug(sprintf('Processing journal #%d', $journal->id));
                 $transaction             = $transactions[$journal->id] ?? [];
-                $billId                  = (int)$journal->bill_id;
-                $currencyId              = (int)($transaction['transaction_currency_id'] ?? 0);
+                $billId                  = (int) $journal->bill_id;
+                $currencyId              = (int) ($transaction['transaction_currency_id'] ?? 0);
                 $currencies[$currencyId] ??= TransactionCurrency::find($currencyId);
 
                 // foreign currency
@@ -133,7 +134,7 @@ class BillTransformer extends AbstractTransformer
                 app('log')->debug('Foreign currency is NULL');
                 if (null !== $transaction['foreign_currency_id']) {
                     app('log')->debug(sprintf('Foreign currency is #%d', $transaction['foreign_currency_id']));
-                    $foreignCurrencyId              = (int)$transaction['foreign_currency_id'];
+                    $foreignCurrencyId              = (int) $transaction['foreign_currency_id'];
                     $currencies[$foreignCurrencyId] ??= TransactionCurrency::find($foreignCurrencyId);
                     $foreignCurrencyCode            = $currencies[$foreignCurrencyId]->code;
                     $foreignCurrencyName            = $currencies[$foreignCurrencyId]->name;
@@ -142,8 +143,8 @@ class BillTransformer extends AbstractTransformer
                 }
 
                 $this->paidDates[$billId][] = [
-                    'transaction_group_id'            => (string)$journal->id,
-                    'transaction_journal_id'          => (string)$journal->transaction_group_id,
+                    'transaction_group_id'            => (string) $journal->id,
+                    'transaction_journal_id'          => (string) $journal->transaction_group_id,
                     'date'                            => $journal->date->toAtomString(),
                     'currency_id'                     => $currencies[$currencyId]->id,
                     'currency_code'                   => $currencies[$currencyId]->code,
@@ -162,7 +163,7 @@ class BillTransformer extends AbstractTransformer
                     'amount'                          => $transaction['amount'],
                     'foreign_amount'                  => $transaction['foreign_amount'],
                     'native_amount'                   => $this->converter->convert($currencies[$currencyId], $this->default, $journal->date, $transaction['amount']),
-                    'foreign_native_amount'           => '' === (string)$transaction['foreign_amount'] ? null : $this->converter->convert(
+                    'foreign_native_amount'           => '' === (string) $transaction['foreign_amount'] ? null : $this->converter->convert(
                         $currencies[$foreignCurrencyId],
                         $this->default,
                         $journal->date,
@@ -203,7 +204,7 @@ class BillTransformer extends AbstractTransformer
             'amount_max'                     => app('steam')->bcround($bill->amount_max, $currency->decimal_places),
             'native_amount_min'              => $this->converter->convert($currency, $this->default, $date, $bill->amount_min),
             'native_amount_max'              => $this->converter->convert($currency, $this->default, $date, $bill->amount_max),
-            'currency_id'                    => (string)$bill->transaction_currency_id,
+            'currency_id'                    => (string) $bill->transaction_currency_id,
             'currency_code'                  => $currency->code,
             'currency_name'                  => $currency->name,
             'currency_symbol'                => $currency->symbol,

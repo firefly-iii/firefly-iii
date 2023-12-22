@@ -44,6 +44,11 @@ class StandardWebhookSender implements WebhookSenderInterface
         return $this->version;
     }
 
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function send(): void
     {
         // have the signature generator generate a signature. If it fails, the error thrown will

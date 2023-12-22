@@ -181,7 +181,6 @@ class CreditRecalculateService
         }
         $startOfDebt = $this->repository->getOpeningBalanceAmount($account) ?? '0';
         $leftOfDebt  = app('steam')->positive($startOfDebt);
-        $currency    = $this->repository->getAccountCurrency($account);
         app('log')->debug(sprintf('Start of debt is "%s", so initial left of debt is "%s"', app('steam')->bcround($startOfDebt, 2), app('steam')->bcround($leftOfDebt, 2)));
 
         /** @var AccountMetaFactory $factory */
@@ -243,6 +242,9 @@ class CreditRecalculateService
         app('log')->debug('Opening balance is valid');
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     private function processTransaction(Account $account, string $direction, Transaction $transaction, string $leftOfDebt): string
     {
         $journal         = $transaction->transactionJournal;
@@ -313,14 +315,14 @@ class CreditRecalculateService
 
             return $result;
         }
-        if($isSameAccount && $isDebit && $this->isDepositOut($usedAmount, $type)) { // case 7
+        if ($isSameAccount && $isDebit && $this->isDepositOut($usedAmount, $type)) { // case 7
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcadd($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 7 (deposit away from liability): %s - %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
 
             return $result;
         }
-        if($isSameAccount && $isDebit && $this->isWithdrawalOut($usedAmount, $type)) { // case 8
+        if ($isSameAccount && $isDebit && $this->isWithdrawalOut($usedAmount, $type)) { // case 8
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcadd($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 8 (withdrawal away from liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));

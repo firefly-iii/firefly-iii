@@ -386,6 +386,9 @@ class CreateMainTables extends Migration
         }
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     private function createRuleTables(): void
     {
         if (!Schema::hasTable('rule_groups')) {

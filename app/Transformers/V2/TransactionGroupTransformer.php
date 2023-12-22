@@ -57,13 +57,13 @@ class TransactionGroupTransformer extends AbstractTransformer
         /** @var array $object */
         foreach ($objects as $object) {
             foreach ($object['sums'] as $sum) {
-                $id              = (int)$sum['currency_id'];
+                $id              = (int) $sum['currency_id'];
                 $currencies[$id] ??= TransactionCurrency::find($sum['currency_id']);
             }
 
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
-                $id            = (int)$transaction['transaction_journal_id'];
+                $id            = (int) $transaction['transaction_journal_id'];
                 $journals[$id] = [];
             }
         }
@@ -97,7 +97,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         /** @var \stdClass $tag */
         foreach ($tags as $tag) {
-            $id                = (int)$tag->transaction_journal_id;
+            $id                = (int) $tag->transaction_journal_id;
             $this->tags[$id][] = $tag->tag;
         }
 
@@ -110,11 +110,11 @@ class TransactionGroupTransformer extends AbstractTransformer
         $first = reset($group['transactions']);
 
         return [
-            'id'           => (string)$group['id'],
+            'id'           => (string) $group['id'],
             'created_at'   => $first['created_at']->toAtomString(),
             'updated_at'   => $first['updated_at']->toAtomString(),
-            'user'         => (string)$first['user_id'],
-            'user_group'   => (string)$first['user_group_id'],
+            'user'         => (string) $first['user_id'],
+            'user_group'   => (string) $first['user_group_id'],
             'group_title'  => $group['title'] ?? null,
             'transactions' => $this->transformTransactions($group['transactions'] ?? []),
             'links'        => [
@@ -140,33 +140,35 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     /**
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function transformTransaction(array $transaction): array
     {
         $transaction = new NullArrayObject($transaction);
         $type        = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
-        $journalId   = (int)$transaction['transaction_journal_id'];
+        $journalId   = (int) $transaction['transaction_journal_id'];
         $meta        = new NullArrayObject($this->meta[$journalId] ?? []);
 
         /**
          * Convert and use amount:
          */
-        $amount              = app('steam')->positive((string)($transaction['amount'] ?? '0'));
-        $currencyId          = (int)$transaction['currency_id'];
+        $amount              = app('steam')->positive((string) ($transaction['amount'] ?? '0'));
+        $currencyId          = (int) $transaction['currency_id'];
         $nativeAmount        = $this->converter->convert($this->default, $this->currencies[$currencyId], $transaction['date'], $amount);
         $foreignAmount       = null;
         $nativeForeignAmount = null;
         if (null !== $transaction['foreign_amount']) {
-            $foreignCurrencyId   = (int)$transaction['foreign_currency_id'];
+            $foreignCurrencyId   = (int) $transaction['foreign_currency_id'];
             $foreignAmount       = app('steam')->positive($transaction['foreign_amount']);
             $nativeForeignAmount = $this->converter->convert($this->default, $this->currencies[$foreignCurrencyId], $transaction['date'], $foreignAmount);
         }
         $this->converter->summarize();
 
         return [
-            'user'                            => (string)$transaction['user_id'],
-            'user_group'                      => (string)$transaction['user_group_id'],
-            'transaction_journal_id'          => (string)$transaction['transaction_journal_id'],
+            'user'                            => (string) $transaction['user_id'],
+            'user_group'                      => (string) $transaction['user_group_id'],
+            'transaction_journal_id'          => (string) $transaction['transaction_journal_id'],
             'type'                            => strtolower($type),
             'date'                            => $transaction['date']->toAtomString(),
             'order'                           => $transaction['order'],
@@ -174,14 +176,14 @@ class TransactionGroupTransformer extends AbstractTransformer
             'native_amount'                   => $nativeAmount,
             'foreign_amount'                  => $foreignAmount,
             'native_foreign_amount'           => $nativeForeignAmount,
-            'currency_id'                     => (string)$transaction['currency_id'],
+            'currency_id'                     => (string) $transaction['currency_id'],
             'currency_code'                   => $transaction['currency_code'],
             'currency_name'                   => $transaction['currency_name'],
             'currency_symbol'                 => $transaction['currency_symbol'],
-            'currency_decimal_places'         => (int)$transaction['currency_decimal_places'],
+            'currency_decimal_places'         => (int) $transaction['currency_decimal_places'],
 
             // converted to native currency
-            'native_currency_id'              => (string)$this->default->id,
+            'native_currency_id'              => (string) $this->default->id,
             'native_currency_code'            => $this->default->code,
             'native_currency_name'            => $this->default->name,
             'native_currency_symbol'          => $this->default->symbol,
@@ -196,11 +198,11 @@ class TransactionGroupTransformer extends AbstractTransformer
 
             // foreign converted to native:
             'description'                     => $transaction['description'],
-            'source_id'                       => (string)$transaction['source_account_id'],
+            'source_id'                       => (string) $transaction['source_account_id'],
             'source_name'                     => $transaction['source_account_name'],
             'source_iban'                     => $transaction['source_account_iban'],
             'source_type'                     => $transaction['source_account_type'],
-            'destination_id'                  => (string)$transaction['destination_account_id'],
+            'destination_id'                  => (string) $transaction['destination_account_id'],
             'destination_name'                => $transaction['destination_account_name'],
             'destination_iban'                => $transaction['destination_account_iban'],
             'destination_type'                => $transaction['destination_account_type'],
@@ -265,7 +267,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             return $default;
         }
         if (null !== $array[$key]) {
-            return (string)$array[$key];
+            return (string) $array[$key];
         }
 
         if (null !== $default) {

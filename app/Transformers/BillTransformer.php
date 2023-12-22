@@ -51,24 +51,23 @@ class BillTransformer extends AbstractTransformer
 
     /**
      * Transform the bill.
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function transform(Bill $bill): array
     {
         $paidData     = $this->paidData($bill);
         $lastPaidDate = $this->getLastPaidDate($paidData);
-
-        // both params can be NULL, so just in case they are, add some wide margins:
-        $start    = $this->parameters->get('start') ?? today()->subYears(10);
-        $end      = $this->parameters->get('end') ?? today()->addYears(10);
-        $payDates = $this->calculator->getPayDates($start, $end, $bill->date, $bill->repeat_freq, $bill->skip, $lastPaidDate);
-        $currency = $bill->transactionCurrency;
-        $notes    = $this->repository->getNoteText($bill);
-        $notes    = '' === $notes ? null : $notes;
-        $this->repository->setUser($bill->user);
-
+        $start        = $this->parameters->get('start') ?? today()->subYears(10);
+        $end          = $this->parameters->get('end') ?? today()->addYears(10);
+        $payDates     = $this->calculator->getPayDates($start, $end, $bill->date, $bill->repeat_freq, $bill->skip, $lastPaidDate);
+        $currency     = $bill->transactionCurrency;
+        $notes        = $this->repository->getNoteText($bill);
+        $notes        = '' === $notes ? null : $notes;
         $objectGroupId    = null;
         $objectGroupOrder = null;
         $objectGroupTitle = null;
+        $this->repository->setUser($bill->user);
 
         /** @var null|ObjectGroup $objectGroup */
         $objectGroup = $bill->objectGroups->first();
@@ -138,7 +137,7 @@ class BillTransformer extends AbstractTransformer
             'id'                       => $bill->id,
             'created_at'               => $bill->created_at->toAtomString(),
             'updated_at'               => $bill->updated_at->toAtomString(),
-            'currency_id'              => (string)$bill->transaction_currency_id,
+            'currency_id'              => (string) $bill->transaction_currency_id,
             'currency_code'            => $currency->code,
             'currency_symbol'          => $currency->symbol,
             'currency_decimal_places'  => $currency->decimal_places,
@@ -153,7 +152,7 @@ class BillTransformer extends AbstractTransformer
             'active'                   => $bill->active,
             'order'                    => $bill->order,
             'notes'                    => $notes,
-            'object_group_id'          => null !== $objectGroupId ? (string)$objectGroupId : null,
+            'object_group_id'          => null !== $objectGroupId ? (string) $objectGroupId : null,
             'object_group_order'       => $objectGroupOrder,
             'object_group_title'       => $objectGroupTitle,
 
@@ -207,8 +206,8 @@ class BillTransformer extends AbstractTransformer
         $result = [];
         foreach ($set as $entry) {
             $result[] = [
-                'transaction_group_id'   => (string)$entry->transaction_group_id,
-                'transaction_journal_id' => (string)$entry->id,
+                'transaction_group_id'   => (string) $entry->transaction_group_id,
+                'transaction_journal_id' => (string) $entry->id,
                 'date'                   => $entry->date->format('Y-m-d'),
                 'date_object'            => $entry->date,
             ];

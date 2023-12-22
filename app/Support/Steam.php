@@ -215,6 +215,8 @@ class Steam
 
     /**
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function balanceInRangeConverted(Account $account, Carbon $start, Carbon $end, TransactionCurrency $native): array
     {
@@ -317,22 +319,36 @@ class Steam
     }
 
     /**
+     *  selection of transactions
+     *  1: all normal transactions. No foreign currency info. In $currency. Need conversion.
+     *  2: all normal transactions. No foreign currency info. In $native. Need NO conversion.
+     *  3: all normal transactions. No foreign currency info. In neither currency. Need conversion.
+     *  Then, select everything with foreign currency info:
+     *  4. All transactions with foreign currency info in $native. Normal currency value is ignored. Do not need
+     *  conversion.
+     *  5. All transactions with foreign currency info NOT in $native, but currency info in $currency. Need conversion.
+     *  6. All transactions with foreign currency info NOT in $native, and currency info NOT in $currency. Need
+     *  conversion.
+     *
      * Gets balance at the end of current month by default. Returns the balance converted
      * to the indicated currency ($native).
      *
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function balanceConverted(Account $account, Carbon $date, TransactionCurrency $native): string
     {
-        //        app('log')->debug(sprintf('Now in balanceConverted (%s) for account #%d, converting to %s', $date->format('Y-m-d'), $account->id, $native->code));
+        app('log')->debug(sprintf('Now in balanceConverted (%s) for account #%d, converting to %s', $date->format('Y-m-d'), $account->id, $native->code));
         $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('balance');
         $cache->addProperty($date);
         $cache->addProperty($native->id);
         if ($cache->has()) {
-            //            Log::debug('Cached!');
-            //            return $cache->get();
+            Log::debug('Cached!');
+
+            return $cache->get();
         }
 
         /** @var AccountRepositoryInterface $repository */
@@ -344,20 +360,9 @@ class Steam
             return $this->balance($account, $date);
         }
 
-        /**
-         * selection of transactions
-         * 1: all normal transactions. No foreign currency info. In $currency. Need conversion.
-         * 2: all normal transactions. No foreign currency info. In $native. Need NO conversion.
-         * 3: all normal transactions. No foreign currency info. In neither currency. Need conversion.
-         * Then, select everything with foreign currency info:
-         * 4. All transactions with foreign currency info in $native. Normal currency value is ignored. Do not need conversion.
-         * 5. All transactions with foreign currency info NOT in $native, but currency info in $currency. Need conversion.
-         * 6. All transactions with foreign currency info NOT in $native, and currency info NOT in $currency. Need conversion.
-         */
         $new      = [];
         $existing = [];
-        // 1
-        $new[] = $account->transactions()
+        $new[]    = $account->transactions() // 1
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
             ->where('transactions.transaction_currency_id', $currency->id)
@@ -365,8 +370,7 @@ class Steam
             ->get(['transaction_journals.date', 'transactions.amount'])->toArray()
         ;
         app('log')->debug(sprintf('%d transaction(s) in set #1', count($new[0])));
-        // 2
-        $existing[] = $account->transactions()
+        $existing[] = $account->transactions()         // 2
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
             ->where('transactions.transaction_currency_id', $native->id)
@@ -374,8 +378,7 @@ class Steam
             ->get(['transactions.amount'])->toArray()
         ;
         app('log')->debug(sprintf('%d transaction(s) in set #2', count($existing[0])));
-        // 3
-        $new[] = $account->transactions()
+        $new[] = $account->transactions()         // 3
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
             ->where('transactions.transaction_currency_id', '!=', $currency->id)
@@ -384,8 +387,7 @@ class Steam
             ->get(['transaction_journals.date', 'transactions.amount'])->toArray()
         ;
         app('log')->debug(sprintf('%d transactions in set #3', count($new[1])));
-        // 4
-        $existing[] = $account->transactions()
+        $existing[] = $account->transactions() // 4
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
             ->where('transactions.foreign_currency_id', $native->id)
@@ -393,8 +395,7 @@ class Steam
             ->get(['transactions.foreign_amount'])->toArray()
         ;
         app('log')->debug(sprintf('%d transactions in set #4', count($existing[1])));
-        // 5
-        $new[] = $account->transactions()
+        $new[] = $account->transactions()// 5
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
             ->where('transactions.transaction_currency_id', $currency->id)
@@ -403,8 +404,7 @@ class Steam
             ->get(['transaction_journals.date', 'transactions.amount'])->toArray()
         ;
         app('log')->debug(sprintf('%d transactions in set #5', count($new[2])));
-        // 6
-        $new[] = $account->transactions()
+        $new[] = $account->transactions()// 6
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
             ->where('transactions.transaction_currency_id', '!=', $currency->id)

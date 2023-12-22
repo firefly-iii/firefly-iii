@@ -70,8 +70,8 @@
     </rule>
     <rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
         <properties>
-            <!-- TODO we want to be at a value of 40. But we start high, and drop the bar slowly. -->
-            <property name="minimum" value="100"/>
+            <!-- 75 seems like a nice number. Shorter isn't always feasible and there are a few exceptions already -->
+            <property name="minimum" value="75"/>
             <property name="ignore-whitespace" value="true"/>
         </properties>
     </rule>

@@ -41,11 +41,8 @@ class DoubleController extends Controller
 {
     use AugumentData;
 
-    /** @var AccountRepositoryInterface The account repository */
-    protected $accountRepository;
-
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
+    protected AccountRepositoryInterface $accountRepository;
+    private OperationsRepositoryInterface $opsRepository;
 
     /**
      * Constructor for ExpenseController
@@ -167,6 +164,8 @@ class DoubleController extends Controller
 
     /**
      * @return Factory|View
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function operations(Collection $accounts, Collection $double, Carbon $start, Carbon $end)
     {

@@ -49,6 +49,9 @@ class ConvertToTransfer implements ActionInterface
         $this->action = $action;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function actOnArray(array $journal): bool
     {
         // make object from array (so the data is fresh).
@@ -162,7 +165,7 @@ class ConvertToTransfer implements ActionInterface
             return '';
         }
 
-        return (string)$journal->transactions()->where('amount', '<', 0)->first()?->account?->accountType?->type;
+        return (string) $journal->transactions()->where('amount', '<', 0)->first()?->account?->accountType?->type;
     }
 
     private function getDestinationType(int $journalId): string
@@ -175,7 +178,7 @@ class ConvertToTransfer implements ActionInterface
             return '';
         }
 
-        return (string)$journal->transactions()->where('amount', '>', 0)->first()?->account?->accountType?->type;
+        return (string) $journal->transactions()->where('amount', '>', 0)->first()?->account?->accountType?->type;
     }
 
     /**

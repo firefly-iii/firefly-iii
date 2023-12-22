@@ -62,75 +62,15 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
-        $this->integerFields = [
-            'order',
-            'currency_id',
-            'foreign_currency_id',
-            'transaction_journal_id',
-            'source_id',
-            'destination_id',
-            'budget_id',
-            'category_id',
-            'bill_id',
-            'recurrence_id',
-        ];
-
-        $this->dateFields = [
-            'date',
-            'interest_date',
-            'book_date',
-            'process_date',
-            'due_date',
-            'payment_date',
-            'invoice_date',
-        ];
-
-        $this->textareaFields = [
-            'notes',
-        ];
-
-        $this->floatFields = [ // not really floats, for validation.
-            'amount',
-            'foreign_amount',
-        ];
-
-        $this->stringFields  = [
-            'type',
-            'currency_code',
-            'foreign_currency_code',
-            'description',
-            'source_name',
-            'source_iban',
-            'source_number',
-            'source_bic',
-            'destination_name',
-            'destination_iban',
-            'destination_number',
-            'destination_bic',
-            'budget_name',
-            'category_name',
-            'bill_name',
-            'internal_reference',
-            'external_id',
-            'bunq_payment_id',
-            'sepa_cc',
-            'sepa_ct_op',
-            'sepa_ct_id',
-            'sepa_db',
-            'sepa_country',
-            'sepa_ep',
-            'sepa_ci',
-            'sepa_batch_id',
-            'external_url',
-        ];
-        $this->booleanFields = [
-            'reconciled',
-        ];
-
-        $this->arrayFields = [
-            'tags',
-        ];
-        $data              = [];
+        $this->integerFields  = ['order', 'currency_id', 'foreign_currency_id', 'transaction_journal_id', 'source_id', 'destination_id', 'budget_id', 'category_id', 'bill_id', 'recurrence_id'];
+        $this->dateFields     = ['date', 'interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
+        $this->textareaFields = ['notes'];
+        // not really floats, for validation.
+        $this->floatFields   = ['amount', 'foreign_amount'];
+        $this->stringFields  = ['type', 'currency_code', 'foreign_currency_code', 'description', 'source_name', 'source_iban', 'source_number', 'source_bic', 'destination_name', 'destination_iban', 'destination_number', 'destination_bic', 'budget_name', 'category_name', 'bill_name', 'internal_reference', 'external_id', 'bunq_payment_id', 'sepa_cc', 'sepa_ct_op', 'sepa_ct_id', 'sepa_db', 'sepa_country', 'sepa_ep', 'sepa_ci', 'sepa_batch_id', 'external_url'];
+        $this->booleanFields = ['reconciled'];
+        $this->arrayFields   = ['tags'];
+        $data                = [];
         if ($this->has('transactions')) {
             $data['transactions'] = $this->getTransactionData();
         }
@@ -308,7 +248,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->integerFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->integerFromValue((string)$transaction[$fieldName]);
+                $current[$fieldName] = $this->integerFromValue((string) $transaction[$fieldName]);
             }
         }
 
@@ -319,7 +259,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->stringFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->clearString((string)$transaction[$fieldName]);
+                $current[$fieldName] = $this->clearString((string) $transaction[$fieldName]);
             }
         }
 
@@ -330,7 +270,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->textareaFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->clearStringKeepNewlines((string)$transaction[$fieldName]); // keep newlines
+                $current[$fieldName] = $this->clearStringKeepNewlines((string) $transaction[$fieldName]); // keep newlines
             }
         }
 
@@ -342,8 +282,8 @@ class UpdateRequest extends FormRequest
         foreach ($this->dateFields as $fieldName) {
             app('log')->debug(sprintf('Now at date field %s', $fieldName));
             if (array_key_exists($fieldName, $transaction)) {
-                app('log')->debug(sprintf('New value: "%s"', (string)$transaction[$fieldName]));
-                $current[$fieldName] = $this->dateFromValue((string)$transaction[$fieldName]);
+                app('log')->debug(sprintf('New value: "%s"', (string) $transaction[$fieldName]));
+                $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
             }
         }
 
@@ -354,7 +294,7 @@ class UpdateRequest extends FormRequest
     {
         foreach ($this->booleanFields as $fieldName) {
             if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->convertBoolean((string)$transaction[$fieldName]);
+                $current[$fieldName] = $this->convertBoolean((string) $transaction[$fieldName]);
             }
         }
 
@@ -381,7 +321,7 @@ class UpdateRequest extends FormRequest
                     $current[$fieldName] = sprintf('%.12f', $value);
                 }
                 if (!is_float($value)) {
-                    $current[$fieldName] = (string)$value;
+                    $current[$fieldName] = (string) $value;
                 }
             }
         }

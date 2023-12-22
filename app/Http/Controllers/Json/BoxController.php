@@ -48,6 +48,8 @@ class BoxController extends Controller
      * 0) If the user has available amount this period and has overspent: overspent box.
      * 1) If the user has available amount this period and has NOT overspent: left to spend box.
      * 2) if the user has no available amount set this period: spent per day
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function available(): JsonResponse
     {

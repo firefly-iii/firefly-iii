@@ -240,7 +240,7 @@ class BasicController extends Controller
     }
 
     /**
-     * @throws \Exception
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {

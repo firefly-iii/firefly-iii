@@ -92,9 +92,6 @@ class Amount
         return $user->currencies()->orderBy('code', 'ASC')->get();
     }
 
-    /**
-     * @throws FireflyException
-     */
     public function getDefaultCurrency(): TransactionCurrency
     {
         /** @var User $user */

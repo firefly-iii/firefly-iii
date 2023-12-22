@@ -147,6 +147,8 @@ class TagController extends Controller
 
     /**
      * @return Factory|View
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function accounts(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
@@ -273,8 +275,8 @@ class TagController extends Controller
                     ];
                     ++$result[$key]['transactions'];
                     $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
-                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
-                    $result[$key]['avg_float'] = (float)$result[$key]['avg'];
+                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
+                    $result[$key]['avg_float'] = (float) $result[$key]['avg'];
                 }
             }
         }
@@ -323,8 +325,8 @@ class TagController extends Controller
                     ];
                     ++$result[$key]['transactions'];
                     $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
-                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
-                    $result[$key]['avg_float'] = (float)$result[$key]['avg'];
+                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
+                    $result[$key]['avg_float'] = (float) $result[$key]['avg'];
                 }
             }
         }
@@ -347,6 +349,8 @@ class TagController extends Controller
 
     /**
      * @return Factory|View
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function tags(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
@@ -466,7 +470,7 @@ class TagController extends Controller
                     $result[] = [
                         'description'              => $journal['description'],
                         'transaction_group_id'     => $journal['transaction_group_id'],
-                        'amount_float'             => (float)$journal['amount'],
+                        'amount_float'             => (float) $journal['amount'],
                         'amount'                   => $journal['amount'],
                         'date'                     => $journal['date']->isoFormat($this->monthAndDayFormat),
                         'date_sort'                => $journal['date']->format('Y-m-d'),
@@ -514,7 +518,7 @@ class TagController extends Controller
                     $result[] = [
                         'description'             => $journal['description'],
                         'transaction_group_id'    => $journal['transaction_group_id'],
-                        'amount_float'            => (float)$journal['amount'], // intentional float.
+                        'amount_float'            => (float) $journal['amount'], // intentional float.
                         'amount'                  => $journal['amount'],
                         'date'                    => $journal['date']->isoFormat($this->monthAndDayFormat),
                         'date_sort'               => $journal['date']->format('Y-m-d'),

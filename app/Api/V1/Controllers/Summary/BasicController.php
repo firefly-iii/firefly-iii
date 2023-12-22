@@ -146,13 +146,7 @@ class BasicController extends Controller
         // collect income of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector
-            ->setRange($start, $end)
-            // set page to retrieve
-            ->setPage($this->parameters->get('page'))
-            // set types of transactions to return.
-            ->setTypes([TransactionType::DEPOSIT])
-        ;
+        $collector->setRange($start, $end)->setPage($this->parameters->get('page'))->setTypes([TransactionType::DEPOSIT]);
 
         $set = $collector->getExtractedJournals();
 
@@ -171,13 +165,7 @@ class BasicController extends Controller
         // collect expenses of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector
-            ->setRange($start, $end)
-            // set page to retrieve
-            ->setPage($this->parameters->get('page'))
-            // set types of transactions to return.
-            ->setTypes([TransactionType::WITHDRAWAL])
-        ;
+        $collector->setRange($start, $end)->setPage($this->parameters->get('page'))->setTypes([TransactionType::WITHDRAWAL]);
         $set = $collector->getExtractedJournals();
 
         /** @var array $transactionJournal */

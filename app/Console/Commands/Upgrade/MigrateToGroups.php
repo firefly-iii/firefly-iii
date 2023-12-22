@@ -104,7 +104,7 @@ class MigrateToGroups extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false;
@@ -197,7 +197,7 @@ class MigrateToGroups extends Command
     {
         $set = $journal->transactions->filter(
             static function (Transaction $subject) use ($transaction) {
-                $amount     = (float)$transaction->amount * -1 === (float)$subject->amount;  // intentional float
+                $amount     = (float) $transaction->amount * -1 === (float) $subject->amount;  // intentional float
                 $identifier = $transaction->identifier === $subject->identifier;
                 app('log')->debug(sprintf('Amount the same? %s', var_export($amount, true)));
                 app('log')->debug(sprintf('ID the same?     %s', var_export($identifier, true)));
@@ -209,6 +209,9 @@ class MigrateToGroups extends Command
         return $set->first();
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     private function generateTransaction(TransactionJournal $journal, Transaction $transaction): array
     {
         app('log')->debug(sprintf('Now going to add transaction #%d to the array.', $transaction->id));
@@ -226,31 +229,31 @@ class MigrateToGroups extends Command
             return [];
         }
 
-        $budgetId         = $this->cliRepository->getJournalBudgetId($journal);
-        $categoryId       = $this->cliRepository->getJournalCategoryId($journal);
-        $notes            = $this->cliRepository->getNoteText($journal);
-        $tags             = $this->cliRepository->getTags($journal);
-        $internalRef      = $this->cliRepository->getMetaField($journal, 'internal-reference');
-        $sepaCC           = $this->cliRepository->getMetaField($journal, 'sepa_cc');
-        $sepaCtOp         = $this->cliRepository->getMetaField($journal, 'sepa_ct_op');
-        $sepaCtId         = $this->cliRepository->getMetaField($journal, 'sepa_ct_id');
-        $sepaDb           = $this->cliRepository->getMetaField($journal, 'sepa_db');
-        $sepaCountry      = $this->cliRepository->getMetaField($journal, 'sepa_country');
-        $sepaEp           = $this->cliRepository->getMetaField($journal, 'sepa_ep');
-        $sepaCi           = $this->cliRepository->getMetaField($journal, 'sepa_ci');
-        $sepaBatchId      = $this->cliRepository->getMetaField($journal, 'sepa_batch_id');
-        $externalId       = $this->cliRepository->getMetaField($journal, 'external-id');
-        $originalSource   = $this->cliRepository->getMetaField($journal, 'original-source');
-        $recurrenceId     = $this->cliRepository->getMetaField($journal, 'recurrence_id');
-        $bunq             = $this->cliRepository->getMetaField($journal, 'bunq_payment_id');
-        $hash             = $this->cliRepository->getMetaField($journal, 'import_hash');
-        $hashTwo          = $this->cliRepository->getMetaField($journal, 'import_hash_v2');
-        $interestDate     = $this->cliRepository->getMetaDate($journal, 'interest_date');
-        $bookDate         = $this->cliRepository->getMetaDate($journal, 'book_date');
-        $processDate      = $this->cliRepository->getMetaDate($journal, 'process_date');
-        $dueDate          = $this->cliRepository->getMetaDate($journal, 'due_date');
-        $paymentDate      = $this->cliRepository->getMetaDate($journal, 'payment_date');
-        $invoiceDate      = $this->cliRepository->getMetaDate($journal, 'invoice_date');
+        $budgetId       = $this->cliRepository->getJournalBudgetId($journal);
+        $categoryId     = $this->cliRepository->getJournalCategoryId($journal);
+        $notes          = $this->cliRepository->getNoteText($journal);
+        $tags           = $this->cliRepository->getTags($journal);
+        $internalRef    = $this->cliRepository->getMetaField($journal, 'internal-reference');
+        $sepaCC         = $this->cliRepository->getMetaField($journal, 'sepa_cc');
+        $sepaCtOp       = $this->cliRepository->getMetaField($journal, 'sepa_ct_op');
+        $sepaCtId       = $this->cliRepository->getMetaField($journal, 'sepa_ct_id');
+        $sepaDb         = $this->cliRepository->getMetaField($journal, 'sepa_db');
+        $sepaCountry    = $this->cliRepository->getMetaField($journal, 'sepa_country');
+        $sepaEp         = $this->cliRepository->getMetaField($journal, 'sepa_ep');
+        $sepaCi         = $this->cliRepository->getMetaField($journal, 'sepa_ci');
+        $sepaBatchId    = $this->cliRepository->getMetaField($journal, 'sepa_batch_id');
+        $externalId     = $this->cliRepository->getMetaField($journal, 'external-id');
+        $originalSource = $this->cliRepository->getMetaField($journal, 'original-source');
+        $recurrenceId   = $this->cliRepository->getMetaField($journal, 'recurrence_id');
+        $bunq           = $this->cliRepository->getMetaField($journal, 'bunq_payment_id');
+        $hash           = $this->cliRepository->getMetaField($journal, 'import_hash');
+        $hashTwo        = $this->cliRepository->getMetaField($journal, 'import_hash_v2');
+        $interestDate   = $this->cliRepository->getMetaDate($journal, 'interest_date');
+        $bookDate       = $this->cliRepository->getMetaDate($journal, 'book_date');
+        $processDate    = $this->cliRepository->getMetaDate($journal, 'process_date');
+        $dueDate        = $this->cliRepository->getMetaDate($journal, 'due_date');
+        $paymentDate    = $this->cliRepository->getMetaDate($journal, 'payment_date');
+        $invoiceDate    = $this->cliRepository->getMetaDate($journal, 'invoice_date');
 
         // overrule journal category with transaction category.
         $budgetId   = $this->getTransactionBudget($transaction, $opposingTr) ?? $budgetId;

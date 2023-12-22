@@ -120,6 +120,8 @@ class CreateController extends Controller
 
     /**
      * @return Factory|\Illuminate\Contracts\View\View
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function createFromJournal(Request $request, TransactionJournal $journal)
     {

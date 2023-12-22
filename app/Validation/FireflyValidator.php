@@ -115,6 +115,7 @@ class FireflyValidator extends Validator
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function validateIban(mixed $attribute, mixed $value): bool
     {
