@@ -65,7 +65,7 @@ class RuleController extends Controller
         /** @var Rule $rule */
         foreach ($rules as $rule) {
             $response[] = [
-                'id'          => (string)$rule->id,
+                'id'          => (string) $rule->id,
                 'name'        => $rule->title,
                 'description' => $rule->description,
             ];
