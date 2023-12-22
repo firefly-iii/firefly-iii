@@ -70,7 +70,7 @@ class AccountController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/charts/getChartAccountOverview
      *
      * @throws FireflyException
-     *      * @throws ContainerExceptionInterface
+     * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public function overview(DateRequest $request): JsonResponse
@@ -108,7 +108,7 @@ class AccountController extends Controller
             }
             $currentSet = [
                 'label'                   => $account->name,
-                'currency_id'             => (string)$currency->id,
+                'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
