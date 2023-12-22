@@ -238,7 +238,7 @@ class BillRepository implements BillRepositoryInterface
         /** @var null|Note $note */
         $note = $bill->notes()->first();
 
-        return (string)$note?->text;
+        return (string) $note?->text;
     }
 
     public function getOverallAverage(Bill $bill): array
@@ -255,7 +255,7 @@ class BillRepository implements BillRepositoryInterface
         foreach ($journals as $journal) {
             /** @var Transaction $transaction */
             $transaction                = $journal->transactions()->where('amount', '<', 0)->first();
-            $currencyId                 = (int)$journal->transaction_currency_id;
+            $currencyId                 = (int) $journal->transaction_currency_id;
             $currency                   = $journal->transactionCurrency;
             $result[$currencyId]        ??= [
                 'sum'                     => '0',
@@ -276,7 +276,7 @@ class BillRepository implements BillRepositoryInterface
          * @var array $arr
          */
         foreach ($result as $currencyId => $arr) {
-            $result[$currencyId]['avg'] = bcdiv($arr['sum'], (string)$arr['count']);
+            $result[$currencyId]['avg'] = bcdiv($arr['sum'], (string) $arr['count']);
         }
 
         return $result;
@@ -378,7 +378,7 @@ class BillRepository implements BillRepositoryInterface
             if (null === $transaction) {
                 continue;
             }
-            $currencyId                 = (int)$journal->transaction_currency_id;
+            $currencyId                 = (int) $journal->transaction_currency_id;
             $currency                   = $journal->transactionCurrency;
             $result[$currencyId]        ??= [
                 'sum'                     => '0',
@@ -399,7 +399,7 @@ class BillRepository implements BillRepositoryInterface
          * @var array $arr
          */
         foreach ($result as $currencyId => $arr) {
-            $result[$currencyId]['avg'] = bcdiv($arr['sum'], (string)$arr['count']);
+            $result[$currencyId]['avg'] = bcdiv($arr['sum'], (string) $arr['count']);
         }
 
         return $result;
@@ -412,7 +412,7 @@ class BillRepository implements BillRepositoryInterface
     {
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $journal          = $bill->user->transactionJournals()->find((int)$transaction['transaction_journal_id']);
+            $journal          = $bill->user->transactionJournals()->find((int) $transaction['transaction_journal_id']);
             $journal->bill_id = $bill->id;
             $journal->save();
             app('log')->debug(sprintf('Linked journal #%d to bill #%d', $journal->id, $bill->id));
@@ -517,7 +517,7 @@ class BillRepository implements BillRepositoryInterface
             $currency = $bill->transactionCurrency;
 
             $return[$currency->id] ??= [
-                'id'             => (string)$currency->id,
+                'id'             => (string) $currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,
                 'code'           => $currency->code,
@@ -531,9 +531,9 @@ class BillRepository implements BillRepositoryInterface
                 $sourceTransaction = $transactionJournal->transactions()->where('amount', '<', 0)->first();
                 if (null !== $sourceTransaction) {
                     $amount = $sourceTransaction->amount;
-                    if ((int)$sourceTransaction->foreign_currency_id === $currency->id) {
+                    if ((int) $sourceTransaction->foreign_currency_id === $currency->id) {
                         // use foreign amount instead!
-                        $amount = (string)$sourceTransaction->foreign_amount;
+                        $amount = (string) $sourceTransaction->foreign_amount;
                     }
                     $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
                 }
@@ -560,25 +560,25 @@ class BillRepository implements BillRepositoryInterface
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            app('log')->debug(sprintf('Processing bill #%d ("%s")', $bill->id, $bill->name));
+            //            app('log')->debug(sprintf('Processing bill #%d ("%s")', $bill->id, $bill->name));
             $dates = $this->getPayDatesInRange($bill, $start, $end);
             $count = $bill->transactionJournals()->after($start)->before($end)->count();
             $total = $dates->count() - $count;
-            app('log')->debug(sprintf('Pay dates: %d, count: %d, left: %d', $dates->count(), $count, $total));
-            app('log')->debug('dates', $dates->toArray());
+            // app('log')->debug(sprintf('Pay dates: %d, count: %d, left: %d', $dates->count(), $count, $total));
+            // app('log')->debug('dates', $dates->toArray());
 
             if ($total > 0) {
                 $currency                     = $bill->transactionCurrency;
                 $average                      = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
                 $return[$currency->id]        ??= [
-                    'id'             => (string)$currency->id,
+                    'id'             => (string) $currency->id,
                     'name'           => $currency->name,
                     'symbol'         => $currency->symbol,
                     'code'           => $currency->code,
                     'decimal_places' => $currency->decimal_places,
                     'sum'            => '0',
                 ];
-                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], bcmul($average, (string)$total));
+                $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], bcmul($average, (string) $total));
             }
         }
 
