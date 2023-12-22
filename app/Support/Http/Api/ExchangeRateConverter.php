@@ -75,7 +75,7 @@ class ExchangeRateConverter
          * Dus de laatste met de meest recente datum voor je periode.
          * Dan moet je gaan loopen per dag, en als er iets in $temp zit toevallig gebruik je die.
          */
-        $temp = [];
+        $temp  = [];
         $count = 0;
         foreach ($set as $rate) {
             $date        = $rate->date->format('Y-m-d');
@@ -92,7 +92,7 @@ class ExchangeRateConverter
             $currentDate                  = $currentStart->format('Y-m-d');
             $this->prepared[$currentDate] ??= [];
             $fallback                     = $temp[$currentDate][$from->id][$to->id] ?? $fallback;
-            if (0 === count($this->prepared[$currentDate])) {
+            if (0 === count($this->prepared[$currentDate]) && 0 !== bccomp('0', $fallback)) {
                 // fill from temp or fallback or from temp (see before)
                 $this->prepared[$currentDate][$from->id][$to->id] = $fallback;
             }
@@ -149,14 +149,14 @@ class ExchangeRateConverter
 
     private function getFromDB(int $from, int $to, string $date): ?string
     {
-        if($from === $to) {
+        if ($from === $to) {
             return '1';
         }
         $key = sprintf('cer-%d-%d-%s', $from, $to, $date);
 
         // perhaps the rate has been cached during this particular run
         $preparedRate = $this->prepared[$date][$from][$to] ?? null;
-        if (null !== $preparedRate) {
+        if (null !== $preparedRate && '0' !== $preparedRate) {
             return $preparedRate;
         }
 
