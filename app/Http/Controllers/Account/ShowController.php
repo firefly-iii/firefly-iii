@@ -36,8 +36,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ShowController
@@ -76,9 +74,7 @@ class ShowController extends Controller
      * @return Factory|Redirector|RedirectResponse|View
      *
      * @throws FireflyException
-     *      * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
+     *                                              */
     public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
     {
         $objectType = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
@@ -161,9 +157,7 @@ class ShowController extends Controller
      * @return Factory|Redirector|RedirectResponse|View
      *
      * @throws FireflyException
-     *      * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
+     *                                              */
     public function showAll(Request $request, Account $account)
     {
         if (!$this->isEditableAccount($account)) {

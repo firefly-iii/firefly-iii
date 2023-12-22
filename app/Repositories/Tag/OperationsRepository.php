@@ -30,8 +30,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class OperationsRepository
@@ -45,9 +43,6 @@ class OperationsRepository implements OperationsRepositoryInterface
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
@@ -123,9 +118,6 @@ class OperationsRepository implements OperationsRepositoryInterface
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
@@ -211,10 +203,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         throw new FireflyException(sprintf('%s is not yet implemented.', __METHOD__));
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function getTags(): Collection
     {
         $repository = app(TagRepositoryInterface::class);

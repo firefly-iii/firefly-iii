@@ -32,8 +32,6 @@ use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Response as LaravelResponse;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class IndexController
@@ -64,8 +62,6 @@ class IndexController extends Controller
 
     /**
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function export(): LaravelResponse
     {

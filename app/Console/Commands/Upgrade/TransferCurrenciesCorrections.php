@@ -32,8 +32,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class TransferCurrenciesCorrections
@@ -59,9 +57,6 @@ class TransferCurrenciesCorrections extends Command
 
     /**
      * Execute the console command.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -114,10 +109,6 @@ class TransferCurrenciesCorrections extends Command
         $this->destinationCurrency    = null;
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);

@@ -50,8 +50,6 @@ use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Recovery\Recovery;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ProfileController.
@@ -92,8 +90,6 @@ class ProfileController extends Controller
      * @throws IncompatibleWithGoogleAuthenticatorException
      * @throws InvalidCharactersException
      * @throws SecretKeyTooShortException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function code(Request $request): Factory|RedirectResponse|View
     {
@@ -257,8 +253,6 @@ class ProfileController extends Controller
      * Index for profile.
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function index(): Factory|View
     {
@@ -455,8 +449,6 @@ class ProfileController extends Controller
      * @return Redirector|RedirectResponse
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function postCode(TokenFormRequest $request)
     {
@@ -644,8 +636,6 @@ class ProfileController extends Controller
      * TODO duplicate code.
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function addToMFAHistory(string $mfaCode): void
     {

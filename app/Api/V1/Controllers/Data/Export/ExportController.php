@@ -29,8 +29,6 @@ use FireflyIII\Api\V1\Requests\Data\Export\ExportRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Http\Response as LaravelResponse;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ExportController
@@ -59,9 +57,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportAccounts
      *
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -76,9 +72,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBills
      *
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -93,9 +87,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBudgets
      *
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -110,9 +102,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportCategories
      *
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -127,9 +117,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportPiggies
      *
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -144,9 +132,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRecurring
      *
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -161,9 +147,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRules
      *
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -178,9 +162,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTags
      *
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -195,9 +177,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTransactions
      *
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function transactions(ExportRequest $request): LaravelResponse
     {
@@ -212,8 +192,6 @@ class ExportController extends Controller
 
     /**
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function returnExport(string $key): LaravelResponse
     {

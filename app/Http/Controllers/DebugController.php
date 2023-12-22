@@ -39,8 +39,6 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class DebugController
@@ -259,10 +257,6 @@ class DebugController extends Controller
         ];
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function getuserInfo(): array
     {
         $userFlags = $this->getUserFlags();

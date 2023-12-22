@@ -27,8 +27,6 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountMeta;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class RenameAccountMeta
@@ -46,9 +44,7 @@ class RenameAccountMeta extends Command
     /**
      * Execute the console command.
      *
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -89,10 +85,6 @@ class RenameAccountMeta extends Command
         return 0;
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);

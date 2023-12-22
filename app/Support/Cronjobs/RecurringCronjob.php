@@ -27,8 +27,6 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Jobs\CreateRecurringTransactions;
 use FireflyIII\Models\Configuration;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class RecurringCronjob
@@ -37,8 +35,6 @@ class RecurringCronjob extends AbstractCronjob
 {
     /**
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function fire(): void
     {

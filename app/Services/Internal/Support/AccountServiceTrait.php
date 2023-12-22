@@ -188,7 +188,7 @@ trait AccountServiceTrait
 
     /**
      * @throws FireflyException
-     *      *
+     *                          *
      * @deprecated
      */
     protected function createOBGroup(Account $account, array $data): TransactionGroup

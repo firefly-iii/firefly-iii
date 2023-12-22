@@ -39,8 +39,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ReconcileController.
@@ -76,9 +74,7 @@ class ReconcileController extends Controller
      * @return Factory|Redirector|RedirectResponse|View
      *
      * @throws FireflyException
-     *      * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
+     *                                              */
     public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
     {
         if (!$this->isEditableAccount($account)) {

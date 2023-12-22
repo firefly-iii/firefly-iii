@@ -34,8 +34,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ShowController
@@ -72,8 +70,6 @@ class ShowController extends Controller
      * @return Factory|View
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Category $category, Carbon $start = null, Carbon $end = null)
     {
@@ -114,9 +110,6 @@ class ShowController extends Controller
      * Show all transactions within a category.
      *
      * @return Factory|View
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function showAll(Request $request, Category $category)
     {

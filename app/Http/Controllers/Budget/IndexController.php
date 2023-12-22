@@ -41,8 +41,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class IndexController
@@ -86,9 +84,7 @@ class IndexController extends Controller
      * @return Factory|View
      *
      * @throws FireflyException
-     *      * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
+     *                                              */
     public function index(Carbon $start = null, Carbon $end = null)
     {
         $this->abRepository->cleanup();

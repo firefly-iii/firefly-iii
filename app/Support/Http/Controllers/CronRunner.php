@@ -29,18 +29,12 @@ use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\BillWarningCronjob;
 use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Trait CronRunner
  */
 trait CronRunner
 {
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     protected function billWarningCronJob(bool $force, Carbon $date): array
     {
         /** @var BillWarningCronjob $billWarning */
@@ -119,10 +113,6 @@ trait CronRunner
         ];
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     protected function runRecurring(bool $force, Carbon $date): array
     {
         /** @var RecurringCronjob $recurring */

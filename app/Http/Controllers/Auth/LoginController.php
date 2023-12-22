@@ -40,8 +40,6 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class LoginController
@@ -173,8 +171,6 @@ class LoginController extends Controller
      * @return Application|Factory|Redirector|RedirectResponse|View
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function showLoginForm(Request $request)
     {

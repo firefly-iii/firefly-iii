@@ -36,8 +36,6 @@ use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class AccountController
@@ -76,8 +74,6 @@ class AccountController extends Controller
      *
      * TODO validate and set user_group_id from request
      *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      * @throws FireflyException
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

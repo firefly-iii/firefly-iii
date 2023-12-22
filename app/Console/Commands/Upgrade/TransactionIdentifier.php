@@ -30,8 +30,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class TransactionIdentifier
@@ -56,9 +54,7 @@ class TransactionIdentifier extends Command
      * When either of these are the same amount, FF3 can't keep them apart: +3/-3, +3/-3, +3/-3. This happens more
      * often than you would think. So each set gets a number (1,2,3) to keep them apart.
      *
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -105,10 +101,6 @@ class TransactionIdentifier extends Command
         $this->count         = 0;
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);

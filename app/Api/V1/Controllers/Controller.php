@@ -35,8 +35,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\JsonApiSerializer;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -109,9 +107,6 @@ abstract class Controller extends BaseController
 
     /**
      * Method to grab all parameters from the URL.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function getParameters(): ParameterBag
     {

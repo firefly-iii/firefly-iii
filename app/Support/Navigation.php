@@ -30,8 +30,6 @@ use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Support\Calendar\Calculator;
 use FireflyIII\Support\Calendar\Periodicity;
 use Illuminate\Support\Facades\Log;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class Navigation.
@@ -395,9 +393,6 @@ class Navigation
     /**
      * Returns the user's view range and if necessary, corrects the dynamic view
      * range to a normal range.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function getViewRange(bool $correct): string
     {

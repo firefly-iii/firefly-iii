@@ -39,8 +39,6 @@ use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class CategoryController.
@@ -69,8 +67,6 @@ class CategoryController extends Controller
      * TODO test method, for category refactor.
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function all(Category $category): JsonResponse
     {
@@ -171,8 +167,6 @@ class CategoryController extends Controller
      * TODO test me, for category refactor.
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function specificPeriod(Category $category, Carbon $date): JsonResponse
     {

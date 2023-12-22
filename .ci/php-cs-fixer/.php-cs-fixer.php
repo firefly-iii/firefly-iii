@@ -55,7 +55,7 @@ return $config->setRules([
                                  ],
                              ],
                              'statement_indentation'         => true,
-                             'type_declaration_spaces'       => true,
+                             'type_declaration_spaces'       => false,
                              'cast_spaces'                   => false,
                              'binary_operator_spaces'        => false,
                              'void_return'                   => true,

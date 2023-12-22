@@ -35,8 +35,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class TagController.
@@ -215,8 +213,6 @@ class TagController extends Controller
      * @return Factory|View
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Tag $tag, Carbon $start = null, Carbon $end = null)
     {
@@ -260,9 +256,6 @@ class TagController extends Controller
      * Show a single tag over all time.
      *
      * @return Factory|View
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function showAll(Request $request, Tag $tag)
     {

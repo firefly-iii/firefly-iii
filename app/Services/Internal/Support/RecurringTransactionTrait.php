@@ -162,8 +162,6 @@ trait RecurringTransactionTrait
         }
     }
 
-    /**
-     *      */
     protected function findAccount(array $expectedTypes, ?int $accountId, ?string $accountName): Account
     {
         $result      = null;

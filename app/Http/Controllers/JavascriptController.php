@@ -33,8 +33,6 @@ use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class JavascriptController.
@@ -45,9 +43,6 @@ class JavascriptController extends Controller
 
     /**
      * Show info about accounts.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function accounts(AccountRepositoryInterface $repository): Response
     {
@@ -97,9 +92,7 @@ class JavascriptController extends Controller
      * Show some common variables to be used in scripts.
      *
      * @throws FireflyException
-     *      * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
+     *                                              */
     public function variables(Request $request, AccountRepositoryInterface $repository): Response
     {
         $account  = $repository->find((int)$request->get('account'));

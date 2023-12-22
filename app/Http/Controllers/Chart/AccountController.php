@@ -40,8 +40,6 @@ use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class AccountController.
@@ -297,9 +295,7 @@ class AccountController extends Controller
      * Shows the balances for all the user's frontpage accounts.
      *
      * @throws FireflyException
-     *      * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
+     *                                              */
     public function frontpage(AccountRepositoryInterface $repository): JsonResponse
     {
         $start      = clone session('start', today(config('app.timezone'))->startOfMonth());

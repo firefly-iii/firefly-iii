@@ -56,8 +56,6 @@ use Illuminate\Support\Collection;
 use League\Csv\CannotInsertRecord;
 use League\Csv\Exception;
 use League\Csv\Writer;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ExportDataGenerator
@@ -100,9 +98,7 @@ class ExportDataGenerator
     }
 
     /**
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function export(): array
     {
@@ -871,10 +867,8 @@ class ExportDataGenerator
 
     /**
      * @throws CannotInsertRecord
-     * @throws ContainerExceptionInterface
      * @throws Exception
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     private function exportTags(): string
     {

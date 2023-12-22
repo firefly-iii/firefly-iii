@@ -34,8 +34,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class PreferencesController.
@@ -65,8 +63,6 @@ class PreferencesController extends Controller
      * @return Factory|View
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function index(AccountRepositoryInterface $repository)
     {
@@ -174,8 +170,6 @@ class PreferencesController extends Controller
      * @return Redirector|RedirectResponse
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function postIndex(Request $request)
     {

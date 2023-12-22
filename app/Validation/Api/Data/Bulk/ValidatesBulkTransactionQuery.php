@@ -29,8 +29,6 @@ use Illuminate\Validation\Validator;
 
 trait ValidatesBulkTransactionQuery
 {
-    /**
-     *      */
     protected function validateTransactionQuery(Validator $validator): void
     {
         $data = $validator->getData();

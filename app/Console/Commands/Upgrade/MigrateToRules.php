@@ -34,8 +34,6 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class MigrateToRules
@@ -58,9 +56,7 @@ class MigrateToRules extends Command
     /**
      * Execute the console command.
      *
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -105,10 +101,6 @@ class MigrateToRules extends Command
         $this->ruleRepository      = app(RuleRepositoryInterface::class);
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);

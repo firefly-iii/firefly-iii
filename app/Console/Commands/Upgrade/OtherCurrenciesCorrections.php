@@ -34,8 +34,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class OtherCurrenciesCorrections
@@ -55,9 +53,6 @@ class OtherCurrenciesCorrections extends Command
 
     /**
      * Execute the console command.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -91,10 +86,6 @@ class OtherCurrenciesCorrections extends Command
         $this->cliRepos          = app(JournalCLIRepositoryInterface::class);
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);

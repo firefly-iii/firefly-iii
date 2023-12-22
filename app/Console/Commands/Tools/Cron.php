@@ -32,8 +32,6 @@ use FireflyIII\Support\Cronjobs\BillWarningCronjob;
 use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class Cron
@@ -49,10 +47,6 @@ class Cron extends Command
         {--date= : Set the date in YYYY-MM-DD to make Firefly III think that\'s the current date.}
         ';
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function handle(): int
     {
         $date = null;
@@ -130,9 +124,7 @@ class Cron extends Command
     }
 
     /**
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     private function recurringCronJob(bool $force, ?Carbon $date): void
     {
@@ -180,8 +172,6 @@ class Cron extends Command
 
     /**
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function billWarningCronJob(bool $force, ?Carbon $date): void
     {

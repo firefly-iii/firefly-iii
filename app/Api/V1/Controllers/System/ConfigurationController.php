@@ -29,8 +29,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Binder\EitherConfigKey;
 use Illuminate\Http\JsonResponse;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ConfigurationController
@@ -58,9 +56,7 @@ class ConfigurationController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/configuration/getConfiguration
      *
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function index(): JsonResponse
     {
@@ -95,9 +91,6 @@ class ConfigurationController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/configuration/getSingleConfiguration
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function show(string $configKey): JsonResponse
     {
@@ -128,9 +121,7 @@ class ConfigurationController extends Controller
      *
      * Update the configuration.
      *
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function update(UpdateRequest $request, string $name): JsonResponse
     {
@@ -157,9 +148,6 @@ class ConfigurationController extends Controller
 
     /**
      * Get all config values.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function getDynamicConfiguration(): array
     {

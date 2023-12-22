@@ -29,8 +29,6 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class MigrateRecurrenceType
@@ -47,9 +45,6 @@ class MigrateRecurrenceType extends Command
 
     /**
      * Execute the console command.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -65,10 +60,6 @@ class MigrateRecurrenceType extends Command
         return 0;
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);

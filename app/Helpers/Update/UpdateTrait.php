@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Update;
 
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Trait UpdateTrait
@@ -36,9 +34,6 @@ trait UpdateTrait
      * Returns an array with info on the next release, if any.
      * 'message' => 'A new version is available.
      * 'level' => 'info' / 'success' / 'error'
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function getLatestRelease(): array
     {

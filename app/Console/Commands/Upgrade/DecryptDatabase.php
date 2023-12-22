@@ -29,8 +29,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class DecryptDatabase
@@ -44,9 +42,6 @@ class DecryptDatabase extends Command
 
     /**
      * Execute the console command.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -75,10 +70,6 @@ class DecryptDatabase extends Command
         return 0;
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function decryptTable(string $table, array $fields): void
     {
         if ($this->isDecrypted($table)) {
@@ -95,10 +86,6 @@ class DecryptDatabase extends Command
         app('fireflyconfig')->set($configName, true);
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isDecrypted(string $table): bool
     {
         $configName = sprintf('is_decrypted_%s', $table);

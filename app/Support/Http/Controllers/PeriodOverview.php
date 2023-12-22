@@ -33,8 +33,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Trait PeriodOverview.
@@ -73,8 +71,6 @@ trait PeriodOverview
      * performance reasons.
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     protected function getAccountPeriodOverview(Account $account, Carbon $start, Carbon $end): array
     {
@@ -147,8 +143,6 @@ trait PeriodOverview
      * Overview for single category. Has been refactored recently.
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     protected function getCategoryPeriodOverview(Category $category, Carbon $start, Carbon $end): array
     {
@@ -224,8 +218,6 @@ trait PeriodOverview
      * This method has been refactored recently.
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     protected function getNoBudgetPeriodOverview(Carbon $start, Carbon $end): array
     {
@@ -277,8 +269,6 @@ trait PeriodOverview
      * Show period overview for no category view.
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     protected function getNoCategoryPeriodOverview(Carbon $theDate): array
     {
@@ -344,8 +334,6 @@ trait PeriodOverview
      * This shows a period overview for a tag. It goes back in time and lists all relevant transactions and sums.
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     protected function getTagPeriodOverview(Tag $tag, Carbon $start, Carbon $end): array // period overview for tags.
     {
@@ -415,8 +403,6 @@ trait PeriodOverview
 
     /**
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     protected function getTransactionPeriodOverview(string $transactionType, Carbon $start, Carbon $end): array
     {

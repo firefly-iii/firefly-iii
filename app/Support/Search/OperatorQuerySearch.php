@@ -56,8 +56,6 @@ use Gdbots\QueryParser\Node\Word;
 use Gdbots\QueryParser\QueryParser;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class OperatorQuerySearch
@@ -2722,10 +2720,6 @@ class OperatorQuerySearch implements SearchInterface
         }
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function parseTagInstructions(): void
     {
         app('log')->debug('Now in parseTagInstructions()');

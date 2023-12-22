@@ -343,8 +343,6 @@ class TransactionJournalFactory
         return $journal;
     }
 
-    /**
-     *      */
     private function hashArray(NullArrayObject $row): string
     {
         $dataRow = $row->getArrayCopy();

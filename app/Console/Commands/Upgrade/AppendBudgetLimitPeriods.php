@@ -26,8 +26,6 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class AppendBudgetLimitPeriods
@@ -44,9 +42,6 @@ class AppendBudgetLimitPeriods extends Command
 
     /**
      * Execute the console command.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -62,10 +57,6 @@ class AppendBudgetLimitPeriods extends Command
         return 0;
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);

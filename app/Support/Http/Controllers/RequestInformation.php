@@ -32,8 +32,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Validator;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Route as RouteFacade;
 
 /**
@@ -77,9 +75,6 @@ trait RequestInformation
 
     /**
      * Returns if user has seen demo.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     final protected function hasSeenDemo(): bool // get request info + get preference
     {

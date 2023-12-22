@@ -25,8 +25,6 @@ namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Trait GetConfigurationData
@@ -79,8 +77,6 @@ trait GetConfigurationData
      * Get config for date range.
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     protected function getDateRangeConfig(): array // get configuration + get preferences.
     {

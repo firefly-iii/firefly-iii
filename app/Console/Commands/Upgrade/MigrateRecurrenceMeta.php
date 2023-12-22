@@ -29,8 +29,6 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class MigrateRecurrenceMeta
@@ -47,9 +45,6 @@ class MigrateRecurrenceMeta extends Command
 
     /**
      * Execute the console command.
-     *
-     * @throws ContainerExceptionInterface
-     *      * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -72,22 +67,16 @@ class MigrateRecurrenceMeta extends Command
         return 0;
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool)$configVar->data;
+            return (bool) $configVar->data;
         }
 
         return false;
     }
 
-    /**
-     *      */
     private function migrateMetaData(): int
     {
         $count = 0;
@@ -102,8 +91,6 @@ class MigrateRecurrenceMeta extends Command
         return $count;
     }
 
-    /**
-     *      */
     private function migrateEntry(RecurrenceMeta $meta): int
     {
         /** @var null|Recurrence $recurrence */

@@ -32,8 +32,6 @@ use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class IndexController
@@ -70,8 +68,6 @@ class IndexController extends Controller
      * @return Factory|View
      *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function index(Request $request, string $objectType, Carbon $start = null, Carbon $end = null)
     {
@@ -126,9 +122,6 @@ class IndexController extends Controller
      * Index for ALL transactions.
      *
      * @return Factory|View
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function indexAll(Request $request, string $objectType)
     {

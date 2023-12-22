@@ -100,9 +100,7 @@ class OAuthKeys
     }
 
     /**
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public static function restoreKeysFromDB(): bool
     {
