@@ -79,6 +79,7 @@ class SummaryBalanceGrouped
         }
         app('log')->debug(sprintf('this->amounts[%s][native] is now %s', $key, $this->amounts[$key]['native']));
         app('log')->debug(sprintf('this->amounts[%s][native] is now %s', self::SUM, $this->amounts[$key]['native']));
+        $converter->summarize();
     }
 
     public function groupData(): array

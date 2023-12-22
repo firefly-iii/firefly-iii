@@ -138,6 +138,7 @@ class NetWorth implements NetWorthInterface
             $netWorth['native']['native_balance']    = bcadd($nativeBalance, $netWorth['native']['native_balance']);
         }
         $cache->store($netWorth);
+        $converter->summarize();
 
         return $netWorth;
     }

@@ -192,6 +192,7 @@ class BillTransformer extends AbstractTransformer
         $date = null === $startParam ? today() : clone $startParam;
 
         $nextExpectedMatchDiff = $this->getNextExpectedMatchDiff($nextExpectedMatch, $payDates);
+        $this->converter->summarize();
 
         return [
             'id'                             => $bill->id,

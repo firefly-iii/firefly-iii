@@ -118,6 +118,7 @@ class BillRepository implements BillRepositoryInterface
                 }
             }
         }
+        $converter->summarize();
 
         return $return;
     }
@@ -167,6 +168,7 @@ class BillRepository implements BillRepositoryInterface
                 $return[$currencyId]['native_sum'] = bcadd($return[$currencyId]['native_sum'], bcmul($nativeAverage, (string)$total));
             }
         }
+        $converter->summarize();
 
         return $return;
     }

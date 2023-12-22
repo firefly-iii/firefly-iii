@@ -137,6 +137,7 @@ class CategoryController extends Controller
         usort($return, static function (array $a, array $b) {
             return (float)$a['native_amount'] < (float)$b['native_amount'] ? 1 : -1;
         });
+        $converter->summarize();
 
         return response()->json($this->clean($return));
     }

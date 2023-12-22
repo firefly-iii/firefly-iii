@@ -193,6 +193,7 @@ class AccountBalanceGrouped
             $convertedKey                                    = sprintf('native_%s', $key);
             $this->data[$currencyId][$period][$convertedKey] = bcadd($this->data[$currencyId][$period][$convertedKey], $amountConverted);
         }
+        $converter->summarize();
     }
 
     public function setAccounts(Collection $accounts): void

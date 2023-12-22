@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Log;
 class ExchangeRateConverter
 {
     // use ConvertsExchangeRates;
+    private int   $queryCount = 0;
+    private array $prepared   = [];
 
     /**
      * @throws FireflyException
@@ -48,6 +50,56 @@ class ExchangeRateConverter
         return bcmul($amount, $rate);
     }
 
+    public function prepare(TransactionCurrency $from, TransactionCurrency $to, Carbon $start, Carbon $end): void
+    {
+        $start->startOfDay();
+        $end->endOfDay();
+        Log::debug(sprintf('Preparing for %s to %s between %s and %s', $from->code, $to->code, $start->format('Y-m-d'), $end->format('Y-m-d')));
+        $set      = auth()->user()
+            ->currencyExchangeRates()
+            ->where('from_currency_id', $from->id)
+            ->where('to_currency_id', $to->id)
+            ->where('date', '<=', $end->format('Y-m-d'))
+            ->where('date', '>=', $start->format('Y-m-d'))
+            ->orderBy('date', 'DESC')->get()
+        ;
+        $fallback = $this->getRate($from, $to, $start);
+        ++$this->queryCount;
+        if (0 === $set->count()) {
+            Log::debug('No rates found in this period.');
+
+            return;
+        }
+        /*
+         * Je moet een fallback rate hebben van voor de periode zodat je die altijd kan gebruiken.
+         * Dus de laatste met de meest recente datum voor je periode.
+         * Dan moet je gaan loopen per dag, en als er iets in $temp zit toevallig gebruik je die.
+         */
+        $temp = [];
+        $count = 0;
+        foreach ($set as $rate) {
+            $date        = $rate->date->format('Y-m-d');
+            $temp[$date] ??= [
+                $from->id => [
+                    $to->id => $rate->rate,
+                ],
+            ];
+            ++$count;
+        }
+        Log::debug(sprintf('Found %d rates in this period.', $count));
+        $currentStart = clone $start;
+        while ($currentStart->lte($end)) {
+            $currentDate                  = $currentStart->format('Y-m-d');
+            $this->prepared[$currentDate] ??= [];
+            $fallback                     = $temp[$currentDate][$from->id][$to->id] ?? $fallback;
+            if (0 === count($this->prepared[$currentDate])) {
+                // fill from temp or fallback or from temp (see before)
+                $this->prepared[$currentDate][$from->id][$to->id] = $fallback;
+            }
+            $currentStart->addDay();
+        }
+    }
+
     /**
      * @throws FireflyException
      */
@@ -56,6 +108,11 @@ class ExchangeRateConverter
         $rate = $this->getRate($from, $to, $date);
 
         return '0' === $rate ? '1' : $rate;
+    }
+
+    public function summarize(): void
+    {
+        Log::info(sprintf('ExchangeRateConverter ran %d queries.', $this->queryCount));
     }
 
     /**
@@ -94,6 +151,12 @@ class ExchangeRateConverter
     {
         $key = sprintf('cer-%d-%d-%s', $from, $to, $date);
 
+        // perhaps the rate has been cached during this particular run
+        $preparedRate = $this->prepared[$date][$from][$to] ?? null;
+        if (null !== $preparedRate) {
+            return $preparedRate;
+        }
+
         $cache = new CacheProperties();
         $cache->addProperty($key);
         if ($cache->has()) {
@@ -115,8 +178,23 @@ class ExchangeRateConverter
             ->orderBy('date', 'DESC')
             ->first()
         ;
-        $rate   = (string) $result?->rate;
+        ++$this->queryCount;
+        $rate = (string) $result?->rate;
         $cache->store($rate);
+
+        // if the rate has not been cached during this particular run, save it
+        $this->prepared[$date] ??= [
+            $from => [
+                $to => $rate,
+            ],
+        ];
+        // also save the exchange rate the other way around:
+        $this->prepared[$date] ??= [
+            $to => [
+                $from => bcdiv('1', $rate),
+            ],
+        ];
+
         if ('' === $rate) {
             return null;
         }
@@ -168,6 +246,7 @@ class ExchangeRateConverter
             return (int) $cache->get();
         }
         $euro = TransactionCurrency::whereCode('EUR')->first();
+        ++$this->queryCount;
         if (null === $euro) {
             throw new FireflyException('Cannot find EUR in system, cannot do currency conversion.');
         }

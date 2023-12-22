@@ -161,6 +161,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             $foreignAmount       = app('steam')->positive($transaction['foreign_amount']);
             $nativeForeignAmount = $this->converter->convert($this->default, $this->currencies[$foreignCurrencyId], $transaction['date'], $foreignAmount);
         }
+        $this->converter->summarize();
 
         return [
             'user'                            => (string)$transaction['user_id'],

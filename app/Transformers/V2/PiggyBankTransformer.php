@@ -193,6 +193,7 @@ class PiggyBankTransformer extends AbstractTransformer
             $savePerMonth       = $this->getSuggestedMonthlyAmount($currentAmount, $targetAmount, $piggyBank->startdate, $piggyBank->targetdate);
             $nativeSavePerMonth = $this->converter->convert($this->default, $currency, today(), $savePerMonth);
         }
+        $this->converter->summarize();
 
         return [
             'id'                             => (string)$piggyBank->id,

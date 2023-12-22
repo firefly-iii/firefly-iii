@@ -225,6 +225,7 @@ class BudgetController extends Controller
                 $return[$currencyId]['native_spent'] = bcadd($return[$currencyId]['native_spent'], $convertedAmount);
             }
         }
+        $converter->summarize();
 
         return $return;
     }
@@ -288,6 +289,7 @@ class BudgetController extends Controller
                 $result[$limitCurrencyId]['native_overspent'] = app('steam')->positive(bcadd($convertedLimitAmount, $result[$limitCurrencyId]['native_spent']));
             }
         }
+        $converter->summarize();
 
         return $result;
     }
