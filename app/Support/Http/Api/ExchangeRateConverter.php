@@ -149,6 +149,9 @@ class ExchangeRateConverter
 
     private function getFromDB(int $from, int $to, string $date): ?string
     {
+        if($from === $to) {
+            return '1';
+        }
         $key = sprintf('cer-%d-%d-%s', $from, $to, $date);
 
         // perhaps the rate has been cached during this particular run
