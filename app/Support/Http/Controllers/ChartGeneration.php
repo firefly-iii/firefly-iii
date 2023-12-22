@@ -40,8 +40,7 @@ trait ChartGeneration
      * Shows an overview of the account balances for a set of accounts.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {
         // chart properties for cache:

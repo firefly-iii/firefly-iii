@@ -46,8 +46,7 @@ class BillUpdateService
 
     /**
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function update(Bill $bill, array $data): Bill
     {
         $this->user = $bill->user;

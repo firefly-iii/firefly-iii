@@ -71,8 +71,7 @@ class ShowController extends Controller
      * Display a listing of the resource.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function index(): JsonResponse
     {
         $pageSize   = $this->parameters->get('limit');
@@ -102,8 +101,7 @@ class ShowController extends Controller
      * Show a currency.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function show(TransactionCurrency $currency): JsonResponse
     {
         /** @var User $user */
@@ -131,8 +129,7 @@ class ShowController extends Controller
      * Show a currency.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function showDefault(): JsonResponse
     {
         /** @var User $user */

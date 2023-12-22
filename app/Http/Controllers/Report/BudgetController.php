@@ -66,8 +66,7 @@ class BudgetController extends Controller
      * @return Factory|View
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function accountPerBudget(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
         /** @var BudgetReportGenerator $generator */
@@ -258,8 +257,7 @@ class BudgetController extends Controller
      * @return string
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
         /** @var BudgetReportGenerator $generator */

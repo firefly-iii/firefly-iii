@@ -98,8 +98,7 @@ class CreateController extends Controller
      * @return Factory|View
      *
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws ContainerExceptionInterface
+     *      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public function create(?string $objectType)

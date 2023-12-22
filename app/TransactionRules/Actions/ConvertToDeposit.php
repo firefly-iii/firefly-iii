@@ -121,8 +121,7 @@ class ConvertToDeposit implements ActionInterface
      * Is converted to a deposit from C to A.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     private function convertWithdrawalArray(TransactionJournal $journal): bool
     {
         $user = $journal->user;
@@ -211,8 +210,7 @@ class ConvertToDeposit implements ActionInterface
      * The source account is replaced.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     private function convertTransferArray(TransactionJournal $journal): bool
     {
         $user = $journal->user;

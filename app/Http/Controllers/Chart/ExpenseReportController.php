@@ -71,8 +71,7 @@ class ExpenseReportController extends Controller
      *
      * TODO this chart is not multi currency aware.
      *
-     * @throws \JsonException
-     */
+     *      */
     public function mainChart(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): JsonResponse
     {
         $cache = new CacheProperties();

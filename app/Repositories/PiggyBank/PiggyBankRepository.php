@@ -135,8 +135,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * Used for connecting to a piggy bank.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function getExactAmount(PiggyBank $piggyBank, PiggyBankRepetition $repetition, TransactionJournal $journal): string
     {
         app('log')->debug(sprintf('Now in getExactAmount(%d, %d, %d)', $piggyBank->id, $repetition->id, $journal->id));
@@ -320,8 +319,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * Get for piggy account what is left to put in piggies.
      *
-     * @throws \JsonException
-     */
+     *      */
     public function leftOnAccount(PiggyBank $piggyBank, Carbon $date): string
     {
         $balance = app('steam')->balanceIgnoreVirtual($piggyBank->account, $date);

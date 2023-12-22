@@ -49,8 +49,7 @@ class MigrateRecurrenceMeta extends Command
      * Execute the console command.
      *
      * @throws ContainerExceptionInterface
-     * @throws \JsonException
-     * @throws NotFoundExceptionInterface
+     *      * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -88,8 +87,7 @@ class MigrateRecurrenceMeta extends Command
     }
 
     /**
-     * @throws \JsonException
-     */
+     *      */
     private function migrateMetaData(): int
     {
         $count = 0;
@@ -105,8 +103,7 @@ class MigrateRecurrenceMeta extends Command
     }
 
     /**
-     * @throws \JsonException
-     */
+     *      */
     private function migrateEntry(RecurrenceMeta $meta): int
     {
         /** @var null|Recurrence $recurrence */

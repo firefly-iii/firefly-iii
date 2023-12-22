@@ -70,8 +70,7 @@ class AccountController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/charts/getChartAccountOverview
      *
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws ContainerExceptionInterface
+     *      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public function overview(DateRequest $request): JsonResponse

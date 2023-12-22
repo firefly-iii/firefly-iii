@@ -217,8 +217,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      * Find by object, ID or code. Returns user default or system default.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency
     {
         $result = $this->findCurrencyNull($currencyId, $currencyCode);

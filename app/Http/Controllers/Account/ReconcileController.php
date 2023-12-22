@@ -76,8 +76,7 @@ class ReconcileController extends Controller
      * @return Factory|Redirector|RedirectResponse|View
      *
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws ContainerExceptionInterface
+     *      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
@@ -151,8 +150,7 @@ class ReconcileController extends Controller
      * @return Redirector|RedirectResponse
      *
      * @throws DuplicateTransactionException
-     * @throws \JsonException
-     */
+     *      */
     public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end)
     {
         if (!$this->isEditableAccount($account)) {
@@ -194,8 +192,7 @@ class ReconcileController extends Controller
      * Creates a reconciliation group.
      *
      * @throws DuplicateTransactionException
-     * @throws \JsonException
-     */
+     *      */
     private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference): string
     {
         if (!$this->isEditableAccount($account)) {

@@ -188,8 +188,7 @@ trait AccountServiceTrait
 
     /**
      * @throws FireflyException
-     * @throws \JsonException
-     *
+     *      *
      * @deprecated
      */
     protected function createOBGroup(Account $account, array $data): TransactionGroup
@@ -337,8 +336,7 @@ trait AccountServiceTrait
 
     /**
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
     {
         // find currency, or use default currency instead.
@@ -362,8 +360,7 @@ trait AccountServiceTrait
      * Create the opposing "credit liability" transaction for credit liabilities.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     protected function updateCreditTransaction(Account $account, string $direction, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
@@ -419,8 +416,7 @@ trait AccountServiceTrait
 
     /**
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     protected function createCreditTransaction(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
         app('log')->debug('Now going to create an createCreditTransaction.');
@@ -514,8 +510,7 @@ trait AccountServiceTrait
      * Since opening balance and date can still be empty strings, it may fail.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     protected function updateOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
@@ -571,8 +566,7 @@ trait AccountServiceTrait
 
     /**
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     protected function createOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
         app('log')->debug('Now going to create an OB group.');

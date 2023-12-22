@@ -43,8 +43,7 @@ class BillFactory
 
     /**
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function create(array $data): ?Bill
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__), $data);

@@ -30,8 +30,7 @@ use Illuminate\Validation\Validator;
 trait ValidatesBulkTransactionQuery
 {
     /**
-     * @throws \JsonException
-     */
+     *      */
     protected function validateTransactionQuery(Validator $validator): void
     {
         $data = $validator->getData();

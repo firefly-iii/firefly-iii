@@ -65,8 +65,7 @@ class ReconcileController extends Controller
      * Overview of reconciliation.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function overview(Request $request, Account $account = null, Carbon $start = null, Carbon $end = null): JsonResponse
     {
         $startBalance    = $request->get('startBalance');
@@ -166,8 +165,7 @@ class ReconcileController extends Controller
      * @return JsonResponse
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function transactions(Account $account, Carbon $start = null, Carbon $end = null)
     {
         if (null === $start || null === $end) {

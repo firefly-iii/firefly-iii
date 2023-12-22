@@ -97,8 +97,7 @@ class JavascriptController extends Controller
      * Show some common variables to be used in scripts.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws ContainerExceptionInterface
+     *      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public function variables(Request $request, AccountRepositoryInterface $repository): Response

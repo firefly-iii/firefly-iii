@@ -89,8 +89,7 @@ class Steam
      * [yyyy-mm-dd] => 123,2
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function balanceInRange(Account $account, Carbon $start, Carbon $end, ?TransactionCurrency $currency = null): array
     {
         $cache = new CacheProperties();

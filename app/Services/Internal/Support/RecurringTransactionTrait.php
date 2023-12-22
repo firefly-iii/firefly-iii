@@ -87,8 +87,7 @@ trait RecurringTransactionTrait
      * Store transactions of a recurring transactions. It's complex but readable.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     protected function createTransactions(Recurrence $recurrence, array $transactions): void
     {
         app('log')->debug('Now in createTransactions()');
@@ -164,8 +163,7 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @throws \JsonException
-     */
+     *      */
     protected function findAccount(array $expectedTypes, ?int $accountId, ?string $accountName): Account
     {
         $result      = null;

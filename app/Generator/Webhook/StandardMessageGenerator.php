@@ -115,8 +115,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
     /**
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     private function runWebhook(Webhook $webhook): void
     {
         app('log')->debug(sprintf('Now in runWebhook(#%d)', $webhook->id));
@@ -129,8 +128,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
     /**
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     private function generateMessage(Webhook $webhook, Model $model): void
     {
         $class = get_class($model);

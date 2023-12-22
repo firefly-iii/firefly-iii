@@ -85,8 +85,7 @@ trait ModifiesPiggyBanks
     }
 
     /**
-     * @throws \JsonException
-     */
+     *      */
     public function canAddAmount(PiggyBank $piggyBank, string $amount): bool
     {
         $today         = today(config('app.timezone'));

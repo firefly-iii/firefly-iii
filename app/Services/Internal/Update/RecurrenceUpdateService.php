@@ -192,8 +192,7 @@ class RecurrenceUpdateService
      * TODO this method is very complex.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     private function updateTransactions(Recurrence $recurrence, array $transactions): void
     {
         app('log')->debug('Now in updateTransactions()');

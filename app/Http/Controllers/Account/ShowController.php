@@ -76,8 +76,7 @@ class ShowController extends Controller
      * @return Factory|Redirector|RedirectResponse|View
      *
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws ContainerExceptionInterface
+     *      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
@@ -162,8 +161,7 @@ class ShowController extends Controller
      * @return Factory|Redirector|RedirectResponse|View
      *
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws ContainerExceptionInterface
+     *      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public function showAll(Request $request, Account $account)

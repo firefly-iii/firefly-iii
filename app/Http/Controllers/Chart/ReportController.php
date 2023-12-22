@@ -133,8 +133,7 @@ class ReportController extends Controller
     /**
      * Shows income and expense, debit/credit: operations.
      *
-     * @throws \JsonException
-     */
+     *      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         // chart properties for cache:

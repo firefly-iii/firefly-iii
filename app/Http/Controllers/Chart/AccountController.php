@@ -79,8 +79,7 @@ class AccountController extends Controller
      *
      * This chart is (multi) currency aware.
      *
-     * @throws \JsonException
-     */
+     *      */
     public function expenseAccounts(): JsonResponse
     {
         /** @var Carbon $start */
@@ -298,8 +297,7 @@ class AccountController extends Controller
      * Shows the balances for all the user's frontpage accounts.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     * @throws ContainerExceptionInterface
+     *      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
     public function frontpage(AccountRepositoryInterface $repository): JsonResponse
@@ -386,8 +384,7 @@ class AccountController extends Controller
      * Shows overview of account during a single period.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
         $chartData = [];
@@ -423,8 +420,7 @@ class AccountController extends Controller
      * TODO this chart is not multi currency aware.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function report(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         return response()->json($this->accountBalanceChart($accounts, $start, $end));
@@ -435,8 +431,7 @@ class AccountController extends Controller
      *
      * This chart is multi-currency aware.
      *
-     * @throws \JsonException
-     */
+     *      */
     public function revenueAccounts(): JsonResponse
     {
         /** @var Carbon $start */
@@ -526,8 +521,7 @@ class AccountController extends Controller
 
     /**
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     private function periodByCurrency(Carbon $start, Carbon $end, Account $account, TransactionCurrency $currency): array
     {
         app('log')->debug(sprintf('Now in periodByCurrency("%s", "%s", %s, "%s")', $start->format('Y-m-d'), $end->format('Y-m-d'), $account->id, $currency->code));

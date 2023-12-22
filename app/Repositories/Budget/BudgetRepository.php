@@ -233,8 +233,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function update(Budget $budget, array $data): Budget
     {
         app('log')->debug('Now in update()');
@@ -565,8 +564,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function store(array $data): Budget
     {
         $order = $this->getMaxOrder();
@@ -752,8 +750,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     private function updateAutoBudget(Budget $budget, array $data): void
     {
         // update or create auto-budget:

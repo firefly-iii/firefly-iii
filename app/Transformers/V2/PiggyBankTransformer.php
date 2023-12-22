@@ -139,8 +139,7 @@ class PiggyBankTransformer extends AbstractTransformer
      * Transform the piggy bank.
      *
      * @throws FireflyException
-     * @throws \JsonException
-     */
+     *      */
     public function transform(PiggyBank $piggyBank): array
     {
         //        $account = $piggyBank->account;
