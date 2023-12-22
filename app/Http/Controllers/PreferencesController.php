@@ -150,6 +150,7 @@ class PreferencesController extends Controller
      * @throws FireflyException
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function postIndex(Request $request)
     {

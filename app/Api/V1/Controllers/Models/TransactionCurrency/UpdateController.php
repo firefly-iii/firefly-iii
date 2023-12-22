@@ -69,7 +69,7 @@ class UpdateController extends Controller
      * Disable a currency.
      *
      * @throws FireflyException
-     *      */
+     */
     public function disable(TransactionCurrency $currency): JsonResponse
     {
         // must be unused.
@@ -133,7 +133,7 @@ class UpdateController extends Controller
      * Enable a currency.
      *
      * @throws FireflyException
-     *      */
+     */
     public function enable(TransactionCurrency $currency): JsonResponse
     {
         $this->repository->enable($currency);
@@ -160,7 +160,7 @@ class UpdateController extends Controller
      * Update a currency.
      *
      * @throws FireflyException
-     *      */
+     */
     public function update(UpdateRequest $request, TransactionCurrency $currency): JsonResponse
     {
         $data = $request->getAll();

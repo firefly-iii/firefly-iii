@@ -59,6 +59,8 @@ class RecurrenceController extends Controller
     /**
      * Shows all events for a repetition. Used in calendar.
      *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
      * @throws FireflyException
      */
     public function events(Request $request): JsonResponse

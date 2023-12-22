@@ -76,6 +76,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class User.
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  * @property int|string                                                      $id
  * @property string                                                          $email
  * @property bool                                                            $isAdmin

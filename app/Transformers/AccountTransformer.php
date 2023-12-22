@@ -49,7 +49,7 @@ class AccountTransformer extends AbstractTransformer
      * Transform the account.
      *
      * @throws FireflyException
-     *      */
+     */
     public function transform(Account $account): array
     {
         $this->repository->setUser($account->user);
@@ -156,7 +156,7 @@ class AccountTransformer extends AbstractTransformer
 
     /**
      * @throws FireflyException
-     *      */
+     */
     private function getCurrency(Account $account): array
     {
         $currency = $this->repository->getAccountCurrency($account);

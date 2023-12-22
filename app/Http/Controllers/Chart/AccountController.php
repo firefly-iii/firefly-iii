@@ -76,8 +76,7 @@ class AccountController extends Controller
      * Shows the balances for all the user's expense accounts (on the front page).
      *
      * This chart is (multi) currency aware.
-     *
-     *      */
+     */
     public function expenseAccounts(): JsonResponse
     {
         /** @var Carbon $start */
@@ -380,7 +379,7 @@ class AccountController extends Controller
      * Shows overview of account during a single period.
      *
      * @throws FireflyException
-     *      */
+     */
     public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
         $chartData = [];
@@ -416,7 +415,7 @@ class AccountController extends Controller
      * TODO this chart is not multi currency aware.
      *
      * @throws FireflyException
-     *      */
+     */
     public function report(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
         return response()->json($this->accountBalanceChart($accounts, $start, $end));
@@ -426,8 +425,7 @@ class AccountController extends Controller
      * Shows the balances for all the user's revenue accounts.
      *
      * This chart is multi-currency aware.
-     *
-     *      */
+     */
     public function revenueAccounts(): JsonResponse
     {
         /** @var Carbon $start */
@@ -517,7 +515,7 @@ class AccountController extends Controller
 
     /**
      * @throws FireflyException
-     *      */
+     */
     private function periodByCurrency(Carbon $start, Carbon $end, Account $account, TransactionCurrency $currency): array
     {
         app('log')->debug(sprintf('Now in periodByCurrency("%s", "%s", %s, "%s")', $start->format('Y-m-d'), $end->format('Y-m-d'), $account->id, $currency->code));

@@ -218,6 +218,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     private function getTransactionsForSum(
         string               $type,

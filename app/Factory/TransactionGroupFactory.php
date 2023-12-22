@@ -49,7 +49,7 @@ class TransactionGroupFactory
      *
      * @throws DuplicateTransactionException
      * @throws FireflyException
-     *      */
+     */
     public function create(array $data): TransactionGroup
     {
         app('log')->debug('Now in TransactionGroupFactory::create()');

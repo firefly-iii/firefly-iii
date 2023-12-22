@@ -49,7 +49,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
      * Convert piggy bank event.
      *
      * @throws FireflyException
-     *      */
+     */
     public function transform(PiggyBankEvent $event): array
     {
         // get account linked to piggy bank

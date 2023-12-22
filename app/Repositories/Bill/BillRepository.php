@@ -421,8 +421,7 @@ class BillRepository implements BillRepositoryInterface
 
     /**
      * Given the date in $date, this method will return a moment in the future where the bill is expected to be paid.
-     *
-     *      */
+     */
     public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon
     {
         $cache = new CacheProperties();
@@ -463,7 +462,7 @@ class BillRepository implements BillRepositoryInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function store(array $data): Bill
     {
         /** @var BillFactory $factory */
@@ -643,7 +642,7 @@ class BillRepository implements BillRepositoryInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function update(Bill $bill, array $data): Bill
     {
         /** @var BillUpdateService $service */

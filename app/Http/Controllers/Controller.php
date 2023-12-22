@@ -32,6 +32,9 @@ use Illuminate\Routing\Controller as BaseController;
 
 /**
  * Class Controller.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 abstract class Controller extends BaseController
 {

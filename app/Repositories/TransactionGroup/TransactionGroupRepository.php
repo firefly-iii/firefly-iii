@@ -255,7 +255,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
      * Return all piggy bank events for all journals in the group.
      *
      * @throws FireflyException
-     *      */
+     */
     public function getPiggyEvents(TransactionGroup $group): array
     {
         $return   = [];
@@ -318,7 +318,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     /**
      * @throws DuplicateTransactionException
      * @throws FireflyException
-     *      */
+     */
     public function store(array $data): TransactionGroup
     {
         /** @var TransactionGroupFactory $factory */

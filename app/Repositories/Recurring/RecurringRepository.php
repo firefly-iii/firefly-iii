@@ -258,8 +258,7 @@ class RecurringRepository implements RecurringRepositoryInterface
 
     /**
      * Get the tags from the recurring transaction.
-     *
-     *      */
+     */
     public function getTags(RecurrenceTransaction $transaction): array
     {
         $tags = [];
@@ -479,7 +478,7 @@ class RecurringRepository implements RecurringRepositoryInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function store(array $data): Recurrence
     {
         /** @var RecurrenceFactory $factory */

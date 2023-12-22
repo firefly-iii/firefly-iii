@@ -139,7 +139,7 @@ class PiggyBankTransformer extends AbstractTransformer
      * Transform the piggy bank.
      *
      * @throws FireflyException
-     *      */
+     */
     public function transform(PiggyBank $piggyBank): array
     {
         //        $account = $piggyBank->account;

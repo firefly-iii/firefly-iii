@@ -261,7 +261,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function store(array $data): BudgetLimit
     {
         // if no currency has been provided, use the user's default currency:
@@ -316,7 +316,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function update(BudgetLimit $budgetLimit, array $data): BudgetLimit
     {
         $budgetLimit->amount     = array_key_exists('amount', $data) ? $data['amount'] : $budgetLimit->amount;

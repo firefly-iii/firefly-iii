@@ -88,6 +88,8 @@ trait AccountServiceTrait
     /**
      * Update metadata for account. Depends on type which fields are valid.
      *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
      * TODO this method treats expense accounts and liabilities the same way (tries to save interest)
      */
     public function updateMetaData(Account $account, array $data): void
@@ -336,7 +338,7 @@ trait AccountServiceTrait
 
     /**
      * @throws FireflyException
-     *      */
+     */
     protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
     {
         // find currency, or use default currency instead.
@@ -360,7 +362,7 @@ trait AccountServiceTrait
      * Create the opposing "credit liability" transaction for credit liabilities.
      *
      * @throws FireflyException
-     *      */
+     */
     protected function updateCreditTransaction(Account $account, string $direction, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
@@ -416,7 +418,7 @@ trait AccountServiceTrait
 
     /**
      * @throws FireflyException
-     *      */
+     */
     protected function createCreditTransaction(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
         app('log')->debug('Now going to create an createCreditTransaction.');
@@ -510,7 +512,7 @@ trait AccountServiceTrait
      * Since opening balance and date can still be empty strings, it may fail.
      *
      * @throws FireflyException
-     *      */
+     */
     protected function updateOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
@@ -566,7 +568,7 @@ trait AccountServiceTrait
 
     /**
      * @throws FireflyException
-     *      */
+     */
     protected function createOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
         app('log')->debug('Now going to create an OB group.');

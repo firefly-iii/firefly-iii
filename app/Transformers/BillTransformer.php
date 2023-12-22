@@ -53,6 +53,7 @@ class BillTransformer extends AbstractTransformer
      * Transform the bill.
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function transform(Bill $bill): array
     {

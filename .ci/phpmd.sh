@@ -44,8 +44,7 @@ EXIT_CODE=$?
 
 cd $SCRIPT_DIR/..
 
-echo "Exit code is $EXIT_CODE, but we ignore this for the time being."
+echo "Exit code is $EXIT_CODE."
 
 # for the time being, exit 0
-#exit $EXIT_CODE
-exit 0
+exit $EXIT_CODE

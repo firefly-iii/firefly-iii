@@ -146,7 +146,7 @@ class ReconcileController extends Controller
      * @return Redirector|RedirectResponse
      *
      * @throws DuplicateTransactionException
-     *      */
+     */
     public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end)
     {
         if (!$this->isEditableAccount($account)) {
@@ -188,7 +188,7 @@ class ReconcileController extends Controller
      * Creates a reconciliation group.
      *
      * @throws DuplicateTransactionException
-     *      */
+     */
     private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference): string
     {
         if (!$this->isEditableAccount($account)) {

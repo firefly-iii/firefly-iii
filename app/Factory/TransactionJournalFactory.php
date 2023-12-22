@@ -91,7 +91,7 @@ class TransactionJournalFactory
      *
      * @throws DuplicateTransactionException
      * @throws FireflyException
-     *      */
+     */
     public function create(array $data): Collection
     {
         app('log')->debug('Now in TransactionJournalFactory::create()');
@@ -344,7 +344,7 @@ class TransactionJournalFactory
      * If this transaction already exists, throw an error.
      *
      * @throws DuplicateTransactionException
-     *      */
+     */
     private function errorIfDuplicate(string $hash): void
     {
         app('log')->debug(sprintf('In errorIfDuplicate(%s)', $hash));
@@ -442,7 +442,7 @@ class TransactionJournalFactory
 
     /**
      * @throws FireflyException
-     *      */
+     */
     private function getCurrencyByAccount(string $type, ?TransactionCurrency $currency, Account $source, Account $destination): TransactionCurrency
     {
         app('log')->debug('Now in getCurrencyByAccount()');
@@ -455,7 +455,7 @@ class TransactionJournalFactory
 
     /**
      * @throws FireflyException
-     *      */
+     */
     private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
     {
         app('log')->debug('Now in getCurrency()');
@@ -489,7 +489,7 @@ class TransactionJournalFactory
 
     /**
      * @throws FireflyException
-     *      */
+     */
     private function getForeignByAccount(string $type, ?TransactionCurrency $foreignCurrency, Account $destination): ?TransactionCurrency
     {
         if (TransactionType::TRANSFER === $type) {

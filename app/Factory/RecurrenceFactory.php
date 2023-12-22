@@ -52,7 +52,9 @@ class RecurrenceFactory
 
     /**
      * @throws FireflyException
-     *      */
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
     public function create(array $data): Recurrence
     {
         try {
@@ -77,7 +79,7 @@ class RecurrenceFactory
             $firstDate = $data['recurrence']['first_date'];
         }
         if (array_key_exists('nr_of_repetitions', $data['recurrence'])) {
-            $repetitions = (int)$data['recurrence']['nr_of_repetitions'];
+            $repetitions = (int) $data['recurrence']['nr_of_repetitions'];
         }
         if (array_key_exists('repeat_until', $data['recurrence'])) {
             $repeatUntil = $data['recurrence']['repeat_until'];
@@ -114,7 +116,7 @@ class RecurrenceFactory
         $recurrence->save();
 
         if (array_key_exists('notes', $data['recurrence'])) {
-            $this->updateNote($recurrence, (string)$data['recurrence']['notes']);
+            $this->updateNote($recurrence, (string) $data['recurrence']['notes']);
         }
 
         $this->createRepetitions($recurrence, $data['repetitions'] ?? []);

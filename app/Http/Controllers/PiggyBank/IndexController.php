@@ -74,7 +74,7 @@ class IndexController extends Controller
      * @return Factory|View
      *
      * @throws FireflyException
-     *      */
+     */
     public function index()
     {
         $this->cleanupObjectGroups();

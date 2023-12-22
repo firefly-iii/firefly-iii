@@ -68,7 +68,7 @@ class StoreController extends Controller
      * Store new currency.
      *
      * @throws FireflyException
-     *      */
+     */
     public function store(StoreRequest $request): JsonResponse
     {
         $currency = $this->repository->store($request->getAll());

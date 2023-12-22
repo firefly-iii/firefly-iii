@@ -40,6 +40,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class Controller.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 abstract class Controller extends BaseController
 {

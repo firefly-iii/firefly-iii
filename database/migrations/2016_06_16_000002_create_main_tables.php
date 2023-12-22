@@ -527,6 +527,7 @@ class CreateMainTables extends Migration
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     private function createTransactionTables(): void
     {

@@ -134,7 +134,7 @@ class BudgetReportGenerator
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function setUser(User $user): void
     {
         $this->repository->setUser($user);

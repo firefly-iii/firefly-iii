@@ -45,7 +45,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * Generates the report.
      *
      * @throws FireflyException
-     *      */
+     */
     public function generate(): string
     {
         $auditData = [];
@@ -110,7 +110,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * Get the audit report.
      *
      * @throws FireflyException
-     *      */
+     */
     public function getAuditReport(Account $account, Carbon $date): array
     {
         /** @var AccountRepositoryInterface $accountRepository */

@@ -45,6 +45,8 @@ class GracefulNotFoundHandler extends ExceptionHandler
      * @param Request $request
      *
      * @throws \Throwable
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function render($request, \Throwable $e): Response
     {

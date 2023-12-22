@@ -41,7 +41,7 @@ class GroupUpdateService
      *
      * @throws DuplicateTransactionException
      * @throws FireflyException
-     *      */
+     */
     public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
@@ -149,7 +149,7 @@ class GroupUpdateService
     /**
      * @throws DuplicateTransactionException
      * @throws FireflyException
-     *      */
+     */
     private function updateTransactions(TransactionGroup $transactionGroup, array $transactions): array
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
@@ -206,7 +206,7 @@ class GroupUpdateService
     /**
      * @throws DuplicateTransactionException
      * @throws FireflyException
-     *      */
+     */
     private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): ?TransactionJournal
     {
         $submission = [

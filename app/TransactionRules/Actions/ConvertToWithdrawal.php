@@ -116,7 +116,7 @@ class ConvertToWithdrawal implements ActionInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     private function convertDepositArray(TransactionJournal $journal): bool
     {
         $user = $journal->user;
@@ -202,7 +202,7 @@ class ConvertToWithdrawal implements ActionInterface
      * Output is a withdrawal from A to C.
      *
      * @throws FireflyException
-     *      */
+     */
     private function convertTransferArray(TransactionJournal $journal): bool
     {
         // find or create expense account.

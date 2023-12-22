@@ -67,7 +67,9 @@ class EditController extends Controller
     }
 
     /**
-     * Edit account overview.
+     * Edit account overview. It's complex, but it just has a lot of if/then/else.
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      *
      * @return Factory|Redirector|RedirectResponse|View
      */

@@ -29,7 +29,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
-use Route;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -111,6 +110,8 @@ class General extends AbstractExtension
 
     /**
      * Show icon with attachment.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function mimeIcon(): TwigFilter
     {
@@ -205,7 +206,7 @@ class General extends AbstractExtension
                     ]
                 );
 
-                return (string)$converter->convert($text);
+                return (string) $converter->convert($text);
             },
             ['is_safe' => ['html']]
         );
@@ -219,8 +220,8 @@ class General extends AbstractExtension
         return new TwigFilter(
             'phphost',
             static function (string $string): string {
-                $proto = (string)parse_url($string, PHP_URL_SCHEME);
-                $host  = (string)parse_url($string, PHP_URL_HOST);
+                $proto = (string) parse_url($string, PHP_URL_SCHEME);
+                $host  = (string) parse_url($string, PHP_URL_HOST);
 
                 return e(sprintf('%s://%s', $proto, $host));
             }

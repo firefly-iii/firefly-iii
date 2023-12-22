@@ -68,7 +68,7 @@ class AccountFactory
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function findOrCreate(string $accountName, string $accountType): Account
     {
         app('log')->debug(sprintf('findOrCreate("%s", "%s")', $accountName, $accountType));
@@ -100,7 +100,7 @@ class AccountFactory
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function create(array $data): Account
     {
         app('log')->debug('Now in AccountFactory::create()');
@@ -171,7 +171,7 @@ class AccountFactory
 
     /**
      * @throws FireflyException
-     *      */
+     */
     private function createAccount(AccountType $type, array $data): Account
     {
         $this->accountRepository->resetAccountOrder();
@@ -239,7 +239,7 @@ class AccountFactory
 
     /**
      * @throws FireflyException
-     *      */
+     */
     private function cleanMetaDataArray(Account $account, array $data): array
     {
         $currencyId   = array_key_exists('currency_id', $data) ? (int)$data['currency_id'] : 0;

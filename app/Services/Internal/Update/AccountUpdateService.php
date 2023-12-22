@@ -63,7 +63,7 @@ class AccountUpdateService
      * Update account data.
      *
      * @throws FireflyException
-     *      */
+     */
     public function update(Account $account, array $data): Account
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));

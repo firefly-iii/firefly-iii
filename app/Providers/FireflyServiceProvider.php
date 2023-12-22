@@ -75,6 +75,8 @@ use Illuminate\Support\ServiceProvider;
 
 /**
  * Class FireflyServiceProvider.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class FireflyServiceProvider extends ServiceProvider
 {

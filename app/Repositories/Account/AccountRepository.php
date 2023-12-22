@@ -221,7 +221,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function getCashAccount(): Account
     {
         /** @var AccountType $type */
@@ -342,7 +342,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function getReconciliation(Account $account): ?Account
     {
         if (AccountType::ASSET !== $account->accountType->type) {
@@ -617,7 +617,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function store(array $data): Account
     {
         /** @var AccountFactory $factory */
@@ -629,7 +629,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function update(Account $account, array $data): Account
     {
         /** @var AccountUpdateService $service */

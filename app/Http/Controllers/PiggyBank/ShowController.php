@@ -66,7 +66,7 @@ class ShowController extends Controller
      * @return Factory|View
      *
      * @throws FireflyException
-     *      */
+     */
     public function show(PiggyBank $piggyBank)
     {
         /** @var Carbon $end */

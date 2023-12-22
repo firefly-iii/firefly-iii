@@ -42,7 +42,7 @@ class AccountTasker implements AccountTaskerInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $yesterday = clone $start;
@@ -109,7 +109,7 @@ class AccountTasker implements AccountTaskerInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function getExpenseReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
         // get all expenses for the given accounts in the given period!
@@ -140,7 +140,7 @@ class AccountTasker implements AccountTaskerInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array
     {
         // get all incomes for the given accounts in the given period!
@@ -175,7 +175,7 @@ class AccountTasker implements AccountTaskerInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     private function groupExpenseByDestination(array $array): array
     {
         $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
@@ -235,7 +235,7 @@ class AccountTasker implements AccountTaskerInterface
 
     /**
      * @throws FireflyException
-     *      */
+     */
     private function groupIncomeBySource(array $array): array
     {
         $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);

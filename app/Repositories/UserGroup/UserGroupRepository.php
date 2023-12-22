@@ -157,6 +157,8 @@ class UserGroupRepository implements UserGroupRepositoryInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
      * @throws FireflyException
      */
     public function updateMembership(UserGroup $userGroup, array $data): UserGroup
