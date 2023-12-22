@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -166,10 +167,10 @@ class CreditRecalculateService
 
     private function processWorkAccount(Account $account): void
     {
-        app('log')->debug(sprintf('Now processing account #%d ("%s")', $account->id, $account->name));
+        app('log')->debug(sprintf('Now processing account #%d ("%s"). All amounts with 2 decimals!', $account->id, $account->name));
         // get opening balance (if present)
         $this->repository->setUser($account->user);
-        $direction      = (string)$this->repository->getMetaValue($account, 'liability_direction');
+        $direction      = (string) $this->repository->getMetaValue($account, 'liability_direction');
         $openingBalance = $this->repository->getOpeningBalance($account);
         if (null !== $openingBalance) {
             app('log')->debug(sprintf('Found opening balance transaction journal #%d', $openingBalance->id));
@@ -257,7 +258,7 @@ class CreditRecalculateService
         /** @var Transaction $sourceTransaction */
         $sourceTransaction = $journal->transactions()->where('amount', '<', '0')->first();
 
-        app('log')->debug(sprintf('Left of debt is: %s', app('steam')->bcround($leftOfDebt, $decimals)));
+        app('log')->debug(sprintf('Left of debt is: %s', app('steam')->bcround($leftOfDebt, 2)));
 
         if ('' === $direction) {
             app('log')->warning('Direction is empty, so do nothing.');
@@ -271,40 +272,20 @@ class CreditRecalculateService
         }
 
         // amount to use depends on the currency:
-        $usedAmount = $transaction->amount;
-        app('log')->debug(sprintf('Amount of transaction is %s', app('steam')->bcround($usedAmount, $decimals)));
-        if (null !== $foreignCurrency && $foreignCurrency->id === $accountCurrency->id) {
-            $usedAmount = $transaction->foreign_amount;
-            app('log')->debug(sprintf('Overruled by foreign amount. Amount of transaction is now %s', app('steam')->bcround($usedAmount, $decimals)));
-        }
+        $usedAmount    = $this->getAmountToUse($transaction, $accountCurrency, $foreignCurrency);
+        $isSameAccount = $account->id === $transaction->account_id;
+        $isDebit       = 'debit' === $direction;
+        $isCredit      = 'credit' === $direction;
 
-        // Case 1
-        // it's a withdrawal into this liability (from asset).
-        // if it's a credit ("I am owed"), this increases the amount due,
-        // because we're lending person X more money
-        if (
-            TransactionType::WITHDRAWAL === $type
-            && $account->id === $transaction->account_id
-            && 1 === bccomp($usedAmount, '0')
-            && 'credit' === $direction
-        ) {
+        if ($isSameAccount && $isCredit && $this->isWithdrawalIn($usedAmount, $type)) { // case 1
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcadd($leftOfDebt, $usedAmount);
-            app('log')->debug(sprintf('Case 1 (withdrawal into credit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
+            app('log')->debug(sprintf('Case 1 (withdrawal into credit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
 
             return $result;
         }
 
-        // Case 2
-        // it's a withdrawal away from this liability (into expense account).
-        // if it's a credit ("I am owed"), this decreases the amount due,
-        // because we're sending money away from the loan (like loan forgiveness)
-        if (
-            TransactionType::WITHDRAWAL === $type
-            && $account->id === $sourceTransaction->account_id
-            && -1 === bccomp($usedAmount, '0')
-            && 'credit' === $direction
-        ) {
+        if ($isSameAccount && $isCredit && $this->isWithdrawalOut($usedAmount, $type)) { // case 2
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcsub($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 2 (withdrawal away from liability): %s - %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
@@ -312,16 +293,7 @@ class CreditRecalculateService
             return $result;
         }
 
-        // case 3
-        // it's a deposit out of this liability (to asset).
-        // if it's a credit ("I am owed") this decreases the amount due.
-        // because the person is paying us back.
-        if (
-            TransactionType::DEPOSIT === $type
-            && $account->id === $transaction->account_id
-            && -1 === bccomp($usedAmount, '0')
-            && 'credit' === $direction
-        ) {
+        if ($isSameAccount && $isCredit && $this->isDepositOut($usedAmount, $type)) { // case 3
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcsub($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 3 (deposit away from liability): %s - %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
@@ -329,79 +301,35 @@ class CreditRecalculateService
             return $result;
         }
 
-        // case 4
-        // it's a deposit into this liability (from revenue account).
-        // if it's a credit ("I am owed") this increases the amount due.
-        // because the person is having to pay more money.
-        if (
-            TransactionType::DEPOSIT === $type
-            && $account->id === $destTransaction->account_id
-            && 1 === bccomp($usedAmount, '0')
-            && 'credit' === $direction
-        ) {
+        if ($isSameAccount && $isCredit && $this->isDepositIn($usedAmount, $type)) { // case 4
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcadd($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 4 (deposit into credit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
 
             return $result;
         }
-        // case 5: transfer into loan (from other loan).
-        // if it's a credit ("I am owed") this increases the amount due,
-        // because the person has to pay more back.
-        if (
-            TransactionType::TRANSFER === $type
-            && $account->id === $destTransaction->account_id
-            && 1 === bccomp($usedAmount, '0')
-            && 'credit' === $direction
-        ) {
+        if ($isSameAccount && $isCredit && $this->isTransferIn($usedAmount, $type)) { // case 5
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcadd($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 5 (transfer into credit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
 
             return $result;
         }
-        // Case 6
-        // it's a withdrawal into this liability (from asset).
-        // if it's a debit ("I owe this amount"), this decreases the amount due,
-        // because we're paying off the debt
-        if (
-            TransactionType::WITHDRAWAL === $type
-            && $account->id === $transaction->account_id
-            && 1 === bccomp($usedAmount, '0')
-            && 'debit' === $direction
-        ) {
+        if ($isSameAccount && $isDebit && $this->isWithdrawalIn($usedAmount, $type)) { // case 6
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcsub($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 6 (withdrawal into debit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
 
             return $result;
         }
-        // case 7
-        // it's a deposit out of this liability (to asset).
-        // if it's a credit ("I am owed") this increases the amount due.
-        // because we are borrowing more money.
-        if (
-            TransactionType::DEPOSIT === $type
-            && $account->id === $transaction->account_id
-            && -1 === bccomp($usedAmount, '0')
-            && 'debit' === $direction
-        ) {
+        if($isSameAccount && $isDebit && $this->isDepositOut($usedAmount, $type)) { // case 7
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcadd($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 7 (deposit away from liability): %s - %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
 
             return $result;
         }
-        // case 8
-        // it's a withdrawal from this liability (to expense account).
-        // if it's a debit ("I owe this amount") this increase the amount due.
-        // because we are paying interest.
-        if (
-            TransactionType::WITHDRAWAL === $type
-            && $account->id === $transaction->account_id
-            && -1 === bccomp($usedAmount, '0')
-            && 'debit' === $direction
-        ) {
+        if($isSameAccount && $isDebit && $this->isWithdrawalOut($usedAmount, $type)) { // case 8
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcadd($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 8 (withdrawal away from liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, $decimals), app('steam')->bcround($usedAmount, $decimals), app('steam')->bcround($result, $decimals)));
@@ -421,5 +349,86 @@ class CreditRecalculateService
         app('log')->warning(sprintf('[-1] Catch-all, should not happen. Left of debt = %s', app('steam')->bcround($leftOfDebt, $decimals)));
 
         return $leftOfDebt;
+    }
+
+    private function getAmountToUse(Transaction $transaction, TransactionCurrency $accountCurrency, ?TransactionCurrency $foreignCurrency): string
+    {
+        $usedAmount = $transaction->amount;
+        app('log')->debug(sprintf('Amount of transaction is %s', app('steam')->bcround($usedAmount, 2)));
+        if (null !== $foreignCurrency && $foreignCurrency->id === $accountCurrency->id) {
+            $usedAmount = $transaction->foreign_amount;
+            app('log')->debug(sprintf('Overruled by foreign amount. Amount of transaction is now %s', app('steam')->bcround($usedAmount, 2)));
+        }
+
+        return $usedAmount;
+    }
+
+    /**
+     * It's a withdrawal into this liability (from asset).
+     *
+     * Case 1 = credit
+     * if it's a credit ("I am owed"), this increases the amount due,
+     * because we're lending person X more money
+     *
+     * Case 6 = debit
+     * if it's a debit ("I owe this amount"), this decreases the amount due,
+     * because we're paying off the debt
+     */
+    private function isWithdrawalIn(string $amount, string $transactionType): bool
+    {
+        return TransactionType::WITHDRAWAL === $transactionType && 1 === bccomp($amount, '0');
+    }
+
+    /**
+     * it's a withdrawal away from this liability (into expense account).
+     *
+     * Case 2
+     * if it's a credit ("I am owed"), this decreases the amount due,
+     * because we're sending money away from the loan (like loan forgiveness)
+     *
+     * Case 8
+     * if it's a debit ("I owe this amount") this increase the amount due.
+     * because we are paying interest.
+     */
+    private function isWithdrawalOut(string $amount, string $transactionType): bool
+    {
+        return TransactionType::WITHDRAWAL === $transactionType && -1 === bccomp($amount, '0');
+    }
+
+    /**
+     * it's a deposit out of this liability (to asset).
+     *
+     * case 3
+     * if it's a credit ("I am owed") this decreases the amount due.
+     * because the person is paying us back.
+     *
+     * case 7
+     * if it's a credit ("I am owed") this increases the amount due.
+     * because we are borrowing more money.
+     */
+    private function isDepositOut(string $amount, string $transactionType): bool
+    {
+        return TransactionType::DEPOSIT === $transactionType && -1 === bccomp($amount, '0');
+    }
+
+    /**
+     * case 4
+     * it's a deposit into this liability (from revenue account).
+     * if it's a credit ("I am owed") this increases the amount due.
+     * because the person is having to pay more money.
+     */
+    private function isDepositIn(string $amount, string $transactionType): bool
+    {
+        return TransactionType::DEPOSIT === $transactionType && 1 === bccomp($amount, '0');
+    }
+
+    /**
+     * case 5: transfer into loan (from other loan).
+     * if it's a credit ("I am owed") this increases the amount due,
+     * because the person has to pay more back.
+     */
+    private function isTransferIn(string $amount, string $transactionType): bool
+    {
+        return TransactionType::TRANSFER === $transactionType && 1 === bccomp($amount, '0');
     }
 }
