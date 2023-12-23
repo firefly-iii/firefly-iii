@@ -25,6 +25,7 @@
         "destination_account": "Destinasjonskonto",
         "add_another_split": "Legg til en oppdeling til",
         "submission": "Innlevering",
+        "stored_journal": "Opprettet ny transaksjon \":description\"",
         "create_another": "G\u00e5 tilbake hit etter lagring for \u00e5 opprette en ny.",
         "reset_after": "Nullstill skjema etter innsending",
         "submit": "Send inn",

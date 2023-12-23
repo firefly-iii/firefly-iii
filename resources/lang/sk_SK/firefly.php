@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'Prevod „:description“ bol odstránený',
     'deleted_reconciliation'                    => 'Zúčtovacia transakcia ":description" bola odstránená',
     'stored_journal'                            => 'Nová transakcia „:description“ bola vytvorená',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Vaša nová transakcia bola vytvorená',
     'updated_journal_no_descr'                  => 'Vaša transakcia bola upravená',
     'select_transactions'                       => 'Vybrať transakcie',

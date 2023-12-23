@@ -25,6 +25,7 @@
         "destination_account": "Akun tujuan",
         "add_another_split": "Tambahkan perpecahan lagi",
         "submission": "Submission",
+        "stored_journal": "Berhasil membuat transaksi baru \":description\"",
         "create_another": "After storing, return here to create another one.",
         "reset_after": "Reset form after submission",
         "submit": "Menyerahkan",

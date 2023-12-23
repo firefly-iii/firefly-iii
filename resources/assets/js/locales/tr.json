@@ -25,6 +25,7 @@
         "destination_account": "Hedef hesap",
         "add_another_split": "Ba\u015fka bir b\u00f6lme ekle",
         "submission": "Submission",
+        "stored_journal": "\":description\" Yeni i\u015flem ba\u015far\u0131yla olu\u015fturuldu",
         "create_another": "After storing, return here to create another one.",
         "reset_after": "Reset form after submission",
         "submit": "G\u00f6nder",

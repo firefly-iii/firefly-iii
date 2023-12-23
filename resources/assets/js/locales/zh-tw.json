@@ -25,6 +25,7 @@
         "destination_account": "\u76ee\u6a19\u5e33\u6236",
         "add_another_split": "\u589e\u52a0\u62c6\u5206",
         "submission": "Submission",
+        "stored_journal": "\u5df2\u6210\u529f\u5efa\u7acb\u65b0\u4ea4\u6613 \u201c:description\u201d",
         "create_another": "After storing, return here to create another one.",
         "reset_after": "Reset form after submission",
         "submit": "\u9001\u51fa",

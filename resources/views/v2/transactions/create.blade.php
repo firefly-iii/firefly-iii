@@ -10,9 +10,7 @@
                 <div class="col">
                     <template x-if="showSuccessMessage">
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            A simple success alert with <a href="#" class="alert-link">an example link</a>. Give it a
-                            click
-                            if you like.
+                            <a :href="successMessageLink" class="alert-link" x-text="successMessageText"></a>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </template>
@@ -155,12 +153,16 @@
                                                 </template>
                                             </div>
                                             <div class="col-sm-9">
-                                                <input type="number" step="any" min="0" class="form-control"
+                                                <input type="number" step="any" min="0"
                                                        :id="'amount_' + index"
                                                        :data-index="index"
-                                                       x-model="transaction.amount"
+                                                       :class="{'is-invalid': transaction.errors.amount.length > 0, 'input-mask' : true, 'form-control': true}"
+                                                       x-model="transaction.amount" data-inputmask="currency"
                                                        @change="changedAmount"
                                                        placeholder="0.00">
+                                                <template x-if="transaction.errors.amount.length > 0">
+                                                    <div class="invalid-feedback" x-text="transaction.errors.amount[0]"></div>
+                                                </template>
                                             </div>
                                         </div>
                                     </div>
@@ -211,7 +213,34 @@
                                         </h3>
                                     </div>
                                     <div class="card-body">
-                                        submission options
+                                        <div class="form-check">
+                                            <input class="form-check-input" x-model="returnHereButton" type="checkbox" id="returnButton">
+                                            <label class="form-check-label" for="returnButton">
+                                                Return here to create a new transaction
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" x-model="resetButton" type="checkbox" id="resetButton" :disabled="!returnHereButton">
+                                            <label class="form-check-label" for="resetButton">
+                                                Reset the form after returning
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="rulesButton" :checked="rulesButton">
+                                            <label class="form-check-label" for="rulesButton">
+                                                Run rules on this transaction
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="webhookButton" :checked="webhookButton">
+                                            <label class="form-check-label" for="webhookButton">
+                                                Run webhooks on this transaction
+                                            </label>
+                                        </div>
+
 
 
                                     </div>
@@ -222,10 +251,10 @@
                             </div>
                             <div class="col-12">
                                 <template x-if="0 !== index">
-                                    <button class="btn btn-danger" @click="removeSplit(index)">Remove this split
+                                    <button :disabled="submitting" class="btn btn-danger" @click="removeSplit(index)">Remove this split
                                     </button>
                                 </template>
-                                <button class="btn btn-info">Add another split</button>
+                                <button class="btn btn-info" :disabled="submitting">Add another split</button>
                             </div>
                         </div>
                     </div>
@@ -233,7 +262,7 @@
             </div>
             <div class="row">
                 <div class="col text-end">
-                    <button class="btn btn-success" @click="submitTransaction()">Submit</button>
+                    <button class="btn btn-success" :disabled="submitting" @click="submitTransaction()">Submit</button>
                 </div>
             </div>
         </div>

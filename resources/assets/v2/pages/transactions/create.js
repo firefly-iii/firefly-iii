@@ -55,6 +55,20 @@ let transactions = function () {
             destination: [],
         },
         errorMessageText: '',
+        successMessageLink: '#',
+        successMessageText: '',
+
+        // four buttons
+        returnHereButton: false,
+        resetButton: false,
+        resetButtonEnabled: false,
+        rulesButton: true,
+        webhookButton: true,
+
+        // state of the form
+        submitting: false,
+
+
         detectTransactionType() {
             const sourceType = this.entries[0].source_account.type ?? 'unknown';
             const destType = this.entries[0].destination_account.type ?? 'unknown';
@@ -136,8 +150,8 @@ let transactions = function () {
             list.push(currency);
             this.nativeCurrencies = list;
             // this also forces the currency_code on ALL entries.
-            for(let i in this.entries) {
-                if(this.entries.hasOwnProperty(i)) {
+            for (let i in this.entries) {
+                if (this.entries.hasOwnProperty(i)) {
                     this.entries[i].currency_code = code;
                 }
             }
@@ -326,8 +340,10 @@ let transactions = function () {
             this.filters.destination = ['Expense account', 'Loan', 'Debt', 'Mortgage', 'Asset account'];
         },
         submitTransaction() {
+            this.submitting = true;
+            this.showSuccessMessage = false;
+            this.showErrorMessage = false;
             this.detectTransactionType();
-            // todo disable buttons
 
             let transactions = parseFromEntries(this.entries, this.transactionType);
             let submission = {
@@ -344,20 +360,95 @@ let transactions = function () {
             let poster = new Post();
             console.log(submission);
             poster.post(submission).then((response) => {
-                // todo create success banner
-                this.showSuccessMessage = true;
-                // todo release form
+                this.submitting = false;
                 console.log(response);
+                const id = parseInt(response.data.data.id);
+                if (this.returnHereButton) {
+                    // todo create success banner
+                    this.showSuccessMessage = true;
+                    this.successMessageLink = 'transactions/show/' + id;
+                    this.successMessageText = i18n.t('firefly.stored_journal_js', {description: submission.group_title ?? submission.transactions[0].description});
+                    // todo clear out form if necessary
+                    if(this.resetButton) {
+                        this.entries = [];
+                        this.addSplit();
+                        this.totalAmount = 0;
+                    }
+                }
 
-                // todo or redirect to transaction.
-                window.location = 'transactions/show/' + response.data.data.id + '?transaction_group_id=' + response.data.data.id + '&message=created';
+                if (!this.returnHereButton) {
+                    window.location = 'transactions/show/' + id + '?transaction_group_id=' + id + '&message=created';
+                }
 
             }).catch((error) => {
-                this.showErrorMessage = true;
-                // todo create error banner.
-                // todo release form
-                this.errorMessageText = error.response.data.message;
+                this.submitting = false;
+                // todo put errors in form
+                this.parseErrors(error.response.data);
+
+
             });
+        },
+        parseErrors(data) {
+            this.setDefaultErrors();
+            this.showErrorMessage = true;
+            this.showSuccessMessage = false;
+            // todo create error banner.
+            this.errorMessageText = i18n.t('firefly.errors_submission') + ' ' + data.message;
+            let transactionIndex;
+            let fieldName;
+
+            // todo add 'was-validated' to form.
+
+            for (const key in data.errors) {
+                if (data.errors.hasOwnProperty(key)) {
+                    if (key === 'group_title') {
+                        // todo handle group errors.
+                        //this.group_title_errors = errors.errors[key];
+                    }
+                    if (key !== 'group_title') {
+                        // lol, the dumbest way to explode "transactions.0.something" ever.
+                        transactionIndex = parseInt(key.split('.')[1]);
+                        fieldName = key.split('.')[2];
+                        // set error in this object thing.
+                        switch (fieldName) {
+                            case 'amount':
+                            case 'date':
+                            case 'budget_id':
+                            case 'bill_id':
+                            case 'description':
+                            case 'tags':
+                                this.entries[transactionIndex].errors[fieldName] = data.errors[key];
+                                break;
+                            case 'source_name':
+                            case 'source_id':
+                                this.entries[transactionIndex].errors.source_account =
+                                    this.entries[transactionIndex].errors.source_account.concat(data.errors[key]);
+                                break;
+                            case 'destination_name':
+                            case 'destination_id':
+                                this.entries[transactionIndex].errors.destination_account =
+                                    this.entries[transactionIndex].errors.destination_account.concat(data.errors[key]);
+                                break;
+                            case 'foreign_amount':
+                            case 'foreign_currency_id':
+                                this.entries[transactionIndex].errors.foreign_amount =
+                                    this.entries[transactionIndex].errors.foreign_amount.concat(data.errors[key]);
+                                break;
+                        }
+                    }
+                    // unique some things
+                    if (typeof this.entries[transactionIndex] !== 'undefined') {
+                        this.entries[transactionIndex].errors.source_account =
+                            Array.from(new Set(this.entries[transactionIndex].errors.source_account));
+                        this.entries[transactionIndex].errors.destination_account =
+                            Array.from(new Set(this.entries[transactionIndex].errors.destination_account));
+                    }
+                }
+            }
+            console.log(this.entries[0].errors);
+        },
+        setDefaultErrors() {
+
         },
         addSplit() {
             this.entries.push(createEmptySplit());

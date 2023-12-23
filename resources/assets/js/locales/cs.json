@@ -25,6 +25,7 @@
         "destination_account": "C\u00edlov\u00fd \u00fa\u010det",
         "add_another_split": "P\u0159idat dal\u0161\u00ed roz\u00fa\u010dtov\u00e1n\u00ed",
         "submission": "Submission",
+        "stored_journal": "\u00dasp\u011b\u0161n\u011b vytvo\u0159ena nov\u00e1 transakce \u201e:description\u201c",
         "create_another": "After storing, return here to create another one.",
         "reset_after": "Reset form after submission",
         "submit": "Odeslat",

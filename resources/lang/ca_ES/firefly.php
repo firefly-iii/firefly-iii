@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'S\'ha eliminat la transferència ":description" satisfactòriament',
     'deleted_reconciliation'                    => 'S\'ha eliminat la transacció de consolidació ":description" satisfactòriament',
     'stored_journal'                            => 'S\'ha creat la retirada ":description" satisfactòriament',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'S\'ha creat la teua nova transacció satisfactòriament',
     'updated_journal_no_descr'                  => 'S\'ha actualitzat la teua transacció satisfactòriament',
     'select_transactions'                       => 'Selecciona transaccions',

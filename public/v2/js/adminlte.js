@@ -87,8 +87,9 @@
 
     /**
      * --------------------------------------------
-     * AdminLTE layout.ts
-     * License MIT
+     * @file AdminLTE layout.ts
+     * @description Layout for AdminLTE.
+     * @license MIT
      * --------------------------------------------
      */
     /**
@@ -127,8 +128,9 @@
 
     /**
      * --------------------------------------------
-     * AdminLTE push-menu.ts
-     * License MIT
+     * @file AdminLTE push-menu.ts
+     * @description Push menu for AdminLTE.
+     * @license MIT
      * --------------------------------------------
      */
     /**
@@ -136,10 +138,10 @@
      * Constants
      * ------------------------------------------------------------------------
      */
-    const DATA_KEY$1 = 'lte.push-menu';
-    const EVENT_KEY$1 = `.${DATA_KEY$1}`;
-    const EVENT_OPEN = `open${EVENT_KEY$1}`;
-    const EVENT_COLLAPSE = `collapse${EVENT_KEY$1}`;
+    const DATA_KEY$2 = 'lte.push-menu';
+    const EVENT_KEY$2 = `.${DATA_KEY$2}`;
+    const EVENT_OPEN = `open${EVENT_KEY$2}`;
+    const EVENT_COLLAPSE = `collapse${EVENT_KEY$2}`;
     const CLASS_NAME_SIDEBAR_MINI = 'sidebar-mini';
     const CLASS_NAME_SIDEBAR_COLLAPSE = 'sidebar-collapse';
     const CLASS_NAME_SIDEBAR_OPEN = 'sidebar-open';
@@ -272,8 +274,9 @@
 
     /**
      * --------------------------------------------
-     * AdminLTE treeview.ts
-     * License MIT
+     * @file AdminLTE treeview.ts
+     * @description Treeview plugin for AdminLTE.
+     * @license MIT
      * --------------------------------------------
      */
     /**
@@ -282,10 +285,10 @@
      * ------------------------------------------------------------------------
      */
     // const NAME = 'Treeview'
-    const DATA_KEY = 'lte.treeview';
-    const EVENT_KEY = `.${DATA_KEY}`;
-    const EVENT_EXPANDED = `expanded${EVENT_KEY}`;
-    const EVENT_COLLAPSED = `collapsed${EVENT_KEY}`;
+    const DATA_KEY$1 = 'lte.treeview';
+    const EVENT_KEY$1 = `.${DATA_KEY$1}`;
+    const EVENT_EXPANDED = `expanded${EVENT_KEY$1}`;
+    const EVENT_COLLAPSED = `collapsed${EVENT_KEY$1}`;
     // const EVENT_LOAD_DATA_API = `load${EVENT_KEY}`
     const CLASS_NAME_MENU_OPEN = 'menu-open';
     const SELECTOR_NAV_ITEM = '.nav-item';
@@ -293,7 +296,8 @@
     const SELECTOR_TREEVIEW_MENU = '.nav-treeview';
     const SELECTOR_DATA_TOGGLE = '[data-lte-toggle="treeview"]';
     const Default = {
-        animationSpeed: 300
+        animationSpeed: 300,
+        accordion: true
     };
     /**
      * Class Definition
@@ -305,10 +309,22 @@
             this._config = Object.assign(Object.assign({}, Default), config);
         }
         open() {
-            var _a;
+            var _a, _b;
             const event = new Event(EVENT_EXPANDED);
+            if (this._config.accordion) {
+                const openMenuList = (_a = this._element.parentElement) === null || _a === void 0 ? void 0 : _a.querySelectorAll(`${SELECTOR_NAV_ITEM}.${CLASS_NAME_MENU_OPEN}`);
+                openMenuList === null || openMenuList === void 0 ? void 0 : openMenuList.forEach(openMenu => {
+                    if (openMenu !== this._element.parentElement) {
+                        openMenu.classList.remove(CLASS_NAME_MENU_OPEN);
+                        const childElement = openMenu === null || openMenu === void 0 ? void 0 : openMenu.querySelector(SELECTOR_TREEVIEW_MENU);
+                        if (childElement) {
+                            slideUp(childElement, this._config.animationSpeed);
+                        }
+                    }
+                });
+            }
             this._element.classList.add(CLASS_NAME_MENU_OPEN);
-            const childElement = (_a = this._element) === null || _a === void 0 ? void 0 : _a.querySelector(SELECTOR_TREEVIEW_MENU);
+            const childElement = (_b = this._element) === null || _b === void 0 ? void 0 : _b.querySelector(SELECTOR_TREEVIEW_MENU);
             if (childElement) {
                 slideDown(childElement, this._config.animationSpeed);
             }
@@ -356,6 +372,90 @@
         });
     });
 
+    /**
+     * --------------------------------------------
+     * @file AdminLTE fullscreen.ts
+     * @description Fullscreen plugin for AdminLTE.
+     * @license MIT
+     * --------------------------------------------
+     */
+    /**
+     * Constants
+     * ============================================================================
+     */
+    const DATA_KEY = 'lte.fullscreen';
+    const EVENT_KEY = `.${DATA_KEY}`;
+    const EVENT_MAXIMIZED = `maximized${EVENT_KEY}`;
+    const EVENT_MINIMIZED = `minimized${EVENT_KEY}`;
+    const SELECTOR_FULLSCREEN_TOGGLE = '[data-lte-toggle="fullscreen"]';
+    const SELECTOR_MAXIMIZE_ICON = '[data-lte-icon="maximize"]';
+    const SELECTOR_MINIMIZE_ICON = '[data-lte-icon="minimize"]';
+    /**
+     * Class Definition.
+     * ============================================================================
+     */
+    class FullScreen {
+        constructor(element, config) {
+            this._element = element;
+            this._config = config;
+        }
+        inFullScreen() {
+            const event = new Event(EVENT_MAXIMIZED);
+            const iconMaximize = document.querySelector(SELECTOR_MAXIMIZE_ICON);
+            const iconMinimize = document.querySelector(SELECTOR_MINIMIZE_ICON);
+            void document.documentElement.requestFullscreen();
+            if (iconMaximize) {
+                iconMaximize.style.display = 'none';
+            }
+            if (iconMinimize) {
+                iconMinimize.style.display = 'block';
+            }
+            this._element.dispatchEvent(event);
+        }
+        outFullscreen() {
+            const event = new Event(EVENT_MINIMIZED);
+            const iconMaximize = document.querySelector(SELECTOR_MAXIMIZE_ICON);
+            const iconMinimize = document.querySelector(SELECTOR_MINIMIZE_ICON);
+            void document.exitFullscreen();
+            if (iconMaximize) {
+                iconMaximize.style.display = 'block';
+            }
+            if (iconMinimize) {
+                iconMinimize.style.display = 'none';
+            }
+            this._element.dispatchEvent(event);
+        }
+        toggleFullScreen() {
+            if (document.fullscreenEnabled) {
+                if (document.fullscreenElement) {
+                    this.outFullscreen();
+                }
+                else {
+                    this.inFullScreen();
+                }
+            }
+        }
+    }
+    /**
+     * Data Api implementation
+     * ============================================================================
+     */
+    onDOMContentLoaded(() => {
+        const buttons = document.querySelectorAll(SELECTOR_FULLSCREEN_TOGGLE);
+        buttons.forEach(btn => {
+            btn.addEventListener('click', event => {
+                event.preventDefault();
+                const target = event.target;
+                const button = target.closest(SELECTOR_FULLSCREEN_TOGGLE);
+                if (button) {
+                    const data = new FullScreen(button, undefined);
+                    data.toggleFullScreen();
+                }
+            });
+        });
+    });
+
+    exports.FullScreen = FullScreen;
     exports.Layout = Layout;
     exports.PushMenu = PushMenu;
     exports.Treeview = Treeview;

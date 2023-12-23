@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'Overschrijving ":description" verwijderd',
     'deleted_reconciliation'                    => 'Afstemming ":description" verwijderd',
     'stored_journal'                            => 'Nieuw transactie ":description" opgeslagen',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Uw nieuwe transactie is succesvol aangemaakt',
     'updated_journal_no_descr'                  => 'De transactie is geüpdatet',
     'select_transactions'                       => 'Selecteer transacties',

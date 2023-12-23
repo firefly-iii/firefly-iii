@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'Överföring ":description" har tagits bort',
     'deleted_reconciliation'                    => 'Avstämningstransaktionen ":description" togs bort lyckat',
     'stored_journal'                            => 'Skapade ny transaktion ":description"',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Ny transaktion skapades lyckat',
     'updated_journal_no_descr'                  => 'Transaktion har uppdaterats',
     'select_transactions'                       => 'Välj transaktioner',

@@ -25,6 +25,7 @@
         "destination_account": "Conta destino",
         "add_another_split": "Adicionar outra divis\u00e3o",
         "submission": "Envio",
+        "stored_journal": "Transa\u00e7\u00e3o \":description\" inclu\u00edda com sucesso",
         "create_another": "Depois de armazenar, retorne aqui para criar outro.",
         "reset_after": "Limpar o formul\u00e1rio ap\u00f3s o envio",
         "submit": "Enviar",

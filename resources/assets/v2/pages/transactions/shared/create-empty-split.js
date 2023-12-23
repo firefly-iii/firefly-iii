@@ -44,6 +44,10 @@ export function createEmptySplit() {
         destination_account: getAccount(),
 
         // date and time
-        date: formatted
+        date: formatted,
+
+        errors: {
+            'amount': [],
+        },
     };
 }

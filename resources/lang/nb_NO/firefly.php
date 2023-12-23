@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'Slettet overføring ":description"',
     'deleted_reconciliation'                    => 'Slettet avstemmingstransaksjon ":description"',
     'stored_journal'                            => 'Opprettet ny transaksjon ":description"',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Vellykket! Ny transaksjon er opprettet',
     'updated_journal_no_descr'                  => 'Transaksjonen din ble oppdatert',
     'select_transactions'                       => 'Velg transaksjoner',

@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'Transferência ":description" apagada com sucesso',
     'deleted_reconciliation'                    => 'Transação de reconciliação ":description" apagada com sucesso',
     'stored_journal'                            => 'Inserida a transação ":description" com sucesso',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Nova transação criada com sucesso',
     'updated_journal_no_descr'                  => 'Transação atualizada com sucesso',
     'select_transactions'                       => 'Selecionar transações',

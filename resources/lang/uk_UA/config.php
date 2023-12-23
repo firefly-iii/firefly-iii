@@ -34,7 +34,7 @@
 declare(strict_types=1);
 
 return [
-    'html_language'            => 'укр',
+    'html_language'            => 'uk',
     'locale'                   => 'uk, Ukrainian, uk_UA.utf8, uk_UA.UTF-8',
     // 'month'                   => '%B %Y',
     'month_js'                 => 'MMMM YYYY',

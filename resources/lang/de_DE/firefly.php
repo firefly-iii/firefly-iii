@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'Umbuchung ":description" erfolgreich gelöscht',
     'deleted_reconciliation'                    => 'Ausgleichsbuchung „:description” erfolgreich gelöscht',
     'stored_journal'                            => 'Neue Überweisung ":description" erfolgreich erstellt',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Ihre neue Buchung wurde erfolgreich erstellt',
     'updated_journal_no_descr'                  => 'Ihre Buchung wurde erfolgreich aktualisiert',
     'select_transactions'                       => 'Buchungen auswählen',

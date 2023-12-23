@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'Transferul ":description" șters cu succes',
     'deleted_reconciliation'                    => 'Tranzacție de reconciliere ":description" a fost ștearsă cu succes',
     'stored_journal'                            => 'A fost creată cu succes o tranzacție nouă ":description"',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Tranzacția s-a creat cu succes',
     'updated_journal_no_descr'                  => 'Tranzacția s-a actualizat cu succes',
     'select_transactions'                       => 'Selectați tranzacțiile',

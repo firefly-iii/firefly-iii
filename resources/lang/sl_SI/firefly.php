@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'Prenos ":description" je uspešno izbrisan',
     'deleted_reconciliation'                    => 'Transakcija usklajevanja ":description" je bila uspešno izbrisana',
     'stored_journal'                            => 'Nova transakcija ":description" je uspešno ustvarjena',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Vaša nova transakcija je uspešno ustvarjena',
     'updated_journal_no_descr'                  => 'Vaša transakcija je bila uspešno posodobljena',
     'select_transactions'                       => 'Izberi transakcije',

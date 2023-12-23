@@ -25,6 +25,7 @@
         "destination_account": "Conto destinazione",
         "add_another_split": "Aggiungi un'altra divisione",
         "submission": "Invio",
+        "stored_journal": "Nuova transazione \":description\" creata correttamente",
         "create_another": "Dopo il salvataggio, torna qui per crearne un'altra.",
         "reset_after": "Resetta il modulo dopo l'invio",
         "submit": "Invia",

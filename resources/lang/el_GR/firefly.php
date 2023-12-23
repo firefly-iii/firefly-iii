@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'Επιτυχής διαγραφή της μεταφοράς ":description"',
     'deleted_reconciliation'                    => 'Επιτυχής διαγραφή της τακτοποιημένης συναλλαγής ":description"',
     'stored_journal'                            => 'Δημιουργήθηκε επιτυχώς η νέα συναλλαγή ":description"',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Δημιουργήθηκε επιτυχώς η νέα συναλλαγή',
     'updated_journal_no_descr'                  => 'Ενημερώθηκε επιτυχώς η συναλλαγή σας',
     'select_transactions'                       => 'Επιλέξτε συναλλαγές',

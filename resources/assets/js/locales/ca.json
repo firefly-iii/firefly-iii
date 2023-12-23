@@ -25,6 +25,7 @@
         "destination_account": "Compte de dest\u00ed",
         "add_another_split": "Afegeix una nova divisi\u00f3",
         "submission": "Enviament",
+        "stored_journal": "S'ha creat la retirada \":description\" satisfact\u00f2riament",
         "create_another": "Despr\u00e9s de guardar, torna ac\u00ed per crear-ne un altre.",
         "reset_after": "Reiniciar el formulari despr\u00e9s d'enviar",
         "submit": "Enviar",

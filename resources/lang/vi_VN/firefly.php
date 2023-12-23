@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'Xóa thành công chuyển khoản ":description"',
     'deleted_reconciliation'                    => 'Tạo thành công giao dịch mới ":description"',
     'stored_journal'                            => 'Tạo thành công giao dịch mới ":description"',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Tạo thành công giao dịch mới của bạn',
     'updated_journal_no_descr'                  => 'Cập nhật thành công giao dịch của bạn',
     'select_transactions'                       => 'Chọn giao dịch',

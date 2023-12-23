@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'Pomyślnie usunięto transfer ":description"',
     'deleted_reconciliation'                    => 'Pomyślnie usunięto transakcję uzgadniania ":description"',
     'stored_journal'                            => 'Pomyślnie utworzono nową transakcję ":description"',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Pomyślnie utworzono nową transakcję',
     'updated_journal_no_descr'                  => 'Pomyślnie zaktualizowano Twoją transakcję',
     'select_transactions'                       => 'Wybierz transakcje',

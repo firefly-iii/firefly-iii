@@ -25,6 +25,7 @@
         "destination_account": "\u9810\u3051\u5165\u308c\u53e3\u5ea7",
         "add_another_split": "\u5225\u306e\u5206\u5272\u3092\u8ffd\u52a0",
         "submission": "\u9001\u4fe1",
+        "stored_journal": "\u53d6\u5f15\u300c:description\u300d\u3092\u4f5c\u6210\u3057\u307e\u3057\u305f",
         "create_another": "\u4fdd\u5b58\u5f8c\u306b\u623b\u308a\u4f5c\u6210\u3092\u7d9a\u3051\u308b\u3002",
         "reset_after": "\u9001\u4fe1\u5f8c\u306b\u30d5\u30a9\u30fc\u30e0\u3092\u30ea\u30bb\u30c3\u30c8",
         "submit": "\u9001\u4fe1",

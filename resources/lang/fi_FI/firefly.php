@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'Siirron ":description" poisto onnistui',
     'deleted_reconciliation'                    => 'Täsmäytystapahtuma ":description" poistettiin onnistuneesti',
     'stored_journal'                            => 'Loit onnistuneesti uuden tapahtuman ":description"',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Loit onnistuneesti uuden tapahtumasi',
     'updated_journal_no_descr'                  => 'Päivitit tapahtumaasi onnistuneesti',
     'select_transactions'                       => 'Valitse tapahtumat',

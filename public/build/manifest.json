@@ -43,13 +43,13 @@
     "integrity": "sha384-a7EK1Hlv+X5I367qMl06ETSq3vMG4MAIcUFpnK+6FJJSHPeAoKEkqod4CsBkcAwO"
   },
   "resources/assets/v2/pages/transactions/create.js": {
-    "file": "assets/create-46a6e026.js",
+    "file": "assets/create-57cfd98e.js",
     "imports": [
       "_load-translations-85b093de.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/create.js",
-    "integrity": "sha384-QZuBYZlNZHnJZmm/a/XSDVXIz8uRSjsItfumwo+Mcf2wqwxb3DLScIic5vy3V7TF"
+    "integrity": "sha384-y6OO3R97PvGAlKYeuGnkEw2wNlbSOMRTIZE2EWiKmFLp0CRFFCDqpHV+xHVjBCNy"
   },
   "resources/assets/v2/sass/app.scss": {
     "file": "assets/app-fb7b26ec.css",

@@ -1966,6 +1966,7 @@ return [
     'deleted_transfer'                          => '已成功删除转账“:description”',
     'deleted_reconciliation'                    => '成功删除对账交易“:description”',
     'stored_journal'                            => '成功创建新交易“:description”',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => '成功创建您的新交易',
     'updated_journal_no_descr'                  => '成功更新您的交易',
     'select_transactions'                       => '选择交易',

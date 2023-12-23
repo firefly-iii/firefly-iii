@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'Opération ":description" correctement supprimée',
     'deleted_reconciliation'                    => 'Opération ":description" supprimée avec succès',
     'stored_journal'                            => 'Opération ":description" créée avec succès',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Nouvelle opération créée avec succès',
     'updated_journal_no_descr'                  => 'Votre opération a été mise à jour avec succès',
     'select_transactions'                       => 'Sélectionner des opérations',

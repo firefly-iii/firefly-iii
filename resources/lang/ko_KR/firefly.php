@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => '":description" 이체 삭제 성공',
     'deleted_reconciliation'                    => '":description" 조정 거래 삭제 성공',
     'stored_journal'                            => '새로운 ":description" 거래 생성 성공',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => '새로운 거래 생성 성공',
     'updated_journal_no_descr'                  => '거래 업데이트 성공',
     'select_transactions'                       => '거래 선택',

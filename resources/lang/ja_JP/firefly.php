@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => '送金「:description」を削除しました',
     'deleted_reconciliation'                    => '取引照合":description"を削除しました',
     'stored_journal'                            => '取引「:description」を作成しました',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => '新しい取引を作成しました',
     'updated_journal_no_descr'                  => '取引を更新しました',
     'select_transactions'                       => '取引を選択',

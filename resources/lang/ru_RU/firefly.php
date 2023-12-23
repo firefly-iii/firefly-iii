@@ -1965,6 +1965,7 @@ return [
     'deleted_transfer'                          => 'Перевод ":description" успешно удалён',
     'deleted_reconciliation'                    => 'Сверенная транзакция ":description" успешно удалена',
     'stored_journal'                            => 'Новая транзакция ":description" успешно создана',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Ваша новая транзакция успешно создана',
     'updated_journal_no_descr'                  => 'Ваша транзакция успешно обновлена',
     'select_transactions'                       => 'Выбрать транзакции',
