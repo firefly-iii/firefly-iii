@@ -243,6 +243,9 @@ class UpdateRequest extends FormRequest
 
     /**
      * For each field, add it to the array if a reference is present in the request:
+     *
+     * @param array<string, string> $current
+     * @param array<string, mixed>  $transaction
      */
     private function getIntegerData(array $current, array $transaction): array
     {
@@ -255,6 +258,10 @@ class UpdateRequest extends FormRequest
         return $current;
     }
 
+    /**
+     * @param array<string, string> $current
+     * @param array<string, mixed>  $transaction
+     */
     private function getStringData(array $current, array $transaction): array
     {
         foreach ($this->stringFields as $fieldName) {
@@ -266,6 +273,10 @@ class UpdateRequest extends FormRequest
         return $current;
     }
 
+    /**
+     * @param array<string, string> $current
+     * @param array<string, mixed>  $transaction
+     */
     private function getNlStringData(array $current, array $transaction): array
     {
         foreach ($this->textareaFields as $fieldName) {
@@ -277,6 +288,10 @@ class UpdateRequest extends FormRequest
         return $current;
     }
 
+    /**
+     * @param array<string, string> $current
+     * @param array<string, mixed>  $transaction
+     */
     private function getDateData(array $current, array $transaction): array
     {
         foreach ($this->dateFields as $fieldName) {
@@ -290,6 +305,10 @@ class UpdateRequest extends FormRequest
         return $current;
     }
 
+    /**
+     * @param array<string, string> $current
+     * @param array<string, mixed>  $transaction
+     */
     private function getBooleanData(array $current, array $transaction): array
     {
         foreach ($this->booleanFields as $fieldName) {
@@ -301,6 +320,10 @@ class UpdateRequest extends FormRequest
         return $current;
     }
 
+    /**
+     * @param array<string, string> $current
+     * @param array<string, mixed>  $transaction
+     */
     private function getArrayData(array $current, array $transaction): array
     {
         foreach ($this->arrayFields as $fieldName) {
@@ -312,6 +335,10 @@ class UpdateRequest extends FormRequest
         return $current;
     }
 
+    /**
+     * @param array<string, string> $current
+     * @param array<string, mixed>  $transaction
+     */
     private function getFloatData(array $current, array $transaction): array
     {
         foreach ($this->floatFields as $fieldName) {

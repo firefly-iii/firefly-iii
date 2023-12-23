@@ -169,9 +169,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * Shared between the "noBudgetLimits" function and "processLimit".
+     * Shared between the "noBudgetLimits" function and "processLimit". Will take a single set of expenses and return its info.
      *
-     * Will take a single set of expenses and return its info.
+     * @param array<int, array<int, string>> $array
      *
      * @throws FireflyException
      */

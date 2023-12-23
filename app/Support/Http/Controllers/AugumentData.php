@@ -69,6 +69,8 @@ trait AugumentData
 
     /**
      * Small helper function for the revenue and expense account charts.
+     *
+     * @param array<array> $names
      */
     protected function expandNames(array $names): array
     {

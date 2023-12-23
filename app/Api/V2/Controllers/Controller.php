@@ -88,7 +88,7 @@ class Controller extends BaseController
     /**
      * Returns a JSON API object and returns it.
      *
-     * @param Model $object
+     * @param array<int, mixed>|Model $object
      */
     final protected function jsonApiObject(string $key, array|Model $object, AbstractTransformer $transformer): array
     {

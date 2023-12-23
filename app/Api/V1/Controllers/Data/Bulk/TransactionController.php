@@ -82,7 +82,7 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param array $params <array<string, array<string, int|string>>>
+     * @param array<string, array<string, string>> $params
      */
     private function isUpdateTransactionAccount(array $params): bool
     {
