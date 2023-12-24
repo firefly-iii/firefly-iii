@@ -927,7 +927,7 @@ class GroupCollector implements GroupCollectorInterface
     {
         $currentCollection = $collection;
 
-        // app('log')->debug(sprintf('GroupCollector: postFilterCollection has %d filter(s) and %d transaction(s).', count($this->postFilters), count($currentCollection)));
+        app('log')->debug(sprintf('GroupCollector: postFilterCollection has %d filter(s) and %d transaction(s).', count($this->postFilters), count($currentCollection)));
 
         /**
          * @var \Closure $function

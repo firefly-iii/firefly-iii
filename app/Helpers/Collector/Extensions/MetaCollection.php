@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait MetaCollection
@@ -181,7 +182,7 @@ trait MetaCollection
 
     public function excludeInternalReference(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string)json_encode($internalReference);
+        $internalReference = (string) json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -202,7 +203,7 @@ trait MetaCollection
 
     public function externalIdContains(string $externalId): GroupCollectorInterface
     {
-        $externalId = (string)json_encode($externalId);
+        $externalId = (string) json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -214,7 +215,7 @@ trait MetaCollection
 
     public function externalIdDoesNotContain(string $externalId): GroupCollectorInterface
     {
-        $externalId = (string)json_encode($externalId);
+        $externalId = (string) json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -226,7 +227,7 @@ trait MetaCollection
 
     public function externalIdDoesNotEnd(string $externalId): GroupCollectorInterface
     {
-        $externalId = (string)json_encode($externalId);
+        $externalId = (string) json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -238,7 +239,7 @@ trait MetaCollection
 
     public function externalIdDoesNotStart(string $externalId): GroupCollectorInterface
     {
-        $externalId = (string)json_encode($externalId);
+        $externalId = (string) json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -250,7 +251,7 @@ trait MetaCollection
 
     public function externalIdEnds(string $externalId): GroupCollectorInterface
     {
-        $externalId = (string)json_encode($externalId);
+        $externalId = (string) json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -262,7 +263,7 @@ trait MetaCollection
 
     public function externalIdStarts(string $externalId): GroupCollectorInterface
     {
-        $externalId = (string)json_encode($externalId);
+        $externalId = (string) json_encode($externalId);
         $externalId = str_replace('\\', '\\\\', trim($externalId, '"'));
 
         $this->joinMetaDataTables();
@@ -275,7 +276,7 @@ trait MetaCollection
     public function externalUrlContains(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = (string)json_encode($url);
+        $url = (string) json_encode($url);
         $url = str_replace('\\', '\\\\', trim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s%%', $url));
@@ -286,7 +287,7 @@ trait MetaCollection
     public function externalUrlDoesNotContain(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = (string)json_encode($url);
+        $url = (string) json_encode($url);
         $url = str_replace('\\', '\\\\', trim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s%%', $url));
@@ -297,7 +298,7 @@ trait MetaCollection
     public function externalUrlDoesNotEnd(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = (string)json_encode($url);
+        $url = (string) json_encode($url);
         $url = str_replace('\\', '\\\\', ltrim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'NOT LIKE', sprintf('%%%s', $url));
@@ -308,7 +309,7 @@ trait MetaCollection
     public function externalUrlDoesNotStart(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = (string)json_encode($url);
+        $url = (string) json_encode($url);
         $url = str_replace('\\', '\\\\', rtrim($url, '"'));
         // var_dump($url);
 
@@ -321,7 +322,7 @@ trait MetaCollection
     public function externalUrlEnds(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = (string)json_encode($url);
+        $url = (string) json_encode($url);
         $url = str_replace('\\', '\\\\', ltrim($url, '"'));
         $this->query->where('journal_meta.name', '=', 'external_url');
         $this->query->where('journal_meta.data', 'LIKE', sprintf('%%%s', $url));
@@ -332,7 +333,7 @@ trait MetaCollection
     public function externalUrlStarts(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
-        $url = (string)json_encode($url);
+        $url = (string) json_encode($url);
         $url = str_replace('\\', '\\\\', rtrim($url, '"'));
         // var_dump($url);
 
@@ -370,7 +371,7 @@ trait MetaCollection
 
     public function internalReferenceContains(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string)json_encode($internalReference);
+        $internalReference = (string) json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
         // var_dump($internalReference);
         // exit;
@@ -384,7 +385,7 @@ trait MetaCollection
 
     public function internalReferenceDoesNotContain(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string)json_encode($internalReference);
+        $internalReference = (string) json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -396,7 +397,7 @@ trait MetaCollection
 
     public function internalReferenceDoesNotEnd(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string)json_encode($internalReference);
+        $internalReference = (string) json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -408,7 +409,7 @@ trait MetaCollection
 
     public function internalReferenceDoesNotStart(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string)json_encode($internalReference);
+        $internalReference = (string) json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -420,7 +421,7 @@ trait MetaCollection
 
     public function internalReferenceEnds(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string)json_encode($internalReference);
+        $internalReference = (string) json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -432,7 +433,7 @@ trait MetaCollection
 
     public function internalReferenceStarts(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string)json_encode($internalReference);
+        $internalReference = (string) json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -628,7 +629,7 @@ trait MetaCollection
 
     public function setInternalReference(string $internalReference): GroupCollectorInterface
     {
-        $internalReference = (string)json_encode($internalReference);
+        $internalReference = (string) json_encode($internalReference);
         $internalReference = str_replace('\\', '\\\\', trim($internalReference, '"'));
 
         $this->joinMetaDataTables();
@@ -663,7 +664,7 @@ trait MetaCollection
     public function setTag(Tag $tag): GroupCollectorInterface
     {
         $this->withTagInformation();
-        $this->query->where('tag_transaction_journal.tag_id', $tag->id);
+        $this->setTags(new Collection([$tag]));
 
         return $this;
     }
@@ -673,9 +674,38 @@ trait MetaCollection
      */
     public function setTags(Collection $tags): GroupCollectorInterface
     {
+        Log::debug(sprintf('Now in setTags(%d tag(s))', $tags->count()));
         $this->withTagInformation();
-        $this->tags = array_merge($this->tags, $tags->pluck('id')->toArray());
-        $this->query->whereIn('tag_transaction_journal.tag_id', $this->tags);
+        $this->query->whereNotNull('tag_transaction_journal.tag_id');
+
+        // this method adds a "postFilter" to the collector.
+        $list                = $tags->pluck('tag')->toArray();
+        $filter              = static function (array $object) use ($list): bool {
+            Log::debug(sprintf('Now in setTags(%s) filter', implode(', ', $list)));
+            $expectedTagCount = count($list);
+            $foundTagCount = 0;
+            foreach ($object['transactions'] as $transaction) {
+                $transactionTagCount = count($transaction['tags']);
+                app('log')->debug(sprintf('Transaction has %d tag(s)', $transactionTagCount));
+                if ($transactionTagCount < $expectedTagCount) {
+                    app('log')->debug(sprintf('Transaction has %d tag(s), we expect %d tag(s), return false.', $transactionTagCount, $expectedTagCount));
+
+                    return false;
+                }
+                foreach ($transaction['tags'] as $tag) {
+                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
+                    if (in_array(strtolower($tag['name']), $list, true)) {
+                        app('log')->debug(sprintf('Transaction has tag "%s" so count++.', $tag['name']));
+                        ++$foundTagCount;
+                    }
+                }
+            }
+            Log::debug(sprintf('Found %d tags, need at least %d.', $foundTagCount, $expectedTagCount));
+
+            // found at least the expected tags.
+            return $foundTagCount >= $expectedTagCount;
+        };
+        $this->postFilters[] = $filter;
 
         return $this;
     }
@@ -690,10 +720,14 @@ trait MetaCollection
         // this method adds a "postFilter" to the collector.
         $list                = $tags->pluck('tag')->toArray();
         $filter              = static function (array $object) use ($list): bool {
+            Log::debug(sprintf('Now in setWithoutSpecificTags(%s) filter', implode(', ', $list)));
             foreach ($object['transactions'] as $transaction) {
                 app('log')->debug(sprintf('Transaction has %d tag(s)', count($transaction['tags'])));
                 foreach ($transaction['tags'] as $tag) {
-                    if (in_array($tag['name'], $list, true)) {
+                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
+                    if (in_array(strtolower($tag['name']), $list, true)) {
+                        app('log')->debug(sprintf('Transaction has tag "%s", but should not have it, return false.', $tag['name']));
+
                         return false;
                     }
                 }
