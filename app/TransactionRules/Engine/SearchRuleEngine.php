@@ -100,8 +100,16 @@ class SearchRuleEngine implements RuleEngineInterface
         // if rules and no rule groups, file each rule separately.
         if (0 !== $this->rules->count()) {
             app('log')->debug(sprintf('SearchRuleEngine:: found %d rule(s) to fire.', $this->rules->count()));
+
+            /** @var Rule $rule */
             foreach ($this->rules as $rule) {
-                $this->fireRule($rule);
+                $result = $this->fireRule($rule);
+                if (true === $result && $rule->stop_processing) {
+                    app('log')->debug(sprintf('Rule #%d has triggered and executed, but calls to stop processing. Since not in the context of a group, do not stop.', $rule->id));
+                }
+                if (false === $result && $rule->stop_processing) {
+                    app('log')->debug(sprintf('Rule #%d has triggered and changed nothing, but calls to stop processing. Do not stop.', $rule->id));
+                }
             }
             app('log')->debug('SearchRuleEngine:: done processing all rules!');
 
@@ -176,7 +184,7 @@ class SearchRuleEngine implements RuleEngineInterface
             }
 
             // if needs no context, value is different:
-            $needsContext = (bool)(config(sprintf('search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true);
+            $needsContext = (bool) (config(sprintf('search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true);
             if (false === $needsContext) {
                 app('log')->debug(sprintf('SearchRuleEngine:: add a rule trigger (no context): %s:true', $ruleTrigger->trigger_type));
                 $searchArray[$ruleTrigger->trigger_type][] = 'true';
@@ -249,7 +257,7 @@ class SearchRuleEngine implements RuleEngineInterface
         $journalId = 0;
         foreach ($array as $triggerName => $values) {
             if ('journal_id' === $triggerName && is_array($values) && 1 === count($values)) {
-                $journalId = (int)trim($values[0] ?? '"0"', '"'); // follows format "123".
+                $journalId = (int) trim($values[0] ?? '"0"', '"'); // follows format "123".
                 app('log')->debug(sprintf('Found journal ID #%d', $journalId));
             }
         }
@@ -326,7 +334,7 @@ class SearchRuleEngine implements RuleEngineInterface
             app('log')->debug(sprintf('Total collection is now %d transactions', $total->count()));
             ++$count;
             // if trigger says stop processing, do so.
-            if($ruleTrigger->stop_processing && $collection->count() > 0) {
+            if ($ruleTrigger->stop_processing && $collection->count() > 0) {
                 app('log')->debug('The trigger says to stop processing, so stop processing other triggers.');
 
                 break;

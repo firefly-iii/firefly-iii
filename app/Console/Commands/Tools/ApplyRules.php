@@ -133,7 +133,7 @@ class ApplyRules extends Command
         // start running rules.
         $this->friendlyLine(sprintf('Will apply %d rule(s) to your transaction(s).', $count));
 
-        // file the rule(s)
+        // fire the rule(s)
         $ruleEngine->fire();
 
         $this->friendlyLine('');

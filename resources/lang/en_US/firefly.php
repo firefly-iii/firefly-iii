@@ -721,6 +721,8 @@ return [
     // rules
     'is_not_rule_trigger'                                 => 'Not',
     'cannot_fire_inactive_rules'                          => 'You cannot execute inactive rules.',
+    'show_triggers'                                       => 'Show triggers',
+    'show_actions'                                        => 'Show actions',
     'rules'                                               => 'Rules',
     'rule_name'                                           => 'Name of rule',
     'rule_triggers'                                       => 'Rule triggers when',
