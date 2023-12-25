@@ -146,7 +146,9 @@
                                                         {% endif %}
                                                     {% endfor %}
                                                 </ul>
-                                                <span class="small rule-triggers-show" style="cursor:pointer;display:none;" data-id="{{ rule.id }}">{{ 'show_triggers'|_ }}</span>
+                                                <ul class="small rule-triggers-show" style="cursor:pointer;display:none;" data-id="{{ rule.id }}">
+                                                    <li data-id="{{ rule.id }}">{{ 'show_triggers'|_ }}</li>
+                                                </ul>
                                             {% endif %}
                                         </td>
                                         <td class="hidden-xs">
@@ -164,7 +166,10 @@
                                                         </li>
                                                     {% endfor %}
                                                 </ul>
-                                                <span class="small rule-actions-show" style="cursor:pointer;display:none;" data-id="{{ rule.id }}">{{ 'show_actions'|_ }}</span>
+                                                <ul class="small rule-actions-show" style="cursor:pointer;display:none;" data-id="{{ rule.id }}">
+                                                    <li>{{ 'show_actions'|_ }}</li>
+                                                </ul>
+
                                             {% endif %}
                                         </td>
                                     </tr>
