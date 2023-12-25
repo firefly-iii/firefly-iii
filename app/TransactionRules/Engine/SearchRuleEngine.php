@@ -325,6 +325,12 @@ class SearchRuleEngine implements RuleEngineInterface
             $total = $total->merge($collection);
             app('log')->debug(sprintf('Total collection is now %d transactions', $total->count()));
             ++$count;
+            // if trigger says stop processing, do so.
+            if($ruleTrigger->stop_processing && $collection->count() > 0) {
+                app('log')->debug('The trigger says to stop processing, so stop processing other triggers.');
+
+                break;
+            }
         }
         app('log')->debug(sprintf('Total collection is now %d transactions', $total->count()));
         app('log')->debug(sprintf('Done running %d trigger(s)', $count));
@@ -465,10 +471,13 @@ class SearchRuleEngine implements RuleEngineInterface
         }
 
         // pick up from the action if it actually acted or not:
-        if ($ruleAction->stop_processing) {
-            app('log')->debug(sprintf('Rule action "%s" asks to break, so break!', $ruleAction->action_type));
+        if ($ruleAction->stop_processing && true === $result) {
+            app('log')->debug(sprintf('Rule action "%s" reports changes AND asks to break, so break!', $ruleAction->action_type));
 
             return true;
+        }
+        if ($ruleAction->stop_processing && false === $result) {
+            app('log')->debug(sprintf('Rule action "%s" reports NO changes AND asks to break, but we wont break!', $ruleAction->action_type));
         }
 
         return false;

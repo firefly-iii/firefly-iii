@@ -680,10 +680,11 @@ trait MetaCollection
 
         // this method adds a "postFilter" to the collector.
         $list                = $tags->pluck('tag')->toArray();
+        $list                = array_map('strtolower', $list);
         $filter              = static function (array $object) use ($list): bool {
             Log::debug(sprintf('Now in setTags(%s) filter', implode(', ', $list)));
             $expectedTagCount = count($list);
-            $foundTagCount = 0;
+            $foundTagCount    = 0;
             foreach ($object['transactions'] as $transaction) {
                 $transactionTagCount = count($transaction['tags']);
                 app('log')->debug(sprintf('Transaction has %d tag(s)', $transactionTagCount));
@@ -719,6 +720,7 @@ trait MetaCollection
 
         // this method adds a "postFilter" to the collector.
         $list                = $tags->pluck('tag')->toArray();
+        $list                = array_map('strtolower', $list);
         $filter              = static function (array $object) use ($list): bool {
             Log::debug(sprintf('Now in setWithoutSpecificTags(%s) filter', implode(', ', $list)));
             foreach ($object['transactions'] as $transaction) {
