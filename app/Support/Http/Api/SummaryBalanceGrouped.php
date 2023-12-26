@@ -42,9 +42,6 @@ class SummaryBalanceGrouped
         $this->currencyRepository = app(CurrencyRepositoryInterface::class);
     }
 
-    /**
-     * TODO remember to do -1 for deposits.
-     */
     public function groupTransactions(string $key, array $journals): void
     {
         \Log::debug(sprintf('Now in groupTransactions with key "%s" and %d journal(s)', $key, count($journals)));
@@ -77,8 +74,6 @@ class SummaryBalanceGrouped
             $this->amounts[$key]['native']         = bcadd($this->amounts[$key]['native'], $nativeAmount);
             $this->amounts[self::SUM]['native']    = bcadd($this->amounts[self::SUM]['native'], $nativeAmount);
         }
-        app('log')->debug(sprintf('this->amounts[%s][native] is now %s', $key, $this->amounts[$key]['native']));
-        app('log')->debug(sprintf('this->amounts[%s][native] is now %s', self::SUM, $this->amounts[$key]['native']));
         $converter->summarize();
     }
 
