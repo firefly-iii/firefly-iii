@@ -48,7 +48,7 @@ return [
     'source_equals_destination'      => 'Tài khoản nguồn bằng với tài khoản đích.',
     'unique_account_number_for_user' => 'Có vẻ như số tài khoản này đã được sử dụng.',
     'unique_iban_for_user'           => 'Có vẻ như IBAN này đã được sử dụng.',
-    'reconciled_forbidden_field'     => 'This transaction is already reconciled, you cannot change the ":field"',
+    'reconciled_forbidden_field'     => 'Giao dịch này đã được đối chiếu, bạn không thể thay đổi ":field"',
     'deleted_user'                   => 'Do những hạn chế về bảo mật, bạn không thể đăng ký bằng địa chỉ email này.',
     'rule_trigger_value'             => 'Giá trị này không hợp lệ cho trình kích hoạt được chọn.',
     'rule_action_value'              => 'Giá trị này không hợp lệ cho hành động đã chọn.',
@@ -60,10 +60,10 @@ return [
     'transaction_types_equal'        => 'Tất cả các phần tách phải cùng loại.',
     'invalid_transaction_type'       => 'Loại giao dịch không hợp lệ.',
     'invalid_selection'              => 'Lựa chọn của bạn không hợp lệ.',
-    'belongs_user'                   => 'This value is linked to an object that does not seem to exist.',
-    'belongs_user_or_user_group'     => 'This value is linked to an object that does not seem to exist in your current financial administration.',
+    'belongs_user'                   => 'Giá trị này liên kết đến thực thể dường như không tồn tại.',
+    'belongs_user_or_user_group'     => 'Giá trị này liên kết đến thực thể dường như không tồn tại trong phần quản trị tài chính hiện thời.',
     'at_least_one_transaction'       => 'Cần ít nhất một giao dịch.',
-    'recurring_transaction_id'       => 'Need at least one transaction.',
+    'recurring_transaction_id'       => 'Cần ít nhất một giao dịch.',
     'need_id_to_match'               => 'You need to submit this entry with an ID for the API to be able to match it.',
     'too_many_unmatched'             => 'Too many submitted transactions cannot be matched to their respective database entries. Make sure existing entries have a valid ID.',
     'id_does_not_match'              => 'Submitted ID #:id does not match expected ID. Make sure it matches or omit the field.',
@@ -234,8 +234,8 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data' => 'Cần lấy ID tài khoản nguồn hợp lệ và / hoặc tên tài khoản nguồn hợp lệ để tiếp tục.',
-    'withdrawal_source_bad_data'  => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'withdrawal_dest_need_data'   => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_source_bad_data'  => '[a] Không thể tìm thấy tài khoản nguồn hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
+    'withdrawal_dest_need_data'   => '[a] Cần lấy ID tài khoản đích hợp lệ và / hoặc tên tài khoản đích hợp lệ để tiếp tục.',
     'withdrawal_dest_bad_data'    => 'Không thể tìm thấy tài khoản đích hợp lệ khi tìm kiếm ID ":id" hoặc tên ":name".',
 
     'withdrawal_dest_iban_exists' => 'This destination account IBAN is already in use by an asset account or a liability and cannot be used as a withdrawal destination.',

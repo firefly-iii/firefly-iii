@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'        => 'Kerää lisätietoja <code>storage/logs</code> hakemistosta, josta löydät lokitiedostoja. Jos käytät Dockeria, käytä komentoa <code>docker logs -f [container]</code>.',
-    'collect_info_more'   => 'Voit lukea lisää virhetietojen keräämisestä <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>:sta.',
+    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
     'github_help'         => 'Hanki apua GitHubista',
     'github_instructions' => 'Olet enemmän kuin tervetullut avaamaan uuden tiketin <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHubissa</a></strong>.',
     'use_search'          => 'Käytä hakua!',

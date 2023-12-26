@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'        => 'Lütfen günlük dosyalarını bulacağınız <code>storage/logs</code> dizininde daha fazla bilgi toplayın. Eğer Docker kullanıyorsanız, <code>docker logs -f [container]</code> komutunu kullanın.',
-    'collect_info_more'   => 'Hata bilgilerini toplama hakkında daha fazla bilgi için <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode ">the FAQ</a>.',
+    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
     'github_help'         => 'Github\'dan yardım alın',
     'github_instructions' => 'Yeni bir sayı açmaktan memnuniyet duyarız<strong><a href="https://github.com/firefly-iii/firefly-iii/issues">on GitHub</a></strong>.',
     'use_search'          => 'Aramayı kullan!',

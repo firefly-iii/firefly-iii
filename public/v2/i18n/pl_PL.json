@@ -22,7 +22,7 @@
             "unknown_dest_plain": "Nieznane konto docelowe",
             "unknown_any_plain": "Nieznane konto",
             "unknown_budget_plain": "Brak bud\u017cetu",
-            "stored_journal_js": "Successfully created new transaction \"%{description}\"",
+            "stored_journal_js": "Pomy\u015blnie utworzono now\u0105 transakcj\u0119 \"%{description}\"",
             "expense_account": "Konto wydatk\u00f3w",
             "revenue_account": "Konto przychod\u00f3w",
             "budget": "Bud\u017cet",

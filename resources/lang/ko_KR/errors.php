@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'        => '<code>storage/logs</code> 디렉토리의 로그 파일에서 추가정보를 수집하세요. 도커를 실행중이라면 <code>docker logs -f [container]</code>를 사용하세요.',
-    'collect_info_more'   => '<a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>에서 오류 정보 수집에 대한 더 자세한 정보를 읽을 수 있습니다.',
+    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
     'github_help'         => 'GitHub에서 도움 얻기',
     'github_instructions' => '<strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub에서</a></strong> 새로운 이슈를 여는 것을 환영합니다.',
     'use_search'          => '검색을 이용하세요!',

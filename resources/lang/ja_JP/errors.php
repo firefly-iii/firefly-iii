@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'        => 'ログファイルがある <code>storage/logs</code> ディレクトリにて、より詳細な情報を集めてください。Docker を使っている場合は <code>docker logs -f [container]</code> を使用してください。',
-    'collect_info_more'   => 'エラー情報の収集については、 <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a> をご覧ください。',
+    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
     'github_help'         => 'GitHubでヘルプを見る',
     'github_instructions' => '<strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong> にて新しい issue を作ることは大歓迎です。',
     'use_search'          => '検索してください！',

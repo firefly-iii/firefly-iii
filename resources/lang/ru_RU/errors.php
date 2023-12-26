@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'        => 'Пожалуйста, соберите больше информации в каталоге <code>storage/logs</code>, где вы найдете файлы журнала. Если вы используете Docker, используйте <code>docker logs -f [container]</code>.',
-    'collect_info_more'   => 'Вы можете прочитать больше о сборе информации об ошибке в <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
+    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
     'github_help'         => 'Получить помощь на GitHub',
     'github_instructions' => 'Я буду очень признателен, если вы откроете Заявку на <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
     'use_search'          => 'Используйте поиск!',

@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'        => 'Vui lòng thu thập thêm thông tin trong <code>storage/logs</code> nơi bạn lưu file log.',
-    'collect_info_more'   => 'Bạn có thể đọc thêm về việc thu thập thông tin lỗi trong <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">the FAQ</a>.',
+    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
     'github_help'         => 'Nhận trợ giúp trên GitHub',
     'github_instructions' => 'Nếu bạn chắc chắn trang này tồn tại, vui lòng mở một yêu cầu trên <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
     'use_search'          => 'Sử dụng tìm kiếm!',

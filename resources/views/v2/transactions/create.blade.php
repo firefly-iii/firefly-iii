@@ -240,9 +240,6 @@
                                                 Run webhooks on this transaction
                                             </label>
                                         </div>
-
-
-
                                     </div>
                                     <div class="card-footer">
                                         submission options

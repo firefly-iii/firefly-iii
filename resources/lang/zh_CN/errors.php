@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'        => '请在 <code>storage/logs</code> 目录中查找日志文件以获取更多信息。如果您正在使用 Docker，请使用 <code>docker logs -f [container]</code>。',
-    'collect_info_more'   => '您可以在<a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ页面</a>了解更多有关收集错误信息的内容。',
+    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
     'github_help'         => '在 GitHub 上获取帮助',
     'github_instructions' => '欢迎您在 <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong> 创建工单。',
     'use_search'          => '请善用搜索功能！',

@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'        => 'Samle inn meir informasjon i <code>storage/logs</code> mappa kor du finn loggfiler. Om du køyrer Docker, bruk <code>docker logger -f [container]</code>.',
-    'collect_info_more'   => 'Du kan lesa meir om innsamling av feilinformasjon i <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
+    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
     'github_help'         => 'Få hjelp på GitHub',
     'github_instructions' => 'Du er meir enn velkomen til å åpne eit nytt problem <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">på GitHub</a></strong>.',
     'use_search'          => 'Bruk søket!',

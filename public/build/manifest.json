@@ -1,7 +1,7 @@
 {
-  "_load-translations-85b093de.js": {
-    "file": "assets/load-translations-85b093de.js",
-    "integrity": "sha384-AQsbwlyfi+JD0G6ymSMcfR9FfVJIdqMf/btUvbHkKcRLKTnIN0orw0xpEAajOEWs"
+  "_load-translations-36a0ce82.js": {
+    "file": "assets/load-translations-36a0ce82.js",
+    "integrity": "sha384-wTRO7jAxX9xxNgWUuXNrrSBjAyE0lWGOi3yVQ6S03bEYCk04Tc1C4BrVqHlnDSZL"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
     "file": "assets/fa-brands-400-5656d596.ttf",
@@ -34,22 +34,22 @@
     "integrity": "sha384-YxWlWCDksuL6Ljn1HkJNPH8l+jSRIWPpMpPw3pFa0QnmLXjwV/uPwpDm/b9vn/o1"
   },
   "resources/assets/v2/pages/dashboard/dashboard.js": {
-    "file": "assets/dashboard-8ab291b1.js",
+    "file": "assets/dashboard-9f02f998.js",
     "imports": [
-      "_load-translations-85b093de.js"
+      "_load-translations-36a0ce82.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/dashboard/dashboard.js",
-    "integrity": "sha384-a7EK1Hlv+X5I367qMl06ETSq3vMG4MAIcUFpnK+6FJJSHPeAoKEkqod4CsBkcAwO"
+    "integrity": "sha384-mH/cboBLbKf0nKndnDaPzbF4ogflUacPt4Meytovf5d92Z6dytPdAXaUTPhWb89+"
   },
   "resources/assets/v2/pages/transactions/create.js": {
-    "file": "assets/create-57cfd98e.js",
+    "file": "assets/create-8d2b7efc.js",
     "imports": [
-      "_load-translations-85b093de.js"
+      "_load-translations-36a0ce82.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/create.js",
-    "integrity": "sha384-y6OO3R97PvGAlKYeuGnkEw2wNlbSOMRTIZE2EWiKmFLp0CRFFCDqpHV+xHVjBCNy"
+    "integrity": "sha384-AoSn0ASKb6wASHs6lp71iR/Siw9t2xU67Aos2Eq/osFPlEyJ58N7gHUoowy56/8z"
   },
   "resources/assets/v2/sass/app.scss": {
     "file": "assets/app-fb7b26ec.css",

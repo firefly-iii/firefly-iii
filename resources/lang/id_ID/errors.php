@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'        => 'Silakan ambil informasi lebih lanjut di direktori<code>storage/logs</code> di mana Anda dapat menemukan file log. Jika Anda menggunakan Docker, gunakan <code>docker logs -f [container]</code>.',
-    'collect_info_more'   => 'Anda dapat membaca lebih lanjut dalam mengumpulkan informasi kesalahan di <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">Pertanyaan yang sering diajukan</a>.',
+    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
     'github_help'         => 'Dapatkan bantuan di GitHub',
     'github_instructions' => 'Anda sangat diperbolehkan untuk membuka isu baru <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">di GitHub</a></strong>.',
     'use_search'          => 'Gunakan pencarian!',

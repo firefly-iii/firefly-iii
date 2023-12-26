@@ -22,7 +22,7 @@
             "unknown_dest_plain": "Compte de destination inconnu",
             "unknown_any_plain": "Compte inconnu",
             "unknown_budget_plain": "Pas de budget",
-            "stored_journal_js": "Successfully created new transaction \"%{description}\"",
+            "stored_journal_js": "Op\u00e9ration \"%{description}\" cr\u00e9\u00e9e avec succ\u00e8s",
             "expense_account": "Compte de d\u00e9penses",
             "revenue_account": "Compte de recettes",
             "budget": "Budget",

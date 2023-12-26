@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'        => 'Shromažďujte prosím další informace do adresáře <code>storage/logs</code>, kde najdete chybové záznamy. Pokud používáte Docker, použijte <code>docker logs -f [container]</code>.',
-    'collect_info_more'   => 'Více informací o shromažďování chyb si můžete přečíst v <a href="https://docs.firefly-iii.org/faq/other#how-do-i-enable-debug-mode">FAQ</a>.',
+    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
     'github_help'         => 'Získejte nápovědu na GitHub',
     'github_instructions' => 'Jste více než vítáni při otevření nových hlášení <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">na GitHub</a></strong>.',
     'use_search'          => 'Použijte vyhledávání!',
