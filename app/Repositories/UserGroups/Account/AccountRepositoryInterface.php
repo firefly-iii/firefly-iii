@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * AccountRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -36,98 +35,30 @@ use Illuminate\Support\Collection;
  */
 interface AccountRepositoryInterface
 {
-    /**
-     * @param int $accountId
-     *
-     * @return Account|null
-     */
     public function find(int $accountId): ?Account;
 
-    /**
-     * @param string $number
-     * @param array  $types
-     *
-     * @return Account|null
-     */
     public function findByAccountNumber(string $number, array $types): ?Account;
 
-    /**
-     * @param string $iban
-     * @param array  $types
-     *
-     * @return Account|null
-     */
     public function findByIbanNull(string $iban, array $types): ?Account;
 
-    /**
-     * @param string $name
-     * @param array  $types
-     *
-     * @return Account|null
-     */
     public function findByName(string $name, array $types): ?Account;
 
-    /**
-     * @param Account $account
-     *
-     * @return TransactionCurrency|null
-     */
     public function getAccountCurrency(Account $account): ?TransactionCurrency;
 
-    /**
-     * @param array $accountIds
-     *
-     * @return Collection
-     */
     public function getAccountsById(array $accountIds): Collection;
 
-    /**
-     * @param array      $types
-     * @param array|null $sort
-     *
-     * @return Collection
-     */
     public function getAccountsByType(array $types, ?array $sort = []): Collection;
 
-    /**
-     * @param array $types
-     *
-     * @return Collection
-     */
     public function getActiveAccountsByType(array $types): Collection;
 
     /**
      * Return meta value for account. Null if not found.
-     *
-     * @param Account $account
-     * @param string  $field
-     *
-     * @return null|string
      */
     public function getMetaValue(Account $account, string $field): ?string;
 
-    /**
-     * @param string $query
-     * @param array  $types
-     * @param int    $limit
-     *
-     * @return Collection
-     */
     public function searchAccount(string $query, array $types, int $limit): Collection;
 
-    /**
-     * @param User $user
-     *
-     * @return void
-     */
     public function setUser(User $user): void;
 
-    /**
-     * @param UserGroup $userGroup
-     *
-     * @return void
-     */
     public function setUserGroup(UserGroup $userGroup): void;
-
-
 }

@@ -30,15 +30,9 @@ use FireflyIII\Models\RecurrenceTransaction;
  */
 class RecurrenceTransactionObserver
 {
-    /**
-     * @param RecurrenceTransaction $transaction
-     *
-     * @return void
-     */
     public function deleting(RecurrenceTransaction $transaction): void
     {
         app('log')->debug('Observe "deleting" of a recurrence transaction.');
         $transaction->recurrenceTransactionMeta()->delete();
     }
-
 }

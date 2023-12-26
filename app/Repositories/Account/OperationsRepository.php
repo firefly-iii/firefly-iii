@@ -32,7 +32,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 
 /**
- *
  * Class OperationsRepository
  */
 class OperationsRepository implements OperationsRepositoryInterface
@@ -43,12 +42,6 @@ class OperationsRepository implements OperationsRepositoryInterface
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
      * which have the specified accounts. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return array
      */
     public function listExpenses(Carbon $start, Carbon $end, Collection $accounts): array
     {
@@ -57,15 +50,124 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $this->sortByCurrency($journals, 'negative');
     }
 
+    public function setUser(null|Authenticatable|User $user): void
+    {
+        if ($user instanceof User) {
+            $this->user = $user;
+        }
+    }
+
+    /**
+     * This method returns a list of all the deposit transaction journals (as arrays) set in that period
+     * which have the specified accounts. It's grouped per currency, with as few details in the array
+     * as possible. Amounts are always positive.
+     */
+    public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array
+    {
+        $journals = $this->getTransactions($start, $end, $accounts, TransactionType::DEPOSIT);
+
+        return $this->sortByCurrency($journals, 'positive');
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function sumExpenses(
+        Carbon               $start,
+        Carbon               $end,
+        ?Collection          $accounts = null,
+        ?Collection          $expense = null,
+        ?TransactionCurrency $currency = null
+    ): array {
+        $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
+
+        return $this->groupByCurrency($journals, 'negative');
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function sumExpensesByDestination(
+        Carbon               $start,
+        Carbon               $end,
+        ?Collection          $accounts = null,
+        ?Collection          $expense = null,
+        ?TransactionCurrency $currency = null
+    ): array {
+        $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
+
+        return $this->groupByDirection($journals, 'destination', 'negative');
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function sumExpensesBySource(
+        Carbon               $start,
+        Carbon               $end,
+        ?Collection          $accounts = null,
+        ?Collection          $expense = null,
+        ?TransactionCurrency $currency = null
+    ): array {
+        $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
+
+        return $this->groupByDirection($journals, 'source', 'negative');
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function sumIncome(
+        Carbon               $start,
+        Carbon               $end,
+        ?Collection          $accounts = null,
+        ?Collection          $revenue = null,
+        ?TransactionCurrency $currency = null
+    ): array {
+        $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
+
+        return $this->groupByCurrency($journals, 'positive');
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function sumIncomeByDestination(
+        Carbon               $start,
+        Carbon               $end,
+        ?Collection          $accounts = null,
+        ?Collection          $revenue = null,
+        ?TransactionCurrency $currency = null
+    ): array {
+        $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
+
+        return $this->groupByDirection($journals, 'destination', 'positive');
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
+    public function sumIncomeBySource(
+        Carbon               $start,
+        Carbon               $end,
+        ?Collection          $accounts = null,
+        ?Collection          $revenue = null,
+        ?TransactionCurrency $currency = null
+    ): array {
+        $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
+
+        return $this->groupByDirection($journals, 'source', 'positive');
+    }
+
+    public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
+    {
+        $journals = $this->getTransactionsForSum(TransactionType::TRANSFER, $start, $end, $accounts, null, $currency);
+
+        return $this->groupByEither($journals);
+    }
+
     /**
      * Collect transactions with some parameters
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     * @param string     $type
-     *
-     * @return array
      */
     private function getTransactions(Carbon $start, Carbon $end, Collection $accounts, string $type): array
     {
@@ -78,22 +180,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $collector->getExtractedJournals();
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
-    {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
-    }
-
-    /**
-     * @param array  $journals
-     * @param string $direction
-     *
-     * @return array
-     */
     private function sortByCurrency(array $journals, string $direction): array
     {
         $array = [];
@@ -101,7 +187,6 @@ class OperationsRepository implements OperationsRepositoryInterface
             $currencyId         = (int)$journal['currency_id'];
             $journalId          = (int)$journal['transaction_journal_id'];
             $array[$currencyId] ??= [
-
                 'currency_id'             => $journal['currency_id'],
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
@@ -111,7 +196,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             $array[$currencyId]['transaction_journals'][$journalId] = [
-                'amount'                   => app('steam')->$direction((string)$journal['amount']), // @phpstan-ignore-line
+                'amount'                   => app('steam')->{$direction}((string)$journal['amount']), // @phpstan-ignore-line
                 'date'                     => $journal['date'],
                 'transaction_journal_id'   => $journalId,
                 'budget_name'              => $journal['budget_name'],
@@ -132,50 +217,8 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * This method returns a list of all the deposit transaction journals (as arrays) set in that period
-     * which have the specified accounts. It's grouped per currency, with as few details in the array
-     * as possible. Amounts are always positive.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     *
-     * @return array
-     */
-    public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array
-    {
-        $journals = $this->getTransactions($start, $end, $accounts, TransactionType::DEPOSIT);
-
-        return $this->sortByCurrency($journals, 'positive');
-    }
-
-    /**
-     * @inheritDoc
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     */
-    public function sumExpenses(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $expense = null,
-        ?TransactionCurrency $currency = null
-    ): array
-    {
-        $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
-
-        return $this->groupByCurrency($journals, 'negative');
-    }
-
-    /**
-     * @param Carbon                   $start
-     * @param Carbon                   $end
-     * @param Collection|null          $accounts
-     * @param Collection|null          $opposing
-     * @param TransactionCurrency|null $currency
-     * @param string                   $type
-     *
-     * @return array
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     private function getTransactionsForSum(
         string               $type,
@@ -184,8 +227,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         ?Collection          $accounts = null,
         ?Collection          $opposing = null,
         ?TransactionCurrency $currency = null
-    ): array
-    {
+    ): array {
         $start->startOfDay();
         $end->endOfDay();
 
@@ -225,7 +267,8 @@ class OperationsRepository implements OperationsRepositoryInterface
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
             $collector->setUser($this->user)->setRange($start, $end)->setTypes([$type])->withAccountInformation()
-                      ->setForeignCurrency($currency);
+                ->setForeignCurrency($currency)
+            ;
             if (TransactionType::WITHDRAWAL === $type) {
                 if (null !== $accounts) {
                     $collector->setSourceAccounts($accounts);
@@ -252,12 +295,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $journals;
     }
 
-    /**
-     * @param array  $journals
-     * @param string $direction
-     *
-     * @return array
-     */
     private function groupByCurrency(array $journals, string $direction): array
     {
         $array = [];
@@ -272,7 +309,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'currency_code'           => $journal['currency_code'],
                 'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->$direction($journal['amount'])); // @phpstan-ignore-line
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->{$direction}($journal['amount'])); // @phpstan-ignore-line
 
             // also do foreign amount:
             $foreignId = (int)$journal['foreign_currency_id'];
@@ -285,37 +322,13 @@ class OperationsRepository implements OperationsRepositoryInterface
                     'currency_code'           => $journal['foreign_currency_code'],
                     'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
                 ];
-                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->$direction($journal['foreign_amount']));// @phpstan-ignore-line
+                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], app('steam')->{$direction}($journal['foreign_amount'])); // @phpstan-ignore-line
             }
         }
 
         return $array;
     }
 
-    /**
-     * @inheritDoc
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     */
-    public function sumExpensesByDestination(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $expense = null,
-        ?TransactionCurrency $currency = null
-    ): array
-    {
-        $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
-
-        return $this->groupByDirection($journals, 'destination', 'negative');
-    }
-
-    /**
-     * @param array  $journals
-     * @param string $direction
-     * @param string $method
-     *
-     * @return array
-     */
     private function groupByDirection(array $journals, string $direction, string $method): array
     {
         $array   = [];
@@ -334,7 +347,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 'currency_code'           => $journal['currency_code'],
                 'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
-            $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->$method((string)$journal['amount']));// @phpstan-ignore-line
+            $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->{$method}((string)$journal['amount'])); // @phpstan-ignore-line
 
             // also do foreign amount:
             if (0 !== (int)$journal['foreign_currency_id']) {
@@ -349,99 +362,17 @@ class OperationsRepository implements OperationsRepositoryInterface
                     'currency_code'           => $journal['foreign_currency_code'],
                     'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
                 ];
-                $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->$method((string)$journal['foreign_amount']));// @phpstan-ignore-line
+                $array[$key]['sum'] = bcadd($array[$key]['sum'], app('steam')->{$method}((string)$journal['foreign_amount'])); // @phpstan-ignore-line
             }
         }
 
         return $array;
     }
 
-    /**
-     * @inheritDoc
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     */
-    public function sumExpensesBySource(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $expense = null,
-        ?TransactionCurrency $currency = null
-    ): array
-    {
-        $journals = $this->getTransactionsForSum(TransactionType::WITHDRAWAL, $start, $end, $accounts, $expense, $currency);
-
-        return $this->groupByDirection($journals, 'source', 'negative');
-    }
-
-    /**
-     * @inheritDoc
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     */
-    public function sumIncome(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $revenue = null,
-        ?TransactionCurrency $currency = null
-    ): array
-    {
-        $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
-
-        return $this->groupByCurrency($journals, 'positive');
-    }
-
-    /**
-     * @inheritDoc
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     */
-    public function sumIncomeByDestination(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $revenue = null,
-        ?TransactionCurrency $currency = null
-    ): array
-    {
-        $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
-
-        return $this->groupByDirection($journals, 'destination', 'positive');
-    }
-
-    /**
-     * @inheritDoc
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     */
-    public function sumIncomeBySource(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $revenue = null,
-        ?TransactionCurrency $currency = null
-    ): array
-    {
-        $journals = $this->getTransactionsForSum(TransactionType::DEPOSIT, $start, $end, $accounts, $revenue, $currency);
-
-        return $this->groupByDirection($journals, 'source', 'positive');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
-    {
-        $journals = $this->getTransactionsForSum(TransactionType::TRANSFER, $start, $end, $accounts, null, $currency);
-
-        return $this->groupByEither($journals);
-    }
-
-    /**
-     * @param array $journals
-     *
-     * @return array
-     */
     private function groupByEither(array $journals): array
     {
         $return = [];
+
         /** @var array $journal */
         foreach ($journals as $journal) {
             $return = $this->groupByEitherJournal($return, $journal);
@@ -457,12 +388,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $final;
     }
 
-    /**
-     * @param array $return
-     * @param array $journal
-     *
-     * @return array
-     */
     private function groupByEitherJournal(array $return, array $journal): array
     {
         $sourceId      = $journal['source_account_id'];

@@ -35,15 +35,14 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use League\Fractal\Manager;
 use League\Fractal\Serializer\JsonApiSerializer;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class Controller.
  *
-
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 abstract class Controller extends BaseController
 {
@@ -52,6 +51,7 @@ abstract class Controller extends BaseController
     use ValidatesRequests;
 
     protected const string CONTENT_TYPE = 'application/vnd.api+json';
+
     /** @var array<int, string> */
     protected array        $allowedSort;
     protected ParameterBag $parameters;
@@ -77,11 +77,39 @@ abstract class Controller extends BaseController
     }
 
     /**
+     * Method to help build URL's.
+     */
+    final protected function buildParams(): string
+    {
+        $return = '?';
+        $params = [];
+        foreach ($this->parameters as $key => $value) {
+            if ('page' === $key) {
+                continue;
+            }
+            if ($value instanceof Carbon) {
+                $params[$key] = $value->format('Y-m-d');
+
+                continue;
+            }
+            $params[$key] = $value;
+        }
+
+        return $return.http_build_query($params);
+    }
+
+    final protected function getManager(): Manager
+    {
+        // create some objects:
+        $manager = new Manager();
+        $baseUrl = request()->getSchemeAndHttpHost().'/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        return $manager;
+    }
+
+    /**
      * Method to grab all parameters from the URL.
-     *
-     * @return ParameterBag
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function getParameters(): ParameterBag
     {
@@ -99,6 +127,7 @@ abstract class Controller extends BaseController
         $dates = ['start', 'end', 'date'];
         foreach ($dates as $field) {
             $date = null;
+
             try {
                 $date = request()->query->get($field);
             } catch (BadRequestException $e) {
@@ -111,7 +140,7 @@ abstract class Controller extends BaseController
             if (null !== $date) {
                 try {
                     $obj = Carbon::parse((string)$date);
-                } catch (InvalidDateException | InvalidFormatException $e) {
+                } catch (InvalidDateException|InvalidFormatException $e) {
                     // don't care
                     app('log')->warning(
                         sprintf(
@@ -139,12 +168,13 @@ abstract class Controller extends BaseController
             if (null !== $value) {
                 $bag->set($integer, (int)$value);
             }
-            if (null === $value &&
-                'limit' === $integer && // @phpstan-ignore-line
-                auth()->check()) {
+            if (null === $value
+                && 'limit' === $integer // @phpstan-ignore-line
+                && auth()->check()) {
                 // set default for user:
                 /** @var User $user */
                 $user = auth()->user();
+
                 /** @var Preference $pageSize */
                 $pageSize = (int)app('preferences')->getForUser($user, 'listPageSize', 50)->data;
                 $bag->set($integer, $pageSize);
@@ -155,14 +185,10 @@ abstract class Controller extends BaseController
         return $this->getSortParameters($bag);
     }
 
-    /**
-     * @param ParameterBag $bag
-     *
-     * @return ParameterBag
-     */
     private function getSortParameters(ParameterBag $bag): ParameterBag
     {
         $sortParameters = [];
+
         try {
             $param = (string)request()->query->get('sort');
         } catch (BadRequestException $e) {
@@ -189,41 +215,5 @@ abstract class Controller extends BaseController
         $bag->set('sort', $sortParameters);
 
         return $bag;
-    }
-
-    /**
-     * Method to help build URL's.
-     *
-     * @return string
-     */
-    final protected function buildParams(): string
-    {
-        $return = '?';
-        $params = [];
-        foreach ($this->parameters as $key => $value) {
-            if ('page' === $key) {
-                continue;
-            }
-            if ($value instanceof Carbon) {
-                $params[$key] = $value->format('Y-m-d');
-                continue;
-            }
-            $params[$key] = $value;
-        }
-
-        return $return . http_build_query($params);
-    }
-
-    /**
-     * @return Manager
-     */
-    final protected function getManager(): Manager
-    {
-        // create some objects:
-        $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        return $manager;
     }
 }

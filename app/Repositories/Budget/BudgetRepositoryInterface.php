@@ -36,53 +36,22 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
-    /**
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return Collection
-     */
     public function budgetEndsWith(string $query, int $limit): Collection;
 
-    /**
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return Collection
-     */
     public function budgetStartsWith(string $query, int $limit): Collection;
 
     /**
      * Returns the amount that is budgeted in a period.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
      */
     public function budgetedInPeriod(Carbon $start, Carbon $end): array;
 
     /**
      * Returns the amount that is budgeted in a period.
-     *
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
      */
     public function budgetedInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array;
 
-    /**
-     * @return bool
-     */
     public function cleanupBudgets(): bool;
 
-    /**
-     * @param Budget $budget
-     *
-     * @return bool
-     */
     public function destroy(Budget $budget): bool;
 
     /**
@@ -90,145 +59,62 @@ interface BudgetRepositoryInterface
      */
     public function destroyAll(): void;
 
-    /**
-     * @param Budget $budget
-     */
     public function destroyAutoBudget(Budget $budget): void;
 
-    /**
-     *
-     * @param int|null $budgetId
-     *
-     * @return Budget|null
-     */
     public function find(int $budgetId = null): ?Budget;
 
-    /**
-     * @param int|null    $budgetId
-     * @param string|null $budgetName
-     *
-     * @return Budget|null
-     */
     public function findBudget(?int $budgetId, ?string $budgetName): ?Budget;
 
     /**
      * Find budget by name.
-     *
-     * @param string|null $name
-     *
-     * @return Budget|null
      */
     public function findByName(?string $name): ?Budget;
 
     /**
      * This method returns the oldest journal or transaction date known to this budget.
      * Will cache result.
-     *
-     * @param Budget $budget
-     *
-     * @return Carbon|null
      */
     public function firstUseDate(Budget $budget): ?Carbon;
 
-    /**
-     * @return Collection
-     */
     public function getActiveBudgets(): Collection;
 
-    /**
-     * @param Budget $budget
-     *
-     * @return Collection
-     */
     public function getAttachments(Budget $budget): Collection;
 
-    /**
-     * @param Budget $budget
-     *
-     * @return AutoBudget|null
-     */
     public function getAutoBudget(Budget $budget): ?AutoBudget;
 
-    /**
-     * @return Collection
-     */
     public function getBudgets(): Collection;
 
     /**
      * Get all budgets with these ID's.
-     *
-     * @param array $budgetIds
-     *
-     * @return Collection
      */
     public function getByIds(array $budgetIds): Collection;
 
-    /**
-     * @return Collection
-     */
     public function getInactiveBudgets(): Collection;
 
-    /**
-     * @return int
-     */
     public function getMaxOrder(): int;
 
-    /**
-     * @param Budget $budget
-     *
-     * @return string|null
-     */
     public function getNoteText(Budget $budget): ?string;
 
-    /**
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return Collection
-     */
     public function searchBudget(string $query, int $limit): Collection;
 
-    /**
-     * @param Budget $budget
-     * @param int    $order
-     */
     public function setBudgetOrder(Budget $budget, int $order): void;
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void;
+    public function setUser(null|Authenticatable|User $user): void;
 
     /**
      * Used in the v2 API to calculate the amount of money spent in all active budgets.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
      */
     public function spentInPeriod(Carbon $start, Carbon $end): array;
 
     /**
      * Used in the v2 API to calculate the amount of money spent in a single budget..
-     *
-     *
      */
     public function spentInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array;
 
     /**
-     * @param array $data
-     *
-     * @return Budget
      * @throws FireflyException
      */
     public function store(array $data): Budget;
 
-    /**
-     * @param Budget $budget
-     * @param array  $data
-     *
-     * @return Budget
-     */
     public function update(Budget $budget, array $data): Budget;
 }

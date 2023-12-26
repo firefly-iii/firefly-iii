@@ -34,13 +34,6 @@ trait CalculateXOccurrencesSince
     /**
      * Calculates the number of daily occurrences for a recurring transaction, starting at the date, until $count is
      * reached. It will skip over $skipMod -1 recurrences.
-     *
-     * @param Carbon $date
-     * @param Carbon $afterDate
-     * @param int    $count
-     * @param int    $skipMod
-     *
-     * @return array
      */
     protected function getXDailyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod): array
     {
@@ -52,10 +45,10 @@ trait CalculateXOccurrencesSince
         while ($total < $count) {
             if (0 === $attempts % $skipMod && $mutator->gt($afterDate)) {
                 $return[] = clone $mutator;
-                $total++;
+                ++$total;
             }
             $mutator->addDay();
-            $attempts++;
+            ++$attempts;
         }
 
         return $return;
@@ -65,13 +58,6 @@ trait CalculateXOccurrencesSince
      * Calculates the number of monthly occurrences for a recurring transaction, starting at the date, until $count is
      * reached. It will skip over $skipMod -1 recurrences.
      *
-     * @param Carbon $date
-     * @param Carbon $afterDate
-     * @param int    $count
-     * @param int    $skipMod
-     * @param string $moment
-     *
-     * @return array
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     protected function getXMonthlyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
@@ -95,9 +81,9 @@ trait CalculateXOccurrencesSince
             $mutator->day = $domCorrected;
             if (0 === $attempts % $skipMod && $mutator->gte($afterDate)) {
                 $return[] = clone $mutator;
-                $total++;
+                ++$total;
             }
-            $attempts++;
+            ++$attempts;
             $mutator = $mutator->endOfMonth()->addDay();
             app('log')->debug(sprintf('Mutator is now %s', $mutator->format('Y-m-d')));
         }
@@ -109,13 +95,6 @@ trait CalculateXOccurrencesSince
      * Calculates the number of NDOM occurrences for a recurring transaction, starting at the date, until $count is
      * reached. It will skip over $skipMod -1 recurrences.
      *
-     * @param Carbon $date
-     * @param Carbon $afterDate
-     * @param int    $count
-     * @param int    $skipMod
-     * @param string $moment
-     *
-     * @return array
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     protected function getXNDomOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
@@ -128,8 +107,8 @@ trait CalculateXOccurrencesSince
         $mutator->addDay(); // always assume today has passed.
         $mutator->startOfMonth();
         // this feels a bit like a cop out but why reinvent the wheel?
-        $counters   = [1 => 'first', 2 => 'second', 3 => 'third', 4 => 'fourth', 5 => 'fifth',];
-        $daysOfWeek = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday',];
+        $counters   = [1 => 'first', 2 => 'second', 3 => 'third', 4 => 'fourth', 5 => 'fifth'];
+        $daysOfWeek = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday'];
         $parts      = explode(',', $moment);
 
         while ($total < $count) {
@@ -137,9 +116,9 @@ trait CalculateXOccurrencesSince
             $newCarbon = new Carbon($string);
             if (0 === $attempts % $skipMod && $mutator->gte($afterDate)) {
                 $return[] = clone $newCarbon;
-                $total++;
+                ++$total;
             }
-            $attempts++;
+            ++$attempts;
             $mutator->endOfMonth()->addDay();
         }
 
@@ -150,13 +129,6 @@ trait CalculateXOccurrencesSince
      * Calculates the number of weekly occurrences for a recurring transaction, starting at the date, until $count is
      * reached. It will skip over $skipMod -1 recurrences.
      *
-     * @param Carbon $date
-     * @param Carbon $afterDate
-     * @param int    $count
-     * @param int    $skipMod
-     * @param string $moment
-     *
-     * @return array
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     protected function getXWeeklyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
@@ -169,7 +141,7 @@ trait CalculateXOccurrencesSince
         // monday = 1
         // sunday = 7
         // Removed assumption today has passed, see issue https://github.com/firefly-iii/firefly-iii/issues/4798
-        //$mutator->addDay(); // always assume today has passed.
+        // $mutator->addDay(); // always assume today has passed.
         $dayOfWeek = (int)$moment;
         if ($mutator->dayOfWeekIso > $dayOfWeek) {
             // day has already passed this week, add one week:
@@ -183,9 +155,9 @@ trait CalculateXOccurrencesSince
         while ($total < $count) {
             if (0 === $attempts % $skipMod && $mutator->gte($afterDate)) {
                 $return[] = clone $mutator;
-                $total++;
+                ++$total;
             }
-            $attempts++;
+            ++$attempts;
             $mutator->addWeek();
         }
 
@@ -196,13 +168,6 @@ trait CalculateXOccurrencesSince
      * Calculates the number of yearly occurrences for a recurring transaction, starting at the date, until $count is
      * reached. It will skip over $skipMod -1 recurrences.
      *
-     * @param Carbon $date
-     * @param Carbon $afterDate
-     * @param int    $count
-     * @param int    $skipMod
-     * @param string $moment
-     *
-     * @return array
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     protected function getXYearlyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
@@ -229,10 +194,10 @@ trait CalculateXOccurrencesSince
             if (0 === $attempts % $skipMod && $obj->gte($afterDate)) {
                 app('log')->debug('All conditions true, add obj.');
                 $return[] = clone $obj;
-                $total++;
+                ++$total;
             }
             $obj->addYears();
-            $attempts++;
+            ++$attempts;
         }
 
         return $return;

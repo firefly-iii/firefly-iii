@@ -54,6 +54,8 @@ class BudgetServiceProvider extends ServiceProvider
 
     /**
      * Register the application services.
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function register(): void
     {

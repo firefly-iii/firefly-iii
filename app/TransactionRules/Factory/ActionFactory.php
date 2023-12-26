@@ -30,8 +30,6 @@ use FireflyIII\TransactionRules\Actions\ActionInterface;
 
 /**
  * Class ActionFactory can create actions.
- *
-
  */
 class ActionFactory
 {
@@ -43,10 +41,6 @@ class ActionFactory
      * RuleAction (database object). If for example the database object contains action_type "change_category"
      * with value "Groceries" this method will return a corresponding SetCategory object preset
      * to "Groceries". Any transaction journal then fed to this object will have its category changed.
-     *
-     * @param RuleAction $action
-     *
-     * @return ActionInterface
      *
      * @throws FireflyException
      */
@@ -63,10 +57,6 @@ class ActionFactory
      * that will match the given action type (ie. "change_category") to the matching class name
      * (SetCategory) using the configuration (firefly.php).
      *
-     * @param string $actionType
-     *
-     * @return string
-     *
      * @throws FireflyException
      */
     public static function getActionClass(string $actionType): string
@@ -74,12 +64,12 @@ class ActionFactory
         $actionTypes = self::getActionTypes();
 
         if (!array_key_exists($actionType, $actionTypes)) {
-            throw new FireflyException('No such action exists ("' . e($actionType) . '").');
+            throw new FireflyException('No such action exists ("'.e($actionType).'").');
         }
 
         $class = $actionTypes[$actionType];
         if (!class_exists($class)) {
-            throw new FireflyException('Could not instantiate class for rule action type "' . e($actionType) . '" (' . e($class) . ').');
+            throw new FireflyException('Could not instantiate class for rule action type "'.e($actionType).'" ('.e($class).').');
         }
 
         return $class;
@@ -87,8 +77,6 @@ class ActionFactory
 
     /**
      * Returns a map with actiontypes, mapped to the class representing that type.
-     *
-     * @return array
      */
     protected static function getActionTypes(): array
     {

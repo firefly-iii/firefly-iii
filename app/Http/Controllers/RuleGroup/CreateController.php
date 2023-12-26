@@ -41,8 +41,6 @@ class CreateController extends Controller
 
     /**
      * CreateController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -82,9 +80,7 @@ class CreateController extends Controller
     /**
      * Store the rule group.
      *
-     * @param RuleGroupFormRequest $request
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function store(RuleGroupFormRequest $request)
     {

@@ -41,8 +41,6 @@ class BudgetLimitTransformer extends AbstractTransformer
     /**
      * Include Budget
      *
-     * @param BudgetLimit $limit
-     *
      * @return Item
      */
     public function includeBudget(BudgetLimit $limit)
@@ -52,10 +50,6 @@ class BudgetLimitTransformer extends AbstractTransformer
 
     /**
      * Transform the note.
-     *
-     * @param BudgetLimit $budgetLimit
-     *
-     * @return array
      */
     public function transform(BudgetLimit $budgetLimit): array
     {
@@ -103,7 +97,7 @@ class BudgetLimitTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/budgets/limits/' . $budgetLimit->id,
+                    'uri' => '/budgets/limits/'.$budgetLimit->id,
                 ],
             ],
         ];

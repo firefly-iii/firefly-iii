@@ -34,13 +34,9 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
- *
  * Class ShowController
- *
  */
 class ShowController extends Controller
 {
@@ -51,8 +47,6 @@ class ShowController extends Controller
 
     /**
      * CategoryController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -73,21 +67,15 @@ class ShowController extends Controller
     /**
      * Show a single category.
      *
-     * @param Request     $request
-     * @param Category    $category
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Category $category, Carbon $start = null, Carbon $end = null)
     {
-        /** @var Carbon $start */
+        // @var Carbon $start
         $start ??= session('start', today(config('app.timezone'))->startOfMonth());
-        /** @var Carbon $end */
+        // @var Carbon $end
         $end          ??= session('end', today(config('app.timezone'))->endOfMonth());
         $subTitleIcon = 'fa-bookmark';
         $page         = (int)$request->get('page');
@@ -108,8 +96,9 @@ class ShowController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)
-                  ->withAccountInformation()
-                  ->setCategory($category)->withBudgetInformation()->withCategoryInformation();
+            ->withAccountInformation()
+            ->setCategory($category)->withBudgetInformation()->withCategoryInformation()
+        ;
 
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
@@ -120,12 +109,7 @@ class ShowController extends Controller
     /**
      * Show all transactions within a category.
      *
-     * @param Request  $request
-     * @param Category $category
-     *
      * @return Factory|View
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function showAll(Request $request, Category $category)
     {
@@ -139,6 +123,7 @@ class ShowController extends Controller
 
         $subTitle = (string)trans('firefly.all_journals_for_category', ['name' => $category->name]);
         $first    = $this->repository->firstUseDate($category);
+
         /** @var Carbon $start */
         $start       = $first ?? today(config('app.timezone'));
         $end         = today(config('app.timezone'));
@@ -148,8 +133,9 @@ class ShowController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)
-                  ->withAccountInformation()
-                  ->setCategory($category)->withBudgetInformation()->withCategoryInformation();
+            ->withAccountInformation()
+            ->setCategory($category)->withBudgetInformation()->withCategoryInformation()
+        ;
 
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);

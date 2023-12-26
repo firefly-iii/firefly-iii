@@ -29,8 +29,6 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 /**
  * File to make sure commands work.
- *
-
  */
 class Kernel extends ConsoleKernel
 {
@@ -39,20 +37,18 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__ . '/Commands');
+        $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');
     }
 
     /**
      * Define the application's command schedule.
-     *
-     * @param Schedule $schedule
      */
     protected function schedule(Schedule $schedule): void
     {
         $schedule->call(
-            static function () {
+            static function (): void {
                 app('log')->error(
                     'Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions at https://docs.firefly-iii.org/'
                 );

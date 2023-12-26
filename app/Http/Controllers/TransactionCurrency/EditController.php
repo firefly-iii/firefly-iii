@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * EditController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -45,8 +44,6 @@ class EditController extends Controller
 
     /**
      * CurrencyController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -67,10 +64,7 @@ class EditController extends Controller
     /**
      * Edit a currency.
      *
-     * @param Request             $request
-     * @param TransactionCurrency $currency
-     *
-     * @return Factory|RedirectResponse|Redirector|View
+     * @return Factory|Redirector|RedirectResponse|View
      */
     public function edit(Request $request, TransactionCurrency $currency)
     {
@@ -109,14 +103,10 @@ class EditController extends Controller
         return view('currencies.edit', compact('currency', 'subTitle', 'subTitleIcon'));
     }
 
-
     /**
      * Updates a currency.
      *
-     * @param CurrencyFormRequest $request
-     * @param TransactionCurrency $currency
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function update(CurrencyFormRequest $request, TransactionCurrency $currency)
     {
@@ -147,5 +137,4 @@ class EditController extends Controller
 
         return redirect($this->getPreviousUrl('currencies.edit.url'));
     }
-
 }

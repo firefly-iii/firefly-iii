@@ -28,16 +28,9 @@ use Monolog\LogRecord;
 
 /**
  * Class AuditProcessor
- *
-
  */
 class AuditProcessor
 {
-    /**
-     * @param LogRecord $record
-     *
-     * @return LogRecord
-     */
     public function __invoke(LogRecord $record): LogRecord
     {
         if (auth()->check()) {
@@ -49,6 +42,7 @@ class AuditProcessor
                 request()->method(),
                 request()->url()
             );
+
             return new LogRecord($record->datetime, $record->channel, $record->level, $message, $record->context, $record->extra, $record->formatted);
         }
 

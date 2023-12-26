@@ -25,6 +25,7 @@
         "destination_account": "Zielkonto",
         "add_another_split": "Eine weitere Aufteilung hinzuf\u00fcgen",
         "submission": "\u00dcbermittlung",
+        "stored_journal": "Neue \u00dcberweisung \":description\" erfolgreich erstellt",
         "create_another": "Nach dem Speichern hierher zur\u00fcckkehren, um ein weiteres zu erstellen.",
         "reset_after": "Formular nach der \u00dcbermittlung zur\u00fccksetzen",
         "submit": "Absenden",

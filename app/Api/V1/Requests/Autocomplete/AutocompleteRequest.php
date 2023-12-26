@@ -36,9 +36,6 @@ class AutocompleteRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    /**
-     * @return array
-     */
     public function getData(): array
     {
         $types = $this->convertString('types');
@@ -57,9 +54,6 @@ class AutocompleteRequest extends FormRequest
         ];
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return [

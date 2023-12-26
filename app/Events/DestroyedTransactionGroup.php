@@ -29,8 +29,6 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class DestroyedTransactionGroup.
- *
-
  */
 class DestroyedTransactionGroup extends Event
 {
@@ -40,8 +38,6 @@ class DestroyedTransactionGroup extends Event
 
     /**
      * Create a new event instance.
-     *
-     * @param TransactionGroup $transactionGroup
      */
     public function __construct(TransactionGroup $transactionGroup)
     {

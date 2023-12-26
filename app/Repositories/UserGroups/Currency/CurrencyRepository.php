@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * CurrencyRepository.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -39,7 +38,6 @@ use FireflyIII\Services\Internal\Destroy\CurrencyDestroyService;
 use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
-use JsonException;
 
 /**
  * Class CurrencyRepository
@@ -49,9 +47,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     use UserGroupTrait;
 
     /**
-     * @param TransactionCurrency $currency
-     *
-     * @return bool
      * @throws FireflyException
      */
     public function currencyInUse(TransactionCurrency $currency): bool
@@ -62,9 +57,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param TransactionCurrency $currency
-     *
-     * @return string|null
      * @throws FireflyException
      */
     public function currencyInUseAt(TransactionCurrency $currency): ?string
@@ -112,8 +104,9 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
         // is being used in accounts (as integer)
         $meta = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
-                           ->whereNull('accounts.deleted_at')
-                           ->where('account_meta.name', 'currency_id')->where('account_meta.data', json_encode($currency->id))->count();
+            ->whereNull('accounts.deleted_at')
+            ->where('account_meta.name', 'currency_id')->where('account_meta.data', json_encode($currency->id))->count()
+        ;
         if ($meta > 0) {
             app('log')->info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -158,27 +151,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param TransactionCurrency $currency
-     *
-     * @return int
-     */
-    private function countJournals(TransactionCurrency $currency): int
-    {
-        $count = $currency->transactions()->whereNull('deleted_at')->count() + $currency->transactionJournals()->whereNull('deleted_at')->count();
-
-        // also count foreign:
-        return $count + Transaction::where('foreign_currency_id', $currency->id)->count();
-    }
-
-    /**
      * Returns ALL currencies, regardless of whether they are enabled or not.
-     *
-     * @return Collection
      */
     public function getAll(): Collection
     {
         $all   = TransactionCurrency::orderBy('code', 'ASC')->get();
         $local = $this->get();
+
         return $all->map(static function (TransactionCurrency $current) use ($local) {
             $hasId                = $local->contains(static function (TransactionCurrency $entry) use ($current) {
                 return $entry->id === $current->id;
@@ -188,29 +167,24 @@ class CurrencyRepository implements CurrencyRepositoryInterface
             });
             $current->userGroupEnabled = $hasId;
             $current->userGroupDefault = $isDefault;
+
             return $current;
         });
     }
 
-    /**
-     * @inheritDoc
-     */
     public function get(): Collection
     {
         $all = $this->userGroup->currencies()->orderBy('code', 'ASC')->withPivot(['group_default'])->get();
         $all->map(static function (TransactionCurrency $current) {
             $current->userGroupEnabled = true;
             $current->userGroupDefault = 1 === (int)$current->pivot->group_default;
+
             return $current;
         });
+
         return $all;
     }
 
-    /**
-     * @param TransactionCurrency $currency
-     *
-     * @return bool
-     */
     public function destroy(TransactionCurrency $currency): bool
     {
         /** @var UserRepositoryInterface $repository */
@@ -226,8 +200,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     /**
      * Disables a currency
-     *
-     * @param TransactionCurrency $currency
      */
     public function disable(TransactionCurrency $currency): void
     {
@@ -236,9 +208,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $currency->save();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function findByName(string $name): ?TransactionCurrency
     {
         return TransactionCurrency::where('name', $name)->first();
@@ -247,12 +216,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * Find by object, ID or code. Returns user default or system default.
      *
-     * @param int|null    $currencyId
-     * @param string|null $currencyCode
-     *
-     * @return TransactionCurrency
      * @throws FireflyException
-     * @throws JsonException
      */
     public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency
     {
@@ -260,7 +224,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
         if (null === $result) {
             app('log')->debug('Grabbing default currency for this user...');
-            /** @var TransactionCurrency|null $result */
+
+            /** @var null|TransactionCurrency $result */
             $result = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         }
 
@@ -275,11 +240,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     /**
      * Find by object, ID or code. Returns NULL if nothing found.
-     *
-     * @param int|null    $currencyId
-     * @param string|null $currencyCode
-     *
-     * @return TransactionCurrency|null
      */
     public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
@@ -299,10 +259,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     /**
      * Find by ID, return NULL if not found.
-     *
-     * @param int $currencyId
-     *
-     * @return TransactionCurrency|null
      */
     public function find(int $currencyId): ?TransactionCurrency
     {
@@ -311,10 +267,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     /**
      * Find by currency code, return NULL if unfound.
-     *
-     * @param string $currencyCode
-     *
-     * @return TransactionCurrency|null
      */
     public function findByCode(string $currencyCode): ?TransactionCurrency
     {
@@ -323,7 +275,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     /**
      * @param TransactionCurrency $currency
-     * Enables a currency
+     *                                      Enables a currency
      */
     public function enable(TransactionCurrency $currency): void
     {
@@ -332,27 +284,16 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $currency->save();
     }
 
-    /**
-     * @param array $ids
-     *
-     * @return Collection
-     */
     public function getByIds(array $ids): Collection
     {
         return TransactionCurrency::orderBy('code', 'ASC')->whereIn('id', $ids)->get();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function isFallbackCurrency(TransactionCurrency $currency): bool
     {
         return $currency->code === config('firefly.default_currency', 'EUR');
     }
 
-    /**
-     * @inheritDoc
-     */
     public function makeDefault(TransactionCurrency $currency): void
     {
         app('log')->debug(sprintf('Enabled + made default currency %s for user #%d', $currency->code, $this->userGroup->id));
@@ -363,12 +304,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $this->userGroup->currencies()->syncWithoutDetaching([$currency->id => ['group_default' => true]]);
     }
 
-    /**
-     * @param string $search
-     * @param int    $limit
-     *
-     * @return Collection
-     */
     public function searchCurrency(string $search, int $limit): Collection
     {
         $query = TransactionCurrency::where('enabled', true);
@@ -380,9 +315,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * @param array $data
-     *
-     * @return TransactionCurrency
      * @throws FireflyException
      */
     public function store(array $data): TransactionCurrency
@@ -398,12 +330,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         return $result;
     }
 
-    /**
-     * @param TransactionCurrency $currency
-     * @param array               $data
-     *
-     * @return TransactionCurrency
-     */
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency
     {
         app('log')->debug('Now in update()');
@@ -449,5 +375,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $service = app(CurrencyUpdateService::class);
 
         return $service->update($currency, $data);
+    }
+
+    private function countJournals(TransactionCurrency $currency): int
+    {
+        $count = $currency->transactions()->whereNull('deleted_at')->count() + $currency->transactionJournals()->whereNull('deleted_at')->count();
+
+        // also count foreign:
+        return $count + Transaction::where('foreign_currency_id', $currency->id)->count();
     }
 }

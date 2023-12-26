@@ -29,8 +29,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class EmailFormRequest.
- *
-
  */
 class EmailFormRequest extends FormRequest
 {
@@ -39,8 +37,6 @@ class EmailFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {

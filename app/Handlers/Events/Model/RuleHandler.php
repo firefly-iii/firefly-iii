@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * RuleHandler.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -35,15 +34,11 @@ use Illuminate\Support\Facades\Notification;
  */
 class RuleHandler
 {
-    /**
-     * @param RuleActionFailedOnArray $event
-     *
-     * @return void
-     */
     public function ruleActionFailedOnArray(RuleActionFailedOnArray $event): void
     {
         $ruleAction = $event->ruleAction;
         $rule       = $ruleAction->rule;
+
         /** @var bool $preference */
         $preference = app('preferences')->getForUser($rule->user, 'notification_rule_action_failures', true)->data;
         if (false === $preference) {
@@ -61,19 +56,14 @@ class RuleHandler
         $ruleLink    = route('rules.edit', [$rule->id]);
         $params      = [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink];
 
-
         Notification::send($user, new RuleActionFailed($params));
     }
 
-    /**
-     * @param RuleActionFailedOnObject $event
-     *
-     * @return void
-     */
     public function ruleActionFailedOnObject(RuleActionFailedOnObject $event): void
     {
         $ruleAction = $event->ruleAction;
         $rule       = $ruleAction->rule;
+
         /** @var bool $preference */
         $preference = app('preferences')->getForUser($rule->user, 'notification_rule_action_failures', true)->data;
         if (false === $preference) {
@@ -91,8 +81,6 @@ class RuleHandler
         $ruleLink    = route('rules.edit', [$rule->id]);
         $params      = [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink];
 
-
         Notification::send($user, new RuleActionFailed($params));
     }
-
 }

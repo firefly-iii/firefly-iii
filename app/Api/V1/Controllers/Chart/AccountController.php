@@ -35,9 +35,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use JsonException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class AccountController
@@ -50,8 +47,6 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -72,25 +67,22 @@ class AccountController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/charts/getChartAccountOverview
      *
-     * @param DateRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     * @throws JsonException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function overview(DateRequest $request): JsonResponse
     {
         // parameters for chart:
         $dates = $request->getAll();
+
         /** @var Carbon $start */
         $start = $dates['start'];
+
         /** @var Carbon $end */
         $end = $dates['end'];
 
         // user's preferences
         $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
+
         /** @var Preference $frontPage */
         $frontPage = app('preferences')->get('frontPageAccounts', $defaultSet);
         $default   = app('amount')->getDefaultCurrency();
@@ -100,10 +92,10 @@ class AccountController extends Controller
             $frontPage->save();
         }
 
-
         // get accounts:
         $accounts  = $this->repository->getAccountsById($frontPage->data);
         $chartData = [];
+
         /** @var Account $account */
         foreach ($accounts as $account) {
             $currency = $this->repository->getAccountCurrency($account);
@@ -112,7 +104,7 @@ class AccountController extends Controller
             }
             $currentSet = [
                 'label'                   => $account->name,
-                'currency_id'             => (string)$currency->id,
+                'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,

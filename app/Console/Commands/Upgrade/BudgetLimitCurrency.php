@@ -29,8 +29,6 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class BudgetLimitCurrency
@@ -48,10 +46,7 @@ class BudgetLimitCurrency extends Command
     /**
      * Execute the console command.
      *
-     * @return int
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -61,16 +56,16 @@ class BudgetLimitCurrency extends Command
             return 0;
         }
 
-
         $count        = 0;
         $budgetLimits = BudgetLimit::get();
+
         /** @var BudgetLimit $budgetLimit */
         foreach ($budgetLimits as $budgetLimit) {
             if (null === $budgetLimit->transaction_currency_id) {
-                /** @var Budget|null $budget */
+                /** @var null|Budget $budget */
                 $budget = $budgetLimit->budget;
                 if (null !== $budget) {
-                    /** @var User|null $user */
+                    /** @var null|User $user */
                     $user = $budget->user;
                     if (null !== $user) {
                         $currency                             = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
@@ -79,7 +74,7 @@ class BudgetLimitCurrency extends Command
                         $this->friendlyInfo(
                             sprintf('Budget limit #%d (part of budget "%s") now has a currency setting (%s).', $budgetLimit->id, $budget->name, $currency->name)
                         );
-                        $count++;
+                        ++$count;
                     }
                 }
             }
@@ -92,11 +87,6 @@ class BudgetLimitCurrency extends Command
         return 0;
     }
 
-    /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
@@ -107,9 +97,6 @@ class BudgetLimitCurrency extends Command
         return false;
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

@@ -34,8 +34,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class AccountCurrencies
@@ -55,8 +53,6 @@ class AccountCurrencies extends Command
     /**
      * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's
      * forced upon the account.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -84,7 +80,6 @@ class AccountCurrencies extends Command
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
      * be called from the handle method instead of using the constructor to initialize the command.
-     *
      */
     private function stupidLaravel(): void
     {
@@ -93,20 +88,13 @@ class AccountCurrencies extends Command
         $this->count        = 0;
     }
 
-    /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+
         return (bool)$configVar?->data;
     }
 
-    /**
-     *
-     */
     private function updateAccountCurrencies(): void
     {
         $users = $this->userRepos->all();
@@ -116,8 +104,6 @@ class AccountCurrencies extends Command
     }
 
     /**
-     * @param User $user
-     *
      * @throws FireflyException
      */
     private function updateCurrenciesForUser(User $user): void
@@ -134,10 +120,6 @@ class AccountCurrencies extends Command
         }
     }
 
-    /**
-     * @param Account             $account
-     * @param TransactionCurrency $currency
-     */
     private function updateAccount(Account $account, TransactionCurrency $currency): void
     {
         $this->accountRepos->setUser($account->user);
@@ -150,7 +132,7 @@ class AccountCurrencies extends Command
             AccountMeta::where('account_id', $account->id)->where('name', 'currency_id')->forceDelete();
             AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $currency->id]);
             $this->friendlyInfo(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $currency->code));
-            $this->count++;
+            ++$this->count;
 
             return;
         }
@@ -159,7 +141,7 @@ class AccountCurrencies extends Command
         if (0 === $accountCurrency && $obCurrency > 0) {
             AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $obCurrency]);
             $this->friendlyInfo(sprintf('Account #%d ("%s") now has a currency setting (#%d).', $account->id, $account->name, $obCurrency));
-            $this->count++;
+            ++$this->count;
 
             return;
         }
@@ -169,19 +151,16 @@ class AccountCurrencies extends Command
             $openingBalance->transaction_currency_id = $accountCurrency;
             $openingBalance->save();
             $openingBalance->transactions->each(
-                static function (Transaction $transaction) use ($accountCurrency) {
+                static function (Transaction $transaction) use ($accountCurrency): void {
                     $transaction->transaction_currency_id = $accountCurrency;
                     $transaction->save();
                 }
             );
             $this->friendlyInfo(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
-            $this->count++;
+            ++$this->count;
         }
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

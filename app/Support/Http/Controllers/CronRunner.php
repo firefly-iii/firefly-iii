@@ -29,28 +29,19 @@ use FireflyIII\Support\Cronjobs\AutoBudgetCronjob;
 use FireflyIII\Support\Cronjobs\BillWarningCronjob;
 use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Trait CronRunner
  */
 trait CronRunner
 {
-    /**
-     * @param bool   $force
-     * @param Carbon $date
-     *
-     * @return array
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     protected function billWarningCronJob(bool $force, Carbon $date): array
     {
         /** @var BillWarningCronjob $billWarning */
         $billWarning = app(BillWarningCronjob::class);
         $billWarning->setForce($force);
         $billWarning->setDate($date);
+
         try {
             $billWarning->fire();
         } catch (FireflyException $e) {
@@ -70,18 +61,13 @@ trait CronRunner
         ];
     }
 
-    /**
-     * @param bool   $force
-     * @param Carbon $date
-     *
-     * @return array
-     */
     protected function exchangeRatesCronJob(bool $force, Carbon $date): array
     {
         /** @var ExchangeRatesCronjob $exchangeRates */
         $exchangeRates = app(ExchangeRatesCronjob::class);
         $exchangeRates->setForce($force);
         $exchangeRates->setDate($date);
+
         try {
             $exchangeRates->fire();
         } catch (FireflyException $e) {
@@ -101,18 +87,13 @@ trait CronRunner
         ];
     }
 
-    /**
-     * @param bool   $force
-     * @param Carbon $date
-     *
-     * @return array
-     */
     protected function runAutoBudget(bool $force, Carbon $date): array
     {
         /** @var AutoBudgetCronjob $autoBudget */
         $autoBudget = app(AutoBudgetCronjob::class);
         $autoBudget->setForce($force);
         $autoBudget->setDate($date);
+
         try {
             $autoBudget->fire();
         } catch (FireflyException $e) {
@@ -132,20 +113,13 @@ trait CronRunner
         ];
     }
 
-    /**
-     * @param bool   $force
-     * @param Carbon $date
-     *
-     * @return array
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     protected function runRecurring(bool $force, Carbon $date): array
     {
         /** @var RecurringCronjob $recurring */
         $recurring = app(RecurringCronjob::class);
         $recurring->setForce($force);
         $recurring->setDate($date);
+
         try {
             $recurring->fire();
         } catch (FireflyException $e) {

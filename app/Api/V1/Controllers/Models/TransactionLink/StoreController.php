@@ -47,8 +47,6 @@ class StoreController extends Controller
 
     /**
      * TransactionLinkController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -75,9 +73,6 @@ class StoreController extends Controller
      *
      * Store new object.
      *
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function store(StoreRequest $request): JsonResponse

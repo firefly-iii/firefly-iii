@@ -31,7 +31,6 @@ use Illuminate\Http\Request;
 
 /**
  * Class ReportController.
- *
  */
 class ReportController extends Controller
 {
@@ -40,9 +39,6 @@ class ReportController extends Controller
     /**
      * Generate popup view.
      *
-     * @param Request $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function general(Request $request): JsonResponse
@@ -61,6 +57,7 @@ class ReportController extends Controller
             'category-entry'      => $this->categoryEntry($attributes),
             'budget-entry'        => $this->budgetEntry($attributes),
         };
+
         return response()->json(['html' => $html]);
     }
 }

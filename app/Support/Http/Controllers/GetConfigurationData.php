@@ -25,21 +25,14 @@ namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Trait GetConfigurationData
- *
  */
 trait GetConfigurationData
 {
     /**
      * Some common combinations.
-     *
-     * @param int $value
-     *
-     * @return string
      */
     protected function errorReporting(int $value): string // get configuration
     {
@@ -58,10 +51,6 @@ trait GetConfigurationData
 
     /**
      * Get the basic steps from config.
-     *
-     * @param string $route
-     *
-     * @return array
      */
     protected function getBasicSteps(string $route): array // get config values
     {
@@ -73,7 +62,7 @@ trait GetConfigurationData
                 $currentStep = $options;
 
                 // get the text:
-                $currentStep['intro'] = (string)trans('intro.' . $route . '_' . $key);
+                $currentStep['intro'] = (string)trans('intro.'.$route.'_'.$key);
 
                 // save in array:
                 $steps[] = $currentStep;
@@ -87,18 +76,18 @@ trait GetConfigurationData
     /**
      * Get config for date range.
      *
-     * @return array
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     protected function getDateRangeConfig(): array // get configuration + get preferences.
     {
         $viewRange = app('navigation')->getViewRange(false);
+
         /** @var Carbon $start */
         $start = session('start');
+
         /** @var Carbon $end */
         $end = session('end');
+
         /** @var Carbon $first */
         $first    = session('first');
         $title    = sprintf('%s - %s', $start->isoFormat($this->monthAndDayFormat), $end->isoFormat($this->monthAndDayFormat));
@@ -134,6 +123,7 @@ trait GetConfigurationData
         // today:
         /** @var Carbon $todayStart */
         $todayStart = app('navigation')->startOfPeriod($today, $viewRange);
+
         /** @var Carbon $todayEnd */
         $todayEnd = app('navigation')->endOfPeriod($todayStart, $viewRange);
         if ($todayStart->ne($start) || $todayEnd->ne($end)) {
@@ -181,12 +171,6 @@ trait GetConfigurationData
 
     /**
      * Get specific info for special routes.
-     *
-     * @param string $route
-     * @param string $specificPage
-     *
-     * @return array
-     *
      */
     protected function getSpecificSteps(string $route, string $specificPage): array // get config values
     {
@@ -196,13 +180,13 @@ trait GetConfigurationData
         // user is on page with specific instructions:
         if ('' !== $specificPage) {
             $routeKey = str_replace('.', '_', $route);
-            $elements = config(sprintf('intro.%s', $routeKey . '_' . $specificPage));
+            $elements = config(sprintf('intro.%s', $routeKey.'_'.$specificPage));
             if (is_array($elements) && count($elements) > 0) {
                 foreach ($elements as $key => $options) {
                     $currentStep = $options;
 
                     // get the text:
-                    $currentStep['intro'] = (string)trans('intro.' . $route . '_' . $specificPage . '_' . $key);
+                    $currentStep['intro'] = (string)trans('intro.'.$route.'_'.$specificPage.'_'.$key);
 
                     // save in array:
                     $steps[] = $currentStep;
@@ -214,9 +198,6 @@ trait GetConfigurationData
         return $steps;
     }
 
-    /**
-     *
-     */
     protected function verifyRecurringCronJob(): void
     {
         $config   = app('fireflyconfig')->get('last_rt_job', 0);

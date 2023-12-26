@@ -39,11 +39,11 @@ class AddLdapColumnsToUsersTable extends Migration
             try {
                 Schema::table(
                     'users',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn(['domain']);
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -52,6 +52,7 @@ class AddLdapColumnsToUsersTable extends Migration
 
     /**
      * Run the migrations.
+     *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
@@ -60,7 +61,7 @@ class AddLdapColumnsToUsersTable extends Migration
             try {
                 Schema::table(
                     'users',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->string('domain')->nullable();
                     }
                 );

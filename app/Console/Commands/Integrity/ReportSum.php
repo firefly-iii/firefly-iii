@@ -40,8 +40,6 @@ class ReportSum extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -64,6 +62,7 @@ class ReportSum extends Command
             if (!is_numeric($sum)) {
                 $message = sprintf('Error: Transactions for user #%d (%s) have an invalid sum ("%s").', $user->id, $user->email, $sum);
                 $this->friendlyError($message);
+
                 continue;
             }
             if (0 !== bccomp($sum, '0')) {

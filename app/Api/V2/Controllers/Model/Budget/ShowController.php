@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * ShowController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -39,9 +38,6 @@ class ShowController extends Controller
 {
     private BudgetRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -60,7 +56,6 @@ class ShowController extends Controller
      *
      * This endpoint is documented at:
      * TODO add URL
-     *
      */
     public function budgeted(DateRequest $request, Budget $budget): JsonResponse
     {
@@ -73,7 +68,6 @@ class ShowController extends Controller
     /**
      * This endpoint is documented at:
      * TODO add URL
-     *
      */
     public function spent(DateRequest $request, Budget $budget): JsonResponse
     {

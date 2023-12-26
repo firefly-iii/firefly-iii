@@ -23,14 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
-use DB;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use stdClass;
-use ValueError;
 
 /**
  * Class FixUnevenAmount
@@ -44,23 +41,23 @@ class FixUnevenAmount extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
         $count    = 0;
-        $journals = DB::table('transactions')
-                      ->groupBy('transaction_journal_id')
-                      ->whereNull('deleted_at')
-                      ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')]);
-        /** @var stdClass $entry */
+        $journals = \DB::table('transactions')
+            ->groupBy('transaction_journal_id')
+            ->whereNull('deleted_at')
+            ->get(['transaction_journal_id', \DB::raw('SUM(amount) AS the_sum')])
+        ;
+
+        /** @var \stdClass $entry */
         foreach ($journals as $entry) {
             $sum = (string)$entry->the_sum;
-            if (!is_numeric($sum) ||
-                '' === $sum || // @phpstan-ignore-line
-                str_contains($sum, 'e') ||
-                str_contains($sum, ',')) {
+            if (!is_numeric($sum)
+                || '' === $sum // @phpstan-ignore-line
+                || str_contains($sum, 'e')
+                || str_contains($sum, ',')) {
                 $message = sprintf(
                     'Journal #%d has an invalid sum ("%s"). No sure what to do.',
                     $entry->transaction_journal_id,
@@ -68,13 +65,15 @@ class FixUnevenAmount extends Command
                 );
                 $this->friendlyWarning($message);
                 app('log')->warning($message);
-                $count++;
+                ++$count;
+
                 continue;
             }
             $res = -1;
+
             try {
                 $res = bccomp($sum, '0');
-            } catch (ValueError $e) {
+            } catch (\ValueError $e) {
                 $this->friendlyError(sprintf('Could not bccomp("%s", "0").', $sum));
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
@@ -88,7 +87,7 @@ class FixUnevenAmount extends Command
                 $this->friendlyWarning($message);
                 app('log')->warning($message);
                 $this->fixJournal($entry->transaction_journal_id);
-                $count++;
+                ++$count;
             }
         }
         if (0 === $count) {
@@ -98,9 +97,6 @@ class FixUnevenAmount extends Command
         return 0;
     }
 
-    /**
-     * @param int $param
-     */
     private function fixJournal(int $param): void
     {
         // one of the transactions is bad.
@@ -108,7 +104,8 @@ class FixUnevenAmount extends Command
         if (null === $journal) {
             return;
         }
-        /** @var Transaction|null $source */
+
+        /** @var null|Transaction $source */
         $source = $journal->transactions()->where('amount', '<', 0)->first();
 
         if (null === $source) {
@@ -128,7 +125,7 @@ class FixUnevenAmount extends Command
         $amount = bcmul('-1', $source->amount);
 
         // fix amount of destination:
-        /** @var Transaction|null $destination */
+        /** @var null|Transaction $destination */
         $destination = $journal->transactions()->where('amount', '>', 0)->first();
 
         if (null === $destination) {

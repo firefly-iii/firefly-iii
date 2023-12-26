@@ -27,17 +27,17 @@ use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
     /**
      * Run the migrations.
+     *
      * @SuppressWarnings(PHPMD.ShortMethodName)
-     * @return void
      */
     public function up(): void
     {
         if (!Schema::hasTable('invited_users')) {
             try {
-                Schema::create('invited_users', static function (Blueprint $table) {
+                Schema::create('invited_users', static function (Blueprint $table): void {
                     $table->id();
                     $table->timestamps();
                     $table->integer('user_id', false, true);
@@ -56,8 +56,6 @@ return new class () extends Migration {
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {

@@ -28,8 +28,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class MassDeleteJournalRequest.
- *
-
  */
 class MassDeleteJournalRequest extends FormRequest
 {
@@ -37,8 +35,6 @@ class MassDeleteJournalRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {

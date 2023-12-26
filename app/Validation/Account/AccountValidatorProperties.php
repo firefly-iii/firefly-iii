@@ -29,6 +29,4 @@ namespace FireflyIII\Validation\Account;
  *
  * Trait AccountValidatorProperties
  */
-trait AccountValidatorProperties
-{
-}
+trait AccountValidatorProperties {}

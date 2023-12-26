@@ -38,8 +38,6 @@ class JournalLinkRequest extends FormRequest
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getLinkInfo(): array
     {
@@ -56,14 +54,13 @@ class JournalLinkRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
         // all possible combinations of link types and inward / outward:
         $combinations = [];
         $linkTypes    = LinkType::get(['id']);
+
         /** @var LinkType $type */
         foreach ($linkTypes as $type) {
             $combinations[] = sprintf('%d_inward', $type->id);

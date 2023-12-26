@@ -64,7 +64,7 @@ class AccountController extends Controller
                 return $next($request);
             }
         );
-        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,];
+        $this->balanceTypes = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
     }
 
     /**
@@ -76,9 +76,6 @@ class AccountController extends Controller
      * 4. Endpoint is documented.
      * 5. Collector uses user_group_id
      *
-     * @param AutocompleteRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      * @throws FireflyException
      */
@@ -92,6 +89,7 @@ class AccountController extends Controller
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $groupedResult   = [];
         $allItems        = [];
+
         /** @var Account $account */
         foreach ($result as $account) {
             $nameWithBalance = $account->name;
@@ -131,6 +129,7 @@ class AccountController extends Controller
                 return $posLeft - $posRight;
             }
         );
+
         return response()->json($allItems);
     }
 }

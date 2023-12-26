@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * UrlValidator.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -30,11 +29,6 @@ namespace FireflyIII\Support\Notifications;
  */
 class UrlValidator
 {
-    /**
-     * @param string $url
-     *
-     * @return bool
-     */
     public static function isValidWebhookURL(string $url): bool
     {
         return str_starts_with($url, 'https://hooks.slack.com/services/') || str_starts_with($url, 'https://discord.com/api/webhooks/');

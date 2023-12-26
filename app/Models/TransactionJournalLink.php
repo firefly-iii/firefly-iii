@@ -37,20 +37,21 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\TransactionJournalLink
  *
- * @property int                     $id
- * @property Carbon|null             $created_at
- * @property Carbon|null             $updated_at
- * @property int                     $link_type_id
- * @property int                     $source_id
- * @property int                     $destination_id
- * @property string|null             $comment
- * @property-read TransactionJournal $destination
- * @property-read LinkType           $linkType
- * @property-read Collection|Note[]  $notes
- * @property-read int|null           $notes_count
- * @property-read TransactionJournal $source
- * @property-read string             $inward
- * @property-read string             $outward
+ * @property int                $id
+ * @property null|Carbon        $created_at
+ * @property null|Carbon        $updated_at
+ * @property int                $link_type_id
+ * @property int                $source_id
+ * @property int                $destination_id
+ * @property null|string        $comment
+ * @property TransactionJournal $destination
+ * @property LinkType           $linkType
+ * @property Collection|Note[]  $notes
+ * @property null|int           $notes_count
+ * @property TransactionJournal $source
+ * @property string             $inward
+ * @property string             $outward
+ *
  * @method static Builder|TransactionJournalLink newModelQuery()
  * @method static Builder|TransactionJournalLink newQuery()
  * @method static Builder|TransactionJournalLink query()
@@ -61,6 +62,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|TransactionJournalLink whereLinkTypeId($value)
  * @method static Builder|TransactionJournalLink whereSourceId($value)
  * @method static Builder|TransactionJournalLink whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class TransactionJournalLink extends Model
@@ -72,15 +74,12 @@ class TransactionJournalLink extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+
     /** @var string The table to store the data in */
     protected $table = 'journal_links';
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
-     *
-     * @param string $value
-     *
-     * @return TransactionJournalLink
      *
      * @throws NotFoundHttpException
      */
@@ -89,29 +88,25 @@ class TransactionJournalLink extends Model
         if (auth()->check()) {
             $linkId = (int)$value;
             $link   = self::where('journal_links.id', $linkId)
-                          ->leftJoin('transaction_journals as t_a', 't_a.id', '=', 'source_id')
-                          ->leftJoin('transaction_journals as t_b', 't_b.id', '=', 'destination_id')
-                          ->where('t_a.user_id', auth()->user()->id)
-                          ->where('t_b.user_id', auth()->user()->id)
-                          ->first(['journal_links.*']);
+                ->leftJoin('transaction_journals as t_a', 't_a.id', '=', 'source_id')
+                ->leftJoin('transaction_journals as t_b', 't_b.id', '=', 'destination_id')
+                ->where('t_a.user_id', auth()->user()->id)
+                ->where('t_b.user_id', auth()->user()->id)
+                ->first(['journal_links.*'])
+            ;
             if (null !== $link) {
                 return $link;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function destination(): BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class, 'destination_id');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function linkType(): BelongsTo
     {
         return $this->belongsTo(LinkType::class);
@@ -125,41 +120,29 @@ class TransactionJournalLink extends Model
         return $this->morphMany(Note::class, 'noteable');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function source(): BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class, 'source_id');
     }
 
-    /**
-     * @return Attribute
-     */
     protected function destinationId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
-    /**
-     * @return Attribute
-     */
     protected function linkTypeId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
-    /**
-     * @return Attribute
-     */
     protected function sourceId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

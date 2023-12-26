@@ -37,18 +37,21 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class InvitedUser
  *
- * @property-read User   $user
+ * @property User $user
+ *
  * @method static Builder|InvitedUser newModelQuery()
  * @method static Builder|InvitedUser newQuery()
  * @method static Builder|InvitedUser query()
+ *
  * @property int         $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property null|Carbon $created_at
+ * @property null|Carbon $updated_at
  * @property int         $user_id
  * @property string      $email
  * @property string      $invite_code
  * @property Carbon      $expires
  * @property bool        $redeemed
+ *
  * @method static Builder|InvitedUser whereCreatedAt($value)
  * @method static Builder|InvitedUser whereEmail($value)
  * @method static Builder|InvitedUser whereExpires($value)
@@ -57,6 +60,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|InvitedUser whereRedeemed($value)
  * @method static Builder|InvitedUser whereUpdatedAt($value)
  * @method static Builder|InvitedUser whereUserId($value)
+ *
  * @mixin Eloquent
  */
 class InvitedUser extends Model
@@ -66,38 +70,31 @@ class InvitedUser extends Model
 
     protected $casts
                         = [
-            'expires'  => 'datetime',
-            'redeemed' => 'boolean',
-        ];
+                            'expires'  => 'datetime',
+                            'redeemed' => 'boolean',
+                        ];
     protected $fillable = ['user_id', 'email', 'invite_code', 'expires', 'redeemed'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
-     *
-     * @param string $value
-     *
-     * @return InvitedUser
      */
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $attemptId = (int)$value;
-            /** @var InvitedUser|null $attempt */
+
+            /** @var null|InvitedUser $attempt */
             $attempt = self::find($attemptId);
             if (null !== $attempt) {
                 return $attempt;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-
-
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * BudgetController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -81,34 +80,32 @@ class BudgetController extends Controller
      *
      * TODO see autocomplete/accountcontroller
      *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
         $params = $request->getAll();
+
         /** @var Carbon $start */
         $start = $params['start'];
+
         /** @var Carbon $end */
         $end = $params['end'];
 
         // code from FrontpageChartGenerator, but not in separate class
         $budgets = $this->repository->getActiveBudgets();
         $data    = [];
+
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
             // could return multiple arrays, so merge.
             $data = array_merge($data, $this->processBudget($budget, $start, $end));
         }
+
         return response()->json($this->clean($data));
     }
 
     /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
      * @throws FireflyException
      */
     private function processBudget(Budget $budget, Carbon $start, Carbon $end): array
@@ -154,6 +151,7 @@ class BudgetController extends Controller
             ];
             $return[] = $current;
         }
+
         return $return;
     }
 
@@ -161,28 +159,20 @@ class BudgetController extends Controller
      * When no budget limits are present, the expenses of the whole period are collected and grouped.
      * This is grouped per currency. Because there is no limit set, "left to spend" and "overspent" are empty.
      *
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
      * @throws FireflyException
      */
     private function noBudgetLimits(Budget $budget, Carbon $start, Carbon $end): array
     {
         $spent = $this->opsRepository->listExpenses($start, $end, null, new Collection([$budget]));
+
         return $this->processExpenses($budget->id, $spent, $start, $end);
     }
 
     /**
-     * Shared between the "noBudgetLimits" function and "processLimit".
+     * Shared between the "noBudgetLimits" function and "processLimit". Will take a single set of expenses and return its info.
      *
-     * Will take a single set of expenses and return its info.
+     * @param array<int, array<int, string>> $array
      *
-     * @param int   $budgetId
-     * @param array $array
-     *
-     * @return array
      * @throws FireflyException
      */
     private function processExpenses(int $budgetId, array $array, Carbon $start, Carbon $end): array
@@ -218,13 +208,12 @@ class BudgetController extends Controller
                 'native_left'             => '0',
                 'overspent'               => '0',
                 'native_overspent'        => '0',
-
             ];
             $currentBudgetArray            = $block['budgets'][$budgetId];
-            //var_dump($return);
+
+            // var_dump($return);
             /** @var array $journal */
             foreach ($currentBudgetArray['transaction_journals'] as $journal) {
-
                 // convert the amount to the native currency.
                 $rate            = $converter->getCurrencyRate($this->currencies[$currencyId], $this->currency, $journal['date']);
                 $convertedAmount = bcmul($journal['amount'], $rate);
@@ -236,6 +225,8 @@ class BudgetController extends Controller
                 $return[$currencyId]['native_spent'] = bcadd($return[$currencyId]['native_spent'], $convertedAmount);
             }
         }
+        $converter->summarize();
+
         return $return;
     }
 
@@ -247,16 +238,13 @@ class BudgetController extends Controller
      *
      * If you have a budget limit in EUR, and a transaction in GBP, it will not be considered for the EUR budget limit.
      *
-     * @param Budget     $budget
-     * @param Collection $limits
-     *
-     * @return array
      * @throws FireflyException
      */
     private function budgetLimits(Budget $budget, Collection $limits): array
     {
         app('log')->debug(sprintf('Now in budgetLimits(#%d)', $budget->id));
         $data = [];
+
         /** @var BudgetLimit $limit */
         foreach ($limits as $limit) {
             $data = array_merge($data, $this->processLimit($budget, $limit));
@@ -266,10 +254,6 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Budget      $budget
-     * @param BudgetLimit $limit
-     *
-     * @return array
      * @throws FireflyException
      */
     private function processLimit(Budget $budget, BudgetLimit $limit): array
@@ -283,7 +267,6 @@ class BudgetController extends Controller
         $filtered             = [];
         $rate                 = $converter->getCurrencyRate($limitCurrency, $this->currency, $limit->start_date);
         $convertedLimitAmount = bcmul($limit->amount, $rate);
-
 
         /** @var array $entry */
         foreach ($spent as $currencyId => $entry) {
@@ -306,8 +289,8 @@ class BudgetController extends Controller
                 $result[$limitCurrencyId]['native_overspent'] = app('steam')->positive(bcadd($convertedLimitAmount, $result[$limitCurrencyId]['native_spent']));
             }
         }
+        $converter->summarize();
+
         return $result;
     }
-
-
 }

@@ -31,35 +31,15 @@ use Illuminate\Support\Collection;
  */
 interface MessageGeneratorInterface
 {
-    /**
-     *
-     */
     public function generateMessages(): void;
 
-    /**
-     * @return int
-     */
     public function getVersion(): int;
 
-    /**
-     * @param Collection $objects
-     */
     public function setObjects(Collection $objects): void;
 
-    /**
-     * @param int $trigger
-     */
     public function setTrigger(int $trigger): void;
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user): void;
 
-    /**
-     * @param Collection $webhooks
-     *
-     * @return void
-     */
     public function setWebhooks(Collection $webhooks): void;
 }

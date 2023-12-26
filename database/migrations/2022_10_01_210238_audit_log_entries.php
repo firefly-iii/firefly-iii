@@ -27,17 +27,17 @@ use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
     /**
      * Run the migrations.
+     *
      * @SuppressWarnings(PHPMD.ShortMethodName)
-     * @return void
      */
     public function up(): void
     {
         if (!Schema::hasTable('audit_log_entries')) {
             try {
-                Schema::create('audit_log_entries', static function (Blueprint $table) {
+                Schema::create('audit_log_entries', static function (Blueprint $table): void {
                     $table->id();
                     $table->timestamps();
                     $table->softDeletes();
@@ -61,8 +61,6 @@ return new class () extends Migration {
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {

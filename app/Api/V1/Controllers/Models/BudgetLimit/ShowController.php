@@ -48,8 +48,6 @@ class ShowController extends Controller
 
     /**
      * BudgetLimitController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -73,10 +71,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listBudgetLimitByBudget
      *
      * Display a listing of the budget limits for this budget.
-     *
-     * @param Budget $budget
-     *
-     * @return JsonResponse
      */
     public function index(Budget $budget): JsonResponse
     {
@@ -87,7 +81,7 @@ class ShowController extends Controller
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budgets.limits.index', [$budget->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.limits.index', [$budget->id]).$this->buildParams());
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
@@ -105,9 +99,6 @@ class ShowController extends Controller
      *
      * Display a listing of the budget limits for this budget.
      *
-     * @param SameDateRequest $request
-     *
-     * @return JsonResponse
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function indexAll(SameDateRequest $request): JsonResponse
@@ -119,7 +110,7 @@ class ShowController extends Controller
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budget-limits.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.budget-limits.index').$this->buildParams());
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
@@ -135,10 +126,6 @@ class ShowController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/getBudgetLimit
      *
-     * @param Budget      $budget
-     * @param BudgetLimit $budgetLimit
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function show(Budget $budget, BudgetLimit $budgetLimit): JsonResponse

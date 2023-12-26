@@ -37,9 +37,6 @@ class TestRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    /**
-     * @return array
-     */
     public function getTestParameters(): array
     {
         return [
@@ -47,23 +44,24 @@ class TestRequest extends FormRequest
             'start'    => $this->getDate('start'),
             'end'      => $this->getDate('end'),
             'accounts' => $this->getAccounts(),
-
         ];
     }
 
-    /**
-     * @return int
-     */
+    public function rules(): array
+    {
+        return [
+            'start'      => 'date',
+            'end'        => 'date|after_or_equal:start',
+            'accounts'   => '',
+            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
+        ];
+    }
+
     private function getPage(): int
     {
         return 0 === (int)$this->query('page') ? 1 : (int)$this->query('page');
     }
 
-    /**
-     * @param string $field
-     *
-     * @return Carbon|null
-     */
     private function getDate(string $field): ?Carbon
     {
         $value = $this->query($field);
@@ -75,27 +73,12 @@ class TestRequest extends FormRequest
         if (false === $result) {
             return null;
         }
+
         return $result;
     }
 
-    /**
-     * @return array
-     */
     private function getAccounts(): array
     {
         return $this->get('accounts');
-    }
-
-    /**
-     * @return array
-     */
-    public function rules(): array
-    {
-        return [
-            'start'      => 'date',
-            'end'        => 'date|after_or_equal:start',
-            'accounts'   => '',
-            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
-        ];
     }
 }

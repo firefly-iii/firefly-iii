@@ -41,8 +41,6 @@ use Illuminate\View\View;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\DataArraySerializer;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -54,8 +52,6 @@ class ShowController extends Controller
 
     /**
      * BillController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -77,10 +73,7 @@ class ShowController extends Controller
     /**
      * Rescan bills for transactions.
      *
-     * @param Request $request
-     * @param Bill    $bill
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function rescan(Request $request, Bill $bill)
     {
@@ -117,20 +110,17 @@ class ShowController extends Controller
     /**
      * Show a bill.
      *
-     * @param Request $request
-     * @param Bill    $bill
-     *
      * @return Factory|View
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Bill $bill)
     {
         // add info about rules:
         $rules    = $this->repository->getRulesForBill($bill);
         $subTitle = $bill->name;
+
         /** @var Carbon $start */
         $start = session('start');
+
         /** @var Carbon $end */
         $end            = session('end');
         $year           = $start->year;
@@ -159,18 +149,17 @@ class ShowController extends Controller
         $object                     = $manager->createData($resource)->toArray();
         $object['data']['currency'] = $bill->transactionCurrency;
 
-
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setBill($bill)->setLimit($pageSize)->setPage($page)->withBudgetInformation()
-                  ->withCategoryInformation()->withAccountInformation();
+            ->withCategoryInformation()->withAccountInformation()
+        ;
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('bills.show', [$bill->id]));
 
         // transform any attachments as well.
         $collection  = $this->repository->getAttachments($bill);
         $attachments = new Collection();
-
 
         if ($collection->count() > 0) {
             /** @var AttachmentTransformer $transformer */
@@ -181,7 +170,6 @@ class ShowController extends Controller
                 }
             );
         }
-
 
         return view('bills.show', compact('attachments', 'groups', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
     }

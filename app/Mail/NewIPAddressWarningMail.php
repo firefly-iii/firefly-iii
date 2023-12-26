@@ -43,8 +43,6 @@ class NewIPAddressWarningMail extends Mailable
 
     /**
      * OAuthTokenCreatedMail constructor.
-     *
-     * @param string $ipAddress
      */
     public function __construct(string $ipAddress)
     {
@@ -60,6 +58,7 @@ class NewIPAddressWarningMail extends Mailable
     {
         $this->time = now(config('app.timezone'))->isoFormat((string)trans('config.date_time_js'));
         $this->host = '';
+
         try {
             $hostName = app('steam')->getHostName($this->ipAddress);
         } catch (FireflyException $e) {
@@ -72,6 +71,7 @@ class NewIPAddressWarningMail extends Mailable
 
         return $this
             ->markdown('emails.new-ip')
-            ->subject((string)trans('email.login_from_new_ip'));
+            ->subject((string)trans('email.login_from_new_ip'))
+        ;
     }
 }

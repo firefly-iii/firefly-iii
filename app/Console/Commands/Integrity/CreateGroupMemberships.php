@@ -47,7 +47,6 @@ class CreateGroupMemberships extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws FireflyException
      */
     public function handle(): int
@@ -59,22 +58,7 @@ class CreateGroupMemberships extends Command
     }
 
     /**
-     *
-     * @throws FireflyException
-     */
-    private function createGroupMemberships(): void
-    {
-        $users = User::get();
-        /** @var User $user */
-        foreach ($users as $user) {
-            self::createGroupMembership($user);
-        }
-    }
-
-    /**
      * TODO move to helper.
-     *
-     * @param User $user
      *
      * @throws FireflyException
      */
@@ -92,8 +76,9 @@ class CreateGroupMemberships extends Command
             throw new FireflyException('Firefly III could not find a user role. Please make sure all migrations have run.');
         }
         $membership = GroupMembership::where('user_id', $user->id)
-                                     ->where('user_group_id', $userGroup->id)
-                                     ->where('user_role_id', $userRole->id)->first();
+            ->where('user_group_id', $userGroup->id)
+            ->where('user_role_id', $userRole->id)->first()
+        ;
         if (null === $membership) {
             GroupMembership::create(
                 [
@@ -106,6 +91,19 @@ class CreateGroupMemberships extends Command
         if (null === $user->user_group_id) {
             $user->user_group_id = $userGroup->id;
             $user->save();
+        }
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function createGroupMemberships(): void
+    {
+        $users = User::get();
+
+        /** @var User $user */
+        foreach ($users as $user) {
+            self::createGroupMembership($user);
         }
     }
 }

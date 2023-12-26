@@ -62,10 +62,6 @@ class PiggyBankController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getPiggiesAC
-     *
-     * @param AutocompleteRequest $request
-     *
-     * @return JsonResponse
      */
     public function piggyBanks(AutocompleteRequest $request): JsonResponse
     {
@@ -79,14 +75,14 @@ class PiggyBankController extends Controller
             $currency    = $this->accountRepository->getAccountCurrency($piggy->account) ?? $defaultCurrency;
             $objectGroup = $piggy->objectGroups()->first();
             $response[]  = [
-                'id'                      => (string)$piggy->id,
+                'id'                      => (string) $piggy->id,
                 'name'                    => $piggy->name,
-                'currency_id'             => (string)$currency->id,
+                'currency_id'             => (string) $currency->id,
                 'currency_name'           => $currency->name,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'object_group_id'         => null === $objectGroup ? null : (string)$objectGroup->id,
+                'object_group_id'         => null === $objectGroup ? null : (string) $objectGroup->id,
                 'object_group_title'      => $objectGroup?->title,
             ];
         }
@@ -97,10 +93,6 @@ class PiggyBankController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getPiggiesBalanceAC
-     *
-     * @param AutocompleteRequest $request
-     *
-     * @return JsonResponse
      */
     public function piggyBanksWithBalance(AutocompleteRequest $request): JsonResponse
     {
@@ -108,13 +100,14 @@ class PiggyBankController extends Controller
         $piggies         = $this->piggyRepository->searchPiggyBank($data['query'], $this->parameters->get('limit'));
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $response        = [];
+
         /** @var PiggyBank $piggy */
         foreach ($piggies as $piggy) {
             $currency      = $this->accountRepository->getAccountCurrency($piggy->account) ?? $defaultCurrency;
             $currentAmount = $this->piggyRepository->getRepetition($piggy)->currentamount ?? '0';
             $objectGroup   = $piggy->objectGroups()->first();
             $response[]    = [
-                'id'                      => (string)$piggy->id,
+                'id'                      => (string) $piggy->id,
                 'name'                    => $piggy->name,
                 'name_with_balance'       => sprintf(
                     '%s (%s / %s)',
@@ -122,12 +115,12 @@ class PiggyBankController extends Controller
                     app('amount')->formatAnything($currency, $currentAmount, false),
                     app('amount')->formatAnything($currency, $piggy->targetamount, false),
                 ),
-                'currency_id'             => (string)$currency->id,
+                'currency_id'             => (string) $currency->id,
                 'currency_name'           => $currency->name,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'object_group_id'         => null === $objectGroup ? null : (string)$objectGroup->id,
+                'object_group_id'         => null === $objectGroup ? null : (string) $objectGroup->id,
                 'object_group_title'      => $objectGroup?->title,
             ];
         }

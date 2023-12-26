@@ -43,8 +43,6 @@ class ShowController extends Controller
 
     /**
      * Constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,7 +63,6 @@ class ShowController extends Controller
      *
      * List all of them.
      *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function index(): JsonResponse
@@ -81,7 +78,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.piggy-banks.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.piggy-banks.index').$this->buildParams());
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
@@ -98,10 +95,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/getPiggyBank
      *
      * List single resource.
-     *
-     * @param PiggyBank $piggyBank
-     *
-     * @return JsonResponse
      */
     public function show(PiggyBank $piggyBank): JsonResponse
     {

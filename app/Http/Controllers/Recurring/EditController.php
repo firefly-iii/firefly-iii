@@ -41,7 +41,6 @@ use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- *
  * Class EditController
  */
 class EditController extends Controller
@@ -53,8 +52,6 @@ class EditController extends Controller
 
     /**
      * EditController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -80,12 +77,9 @@ class EditController extends Controller
     /**
      * Edit a recurring transaction.
      *
-     * @param Request    $request
-     * @param Recurrence $recurrence
-     *
      * @return Factory|View
-     * @throws FireflyException
      *
+     * @throws FireflyException
      */
     public function edit(Request $request, Recurrence $recurrence)
     {
@@ -107,7 +101,7 @@ class EditController extends Controller
         $repetition     = $recurrence->recurrenceRepetitions()->first();
         $currentRepType = $repetition->repetition_type;
         if ('' !== $repetition->repetition_moment) {
-            $currentRepType .= ',' . $repetition->repetition_moment;
+            $currentRepType .= ','.$repetition->repetition_moment;
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -167,10 +161,8 @@ class EditController extends Controller
     /**
      * Update the recurring transaction.
      *
-     * @param RecurrenceFormRequest $request
-     * @param Recurrence            $recurrence
+     * @return Redirector|RedirectResponse
      *
-     * @return RedirectResponse|Redirector
      * @throws FireflyException
      */
     public function update(RecurrenceFormRequest $request, Recurrence $recurrence)
@@ -181,7 +173,7 @@ class EditController extends Controller
         $request->session()->flash('success', (string)trans('firefly.updated_recurrence', ['title' => $recurrence->title]));
 
         // store new attachment(s):
-        /** @var array|null $files */
+        /** @var null|array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($recurrence, $files);

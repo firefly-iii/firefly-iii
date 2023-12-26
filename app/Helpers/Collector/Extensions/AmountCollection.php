@@ -34,15 +34,11 @@ trait AmountCollection
 {
     /**
      * Get transactions with a specific amount.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
      */
     public function amountIs(string $amount): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($amount) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
                 $q->where('source.amount', app('steam')->negative($amount));
             }
         );
@@ -50,13 +46,10 @@ trait AmountCollection
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function amountIsNot(string $amount): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($amount) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
                 $q->where('source.amount', '!=', app('steam')->negative($amount));
             }
         );
@@ -66,15 +59,11 @@ trait AmountCollection
 
     /**
      * Get transactions where the amount is less than.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
      */
     public function amountLess(string $amount): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($amount) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
                 $q->where('destination.amount', '<=', app('steam')->positive($amount));
             }
         );
@@ -84,15 +73,11 @@ trait AmountCollection
 
     /**
      * Get transactions where the amount is more than.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
      */
     public function amountMore(string $amount): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($amount) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
                 $q->where('destination.amount', '>=', app('steam')->positive($amount));
             }
         );
@@ -102,15 +87,11 @@ trait AmountCollection
 
     /**
      * Get transactions with a specific foreign amount.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
      */
     public function foreignAmountIs(string $amount): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($amount) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
                 $q->whereNotNull('source.foreign_amount');
                 $q->where('source.foreign_amount', app('steam')->negative($amount));
             }
@@ -121,15 +102,11 @@ trait AmountCollection
 
     /**
      * Get transactions with a specific foreign amount.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
      */
     public function foreignAmountIsNot(string $amount): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($amount) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
                 $q->whereNull('source.foreign_amount');
                 $q->orWhere('source.foreign_amount', '!=', app('steam')->negative($amount));
             }
@@ -140,15 +117,11 @@ trait AmountCollection
 
     /**
      * Get transactions where the amount is less than.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
      */
     public function foreignAmountLess(string $amount): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($amount) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
                 $q->whereNotNull('destination.foreign_amount');
                 $q->where('destination.foreign_amount', '<=', app('steam')->positive($amount));
             }
@@ -159,15 +132,11 @@ trait AmountCollection
 
     /**
      * Get transactions where the amount is more than.
-     *
-     * @param string $amount
-     *
-     * @return GroupCollectorInterface
      */
     public function foreignAmountMore(string $amount): GroupCollectorInterface
     {
         $this->query->where(
-            static function (EloquentBuilder $q) use ($amount) { // @phpstan-ignore-line
+            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
                 $q->whereNotNull('destination.foreign_amount');
                 $q->where('destination.foreign_amount', '>=', app('steam')->positive($amount));
             }

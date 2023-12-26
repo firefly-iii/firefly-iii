@@ -36,11 +36,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
- *
  * Class CreateController
  */
 class CreateController extends Controller
@@ -52,8 +49,6 @@ class CreateController extends Controller
 
     /**
      * CreateController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -75,9 +70,6 @@ class CreateController extends Controller
 
     /**
      * Create a new account.
-     *
-     * @param Request $request
-     * @param string  $objectType
      *
      * @return Factory|View
      */
@@ -134,12 +126,9 @@ class CreateController extends Controller
     /**
      * Store the new account.
      *
-     * @param AccountFormRequest $request
+     * @return Redirector|RedirectResponse
      *
-     * @return RedirectResponse|Redirector
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function store(AccountFormRequest $request)
     {
@@ -161,7 +150,7 @@ class CreateController extends Controller
         }
 
         // store attachment(s):
-        /** @var array|null $files */
+        /** @var null|array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($account, $files);

@@ -37,14 +37,10 @@ class ActuallyLoggedIn extends Event
 
     public User $user;
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function __construct(User | Authenticatable | null $user)
+    public function __construct(null|Authenticatable|User $user)
     {
         if ($user instanceof User) {
             $this->user = $user;
         }
-
     }
 }

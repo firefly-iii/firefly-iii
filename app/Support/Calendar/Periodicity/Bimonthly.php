@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Bimonthly.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>

@@ -42,25 +42,22 @@ class AppendNotesToDescription implements ActionInterface
 
     /**
      * TriggerInterface constructor.
-     *
-     * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
     {
         $this->action = $action;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function actOnArray(array $journal): bool
     {
         app('log')->debug('Now in AppendNotesToDescription');
-        /** @var TransactionJournal|null $object */
+
+        /** @var null|TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             app('log')->error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_other_user')));
+
             return false;
         }
         $note = $object->notes()->first();
@@ -73,7 +70,7 @@ class AppendNotesToDescription implements ActionInterface
         // only append if there is something to append
         if ('' !== $note->text) {
             $before              = $object->description;
-            $object->description = trim(sprintf('%s %s', $object->description, (string)$this->clearString($note->text)));
+            $object->description = trim(sprintf('%s %s', $object->description, (string) $this->clearString($note->text)));
             $object->save();
             app('log')->debug(sprintf('Journal description is updated to "%s".', $object->description));
 
@@ -82,11 +79,12 @@ class AppendNotesToDescription implements ActionInterface
             return true;
         }
         event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.new_notes_empty')));
+
         return false;
     }
 
     /**
-     * @inheritDoc
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function get(string $key, mixed $default = null): mixed
     {
@@ -94,7 +92,7 @@ class AppendNotesToDescription implements ActionInterface
     }
 
     /**
-     * @inheritDoc
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function has(mixed $key): mixed
     {

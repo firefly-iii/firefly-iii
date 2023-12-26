@@ -35,7 +35,6 @@ use FireflyIII\Transformers\LinkTypeTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
-use Validator;
 
 /**
  * Class UpdateController
@@ -49,8 +48,6 @@ class UpdateController extends Controller
 
     /**
      * LinkTypeController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -74,10 +71,6 @@ class UpdateController extends Controller
      *
      * Update object.
      *
-     * @param UpdateRequest $request
-     * @param LinkType      $linkType
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function update(UpdateRequest $request, LinkType $linkType): JsonResponse
@@ -92,12 +85,13 @@ class UpdateController extends Controller
 
         if (!$this->userRepository->hasRole($admin, 'owner')) {
             $messages = ['name' => '200005: You need the "owner" role to do this.'];
-            Validator::make([], $rules, $messages)->validate();
+            \Validator::make([], $rules, $messages)->validate();
         }
 
         $data = $request->getAll();
         $this->repository->update($linkType, $data);
         $manager = $this->getManager();
+
         /** @var LinkTypeTransformer $transformer */
         $transformer = app(LinkTypeTransformer::class);
         $transformer->setParameters($this->parameters);

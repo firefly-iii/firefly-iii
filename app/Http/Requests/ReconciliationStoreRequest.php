@@ -38,8 +38,6 @@ class ReconciliationStoreRequest extends FormRequest
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -63,8 +61,6 @@ class ReconciliationStoreRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {

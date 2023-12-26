@@ -25,6 +25,7 @@
         "destination_account": "Destinationskonto",
         "add_another_split": "Add another split",
         "submission": "Submission",
+        "stored_journal": "Successfully created new transaction \":description\"",
         "create_another": "After storing, return here to create another one.",
         "reset_after": "Reset form after submission",
         "submit": "Submit",

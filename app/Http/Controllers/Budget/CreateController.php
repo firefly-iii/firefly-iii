@@ -44,8 +44,6 @@ class CreateController extends Controller
 
     /**
      * CreateController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -64,8 +62,6 @@ class CreateController extends Controller
 
     /**
      * Form to create a budget.
-     *
-     * @param Request $request
      *
      * @return Factory|View
      */
@@ -110,9 +106,6 @@ class CreateController extends Controller
     /**
      * Stores a budget.
      *
-     * @param BudgetFormStoreRequest $request
-     *
-     * @return RedirectResponse
      * @throws FireflyException
      */
     public function store(BudgetFormStoreRequest $request): RedirectResponse
@@ -125,7 +118,7 @@ class CreateController extends Controller
         app('preferences')->mark();
 
         // store attachment(s):
-        /** @var array|null $files */
+        /** @var null|array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($budget, $files);

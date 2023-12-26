@@ -25,6 +25,7 @@
         "destination_account": "Ciljni ra\u010dun",
         "add_another_split": "Dodaj \u0161e eno razdelitev",
         "submission": "Predlo\u017eitev",
+        "stored_journal": "Nova transakcija \":description\" je uspe\u0161no ustvarjena",
         "create_another": "Po shranjevanju se vrnite sem, da ustvarite \u0161e enega.",
         "reset_after": "Po predlo\u017eitvi ponastavite obrazec",
         "submit": "Potrdite",

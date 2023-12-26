@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Export;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Console\Commands\VerifiesAccessToken;
 use FireflyIII\Exceptions\FireflyException;
@@ -36,9 +35,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use InvalidArgumentException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ExportData
@@ -47,7 +43,6 @@ class ExportData extends Command
 {
     use ShowsFriendlyMessages;
     use VerifiesAccessToken;
-
 
     protected $description = 'Command to export data from Firefly III.';
 
@@ -74,10 +69,7 @@ class ExportData extends Command
     /**
      * Execute the console command.
      *
-     * @return int
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -92,6 +84,7 @@ class ExportData extends Command
         $user = $this->getUser();
         $this->journalRepository->setUser($user);
         $this->accountRepository->setUser($user);
+
         // get the options.
         try {
             $options = $this->parseOptions();
@@ -100,6 +93,7 @@ class ExportData extends Command
 
             return 1;
         }
+
         // make export object and configure it.
         /** @var ExportDataGenerator $exporter */
         $exporter = app(ExportDataGenerator::class);
@@ -139,8 +133,6 @@ class ExportData extends Command
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
      * be called from the handle method instead of using the constructor to initialize the command.
-     *
-
      */
     private function stupidLaravel(): void
     {
@@ -149,9 +141,8 @@ class ExportData extends Command
     }
 
     /**
-     * @return array
      * @throws FireflyException
-     * @throws Exception
+     * @throws \Exception
      */
     private function parseOptions(): array
     {
@@ -181,10 +172,7 @@ class ExportData extends Command
     }
 
     /**
-     * @param string $field
-     *
-     * @return Carbon
-     * @throws Exception
+     * @throws \Exception
      */
     private function getDateParameter(string $field): Carbon
     {
@@ -198,13 +186,14 @@ class ExportData extends Command
         if (is_string($this->option($field))) {
             try {
                 $date = Carbon::createFromFormat('!Y-m-d', $this->option($field));
-            } catch (InvalidArgumentException $e) {
+            } catch (\InvalidArgumentException $e) {
                 app('log')->error($e->getMessage());
                 $this->friendlyError(sprintf('%s date "%s" must be formatted YYYY-MM-DD. Field will be ignored.', $field, $this->option('start')));
                 $error = true;
             }
             if (false === $date) {
                 $this->friendlyError(sprintf('%s date "%s" must be formatted YYYY-MM-DD.', $field, $this->option('start')));
+
                 throw new FireflyException(sprintf('%s date "%s" must be formatted YYYY-MM-DD.', $field, $this->option('start')));
             }
         }
@@ -217,12 +206,14 @@ class ExportData extends Command
             $journal = $this->journalRepository->firstNull();
             $date    = null === $journal ? today(config('app.timezone'))->subYear() : $journal->date;
             $date->startOfDay();
+
             return $date;
         }
         // field can only be 'end' at this point, so no need to include it in the check.
         if (true === $error) {
             $date = today(config('app.timezone'));
             $date->endOfDay();
+
             return $date;
         }
 
@@ -234,7 +225,6 @@ class ExportData extends Command
     }
 
     /**
-     * @return Collection
      * @throws FireflyException
      */
     private function getAccountsParameter(): Collection
@@ -250,6 +240,7 @@ class ExportData extends Command
         if ('' === $accountList) {
             $accounts = $this->accountRepository->getAccountsByType($types);
         }
+
         // filter accounts,
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -265,9 +256,7 @@ class ExportData extends Command
     }
 
     /**
-     * @return string
      * @throws FireflyException
-     *
      */
     private function getExportDirectory(): string
     {
@@ -283,9 +272,6 @@ class ExportData extends Command
     }
 
     /**
-     * @param array $options
-     * @param array $data
-     *
      * @throws FireflyException
      */
     private function exportData(array $options, array $data): void

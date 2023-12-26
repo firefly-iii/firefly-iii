@@ -41,8 +41,6 @@ class StoreRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -66,51 +64,7 @@ class StoreRequest extends FormRequest
     }
 
     /**
-     * @return array
-     */
-    private function getRuleTriggers(): array
-    {
-        $triggers = $this->get('triggers');
-        $return   = [];
-        if (is_array($triggers)) {
-            foreach ($triggers as $trigger) {
-                $return[] = [
-                    'type'            => $trigger['type'],
-                    'value'           => $trigger['value'],
-                    'active'          => $this->convertBoolean((string)($trigger['active'] ?? 'true')),
-                    'stop_processing' => $this->convertBoolean((string)($trigger['stop_processing'] ?? 'false')),
-                ];
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * @return array
-     */
-    private function getRuleActions(): array
-    {
-        $actions = $this->get('actions');
-        $return  = [];
-        if (is_array($actions)) {
-            foreach ($actions as $action) {
-                $return[] = [
-                    'type'            => $action['type'],
-                    'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'true')),
-                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
-                ];
-            }
-        }
-
-        return $return;
-    }
-
-    /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -127,12 +81,12 @@ class StoreRequest extends FormRequest
             'rule_group_id'              => 'belongsToUser:rule_groups|required_without:rule_group_title',
             'rule_group_title'           => 'nullable|between:1,255|required_without:rule_group_id|belongsToUser:rule_groups,title',
             'trigger'                    => 'required|in:store-journal,update-journal',
-            'triggers.*.type'            => 'required|in:' . implode(',', $validTriggers),
-            'triggers.*.value'           => 'required_if:actions.*.type,' . $contextTriggers . '|min:1|ruleTriggerValue|max:1024',
+            'triggers.*.type'            => 'required|in:'.implode(',', $validTriggers),
+            'triggers.*.value'           => 'required_if:actions.*.type,'.$contextTriggers.'|min:1|ruleTriggerValue|max:1024',
             'triggers.*.stop_processing' => [new IsBoolean()],
             'triggers.*.active'          => [new IsBoolean()],
-            'actions.*.type'             => 'required|in:' . implode(',', $validActions),
-            'actions.*.value'            => 'required_if:actions.*.type,' . $contextActions . '|ruleActionValue',
+            'actions.*.type'             => 'required|in:'.implode(',', $validActions),
+            'actions.*.value'            => 'required_if:actions.*.type,'.$contextActions.'|ruleActionValue',
             'actions.*.stop_processing'  => [new IsBoolean()],
             'actions.*.active'           => [new IsBoolean()],
             'strict'                     => [new IsBoolean()],
@@ -143,15 +97,11 @@ class StoreRequest extends FormRequest
 
     /**
      * Configure the validator instance.
-     *
-     * @param Validator $validator
-     *
-     * @return void
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator) {
+            function (Validator $validator): void {
                 $this->atLeastOneTrigger($validator);
                 $this->atLeastOneAction($validator);
                 $this->atLeastOneActiveTrigger($validator);
@@ -162,8 +112,6 @@ class StoreRequest extends FormRequest
 
     /**
      * Adds an error to the validator when there are no triggers in the array of data.
-     *
-     * @param Validator $validator
      */
     protected function atLeastOneTrigger(Validator $validator): void
     {
@@ -177,8 +125,6 @@ class StoreRequest extends FormRequest
 
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
-     *
-     * @param Validator $validator
      */
     protected function atLeastOneAction(Validator $validator): void
     {
@@ -192,13 +138,12 @@ class StoreRequest extends FormRequest
 
     /**
      * Adds an error to the validator when there are no ACTIVE triggers in the array of data.
-     *
-     * @param Validator $validator
      */
     protected function atLeastOneActiveTrigger(Validator $validator): void
     {
         $data = $validator->getData();
-        /** @var string|int|array|null $triggers */
+
+        /** @var null|array|int|string $triggers */
         $triggers = $data['triggers'] ?? [];
         // need at least one trigger
         if (!is_countable($triggers) || 0 === count($triggers)) {
@@ -222,13 +167,12 @@ class StoreRequest extends FormRequest
 
     /**
      * Adds an error to the validator when there are no ACTIVE actions in the array of data.
-     *
-     * @param Validator $validator
      */
     protected function atLeastOneActiveAction(Validator $validator): void
     {
         $data = $validator->getData();
-        /** @var string|int|array|null $actions */
+
+        /** @var null|array|int|string $actions */
         $actions = $data['actions'] ?? [];
         // need at least one trigger
         if (!is_countable($actions) || 0 === count($actions)) {
@@ -248,5 +192,41 @@ class StoreRequest extends FormRequest
         if (true === $allInactive) {
             $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string)trans('validation.at_least_one_active_action'));
         }
+    }
+
+    private function getRuleTriggers(): array
+    {
+        $triggers = $this->get('triggers');
+        $return   = [];
+        if (is_array($triggers)) {
+            foreach ($triggers as $trigger) {
+                $return[] = [
+                    'type'            => $trigger['type'],
+                    'value'           => $trigger['value'],
+                    'active'          => $this->convertBoolean((string)($trigger['active'] ?? 'true')),
+                    'stop_processing' => $this->convertBoolean((string)($trigger['stop_processing'] ?? 'false')),
+                ];
+            }
+        }
+
+        return $return;
+    }
+
+    private function getRuleActions(): array
+    {
+        $actions = $this->get('actions');
+        $return  = [];
+        if (is_array($actions)) {
+            foreach ($actions as $action) {
+                $return[] = [
+                    'type'            => $action['type'],
+                    'value'           => $action['value'],
+                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'true')),
+                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
+                ];
+            }
+        }
+
+        return $return;
     }
 }

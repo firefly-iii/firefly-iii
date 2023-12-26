@@ -23,23 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use ArrayObject;
-
 /**
  * Class NullArrayObject
- *
-
  */
-class NullArrayObject extends ArrayObject
+class NullArrayObject extends \ArrayObject
 {
-    /** @var mixed|null */
-    public $default = null;
+    /** @var null|mixed */
+    public $default;
 
     /**
      * NullArrayObject constructor.
      *
-     * @param array $array
-     * @param null  $default
+     * @param null $default
      */
     /** @phpstan-ignore-next-line */
     public function __construct(array $array, $default = null)
@@ -50,8 +45,6 @@ class NullArrayObject extends ArrayObject
 
     /**
      * @param mixed $key
-     *
-     * @return mixed
      */
     public function offsetGet($key): mixed
     {

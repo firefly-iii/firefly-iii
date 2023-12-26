@@ -33,8 +33,6 @@ use Illuminate\Support\Collection;
 
 /**
  * Class ReportHelper.
- *
-
  */
 class ReportHelper implements ReportHelperInterface
 {
@@ -43,8 +41,6 @@ class ReportHelper implements ReportHelperInterface
 
     /**
      * ReportHelper constructor.
-     *
-     * @param BudgetRepositoryInterface $budgetRepository
      */
     public function __construct(BudgetRepositoryInterface $budgetRepository)
     {
@@ -56,12 +52,6 @@ class ReportHelper implements ReportHelperInterface
      * the users bills and their payments.
      *
      * Excludes bills which have not had a payment on the mentioned accounts.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return array
      */
     public function getBillReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
@@ -112,10 +102,6 @@ class ReportHelper implements ReportHelperInterface
 
     /**
      * Generate a list of months for the report.
-     *
-     * @param Carbon $date
-     *
-     * @return array
      */
     public function listOfMonths(Carbon $date): array
     {

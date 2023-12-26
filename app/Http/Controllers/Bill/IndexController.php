@@ -35,8 +35,6 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -50,8 +48,6 @@ class IndexController extends Controller
 
     /**
      * BillController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -71,7 +67,7 @@ class IndexController extends Controller
     /**
      * Show all bills.
      */
-    public function index(): View | Application | Factory | \Illuminate\Contracts\Foundation\Application
+    public function index(): Application|Factory|\Illuminate\Contracts\Foundation\Application|View
     {
         $this->cleanupObjectGroups();
         $this->repository->correctOrder();
@@ -85,7 +81,7 @@ class IndexController extends Controller
         // sub one day from temp start so the last paid date is one day before it should be.
         $tempStart = clone $start;
         // 2023-06-23 do not sub one day from temp start, fix is in BillTransformer::payDates instead
-        //$tempStart->subDay();
+        // $tempStart->subDay();
         $parameters->set('start', $tempStart);
         $parameters->set('end', $end);
 
@@ -99,11 +95,12 @@ class IndexController extends Controller
         // make bill groups:
         $bills = [
             0 => [ // the index is the order, not the ID.
-                   'object_group_id'    => 0,
-                   'object_group_title' => (string)trans('firefly.default_group_title_name'),
-                   'bills'              => [],
+                'object_group_id'    => 0,
+                'object_group_title' => (string)trans('firefly.default_group_title_name'),
+                'bills'              => [],
             ],
         ];
+
         /** @var Bill $bill */
         foreach ($collection as $bill) {
             $array      = $transformer->transform($bill);
@@ -138,12 +135,25 @@ class IndexController extends Controller
     }
 
     /**
-     * @param array $bills
-     *
-     * @return array
+     * Set the order of a bill.
+     */
+    public function setOrder(Request $request, Bill $bill): JsonResponse
+    {
+        $objectGroupTitle = (string)$request->get('objectGroupTitle');
+        $newOrder         = (int)$request->get('order');
+        $this->repository->setOrder($bill, $newOrder);
+        if ('' !== $objectGroupTitle) {
+            $this->repository->setObjectGroup($bill, $objectGroupTitle);
+        }
+        if ('' === $objectGroupTitle) {
+            $this->repository->removeObjectGroup($bill);
+        }
+
+        return response()->json(['data' => 'OK']);
+    }
+
+    /**
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function getSums(array $bills): array
     {
@@ -169,8 +179,9 @@ class IndexController extends Controller
                     'period'                  => $range,
                     'per_period'              => '0',
                 ];
+
                 // only fill in avg when bill is active.
-                if (count($bill['pay_dates']) > 0) {
+                if (null !== $bill['next_expected_match']) {
                     $avg                                   = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
                     $avg                                   = bcmul($avg, (string)count($bill['pay_dates']));
                     $sums[$groupOrder][$currencyId]['avg'] = bcadd($sums[$groupOrder][$currencyId]['avg'], $avg);
@@ -179,15 +190,10 @@ class IndexController extends Controller
                 $sums[$groupOrder][$currencyId]['per_period'] = bcadd($sums[$groupOrder][$currencyId]['per_period'], $this->amountPerPeriod($bill, $range));
             }
         }
+
         return $sums;
     }
 
-    /**
-     * @param array  $bill
-     * @param string $range
-     *
-     * @return string
-     */
     private function amountPerPeriod(array $bill, string $range): string
     {
         $avg = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
@@ -229,17 +235,13 @@ class IndexController extends Controller
         return $perPeriod;
     }
 
-    /**
-     * @param array $sums
-     *
-     * @return array
-     */
     private function getTotals(array $sums): array
     {
         $totals = [];
         if (count($sums) < 2) {
             return [];
         }
+
         /**
          * @var array $array
          */
@@ -265,28 +267,5 @@ class IndexController extends Controller
         }
 
         return $totals;
-    }
-
-    /**
-     * Set the order of a bill.
-     *
-     * @param Request $request
-     * @param Bill    $bill
-     *
-     * @return JsonResponse
-     */
-    public function setOrder(Request $request, Bill $bill): JsonResponse
-    {
-        $objectGroupTitle = (string)$request->get('objectGroupTitle');
-        $newOrder         = (int)$request->get('order');
-        $this->repository->setOrder($bill, $newOrder);
-        if ('' !== $objectGroupTitle) {
-            $this->repository->setObjectGroup($bill, $objectGroupTitle);
-        }
-        if ('' === $objectGroupTitle) {
-            $this->repository->removeObjectGroup($bill);
-        }
-
-        return response()->json(['data' => 'OK']);
     }
 }

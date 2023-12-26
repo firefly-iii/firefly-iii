@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * NavigationCustomEndOfPeriodTest.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -29,16 +28,20 @@ use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
 use Tests\integration\TestCase;
 
-class NavigationCustomEndOfPeriodTest extends TestCase
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+final class NavigationCustomEndOfPeriodTest extends TestCase
 {
     /**
-     * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testGivenADateAndCustomFrequencyWhenCalculateTheDateThenReturnsTheEndOfMonthSuccessful()
+    public function testGivenADateAndCustomFrequencyWhenCalculateTheDateThenReturnsTheEndOfMonthSuccessful(): void
     {
         $from       = Carbon::parse('2023-08-05');
-        $expected   = Carbon::parse('2023-09-03');
+        $expected   = Carbon::parse('2023-09-04');
         $navigation = new Navigation();
 
         $period = $navigation->endOfPeriod($from, 'custom');

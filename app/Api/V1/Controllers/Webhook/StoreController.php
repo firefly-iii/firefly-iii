@@ -38,8 +38,6 @@ class StoreController extends Controller
     public const string RESOURCE_KEY = 'webhooks';
     private WebhookRepositoryInterface $repository;
 
-    /**
-     */
     public function __construct()
     {
         parent::__construct();
@@ -56,16 +54,13 @@ class StoreController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/webhooks/storeWebhook
-     *
-     * @param CreateRequest $request
-     *
-     * @return JsonResponse
      */
     public function store(CreateRequest $request): JsonResponse
     {
         $data    = $request->getData();
         $webhook = $this->repository->store($data);
         $manager = $this->getManager();
+
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
         $transformer->setParameters($this->parameters);

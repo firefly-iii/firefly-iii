@@ -29,7 +29,6 @@ use FireflyIII\Models\TransactionType;
 
 /**
  * Trait TransactionTypeTrait
- *
  */
 trait TransactionTypeTrait
 {
@@ -37,9 +36,6 @@ trait TransactionTypeTrait
      * Get the transaction type. Since this is mandatory, will throw an exception when nothing comes up. Will always
      * use TransactionType repository.
      *
-     * @param string $type
-     *
-     * @return TransactionType
      * @throws FireflyException
      */
     protected function findTransactionType(string $type): TransactionType
@@ -48,6 +44,7 @@ trait TransactionTypeTrait
         $transactionType = $factory->find($type);
         if (null === $transactionType) {
             app('log')->error(sprintf('Could not find transaction type for "%s"', $type));
+
             throw new FireflyException(sprintf('Could not find transaction type for "%s"', $type));
         }
 

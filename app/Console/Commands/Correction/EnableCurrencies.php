@@ -48,8 +48,6 @@ class EnableCurrencies extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -57,14 +55,10 @@ class EnableCurrencies extends Command
         foreach ($userGroups as $userGroup) {
             $this->correctCurrencies($userGroup);
         }
+
         return CommandAlias::SUCCESS;
     }
 
-    /**
-     * @param UserGroup $userGroup
-     *
-     * @return void
-     */
     private function correctCurrencies(UserGroup $userGroup): void
     {
         /** @var CurrencyRepositoryInterface $repos */
@@ -75,40 +69,41 @@ class EnableCurrencies extends Command
 
         Log::debug(sprintf('Now correcting currencies for user group #%d', $userGroup->id));
         $found = [$defaultCurrency->id];
+
         // get all meta entries
         /** @var Collection $meta */
-        $meta = AccountMeta
-            ::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
+        $meta = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
             ->where('accounts.user_group_id', $userGroup->id)
-            ->where('account_meta.name', 'currency_id')->groupBy('data')->get(['data']);
+            ->where('account_meta.name', 'currency_id')->groupBy('data')->get(['data'])
+        ;
         foreach ($meta as $entry) {
             $found[] = (int)$entry->data;
         }
 
         // get all from journals:
-        $journals = TransactionJournal
-            ::where('user_group_id', $userGroup->id)
-            ->groupBy('transaction_currency_id')->get(['transaction_currency_id']);
+        $journals = TransactionJournal::where('user_group_id', $userGroup->id)
+            ->groupBy('transaction_currency_id')->get(['transaction_currency_id'])
+        ;
         foreach ($journals as $entry) {
             $found[] = (int)$entry->transaction_currency_id;
         }
 
         // get all from transactions
-        $transactions = Transaction
-            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+        $transactions = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.user_group_id', $userGroup->id)
             ->groupBy('transactions.transaction_currency_id', 'transactions.foreign_currency_id')
-            ->get(['transactions.transaction_currency_id', 'transactions.foreign_currency_id']);
+            ->get(['transactions.transaction_currency_id', 'transactions.foreign_currency_id'])
+        ;
         foreach ($transactions as $entry) {
             $found[] = (int)$entry->transaction_currency_id;
             $found[] = (int)$entry->foreign_currency_id;
         }
 
         // get all from budget limits
-        $limits = BudgetLimit
-            ::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+        $limits = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
             ->groupBy('transaction_currency_id')
-            ->get(['budget_limits.transaction_currency_id']);
+            ->get(['budget_limits.transaction_currency_id'])
+        ;
         foreach ($limits as $entry) {
             $found[] = $entry->transaction_currency_id;
         }
@@ -118,12 +113,13 @@ class EnableCurrencies extends Command
             array_filter(
                 $found,
                 static function (int $currencyId) {
-                    return $currencyId !== 0;
+                    return 0 !== $currencyId;
                 }
             )
         );
 
         $valid = new Collection();
+
         /** @var int $currencyId */
         foreach ($found as $currencyId) {
             $currency = $repos->find($currencyId);
@@ -134,12 +130,11 @@ class EnableCurrencies extends Command
         $ids = $valid->pluck('id')->toArray();
         Log::debug(sprintf('Found currencies for user group #%d: %s', $userGroup->id, implode(', ', $ids)));
         $userGroup->currencies()->sync($ids);
+
         /** @var GroupMembership $membership */
         foreach ($userGroup->groupMemberships()->get() as $membership) {
             // make sure no individual different preferences.
             $membership->user->currencies()->sync([]);
         }
-
-
     }
 }

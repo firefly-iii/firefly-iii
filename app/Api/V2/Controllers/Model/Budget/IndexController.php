@@ -52,9 +52,6 @@ class IndexController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/budgets/listBudgets
-     *
-     *
-     * @return JsonResponse
      */
     public function index(): JsonResponse
     {
@@ -68,6 +65,7 @@ class IndexController extends Controller
 
         return response()
             ->api($this->jsonApiList('budgets', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

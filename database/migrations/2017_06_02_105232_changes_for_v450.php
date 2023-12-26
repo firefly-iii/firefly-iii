@@ -43,11 +43,11 @@ class ChangesForV450 extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('foreign_amount');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -56,7 +56,7 @@ class ChangesForV450 extends Migration
         try {
             Schema::table(
                 'transactions',
-                static function (Blueprint $table) {
+                static function (Blueprint $table): void {
                     // cannot drop foreign keys in SQLite:
                     if ('sqlite' !== config('database.default')) {
                         $table->dropForeign('transactions_foreign_currency_id_foreign');
@@ -71,11 +71,11 @@ class ChangesForV450 extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('foreign_currency_id');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -84,6 +84,7 @@ class ChangesForV450 extends Migration
 
     /**
      * Run the migrations.
+     *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
@@ -93,7 +94,7 @@ class ChangesForV450 extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->decimal('foreign_amount', 32, 12)->nullable()->after('amount');
                     }
                 );
@@ -108,7 +109,7 @@ class ChangesForV450 extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->integer('foreign_currency_id', false, true)->default(null)->after('foreign_amount')->nullable();
                         $table->foreign('foreign_currency_id')->references('id')->on('transaction_currencies')->onDelete('set null');
                     }

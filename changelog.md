@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.1 - 2023-12-27
+
+### Changed
+
+- Rule overview is lower in height.
+
+### Removed
+
+- Removed fixed sidebar again
+
+### Fixed
+
+- Nullpointer in rule trigger render code
+- [Issue 8272](https://github.com/firefly-iii/firefly-iii/issues/8272) The sum for expected bills in a group includes unexpected bills as well
+- [Issue 8273](https://github.com/firefly-iii/firefly-iii/issues/8273) Frontpage preferences indicate all accounts are shown on the frontpage, even when not true
+- [Issue 8274](https://github.com/firefly-iii/firefly-iii/issues/8274) Semi specific dates do not work correctly with the "Transaction date is.." rule trigger
+- [Issue 8277](https://github.com/firefly-iii/firefly-iii/issues/8277) Expected bill next month, but shown as not expected
+- [Issue 8278](https://github.com/firefly-iii/firefly-iii/issues/8278) Net worth is empty in the dashboard due to division by zero
+- [Issue 8281](https://github.com/firefly-iii/firefly-iii/issues/8281) Database CPU utilization after v6.1.0 upgrade
+- [Issue 8291](https://github.com/firefly-iii/firefly-iii/issues/8291) Multiple "Any tag is" (negated or not) rule triggers don't all apply in strict mode
+
+### Security
+
+- HTML Injection Vulnerability in webhooks code, discovered by @stefan-schiller-sonarsource from Sonar. Thanks!
+
+### API
+
+- [Issue 8282](https://github.com/firefly-iii/firefly-iii/issues/8282) Update transaction via API does not update the "updated_at" parameter
+
 ## 6.1.0 - 2023-12-17
 
 > ⚠️⚠️ This release required **PHP 8.3.0** and will not work on earlier releases of PHP ⚠️⚠️

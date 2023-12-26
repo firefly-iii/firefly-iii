@@ -31,11 +31,6 @@ use FireflyIII\Models\PiggyBankRepetition;
  */
 class PiggyBankObserver
 {
-    /**
-     * @param PiggyBank $piggyBank
-     *
-     * @return void
-     */
     public function created(PiggyBank $piggyBank): void
     {
         app('log')->debug('Observe "created" of a piggy bank.');
@@ -49,10 +44,6 @@ class PiggyBankObserver
 
     /**
      * Also delete related objects.
-     *
-     * @param PiggyBank $piggyBank
-     *
-     * @return void
      */
     public function deleting(PiggyBank $piggyBank): void
     {
@@ -67,5 +58,4 @@ class PiggyBankObserver
 
         $piggyBank->notes()->delete();
     }
-
 }

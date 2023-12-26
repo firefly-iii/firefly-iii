@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * IntervalTestCase.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
@@ -33,6 +32,7 @@ abstract class IntervalTestCase extends TestCase
     public static function provider(): iterable
     {
         $intervals = static::provideIntervals();
+
         /** @var IntervalProvider $interval */
         foreach ($intervals as $interval) {
             yield "{$interval->label}" => [$interval];
@@ -43,10 +43,6 @@ abstract class IntervalTestCase extends TestCase
 
     /**
      * @dataProvider provider
-     *
-     * @param IntervalProvider $provider
-     *
-     * @return void
      */
     public function testGivenAnEpochWhenCallTheNextDateThenReturnsTheExpectedDateSuccessful(IntervalProvider $provider): void
     {

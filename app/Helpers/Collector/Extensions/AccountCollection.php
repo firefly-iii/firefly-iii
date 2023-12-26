@@ -35,10 +35,6 @@ trait AccountCollection
 {
     /**
      * These accounts must not be included.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function excludeAccounts(Collection $accounts): GroupCollectorInterface
     {
@@ -55,10 +51,6 @@ trait AccountCollection
 
     /**
      * These accounts must not be destination accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function excludeDestinationAccounts(Collection $accounts): GroupCollectorInterface
     {
@@ -74,10 +66,6 @@ trait AccountCollection
 
     /**
      * These accounts must not be source accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function excludeSourceAccounts(Collection $accounts): GroupCollectorInterface
     {
@@ -93,22 +81,18 @@ trait AccountCollection
 
     /**
      * Define which accounts can be part of the source and destination transactions.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function setAccounts(Collection $accounts): GroupCollectorInterface
     {
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->where(
-                static function (EloquentBuilder $query) use ($accountIds) { // @phpstan-ignore-line
+                static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
                     $query->whereIn('source.account_id', $accountIds);
                     $query->orWhereIn('destination.account_id', $accountIds);
                 }
             );
-            //app('log')->debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
+            // app('log')->debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -116,17 +100,13 @@ trait AccountCollection
 
     /**
      * Both source AND destination must be in this list of accounts.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function setBothAccounts(Collection $accounts): GroupCollectorInterface
     {
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->where(
-                static function (EloquentBuilder $query) use ($accountIds) { // @phpstan-ignore-line
+                static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
                     $query->whereIn('source.account_id', $accountIds);
                     $query->whereIn('destination.account_id', $accountIds);
                 }
@@ -139,10 +119,6 @@ trait AccountCollection
 
     /**
      * Define which accounts can be part of the source and destination transactions.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function setDestinationAccounts(Collection $accounts): GroupCollectorInterface
     {
@@ -158,22 +134,18 @@ trait AccountCollection
 
     /**
      * Define which accounts can NOT be part of the source and destination transactions.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function setNotAccounts(Collection $accounts): GroupCollectorInterface
     {
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->where(
-                static function (EloquentBuilder $query) use ($accountIds) { // @phpstan-ignore-line
+                static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
                     $query->whereNotIn('source.account_id', $accountIds);
                     $query->whereNotIn('destination.account_id', $accountIds);
                 }
             );
-            //app('log')->debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
+            // app('log')->debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -181,10 +153,6 @@ trait AccountCollection
 
     /**
      * Define which accounts can be part of the source and destination transactions.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function setSourceAccounts(Collection $accounts): GroupCollectorInterface
     {
@@ -200,28 +168,24 @@ trait AccountCollection
 
     /**
      * Either account can be set, but NOT both. This effectively excludes internal transfers.
-     *
-     * @param Collection $accounts
-     *
-     * @return GroupCollectorInterface
      */
     public function setXorAccounts(Collection $accounts): GroupCollectorInterface
     {
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->where(
-                static function (EloquentBuilder $q1) use ($accountIds) { // @phpstan-ignore-line
+                static function (EloquentBuilder $q1) use ($accountIds): void { // @phpstan-ignore-line
                     // sourceAccount is in the set, and destination is NOT.
 
                     $q1->where(
-                        static function (EloquentBuilder $q2) use ($accountIds) {
+                        static function (EloquentBuilder $q2) use ($accountIds): void {
                             $q2->whereIn('source.account_id', $accountIds);
                             $q2->whereNotIn('destination.account_id', $accountIds);
                         }
                     );
                     // destination is in the set, and source is NOT
                     $q1->orWhere(
-                        static function (EloquentBuilder $q3) use ($accountIds) {
+                        static function (EloquentBuilder $q3) use ($accountIds): void {
                             $q3->whereNotIn('source.account_id', $accountIds);
                             $q3->whereIn('destination.account_id', $accountIds);
                         }
@@ -237,8 +201,6 @@ trait AccountCollection
 
     /**
      * Will include the source and destination account names and types.
-     *
-     * @return GroupCollectorInterface
      */
     public function withAccountInformation(): GroupCollectorInterface
     {

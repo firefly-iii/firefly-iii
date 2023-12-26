@@ -29,8 +29,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class UserFormRequest.
- *
-
  */
 class UserFormRequest extends FormRequest
 {
@@ -39,8 +37,6 @@ class UserFormRequest extends FormRequest
 
     /**
      * Get data for controller.
-     *
-     * @return array
      */
     public function getUserData(): array
     {
@@ -55,8 +51,6 @@ class UserFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {

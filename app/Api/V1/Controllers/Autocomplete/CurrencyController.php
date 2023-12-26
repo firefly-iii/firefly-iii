@@ -58,10 +58,6 @@ class CurrencyController extends Controller
     /**
      * Documentation for this endpoint is at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getCurrenciesAC
-     *
-     * @param AutocompleteRequest $request
-     *
-     * @return JsonResponse
      */
     public function currencies(AutocompleteRequest $request): JsonResponse
     {
@@ -72,7 +68,7 @@ class CurrencyController extends Controller
         /** @var TransactionCurrency $currency */
         foreach ($collection as $currency) {
             $result[] = [
-                'id'             => (string)$currency->id,
+                'id'             => (string) $currency->id,
                 'name'           => $currency->name,
                 'code'           => $currency->code,
                 'symbol'         => $currency->symbol,
@@ -87,9 +83,6 @@ class CurrencyController extends Controller
      * Documentation for this endpoint is at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getCurrenciesCodeAC
      *
-     * @param AutocompleteRequest $request
-     *
-     * @return JsonResponse
      * @deprecated
      */
     public function currenciesWithCode(AutocompleteRequest $request): JsonResponse
@@ -101,7 +94,7 @@ class CurrencyController extends Controller
         /** @var TransactionCurrency $currency */
         foreach ($collection as $currency) {
             $result[] = [
-                'id'             => (string)$currency->id,
+                'id'             => (string) $currency->id,
                 'name'           => sprintf('%s (%s)', $currency->name, $currency->code),
                 'code'           => $currency->code,
                 'symbol'         => $currency->symbol,

@@ -31,11 +31,6 @@ use FireflyIII\Models\AccountType;
  */
 trait DepositValidation
 {
-    /**
-     * @param array $array
-     *
-     * @return bool
-     */
     protected function validateDepositDestination(array $array): bool
     {
         $result      = null;
@@ -50,7 +45,7 @@ trait DepositValidation
         if (null === $accountId && null === $accountName && null === $accountIban && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the destination of a deposit can't be created.
-            $this->destError = (string)trans('validation.deposit_dest_need_data');
+            $this->destError = (string) trans('validation.deposit_dest_need_data');
             app('log')->error('Both values are NULL, cant create deposit destination.');
             $result = false;
         }
@@ -65,7 +60,7 @@ trait DepositValidation
             $search = $this->findExistingAccount($validTypes, $array);
             if (null === $search) {
                 app('log')->debug('findExistingAccount() returned NULL, so the result is false.');
-                $this->destError = (string)trans('validation.deposit_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
+                $this->destError = (string) trans('validation.deposit_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
                 $result          = false;
             }
             if (null !== $search) {
@@ -79,25 +74,15 @@ trait DepositValidation
         return $result;
     }
 
-    /**
-     * @param array $accountTypes
-     *
-     * @return bool
-     */
     abstract protected function canCreateTypes(array $accountTypes): bool;
 
-    /**
-     * @param array $validTypes
-     * @param array $data
-     *
-     * @return Account|null
-     */
     abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
 
     /**
-     * @param array $array
+     * Pretty complex unfortunately.
      *
-     * @return bool
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function validateDepositSource(array $array): bool
     {
@@ -113,15 +98,15 @@ trait DepositValidation
 
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);
-        if (null === $accountId &&
-            null === $accountName &&
-            null === $accountIban &&
-            null === $accountNumber &&
-            false === $this->canCreateTypes($validTypes)) {
+        if (null === $accountId
+            && null === $accountName
+            && null === $accountIban
+            && null === $accountNumber
+            && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL return false,
             // because the source of a deposit can't be created.
             // (this never happens).
-            $this->sourceError = (string)trans('validation.deposit_source_need_data');
+            $this->sourceError = (string) trans('validation.deposit_source_need_data');
             $result            = false;
         }
 
@@ -130,7 +115,8 @@ trait DepositValidation
             app('log')->debug('Check if there is not already another account with this IBAN');
             $existing = $this->findExistingAccount($validTypes, ['iban' => $accountIban], true);
             if (null !== $existing) {
-                $this->sourceError = (string)trans('validation.deposit_src_iban_exists');
+                $this->sourceError = (string) trans('validation.deposit_src_iban_exists');
+
                 return false;
             }
         }

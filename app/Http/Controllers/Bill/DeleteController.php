@@ -42,8 +42,6 @@ class DeleteController extends Controller
 
     /**
      * BillController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,8 +63,6 @@ class DeleteController extends Controller
     /**
      * Delete a bill.
      *
-     * @param Bill $bill
-     *
      * @return Factory|View
      */
     public function delete(Bill $bill)
@@ -81,10 +77,7 @@ class DeleteController extends Controller
     /**
      * Destroy a bill.
      *
-     * @param Request $request
-     * @param Bill    $bill
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function destroy(Request $request, Bill $bill)
     {

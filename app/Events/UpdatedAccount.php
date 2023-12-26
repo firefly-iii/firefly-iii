@@ -38,8 +38,6 @@ class UpdatedAccount extends Event
 
     /**
      * Create a new event instance.
-     *
-     * @param Account $account
      */
     public function __construct(Account $account)
     {

@@ -53,8 +53,6 @@ class GenericRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -64,13 +62,11 @@ class GenericRequest extends FormRequest
         ];
     }
 
-    /**
-     * @return Collection
-     */
     public function getAssetAccounts(): Collection
     {
         $this->parseAccounts();
         $return = new Collection();
+
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             $type = $account->accountType->type;
@@ -82,9 +78,100 @@ class GenericRequest extends FormRequest
         return $return;
     }
 
+    public function getBills(): Collection
+    {
+        $this->parseBills();
+
+        return $this->bills;
+    }
+
+    public function getBudgets(): Collection
+    {
+        $this->parseBudgets();
+
+        return $this->budgets;
+    }
+
+    public function getCategories(): Collection
+    {
+        $this->parseCategories();
+
+        return $this->categories;
+    }
+
+    public function getEnd(): Carbon
+    {
+        $date = $this->getCarbonDate('end');
+        $date->endOfDay();
+
+        return $date;
+    }
+
+    public function getExpenseAccounts(): Collection
+    {
+        $this->parseAccounts();
+        $return = new Collection();
+
+        /** @var Account $account */
+        foreach ($this->accounts as $account) {
+            $type = $account->accountType->type;
+            if (AccountType::EXPENSE === $type) {
+                $return->push($account);
+            }
+        }
+
+        return $return;
+    }
+
+    public function getRevenueAccounts(): Collection
+    {
+        $this->parseAccounts();
+        $return = new Collection();
+
+        /** @var Account $account */
+        foreach ($this->accounts as $account) {
+            $type = $account->accountType->type;
+            if (AccountType::REVENUE === $type) {
+                $return->push($account);
+            }
+        }
+
+        return $return;
+    }
+
+    public function getStart(): Carbon
+    {
+        $date = $this->getCarbonDate('start');
+        $date->startOfDay();
+
+        return $date;
+    }
+
+    public function getTags(): Collection
+    {
+        $this->parseTags();
+
+        return $this->tags;
+    }
+
     /**
-     *
+     * The rules that the incoming request must be matched against.
      */
+    public function rules(): array
+    {
+        // this is cheating, but it works to initialize the collections.
+        $this->accounts   = new Collection();
+        $this->budgets    = new Collection();
+        $this->categories = new Collection();
+        $this->bills      = new Collection();
+        $this->tags       = new Collection();
+
+        return [
+            'start' => 'required|date',
+            'end'   => 'required|date|after_or_equal:start',
+        ];
+    }
+
     private function parseAccounts(): void
     {
         if (0 !== $this->accounts->count()) {
@@ -104,19 +191,6 @@ class GenericRequest extends FormRequest
         }
     }
 
-    /**
-     * @return Collection
-     */
-    public function getBills(): Collection
-    {
-        $this->parseBills();
-
-        return $this->bills;
-    }
-
-    /**
-     *
-     */
     private function parseBills(): void
     {
         if (0 !== $this->bills->count()) {
@@ -136,19 +210,6 @@ class GenericRequest extends FormRequest
         }
     }
 
-    /**
-     * @return Collection
-     */
-    public function getBudgets(): Collection
-    {
-        $this->parseBudgets();
-
-        return $this->budgets;
-    }
-
-    /**
-     *
-     */
     private function parseBudgets(): void
     {
         if (0 !== $this->budgets->count()) {
@@ -168,19 +229,6 @@ class GenericRequest extends FormRequest
         }
     }
 
-    /**
-     * @return Collection
-     */
-    public function getCategories(): Collection
-    {
-        $this->parseCategories();
-
-        return $this->categories;
-    }
-
-    /**
-     *
-     */
     private function parseCategories(): void
     {
         if (0 !== $this->categories->count()) {
@@ -200,77 +248,6 @@ class GenericRequest extends FormRequest
         }
     }
 
-    /**
-     * @return Carbon
-     */
-    public function getEnd(): Carbon
-    {
-        $date = $this->getCarbonDate('end');
-        $date->endOfDay();
-
-        return $date;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getExpenseAccounts(): Collection
-    {
-        $this->parseAccounts();
-        $return = new Collection();
-        /** @var Account $account */
-        foreach ($this->accounts as $account) {
-            $type = $account->accountType->type;
-            if ($type === AccountType::EXPENSE) {
-                $return->push($account);
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getRevenueAccounts(): Collection
-    {
-        $this->parseAccounts();
-        $return = new Collection();
-        /** @var Account $account */
-        foreach ($this->accounts as $account) {
-            $type = $account->accountType->type;
-            if ($type === AccountType::REVENUE) {
-                $return->push($account);
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * @return Carbon
-     */
-    public function getStart(): Carbon
-    {
-        $date = $this->getCarbonDate('start');
-        $date->startOfDay();
-
-        return $date;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getTags(): Collection
-    {
-        $this->parseTags();
-
-        return $this->tags;
-    }
-
-    /**
-     *
-     */
     private function parseTags(): void
     {
         if (0 !== $this->tags->count()) {
@@ -288,25 +265,5 @@ class GenericRequest extends FormRequest
                 }
             }
         }
-    }
-
-    /**
-     * The rules that the incoming request must be matched against.
-     *
-     * @return array
-     */
-    public function rules(): array
-    {
-        // this is cheating, but it works to initialize the collections.
-        $this->accounts   = new Collection();
-        $this->budgets    = new Collection();
-        $this->categories = new Collection();
-        $this->bills      = new Collection();
-        $this->tags       = new Collection();
-
-        return [
-            'start' => 'required|date',
-            'end'   => 'required|date|after_or_equal:start',
-        ];
     }
 }

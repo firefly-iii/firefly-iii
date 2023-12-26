@@ -29,6 +29,4 @@ use FireflyIII\Api\V2\Controllers\Controller;
 /**
  * Class VersionUpdateController
  */
-class VersionUpdateController extends Controller
-{
-}
+class VersionUpdateController extends Controller {}

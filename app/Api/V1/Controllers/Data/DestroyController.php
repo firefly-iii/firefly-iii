@@ -57,9 +57,6 @@ class DestroyController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/destroyData
      *
-     * @param DestroyRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function destroy(DestroyRequest $request): JsonResponse
@@ -67,10 +64,10 @@ class DestroyController extends Controller
         $objects      = $request->getObjects();
         $this->unused = $request->boolean('unused', false);
 
-        $allExceptAssets = [AccountType::BENEFICIARY, AccountType::CASH, AccountType::CREDITCARD, AccountType::DEFAULT, AccountType::EXPENSE, AccountType::IMPORT, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT, AccountType::RECONCILIATION, AccountType::REVENUE,];
-        $all             = [AccountType::ASSET, AccountType::BENEFICIARY, AccountType::CASH, AccountType::CREDITCARD, AccountType::DEBT, AccountType::DEFAULT, AccountType::EXPENSE, AccountType::IMPORT, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::RECONCILIATION,];
+        $allExceptAssets = [AccountType::BENEFICIARY, AccountType::CASH, AccountType::CREDITCARD, AccountType::DEFAULT, AccountType::EXPENSE, AccountType::IMPORT, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT, AccountType::RECONCILIATION, AccountType::REVENUE];
+        $all             = [AccountType::ASSET, AccountType::BENEFICIARY, AccountType::CASH, AccountType::CREDITCARD, AccountType::DEBT, AccountType::DEFAULT, AccountType::EXPENSE, AccountType::IMPORT, AccountType::INITIAL_BALANCE, AccountType::LIABILITY_CREDIT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::RECONCILIATION];
         $liabilities     = [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
-        $transactions    = [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::RECONCILIATION, TransactionType::OPENING_BALANCE,];
+        $transactions    = [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::RECONCILIATION, TransactionType::OPENING_BALANCE];
 
         match ($objects) {
             'budgets'                => $this->destroyBudgets(),
@@ -99,9 +96,6 @@ class DestroyController extends Controller
         return response()->json([], 204);
     }
 
-    /**
-     *
-     */
     private function destroyBudgets(): void
     {
         /** @var AvailableBudgetRepositoryInterface $abRepository */
@@ -117,9 +111,6 @@ class DestroyController extends Controller
         $budgetRepository->destroyAll();
     }
 
-    /**
-     *
-     */
     private function destroyBills(): void
     {
         /** @var BillRepositoryInterface $repository */
@@ -127,9 +118,6 @@ class DestroyController extends Controller
         $repository->destroyAll();
     }
 
-    /**
-     *
-     */
     private function destroyPiggyBanks(): void
     {
         /** @var PiggyBankRepositoryInterface $repository */
@@ -137,9 +125,6 @@ class DestroyController extends Controller
         $repository->destroyAll();
     }
 
-    /**
-     *
-     */
     private function destroyRules(): void
     {
         /** @var RuleGroupRepositoryInterface $repository */
@@ -147,9 +132,6 @@ class DestroyController extends Controller
         $repository->destroyAll();
     }
 
-    /**
-     *
-     */
     private function destroyRecurringTransactions(): void
     {
         /** @var RecurringRepositoryInterface $repository */
@@ -157,9 +139,6 @@ class DestroyController extends Controller
         $repository->destroyAll();
     }
 
-    /**
-     *
-     */
     private function destroyCategories(): void
     {
         /** @var CategoryRepositoryInterface $categoryRepos */
@@ -167,9 +146,6 @@ class DestroyController extends Controller
         $categoryRepos->destroyAll();
     }
 
-    /**
-     *
-     */
     private function destroyTags(): void
     {
         /** @var TagRepositoryInterface $tagRepository */
@@ -177,9 +153,6 @@ class DestroyController extends Controller
         $tagRepository->destroyAll();
     }
 
-    /**
-     * @return void
-     */
     private function destroyObjectGroups(): void
     {
         /** @var ObjectGroupRepositoryInterface $repository */
@@ -188,7 +161,7 @@ class DestroyController extends Controller
     }
 
     /**
-     * @param array $types <int, string>
+     * @param array<int, string> $types
      */
     private function destroyAccounts(array $types): void
     {
@@ -203,6 +176,7 @@ class DestroyController extends Controller
             if (true === $this->unused && 0 === $count) {
                 app('log')->info(sprintf('Deleted unused account #%d "%s"', $account->id, $account->name));
                 $service->destroy($account, null);
+
                 continue;
             }
             if (false === $this->unused) {
@@ -213,7 +187,7 @@ class DestroyController extends Controller
     }
 
     /**
-     * @param array $types <int, string>
+     * @param array<int, string> $types
      */
     private function destroyTransactions(array $types): void
     {
@@ -221,6 +195,7 @@ class DestroyController extends Controller
         $repository = app(JournalRepositoryInterface::class);
         $journals   = $repository->findByType($types);
         $service    = app(JournalDestroyService::class);
+
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $service->destroy($journal);

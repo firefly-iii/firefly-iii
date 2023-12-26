@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * OperationsRepository.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -40,7 +39,6 @@ class OperationsRepository implements OperationsRepositoryInterface
     use UserGroupTrait;
 
     /**
-     * @inheritDoc
      * @throws FireflyException
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array
@@ -124,9 +122,6 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $array;
     }
 
-    /**
-     * @return Collection
-     */
     private function getBudgets(): Collection
     {
         /** @var BudgetRepositoryInterface $repository */

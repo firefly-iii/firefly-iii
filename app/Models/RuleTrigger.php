@@ -35,15 +35,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * FireflyIII\Models\RuleTrigger
  *
  * @property int         $id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property null|Carbon $created_at
+ * @property null|Carbon $updated_at
  * @property int         $rule_id
- * @property string|null $trigger_type
- * @property string|null $trigger_value
+ * @property null|string $trigger_type
+ * @property null|string $trigger_value
  * @property int         $order
  * @property bool        $active
  * @property bool        $stop_processing
- * @property-read Rule   $rule
+ * @property Rule        $rule
+ *
  * @method static Builder|RuleTrigger newModelQuery()
  * @method static Builder|RuleTrigger newQuery()
  * @method static Builder|RuleTrigger query()
@@ -56,6 +57,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder|RuleTrigger whereTriggerType($value)
  * @method static Builder|RuleTrigger whereTriggerValue($value)
  * @method static Builder|RuleTrigger whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class RuleTrigger extends Model
@@ -71,35 +73,24 @@ class RuleTrigger extends Model
             'stop_processing' => 'boolean',
         ];
 
-
     protected $fillable = ['rule_id', 'trigger_type', 'trigger_value', 'order', 'active', 'stop_processing'];
 
-    /**
-     * @return BelongsTo
-     */
     public function rule(): BelongsTo
     {
         return $this->belongsTo(Rule::class);
     }
 
-    /**
-     * @return Attribute
-     */
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
-    /**
-     * @return Attribute
-     */
     protected function ruleId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
-
 }

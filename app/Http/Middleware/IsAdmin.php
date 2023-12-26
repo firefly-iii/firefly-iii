@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use Closure;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\Request;
@@ -37,13 +36,11 @@ class IsAdmin
     /**
      * Handle an incoming request. Must be admin.
      *
-     * @param Request     $request
-     * @param Closure     $next
-     * @param string|null $guard
+     * @param null|string $guard
      *
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $guard = null)
+    public function handle(Request $request, \Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->guest()) {
             if ($request->ajax()) {
@@ -52,8 +49,10 @@ class IsAdmin
 
             return response()->redirectTo(route('login'));
         }
+
         /** @var User $user */
         $user = auth()->user();
+
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         if (!$repository->hasRole($user, 'owner')) {

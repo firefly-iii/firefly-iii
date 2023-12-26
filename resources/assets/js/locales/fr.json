@@ -25,6 +25,7 @@
         "destination_account": "Compte de destination",
         "add_another_split": "Ajouter une autre fraction",
         "submission": "Soumission",
+        "stored_journal": "Op\u00e9ration \":description\" cr\u00e9\u00e9e avec succ\u00e8s",
         "create_another": "Apr\u00e8s enregistrement, revenir ici pour en cr\u00e9er un nouveau.",
         "reset_after": "R\u00e9initialiser le formulaire apr\u00e8s soumission",
         "submit": "Soumettre",

@@ -25,30 +25,19 @@ namespace FireflyIII\Support;
 
 /**
  * Class Domain.
- *
-
  */
 class Domain
 {
-    /**
-     * @return array
-     */
     public static function getBindables(): array
     {
         return config('firefly.bindables');
     }
 
-    /**
-     * @return array
-     */
     public static function getRuleActions(): array
     {
         return config('firefly.rule-actions');
     }
 
-    /**
-     * @return array
-     */
     public static function getRuleTriggers(): array
     {
         return array_keys(config('search.operators'));

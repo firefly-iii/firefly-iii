@@ -27,15 +27,18 @@ namespace Tests\unit\Support;
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
 use FireflyIII\Support\Navigation;
-use Generator;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @group unit-test
  * @group support
  * @group navigation
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class NavigationAddPeriodTest extends TestCase
+final class NavigationAddPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
@@ -163,7 +166,7 @@ class NavigationAddPeriodTest extends TestCase
     /**
      * @dataProvider providePeriodsWithSkippingParam
      */
-    public function testGivenAFrequencyAndSkipIntervalWhenCalculateTheDateThenReturnsTheSkippedDateSuccessful(int $skip, string $frequency, Carbon $from, Carbon $expected)
+    public function testGivenAFrequencyAndSkipIntervalWhenCalculateTheDateThenReturnsTheSkippedDateSuccessful(int $skip, string $frequency, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->addPeriod($from, $frequency, $skip);
         self::assertSame($expected->toDateString(), $period->toDateString());
@@ -172,7 +175,7 @@ class NavigationAddPeriodTest extends TestCase
     /**
      * @dataProvider providePeriods
      */
-    public function testGivenAFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected)
+    public function testGivenAFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->addPeriod($from, $frequency, 0);
         self::assertSame($expected->toDateString(), $period->toDateString());
@@ -181,7 +184,7 @@ class NavigationAddPeriodTest extends TestCase
     /**
      * @dataProvider provideFrequencies
      */
-    public function testGivenAIntervalWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(Periodicity $periodicity, Carbon $from, Carbon $expected)
+    public function testGivenAIntervalWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(Periodicity $periodicity, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->nextDateByInterval($from, $periodicity);
         self::assertSame($expected->toDateString(), $period->toDateString());
@@ -190,7 +193,7 @@ class NavigationAddPeriodTest extends TestCase
     /**
      * @dataProvider provideMonthPeriods
      */
-    public function testGivenAMonthFrequencyWhenCalculateTheDateThenReturnsTheLastDayOfMonthSuccessful(string $frequency, Carbon $from, Carbon $expected)
+    public function testGivenAMonthFrequencyWhenCalculateTheDateThenReturnsTheLastDayOfMonthSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
         $period = $this->navigation->addPeriod($from, $frequency, 0);
         self::assertSame($expected->toDateString(), $period->toDateString());

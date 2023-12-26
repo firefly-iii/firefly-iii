@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * CreateController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -48,8 +47,6 @@ class CreateController extends Controller
 
     /**
      * CurrencyController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -70,9 +67,7 @@ class CreateController extends Controller
     /**
      * Create a currency.
      *
-     * @param Request $request
-     *
-     * @return Factory|RedirectResponse|Redirector|View
+     * @return Factory|Redirector|RedirectResponse|View
      */
     public function create(Request $request)
     {
@@ -101,9 +96,7 @@ class CreateController extends Controller
     /**
      * Store new currency.
      *
-     * @param CurrencyFormRequest $request
-     *
-     * @return $this|RedirectResponse|Redirector
+     * @return $this|Redirector|RedirectResponse
      */
     public function store(CurrencyFormRequest $request)
     {
@@ -111,13 +104,14 @@ class CreateController extends Controller
         $user = auth()->user();
         $data = $request->getCurrencyData();
         if (!$this->userRepository->hasRole($user, 'owner')) {
-            app('log')->error('User ' . auth()->user()->id . ' is not admin, but tried to store a currency.');
+            app('log')->error('User '.auth()->user()->id.' is not admin, but tried to store a currency.');
             Log::channel('audit')->info('Tried to create (POST) currency without admin rights.', $data);
 
             return redirect($this->getPreviousUrl('currencies.create.url'))->withInput();
         }
 
         $data['enabled'] = true;
+
         try {
             $currency = $this->repository->store($data);
         } catch (FireflyException $e) {

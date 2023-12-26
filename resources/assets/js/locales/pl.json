@@ -25,6 +25,7 @@
         "destination_account": "Konto docelowe",
         "add_another_split": "Dodaj kolejny podzia\u0142",
         "submission": "Zapisz",
+        "stored_journal": "Pomy\u015blnie utworzono now\u0105 transakcj\u0119 \":description\"",
         "create_another": "Po zapisaniu wr\u00f3\u0107 tutaj, aby utworzy\u0107 kolejny.",
         "reset_after": "Wyczy\u015b\u0107 formularz po zapisaniu",
         "submit": "Prze\u015blij",

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use Cookie;
-use DB;
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -41,8 +40,6 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class LoginController
@@ -50,8 +47,6 @@ use Psr\Container\NotFoundExceptionInterface;
  * This controller handles authenticating users for the application and
  * redirecting them to your home screen. The controller uses a trait
  * to conveniently provide its functionality to your applications.
- *
-
  */
 class LoginController extends Controller
 {
@@ -60,8 +55,6 @@ class LoginController extends Controller
 
     /**
      * Where to redirect users after login.
-     *
-     * @var string
      */
     protected string $redirectTo = RouteServiceProvider::HOME;
 
@@ -69,8 +62,6 @@ class LoginController extends Controller
 
     /**
      * Create a new controller instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -82,10 +73,9 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     * @return JsonResponse|RedirectResponse
      * @throws ValidationException
      */
-    public function login(Request $request): JsonResponse | RedirectResponse
+    public function login(Request $request): JsonResponse|RedirectResponse
     {
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get($this->username())));
         app('log')->info('User is trying to login.');
@@ -93,7 +83,7 @@ class LoginController extends Controller
         $this->validateLogin($request);
         app('log')->debug('Login data is present.');
 
-        /** Copied directly from AuthenticatesUsers, but with logging added: */
+        // Copied directly from AuthenticatesUsers, but with logging added:
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
@@ -104,7 +94,7 @@ class LoginController extends Controller
 
             $this->sendLockoutResponse($request);
         }
-        /** Copied directly from AuthenticatesUsers, but with logging added: */
+        // Copied directly from AuthenticatesUsers, but with logging added:
         if ($this->attemptLogin($request)) {
             Log::channel('audit')->info(sprintf('User "%s" has been logged in.', $request->get($this->username())));
             app('log')->debug(sprintf('Redirect after login is %s.', $this->redirectPath()));
@@ -119,7 +109,7 @@ class LoginController extends Controller
         }
         app('log')->warning('Login attempt failed.');
 
-        /** Copied directly from AuthenticatesUsers, but with logging added: */
+        // Copied directly from AuthenticatesUsers, but with logging added:
         // If the login attempt was unsuccessful we will increment the number of attempts
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
@@ -128,7 +118,7 @@ class LoginController extends Controller
 
         $this->sendFailedLoginResponse($request);
 
-        /** @noinspection PhpUnreachableStatementInspection */
+        // @noinspection PhpUnreachableStatementInspection
         return response()->json([]);
     }
 
@@ -143,32 +133,9 @@ class LoginController extends Controller
     }
 
     /**
-     * Get the failed login response instance.
-     *
-     * @param Request $request
-     *
-     * @return void
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @throws ValidationException
-     */
-    protected function sendFailedLoginResponse(Request $request)
-    {
-        $exception             = ValidationException::withMessages(
-            [
-                $this->username() => [trans('auth.failed')],
-            ]
-        );
-        $exception->redirectTo = route('login');
-
-        throw $exception;
-    }
-
-    /**
      * Log the user out of the application.
      *
-     * @param Request $request
-     *
-     * @return RedirectResponse|Redirector|Response
+     * @return Redirector|RedirectResponse|Response
      */
     public function logout(Request $request)
     {
@@ -183,7 +150,7 @@ class LoginController extends Controller
 
         // also logout current 2FA tokens.
         $cookieName = config('google2fa.cookie_name', 'google2fa_token');
-        Cookie::forget($cookieName);
+        \Cookie::forget($cookieName);
 
         $this->guard()->logout();
 
@@ -201,18 +168,15 @@ class LoginController extends Controller
     /**
      * Show the application's login form.
      *
-     * @param Request $request
+     * @return Application|Factory|Redirector|RedirectResponse|View
      *
-     * @return Factory|Application|View|Redirector|RedirectResponse
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function showLoginForm(Request $request)
     {
         Log::channel('audit')->info('Show login form (1.1).');
 
-        $count = DB::table('users')->count();
+        $count = \DB::table('users')->count();
         $guard = config('auth.defaults.guard');
         $title = (string)trans('firefly.login_page_title');
 
@@ -245,5 +209,24 @@ class LoginController extends Controller
         $usernameField = $this->username();
 
         return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title', 'usernameField'));
+    }
+
+    /**
+     * Get the failed login response instance.
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @throws ValidationException
+     */
+    protected function sendFailedLoginResponse(Request $request): void
+    {
+        $exception             = ValidationException::withMessages(
+            [
+                $this->username() => [trans('auth.failed')],
+            ]
+        );
+        $exception->redirectTo = route('login');
+
+        throw $exception;
     }
 }

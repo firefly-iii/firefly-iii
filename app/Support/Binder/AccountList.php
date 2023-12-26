@@ -34,12 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class AccountList implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
-     *
-     * @return Collection
      * @throws NotFoundHttpException
-     *
      */
     public static function routeBinder(string $value, Route $route): Collection
     {
@@ -48,20 +43,23 @@ class AccountList implements BinderInterface
             if ('allAssetAccounts' === $value) {
                 /** @var Collection $collection */
                 $collection = auth()->user()->accounts()
-                                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                                    ->whereIn('account_types.type', [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE])
-                                    ->orderBy('accounts.name', 'ASC')
-                                    ->get(['accounts.*']);
+                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                    ->whereIn('account_types.type', [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE])
+                    ->orderBy('accounts.name', 'ASC')
+                    ->get(['accounts.*'])
+                ;
             }
             if ('allAssetAccounts' !== $value) {
                 $incoming = array_map('\intval', explode(',', $value));
                 $list     = array_merge(array_unique($incoming), [0]);
+
                 /** @var Collection $collection */
                 $collection = auth()->user()->accounts()
-                                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                                    ->whereIn('accounts.id', $list)
-                                    ->orderBy('accounts.name', 'ASC')
-                                    ->get(['accounts.*']);
+                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                    ->whereIn('accounts.id', $list)
+                    ->orderBy('accounts.name', 'ASC')
+                    ->get(['accounts.*'])
+                ;
             }
 
             if ($collection->count() > 0) {
@@ -69,6 +67,7 @@ class AccountList implements BinderInterface
             }
         }
         app('log')->error(sprintf('Trying to show account list (%s), but user is not logged in or list is empty.', $route->uri));
+
         throw new NotFoundHttpException();
     }
 }

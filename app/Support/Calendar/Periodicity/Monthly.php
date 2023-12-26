@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Monthly.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
@@ -32,14 +31,8 @@ use Carbon\Carbon;
  */
 class Monthly extends Interval
 {
-    /**
-     * @param Carbon $date
-     * @param int    $interval
-     *
-     * @return Carbon
-     */
     public function nextDate(Carbon $date, int $interval = 1): Carbon
     {
-        return ($date->clone())->addMonthsNoOverflow($this->skip($interval));
+        return $date->clone()->addMonthsNoOverflow($this->skip($interval));
     }
 }

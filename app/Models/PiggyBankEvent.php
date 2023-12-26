@@ -34,15 +34,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * FireflyIII\Models\PiggyBankEvent
  *
- * @property int                          $id
- * @property Carbon|null                  $created_at
- * @property Carbon|null                  $updated_at
- * @property int                          $piggy_bank_id
- * @property int|null                     $transaction_journal_id
- * @property Carbon                       $date
- * @property string                       $amount
- * @property PiggyBank                    $piggyBank
- * @property-read TransactionJournal|null $transactionJournal
+ * @property int                     $id
+ * @property null|Carbon             $created_at
+ * @property null|Carbon             $updated_at
+ * @property int                     $piggy_bank_id
+ * @property null|int                $transaction_journal_id
+ * @property Carbon                  $date
+ * @property string                  $amount
+ * @property PiggyBank               $piggyBank
+ * @property null|TransactionJournal $transactionJournal
+ *
  * @method static Builder|PiggyBankEvent newModelQuery()
  * @method static Builder|PiggyBankEvent newQuery()
  * @method static Builder|PiggyBankEvent query()
@@ -53,6 +54,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder|PiggyBankEvent wherePiggyBankId($value)
  * @method static Builder|PiggyBankEvent whereTransactionJournalId($value)
  * @method static Builder|PiggyBankEvent whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class PiggyBankEvent extends Model
@@ -70,16 +72,12 @@ class PiggyBankEvent extends Model
 
     protected $hidden = ['amount_encrypted'];
 
-    /**
-     * @return BelongsTo
-     */
     public function piggyBank(): BelongsTo
     {
         return $this->belongsTo(PiggyBank::class);
     }
 
     /**
-     *
      * @param mixed $value
      */
     public function setAmountAttribute($value): void
@@ -87,9 +85,6 @@ class PiggyBankEvent extends Model
         $this->attributes['amount'] = (string)$value;
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function transactionJournal(): BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class);
@@ -97,23 +92,18 @@ class PiggyBankEvent extends Model
 
     /**
      * Get the amount
-     *
-     * @return Attribute
      */
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
-    /**
-     * @return Attribute
-     */
     protected function piggyBankId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

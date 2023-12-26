@@ -37,8 +37,6 @@ class ChangesForV540 extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {
@@ -46,11 +44,11 @@ class ChangesForV540 extends Migration
             try {
                 Schema::table(
                     'oauth_clients',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('provider');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -60,11 +58,11 @@ class ChangesForV540 extends Migration
             try {
                 Schema::table(
                     'accounts',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('order');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -74,11 +72,11 @@ class ChangesForV540 extends Migration
             try {
                 Schema::table(
                     'bills',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('end_date');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -87,11 +85,11 @@ class ChangesForV540 extends Migration
             try {
                 Schema::table(
                     'bills',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('extension_date');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -100,8 +98,8 @@ class ChangesForV540 extends Migration
 
     /**
      * Run the migrations.
+     *
      * @SuppressWarnings(PHPMD.ShortMethodName)
-     * @return void
      */
     public function up(): void
     {
@@ -109,7 +107,7 @@ class ChangesForV540 extends Migration
             try {
                 Schema::table(
                     'accounts',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->integer('order', false, true)->default(0);
                     }
                 );
@@ -123,7 +121,7 @@ class ChangesForV540 extends Migration
             try {
                 Schema::table(
                     'oauth_clients',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->string('provider')->nullable();
                     }
                 );
@@ -137,7 +135,7 @@ class ChangesForV540 extends Migration
             try {
                 Schema::table(
                     'bills',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->date('end_date')->nullable()->after('date');
                         $table->date('extension_date')->nullable()->after('end_date');
                     }
@@ -152,7 +150,7 @@ class ChangesForV540 extends Migration
         try {
             Schema::table(
                 'oauth_clients',
-                static function (Blueprint $table) {
+                static function (Blueprint $table): void {
                     $table->string('secret', 100)->nullable()->change();
                 }
             );

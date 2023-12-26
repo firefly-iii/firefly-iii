@@ -41,8 +41,6 @@ class UpdateController extends Controller
 
     /**
      * RuleGroupController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,11 +63,6 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rule_groups/updateRuleGroup
      *
      * Update a rule group.
-     *
-     * @param UpdateRequest $request
-     * @param RuleGroup     $ruleGroup
-     *
-     * @return JsonResponse
      */
     public function update(UpdateRequest $request, RuleGroup $ruleGroup): JsonResponse
     {

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * UserGroupTransformer.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -38,29 +37,25 @@ class UserGroupTransformer extends AbstractTransformer
 {
     private array $memberships;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->memberships = [];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function collectMetaData(Collection $objects): void
     {
         if (auth()->check()) {
             // collect memberships so they can be listed in the group.
             /** @var User $user */
             $user = auth()->user();
+
             /** @var UserGroup $userGroup */
             foreach ($objects as $userGroup) {
                 $userGroupId = $userGroup->id;
                 $access      = $user->hasRoleInGroupOrOwner($userGroup, UserRoleEnum::VIEW_MEMBERSHIPS) || $user->hasRole('owner');
                 if ($access) {
                     $groupMemberships = $userGroup->groupMemberships()->get();
+
                     /** @var GroupMembership $groupMembership */
                     foreach ($groupMemberships as $groupMembership) {
                         $this->memberships[$userGroupId][] = [
@@ -76,14 +71,10 @@ class UserGroupTransformer extends AbstractTransformer
 
     /**
      * Transform the user group.
-     *
-     * @param UserGroup $userGroup
-     *
-     * @return array
      */
     public function transform(UserGroup $userGroup): array
     {
-        $return = [
+        return [
             'id'         => $userGroup->id,
             'created_at' => $userGroup->created_at->toAtomString(),
             'updated_at' => $userGroup->updated_at->toAtomString(),
@@ -91,7 +82,5 @@ class UserGroupTransformer extends AbstractTransformer
             'members'    => $this->memberships[$userGroup->id] ?? [],
         ];
         // if the user has a specific role in this group, then collect the memberships.
-
-        return $return;
     }
 }

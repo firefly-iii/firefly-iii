@@ -35,19 +35,20 @@ use Illuminate\Database\Query\Builder;
 /**
  * FireflyIII\Models\RecurrenceRepetition
  *
- * @property int             $id
- * @property Carbon|null     $created_at
- * @property Carbon|null     $updated_at
- * @property Carbon|null     $deleted_at
- * @property int             $recurrence_id
- * @property string          $repetition_type
- * @property string          $repetition_moment
- * @property int             $repetition_skip
- * @property int             $weekend
- * @property-read Recurrence $recurrence
+ * @property int         $id
+ * @property null|Carbon $created_at
+ * @property null|Carbon $updated_at
+ * @property null|Carbon $deleted_at
+ * @property int         $recurrence_id
+ * @property string      $repetition_type
+ * @property string      $repetition_moment
+ * @property int         $repetition_skip
+ * @property int         $weekend
+ * @property Recurrence  $recurrence
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition newQuery()
- * @method static Builder|RecurrenceRepetition onlyTrashed()
+ * @method static Builder|RecurrenceRepetition                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition query()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereDeletedAt($value)
@@ -58,8 +59,9 @@ use Illuminate\Database\Query\Builder;
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereRepetitionType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceRepetition whereWeekend($value)
- * @method static Builder|RecurrenceRepetition withTrashed()
- * @method static Builder|RecurrenceRepetition withoutTrashed()
+ * @method static Builder|RecurrenceRepetition                               withTrashed()
+ * @method static Builder|RecurrenceRepetition                               withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class RecurrenceRepetition extends Model
@@ -71,7 +73,6 @@ class RecurrenceRepetition extends Model
     public const int WEEKEND_SKIP_CREATION = 2;
     public const int WEEKEND_TO_FRIDAY     = 3;
     public const int WEEKEND_TO_MONDAY     = 4;
-
 
     protected $casts
         = [
@@ -85,44 +86,33 @@ class RecurrenceRepetition extends Model
         ];
 
     protected $fillable = ['recurrence_id', 'weekend', 'repetition_type', 'repetition_moment', 'repetition_skip'];
+
     /** @var string The table to store the data in */
     protected $table = 'recurrences_repetitions';
 
-    /**
-     * @return BelongsTo
-     */
     public function recurrence(): BelongsTo
     {
         return $this->belongsTo(Recurrence::class);
     }
 
-    /**
-     * @return Attribute
-     */
     protected function recurrenceId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
-    /**
-     * @return Attribute
-     */
     protected function repetitionSkip(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
-    /**
-     * @return Attribute
-     */
     protected function weekend(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

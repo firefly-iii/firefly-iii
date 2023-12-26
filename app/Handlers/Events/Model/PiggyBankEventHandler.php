@@ -32,11 +32,6 @@ use FireflyIII\Models\PiggyBankEvent;
  */
 class PiggyBankEventHandler
 {
-    /**
-     * @param ChangedAmount $event
-     *
-     * @return void
-     */
     public function changePiggyAmount(ChangedAmount $event): void
     {
         // find journal if group is present.
@@ -48,10 +43,12 @@ class PiggyBankEventHandler
         // sanity check: event must not already exist for this journal and piggy bank.
         if (null !== $journal) {
             $exists = PiggyBankEvent::where('piggy_bank_id', $event->piggyBank->id)
-                                    ->where('transaction_journal_id', $journal->id)
-                                    ->exists();
+                ->where('transaction_journal_id', $journal->id)
+                ->exists()
+            ;
             if ($exists) {
                 app('log')->warning('Already have event for this journal and piggy, will not create another.');
+
                 return;
             }
         }

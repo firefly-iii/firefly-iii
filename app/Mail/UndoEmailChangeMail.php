@@ -29,8 +29,6 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class UndoEmailChangeMail
- *
-
  */
 class UndoEmailChangeMail extends Mailable
 {
@@ -43,10 +41,6 @@ class UndoEmailChangeMail extends Mailable
 
     /**
      * UndoEmailChangeMail constructor.
-     *
-     * @param string $newEmail
-     * @param string $oldEmail
-     * @param string $url
      */
     public function __construct(string $newEmail, string $oldEmail, string $url)
     {
@@ -64,6 +58,7 @@ class UndoEmailChangeMail extends Mailable
     {
         return $this
             ->markdown('emails.undo-email-change')
-            ->subject((string)trans('email.email_change_subject'));
+            ->subject((string)trans('email.email_change_subject'))
+        ;
     }
 }

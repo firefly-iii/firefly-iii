@@ -29,11 +29,12 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
-use Route;
 
 /**
  * Class Controller.
  *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 abstract class Controller extends BaseController
 {
@@ -50,8 +51,6 @@ abstract class Controller extends BaseController
 
     /**
      * Controller constructor.
-     *
-
      */
     public function __construct()
     {
@@ -112,7 +111,7 @@ abstract class Controller extends BaseController
                     app('view')->share('locale', $locale);
                     app('view')->share('shownDemo', $shownDemo);
                     app('view')->share('current_route_name', $page);
-                    app('view')->share('original_route_name', Route::currentRouteName());
+                    app('view')->share('original_route_name', \Route::currentRouteName());
                 }
                 app('view')->share('darkMode', $darkMode);
 

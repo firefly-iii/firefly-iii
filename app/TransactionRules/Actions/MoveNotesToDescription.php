@@ -45,30 +45,26 @@ class MoveNotesToDescription implements ActionInterface
 
     /**
      * TriggerInterface constructor.
-     *
-     *
-     * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
     {
         $this->action = $action;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function actOnArray(array $journal): bool
     {
-        /** @var TransactionJournal|null $object */
+        /** @var null|TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             app('log')->error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_other_user')));
+
             return false;
         }
         $note = $object->notes()->first();
         if (null === $note) {
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_notes_to_move')));
+
             // nothing to move, return null
             return false;
         }
@@ -76,11 +72,12 @@ class MoveNotesToDescription implements ActionInterface
             // nothing to move, return null
             $note->delete();
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_notes_to_move')));
+
             return false;
         }
         $before              = $object->description;
         $beforeNote          = $note->text;
-        $object->description = (string)$this->clearString($note->text);
+        $object->description = (string) $this->clearString($note->text);
         $object->save();
         $note->delete();
 
@@ -91,7 +88,7 @@ class MoveNotesToDescription implements ActionInterface
     }
 
     /**
-     * @inheritDoc
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function get(string $key, mixed $default = null): mixed
     {
@@ -99,7 +96,7 @@ class MoveNotesToDescription implements ActionInterface
     }
 
     /**
-     * @inheritDoc
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function has(mixed $key): mixed
     {

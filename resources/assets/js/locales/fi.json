@@ -25,6 +25,7 @@
         "destination_account": "Kohdetili",
         "add_another_split": "Lis\u00e4\u00e4 tapahtumaan uusi osa",
         "submission": "Vahvistus",
+        "stored_journal": "Loit onnistuneesti uuden tapahtuman \":description\"",
         "create_another": "Tallennuksen j\u00e4lkeen, palaa takaisin luomaan uusi tapahtuma.",
         "reset_after": "Tyhjenn\u00e4 lomake l\u00e4hetyksen j\u00e4lkeen",
         "submit": "Vahvista",

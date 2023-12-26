@@ -49,8 +49,6 @@ class ListController extends Controller
 
     /**
      * TagController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -72,9 +70,6 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/tags/listAttachmentByTag
      *
-     * @param Tag $tag
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function attachments(Tag $tag): JsonResponse
@@ -88,7 +83,7 @@ class ListController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.tags.attachments', [$tag->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.tags.attachments', [$tag->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -106,10 +101,6 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @param Request $request
-     * @param Tag     $tag
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function transactions(Request $request, Tag $tag): JsonResponse
@@ -120,6 +111,7 @@ class ListController extends Controller
 
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
         $manager = $this->getManager();
+
         /** @var User $admin */
         $admin = auth()->user();
 
@@ -137,7 +129,8 @@ class ListController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes($types);
+            ->setTypes($types)
+        ;
 
         if (null !== $this->parameters->get('start')) {
             $collector->setStart($this->parameters->get('start'));
@@ -146,7 +139,7 @@ class ListController extends Controller
             $collector->setEnd($this->parameters->get('end'));
         }
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.tags.transactions', [$tag->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.tags.transactions', [$tag->id]).$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */

@@ -37,11 +37,6 @@ class IntroController extends Controller
 
     /**
      * Returns the introduction wizard for a page.
-     *
-     * @param string      $route
-     * @param string|null $specificPage
-     *
-     * @return JsonResponse
      */
     public function getIntroSteps(string $route, string $specificPage = null): JsonResponse
     {
@@ -72,10 +67,6 @@ class IntroController extends Controller
 
     /**
      * Returns true if there is a general outro step.
-     *
-     * @param string $route
-     *
-     * @return bool
      */
     public function hasOutroStep(string $route): bool
     {
@@ -98,19 +89,15 @@ class IntroController extends Controller
     /**
      * Enable the boxes for a specific page again.
      *
-     * @param string      $route
-     * @param string|null $specialPage
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function postEnable(string $route, string $specialPage = null): JsonResponse
     {
         $specialPage ??= '';
         $route       = str_replace('.', '_', $route);
-        $key         = 'shown_demo_' . $route;
+        $key         = 'shown_demo_'.$route;
         if ('' !== $specialPage) {
-            $key .= '_' . $specialPage;
+            $key .= '_'.$specialPage;
         }
         app('log')->debug(sprintf('Going to mark the following route as NOT done: %s with special "%s" (%s)', $route, $specialPage, $key));
         app('preferences')->set($key, false);
@@ -122,18 +109,14 @@ class IntroController extends Controller
     /**
      * Set that you saw them.
      *
-     * @param string      $route
-     * @param string|null $specialPage
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function postFinished(string $route, string $specialPage = null): JsonResponse
     {
         $specialPage ??= '';
-        $key         = 'shown_demo_' . $route;
+        $key         = 'shown_demo_'.$route;
         if ('' !== $specialPage) {
-            $key .= '_' . $specialPage;
+            $key .= '_'.$specialPage;
         }
         app('log')->debug(sprintf('Going to mark the following route as done: %s with special "%s" (%s)', $route, $specialPage, $key));
         app('preferences')->set($key, true);

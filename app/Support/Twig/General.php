@@ -29,7 +29,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
-use Route;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -39,9 +38,6 @@ use Twig\TwigFunction;
  */
 class General extends AbstractExtension
 {
-    /**
-     * @inheritDoc
-     */
     public function getFilters(): array
     {
         return [
@@ -53,173 +49,6 @@ class General extends AbstractExtension
         ];
     }
 
-    /**
-     * Show account balance. Only used on the front page of Firefly III.
-     *
-     * @return TwigFilter
-     */
-    protected function balance(): TwigFilter
-    {
-        return new TwigFilter(
-            'balance',
-            static function (?Account $account): string {
-                if (null === $account) {
-                    return '0';
-                }
-                /** @var Carbon $date */
-                $date = session('end', today(config('app.timezone'))->endOfMonth());
-
-                return app('steam')->balance($account, $date);
-            }
-        );
-    }
-
-    /**
-     * Used to convert 1024 to 1kb etc.
-     *
-     * @return TwigFilter
-     */
-    protected function formatFilesize(): TwigFilter
-    {
-        return new TwigFilter(
-            'filesize',
-            static function (int $size): string {
-                // less than one GB, more than one MB
-                if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-                    return round($size / (1024 * 1024), 2) . ' MB';
-                }
-
-                // less than one MB
-                if ($size < (1024 * 1024)) {
-                    return round($size / 1024, 2) . ' KB';
-                }
-
-                return $size . ' bytes';
-            }
-        );
-    }
-
-    /**
-     * Show icon with attachment.
-     *
-     * @return TwigFilter
-     */
-    protected function mimeIcon(): TwigFilter
-    {
-        return new TwigFilter(
-            'mimeIcon',
-            static function (string $string): string {
-                switch ($string) {
-                    default:
-                        return 'fa-file-o';
-                    case 'application/pdf':
-                        return 'fa-file-pdf-o';
-                    /* image */
-                    case 'image/png':
-                    case 'image/jpeg':
-                    case 'image/svg+xml':
-                    case 'image/heic':
-                    case 'image/heic-sequence':
-                    case 'application/vnd.oasis.opendocument.image':
-                        return 'fa-file-image-o';
-                    /* MS word */
-                    case 'application/msword':
-                    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.template':
-                    case 'application/x-iwork-pages-sffpages':
-                    case 'application/vnd.sun.xml.writer':
-                    case 'application/vnd.sun.xml.writer.template':
-                    case 'application/vnd.sun.xml.writer.global':
-                    case 'application/vnd.stardivision.writer':
-                    case 'application/vnd.stardivision.writer-global':
-                    case 'application/vnd.oasis.opendocument.text':
-                    case 'application/vnd.oasis.opendocument.text-template':
-                    case 'application/vnd.oasis.opendocument.text-web':
-                    case 'application/vnd.oasis.opendocument.text-master':
-                        return 'fa-file-word-o';
-                    /* MS excel */
-                    case 'application/vnd.ms-excel':
-                    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.template':
-                    case 'application/vnd.sun.xml.calc':
-                    case 'application/vnd.sun.xml.calc.template':
-                    case 'application/vnd.stardivision.calc':
-                    case 'application/vnd.oasis.opendocument.spreadsheet':
-                    case 'application/vnd.oasis.opendocument.spreadsheet-template':
-                        return 'fa-file-excel-o';
-                    /* MS powerpoint */
-                    case 'application/vnd.ms-powerpoint':
-                    case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-                    case 'application/vnd.openxmlformats-officedocument.presentationml.template':
-                    case 'application/vnd.openxmlformats-officedocument.presentationml.slideshow':
-                    case 'application/vnd.sun.xml.impress':
-                    case 'application/vnd.sun.xml.impress.template':
-                    case 'application/vnd.stardivision.impress':
-                    case 'application/vnd.oasis.opendocument.presentation':
-                    case 'application/vnd.oasis.opendocument.presentation-template':
-                        return 'fa-file-powerpoint-o';
-                    /* calc */
-                    case 'application/vnd.sun.xml.draw':
-                    case 'application/vnd.sun.xml.draw.template':
-                    case 'application/vnd.stardivision.draw':
-                    case 'application/vnd.oasis.opendocument.chart':
-                        return 'fa-paint-brush';
-                    case 'application/vnd.oasis.opendocument.graphics':
-                    case 'application/vnd.oasis.opendocument.graphics-template':
-                    case 'application/vnd.sun.xml.math':
-                    case 'application/vnd.stardivision.math':
-                    case 'application/vnd.oasis.opendocument.formula':
-                    case 'application/vnd.oasis.opendocument.database':
-                        return 'fa-calculator';
-                }
-            },
-            ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * @return TwigFilter
-     */
-    protected function markdown(): TwigFilter
-    {
-        return new TwigFilter(
-            'markdown',
-            static function (string $text): string {
-                $converter = new GithubFlavoredMarkdownConverter(
-                    [
-                        'allow_unsafe_links' => false,
-                        'max_nesting_level'  => 3,
-                        'html_input'         => 'escape',
-                    ]
-                );
-
-                return (string)$converter->convert($text);
-            },
-            ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * Show URL host name
-     *
-     * @return TwigFilter
-     */
-    protected function phpHostName(): TwigFilter
-    {
-        return new TwigFilter(
-            'phphost',
-            static function (string $string): string {
-                $proto = (string)parse_url($string, PHP_URL_SCHEME);
-                $host  = (string)parse_url($string, PHP_URL_HOST);
-
-                return e(sprintf('%s://%s', $proto, $host));
-            }
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getFunctions(): array
     {
         return [
@@ -237,9 +66,170 @@ class General extends AbstractExtension
     }
 
     /**
-     * Basic example thing for some views.
+     * Show account balance. Only used on the front page of Firefly III.
+     */
+    protected function balance(): TwigFilter
+    {
+        return new TwigFilter(
+            'balance',
+            static function (?Account $account): string {
+                if (null === $account) {
+                    return '0';
+                }
+
+                /** @var Carbon $date */
+                $date = session('end', today(config('app.timezone'))->endOfMonth());
+
+                return app('steam')->balance($account, $date);
+            }
+        );
+    }
+
+    /**
+     * Used to convert 1024 to 1kb etc.
+     */
+    protected function formatFilesize(): TwigFilter
+    {
+        return new TwigFilter(
+            'filesize',
+            static function (int $size): string {
+                // less than one GB, more than one MB
+                if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
+                    return round($size / (1024 * 1024), 2).' MB';
+                }
+
+                // less than one MB
+                if ($size < (1024 * 1024)) {
+                    return round($size / 1024, 2).' KB';
+                }
+
+                return $size.' bytes';
+            }
+        );
+    }
+
+    /**
+     * Show icon with attachment.
      *
-     * @return TwigFunction
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    protected function mimeIcon(): TwigFilter
+    {
+        return new TwigFilter(
+            'mimeIcon',
+            static function (string $string): string {
+                switch ($string) {
+                    default:
+                        return 'fa-file-o';
+
+                    case 'application/pdf':
+                        return 'fa-file-pdf-o';
+
+                        // image
+                    case 'image/png':
+                    case 'image/jpeg':
+                    case 'image/svg+xml':
+                    case 'image/heic':
+                    case 'image/heic-sequence':
+                    case 'application/vnd.oasis.opendocument.image':
+                        return 'fa-file-image-o';
+
+                        // MS word
+                    case 'application/msword':
+                    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.template':
+                    case 'application/x-iwork-pages-sffpages':
+                    case 'application/vnd.sun.xml.writer':
+                    case 'application/vnd.sun.xml.writer.template':
+                    case 'application/vnd.sun.xml.writer.global':
+                    case 'application/vnd.stardivision.writer':
+                    case 'application/vnd.stardivision.writer-global':
+                    case 'application/vnd.oasis.opendocument.text':
+                    case 'application/vnd.oasis.opendocument.text-template':
+                    case 'application/vnd.oasis.opendocument.text-web':
+                    case 'application/vnd.oasis.opendocument.text-master':
+                        return 'fa-file-word-o';
+
+                        // MS excel
+                    case 'application/vnd.ms-excel':
+                    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.template':
+                    case 'application/vnd.sun.xml.calc':
+                    case 'application/vnd.sun.xml.calc.template':
+                    case 'application/vnd.stardivision.calc':
+                    case 'application/vnd.oasis.opendocument.spreadsheet':
+                    case 'application/vnd.oasis.opendocument.spreadsheet-template':
+                        return 'fa-file-excel-o';
+
+                        // MS powerpoint
+                    case 'application/vnd.ms-powerpoint':
+                    case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+                    case 'application/vnd.openxmlformats-officedocument.presentationml.template':
+                    case 'application/vnd.openxmlformats-officedocument.presentationml.slideshow':
+                    case 'application/vnd.sun.xml.impress':
+                    case 'application/vnd.sun.xml.impress.template':
+                    case 'application/vnd.stardivision.impress':
+                    case 'application/vnd.oasis.opendocument.presentation':
+                    case 'application/vnd.oasis.opendocument.presentation-template':
+                        return 'fa-file-powerpoint-o';
+
+                        // calc
+                    case 'application/vnd.sun.xml.draw':
+                    case 'application/vnd.sun.xml.draw.template':
+                    case 'application/vnd.stardivision.draw':
+                    case 'application/vnd.oasis.opendocument.chart':
+                        return 'fa-paint-brush';
+
+                    case 'application/vnd.oasis.opendocument.graphics':
+                    case 'application/vnd.oasis.opendocument.graphics-template':
+                    case 'application/vnd.sun.xml.math':
+                    case 'application/vnd.stardivision.math':
+                    case 'application/vnd.oasis.opendocument.formula':
+                    case 'application/vnd.oasis.opendocument.database':
+                        return 'fa-calculator';
+                }
+            },
+            ['is_safe' => ['html']]
+        );
+    }
+
+    protected function markdown(): TwigFilter
+    {
+        return new TwigFilter(
+            'markdown',
+            static function (string $text): string {
+                $converter = new GithubFlavoredMarkdownConverter(
+                    [
+                        'allow_unsafe_links' => false,
+                        'max_nesting_level'  => 3,
+                        'html_input'         => 'escape',
+                    ]
+                );
+
+                return (string) $converter->convert($text);
+            },
+            ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * Show URL host name
+     */
+    protected function phpHostName(): TwigFilter
+    {
+        return new TwigFilter(
+            'phphost',
+            static function (string $string): string {
+                $proto = (string) parse_url($string, PHP_URL_SCHEME);
+                $host  = (string) parse_url($string, PHP_URL_HOST);
+
+                return e(sprintf('%s://%s', $proto, $host));
+            }
+        );
+    }
+
+    /**
+     * Basic example thing for some views.
      */
     protected function phpdate(): TwigFunction
     {
@@ -254,8 +244,6 @@ class General extends AbstractExtension
     /**
      * Will return "active" when the current route matches the given argument
      * exactly.
-     *
-     * @return TwigFunction
      */
     protected function activeRouteStrict(): TwigFunction
     {
@@ -265,7 +253,7 @@ class General extends AbstractExtension
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
 
-                if (Route::getCurrentRoute()->getName() === $route) {
+                if (\Route::getCurrentRoute()->getName() === $route) {
                     return 'active';
                 }
 
@@ -277,8 +265,6 @@ class General extends AbstractExtension
     /**
      * Will return "active" when a part of the route matches the argument.
      * ie. "accounts" will match "accounts.index".
-     *
-     * @return TwigFunction
      */
     protected function activeRoutePartial(): TwigFunction
     {
@@ -287,7 +273,7 @@ class General extends AbstractExtension
             static function (): string {
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
-                $name  = Route::getCurrentRoute()->getName() ?? '';
+                $name  = \Route::getCurrentRoute()->getName() ?? '';
                 if (str_contains($name, $route)) {
                     return 'active';
                 }
@@ -300,8 +286,6 @@ class General extends AbstractExtension
     /**
      * This function will return "active" when the current route matches the first argument (even partly)
      * but, the variable $objectType has been set and matches the second argument.
-     *
-     * @return TwigFunction
      */
     protected function activeRoutePartialObjectType(): TwigFunction
     {
@@ -313,7 +297,7 @@ class General extends AbstractExtension
 
                 if ($objectType === $activeObjectType
                     && false !== stripos(
-                        Route::getCurrentRoute()->getName(),
+                        \Route::getCurrentRoute()->getName(),
                         $route
                     )) {
                     return 'active';
@@ -328,8 +312,6 @@ class General extends AbstractExtension
     /**
      * Will return "menu-open" when a part of the route matches the argument.
      * ie. "accounts" will match "accounts.index".
-     *
-     * @return TwigFunction
      */
     protected function menuOpenRoutePartial(): TwigFunction
     {
@@ -338,7 +320,7 @@ class General extends AbstractExtension
             static function (): string {
                 $args  = func_get_args();
                 $route = $args[0]; // name of the route.
-                $name  = Route::getCurrentRoute()->getName() ?? '';
+                $name  = \Route::getCurrentRoute()->getName() ?? '';
                 if (str_contains($name, $route)) {
                     return 'menu-open';
                 }
@@ -350,8 +332,6 @@ class General extends AbstractExtension
 
     /**
      * Formats a string as a thing by converting it to a Carbon first.
-     *
-     * @return TwigFunction
      */
     protected function formatDate(): TwigFunction
     {
@@ -366,8 +346,8 @@ class General extends AbstractExtension
     }
 
     /**
-     * @return TwigFunction
-     * TODO remove me when layout v1 is deprecated.
+     * @return twigFunction
+     *                      TODO remove me when layout v1 is deprecated
      */
     protected function getMetaField(): TwigFunction
     {
@@ -388,8 +368,6 @@ class General extends AbstractExtension
 
     /**
      * Will return true if the user is of role X.
-     *
-     * @return TwigFunction
      */
     protected function hasRole(): TwigFunction
     {
@@ -406,9 +384,6 @@ class General extends AbstractExtension
         );
     }
 
-    /**
-     * @return TwigFunction
-     */
     protected function getRootSearchOperator(): TwigFunction
     {
         return new TwigFunction(
@@ -421,9 +396,6 @@ class General extends AbstractExtension
         );
     }
 
-    /**
-     * @return TwigFunction
-     */
     protected function carbonize(): TwigFunction
     {
         return new TwigFunction(

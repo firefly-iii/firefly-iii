@@ -40,26 +40,27 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\Category
  *
- * @property int                                  $id
- * @property Carbon|null                          $created_at
- * @property Carbon|null                          $updated_at
- * @property Carbon|null                          $deleted_at
- * @property int                                  $user_id
- * @property string                               $name
- * @property Carbon                               $lastActivity
- * @property bool                                 $encrypted
- * @property-read Collection|Attachment[]         $attachments
- * @property-read int|null                        $attachments_count
- * @property-read Collection|Note[]               $notes
- * @property-read int|null                        $notes_count
- * @property-read Collection|TransactionJournal[] $transactionJournals
- * @property-read int|null                        $transaction_journals_count
- * @property-read Collection|Transaction[]        $transactions
- * @property-read int|null                        $transactions_count
- * @property-read User                            $user
+ * @property int                             $id
+ * @property null|Carbon                     $created_at
+ * @property null|Carbon                     $updated_at
+ * @property null|Carbon                     $deleted_at
+ * @property int                             $user_id
+ * @property string                          $name
+ * @property Carbon                          $lastActivity
+ * @property bool                            $encrypted
+ * @property Attachment[]|Collection         $attachments
+ * @property null|int                        $attachments_count
+ * @property Collection|Note[]               $notes
+ * @property null|int                        $notes_count
+ * @property Collection|TransactionJournal[] $transactionJournals
+ * @property null|int                        $transaction_journals_count
+ * @property Collection|Transaction[]        $transactions
+ * @property null|int                        $transactions_count
+ * @property User                            $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
- * @method static Builder|Category onlyTrashed()
+ * @method static Builder|Category                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Category query()
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereDeletedAt($value)
@@ -68,10 +69,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUserId($value)
- * @method static Builder|Category withTrashed()
- * @method static Builder|Category withoutTrashed()
- * @property int                                  $user_group_id
+ * @method static Builder|Category                               withTrashed()
+ * @method static Builder|Category                               withoutTrashed()
+ *
+ * @property int $user_group_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|Category whereUserGroupId($value)
+ *
  * @mixin Eloquent
  */
 class Category extends Model
@@ -95,37 +99,31 @@ class Category extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return Category
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $categoryId = (int)$value;
+
             /** @var User $user */
             $user = auth()->user();
-            /** @var Category|null $category */
+
+            /** @var null|Category $category */
             $category = $user->categories()->find($categoryId);
             if (null !== $category) {
                 return $category;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return MorphMany
-     */
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
@@ -139,20 +137,13 @@ class Category extends Model
         return $this->morphMany(Note::class, 'noteable');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function transactionJournals(): BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class, 'category_transaction_journal', 'category_id');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function transactions(): BelongsToMany
     {
         return $this->belongsToMany(Transaction::class, 'category_transaction', 'category_id');
     }
-
 }

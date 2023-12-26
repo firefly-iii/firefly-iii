@@ -36,21 +36,11 @@ interface ReportHelperInterface
      * the users bills and their payments.
      *
      * Excludes bills which have not had a payment on the mentioned accounts.
-     *
-     * @param Carbon     $start
-     * @param Carbon     $end
-     * @param Collection $accounts
-     *
-     * @return array
      */
     public function getBillReport(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * Generate a list of months.
-     *
-     * @param Carbon $date
-     *
-     * @return array
      */
     public function listOfMonths(Carbon $date): array;
 }

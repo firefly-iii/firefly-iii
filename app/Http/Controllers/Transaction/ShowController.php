@@ -65,8 +65,6 @@ class ShowController extends Controller
     }
 
     /**
-     * @param TransactionGroup $transactionGroup
-     *
      * @return JsonResponse
      */
     public function debugShow(TransactionGroup $transactionGroup)
@@ -75,14 +73,13 @@ class ShowController extends Controller
     }
 
     /**
-     * @param TransactionGroup $transactionGroup
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
      */
     public function show(TransactionGroup $transactionGroup)
     {
-        /** @var TransactionJournal|null $first */
+        /** @var null|TransactionJournal $first */
         $first  = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
         $splits = $transactionGroup->transactionJournals()->count();
 
@@ -120,7 +117,6 @@ class ShowController extends Controller
         $attachments = $this->repository->getAttachments($transactionGroup);
         $links       = $this->repository->getLinks($transactionGroup);
 
-
         return view(
             'transactions.show',
             compact(
@@ -141,11 +137,6 @@ class ShowController extends Controller
         );
     }
 
-    /**
-     * @param array $group
-     *
-     * @return array
-     */
     private function getAmounts(array $group): array
     {
         $amounts = [];
@@ -160,10 +151,10 @@ class ShowController extends Controller
             }
             $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], $transaction['amount']);
             if (null !== $transaction['foreign_amount'] && '' !== $transaction['foreign_amount']
-                && bccomp(
+                && 0 !== bccomp(
                     '0',
                     $transaction['foreign_amount']
-                ) !== 0) {
+                )) {
                 // same for foreign currency:
                 $foreignSymbol = $transaction['foreign_currency_symbol'];
                 if (!array_key_exists($foreignSymbol, $amounts)) {
@@ -183,11 +174,6 @@ class ShowController extends Controller
         return $amounts;
     }
 
-    /**
-     * @param array $group
-     *
-     * @return array
-     */
     private function getAccounts(array $group): array
     {
         $accounts = [

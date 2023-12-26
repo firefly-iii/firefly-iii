@@ -59,12 +59,8 @@ class AccountController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/search/searchAccounts
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse|Response
      */
-    public function search(Request $request): JsonResponse | Response
+    public function search(Request $request): JsonResponse|Response
     {
         app('log')->debug('Now in account search()');
         $manager = $this->getManager();
@@ -84,6 +80,7 @@ class AccountController extends Controller
         $search->setQuery($query);
 
         $accounts = $search->search();
+
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
         $transformer->setParameters($this->parameters);

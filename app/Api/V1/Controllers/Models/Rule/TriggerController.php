@@ -46,8 +46,6 @@ class TriggerController extends Controller
 
     /**
      * RuleController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -68,11 +66,6 @@ class TriggerController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/testRule
-     *
-     * @param TestRequest $request
-     * @param Rule        $rule
-     *
-     * @return JsonResponse
      */
     public function testRule(TestRequest $request, Rule $rule): JsonResponse
     {
@@ -96,16 +89,16 @@ class TriggerController extends Controller
             $ruleEngine->addOperator(['type' => 'account_id', 'value' => implode(',', $parameters['accounts'])]);
         }
 
-
         // file the rule(s)
         $transactions = $ruleEngine->find();
         $count        = $transactions->count();
 
         $paginator = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rules.test', [$rule->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.rules.test', [$rule->id]).$this->buildParams());
 
         // resulting list is presented as JSON thing.
         $manager = $this->getManager();
+
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -121,11 +114,6 @@ class TriggerController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rules/fireRule
      *
      * Execute the given rule group on a set of existing transactions.
-     *
-     * @param TriggerRequest $request
-     * @param Rule           $rule
-     *
-     * @return JsonResponse
      */
     public function triggerRule(TriggerRequest $request, Rule $rule): JsonResponse
     {
@@ -149,7 +137,6 @@ class TriggerController extends Controller
         if (array_key_exists('accounts', $parameters) && is_array($parameters['accounts']) && count($parameters['accounts']) > 0) {
             $ruleEngine->addOperator(['type' => 'account_id', 'value' => implode(',', $parameters['accounts'])]);
         }
-
 
         // fire the rule(s)
         $ruleEngine->fire();

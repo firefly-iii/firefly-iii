@@ -32,8 +32,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class UpdateRequest
- *
-
  */
 class UpdateRequest extends FormRequest
 {
@@ -42,8 +40,6 @@ class UpdateRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -65,8 +61,6 @@ class UpdateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -74,7 +68,7 @@ class UpdateRequest extends FormRequest
         $piggyBank = $this->route()->parameter('piggyBank');
 
         return [
-            'name'           => 'between:1,255|uniquePiggyBankForUser:' . $piggyBank->id,
+            'name'           => 'between:1,255|uniquePiggyBankForUser:'.$piggyBank->id,
             'current_amount' => ['numeric', 'gte:0', new LessThanPiggyTarget()],
             'target_amount'  => 'numeric|gte:0',
             'start_date'     => 'date|nullable',

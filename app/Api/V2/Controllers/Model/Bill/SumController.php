@@ -39,9 +39,6 @@ class SumController extends Controller
 
     private BillRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -54,7 +51,6 @@ class SumController extends Controller
                     $this->repository->setUserGroup($userGroup);
                 }
 
-
                 return $next($request);
             }
         );
@@ -66,9 +62,6 @@ class SumController extends Controller
      *
      * TODO see autocomplete/accountcontroller for list.
      *
-     * @param DateRequest $request
-     *
-     * @return JsonResponse
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function paid(DateRequest $request): JsonResponse
@@ -85,10 +78,7 @@ class SumController extends Controller
      *
      * TODO see autocomplete/accountcontroller for list.
      *
-     * @param DateRequest $request
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @return JsonResponse
      */
     public function unpaid(DateRequest $request): JsonResponse
     {

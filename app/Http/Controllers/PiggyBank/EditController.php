@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
-use Amount;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\PiggyBankUpdateRequest;
@@ -47,8 +46,6 @@ class EditController extends Controller
 
     /**
      * PiggyBankController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -62,6 +59,7 @@ class EditController extends Controller
                 $this->attachments       = app(AttachmentHelperInterface::class);
                 $this->piggyRepos        = app(PiggyBankRepositoryInterface::class);
                 $this->accountRepository = app(AccountRepositoryInterface::class);
+
                 return $next($request);
             }
         );
@@ -69,8 +67,6 @@ class EditController extends Controller
 
     /**
      * Edit a piggy bank.
-     *
-     * @param PiggyBank $piggyBank
      *
      * @return Factory|View
      */
@@ -113,10 +109,7 @@ class EditController extends Controller
     /**
      * Update a piggy bank.
      *
-     * @param PiggyBankUpdateRequest $request
-     * @param PiggyBank              $piggyBank
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function update(PiggyBankUpdateRequest $request, PiggyBank $piggyBank)
     {
@@ -127,7 +120,7 @@ class EditController extends Controller
         app('preferences')->mark();
 
         // store new attachment(s):
-        /** @var array|null $files */
+        /** @var null|array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($piggyBank, $files);

@@ -27,8 +27,6 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class MigrateJournalNotes
@@ -45,10 +43,6 @@ class MigrateJournalNotes extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -62,6 +56,7 @@ class MigrateJournalNotes extends Command
 
         $count = 0;
         $set   = TransactionJournalMeta::whereName('notes')->get();
+
         /** @var TransactionJournalMeta $meta */
         foreach ($set as $meta) {
             $journal = $meta->transactionJournal;
@@ -76,7 +71,7 @@ class MigrateJournalNotes extends Command
             app('log')->debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
             $meta->delete();
 
-            $count++;
+            ++$count;
         }
 
         if (0 === $count) {
@@ -93,11 +88,6 @@ class MigrateJournalNotes extends Command
         return 0;
     }
 
-    /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
@@ -108,9 +98,6 @@ class MigrateJournalNotes extends Command
         return false;
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

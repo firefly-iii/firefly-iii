@@ -86,7 +86,7 @@ return [
     'include_helpers' => false,
 
     'helper_files' => [
-        base_path() . '/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
+        base_path().'/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
     ],
 
     /*
@@ -141,7 +141,6 @@ return [
     */
 
     'interfaces'                  => [
-
     ],
 
     /*
@@ -171,7 +170,6 @@ return [
     |
     */
     'custom_db_types'             => [
-
     ],
 
     /*
@@ -223,5 +221,4 @@ return [
     |
     */
     'include_class_docblocks'     => false,
-
 ];

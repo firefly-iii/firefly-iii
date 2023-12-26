@@ -42,11 +42,11 @@ class ExpandTransactionsTable extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->dropColumn('identifier');
                     }
                 );
-            } catch (QueryException | ColumnDoesNotExist $e) {
+            } catch (ColumnDoesNotExist|QueryException $e) {
                 app('log')->error(sprintf('Could not drop column "identifier": %s', $e->getMessage()));
                 app('log')->error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
             }
@@ -55,8 +55,8 @@ class ExpandTransactionsTable extends Migration
 
     /**
      * Run the migrations.
-     * @SuppressWarnings(PHPMD.ShortMethodName)
      *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
     {
@@ -64,7 +64,7 @@ class ExpandTransactionsTable extends Migration
             try {
                 Schema::table(
                     'transactions',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->smallInteger('identifier', false, true)->default(0);
                     }
                 );

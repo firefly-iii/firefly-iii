@@ -36,8 +36,6 @@ class MakeLocationsTable extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {
@@ -46,8 +44,8 @@ class MakeLocationsTable extends Migration
 
     /**
      * Run the migrations.
+     *
      * @SuppressWarnings(PHPMD.ShortMethodName)
-     * @return void
      */
     public function up(): void
     {
@@ -55,7 +53,7 @@ class MakeLocationsTable extends Migration
             try {
                 Schema::create(
                     'locations',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->bigIncrements('id');
                         $table->timestamps();
                         $table->softDeletes();

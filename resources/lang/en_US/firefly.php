@@ -104,7 +104,7 @@ return [
     'two_factor_forgot'                    => 'I forgot my two-factor thing.',
     'two_factor_lost_header'               => 'Lost your two factor authentication?',
     'two_factor_lost_intro'                => 'If you lost your backup codes as well, you have bad luck. This is not something you can fix from the web interface. You have two choices.',
-    'two_factor_lost_fix_self'             => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/faq/other#i-lost-my-two-factor-authentication-codes-and-backup-codes">this entry in the FAQ</a> for instructions.',
+    'two_factor_lost_fix_self'             => 'If you run your own instance of Firefly III, read <a href="https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-lost-my-2fa-token-generator-or-2fa-has-stopped-working>this entry in the FAQ</a> for instructions.',
     'two_factor_lost_fix_owner'            => 'Otherwise, email the site owner, <a href="mailto::site_owner">:site_owner</a> and ask them to reset your two factor authentication.',
     'mfa_backup_code'                      => 'You have used a backup code to login to Firefly III. It can\'t be used again, so cross it from your list.',
     'pref_two_factor_new_backup_codes'     => 'Get new backup codes',
@@ -194,7 +194,7 @@ return [
     'transfer_exchange_rate_instructions'  => 'Source asset account "@source_name" only accepts transactions in @source_currency. Destination asset account "@dest_name" only accepts transactions in @dest_currency. You must provide the transferred amount correctly in both currencies.',
     'transaction_data'                     => 'Transaction data',
     'invalid_server_configuration'         => 'Invalid server configuration',
-    'invalid_locale_settings'              => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://docs.firefly-iii.org/firefly-iii/advanced-installation/locales/">instructions how to do this</a>.',
+    'invalid_locale_settings'              => 'Firefly III is unable to format monetary amounts because your server is missing the required packages. There are <a href="https://docs.firefly-iii.org/how-to/firefly-iii/advanced/locales/">instructions how to do this</a>.',
     'quickswitch'                          => 'Quickswitch',
     'sign_in_to_start'                     => 'Sign in to start your session',
     'sign_in'                              => 'Sign in',
@@ -467,7 +467,6 @@ return [
     'search_modifier_date_after_month'                    => 'Transaction is in or after month ":value"',
     'search_modifier_date_after_day'                      => 'Transaction is after or on day of month ":value"',
 
-
     // new
     'search_modifier_tag_is_not'                          => 'No tag is ":value"',
     'search_modifier_not_tag_is_not'                      => 'Tag is ":value"',
@@ -722,6 +721,8 @@ return [
     // rules
     'is_not_rule_trigger'                                 => 'Not',
     'cannot_fire_inactive_rules'                          => 'You cannot execute inactive rules.',
+    'show_triggers'                                       => 'Show triggers',
+    'show_actions'                                        => 'Show actions',
     'rules'                                               => 'Rules',
     'rule_name'                                           => 'Name of rule',
     'rule_triggers'                                       => 'Rule triggers when',
@@ -788,7 +789,6 @@ return [
     'rule_trigger_store_journal'                          => 'When a transaction is created',
     'rule_trigger_update_journal'                         => 'When a transaction is updated',
     'rule_trigger_user_action'                            => 'User action is ":trigger_value"',
-
 
     // OLD values (remove non-doubles later):
     'rule_trigger_source_account_starts_choice'           => 'Source account name starts with..',
@@ -1273,7 +1273,6 @@ return [
     'deleted_x_tags'                            => 'Deleted :count tag.|Deleted :count tags.',
     'create_rule_from_transaction'              => 'Create rule based on transaction',
     'create_recurring_from_transaction'         => 'Create recurring transaction based on transaction',
-
 
     // preferences
     'dark_mode_option_browser'                  => 'Let your browser decide',
@@ -1914,6 +1913,7 @@ return [
     'deleted_transfer'                          => 'Successfully deleted transfer ":description"',
     'deleted_reconciliation'                    => 'Successfully deleted reconciliation transaction ":description"',
     'stored_journal'                            => 'Successfully created new transaction ":description"',
+    'stored_journal_js'                         => 'Successfully created new transaction "%{description}"',
     'stored_journal_no_descr'                   => 'Successfully created your new transaction',
     'updated_journal_no_descr'                  => 'Successfully updated your transaction',
     'select_transactions'                       => 'Select transactions',
@@ -1992,7 +1992,6 @@ return [
     'first_split_overrules_source'              => 'The first split may overrule the source account',
     'first_split_overrules_destination'         => 'The first split may overrule the destination account',
     'spent_x_of_y'                              => 'Spent {amount} of {total}',
-
 
     // new user:
     'welcome'                                   => 'Welcome to Firefly III!',
@@ -2383,14 +2382,12 @@ return [
     'save_notification_settings'               => 'Save settings',
     'notification_settings_saved'              => 'The notification settings have been saved',
 
-
     'split_transaction_title'               => 'Description of the split transaction',
     'split_transaction_title_help'          => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'you_create_transfer'                   => 'You\'re creating a transfer.',
     'you_create_withdrawal'                 => 'You\'re creating a withdrawal.',
     'you_create_deposit'                    => 'You\'re creating a deposit.',
-
 
     // links
     'journal_link_configuration'            => 'Transaction links configuration',
@@ -2662,7 +2659,6 @@ return [
     // dashboard
     'enable_auto_convert'                => 'Enable currency conversion',
     'disable_auto_convert'               => 'Disable currency conversion',
-
 ];
 
 // Ignore this comment

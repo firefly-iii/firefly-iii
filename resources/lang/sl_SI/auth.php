@@ -31,9 +31,7 @@
  *
  */
 
-
 declare(strict_types=1);
-
 
 return [
     'failed'   => 'Podatki se ne ujemajo s podatki v naši bazi.',

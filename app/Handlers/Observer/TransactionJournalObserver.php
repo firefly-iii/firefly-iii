@@ -30,17 +30,12 @@ use FireflyIII\Models\TransactionJournal;
  */
 class TransactionJournalObserver
 {
-    /**
-     * @param TransactionJournal $transactionJournal
-     *
-     * @return void
-     */
     public function deleting(TransactionJournal $transactionJournal): void
     {
         app('log')->debug('Observe "deleting" of a transaction journal.');
 
         // to make sure the listener doesn't get back to use and loop
-        TransactionJournal::withoutEvents(static function () use ($transactionJournal) {
+        TransactionJournal::withoutEvents(static function () use ($transactionJournal): void {
             foreach ($transactionJournal->transactions()->get() as $transaction) {
                 $transaction->delete();
             }
@@ -53,5 +48,4 @@ class TransactionJournalObserver
         $transactionJournal->destJournalLinks()->delete();
         $transactionJournal->auditLogEntries()->delete();
     }
-
 }

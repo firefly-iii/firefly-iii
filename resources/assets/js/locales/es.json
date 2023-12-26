@@ -25,6 +25,7 @@
         "destination_account": "Cuenta destino",
         "add_another_split": "A\u00f1adir otra divisi\u00f3n",
         "submission": "Env\u00edo",
+        "stored_journal": "Nueva transacci\u00f3n creada exitosamente \":description\"",
         "create_another": "Despu\u00e9s de guardar, vuelve aqu\u00ed para crear otro.",
         "reset_after": "Restablecer formulario despu\u00e9s del env\u00edo",
         "submit": "Enviar",

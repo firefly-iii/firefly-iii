@@ -40,8 +40,6 @@ class StoredGroupEventHandler
 {
     /**
      * This method grabs all the users rules and processes them.
-     *
-     * @param StoredTransactionGroup $storedGroupEvent
      */
     public function processRules(StoredTransactionGroup $storedGroupEvent): void
     {
@@ -54,6 +52,7 @@ class StoredGroupEventHandler
 
         $journals = $storedGroupEvent->transactionGroup->transactionJournals;
         $array    = [];
+
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $array[] = $journal->id;
@@ -77,12 +76,10 @@ class StoredGroupEventHandler
         $newRuleEngine->fire();
     }
 
-    /**
-     * @param StoredTransactionGroup $event
-     */
     public function recalculateCredit(StoredTransactionGroup $event): void
     {
         $group = $event->transactionGroup;
+
         /** @var CreditRecalculateService $object */
         $object = app(CreditRecalculateService::class);
         $object->setGroup($group);
@@ -91,8 +88,6 @@ class StoredGroupEventHandler
 
     /**
      * This method processes all webhooks that respond to the "stored transaction group" trigger (100)
-     *
-     * @param StoredTransactionGroup $storedGroupEvent
      */
     public function triggerWebhooks(StoredTransactionGroup $storedGroupEvent): void
     {
@@ -105,6 +100,7 @@ class StoredGroupEventHandler
         }
 
         $user = $group->user;
+
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser($user);

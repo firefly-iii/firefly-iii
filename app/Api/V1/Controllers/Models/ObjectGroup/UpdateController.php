@@ -41,8 +41,6 @@ class UpdateController extends Controller
 
     /**
      * ObjectGroupController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -62,11 +60,6 @@ class UpdateController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/object_groups/updateObjectGroup
-     *
-     * @param UpdateRequest $request
-     * @param ObjectGroup   $objectGroup
-     *
-     * @return JsonResponse
      */
     public function update(UpdateRequest $request, ObjectGroup $objectGroup): JsonResponse
     {

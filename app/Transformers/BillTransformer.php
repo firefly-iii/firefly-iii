@@ -42,8 +42,6 @@ class BillTransformer extends AbstractTransformer
 
     /**
      * BillTransformer constructor.
-     *
-
      */
     public function __construct()
     {
@@ -54,28 +52,25 @@ class BillTransformer extends AbstractTransformer
     /**
      * Transform the bill.
      *
-     * @param Bill $bill
-     *
-     * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function transform(Bill $bill): array
     {
         $paidData     = $this->paidData($bill);
         $lastPaidDate = $this->getLastPaidDate($paidData);
-
-        // both params can be NULL, so just in case they are, add some wide margins:
-        $start    = $this->parameters->get('start') ?? today()->subYears(10);
-        $end      = $this->parameters->get('end') ?? today()->addYears(10);
-        $payDates = $this->calculator->getPayDates($start, $end, $bill->date, $bill->repeat_freq, $bill->skip, $lastPaidDate);
-        $currency = $bill->transactionCurrency;
-        $notes    = $this->repository->getNoteText($bill);
-        $notes    = '' === $notes ? null : $notes;
-        $this->repository->setUser($bill->user);
-
+        $start        = $this->parameters->get('start') ?? today()->subYears(10);
+        $end          = $this->parameters->get('end') ?? today()->addYears(10);
+        $payDates     = $this->calculator->getPayDates($start, $end, $bill->date, $bill->repeat_freq, $bill->skip, $lastPaidDate);
+        $currency     = $bill->transactionCurrency;
+        $notes        = $this->repository->getNoteText($bill);
+        $notes        = '' === $notes ? null : $notes;
         $objectGroupId    = null;
         $objectGroupOrder = null;
         $objectGroupTitle = null;
-        /** @var ObjectGroup|null $objectGroup */
+        $this->repository->setUser($bill->user);
+
+        /** @var null|ObjectGroup $objectGroup */
         $objectGroup = $bill->objectGroups->first();
         if (null !== $objectGroup) {
             $objectGroupId    = $objectGroup->id;
@@ -138,11 +133,12 @@ class BillTransformer extends AbstractTransformer
             }
             unset($temp2);
         }
+
         return [
             'id'                       => $bill->id,
             'created_at'               => $bill->created_at->toAtomString(),
             'updated_at'               => $bill->updated_at->toAtomString(),
-            'currency_id'              => (string)$bill->transaction_currency_id,
+            'currency_id'              => (string) $bill->transaction_currency_id,
             'currency_code'            => $currency->code,
             'currency_symbol'          => $currency->symbol,
             'currency_decimal_places'  => $currency->decimal_places,
@@ -157,7 +153,7 @@ class BillTransformer extends AbstractTransformer
             'active'                   => $bill->active,
             'order'                    => $bill->order,
             'notes'                    => $notes,
-            'object_group_id'          => null !== $objectGroupId ? (string)$objectGroupId : null,
+            'object_group_id'          => null !== $objectGroupId ? (string) $objectGroupId : null,
             'object_group_order'       => $objectGroupOrder,
             'object_group_title'       => $objectGroupTitle,
 
@@ -169,7 +165,7 @@ class BillTransformer extends AbstractTransformer
             'links'                    => [
                 [
                     'rel' => 'self',
-                    'uri' => '/bills/' . $bill->id,
+                    'uri' => '/bills/'.$bill->id,
                 ],
             ],
         ];
@@ -177,10 +173,6 @@ class BillTransformer extends AbstractTransformer
 
     /**
      * Get the data the bill was paid and predict the next expected match.
-     *
-     * @param Bill $bill
-     *
-     * @return array
      */
     protected function paidData(Bill $bill): array
     {
@@ -190,6 +182,7 @@ class BillTransformer extends AbstractTransformer
 
             return [];
         }
+
         // 2023-07-1 sub one day from the start date to fix a possible bug (see #7704)
         // 2023-07-18 this particular date is used to search for the last paid date.
         // 2023-07-18 the cloned $searchDate is used to grab the correct transactions.
@@ -201,27 +194,21 @@ class BillTransformer extends AbstractTransformer
         app('log')->debug(sprintf('Parameters are start: %s end: %s', $start->format('Y-m-d'), $this->parameters->get('end')->format('Y-m-d')));
         app('log')->debug(sprintf('Search parameters are: start: %s', $searchStart->format('Y-m-d')));
 
-        /*
-         *  Get from database when bill was paid.
-         */
+        // Get from database when bill was paid.
         $set = $this->repository->getPaidDatesInRange($bill, $searchStart, $this->parameters->get('end'));
         app('log')->debug(sprintf('Count %d entries in getPaidDatesInRange()', $set->count()));
 
-        /*
-         * Grab from array the most recent payment. If none exist, fall back to the start date and pretend *that* was the last paid date.
-         */
+        // Grab from array the most recent payment. If none exist, fall back to the start date and pretend *that* was the last paid date.
         app('log')->debug(sprintf('Grab last paid date from function, return %s if it comes up with nothing.', $start->format('Y-m-d')));
         $lastPaidDate = $this->lastPaidDate($set, $start);
         app('log')->debug(sprintf('Result of lastPaidDate is %s', $lastPaidDate->format('Y-m-d')));
 
-        /*
-         * At this point the "next match" is exactly after the last time the bill was paid.
-         */
+        // At this point the "next match" is exactly after the last time the bill was paid.
         $result = [];
         foreach ($set as $entry) {
             $result[] = [
-                'transaction_group_id'   => (string)$entry->transaction_group_id,
-                'transaction_journal_id' => (string)$entry->id,
+                'transaction_group_id'   => (string) $entry->transaction_group_id,
+                'transaction_journal_id' => (string) $entry->id,
                 'date'                   => $entry->date->format('Y-m-d'),
                 'date_object'            => $entry->date,
             ];
@@ -232,11 +219,6 @@ class BillTransformer extends AbstractTransformer
 
     /**
      * Returns the latest date in the set, or start when set is empty.
-     *
-     * @param Collection $dates
-     * @param Carbon     $default
-     *
-     * @return Carbon
      */
     protected function lastPaidDate(Collection $dates, Carbon $default): Carbon
     {
@@ -244,6 +226,7 @@ class BillTransformer extends AbstractTransformer
             return $default;
         }
         $latest = $dates->first()->date;
+
         /** @var TransactionJournal $journal */
         foreach ($dates as $journal) {
             if ($journal->date->gte($latest)) {
@@ -254,11 +237,6 @@ class BillTransformer extends AbstractTransformer
         return $latest;
     }
 
-    /**
-     * @param array $paidData
-     *
-     * @return Carbon|null
-     */
     private function getLastPaidDate(array $paidData): ?Carbon
     {
         app('log')->debug('getLastPaidDate()');
@@ -279,7 +257,7 @@ class BillTransformer extends AbstractTransformer
             }
         }
         app('log')->debug(sprintf('Last paid date is: "%s"', $return?->format('Y-m-d')));
+
         return $return;
     }
-
 }

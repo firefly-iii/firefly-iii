@@ -41,14 +41,13 @@ class DeleteZeroAmount extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
         $set      = Transaction::where('amount', 0)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
         $set      = array_unique($set);
         $journals = TransactionJournal::whereIn('id', $set)->get();
+
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $this->friendlyWarning(sprintf('Deleted transaction journal #%d because the amount is zero (0.00).', $journal->id));

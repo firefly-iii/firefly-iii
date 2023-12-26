@@ -44,8 +44,6 @@ class EditController extends Controller
 
     /**
      * CategoryController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,9 +63,6 @@ class EditController extends Controller
 
     /**
      * Edit a category.
-     *
-     * @param Request  $request
-     * @param Category $category
      *
      * @return Factory|View
      */
@@ -91,10 +86,7 @@ class EditController extends Controller
     /**
      * Update category.
      *
-     * @param CategoryFormRequest $request
-     * @param Category            $category
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function update(CategoryFormRequest $request, Category $category)
     {
@@ -105,7 +97,7 @@ class EditController extends Controller
         app('preferences')->mark();
 
         // store new attachment(s):
-        /** @var array|null $files */
+        /** @var null|array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($category, $files);

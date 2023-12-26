@@ -33,9 +33,6 @@ use FireflyIII\Models\Configuration;
  */
 class ExchangeRatesCronjob extends AbstractCronjob
 {
-    /**
-     * @inheritDoc
-     */
     public function fire(): void
     {
         /** @var Configuration $config */
@@ -67,12 +64,10 @@ class ExchangeRatesCronjob extends AbstractCronjob
         app('preferences')->mark();
     }
 
-    /**
-     *
-     */
     private function fireExchangeRateJob(): void
     {
         app('log')->info(sprintf('Will now fire exchange rates cron job task for date "%s".', $this->date->format('Y-m-d')));
+
         /** @var DownloadExchangeRates $job */
         $job = app(DownloadExchangeRates::class);
         $job->setDate($this->date);

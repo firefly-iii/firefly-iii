@@ -26,7 +26,6 @@ use FireflyIII\Http\Middleware\EncryptCookies;
 use FireflyIII\Http\Middleware\VerifyCsrfToken;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Stateful Domains
@@ -82,5 +81,4 @@ return [
         'verify_csrf_token' => VerifyCsrfToken::class,
         'encrypt_cookies'   => EncryptCookies::class,
     ],
-
 ];

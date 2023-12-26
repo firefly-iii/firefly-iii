@@ -40,8 +40,6 @@ class DashboardChartRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -53,8 +51,6 @@ class DashboardChartRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -66,19 +62,14 @@ class DashboardChartRequest extends FormRequest
         ];
     }
 
-    /**
-     * @param Validator $validator
-     *
-     * @return void
-     */
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            static function (Validator $validator) {
+            static function (Validator $validator): void {
                 // validate transaction query data.
                 $data = $validator->getData();
                 if (!array_key_exists('accounts', $data)) {
-                    //$validator->errors()->add('accounts', trans('validation.filled', ['attribute' => 'accounts']));
+                    // $validator->errors()->add('accounts', trans('validation.filled', ['attribute' => 'accounts']));
                     return;
                 }
                 if (!is_array($data['accounts'])) {

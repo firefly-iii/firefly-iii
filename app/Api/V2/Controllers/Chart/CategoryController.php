@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * CategoryController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -61,6 +60,7 @@ class CategoryController extends Controller
                 if (null !== $userGroup) {
                     $this->accountRepos->setUserGroup($userGroup);
                 }
+
                 return $next($request);
             }
         );
@@ -70,16 +70,15 @@ class CategoryController extends Controller
      * TODO may be worth to move to a handler but the data is simple enough.
      * TODO see autoComplete/account controller
      *
-     * @param DateRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
         /** @var Carbon $start */
         $start = $this->parameters->get('start');
+
         /** @var Carbon $end */
         $end        = $this->parameters->get('end');
         $accounts   = $this->accountRepos->getAccountsByType([AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::ASSET, AccountType::DEFAULT]);
@@ -128,7 +127,6 @@ class CategoryController extends Controller
                 'native_amount'           => '0',
             ];
 
-
             // add monies
             $return[$key]['amount']        = bcadd($return[$key]['amount'], $amount);
             $return[$key]['native_amount'] = bcadd($return[$key]['native_amount'], $nativeAmount);
@@ -139,7 +137,8 @@ class CategoryController extends Controller
         usort($return, static function (array $a, array $b) {
             return (float)$a['native_amount'] < (float)$b['native_amount'] ? 1 : -1;
         });
+        $converter->summarize();
+
         return response()->json($this->clean($return));
     }
-
 }

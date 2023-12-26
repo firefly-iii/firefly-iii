@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * OperationsRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -38,20 +37,8 @@ interface OperationsRepositoryInterface
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
      * which have the specified budget set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $budgets
-     *
-     * @return array
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
 
-    /**
-     * @param User $user
-     *
-     * @return void
-     */
     public function setUser(User $user): void;
 }

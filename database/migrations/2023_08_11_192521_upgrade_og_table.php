@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * 2023_08_11_192521_upgrade_og_table.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -29,12 +28,10 @@ use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-/**
- *
- */
-return new class () extends Migration {
+return new class() extends Migration {
     /**
      * Run the migrations.
+     *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
@@ -42,7 +39,7 @@ return new class () extends Migration {
         try {
             Schema::table(
                 'object_groups',
-                static function (Blueprint $table) {
+                static function (Blueprint $table): void {
                     if (!Schema::hasColumn('object_groups', 'user_group_id')) {
                         $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
                         $table->foreign('user_group_id', sprintf('%s_to_ugi', 'object_groups'))->references('id')->on('user_groups')->onDelete(
@@ -65,7 +62,7 @@ return new class () extends Migration {
         try {
             Schema::table(
                 'object_groups',
-                static function (Blueprint $table) {
+                static function (Blueprint $table): void {
                     if ('sqlite' !== config('database.default')) {
                         $table->dropForeign(sprintf('%s_to_ugi', 'object_groups'));
                     }
@@ -74,7 +71,7 @@ return new class () extends Migration {
                     }
                 }
             );
-        } catch (QueryException | ColumnDoesNotExist $e) {
+        } catch (ColumnDoesNotExist|QueryException $e) {
             app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
             app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
         }

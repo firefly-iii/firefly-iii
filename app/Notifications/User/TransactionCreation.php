@@ -39,8 +39,6 @@ class TransactionCreation extends Notification
 
     /**
      * Create a new notification instance.
-     *
-     * @return void
      */
     public function __construct(array $collection)
     {
@@ -53,12 +51,12 @@ class TransactionCreation extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toArray($notifiable)
     {
         return [
-            //
         ];
     }
 
@@ -68,13 +66,15 @@ class TransactionCreation extends Notification
      * @param mixed $notifiable
      *
      * @return MailMessage
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function toMail($notifiable)
     {
         return (new MailMessage())
             ->markdown('emails.report-new-journals', ['transformed' => $this->collection])
-            ->subject(trans_choice('email.new_journals_subject', count($this->collection)));
+            ->subject(trans_choice('email.new_journals_subject', count($this->collection)))
+        ;
     }
 
     /**
@@ -83,6 +83,7 @@ class TransactionCreation extends Notification
      * @param mixed $notifiable
      *
      * @return array
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function via($notifiable)

@@ -37,16 +37,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Class GroupMembership
  *
- * @property int            $id
- * @property Carbon|null    $created_at
- * @property Carbon|null    $updated_at
- * @property string|null    $deleted_at
- * @property int            $user_id
- * @property int            $user_group_id
- * @property int            $user_role_id
- * @property-read User      $user
- * @property-read UserGroup $userGroup
- * @property-read UserRole  $userRole
+ * @property int         $id
+ * @property null|Carbon $created_at
+ * @property null|Carbon $updated_at
+ * @property null|string $deleted_at
+ * @property int         $user_id
+ * @property int         $user_group_id
+ * @property int         $user_role_id
+ * @property User        $user
+ * @property UserGroup   $userGroup
+ * @property UserRole    $userRole
+ *
  * @method static Builder|GroupMembership newModelQuery()
  * @method static Builder|GroupMembership newQuery()
  * @method static Builder|GroupMembership query()
@@ -57,6 +58,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static Builder|GroupMembership whereUserGroupId($value)
  * @method static Builder|GroupMembership whereUserId($value)
  * @method static Builder|GroupMembership whereUserRoleId($value)
+ *
  * @mixin Eloquent
  */
 class GroupMembership extends Model
@@ -66,39 +68,25 @@ class GroupMembership extends Model
 
     protected $fillable = ['user_id', 'user_group_id', 'user_role_id'];
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function userGroup(): BelongsTo
     {
         return $this->belongsTo(UserGroup::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function userRole(): BelongsTo
     {
         return $this->belongsTo(UserRole::class);
     }
 
-    /**
-     * @return Attribute
-     */
     protected function userRoleId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
-
-
 }

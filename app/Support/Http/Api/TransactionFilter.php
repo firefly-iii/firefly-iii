@@ -27,17 +27,11 @@ use FireflyIII\Models\TransactionType;
 
 /**
  * Trait TransactionFilter
- *
-
  */
 trait TransactionFilter
 {
     /**
      * All the types you can request.
-     *
-     * @param string $type
-     *
-     * @return array
      */
     protected function mapTransactionTypes(string $type): array
     {
@@ -49,27 +43,28 @@ trait TransactionFilter
                 TransactionType::OPENING_BALANCE,
                 TransactionType::RECONCILIATION,
             ],
-            'withdrawal'      => [TransactionType::WITHDRAWAL,],
-            'withdrawals'     => [TransactionType::WITHDRAWAL,],
-            'expense'         => [TransactionType::WITHDRAWAL,],
-            'expenses'        => [TransactionType::WITHDRAWAL,],
-            'income'          => [TransactionType::DEPOSIT,],
-            'deposit'         => [TransactionType::DEPOSIT,],
-            'deposits'        => [TransactionType::DEPOSIT,],
-            'transfer'        => [TransactionType::TRANSFER,],
-            'transfers'       => [TransactionType::TRANSFER,],
-            'opening_balance' => [TransactionType::OPENING_BALANCE,],
-            'reconciliation'  => [TransactionType::RECONCILIATION,],
-            'reconciliations' => [TransactionType::RECONCILIATION,],
-            'special'         => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION,],
-            'specials'        => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION,],
-            'default'         => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER,],
+            'withdrawal'      => [TransactionType::WITHDRAWAL],
+            'withdrawals'     => [TransactionType::WITHDRAWAL],
+            'expense'         => [TransactionType::WITHDRAWAL],
+            'expenses'        => [TransactionType::WITHDRAWAL],
+            'income'          => [TransactionType::DEPOSIT],
+            'deposit'         => [TransactionType::DEPOSIT],
+            'deposits'        => [TransactionType::DEPOSIT],
+            'transfer'        => [TransactionType::TRANSFER],
+            'transfers'       => [TransactionType::TRANSFER],
+            'opening_balance' => [TransactionType::OPENING_BALANCE],
+            'reconciliation'  => [TransactionType::RECONCILIATION],
+            'reconciliations' => [TransactionType::RECONCILIATION],
+            'special'         => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION],
+            'specials'        => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION],
+            'default'         => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER],
         ];
         $return = [];
         $parts  = explode(',', $type);
         foreach ($parts as $part) {
             $return = array_merge($return, $types[$part] ?? $types['default']);
         }
+
         return array_unique($return);
     }
 }

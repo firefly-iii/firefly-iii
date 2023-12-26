@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Attachments;
 
-use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\PiggyBank;
@@ -36,7 +35,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use const DIRECTORY_SEPARATOR;
 
 /**
  * Class AttachmentHelper.
@@ -53,8 +51,6 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * AttachmentHelper constructor.
-     *
-
      */
     public function __construct()
     {
@@ -68,17 +64,13 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * Returns the content of an attachment.
-     *
-     *
-     * @param Attachment $attachment
-     *
-     * @return string
      */
     public function getAttachmentContent(Attachment $attachment): string
     {
         $encryptedData = (string)$this->uploadDisk->get(sprintf('at-%d.data', $attachment->id));
+
         try {
-            $unencryptedData = Crypt::decrypt($encryptedData); // verified
+            $unencryptedData = \Crypt::decrypt($encryptedData); // verified
         } catch (DecryptException $e) {
             Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
             $unencryptedData = $encryptedData;
@@ -89,20 +81,14 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * Returns the file path relative to upload disk for an attachment,
-     *
-     * @param Attachment $attachment
-     *
-     * @return string
      */
     public function getAttachmentLocation(Attachment $attachment): string
     {
-        return sprintf('%sat-%d.data', DIRECTORY_SEPARATOR, $attachment->id);
+        return sprintf('%sat-%d.data', \DIRECTORY_SEPARATOR, $attachment->id);
     }
 
     /**
      * Get all attachments.
-     *
-     * @return Collection
      */
     public function getAttachments(): Collection
     {
@@ -111,8 +97,6 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * Get all errors.
-     *
-     * @return MessageBag
      */
     public function getErrors(): MessageBag
     {
@@ -121,8 +105,6 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * Get all messages.
-     *
-     * @return MessageBag
      */
     public function getMessages(): MessageBag
     {
@@ -131,11 +113,6 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * Uploads a file as a string.
-     *
-     * @param Attachment $attachment
-     * @param string     $content
-     *
-     * @return bool
      */
     public function saveAttachmentFromApi(Attachment $attachment, string $content): bool
     {
@@ -158,6 +135,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $result = fwrite($resource, $content);
         if (false === $result) {
             Log::error('Could not write temp file.');
+
             return false;
         }
         Log::debug(sprintf('Wrote %d bytes to temp file.', $result));
@@ -165,6 +143,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         if (false === $finfo) {
             Log::error('Could not open finfo.');
             fclose($resource);
+
             return false;
         }
         $mime        = (string)finfo_file($finfo, $path);
@@ -197,22 +176,19 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Save attachments that get uploaded with models, through the app.
      *
-     * @param object     $model
-     * @param array|null $files
-     *
-     * @return bool
      * @throws FireflyException
      */
     public function saveAttachmentsForModel(object $model, ?array $files): bool
     {
-        if (!($model instanceof Model)) {
+        if (!$model instanceof Model) {
             return false;
         }
 
         Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
         if (is_array($files)) {
             Log::debug('$files is an array.');
-            /** @var UploadedFile|null $entry */
+
+            /** @var null|UploadedFile $entry */
             foreach ($files as $entry) {
                 if (null !== $entry) {
                     $this->processFile($entry, $model);
@@ -230,10 +206,6 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Process the upload of a file.
      *
-     * @param UploadedFile $file
-     * @param Model        $model
-     *
-     * @return Attachment|null
      * @throws FireflyException
      * @throws EncryptException
      */
@@ -286,11 +258,6 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * Verify if the file was uploaded correctly.
-     *
-     * @param UploadedFile $file
-     * @param Model        $model
-     *
-     * @return bool
      */
     protected function validateUpload(UploadedFile $file, Model $model): bool
     {
@@ -303,7 +270,6 @@ class AttachmentHelper implements AttachmentHelperInterface
             Log::error('Cannot upload empty file.');
             $result = false;
         }
-
 
         // can't seem to reach this point.
         if (true === $result && !$this->validSize($file)) {
@@ -319,10 +285,6 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * Verify if the mime of a file is valid.
-     *
-     * @param UploadedFile $file
-     *
-     * @return bool
      */
     protected function validMime(UploadedFile $file): bool
     {
@@ -346,11 +308,6 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * Verify if the size of a file is valid.
-     *
-     *
-     * @param UploadedFile $file
-     *
-     * @return bool
      */
     protected function validSize(UploadedFile $file): bool
     {
@@ -370,11 +327,6 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * Check if a model already has this file attached.
-     *
-     * @param UploadedFile $file
-     * @param Model        $model
-     *
-     * @return bool
      */
     protected function hasFile(UploadedFile $file, Model $model): bool
     {
@@ -386,7 +338,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         if ($model instanceof PiggyBank) {
             $count = $model->account->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
         }
-        if (!($model instanceof PiggyBank)) {
+        if (!$model instanceof PiggyBank) {
             $count = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
         }
         $result = false;

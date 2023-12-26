@@ -28,8 +28,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class UserRegistrationRequest.
- *
-
  */
 class UserRegistrationRequest extends FormRequest
 {
@@ -37,8 +35,6 @@ class UserRegistrationRequest extends FormRequest
 
     /**
      * Verify the request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -48,8 +44,6 @@ class UserRegistrationRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {

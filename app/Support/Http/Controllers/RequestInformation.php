@@ -25,29 +25,22 @@ namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\ValidationException;
-use FireflyIII\Helpers\Help\HelpInterface;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Support\Binder\AccountList;
 use FireflyIII\User;
-use Hash;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Validator;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Route as RouteFacade;
 
 /**
  * Trait RequestInformation
- *
  */
 trait RequestInformation
 {
     /**
      * Get the domain of FF system.
-     *
-     * @return string
      */
     final protected function getDomain(): string // get request info
     {
@@ -59,10 +52,6 @@ trait RequestInformation
 
     /**
      * Get a list of triggers.
-     *
-     * @param TestRuleFormRequest $request
-     *
-     * @return array
      */
     final protected function getValidTriggerList(TestRuleFormRequest $request): array // process input
     {
@@ -80,15 +69,12 @@ trait RequestInformation
                 $triggers[] = $current;
             }
         }
+
         return $triggers;
     }
 
     /**
      * Returns if user has seen demo.
-     *
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     final protected function hasSeenDemo(): bool // get request info + get preference
     {
@@ -113,9 +99,6 @@ trait RequestInformation
         return $shownDemo;
     }
 
-    /**
-     * @return string
-     */
     final protected function getPageName(): string // get request info
     {
         return str_replace('.', '_', RouteFacade::currentRouteName());
@@ -123,28 +106,23 @@ trait RequestInformation
 
     /**
      * Get the specific name of a page for intro.
-     *
-     * @return string
      */
     final protected function getSpecificPageName(): string // get request info
     {
-        /** @var string|null $param */
+        /** @var null|string $param */
         $param = RouteFacade::current()->parameter('objectType');
+
         return null === $param ? '' : sprintf('_%s', $param);
     }
 
     /**
      * Check if date is outside session range.
-     *
-     * @param Carbon $date
-     *
-     * @return bool
-     *
      */
     final protected function notInSessionRange(Carbon $date): bool // Validate a preference
     {
         /** @var Carbon $start */
         $start = session('start', today(config('app.timezone'))->startOfMonth());
+
         /** @var Carbon $end */
         $end    = session('end', today(config('app.timezone'))->endOfMonth());
         $result = false;
@@ -161,10 +139,6 @@ trait RequestInformation
 
     /**
      * Parses attributes from URL
-     *
-     * @param array $attributes
-     *
-     * @return array
      */
     final protected function parseAttributes(array $attributes): array // parse input + return result
     {
@@ -184,24 +158,17 @@ trait RequestInformation
         $date2->endOfDay();
         $attributes['endDate'] = $date2;
 
-
         return $attributes;
     }
 
     /**
      * Validate users new password.
      *
-     * @param User   $user
-     * @param string $current
-     * @param string $new
-     *
-     * @return bool
-     *
      * @throws ValidationException
      */
-    final protected function validatePassword(User $user, string $current, string $new): bool //get request info
+    final protected function validatePassword(User $user, string $current, string $new): bool // get request info
     {
-        if (!Hash::check($current, $user->password)) {
+        if (!\Hash::check($current, $user->password)) {
             throw new ValidationException((string)trans('firefly.invalid_current_password'));
         }
 
@@ -214,10 +181,6 @@ trait RequestInformation
 
     /**
      * Get a validator for an incoming registration request.
-     *
-     * @param array $data
-     *
-     * @return ValidatorContract
      */
     final protected function validator(array $data): ValidatorContract
     {

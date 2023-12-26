@@ -35,17 +35,18 @@ use Illuminate\Database\Query\Builder;
 /**
  * FireflyIII\Models\RecurrenceMeta
  *
- * @property int             $id
- * @property Carbon|null     $created_at
- * @property Carbon|null     $updated_at
- * @property Carbon|null     $deleted_at
- * @property int             $recurrence_id
- * @property string          $name
- * @property mixed           $value
- * @property-read Recurrence $recurrence
+ * @property int         $id
+ * @property null|Carbon $created_at
+ * @property null|Carbon $updated_at
+ * @property null|Carbon $deleted_at
+ * @property int         $recurrence_id
+ * @property string      $name
+ * @property mixed       $value
+ * @property Recurrence  $recurrence
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta newQuery()
- * @method static Builder|RecurrenceMeta onlyTrashed()
+ * @method static Builder|RecurrenceMeta                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta query()
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereDeletedAt($value)
@@ -54,15 +55,15 @@ use Illuminate\Database\Query\Builder;
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereRecurrenceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|RecurrenceMeta whereValue($value)
- * @method static Builder|RecurrenceMeta withTrashed()
- * @method static Builder|RecurrenceMeta withoutTrashed()
+ * @method static Builder|RecurrenceMeta                               withTrashed()
+ * @method static Builder|RecurrenceMeta                               withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class RecurrenceMeta extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
-
 
     protected $casts
         = [
@@ -74,24 +75,19 @@ class RecurrenceMeta extends Model
         ];
 
     protected $fillable = ['recurrence_id', 'name', 'value'];
+
     /** @var string The table to store the data in */
     protected $table = 'recurrences_meta';
 
-    /**
-     * @return BelongsTo
-     */
     public function recurrence(): BelongsTo
     {
         return $this->belongsTo(Recurrence::class);
     }
 
-    /**
-     * @return Attribute
-     */
     protected function recurrenceId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

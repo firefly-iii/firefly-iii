@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * CurrencyRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -32,83 +31,41 @@ use Illuminate\Support\Collection;
 
 interface CurrencyRepositoryInterface
 {
-    /**
-     * @param TransactionCurrency $currency
-     *
-     * @return bool
-     */
     public function currencyInUse(TransactionCurrency $currency): bool;
 
     /**
      * Currency is in use where exactly.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return string|null
      */
     public function currencyInUseAt(TransactionCurrency $currency): ?string;
 
-    /**
-     * @param TransactionCurrency $currency
-     *
-     * @return bool
-     */
     public function destroy(TransactionCurrency $currency): bool;
 
     /**
      * Disables a currency
-     *
-     * @param TransactionCurrency $currency
      */
     public function disable(TransactionCurrency $currency): void;
 
     /**
      * Enables a currency
-     *
-     * @param TransactionCurrency $currency
      */
     public function enable(TransactionCurrency $currency): void;
 
     /**
      * Find by ID, return NULL if not found.
-     *
-     * @param int $currencyId
-     *
-     * @return TransactionCurrency|null
      */
     public function find(int $currencyId): ?TransactionCurrency;
 
-    /**
-     * @param string $currencyCode
-     *
-     * @return TransactionCurrency|null
-     */
     public function findByCode(string $currencyCode): ?TransactionCurrency;
 
-    /**
-     * @param string $name
-     *
-     * @return TransactionCurrency|null
-     */
     public function findByName(string $name): ?TransactionCurrency;
 
     /**
      * Find by object, ID or code. Returns user default or system default.
-     *
-     * @param int|null    $currencyId
-     * @param string|null $currencyCode
-     *
-     * @return TransactionCurrency
      */
     public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency;
 
     /**
      * Find by object, ID or code. Returns NULL if nothing found.
-     *
-     * @param int|null    $currencyId
-     * @param string|null $currencyCode
-     *
-     * @return TransactionCurrency|null
      */
     public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency;
 
@@ -121,60 +78,23 @@ interface CurrencyRepositoryInterface
 
     /**
      * Get ALL currencies.
-     *
-     * @return Collection
      */
     public function getAll(): Collection;
 
-    /**
-     * @param array $ids
-     *
-     * @return Collection
-     */
     public function getByIds(array $ids): Collection;
 
-    /**
-     * @param TransactionCurrency $currency
-     *
-     * @return bool
-     */
     public function isFallbackCurrency(TransactionCurrency $currency): bool;
 
-    /**
-     * @param TransactionCurrency $currency
-     *
-     * @return void
-     */
     public function makeDefault(TransactionCurrency $currency): void;
 
-    /**
-     * @param string $search
-     * @param int    $limit
-     *
-     * @return Collection
-     */
     public function searchCurrency(string $search, int $limit): Collection;
 
-    /**
-     * @param User $user
-     *
-     * @return void
-     */
     public function setUser(User $user): void;
 
     /**
-     * @param array $data
-     *
-     * @return TransactionCurrency
      * @throws FireflyException
      */
     public function store(array $data): TransactionCurrency;
 
-    /**
-     * @param TransactionCurrency $currency
-     * @param array               $data
-     *
-     * @return TransactionCurrency
-     */
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency;
 }

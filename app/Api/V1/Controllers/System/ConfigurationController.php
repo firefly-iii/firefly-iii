@@ -29,9 +29,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Binder\EitherConfigKey;
 use Illuminate\Http\JsonResponse;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Validator;
 
 /**
  * Class ConfigurationController
@@ -59,10 +56,7 @@ class ConfigurationController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/configuration/getConfiguration
      *
-     * @return JsonResponse
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function index(): JsonResponse
     {
@@ -71,6 +65,7 @@ class ConfigurationController extends Controller
         } catch (FireflyException $e) {
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
+
             throw new FireflyException('200030: Could not load config variables.', 0, $e);
         }
         $staticData = $this->getStaticConfiguration();
@@ -94,50 +89,8 @@ class ConfigurationController extends Controller
     }
 
     /**
-     * Get all config values.
-     *
-     * @return array
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function getDynamicConfiguration(): array
-    {
-        $isDemoSite  = app('fireflyconfig')->get('is_demo_site');
-        $updateCheck = app('fireflyconfig')->get('permission_update_check');
-        $lastCheck   = app('fireflyconfig')->get('last_update_check');
-        $singleUser  = app('fireflyconfig')->get('single_user_mode');
-
-        return [
-            'is_demo_site'            => $isDemoSite?->data,
-            'permission_update_check' => null === $updateCheck ? null : (int)$updateCheck->data,
-            'last_update_check'       => null === $lastCheck ? null : (int)$lastCheck->data,
-            'single_user_mode'        => $singleUser?->data,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function getStaticConfiguration(): array
-    {
-        $list   = EitherConfigKey::$static;
-        $return = [];
-        foreach ($list as $key) {
-            $return[$key] = config($key);
-        }
-
-        return $return;
-    }
-
-    /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/configuration/getSingleConfiguration
-     *
-     * @param string $configKey
-     *
-     * @return JsonResponse
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function show(string $configKey): JsonResponse
     {
@@ -168,20 +121,14 @@ class ConfigurationController extends Controller
      *
      * Update the configuration.
      *
-     * @param UpdateRequest $request
-     * @param string        $name
-     *
-     * @return JsonResponse
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function update(UpdateRequest $request, string $name): JsonResponse
     {
         $rules = ['value' => 'required'];
         if (!$this->repository->hasRole(auth()->user(), 'owner')) {
             $messages = ['value' => '200005: You need the "owner" role to do this.'];
-            Validator::make([], $rules, $messages)->validate();
+            \Validator::make([], $rules, $messages)->validate();
         }
         $data      = $request->getAll();
         $shortName = str_replace('configuration.', '', $name);
@@ -197,5 +144,34 @@ class ConfigurationController extends Controller
         ];
 
         return response()->json(['data' => $data])->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    /**
+     * Get all config values.
+     */
+    private function getDynamicConfiguration(): array
+    {
+        $isDemoSite  = app('fireflyconfig')->get('is_demo_site');
+        $updateCheck = app('fireflyconfig')->get('permission_update_check');
+        $lastCheck   = app('fireflyconfig')->get('last_update_check');
+        $singleUser  = app('fireflyconfig')->get('single_user_mode');
+
+        return [
+            'is_demo_site'            => $isDemoSite?->data,
+            'permission_update_check' => null === $updateCheck ? null : (int)$updateCheck->data,
+            'last_update_check'       => null === $lastCheck ? null : (int)$lastCheck->data,
+            'single_user_mode'        => $singleUser?->data,
+        ];
+    }
+
+    private function getStaticConfiguration(): array
+    {
+        $list   = EitherConfigKey::$static;
+        $return = [];
+        foreach ($list as $key) {
+            $return[$key] = config($key);
+        }
+
+        return $return;
     }
 }

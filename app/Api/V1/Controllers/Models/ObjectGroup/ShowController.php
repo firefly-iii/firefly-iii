@@ -43,8 +43,6 @@ class ShowController extends Controller
 
     /**
      * ObjectGroupController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -66,8 +64,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/object_groups/listObjectGroups
      *
      * Display a listing of the resource.
-     *
-     * @return JsonResponse
      */
     public function index(): JsonResponse
     {
@@ -83,7 +79,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($objectGroups, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.object-groups.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.object-groups.index').$this->buildParams());
 
         /** @var ObjectGroupTransformer $transformer */
         $transformer = app(ObjectGroupTransformer::class);
@@ -100,10 +96,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/object_groups/getObjectGroup
      *
      * Show single instance.
-     *
-     * @param ObjectGroup $objectGroup
-     *
-     * @return JsonResponse
      */
     public function show(ObjectGroup $objectGroup): JsonResponse
     {

@@ -40,8 +40,6 @@ class BudgetFormStoreRequest extends FormRequest
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getBudgetData(): array
     {
@@ -57,8 +55,6 @@ class BudgetFormStoreRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -74,15 +70,11 @@ class BudgetFormStoreRequest extends FormRequest
 
     /**
      * Configure the validator instance with special rules for after the basic validation rules.
-     *
-     * @param Validator $validator
-     *
-     * @return void
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator) {
+            function (Validator $validator): void {
                 // validate all account info
                 $this->validateAutoBudgetAmount($validator);
             }

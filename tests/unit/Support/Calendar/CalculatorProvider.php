@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * CalculatorProvider.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
@@ -27,7 +26,6 @@ namespace Tests\unit\Support\Calendar;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
-use Generator;
 use Tests\unit\Support\Calendar\Periodicity\IntervalProvider;
 
 readonly class CalculatorProvider
@@ -45,7 +43,7 @@ readonly class CalculatorProvider
         $this->label            = "{$periodicity->name} {$intervalProvider->label}";
     }
 
-    public static function providePeriodicityWithSkippedIntervals(): Generator
+    public static function providePeriodicityWithSkippedIntervals(): \Generator
     {
         $intervals = [
             self::from(Periodicity::Daily, new IntervalProvider(Carbon::now(), Carbon::now()->addDays(2)), 1),

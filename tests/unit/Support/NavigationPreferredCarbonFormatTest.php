@@ -32,8 +32,12 @@ use PHPUnit\Framework\TestCase;
  * @group unit-test
  * @group support
  * @group navigation
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class NavigationPreferredCarbonFormatTest extends TestCase
+final class NavigationPreferredCarbonFormatTest extends TestCase
 {
     private Navigation $navigation;
 
@@ -64,7 +68,7 @@ class NavigationPreferredCarbonFormatTest extends TestCase
     /**
      * @dataProvider providePeriods
      */
-    public function testGivenStartAndEndDatesWhenCallPreferredCarbonFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected)
+    public function testGivenStartAndEndDatesWhenCallPreferredCarbonFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
     {
         $carbonFormat = $this->navigation->preferredCarbonFormat($start, $end);
         self::assertSame($expected, $carbonFormat);

@@ -40,8 +40,6 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -60,10 +58,6 @@ class AccountController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightTransfers
-     *
-     * @param GenericRequest $request
-     *
-     * @return JsonResponse
      */
     public function asset(GenericRequest $request): JsonResponse
     {

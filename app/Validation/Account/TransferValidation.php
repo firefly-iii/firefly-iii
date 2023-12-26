@@ -30,11 +30,6 @@ use FireflyIII\Models\Account;
  */
 trait TransferValidation
 {
-    /**
-     * @param array $array
-     *
-     * @return bool
-     */
     protected function validateTransferDestination(array $array): bool
     {
         $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
@@ -72,26 +67,10 @@ trait TransferValidation
         return true;
     }
 
-    /**
-     * @param array $accountTypes
-     *
-     * @return bool
-     */
     abstract protected function canCreateTypes(array $accountTypes): bool;
 
-    /**
-     * @param array $validTypes
-     * @param array $data
-     *
-     * @return Account|null
-     */
     abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
 
-    /**
-     * @param array $array
-     *
-     * @return bool
-     */
     protected function validateTransferSource(array $array): bool
     {
         $accountId     = array_key_exists('id', $array) ? $array['id'] : null;

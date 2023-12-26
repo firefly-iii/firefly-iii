@@ -50,7 +50,7 @@ class NetWorth implements NetWorthInterface
 
     private CurrencyRepositoryInterface $currencyRepos;
     private User                        $user;
-    private null | UserGroup            $userGroup;
+    private null|UserGroup            $userGroup;
 
     /**
      * This method collects the user's net worth in ALL the user's currencies
@@ -58,10 +58,6 @@ class NetWorth implements NetWorthInterface
      *
      * The set of accounts has to be fed to it.
      *
-     * @param Collection $accounts
-     * @param Carbon     $date
-     *
-     * @return array
      * @throws FireflyException
      */
     public function byAccounts(Collection $accounts, Carbon $date): array
@@ -142,27 +138,14 @@ class NetWorth implements NetWorthInterface
             $netWorth['native']['native_balance']    = bcadd($nativeBalance, $netWorth['native']['native_balance']);
         }
         $cache->store($netWorth);
+        $converter->summarize();
 
         return $netWorth;
     }
 
-    /**
-     * @return AdminAccountRepositoryInterface|AccountRepositoryInterface
-     */
-    private function getRepository(): AdminAccountRepositoryInterface | AccountRepositoryInterface
+    public function setUser(null|Authenticatable|User $user): void
     {
-        if (null === $this->userGroup) {
-            return $this->accountRepository;
-        }
-        return $this->adminAccountRepository;
-    }
-
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
-    {
-        if (!($user instanceof User)) {
+        if (!$user instanceof User) {
             return;
         }
         $this->user      = $user;
@@ -176,9 +159,6 @@ class NetWorth implements NetWorthInterface
         $this->currencyRepos->setUser($this->user);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup              = $userGroup;
@@ -187,7 +167,6 @@ class NetWorth implements NetWorthInterface
     }
 
     /**
-     * @inheritDoc
      * @deprecated
      */
     public function sumNetWorthByCurrency(Carbon $date): array
@@ -222,21 +201,29 @@ class NetWorth implements NetWorthInterface
         return $return;
     }
 
-    /**
-     * @return Collection
-     */
+    private function getRepository(): AccountRepositoryInterface|AdminAccountRepositoryInterface
+    {
+        if (null === $this->userGroup) {
+            return $this->accountRepository;
+        }
+
+        return $this->adminAccountRepository;
+    }
+
     private function getAccounts(): Collection
     {
         $accounts = $this->getRepository()->getAccountsByType(
             [AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]
         );
         $filtered = new Collection();
+
         /** @var Account $account */
         foreach ($accounts as $account) {
             if (1 === (int)$this->getRepository()->getMetaValue($account, 'include_net_worth')) {
                 $filtered->push($account);
             }
         }
+
         return $filtered;
     }
 }

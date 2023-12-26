@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Interval.php
  * Copyright (c) 2023 Antonio Spinelli <https://github.com/tonicospinelli>
@@ -32,11 +31,6 @@ abstract class Interval implements Interspacable
 {
     public const int INTERVAL = 1;
 
-    /**
-     * @param int $skip
-     *
-     * @return int
-     */
     final public function skip(int $skip): int
     {
         return static::INTERVAL * $skip;

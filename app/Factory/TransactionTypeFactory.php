@@ -31,11 +31,6 @@ use FireflyIII\Models\TransactionType;
  */
 class TransactionTypeFactory
 {
-    /**
-     * @param string $type
-     *
-     * @return TransactionType|null
-     */
     public function find(string $type): ?TransactionType
     {
         return TransactionType::whereType(ucfirst($type))->first();

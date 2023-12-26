@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Summary;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
 use FireflyIII\Exceptions\FireflyException;
@@ -33,7 +32,6 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
@@ -43,6 +41,7 @@ use FireflyIII\Repositories\UserGroups\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
+use FireflyIII\Support\Http\Api\SummaryBalanceGrouped;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -63,8 +62,6 @@ class BasicController extends Controller
 
     /**
      * BasicController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -96,10 +93,8 @@ class BasicController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v2)#/summary/getBasicSummary
      *
-     * @param DateRequest $request
+     * @throws \Exception
      *
-     * @return JsonResponse
-     * @throws Exception
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function basic(DateRequest $request): JsonResponse
@@ -114,32 +109,37 @@ class BasicController extends Controller
         $spentData    = $this->getLeftToSpendInfo($start, $end);
         $netWorthData = $this->getNetWorthInfo($start, $end);
         $total        = array_merge($balanceData, $billData, $spentData, $netWorthData);
+
         return response()->json($total);
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
+     * Check if date is outside session range.
+     */
+    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
+    {
+        $result = false;
+        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
+            $result = true;
+        }
+        // start and end in the past? use $end
+        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
+            $result = true;
+        }
+
+        return $result;
+    }
+
+    /**
      * @throws FireflyException
      */
     private function getBalanceInformation(Carbon $start, Carbon $end): array
     {
-        // prep some arrays:
-        $incomes    = [
-            'native' => '0',
-        ];
-        $expenses   = [
-            'native' => '0',
-        ];
-        $sums       = [
-            'native' => '0',
-        ];
-        $return     = [];
-        $currencies = [];
-        $converter  = new ExchangeRateConverter();
-        $default    = app('amount')->getDefaultCurrency();
+        $object  = new SummaryBalanceGrouped();
+        $default = app('amount')->getDefaultCurrency();
+
+        $object->setDefault($default);
+
         /** @var User $user */
         $user = auth()->user();
 
@@ -153,33 +153,11 @@ class BasicController extends Controller
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
             ->setTypes([TransactionType::DEPOSIT])
-            ->setRange($start, $end);
+            ->setRange($start, $end)
+        ;
 
         $set = $collector->getExtractedJournals();
-        /** @var array $transactionJournal */
-        foreach ($set as $transactionJournal) {
-            // transaction info:
-            $currencyId              = (int)$transactionJournal['currency_id'];
-            $amount                  = bcmul($transactionJournal['amount'], '-1');
-            $currency                = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
-            $currencies[$currencyId] = $currency;
-            $nativeAmount            = $converter->convert($currency, $default, $transactionJournal['date'], $amount);
-            if ((int)$transactionJournal['foreign_currency_id'] === $default->id) {
-                // use foreign amount instead
-                $nativeAmount = $transactionJournal['foreign_amount'];
-            }
-            // prep the arrays
-            $incomes[$currencyId] ??= '0';
-            $incomes['native']    ??= '0';
-            $sums[$currencyId]    ??= '0';
-            $sums['native']       ??= '0';
-
-            // add values:
-            $incomes[$currencyId] = bcadd($incomes[$currencyId], $amount);
-            $sums[$currencyId]    = bcadd($sums[$currencyId], $amount);
-            $incomes['native']    = bcadd($incomes['native'], $nativeAmount);
-            $sums['native']       = bcadd($sums['native'], $nativeAmount);
-        }
+        $object->groupTransactions('income', $set);
 
         // collect expenses of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
@@ -191,105 +169,14 @@ class BasicController extends Controller
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
             ->setTypes([TransactionType::WITHDRAWAL])
-            ->setRange($start, $end);
+            ->setRange($start, $end)
+        ;
         $set = $collector->getExtractedJournals();
+        $object->groupTransactions('expense', $set);
 
-        /** @var array $transactionJournal */
-        foreach ($set as $transactionJournal) {
-            // transaction info
-            $currencyId              = (int)$transactionJournal['currency_id'];
-            $amount                  = $transactionJournal['amount'];
-            $currency                = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
-            $currencies[$currencyId] = $currency;
-            $nativeAmount            = $converter->convert($currency, $default, $transactionJournal['date'], $amount);
-            if ((int)$transactionJournal['foreign_currency_id'] === $default->id) {
-                // use foreign amount instead
-                $nativeAmount = $transactionJournal['foreign_amount'];
-            }
-
-            // prep arrays
-            $expenses[$currencyId] ??= '0';
-            $expenses['native']    ??= '0';
-            $sums[$currencyId]     ??= '0';
-            $sums['native']        ??= '0';
-
-            // add values
-            $expenses[$currencyId] = bcadd($expenses[$currencyId], $amount);
-            $sums[$currencyId]     = bcadd($sums[$currencyId], $amount);
-            $expenses['native']    = bcadd($expenses['native'], $nativeAmount);
-            $sums['native']        = bcadd($sums['native'], $nativeAmount);
-        }
-
-        // create special array for native currency:
-        $return[] = [
-            'key'                     => 'balance-in-native',
-            'value'                   => $sums['native'],
-            'currency_id'             => (string)$default->id,
-            'currency_code'           => $default->code,
-            'currency_symbol'         => $default->symbol,
-            'currency_decimal_places' => $default->decimal_places,
-        ];
-        $return[] = [
-            'key'                     => 'spent-in-native',
-            'value'                   => $expenses['native'],
-            'currency_id'             => (string)$default->id,
-            'currency_code'           => $default->code,
-            'currency_symbol'         => $default->symbol,
-            'currency_decimal_places' => $default->decimal_places,
-        ];
-        $return[] = [
-            'key'                     => 'earned-in-native',
-            'value'                   => $incomes['native'],
-            'currency_id'             => (string)$default->id,
-            'currency_code'           => $default->code,
-            'currency_symbol'         => $default->symbol,
-            'currency_decimal_places' => $default->decimal_places,
-        ];
-
-        // format amounts:
-        $keys = array_keys($sums);
-        foreach ($keys as $currencyId) {
-            if ('native' === $currencyId) {
-                // skip native entries.
-                continue;
-            }
-            $currency                = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
-            $currencies[$currencyId] = $currency;
-            // create objects for big array.
-            $return[] = [
-                'key'                     => sprintf('balance-in-%s', $currency->code),
-                'value'                   => $sums[$currencyId] ?? '0',
-                'currency_id'             => (string)$currency->id,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-            ];
-            $return[] = [
-                'key'                     => sprintf('spent-in-%s', $currency->code),
-                'value'                   => $expenses[$currencyId] ?? '0',
-                'currency_id'             => (string)$currency->id,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-            ];
-            $return[] = [
-                'key'                     => sprintf('earned-in-%s', $currency->code),
-                'value'                   => $incomes[$currencyId] ?? '0',
-                'currency_id'             => (string)$currency->id,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-            ];
-        }
-        return $return;
+        return $object->groupData();
     }
 
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
     private function getBillInformation(Carbon $start, Carbon $end): array
     {
         /*
@@ -300,6 +187,7 @@ class BasicController extends Controller
         $unpaidAmount = $this->billRepository->sumUnpaidInRange($start, $end);
 
         $return = [];
+
         /**
          * @var array $info
          */
@@ -352,11 +240,7 @@ class BasicController extends Controller
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     * @throws Exception
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
@@ -394,13 +278,14 @@ class BasicController extends Controller
          */
         foreach ($spent as $currencyId => $row) {
             app('log')->debug(sprintf('Processing spent array in currency #%d', $currencyId));
-            $currencyId  = $currencyId;
             $spent       = '0';
             $spentNative = '0';
+
             // get the sum from the array of transactions (double loop but who cares)
             /** @var array $budget */
             foreach ($row['budgets'] as $budget) {
                 app('log')->debug(sprintf('Processing expenses in budget "%s".', $budget['name']));
+
                 /** @var array $journal */
                 foreach ($budget['transaction_journals'] as $journal) {
                     $journalCurrencyId       = $journal['currency_id'];
@@ -465,16 +350,11 @@ class BasicController extends Controller
         }
         $return[] = $nativeLeft;
         $return[] = $nativePerDay;
+        $converter->summarize();
 
         return $return;
     }
 
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
     private function getNetWorthInfo(Carbon $start, Carbon $end): array
     {
         /** @var UserGroup $userGroup */
@@ -528,29 +408,5 @@ class BasicController extends Controller
         }
 
         return $return;
-    }
-
-    /**
-     * Check if date is outside session range.
-     *
-     * @param Carbon $date
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return bool
-     */
-    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
-    {
-        $result = false;
-        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
-            $result = true;
-        }
-        // start and end in the past? use $end
-        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
-            $result = true;
-        }
-
-        return $result;
     }
 }

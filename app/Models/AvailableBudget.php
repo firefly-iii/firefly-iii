@@ -38,20 +38,21 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\AvailableBudget
  *
- * @property int                      $id
- * @property Carbon|null              $created_at
- * @property Carbon|null              $updated_at
- * @property Carbon|null              $deleted_at
- * @property int                      $user_id
- * @property int                      $transaction_currency_id
- * @property string                   $amount
- * @property Carbon                   $start_date
- * @property Carbon                   $end_date
- * @property-read TransactionCurrency $transactionCurrency
- * @property-read User                $user
+ * @property int                 $id
+ * @property null|Carbon         $created_at
+ * @property null|Carbon         $updated_at
+ * @property null|Carbon         $deleted_at
+ * @property int                 $user_id
+ * @property int                 $transaction_currency_id
+ * @property string              $amount
+ * @property Carbon              $start_date
+ * @property Carbon              $end_date
+ * @property TransactionCurrency $transactionCurrency
+ * @property User                $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget newQuery()
- * @method static Builder|AvailableBudget onlyTrashed()
+ * @method static Builder|AvailableBudget                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget query()
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereCreatedAt($value)
@@ -62,10 +63,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereTransactionCurrencyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUserId($value)
- * @method static Builder|AvailableBudget withTrashed()
- * @method static Builder|AvailableBudget withoutTrashed()
- * @property int                      $user_group_id
+ * @method static Builder|AvailableBudget                               withTrashed()
+ * @method static Builder|AvailableBudget                               withoutTrashed()
+ *
+ * @property int $user_group_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|AvailableBudget whereUserGroupId($value)
+ *
  * @mixin Eloquent
  */
 class AvailableBudget extends Model
@@ -89,60 +93,47 @@ class AvailableBudget extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return AvailableBudget
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $availableBudgetId = (int)$value;
+
             /** @var User $user */
             $user = auth()->user();
-            /** @var AvailableBudget|null $availableBudget */
+
+            /** @var null|AvailableBudget $availableBudget */
             $availableBudget = $user->availableBudgets()->find($availableBudgetId);
             if (null !== $availableBudget) {
                 return $availableBudget;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
     }
 
-    /**
-     * @return Attribute
-     */
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
-    /**
-     * @return Attribute
-     */
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
-
 }

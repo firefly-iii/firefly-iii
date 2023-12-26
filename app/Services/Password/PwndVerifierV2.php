@@ -29,17 +29,11 @@ use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class PwndVerifierV2.
- *
-
  */
 class PwndVerifierV2 implements Verifier
 {
     /**
      * Verify the given password against (some) service.
-     *
-     * @param string $password
-     *
-     * @return bool
      */
     public function validPassword(string $password): bool
     {
@@ -62,7 +56,7 @@ class PwndVerifierV2 implements Verifier
         try {
             $client = new Client();
             $res    = $client->request('GET', $url, $opt);
-        } catch (GuzzleException | RequestException $e) {
+        } catch (GuzzleException|RequestException $e) {
             app('log')->error(sprintf('Could not verify password security: %s', $e->getMessage()));
 
             return true;

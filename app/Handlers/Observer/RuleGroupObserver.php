@@ -30,18 +30,11 @@ use FireflyIII\Models\RuleGroup;
  */
 class RuleGroupObserver
 {
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return void
-     */
     public function deleting(RuleGroup $ruleGroup): void
     {
         app('log')->debug('Observe "deleting" of a rule group.');
         foreach ($ruleGroup->rules()->get() as $rule) {
             $rule->delete();
         }
-
     }
-
 }

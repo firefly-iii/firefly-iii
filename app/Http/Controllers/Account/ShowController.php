@@ -36,13 +36,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use JsonException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ShowController
- *
  */
 class ShowController extends Controller
 {
@@ -52,8 +48,6 @@ class ShowController extends Controller
 
     /**
      * ShowController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -77,17 +71,10 @@ class ShowController extends Controller
     /**
      * Show an account.
      *
-     * @param Request     $request
-     * @param Account     $account
-     * @param Carbon|null $start
-     * @param Carbon|null $end
+     * @return Factory|Redirector|RedirectResponse|View
      *
-     * @return RedirectResponse|Redirector|Factory|View
      * @throws FireflyException
-     * @throws JsonException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
+     *                                              */
     public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
     {
         $objectType = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
@@ -96,9 +83,9 @@ class ShowController extends Controller
             return $this->redirectAccountToAccount($account);
         }
 
-        /** @var Carbon $start */
+        // @var Carbon $start
         $start ??= session('start');
-        /** @var Carbon $end */
+        // @var Carbon $end
         $end ??= session('end');
 
         if ($end < $start) {
@@ -123,19 +110,18 @@ class ShowController extends Controller
             $subTitle = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
         }
 
-
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector
             ->setAccounts(new Collection([$account]))
             ->setLimit($pageSize)
             ->setPage($page)->withAccountInformation()->withCategoryInformation()
-            ->setRange($start, $end);
+            ->setRange($start, $end)
+        ;
 
         // this search will not include transaction groups where this asset account (or liability)
         // is just part of ONE of the journals. To force this:
         $collector->setExpandGroupSearch(true);
-
 
         $groups = $collector->getPaginatedGroups();
 
@@ -168,15 +154,10 @@ class ShowController extends Controller
     /**
      * Show an account.
      *
-     * @param Request $request
-     * @param Account $account
+     * @return Factory|Redirector|RedirectResponse|View
      *
-     * @return RedirectResponse|Redirector|Factory|View
      * @throws FireflyException
-     * @throws JsonException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
+     *                                              */
     public function showAll(Request $request, Account $account)
     {
         if (!$this->isEditableAccount($account)) {
@@ -189,12 +170,13 @@ class ShowController extends Controller
         $end          = today(config('app.timezone'));
         $today        = today(config('app.timezone'));
         $start        = $this->repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
+        $subTitleIcon = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $currency     = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
         $subTitle     = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
         $periods      = new Collection();
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page)->withAccountInformation()->withCategoryInformation();

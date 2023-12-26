@@ -31,9 +31,7 @@
  *
  */
 
-
 declare(strict_types=1);
-
 
 return [
     'failed'   => '資格情報が一致しません。',

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * BalanceController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -32,8 +31,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\Http\Api\AccountBalanceGrouped;
 use FireflyIII\Support\Http\Api\CleansChartData;
-use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
@@ -56,34 +55,28 @@ class BalanceController extends Controller
      * TODO validate and set user_group_id
      * TODO collector set group, not user
      *
-     * @param BalanceChartRequest $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function balance(BalanceChartRequest $request): JsonResponse
     {
         $params = $request->getAll();
+
         /** @var Carbon $start */
         $start = $this->parameters->get('start');
+
         /** @var Carbon $end */
         $end = $this->parameters->get('end');
         $end->endOfDay();
+
         /** @var Collection $accounts */
         $accounts       = $params['accounts'];
+
+        /** @var string $preferredRange */
         $preferredRange = $params['period'];
 
-        // set some formats, based on input parameters.
-        $format = app('navigation')->preferredCarbonFormatByPeriod($preferredRange);
-
         // prepare for currency conversion and data collection:
-        $ids = $accounts->pluck('id')->toArray();
         /** @var TransactionCurrency $default */
         $default    = app('amount')->getDefaultCurrency();
-        $converter  = new ExchangeRateConverter();
-        $currencies = [$default->id => $default,]; // currency cache
-        $data       = [];
-        $chartData  = [];
 
         // get journals for entire period:
         /** @var GroupCollectorInterface $collector */
@@ -93,152 +86,16 @@ class BalanceController extends Controller
         $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::RECONCILIATION, TransactionType::TRANSFER]);
         $journals = $collector->getExtractedJournals();
 
-        // set array for default currency (even if unused later on)
-        $defaultCurrencyId        = $default->id;
-        $data[$defaultCurrencyId] = [
-            'currency_id'             => (string)$defaultCurrencyId,
-            'currency_symbol'         => $default->symbol,
-            'currency_code'           => $default->code,
-            'currency_name'           => $default->name,
-            'currency_decimal_places' => $default->decimal_places,
-            'native_id'               => (string)$defaultCurrencyId,
-            'native_symbol'           => $default->symbol,
-            'native_code'             => $default->code,
-            'native_name'             => $default->name,
-            'native_decimal_places'   => $default->decimal_places,
-        ];
+        $object = new AccountBalanceGrouped();
+        $object->setPreferredRange($preferredRange);
+        $object->setDefault($default);
+        $object->setAccounts($accounts);
+        $object->setJournals($journals);
+        $object->setStart($start);
+        $object->setEnd($end);
+        $object->groupByCurrencyAndPeriod();
+        $chartData = $object->convertToChartData();
 
-
-        // loop. group by currency and by period.
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            // format the date according to the period
-            $period = $journal['date']->format($format);
-
-            // collect (and cache) currency information for this journal.
-            $currencyId              = (int)$journal['currency_id'];
-            $currency                = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
-            $currencies[$currencyId] = $currency; // may just re-assign itself, don't mind.
-
-            // set the array with monetary info, if it does not exist.
-            $data[$currencyId] ??= [
-                'currency_id'             => (string)$currencyId,
-                'currency_symbol'         => $journal['currency_symbol'],
-                'currency_code'           => $journal['currency_code'],
-                'currency_name'           => $journal['currency_name'],
-                'currency_decimal_places' => $journal['currency_decimal_places'],
-                // native currency info (could be the same)
-                'native_id'               => (string)$default->id,
-                'native_code'             => $default->code,
-                'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => $default->decimal_places,
-            ];
-
-            // set the array (in monetary info) with spent/earned in this $period, if it does not exist.
-            $data[$currencyId][$period] ??= [
-                'period'        => $period,
-                'spent'         => '0',
-                'earned'        => '0',
-                'native_spent'  => '0',
-                'native_earned' => '0',
-            ];
-            // is this journal's amount in- our outgoing?
-            $key    = 'spent';
-            $amount = app('steam')->negative($journal['amount']);
-            // deposit = incoming
-            // transfer or reconcile or opening balance, and these accounts are the destination.
-            if (
-                TransactionType::DEPOSIT === $journal['transaction_type_type']
-                ||
-
-                (
-                    (
-                        TransactionType::TRANSFER === $journal['transaction_type_type']
-                        || TransactionType::RECONCILIATION === $journal['transaction_type_type']
-                        || TransactionType::OPENING_BALANCE === $journal['transaction_type_type']
-                    )
-                    && in_array($journal['destination_account_id'], $ids, true)
-                )
-            ) {
-                $key    = 'earned';
-                $amount = app('steam')->positive($journal['amount']);
-            }
-            // get conversion rate
-            $rate            = $converter->getCurrencyRate($currency, $default, $journal['date']);
-            $amountConverted = bcmul($amount, $rate);
-
-            // perhaps transaction already has the foreign amount in the native currency.
-            if ((int)$journal['foreign_currency_id'] === $default->id) {
-                $amountConverted = $journal['foreign_amount'] ?? '0';
-                $amountConverted = 'earned' === $key ? app('steam')->positive($amountConverted) : app('steam')->negative($amountConverted);
-            }
-
-            // add normal entry
-            $data[$currencyId][$period][$key] = bcadd($data[$currencyId][$period][$key], $amount);
-
-            // add converted entry
-            $convertedKey                              = sprintf('native_%s', $key);
-            $data[$currencyId][$period][$convertedKey] = bcadd($data[$currencyId][$period][$convertedKey], $amountConverted);
-        }
-
-        // loop this data, make chart bars for each currency:
-        /** @var array $currency */
-        foreach ($data as $currency) {
-            // income and expense array prepped:
-            $income  = [
-                'label'                   => 'earned',
-                'currency_id'             => (string)$currency['currency_id'],
-                'currency_symbol'         => $currency['currency_symbol'],
-                'currency_code'           => $currency['currency_code'],
-                'currency_decimal_places' => $currency['currency_decimal_places'],
-                'native_id'               => (string)$currency['native_id'],
-                'native_symbol'           => $currency['native_symbol'],
-                'native_code'             => $currency['native_code'],
-                'native_decimal_places'   => $currency['native_decimal_places'],
-                'start'                   => $start->toAtomString(),
-                'end'                     => $end->toAtomString(),
-                'period'                  => $preferredRange,
-                'entries'                 => [],
-                'native_entries'          => [],
-            ];
-            $expense = [
-                'label'                   => 'spent',
-                'currency_id'             => (string)$currency['currency_id'],
-                'currency_symbol'         => $currency['currency_symbol'],
-                'currency_code'           => $currency['currency_code'],
-                'currency_decimal_places' => $currency['currency_decimal_places'],
-                'native_id'               => (string)$currency['native_id'],
-                'native_symbol'           => $currency['native_symbol'],
-                'native_code'             => $currency['native_code'],
-                'native_decimal_places'   => $currency['native_decimal_places'],
-                'start'                   => $start->toAtomString(),
-                'end'                     => $end->toAtomString(),
-                'period'                  => $preferredRange,
-                'entries'                 => [],
-                'native_entries'          => [],
-
-            ];
-            // loop all possible periods between $start and $end, and add them to the correct dataset.
-            $currentStart = clone $start;
-            while ($currentStart <= $end) {
-                $key   = $currentStart->format($format);
-                $label = $currentStart->toAtomString();
-                // normal entries
-                $income['entries'][$label]  = app('steam')->bcround(($currency[$key]['earned'] ?? '0'), $currency['currency_decimal_places']);
-                $expense['entries'][$label] = app('steam')->bcround(($currency[$key]['spent'] ?? '0'), $currency['currency_decimal_places']);
-
-                // converted entries
-                $income['native_entries'][$label]  = app('steam')->bcround(($currency[$key]['native_earned'] ?? '0'), $currency['native_decimal_places']);
-                $expense['native_entries'][$label] = app('steam')->bcround(($currency[$key]['native_spent'] ?? '0'), $currency['native_decimal_places']);
-
-                // next loop
-                $currentStart = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
-            }
-
-            $chartData[] = $income;
-            $chartData[] = $expense;
-        }
         return response()->json($this->clean($chartData));
     }
-
 }

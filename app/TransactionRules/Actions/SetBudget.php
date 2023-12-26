@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use DB;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
@@ -40,17 +39,12 @@ class SetBudget implements ActionInterface
 
     /**
      * TriggerInterface constructor.
-     *
-     * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
     {
         $this->action = $action;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */
@@ -67,6 +61,7 @@ class SetBudget implements ActionInterface
                 )
             );
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_budget', ['name' => $search])));
+
             return false;
         }
 
@@ -80,6 +75,7 @@ class SetBudget implements ActionInterface
                 )
             );
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_set_budget', ['type' => $journal['transaction_type_type'], 'name' => $search])));
+
             return false;
         }
 
@@ -90,16 +86,16 @@ class SetBudget implements ActionInterface
         $oldBudgetName = $oldBudget?->name;
         if ((int)$oldBudget?->id === $budget->id) {
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_linked_to_budget', ['name' => $budget->name])));
+
             return false;
         }
-
 
         app('log')->debug(
             sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal['transaction_journal_id'], $budget->id, $budget->name)
         );
 
-        DB::table('budget_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
-        DB::table('budget_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'budget_id' => $budget->id]);
+        \DB::table('budget_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
+        \DB::table('budget_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'budget_id' => $budget->id]);
 
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);

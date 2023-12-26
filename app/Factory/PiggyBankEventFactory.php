@@ -34,10 +34,6 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
  */
 class PiggyBankEventFactory
 {
-    /**
-     * @param TransactionJournal $journal
-     * @param PiggyBank|null     $piggyBank
-     */
     public function create(TransactionJournal $journal, ?PiggyBank $piggyBank): void
     {
         app('log')->debug(sprintf('Now in PiggyBankEventCreate for a %s', $journal->transactionType->type));

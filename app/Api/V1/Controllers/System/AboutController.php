@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\System;
 
-use DB;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Transformers\UserTransformer;
 use Illuminate\Http\JsonResponse;
@@ -42,8 +41,6 @@ class AboutController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/about/getAbout
      *
      * Returns system information.
-     *
-     * @return JsonResponse
      */
     public function about(): JsonResponse
     {
@@ -51,15 +48,15 @@ class AboutController extends Controller
         $replace       = ['\~', '# '];
         $phpVersion    = str_replace($search, $replace, PHP_VERSION);
         $phpOs         = str_replace($search, $replace, PHP_OS);
-        $currentDriver = DB::getDriverName();
+        $currentDriver = \DB::getDriverName();
         $data
                        = [
-            'version'     => config('firefly.version'),
-            'api_version' => config('firefly.api_version'),
-            'php_version' => $phpVersion,
-            'os'          => $phpOs,
-            'driver'      => $currentDriver,
-        ];
+                           'version'     => config('firefly.version'),
+                           'api_version' => config('firefly.api_version'),
+                           'php_version' => $phpVersion,
+                           'os'          => $phpOs,
+                           'driver'      => $currentDriver,
+                       ];
 
         return response()->api(['data' => $data])->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -69,8 +66,6 @@ class AboutController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/about/getCurrentUser
      *
      * Returns information about the user.
-     *
-     * @return JsonResponse
      */
     public function user(): JsonResponse
     {

@@ -28,19 +28,11 @@ use FireflyIII\Exceptions\FireflyException;
 
 /**
  * Class ReportGeneratorFactory.
- *
-
  */
 class ReportGeneratorFactory
 {
     /**
      * Static report generator class.
-     *
-     * @param string $type
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return ReportGeneratorInterface
      *
      * @throws FireflyException
      */
@@ -66,6 +58,7 @@ class ReportGeneratorFactory
 
             return $obj;
         }
+
         throw new FireflyException(sprintf('Cannot generate report. There is no "%s"-report for period "%s".', $type, $period));
     }
 }

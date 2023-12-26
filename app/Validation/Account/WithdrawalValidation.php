@@ -31,11 +31,6 @@ use FireflyIII\Models\AccountType;
  */
 trait WithdrawalValidation
 {
-    /**
-     * @param array $array
-     *
-     * @return bool
-     */
     protected function validateGenericSource(array $array): bool
     {
         $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
@@ -67,26 +62,10 @@ trait WithdrawalValidation
         return true;
     }
 
-    /**
-     * @param array $accountTypes
-     *
-     * @return bool
-     */
     abstract protected function canCreateTypes(array $accountTypes): bool;
 
-    /**
-     * @param array $validTypes
-     * @param array $data
-     *
-     * @return Account|null
-     */
     abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
 
-    /**
-     * @param array $array
-     *
-     * @return bool
-     */
     protected function validateWithdrawalDestination(array $array): bool
     {
         $accountId     = array_key_exists('id', $array) ? $array['id'] : null;
@@ -112,6 +91,7 @@ trait WithdrawalValidation
                 $type = $found->accountType->type;
                 if (in_array($type, $validTypes, true)) {
                     $this->setDestination($found);
+
                     return true;
                 }
                 // todo explain error in log message.
@@ -128,6 +108,7 @@ trait WithdrawalValidation
             $existing = $this->findExistingAccount($validTypes, ['iban' => $accountIban], true);
             if (null !== $existing) {
                 $this->destError = (string)trans('validation.withdrawal_dest_iban_exists');
+
                 return false;
             }
         }
@@ -136,11 +117,6 @@ trait WithdrawalValidation
         return true === $this->canCreateTypes($validTypes);
     }
 
-    /**
-     * @param array $array
-     *
-     * @return bool
-     */
     protected function validateWithdrawalSource(array $array): bool
     {
         $accountId     = array_key_exists('id', $array) ? $array['id'] : null;

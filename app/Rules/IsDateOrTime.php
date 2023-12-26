@@ -27,7 +27,6 @@ namespace FireflyIII\Rules;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
-use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
@@ -36,19 +35,14 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class IsDateOrTime implements ValidationRule
 {
     /**
-     * @param string  $attribute
-     * @param mixed   $value
-     * @param Closure $fail
-     *
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function validate(string $attribute, mixed $value, Closure $fail): void
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         $value = (string)$value;
         if ('' === $value) {
             $fail('validation.date_or_time')->translate();
+
             return;
         }
         if (10 === strlen($value)) {
@@ -59,16 +53,19 @@ class IsDateOrTime implements ValidationRule
                 app('log')->error(sprintf('"%s" is not a valid date: %s', $value, $e->getMessage()));
 
                 $fail('validation.date_or_time')->translate();
+
                 return;
             } catch (InvalidFormatException $e) { // @phpstan-ignore-line
                 app('log')->error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
 
                 $fail('validation.date_or_time')->translate();
+
                 return;
             }
 
             return;
         }
+
         // is an atom string, I hope?
         try {
             Carbon::parse($value);
@@ -76,11 +73,13 @@ class IsDateOrTime implements ValidationRule
             app('log')->error(sprintf('"%s" is not a valid date or time: %s', $value, $e->getMessage()));
 
             $fail('validation.date_or_time')->translate();
+
             return;
         } catch (InvalidFormatException $e) {
             app('log')->error(sprintf('"%s" is of an invalid format: %s', $value, $e->getMessage()));
 
             $fail('validation.date_or_time')->translate();
+
             return;
         }
     }

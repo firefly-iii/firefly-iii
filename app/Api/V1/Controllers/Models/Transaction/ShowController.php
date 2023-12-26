@@ -51,9 +51,6 @@ class ShowController extends Controller
      *
      * Show all transactions.
      *
-     * @param Request $request
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function index(Request $request): JsonResponse
@@ -64,6 +61,7 @@ class ShowController extends Controller
 
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
         $manager = $this->getManager();
+
         /** @var User $admin */
         $admin = auth()->user();
 
@@ -79,12 +77,13 @@ class ShowController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes($types);
+            ->setTypes($types)
+        ;
         if (null !== $this->parameters->get('start') || null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $paginator = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.transactions.index').$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */
@@ -102,10 +101,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/getTransactionByJournal
      *
      * Show a single transaction, by transaction journal.
-     *
-     * @param TransactionJournal $transactionJournal
-     *
-     * @return JsonResponse
      */
     public function showJournal(TransactionJournal $transactionJournal): JsonResponse
     {
@@ -117,16 +112,14 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/getTransaction
      *
      * Show a single transaction.
-     *
-     * @param TransactionGroup $transactionGroup
-     *
-     * @return JsonResponse
      */
     public function show(TransactionGroup $transactionGroup): JsonResponse
     {
         $manager = $this->getManager();
+
         /** @var User $admin */
         $admin = auth()->user();
+
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -135,12 +128,14 @@ class ShowController extends Controller
             // filter on transaction group.
             ->setTransactionGroup($transactionGroup)
             // all info needed for the API:
-            ->withAPIInformation();
+            ->withAPIInformation()
+        ;
 
         $selectedGroup = $collector->getGroups()->first();
         if (null === $selectedGroup) {
             throw new NotFoundHttpException();
         }
+
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);

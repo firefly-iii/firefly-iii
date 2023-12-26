@@ -27,17 +27,9 @@ use FireflyIII\Models\TransactionCurrency;
 
 /**
  * Class CurrencyUpdateService
- *
-
  */
 class CurrencyUpdateService
 {
-    /**
-     * @param TransactionCurrency $currency
-     * @param array               $data
-     *
-     * @return TransactionCurrency
-     */
     public function update(TransactionCurrency $currency, array $data): TransactionCurrency
     {
         if (array_key_exists('code', $data) && '' !== (string)$data['code']) {

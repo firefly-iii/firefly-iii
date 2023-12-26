@@ -44,6 +44,7 @@ class CreateOauthAccessTokensTable extends Migration
 
     /**
      * Run the migrations.
+     *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(): void
@@ -52,7 +53,7 @@ class CreateOauthAccessTokensTable extends Migration
             try {
                 Schema::create(
                     'oauth_access_tokens',
-                    static function (Blueprint $table) {
+                    static function (Blueprint $table): void {
                         $table->string('id', 100)->primary();
                         $table->integer('user_id')->index()->nullable();
                         $table->integer('client_id');

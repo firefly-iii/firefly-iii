@@ -137,9 +137,6 @@ class JournalServiceProvider extends ServiceProvider
         );
     }
 
-    /**
-     *
-     */
     private function registerGroupCollector(): void
     {
         $this->app->bind(

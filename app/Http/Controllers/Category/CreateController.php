@@ -44,8 +44,6 @@ class CreateController extends Controller
 
     /**
      * CategoryController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -66,8 +64,6 @@ class CreateController extends Controller
     /**
      * Create category.
      *
-     * @param Request $request
-     *
      * @return Factory|View
      */
     public function create(Request $request)
@@ -84,9 +80,8 @@ class CreateController extends Controller
     /**
      * Store new category.
      *
-     * @param CategoryFormRequest $request
+     * @return $this|Redirector|RedirectResponse
      *
-     * @return $this|RedirectResponse|Redirector
      * @throws FireflyException
      */
     public function store(CategoryFormRequest $request)
@@ -98,7 +93,7 @@ class CreateController extends Controller
         app('preferences')->mark();
 
         // store attachment(s):
-        /** @var array|null $files */
+        /** @var null|array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($category, $files);

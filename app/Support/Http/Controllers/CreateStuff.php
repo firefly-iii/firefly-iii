@@ -34,17 +34,11 @@ use phpseclib3\Crypt\RSA;
 
 /**
  * Trait CreateStuff
- *
  */
 trait CreateStuff
 {
     /**
      * Creates an asset account.
-     *
-     * @param NewUserFormRequest  $request
-     * @param TransactionCurrency $currency
-     *
-     * @return bool
      */
     protected function createAssetAccount(NewUserFormRequest $request, TransactionCurrency $currency): bool // create stuff
     {
@@ -70,11 +64,6 @@ trait CreateStuff
 
     /**
      * Creates a cash wallet.
-     *
-     * @param TransactionCurrency $currency
-     * @param string              $language
-     *
-     * @return bool
      */
     protected function createCashWalletAccount(TransactionCurrency $currency, string $language): bool // create stuff
     {
@@ -122,12 +111,6 @@ trait CreateStuff
 
     /**
      * Create a savings account.
-     *
-     * @param NewUserFormRequest  $request
-     * @param TransactionCurrency $currency
-     * @param string              $language
-     *
-     * @return bool
      */
     protected function createSavingsAccount(NewUserFormRequest $request, TransactionCurrency $currency, string $language): bool // create stuff
     {
@@ -152,10 +135,6 @@ trait CreateStuff
 
     /**
      * Create a new user instance after a valid registration.
-     *
-     * @param array $data
-     *
-     * @return User
      */
     protected function createUser(array $data): User // create object
     {

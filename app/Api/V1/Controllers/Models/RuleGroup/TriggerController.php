@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\RuleGroup;
 
-use Exception;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\RuleGroup\TestRequest;
 use FireflyIII\Api\V1\Requests\Models\RuleGroup\TriggerRequest;
@@ -47,8 +46,6 @@ class TriggerController extends Controller
 
     /**
      * RuleGroupController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -70,12 +67,7 @@ class TriggerController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rule_groups/testRuleGroup
      *
-     * @param TestRequest $request
-     * @param RuleGroup   $group
-     *
-     * @return JsonResponse
      * @throws FireflyException
-     *
      */
     public function testGroup(TestRequest $request, RuleGroup $group): JsonResponse
     {
@@ -108,10 +100,11 @@ class TriggerController extends Controller
         $count        = $transactions->count();
 
         $paginator = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rule-groups.test', [$group->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.rule-groups.test', [$group->id]).$this->buildParams());
 
         // resulting list is presented as JSON thing.
         $manager = $this->getManager();
+
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -128,11 +121,7 @@ class TriggerController extends Controller
      *
      * Execute the given rule group on a set of existing transactions.
      *
-     * @param TriggerRequest $request
-     * @param RuleGroup      $group
-     *
-     * @return JsonResponse
-     * @throws Exception
+     * @throws \Exception
      */
     public function triggerGroup(TriggerRequest $request, RuleGroup $group): JsonResponse
     {

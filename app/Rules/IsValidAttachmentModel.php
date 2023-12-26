@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Closure;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
@@ -47,14 +46,10 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class IsValidAttachmentModel implements ValidationRule
 {
-    /** @var string */
     private string $model;
 
     /**
      * IsValidAttachmentModel constructor.
-     *
-     *
-     * @param string $model
      */
     public function __construct(string $model)
     {
@@ -63,32 +58,13 @@ class IsValidAttachmentModel implements ValidationRule
     }
 
     /**
-     * @param string $model
-     *
-     * @return string
-     */
-    private function normalizeModel(string $model): string
-    {
-        $search  = ['FireflyIII\Models\\'];
-        $replace = '';
-        $model   = str_replace($search, $replace, $model);
-
-        return sprintf('FireflyIII\Models\%s', $model);
-    }
-
-    /**
-     * @param string  $attribute
-     * @param mixed   $value
-     * @param Closure $fail
-     *
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function validate(string $attribute, mixed $value, Closure $fail): void
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         if (!auth()->check()) {
             $fail('validation.model_id_invalid')->translate();
+
             return;
         }
         $result = match ($this->model) {
@@ -108,11 +84,15 @@ class IsValidAttachmentModel implements ValidationRule
         }
     }
 
-    /**
-     * @param int $value
-     *
-     * @return bool
-     */
+    private function normalizeModel(string $model): string
+    {
+        $search  = ['FireflyIII\Models\\'];
+        $replace = '';
+        $model   = str_replace($search, $replace, $model);
+
+        return sprintf('FireflyIII\Models\%s', $model);
+    }
+
     private function validateAccount(int $value): bool
     {
         /** @var AccountRepositoryInterface $repository */
@@ -122,11 +102,6 @@ class IsValidAttachmentModel implements ValidationRule
         return null !== $repository->find($value);
     }
 
-    /**
-     * @param int $value
-     *
-     * @return bool
-     */
     private function validateBill(int $value): bool
     {
         /** @var BillRepositoryInterface $repository */
@@ -136,11 +111,6 @@ class IsValidAttachmentModel implements ValidationRule
         return null !== $repository->find($value);
     }
 
-    /**
-     * @param int $value
-     *
-     * @return bool
-     */
     private function validateBudget(int $value): bool
     {
         /** @var BudgetRepositoryInterface $repository */
@@ -150,11 +120,6 @@ class IsValidAttachmentModel implements ValidationRule
         return null !== $repository->find($value);
     }
 
-    /**
-     * @param int $value
-     *
-     * @return bool
-     */
     private function validateCategory(int $value): bool
     {
         /** @var CategoryRepositoryInterface $repository */
@@ -164,11 +129,6 @@ class IsValidAttachmentModel implements ValidationRule
         return null !== $repository->find($value);
     }
 
-    /**
-     * @param int $value
-     *
-     * @return bool
-     */
     private function validatePiggyBank(int $value): bool
     {
         /** @var PiggyBankRepositoryInterface $repository */
@@ -178,11 +138,6 @@ class IsValidAttachmentModel implements ValidationRule
         return null !== $repository->find($value);
     }
 
-    /**
-     * @param int $value
-     *
-     * @return bool
-     */
     private function validateTag(int $value): bool
     {
         /** @var TagRepositoryInterface $repository */
@@ -192,11 +147,6 @@ class IsValidAttachmentModel implements ValidationRule
         return null !== $repository->find($value);
     }
 
-    /**
-     * @param int $value
-     *
-     * @return bool
-     */
     private function validateTransaction(int $value): bool
     {
         /** @var JournalAPIRepositoryInterface $repository */
@@ -206,11 +156,6 @@ class IsValidAttachmentModel implements ValidationRule
         return null !== $repository->findTransaction($value);
     }
 
-    /**
-     * @param int $value
-     *
-     * @return bool
-     */
     private function validateJournal(int $value): bool
     {
         $repository = app(JournalRepositoryInterface::class);

@@ -46,8 +46,6 @@ class ShowController extends Controller
 
     /**
      * ShowController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -71,10 +69,7 @@ class ShowController extends Controller
      *
      * Download an attachment.
      *
-     * @param Attachment $attachment
-     *
-     * @return LaravelResponse
-     * @throws   FireflyException
+     * @throws FireflyException
      */
     public function download(Attachment $attachment): LaravelResponse
     {
@@ -96,16 +91,18 @@ class ShowController extends Controller
             $response
                 ->header('Content-Description', 'File Transfer')
                 ->header('Content-Type', 'application/octet-stream')
-                ->header('Content-Disposition', 'attachment; filename=' . $quoted)
+                ->header('Content-Disposition', 'attachment; filename='.$quoted)
                 ->header('Content-Transfer-Encoding', 'binary')
                 ->header('Connection', 'Keep-Alive')
                 ->header('Expires', '0')
                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
                 ->header('Pragma', 'public')
-                ->header('Content-Length', (string)strlen($content));
+                ->header('Content-Length', (string)strlen($content))
+            ;
 
             return $response;
         }
+
         throw new FireflyException('200003: File does not exist.');
     }
 
@@ -115,7 +112,6 @@ class ShowController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function index(): JsonResponse
@@ -132,7 +128,7 @@ class ShowController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.attachments.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.attachments.index').$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
@@ -149,14 +145,11 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/attachments/getAttachment
      *
      * Display the specified resource.
-     *
-     * @param Attachment $attachment
-     *
-     * @return JsonResponse
      */
     public function show(Attachment $attachment): JsonResponse
     {
         $manager = $this->getManager();
+
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
         $transformer->setParameters($this->parameters);

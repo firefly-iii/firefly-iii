@@ -33,18 +33,8 @@ interface JournalRepositoryInterface
 {
     /**
      * Search in journal descriptions.
-     *
-     * @param string $search
-     * @param int    $limit
-     *
-     * @return Collection
      */
     public function searchJournalDescriptions(string $search, int $limit): Collection;
 
-    /**
-     * @param User $user
-     *
-     * @return void
-     */
     public function setUser(User $user): void;
 }

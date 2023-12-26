@@ -27,7 +27,6 @@ namespace FireflyIII\Console\Commands\System;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use PDO;
-use PDOException;
 
 /**
  * Class CreateDatabase
@@ -36,7 +35,6 @@ class CreateDatabase extends Command
 {
     use ShowsFriendlyMessages;
 
-
     protected $description = 'Tries to create the database if it doesn\'t exist yet.';
 
     protected $signature = 'firefly-iii:create-database';
@@ -44,7 +42,7 @@ class CreateDatabase extends Command
     /**
      * Execute the console command.
      *
-     * @return int
+     * @suppressWarnings(PHPMD.MissingImport)
      */
     public function handle(): int
     {
@@ -63,16 +61,17 @@ class CreateDatabase extends Command
         $this->friendlyLine(sprintf('DSN is %s', $dsn));
 
         $options = [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES   => false,
+            \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+            \PDO::ATTR_EMULATE_PREPARES   => false,
         ];
 
         // when it fails, display error
         try {
-            $pdo = new PDO($dsn, env('DB_USERNAME'), env('DB_PASSWORD'), $options);
-        } catch (PDOException $e) {
+            $pdo = new \PDO($dsn, env('DB_USERNAME'), env('DB_PASSWORD'), $options);
+        } catch (\PDOException $e) {
             $this->friendlyError(sprintf('Error when connecting to DB: %s', $e->getMessage()));
+
             return 1;
         }
 

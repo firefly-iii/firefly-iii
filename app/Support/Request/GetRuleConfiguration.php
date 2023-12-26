@@ -28,17 +28,11 @@ namespace FireflyIII\Support\Request;
  */
 trait GetRuleConfiguration
 {
-    /**
-     * @return array
-     */
     protected function getTriggers(): array
     {
         return array_keys(config('search.operators'));
     }
 
-    /**
-     * @return array
-     */
     protected function getTriggersWithContext(): array
     {
         $list   = config('search.operators');

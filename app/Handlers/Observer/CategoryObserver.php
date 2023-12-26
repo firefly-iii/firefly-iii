@@ -30,11 +30,6 @@ use FireflyIII\Models\Category;
  */
 class CategoryObserver
 {
-    /**
-     * @param Category $category
-     *
-     * @return void
-     */
     public function deleting(Category $category): void
     {
         app('log')->debug('Observe "deleting" of a category.');
@@ -43,5 +38,4 @@ class CategoryObserver
         }
         $category->notes()->delete();
     }
-
 }

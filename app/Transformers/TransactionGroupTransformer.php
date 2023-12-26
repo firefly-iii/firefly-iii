@@ -48,8 +48,6 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     /**
      * Constructor.
-     *
-
      */
     public function __construct()
     {
@@ -76,37 +74,59 @@ class TransactionGroupTransformer extends AbstractTransformer
         $this->metaDateFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
     }
 
-    /**
-     * @param array $group
-     *
-     * @return array
-     */
     public function transform(array $group): array
     {
         $data  = new NullArrayObject($group);
         $first = new NullArrayObject(reset($group['transactions']));
 
         return [
-            'id'           => (int)$first['transaction_group_id'],
+            'id'           => (int) $first['transaction_group_id'],
             'created_at'   => $first['created_at']->toAtomString(),
             'updated_at'   => $first['updated_at']->toAtomString(),
-            'user'         => (string)$data['user_id'],
+            'user'         => (string) $data['user_id'],
             'group_title'  => $data['title'],
             'transactions' => $this->transformTransactions($data),
             'links'        => [
                 [
                     'rel' => 'self',
-                    'uri' => '/transactions/' . $first['transaction_group_id'],
+                    'uri' => '/transactions/'.$first['transaction_group_id'],
                 ],
             ],
         ];
     }
 
     /**
-     * @param NullArrayObject $data
-     *
-     * @return array
+     * @throws FireflyException
      */
+    public function transformObject(TransactionGroup $group): array
+    {
+        try {
+            $result = [
+                'id'           => $group->id,
+                'created_at'   => $group->created_at->toAtomString(),
+                'updated_at'   => $group->updated_at->toAtomString(),
+                'user'         => $group->user_id,
+                'group_title'  => $group->title,
+                'transactions' => $this->transformJournals($group->transactionJournals),
+                'links'        => [
+                    [
+                        'rel' => 'self',
+                        'uri' => '/transactions/'.$group->id,
+                    ],
+                ],
+            ];
+        } catch (FireflyException $e) {
+            app('log')->error($e->getMessage());
+            app('log')->error($e->getTraceAsString());
+
+            throw new FireflyException(sprintf('Transaction group #%d is broken. Please check out your log files.', $group->id), 0, $e);
+        }
+
+        // do something else.
+
+        return $result;
+    }
+
     private function transformTransactions(NullArrayObject $data): array
     {
         $result       = [];
@@ -119,30 +139,27 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param array $transaction
-     *
-     * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function transformTransaction(array $transaction): array
     {
         $row = new NullArrayObject($transaction);
 
         // amount:
-        $amount        = app('steam')->positive((string)($row['amount'] ?? '0'));
+        $amount        = app('steam')->positive((string) ($row['amount'] ?? '0'));
         $foreignAmount = null;
-        if (null !== $row['foreign_amount'] && '' !== $row['foreign_amount'] && bccomp('0', $row['foreign_amount']) !== 0) {
+        if (null !== $row['foreign_amount'] && '' !== $row['foreign_amount'] && 0 !== bccomp('0', $row['foreign_amount'])) {
             $foreignAmount = app('steam')->positive($row['foreign_amount']);
         }
 
-        $metaFieldData = $this->groupRepos->getMetaFields((int)$row['transaction_journal_id'], $this->metaFields);
-        $metaDateData  = $this->groupRepos->getMetaDateFields((int)$row['transaction_journal_id'], $this->metaDateFields);
+        $metaFieldData = $this->groupRepos->getMetaFields((int) $row['transaction_journal_id'], $this->metaFields);
+        $metaDateData  = $this->groupRepos->getMetaDateFields((int) $row['transaction_journal_id'], $this->metaDateFields);
         $type          = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
-
 
         $longitude = null;
         $latitude  = null;
         $zoomLevel = null;
-        $location  = $this->getLocationById((int)$row['transaction_journal_id']);
+        $location  = $this->getLocationById((int) $row['transaction_journal_id']);
         if (null !== $location) {
             $longitude = $location->longitude;
             $latitude  = $location->latitude;
@@ -150,17 +167,17 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         return [
-            'user'                   => (string)$row['user_id'],
-            'transaction_journal_id' => (string)$row['transaction_journal_id'],
+            'user'                   => (string) $row['user_id'],
+            'transaction_journal_id' => (string) $row['transaction_journal_id'],
             'type'                   => strtolower($type),
             'date'                   => $row['date']->toAtomString(),
             'order'                  => $row['order'],
 
-            'currency_id'             => (string)$row['currency_id'],
+            'currency_id'             => (string) $row['currency_id'],
             'currency_code'           => $row['currency_code'],
             'currency_name'           => $row['currency_name'],
             'currency_symbol'         => $row['currency_symbol'],
-            'currency_decimal_places' => (int)$row['currency_decimal_places'],
+            'currency_decimal_places' => (int) $row['currency_decimal_places'],
 
             'foreign_currency_id'             => $this->stringFromArray($transaction, 'foreign_currency_id', null),
             'foreign_currency_code'           => $row['foreign_currency_code'],
@@ -172,12 +189,12 @@ class TransactionGroupTransformer extends AbstractTransformer
 
             'description' => $row['description'],
 
-            'source_id'   => (string)$row['source_account_id'],
+            'source_id'   => (string) $row['source_account_id'],
             'source_name' => $row['source_account_name'],
             'source_iban' => $row['source_account_iban'],
             'source_type' => $row['source_account_type'],
 
-            'destination_id'   => (string)$row['destination_account_id'],
+            'destination_id'   => (string) $row['destination_account_id'],
             'destination_name' => $row['destination_account_name'],
             'destination_iban' => $row['destination_account_iban'],
             'destination_type' => $row['destination_account_type'],
@@ -192,8 +209,8 @@ class TransactionGroupTransformer extends AbstractTransformer
             'bill_name' => $row['bill_name'],
 
             'reconciled' => $row['reconciled'],
-            'notes'      => $this->groupRepos->getNoteText((int)$row['transaction_journal_id']),
-            'tags'       => $this->groupRepos->getTags((int)$row['transaction_journal_id']),
+            'notes'      => $this->groupRepos->getNoteText((int) $row['transaction_journal_id']),
+            'tags'       => $this->groupRepos->getTags((int) $row['transaction_journal_id']),
 
             'internal_reference' => $metaFieldData['internal_reference'],
             'external_id'        => $metaFieldData['external_id'],
@@ -226,17 +243,10 @@ class TransactionGroupTransformer extends AbstractTransformer
             'latitude'      => $latitude,
             'zoom_level'    => $zoomLevel,
 
-            'has_attachments' => $this->hasAttachments((int)$row['transaction_journal_id']),
+            'has_attachments' => $this->hasAttachments((int) $row['transaction_journal_id']),
         ];
     }
 
-    /**
-     * @param array       $array
-     * @param string      $key
-     * @param string|null $default
-     *
-     * @return string|null
-     */
     private function stringFromArray(array $array, string $key, ?string $default): ?string
     {
         if (array_key_exists($key, $array) && null === $array[$key]) {
@@ -249,7 +259,8 @@ class TransactionGroupTransformer extends AbstractTransformer
             if ('0' === $array[$key]) {
                 return $default;
             }
-            return (string)$array[$key];
+
+            return (string) $array[$key];
         }
 
         if (null !== $default) {
@@ -259,47 +270,25 @@ class TransactionGroupTransformer extends AbstractTransformer
         return null;
     }
 
-    /**
-     * @param int $journalId
-     *
-     * @return Location|null
-     */
     private function getLocationById(int $journalId): ?Location
     {
         return $this->groupRepos->getLocation($journalId);
     }
 
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Location|null
-     */
     private function getLocation(TransactionJournal $journal): ?Location
     {
         return $journal->locations()->first();
     }
 
-    /**
-     * @param array  $array
-     * @param string $key
-     *
-     * @return int|null
-     */
     private function integerFromArray(array $array, string $key): ?int
     {
         if (array_key_exists($key, $array)) {
-            return (int)$array[$key];
+            return (int) $array[$key];
         }
 
         return null;
     }
 
-    /**
-     * @param NullArrayObject $object
-     * @param string          $key
-     *
-     * @return string|null
-     */
     private function dateFromArray(NullArrayObject $object, string $key): ?string
     {
         if (null === $object[$key]) {
@@ -309,59 +298,18 @@ class TransactionGroupTransformer extends AbstractTransformer
         return $object[$key]->toAtomString();
     }
 
-    /**
-     * @param int $journalId
-     *
-     * @return bool
-     */
     private function hasAttachments(int $journalId): bool
     {
         return $this->groupRepos->countAttachments($journalId) > 0;
     }
 
     /**
-     * @param TransactionGroup $group
-     *
-     * @return array
-     * @throws FireflyException
-     */
-    public function transformObject(TransactionGroup $group): array
-    {
-        try {
-            $result = [
-                'id'           => $group->id,
-                'created_at'   => $group->created_at->toAtomString(),
-                'updated_at'   => $group->updated_at->toAtomString(),
-                'user'         => $group->user_id,
-                'group_title'  => $group->title,
-                'transactions' => $this->transformJournals($group->transactionJournals),
-                'links'        => [
-                    [
-                        'rel' => 'self',
-                        'uri' => '/transactions/' . $group->id,
-                    ],
-                ],
-            ];
-        } catch (FireflyException $e) {
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
-            throw new FireflyException(sprintf('Transaction group #%d is broken. Please check out your log files.', $group->id), 0, $e);
-        }
-
-        // do something else.
-
-        return $result;
-    }
-
-    /**
-     * @param Collection $transactionJournals
-     *
-     * @return array
      * @throws FireflyException
      */
     private function transformJournals(Collection $transactionJournals): array
     {
         $result = [];
+
         /** @var TransactionJournal $journal */
         foreach ($transactionJournals as $journal) {
             $result[] = $this->transformJournal($journal);
@@ -371,10 +319,9 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @return array
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function transformJournal(TransactionJournal $journal): array
     {
@@ -481,16 +428,13 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @return Transaction
      * @throws FireflyException
      */
     private function getSourceTransaction(TransactionJournal $journal): Transaction
     {
         $result = $journal->transactions->first(
             static function (Transaction $transaction) {
-                return (float)$transaction->amount < 0; // lame but it works.
+                return (float) $transaction->amount < 0; // lame but it works.
             }
         );
         if (null === $result) {
@@ -501,16 +445,13 @@ class TransactionGroupTransformer extends AbstractTransformer
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @return Transaction
      * @throws FireflyException
      */
     private function getDestinationTransaction(TransactionJournal $journal): Transaction
     {
         $result = $journal->transactions->first(
             static function (Transaction $transaction) {
-                return (float)$transaction->amount > 0; // lame but it works
+                return (float) $transaction->amount > 0; // lame but it works
             }
         );
         if (null === $result) {
@@ -520,36 +461,21 @@ class TransactionGroupTransformer extends AbstractTransformer
         return $result;
     }
 
-    /**
-     * @param string $amount
-     *
-     * @return string
-     */
     private function getAmount(string $amount): string
     {
         return app('steam')->positive($amount);
     }
 
-    /**
-     * @param string|null $foreignAmount
-     *
-     * @return string|null
-     */
     private function getForeignAmount(?string $foreignAmount): ?string
     {
         $result = null;
-        if (null !== $foreignAmount && '' !== $foreignAmount && bccomp('0', $foreignAmount) !== 0) {
+        if (null !== $foreignAmount && '' !== $foreignAmount && 0 !== bccomp('0', $foreignAmount)) {
             $result = app('steam')->positive($foreignAmount);
         }
 
         return $result;
     }
 
-    /**
-     * @param NullArrayObject $dates
-     *
-     * @return array
-     */
     private function getDates(NullArrayObject $dates): array
     {
         $fields = [
@@ -571,11 +497,6 @@ class TransactionGroupTransformer extends AbstractTransformer
         return $return;
     }
 
-    /**
-     * @param TransactionCurrency|null $currency
-     *
-     * @return array
-     */
     private function getForeignCurrency(?TransactionCurrency $currency): array
     {
         $array = [
@@ -595,11 +516,6 @@ class TransactionGroupTransformer extends AbstractTransformer
         return $array;
     }
 
-    /**
-     * @param Budget|null $budget
-     *
-     * @return array
-     */
     private function getBudget(?Budget $budget): array
     {
         $array = [
@@ -615,11 +531,6 @@ class TransactionGroupTransformer extends AbstractTransformer
         return $array;
     }
 
-    /**
-     * @param Category|null $category
-     *
-     * @return array
-     */
     private function getCategory(?Category $category): array
     {
         $array = [
@@ -635,11 +546,6 @@ class TransactionGroupTransformer extends AbstractTransformer
         return $array;
     }
 
-    /**
-     * @param Bill|null $bill
-     *
-     * @return array
-     */
     private function getBill(?Bill $bill): array
     {
         $array = [
@@ -649,7 +555,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (null === $bill) {
             return $array;
         }
-        $array['id']   = (string)$bill->id;
+        $array['id']   = (string) $bill->id;
         $array['name'] = $bill->name;
 
         return $array;

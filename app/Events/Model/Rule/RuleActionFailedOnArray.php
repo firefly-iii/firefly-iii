@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * RuleActionFailedOnArray.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -39,11 +38,6 @@ class RuleActionFailedOnArray
     public array      $journal;
     public RuleAction $ruleAction;
 
-    /**
-     * @param RuleAction $ruleAction
-     * @param array      $journal
-     * @param string     $error
-     */
     public function __construct(RuleAction $ruleAction, array $journal, string $error)
     {
         app('log')->debug('Created new RuleActionFailedOnArray');

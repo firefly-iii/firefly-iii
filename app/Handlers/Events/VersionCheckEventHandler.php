@@ -28,8 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class VersionCheckEventHandler
@@ -41,11 +39,8 @@ class VersionCheckEventHandler
     /**
      * Checks with GitHub to see if there is a new version.
      *
-     * @param RequestedVersionCheckStatus $event
-     *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     *
      * @deprecated ?
      */
     public function checkForUpdates(RequestedVersionCheckStatus $event): void
@@ -90,11 +85,7 @@ class VersionCheckEventHandler
     }
 
     /**
-     * @param RequestedVersionCheckStatus $event
-     *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     protected function warnToCheckForUpdates(RequestedVersionCheckStatus $event): void
     {

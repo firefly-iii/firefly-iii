@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * 2023_10_21_113213_add_currency_pivot_tables.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -28,7 +27,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
     /**
      * @SuppressWarnings(PHPMD.ShortMethodName)
      * Run the migrations.
@@ -38,7 +37,7 @@ return new class () extends Migration {
         // transaction_currency_user
         if (!Schema::hasTable('transaction_currency_user')) {
             try {
-                Schema::create('transaction_currency_user', static function (Blueprint $table) {
+                Schema::create('transaction_currency_user', static function (Blueprint $table): void {
                     $table->id();
                     $table->timestamps();
                     $table->integer('user_id', false, true);
@@ -57,7 +56,7 @@ return new class () extends Migration {
         // transaction_currency_user_group
         if (!Schema::hasTable('transaction_currency_user_group')) {
             try {
-                Schema::create('transaction_currency_user_group', static function (Blueprint $table) {
+                Schema::create('transaction_currency_user_group', static function (Blueprint $table): void {
                     $table->id();
                     $table->timestamps();
                     $table->bigInteger('user_group_id', false, true);

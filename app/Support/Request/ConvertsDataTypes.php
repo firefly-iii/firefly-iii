@@ -89,10 +89,6 @@ trait ConvertsDataTypes
 
     /**
      * Return integer value.
-     *
-     * @param string $field
-     *
-     * @return int
      */
     public function convertInteger(string $field): int
     {
@@ -102,20 +98,11 @@ trait ConvertsDataTypes
     /**
      * Abstract method that always exists in the Request classes that use this
      * trait, OR a stub needs to be added by any other class that uses this train.
-     *
-     * @param string     $key
-     * @param mixed|null $default
-     *
-     * @return mixed
      */
     abstract public function get(string $key, mixed $default = null): mixed;
 
     /**
      * Return string value.
-     *
-     * @param string $field
-     *
-     * @return string
      */
     public function convertString(string $field): string
     {
@@ -123,14 +110,10 @@ trait ConvertsDataTypes
         if (!is_scalar($entry)) {
             return '';
         }
+
         return (string)$this->clearString((string)$entry);
     }
 
-    /**
-     * @param string|null $string
-     *
-     * @return string|null
-     */
     public function clearString(?string $string): ?string
     {
         $string = $this->clearStringKeepNewlines($string);
@@ -148,11 +131,6 @@ trait ConvertsDataTypes
         return trim($string);
     }
 
-    /**
-     * @param string|null $string
-     *
-     * @return string|null
-     */
     public function clearStringKeepNewlines(?string $string): ?string
     {
         if (null === $string) {
@@ -173,8 +151,6 @@ trait ConvertsDataTypes
      * TODO duplicate, see SelectTransactionsRequest
      *
      * Validate list of accounts. This one is for V2 endpoints, so it searches for groups, not users.
-     *
-     * @return Collection
      */
     public function getAccountList(): Collection
     {
@@ -207,10 +183,6 @@ trait ConvertsDataTypes
 
     /**
      * Return string value with newlines.
-     *
-     * @param string $field
-     *
-     * @return string
      */
     public function stringWithNewlines(string $field): string
     {
@@ -218,9 +190,17 @@ trait ConvertsDataTypes
     }
 
     /**
-     * @param mixed $array
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
      *
-     * @return array|null
+     * @param mixed $key
+     *
+     * @return mixed
+     */
+    abstract public function has($key);
+
+    /**
+     * @param mixed $array
      */
     protected function arrayFromValue($array): ?array
     {
@@ -237,11 +217,6 @@ trait ConvertsDataTypes
         return null;
     }
 
-    /**
-     * @param string|null $value
-     *
-     * @return bool
-     */
     protected function convertBoolean(?string $value): bool
     {
         if (null === $value) {
@@ -263,11 +238,6 @@ trait ConvertsDataTypes
         return false;
     }
 
-    /**
-     * @param string|null $string
-     *
-     * @return Carbon|null
-     */
     protected function convertDateTime(?string $string): ?Carbon
     {
         $value = $this->get((string)$string);
@@ -283,6 +253,7 @@ trait ConvertsDataTypes
                 $carbon = Carbon::createFromFormat('Y-m-d', $value);
             } catch (InvalidDateException $e) { // @phpstan-ignore-line
                 app('log')->error(sprintf('[1] "%s" is not a valid date: %s', $value, $e->getMessage()));
+
                 return null;
             } catch (InvalidFormatException $e) { // @phpstan-ignore-line
                 app('log')->error(sprintf('[2] "%s" is of an invalid format: %s', $value, $e->getMessage()));
@@ -291,10 +262,13 @@ trait ConvertsDataTypes
             }
             if (false === $carbon) {
                 app('log')->error(sprintf('[2] "%s" is of an invalid format.', $value));
+
                 return null;
             }
+
             return $carbon;
         }
+
         // is an atom string, I hope?
         try {
             $carbon = Carbon::parse($value);
@@ -307,15 +281,12 @@ trait ConvertsDataTypes
 
             return null;
         }
+
         return $carbon;
     }
 
     /**
      * Return floating value.
-     *
-     * @param string $field
-     *
-     * @return float|null
      */
     protected function convertFloat(string $field): ?float
     {
@@ -327,11 +298,6 @@ trait ConvertsDataTypes
         return (float)$res;
     }
 
-    /**
-     * @param string|null $string
-     *
-     * @return Carbon|null
-     */
     protected function dateFromValue(?string $string): ?Carbon
     {
         if (null === $string) {
@@ -341,6 +307,7 @@ trait ConvertsDataTypes
             return null;
         }
         $carbon = null;
+
         try {
             $carbon = new Carbon($string, config('app.timezone'));
         } catch (InvalidFormatException $e) {
@@ -359,10 +326,6 @@ trait ConvertsDataTypes
     /**
      * Returns all data in the request, or omits the field if not set,
      * according to the config from the request. This is the way.
-     *
-     * @param array $fields
-     *
-     * @return array
      */
     protected function getAllData(array $fields): array
     {
@@ -370,7 +333,7 @@ trait ConvertsDataTypes
         foreach ($fields as $field => $info) {
             if (true === $this->has($info[0])) {
                 $method         = $info[1];
-                $return[$field] = $this->$method($info[0]); // @phpstan-ignore-line
+                $return[$field] = $this->{$method}($info[0]); // @phpstan-ignore-line
             }
         }
 
@@ -378,25 +341,12 @@ trait ConvertsDataTypes
     }
 
     /**
-     * Abstract method that always exists in the Request classes that use this
-     * trait, OR a stub needs to be added by any other class that uses this train.
-     *
-     * @param mixed $key
-     *
-     * @return mixed
-     */
-    abstract public function has($key);
-
-    /**
      * Return date or NULL.
-     *
-     * @param string $field
-     *
-     * @return Carbon|null
      */
     protected function getCarbonDate(string $field): ?Carbon
     {
         $result = null;
+
         try {
             $result = '' !== (string)$this->get($field) ? new Carbon((string)$this->get($field), config('app.timezone')) : null;
         } catch (InvalidFormatException $e) {
@@ -411,10 +361,6 @@ trait ConvertsDataTypes
 
     /**
      * Parse to integer
-     *
-     * @param string|null $string
-     *
-     * @return int|null
      */
     protected function integerFromValue(?string $string): ?int
     {
@@ -430,10 +376,6 @@ trait ConvertsDataTypes
 
     /**
      * Return integer value, or NULL when it's not set.
-     *
-     * @param string $field
-     *
-     * @return int|null
      */
     protected function nullableInteger(string $field): ?int
     {

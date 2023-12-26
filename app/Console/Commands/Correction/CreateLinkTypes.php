@@ -40,8 +40,6 @@ class CreateLinkTypes extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -54,7 +52,8 @@ class CreateLinkTypes extends Command
         ];
         foreach ($set as $name => $values) {
             $link = LinkType::where('name', $name)
-                            ->first();
+                ->first()
+            ;
             if (null === $link) {
                 $link          = new LinkType();
                 $link->name    = $name;
@@ -69,6 +68,7 @@ class CreateLinkTypes extends Command
         if (0 === $count) {
             $this->friendlyPositive('All link types are OK');
         }
+
         return 0;
     }
 }

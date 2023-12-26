@@ -34,16 +34,10 @@ class AccountMetaFactory
 {
     /**
      * Create update or delete meta data.
-     *
-     * @param Account $account
-     * @param string  $field
-     * @param string  $value
-     *
-     * @return AccountMeta|null
      */
     public function crud(Account $account, string $field, string $value): ?AccountMeta
     {
-        /** @var AccountMeta|null $entry */
+        /** @var null|AccountMeta $entry */
         $entry = $account->accountMeta()->where('name', $field)->first();
         // must not be an empty string:
         if ('' !== $value) {
@@ -65,11 +59,6 @@ class AccountMetaFactory
         return $entry;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return AccountMeta|null
-     */
     public function create(array $data): ?AccountMeta
     {
         return AccountMeta::create($data);

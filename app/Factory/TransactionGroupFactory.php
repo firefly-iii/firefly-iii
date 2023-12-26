@@ -27,12 +27,9 @@ use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\User;
-use JsonException;
 
 /**
  * Class TransactionGroupFactory
- *
-
  */
 class TransactionGroupFactory
 {
@@ -50,22 +47,20 @@ class TransactionGroupFactory
     /**
      * Store a new transaction journal.
      *
-     * @param array $data
-     *
-     * @return TransactionGroup
      * @throws DuplicateTransactionException
      * @throws FireflyException
-     * @throws JsonException
      */
     public function create(array $data): TransactionGroup
     {
         app('log')->debug('Now in TransactionGroupFactory::create()');
         $this->journalFactory->setUser($this->user);
         $this->journalFactory->setErrorOnHash($data['error_if_duplicate_hash'] ?? false);
+
         try {
             $collection = $this->journalFactory->create($data);
         } catch (DuplicateTransactionException $e) {
             app('log')->warning('GroupFactory::create() caught journalFactory::create() with a duplicate!');
+
             throw new DuplicateTransactionException($e->getMessage(), 0, $e);
         }
         $title = $data['group_title'] ?? null;
@@ -91,8 +86,6 @@ class TransactionGroupFactory
 
     /**
      * Set the user.
-     *
-     * @param User $user
      */
     public function setUser(User $user): void
     {

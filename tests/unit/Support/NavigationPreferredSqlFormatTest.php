@@ -32,8 +32,12 @@ use PHPUnit\Framework\TestCase;
  * @group unit-test
  * @group support
  * @group navigation
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class NavigationPreferredSqlFormatTest extends TestCase
+final class NavigationPreferredSqlFormatTest extends TestCase
 {
     private Navigation $navigation;
 
@@ -64,7 +68,7 @@ class NavigationPreferredSqlFormatTest extends TestCase
     /**
      * @dataProvider provideDates
      */
-    public function testGivenStartAndEndDatesWhenCallPreferredSqlFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected)
+    public function testGivenStartAndEndDatesWhenCallPreferredSqlFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
     {
         $formatPeriod = $this->navigation->preferredSqlFormat($start, $end);
         self::assertSame($expected, $formatPeriod);

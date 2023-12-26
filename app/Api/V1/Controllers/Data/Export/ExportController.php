@@ -29,8 +29,6 @@ use FireflyIII\Api\V1\Requests\Data\Export\ExportRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Http\Response as LaravelResponse;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ExportController
@@ -59,12 +57,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportAccounts
      *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -76,45 +69,11 @@ class ExportController extends Controller
     }
 
     /**
-     * @param string $key
-     *
-     * @return LaravelResponse
-     * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function returnExport(string $key): LaravelResponse
-    {
-        $date     = date('Y-m-d-H-i-s');
-        $fileName = sprintf('%s-export-%s.csv', $date, $key);
-        $data     = $this->exporter->export();
-
-        /** @var LaravelResponse $response */
-        $response = response($data[$key]);
-        $response
-            ->header('Content-Description', 'File Transfer')
-            ->header('Content-Type', 'application/octet-stream')
-            ->header('Content-Disposition', 'attachment; filename=' . $fileName)
-            ->header('Content-Transfer-Encoding', 'binary')
-            ->header('Connection', 'Keep-Alive')
-            ->header('Expires', '0')
-            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
-            ->header('Pragma', 'public')
-            ->header('Content-Length', (string)strlen($data[$key]));
-
-        return $response;
-    }
-
-    /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBills
      *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function bills(ExportRequest $request): LaravelResponse
@@ -128,12 +87,8 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBudgets
      *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function budgets(ExportRequest $request): LaravelResponse
@@ -147,12 +102,8 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportCategories
      *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function categories(ExportRequest $request): LaravelResponse
@@ -166,12 +117,8 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportPiggies
      *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function piggyBanks(ExportRequest $request): LaravelResponse
@@ -185,12 +132,8 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRecurring
      *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function recurring(ExportRequest $request): LaravelResponse
@@ -204,12 +147,8 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRules
      *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function rules(ExportRequest $request): LaravelResponse
@@ -223,12 +162,8 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTags
      *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function tags(ExportRequest $request): LaravelResponse
@@ -242,12 +177,7 @@ class ExportController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTransactions
      *
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function transactions(ExportRequest $request): LaravelResponse
     {
@@ -258,5 +188,31 @@ class ExportController extends Controller
         $this->exporter->setExportTransactions(true);
 
         return $this->returnExport('transactions');
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function returnExport(string $key): LaravelResponse
+    {
+        $date     = date('Y-m-d-H-i-s');
+        $fileName = sprintf('%s-export-%s.csv', $date, $key);
+        $data     = $this->exporter->export();
+
+        /** @var LaravelResponse $response */
+        $response = response($data[$key]);
+        $response
+            ->header('Content-Description', 'File Transfer')
+            ->header('Content-Type', 'application/octet-stream')
+            ->header('Content-Disposition', 'attachment; filename='.$fileName)
+            ->header('Content-Transfer-Encoding', 'binary')
+            ->header('Connection', 'Keep-Alive')
+            ->header('Expires', '0')
+            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->header('Pragma', 'public')
+            ->header('Content-Length', (string) strlen($data[$key]))
+        ;
+
+        return $response;
     }
 }

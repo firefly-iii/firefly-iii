@@ -29,8 +29,6 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class UpdatedTransactionGroup.
- *
-
  */
 class UpdatedTransactionGroup extends Event
 {
@@ -42,10 +40,6 @@ class UpdatedTransactionGroup extends Event
 
     /**
      * Create a new event instance.
-     *
-     * @param TransactionGroup $transactionGroup
-     * @param bool             $applyRules
-     * @param bool             $fireWebhooks
      */
     public function __construct(TransactionGroup $transactionGroup, bool $applyRules, bool $fireWebhooks)
     {

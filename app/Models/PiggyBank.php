@@ -40,32 +40,33 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\PiggyBank
  *
- * @property int                                   $id
- * @property Carbon|null                           $created_at
- * @property Carbon|null                           $updated_at
- * @property Carbon|null                           $deleted_at
- * @property int                                   $account_id
- * @property string                                $name
- * @property string                                $targetamount
- * @property Carbon|null                           $startdate
- * @property Carbon|null                           $targetdate
- * @property int                                   $order
- * @property bool                                  $active
- * @property bool                                  $encrypted
- * @property-read Account                          $account
- * @property-read Collection|Attachment[]          $attachments
- * @property-read int|null                         $attachments_count
- * @property-read Collection|Note[]                $notes
- * @property-read int|null                         $notes_count
- * @property-read Collection|ObjectGroup[]         $objectGroups
- * @property-read int|null                         $object_groups_count
- * @property-read Collection|PiggyBankEvent[]      $piggyBankEvents
- * @property-read int|null                         $piggy_bank_events_count
- * @property-read Collection|PiggyBankRepetition[] $piggyBankRepetitions
- * @property-read int|null                         $piggy_bank_repetitions_count
+ * @property int                              $id
+ * @property null|Carbon                      $created_at
+ * @property null|Carbon                      $updated_at
+ * @property null|Carbon                      $deleted_at
+ * @property int                              $account_id
+ * @property string                           $name
+ * @property string                           $targetamount
+ * @property null|Carbon                      $startdate
+ * @property null|Carbon                      $targetdate
+ * @property int                              $order
+ * @property bool                             $active
+ * @property bool                             $encrypted
+ * @property Account                          $account
+ * @property Attachment[]|Collection          $attachments
+ * @property null|int                         $attachments_count
+ * @property Collection|Note[]                $notes
+ * @property null|int                         $notes_count
+ * @property Collection|ObjectGroup[]         $objectGroups
+ * @property null|int                         $object_groups_count
+ * @property Collection|PiggyBankEvent[]      $piggyBankEvents
+ * @property null|int                         $piggy_bank_events_count
+ * @property Collection|PiggyBankRepetition[] $piggyBankRepetitions
+ * @property null|int                         $piggy_bank_repetitions_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank newQuery()
- * @method static Builder|PiggyBank onlyTrashed()
+ * @method static Builder|PiggyBank                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank query()
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereAccountId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereActive($value)
@@ -79,8 +80,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereTargetamount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereTargetdate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PiggyBank whereUpdatedAt($value)
- * @method static Builder|PiggyBank withTrashed()
- * @method static Builder|PiggyBank withoutTrashed()
+ * @method static Builder|PiggyBank                               withTrashed()
+ * @method static Builder|PiggyBank                               withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class PiggyBank extends Model
@@ -107,9 +109,6 @@ class PiggyBank extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return PiggyBank
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): self
@@ -117,26 +116,22 @@ class PiggyBank extends Model
         if (auth()->check()) {
             $piggyBankId = (int)$value;
             $piggyBank   = self::where('piggy_banks.id', $piggyBankId)
-                               ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                               ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*']);
+                ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
+                ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*'])
+            ;
             if (null !== $piggyBank) {
                 return $piggyBank;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
     }
 
-    /**
-     * @return MorphMany
-     */
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
@@ -158,24 +153,17 @@ class PiggyBank extends Model
         return $this->morphToMany(ObjectGroup::class, 'object_groupable');
     }
 
-    /**
-     * @return HasMany
-     */
     public function piggyBankEvents(): HasMany
     {
         return $this->hasMany(PiggyBankEvent::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function piggyBankRepetitions(): HasMany
     {
         return $this->hasMany(PiggyBankRepetition::class);
     }
 
     /**
-     *
      * @param mixed $value
      */
     public function setTargetamountAttribute($value): void
@@ -183,36 +171,27 @@ class PiggyBank extends Model
         $this->attributes['targetamount'] = (string)$value;
     }
 
-    /**
-     * @return Attribute
-     */
     protected function accountId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
-    /**
-     * @return Attribute
-     */
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
     /**
      * Get the max amount
-     *
-     * @return Attribute
      */
     protected function targetamount(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
-
 }

@@ -38,19 +38,20 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * FireflyIII\Models\BudgetLimit
  *
- * @property int                           $id
- * @property Carbon|null                   $created_at
- * @property Carbon|null                   $updated_at
- * @property int                           $budget_id
- * @property int                           $transaction_currency_id
- * @property Carbon                        $start_date
- * @property Carbon|null                   $end_date
- * @property string                        $amount
- * @property string                        $spent
- * @property string|null                   $period
- * @property int|string                    $generated
- * @property-read Budget                   $budget
- * @property-read TransactionCurrency|null $transactionCurrency
+ * @property int                      $id
+ * @property null|Carbon              $created_at
+ * @property null|Carbon              $updated_at
+ * @property int                      $budget_id
+ * @property int                      $transaction_currency_id
+ * @property Carbon                   $start_date
+ * @property null|Carbon              $end_date
+ * @property string                   $amount
+ * @property string                   $spent
+ * @property null|string              $period
+ * @property int|string               $generated
+ * @property Budget                   $budget
+ * @property null|TransactionCurrency $transactionCurrency
+ *
  * @method static Builder|BudgetLimit newModelQuery()
  * @method static Builder|BudgetLimit newQuery()
  * @method static Builder|BudgetLimit query()
@@ -64,6 +65,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|BudgetLimit whereStartDate($value)
  * @method static Builder|BudgetLimit whereTransactionCurrencyId($value)
  * @method static Builder|BudgetLimit whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class BudgetLimit extends Model
@@ -90,9 +92,6 @@ class BudgetLimit extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return BudgetLimit
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): self
@@ -100,27 +99,23 @@ class BudgetLimit extends Model
         if (auth()->check()) {
             $budgetLimitId = (int)$value;
             $budgetLimit   = self::where('budget_limits.id', $budgetLimitId)
-                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                                 ->where('budgets.user_id', auth()->user()->id)
-                                 ->first(['budget_limits.*']);
+                ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                ->where('budgets.user_id', auth()->user()->id)
+                ->first(['budget_limits.*'])
+            ;
             if (null !== $budgetLimit) {
                 return $budgetLimit;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function budget(): BelongsTo
     {
         return $this->belongsTo(Budget::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
@@ -128,35 +123,25 @@ class BudgetLimit extends Model
 
     /**
      * Get the amount
-     *
-     * @return Attribute
      */
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
-    /**
-     * @return Attribute
-     */
     protected function budgetId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
-    /**
-     * @return Attribute
-     */
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
-
-
 }

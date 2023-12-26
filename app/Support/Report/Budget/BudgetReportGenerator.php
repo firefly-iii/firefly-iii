@@ -35,7 +35,6 @@ use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use JsonException;
 
 /**
  * Class BudgetReportGenerator
@@ -74,6 +73,7 @@ class BudgetReportGenerator
     {
         $spent        = $this->opsRepository->listExpenses($this->start, $this->end, $this->accounts, $this->budgets);
         $this->report = [];
+
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             $accountId                = $account->id;
@@ -88,48 +88,6 @@ class BudgetReportGenerator
         // loop expenses.
         foreach ($spent as $currency) {
             $this->processExpenses($currency);
-        }
-    }
-
-    /**
-     * Process each row of expenses collected for the "Account per budget" partial
-     *
-     * @param array $expenses
-     */
-    private function processExpenses(array $expenses): void
-    {
-        foreach ($expenses['budgets'] as $budget) {
-            $this->processBudgetExpenses($expenses, $budget);
-        }
-    }
-
-    /**
-     * Process each set of transactions for each row of expenses.
-     *
-     * @param array $expenses
-     * @param array $budget
-     */
-    private function processBudgetExpenses(array $expenses, array $budget): void
-    {
-        $budgetId   = (int)$budget['id'];
-        $currencyId = (int)$expenses['currency_id'];
-        foreach ($budget['transaction_journals'] as $journal) {
-            $sourceAccountId = $journal['source_account_id'];
-
-            $this->report[$sourceAccountId]['currencies'][$currencyId]
-                ??= [
-                'currency_id'             => $expenses['currency_id'],
-                'currency_symbol'         => $expenses['currency_symbol'],
-                'currency_name'           => $expenses['currency_name'],
-                'currency_decimal_places' => $expenses['currency_decimal_places'],
-                'budgets'                 => [],
-            ];
-
-            $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId]
-                ??= '0';
-
-            $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId]
-                = bcadd($this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId], $journal['amount']);
         }
     }
 
@@ -149,12 +107,87 @@ class BudgetReportGenerator
         $this->percentageReport();
     }
 
+    public function getReport(): array
+    {
+        return $this->report;
+    }
+
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
+    public function setBudgets(Collection $budgets): void
+    {
+        $this->budgets = $budgets;
+    }
+
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    public function setUser(User $user): void
+    {
+        $this->repository->setUser($user);
+        $this->blRepository->setUser($user);
+        $this->opsRepository->setUser($user);
+        $this->nbRepository->setUser($user);
+        $this->currency = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
+    }
+
+    /**
+     * Process each row of expenses collected for the "Account per budget" partial
+     */
+    private function processExpenses(array $expenses): void
+    {
+        foreach ($expenses['budgets'] as $budget) {
+            $this->processBudgetExpenses($expenses, $budget);
+        }
+    }
+
+    /**
+     * Process each set of transactions for each row of expenses.
+     */
+    private function processBudgetExpenses(array $expenses, array $budget): void
+    {
+        $budgetId   = (int)$budget['id'];
+        $currencyId = (int)$expenses['currency_id'];
+        foreach ($budget['transaction_journals'] as $journal) {
+            $sourceAccountId = $journal['source_account_id'];
+
+            $this->report[$sourceAccountId]['currencies'][$currencyId]
+                ??= [
+                    'currency_id'             => $expenses['currency_id'],
+                    'currency_symbol'         => $expenses['currency_symbol'],
+                    'currency_name'           => $expenses['currency_name'],
+                    'currency_decimal_places' => $expenses['currency_decimal_places'],
+                    'budgets'                 => [],
+                ];
+
+            $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId]
+                ??= '0';
+
+            $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId]
+                = bcadd($this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId], $journal['amount']);
+        }
+    }
+
     /**
      * Start the budgets block on the default report by processing every budget.
      */
     private function generalBudgetReport(): void
     {
         $budgetList = $this->repository->getBudgets();
+
         /** @var Budget $budget */
         foreach ($budgetList as $budget) {
             $this->processBudget($budget);
@@ -163,8 +196,6 @@ class BudgetReportGenerator
 
     /**
      * Process expenses etc. for a single budget for the budgets block on the default report.
-     *
-     * @param Budget $budget
      */
     private function processBudget(Budget $budget): void
     {
@@ -178,6 +209,7 @@ class BudgetReportGenerator
 
         // get all budget limits for budget in period:
         $limits = $this->blRepository->getBudgetLimits($budget, $this->start, $this->end);
+
         /** @var BudgetLimit $limit */
         foreach ($limits as $limit) {
             $this->processLimit($budget, $limit);
@@ -186,9 +218,6 @@ class BudgetReportGenerator
 
     /**
      * Process a single budget limit for the budgets block on the default report.
-     *
-     * @param Budget      $budget
-     * @param BudgetLimit $limit
      */
     private function processLimit(Budget $budget, BudgetLimit $limit): void
     {
@@ -221,16 +250,16 @@ class BudgetReportGenerator
         // make sum information:
         $this->report['sums'][$currencyId]
                                                         ??= [
-            'budgeted'                => '0',
-            'spent'                   => '0',
-            'left'                    => '0',
-            'overspent'               => '0',
-            'currency_id'             => $currencyId,
-            'currency_code'           => $limitCurrency->code,
-            'currency_name'           => $limitCurrency->name,
-            'currency_symbol'         => $limitCurrency->symbol,
-            'currency_decimal_places' => $limitCurrency->decimal_places,
-        ];
+                                                            'budgeted'                => '0',
+                                                            'spent'                   => '0',
+                                                            'left'                    => '0',
+                                                            'overspent'               => '0',
+                                                            'currency_id'             => $currencyId,
+                                                            'currency_code'           => $limitCurrency->code,
+                                                            'currency_name'           => $limitCurrency->name,
+                                                            'currency_symbol'         => $limitCurrency->symbol,
+                                                            'currency_decimal_places' => $limitCurrency->decimal_places,
+                                                        ];
         $this->report['sums'][$currencyId]['budgeted']  = bcadd($this->report['sums'][$currencyId]['budgeted'], $limit->amount);
         $this->report['sums'][$currencyId]['spent']     = bcadd($this->report['sums'][$currencyId]['spent'], $spent);
         $this->report['sums'][$currencyId]['left']      = bcadd($this->report['sums'][$currencyId]['left'], bcadd($limit->amount, $spent));
@@ -319,60 +348,5 @@ class BudgetReportGenerator
                 $this->report['budgets'][$budgetId]['budget_limits'][$limitId]['budgeted_pct'] = $budgetedPct;
             }
         }
-    }
-
-    /**
-     * @return array
-     */
-    public function getReport(): array
-    {
-        return $this->report;
-    }
-
-    /**
-     * @param Collection $accounts
-     */
-    public function setAccounts(Collection $accounts): void
-    {
-        $this->accounts = $accounts;
-    }
-
-    /**
-     * @param Collection $budgets
-     */
-    public function setBudgets(Collection $budgets): void
-    {
-        $this->budgets = $budgets;
-    }
-
-    /**
-     * @param Carbon $end
-     */
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    /**
-     * @param Carbon $start
-     */
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
-    }
-
-    /**
-     * @param User $user
-     *
-     * @throws FireflyException
-     * @throws JsonException
-     */
-    public function setUser(User $user): void
-    {
-        $this->repository->setUser($user);
-        $this->blRepository->setUser($user);
-        $this->opsRepository->setUser($user);
-        $this->nbRepository->setUser($user);
-        $this->currency = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
     }
 }

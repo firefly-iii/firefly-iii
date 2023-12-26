@@ -33,9 +33,6 @@ use Illuminate\View\View;
  */
 class CreateController extends Controller
 {
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -61,6 +58,7 @@ class CreateController extends Controller
     public function index()
     {
         $previousUrl = $this->rememberPreviousUrl('webhooks.create.url');
+
         return view('webhooks.create', compact('previousUrl'));
     }
 }

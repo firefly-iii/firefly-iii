@@ -42,8 +42,6 @@ class DeleteController extends Controller
 
     /**
      * DeleteController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -64,8 +62,6 @@ class DeleteController extends Controller
     /**
      * Delete a rule group.
      *
-     * @param RuleGroup $ruleGroup
-     *
      * @return Factory|View
      */
     public function delete(RuleGroup $ruleGroup)
@@ -81,10 +77,7 @@ class DeleteController extends Controller
     /**
      * Actually destroy the rule group.
      *
-     * @param Request   $request
-     * @param RuleGroup $ruleGroup
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function destroy(Request $request, RuleGroup $ruleGroup)
     {

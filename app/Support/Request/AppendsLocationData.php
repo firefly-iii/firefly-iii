@@ -31,20 +31,42 @@ trait AppendsLocationData
     /**
      * Abstract method.
      *
-     * @param $key
+     * @param mixed $key
      *
      * @return bool
      */
     abstract public function has($key);
 
     /**
+     * Abstract method.
+     *
+     * @return string
+     */
+    abstract public function method();
+
+    /**
+     * Abstract method.
+     *
+     * @param mixed ...$patterns
+     *
+     * @return mixed
+     */
+    abstract public function routeIs(...$patterns);
+
+    /**
+     * Abstract method stolen from "InteractsWithInput".
+     *
+     * @param null $key
+     * @param bool $default
+     *
+     * @return mixed
+     *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
+    abstract public function boolean($key = null, $default = false);
+
+    /**
      * Read the submitted Request data and add new or updated Location data to the array.
-     *
-     * @param array       $data
-     *
-     * @param string|null $prefix
-     *
-     * @return array
      */
     protected function appendLocationData(array $data, ?string $prefix): array
     {
@@ -97,12 +119,6 @@ trait AppendsLocationData
         return $data;
     }
 
-    /**
-     * @param string|null $prefix
-     * @param string      $key
-     *
-     * @return string
-     */
     private function getLocationKey(?string $prefix, string $key): string
     {
         if (null === $prefix) {
@@ -112,11 +128,6 @@ trait AppendsLocationData
         return sprintf('%s_%s', $prefix, $key);
     }
 
-    /**
-     * @param string|null $prefix
-     *
-     * @return bool
-     */
     private function isValidPost(?string $prefix): bool
     {
         app('log')->debug('Now in isValidPost()');
@@ -155,38 +166,6 @@ trait AppendsLocationData
         return false;
     }
 
-    /**
-     * Abstract method.
-     *
-     * @return string
-     */
-    abstract public function method();
-
-    /**
-     * Abstract method.
-     *
-     * @param mixed ...$patterns
-     *
-     * @return mixed
-     */
-    abstract public function routeIs(...$patterns);
-
-    /**
-     * Abstract method stolen from "InteractsWithInput".
-     *
-     * @param null $key
-     * @param bool $default
-     *
-     * @return mixed
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     */
-    abstract public function boolean($key = null, $default = false);
-
-    /**
-     * @param string|null $prefix
-     *
-     * @return bool
-     */
     private function isValidPUT(?string $prefix): bool
     {
         $longitudeKey   = $this->getLocationKey($prefix, 'longitude');
@@ -227,11 +206,6 @@ trait AppendsLocationData
         return false;
     }
 
-    /**
-     * @param string|null $prefix
-     *
-     * @return bool
-     */
     private function isValidEmptyPUT(?string $prefix): bool
     {
         $longitudeKey = $this->getLocationKey($prefix, 'longitude');
@@ -239,9 +213,9 @@ trait AppendsLocationData
         $zoomLevelKey = $this->getLocationKey($prefix, 'zoom_level');
 
         return (
-                   null === $this->get($longitudeKey)
-                   && null === $this->get($latitudeKey)
-                   && null === $this->get($zoomLevelKey))
+            null === $this->get($longitudeKey)
+            && null === $this->get($latitudeKey)
+            && null === $this->get($zoomLevelKey))
                && (
                    'PUT' === $this->method()
                    || ('POST' === $this->method() && $this->routeIs('*.update'))

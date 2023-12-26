@@ -30,11 +30,8 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
- *
  * Class OperationsRepository
  */
 class OperationsRepository implements OperationsRepositoryInterface
@@ -46,15 +43,6 @@ class OperationsRepository implements OperationsRepositoryInterface
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $tags
-     *
-     * @return array
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
@@ -119,10 +107,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         return $array;
     }
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;
@@ -130,30 +115,9 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
-     * @return Collection
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function getTags(): Collection
-    {
-        $repository = app(TagRepositoryInterface::class);
-
-        return $repository->get();
-    }
-
-    /**
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
-     *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $tags
-     *
-     * @return array
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
@@ -222,12 +186,6 @@ class OperationsRepository implements OperationsRepositoryInterface
     /**
      * Sum of withdrawal journals in period for a set of tags, grouped per currency. Amounts are always negative.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $tags
-     *
-     * @return array
      * @throws FireflyException
      */
     public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
@@ -238,16 +196,17 @@ class OperationsRepository implements OperationsRepositoryInterface
     /**
      * Sum of income journals in period for a set of tags, grouped per currency. Amounts are always positive.
      *
-     * @param Carbon          $start
-     * @param Carbon          $end
-     * @param Collection|null $accounts
-     * @param Collection|null $tags
-     *
-     * @return array
      * @throws FireflyException
      */
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         throw new FireflyException(sprintf('%s is not yet implemented.', __METHOD__));
+    }
+
+    private function getTags(): Collection
+    {
+        $repository = app(TagRepositoryInterface::class);
+
+        return $repository->get();
     }
 }

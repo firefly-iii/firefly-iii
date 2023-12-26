@@ -28,8 +28,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class MigrateAttachments
@@ -47,10 +45,7 @@ class MigrateAttachments extends Command
     /**
      * Execute the console command.
      *
-     * @return int
-     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -60,7 +55,6 @@ class MigrateAttachments extends Command
 
             return 0;
         }
-
 
         $attachments = Attachment::get();
         $count       = 0;
@@ -84,7 +78,7 @@ class MigrateAttachments extends Command
                 $att->save();
 
                 app('log')->debug(sprintf('Migrated attachment #%s description to note #%d.', $att->id, $note->id));
-                $count++;
+                ++$count;
             }
         }
         if (0 === $count) {
@@ -100,11 +94,6 @@ class MigrateAttachments extends Command
         return 0;
     }
 
-    /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
@@ -115,9 +104,6 @@ class MigrateAttachments extends Command
         return false;
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

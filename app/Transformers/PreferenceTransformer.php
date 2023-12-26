@@ -32,10 +32,6 @@ class PreferenceTransformer extends AbstractTransformer
 {
     /**
      * Transform the preference
-     *
-     * @param Preference $preference
-     *
-     * @return array
      */
     public function transform(Preference $preference): array
     {

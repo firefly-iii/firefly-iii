@@ -35,8 +35,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class TagController.
@@ -102,8 +100,6 @@ class TagController extends Controller
     /**
      * Delete a tag.
      *
-     * @param Tag $tag
-     *
      * @return Factory|View
      */
     public function delete(Tag $tag)
@@ -118,8 +114,6 @@ class TagController extends Controller
 
     /**
      * Edit a tag.
-     *
-     * @param Tag $tag
      *
      * @return Factory|View
      */
@@ -154,8 +148,6 @@ class TagController extends Controller
     /**
      * Edit a tag.
      *
-     * @param TagRepositoryInterface $repository
-     *
      * @return Factory|View
      */
     public function index(TagRepositoryInterface $repository)
@@ -179,11 +171,6 @@ class TagController extends Controller
         return view('tags.index', compact('tags', 'count'));
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     public function massDestroy(Request $request): RedirectResponse
     {
         $tags = $request->get('tags');
@@ -198,7 +185,7 @@ class TagController extends Controller
             $tag   = $this->repository->find($tagId);
             if (null !== $tag) {
                 $this->repository->destroy($tag);
-                $count++;
+                ++$count;
             }
         }
         session()->flash('success', trans_choice('firefly.deleted_x_tags', $count));
@@ -208,10 +195,6 @@ class TagController extends Controller
 
     /**
      * Destroy a tag.
-     *
-     * @param Tag $tag
-     *
-     * @return RedirectResponse
      */
     public function destroy(Tag $tag): RedirectResponse
     {
@@ -227,15 +210,9 @@ class TagController extends Controller
     /**
      * Show a single tag.
      *
-     * @param Request     $request
-     * @param Tag         $tag
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Tag $tag, Carbon $start = null, Carbon $end = null)
     {
@@ -266,7 +243,8 @@ class TagController extends Controller
         $collector = app(GroupCollectorInterface::class);
 
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withAccountInformation()
-                  ->setTag($tag)->withBudgetInformation()->withCategoryInformation();
+            ->setTag($tag)->withBudgetInformation()->withCategoryInformation()
+        ;
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
         $sums = $this->repository->sumsOfTag($tag, $start, $end);
@@ -277,12 +255,7 @@ class TagController extends Controller
     /**
      * Show a single tag over all time.
      *
-     * @param Request $request
-     * @param Tag     $tag
-     *
      * @return Factory|View
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function showAll(Request $request, Tag $tag)
     {
@@ -297,10 +270,12 @@ class TagController extends Controller
         $attachments  = $this->repository->getAttachments($tag);
         $path         = route('tags.show', [$tag->id, 'all']);
         $location     = $this->repository->getLocation($tag);
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withAccountInformation()
-                  ->setTag($tag)->withBudgetInformation()->withCategoryInformation();
+            ->setTag($tag)->withBudgetInformation()->withCategoryInformation()
+        ;
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
         $sums = $this->repository->sumsOfTag($tag, $start, $end);
@@ -310,10 +285,6 @@ class TagController extends Controller
 
     /**
      * Store a tag.
-     *
-     * @param TagFormRequest $request
-     *
-     * @return RedirectResponse
      */
     public function store(TagFormRequest $request): RedirectResponse
     {
@@ -327,7 +298,7 @@ class TagController extends Controller
         app('preferences')->mark();
 
         // store attachment(s):
-        /** @var array|null $files */
+        /** @var null|array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachmentsHelper->saveAttachmentsForModel($result, $files);
@@ -351,11 +322,6 @@ class TagController extends Controller
 
     /**
      * Update a tag.
-     *
-     * @param TagFormRequest $request
-     * @param Tag            $tag
-     *
-     * @return RedirectResponse
      */
     public function update(TagFormRequest $request, Tag $tag): RedirectResponse
     {
@@ -366,7 +332,7 @@ class TagController extends Controller
         app('preferences')->mark();
 
         // store new attachment(s):
-        /** @var array|null $files */
+        /** @var null|array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachmentsHelper->saveAttachmentsForModel($tag, $files);

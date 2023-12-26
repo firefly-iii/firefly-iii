@@ -32,15 +32,11 @@ use FireflyIII\User;
  */
 class UserTransformer extends AbstractTransformer
 {
-    /** @var UserRepositoryInterface */
     private UserRepositoryInterface $repository;
 
     /**
      * Transform user.
      *
-     * @param User $user
-     *
-     * @return array
      * @throws FireflyException
      */
     public function transform(User $user): array
@@ -58,7 +54,7 @@ class UserTransformer extends AbstractTransformer
             'links'        => [
                 [
                     'rel' => 'self',
-                    'uri' => '/users/' . $user->id,
+                    'uri' => '/users/'.$user->id,
                 ],
             ],
         ];

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * BillRepository.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -53,29 +52,25 @@ class BillRepository implements BillRepositoryInterface
                 $bill->order = $current;
                 $bill->save();
             }
-            $current++;
+            ++$current;
         }
     }
 
-    /**
-     * @return Collection
-     */
     public function getBills(): Collection
     {
         return $this->userGroup->bills()
-                               ->orderBy('bills.name', 'ASC')
-                               ->get(['bills.*']);
+            ->orderBy('bills.name', 'ASC')
+            ->get(['bills.*'])
+        ;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function sumPaidInRange(Carbon $start, Carbon $end): array
     {
         $bills     = $this->getActiveBills();
         $default   = app('amount')->getDefaultCurrency();
         $return    = [];
         $converter = new ExchangeRateConverter();
+
         /** @var Bill $bill */
         foreach ($bills as $bill) {
             /** @var Collection $set */
@@ -100,7 +95,7 @@ class BillRepository implements BillRepositoryInterface
 
             /** @var TransactionJournal $transactionJournal */
             foreach ($set as $transactionJournal) {
-                /** @var Transaction|null $sourceTransaction */
+                /** @var null|Transaction $sourceTransaction */
                 $sourceTransaction = $transactionJournal->transactions()->where('amount', '<', 0)->first();
                 if (null !== $sourceTransaction) {
                     $amount = $sourceTransaction->amount;
@@ -123,29 +118,27 @@ class BillRepository implements BillRepositoryInterface
                 }
             }
         }
+        $converter->summarize();
+
         return $return;
     }
 
-    /**
-     * @return Collection
-     */
     public function getActiveBills(): Collection
     {
         return $this->userGroup->bills()
-                               ->where('active', true)
-                               ->orderBy('bills.name', 'ASC')
-                               ->get(['bills.*']);
+            ->where('active', true)
+            ->orderBy('bills.name', 'ASC')
+            ->get(['bills.*'])
+        ;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function sumUnpaidInRange(Carbon $start, Carbon $end): array
     {
         $bills     = $this->getActiveBills();
         $return    = [];
         $default   = app('amount')->getDefaultCurrency();
         $converter = new ExchangeRateConverter();
+
         /** @var Bill $bill */
         foreach ($bills as $bill) {
             $dates = $this->getPayDatesInRange($bill, $start, $end);
@@ -175,6 +168,7 @@ class BillRepository implements BillRepositoryInterface
                 $return[$currencyId]['native_sum'] = bcadd($return[$currencyId]['native_sum'], bcmul($nativeAverage, (string)$total));
             }
         }
+        $converter->summarize();
 
         return $return;
     }
@@ -182,32 +176,26 @@ class BillRepository implements BillRepositoryInterface
     /**
      * Between start and end, tells you on which date(s) the bill is expected to hit.
      * TODO duplicate of function in other billrepositoryinterface
-     *
-     * @param Bill   $bill
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
      */
     public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
         $set          = new Collection();
         $currentStart = clone $start;
-        //app('log')->debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
-        //app('log')->debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
+        // app('log')->debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
+        // app('log')->debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
 
         while ($currentStart <= $end) {
-            //app('log')->debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
+            // app('log')->debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
-            //app('log')->debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+            // app('log')->debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
             if ($nextExpectedMatch > $end) {// If nextExpectedMatch is after end, we continue
                 break;
             }
             $set->push(clone $nextExpectedMatch);
-            //app('log')->debug(sprintf('Now %d dates in set.', $set->count()));
+            // app('log')->debug(sprintf('Now %d dates in set.', $set->count()));
             $nextExpectedMatch->addDay();
 
-            //app('log')->debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
+            // app('log')->debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
 
             $currentStart = clone $nextExpectedMatch;
         }
@@ -220,11 +208,6 @@ class BillRepository implements BillRepositoryInterface
      * transaction. Whether it is there already, is not relevant.
      *
      * TODO duplicate of other repos
-     *
-     * @param Bill   $bill
-     * @param Carbon $date
-     *
-     * @return Carbon
      */
     public function nextDateMatch(Bill $bill, Carbon $date): Carbon
     {

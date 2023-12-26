@@ -25,8 +25,6 @@ namespace FireflyIII\Support;
 
 /**
  * Class ChartColour.
- *
-
  */
 class ChartColour
 {
@@ -54,11 +52,6 @@ class ChartColour
             [194, 24, 91],
         ];
 
-    /**
-     * @param int $index
-     *
-     * @return string
-     */
     public static function getColour(int $index): string
     {
         $index %= count(self::$colours);

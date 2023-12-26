@@ -49,11 +49,6 @@ class ParseDateString
             'end of this year',
         ];
 
-    /**
-     * @param string $date
-     *
-     * @return bool
-     */
     public function isDateRange(string $date): bool
     {
         $date = strtolower($date);
@@ -74,10 +69,9 @@ class ParseDateString
     }
 
     /**
-     * @param string $date
-     *
-     * @return Carbon
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function parseDate(string $date): Carbon
     {
@@ -90,7 +84,8 @@ class ParseDateString
 
         // if regex for YYYY-MM-DD:
         $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/';
-        if (false !== preg_match($pattern, $date)) {
+        $result  = preg_match($pattern, $date);
+        if (false !== $result && 0 !== $result) {
             return $this->parseDefaultDate($date);
         }
 
@@ -110,23 +105,64 @@ class ParseDateString
         // maybe a date range
         if (10 === strlen($date) && (str_contains($date, 'xx') || str_contains($date, 'xxxx'))) {
             app('log')->debug(sprintf('[c] Detected a date range ("%s"), return a fake date.', $date));
+
             // very lazy way to parse the date without parsing it, because this specific function
             // cant handle date ranges.
             return new Carbon('1984-09-17');
         }
         // maybe a year, nothing else?
-        if (4 === strlen($date) && is_numeric($date) && (int)$date > 1000 && (int)$date <= 3000) {
+        if (4 === strlen($date) && is_numeric($date) && (int) $date > 1000 && (int) $date <= 3000) {
             return new Carbon(sprintf('%d-01-01', $date));
         }
 
         throw new FireflyException(sprintf('[d] Not a recognised date format: "%s"', $date));
     }
 
-    /**
-     * @param string $keyword
-     *
-     * @return Carbon
-     */
+    public function parseRange(string $date): array
+    {
+        // several types of range can be submitted
+        $result = [
+            'exact' => new Carbon('1984-09-17'),
+        ];
+
+        switch (true) {
+            default:
+                break;
+
+            case $this->isDayRange($date):
+                $result = $this->parseDayRange($date);
+
+                break;
+
+            case $this->isMonthRange($date):
+                $result = $this->parseMonthRange($date);
+
+                break;
+
+            case $this->isYearRange($date):
+                $result = $this->parseYearRange($date);
+
+                break;
+
+            case $this->isMonthDayRange($date):
+                $result = $this->parseMonthDayRange($date);
+
+                break;
+
+            case $this->isDayYearRange($date):
+                $result = $this->parseDayYearRange($date);
+
+                break;
+
+            case $this->isMonthYearRange($date):
+                $result = $this->parseMonthYearRange($date);
+
+                break;
+        }
+
+        return $result;
+    }
+
     protected function parseKeyword(string $keyword): Carbon
     {
         $today = today(config('app.timezone'))->startOfDay();
@@ -146,14 +182,10 @@ class ParseDateString
         };
     }
 
-    /**
-     * @param string $date
-     *
-     * @return Carbon
-     */
     protected function parseDefaultDate(string $date): Carbon
     {
         $result = false;
+
         try {
             $result = Carbon::createFromFormat('Y-m-d', $date);
         } catch (InvalidFormatException $e) { // @phpstan-ignore-line
@@ -162,14 +194,10 @@ class ParseDateString
         if (false === $result) {
             $result = today(config('app.timezone'))->startOfDay();
         }
+
         return $result;
     }
 
-    /**
-     * @param string $date
-     *
-     * @return Carbon
-     */
     protected function parseRelativeDate(string $date): Carbon
     {
         app('log')->debug(sprintf('Now in parseRelativeDate("%s")', $date));
@@ -198,21 +226,23 @@ class ParseDateString
 
             // verify if correct
             $pattern = '/[+-]\d+[wqmdy]/';
-            $res     = preg_match($pattern, $part);
-            if (0 === $res || false === $res) {
+            $result  = preg_match($pattern, $part);
+            if (0 === $result || false === $result) {
                 app('log')->error(sprintf('Part "%s" does not match regular expression. Will be skipped.', $part));
+
                 continue;
             }
             $direction = str_starts_with($part, '+') ? 1 : 0;
             $period    = $part[strlen($part) - 1];
-            $number    = (int)substr($part, 1, -1);
+            $number    = (int) substr($part, 1, -1);
             if (!array_key_exists($period, $functions[$direction])) {
                 app('log')->error(sprintf('No method for direction %d and period "%s".', $direction, $period));
+
                 continue;
             }
             $func = $functions[$direction][$period];
             app('log')->debug(sprintf('Will now do %s(%d) on %s', $func, $number, $today->format('Y-m-d')));
-            $today->$func($number); // @phpstan-ignore-line
+            $today->{$func}($number); // @phpstan-ignore-line
             app('log')->debug(sprintf('Resulting date is %s', $today->format('Y-m-d')));
         }
 
@@ -220,52 +250,13 @@ class ParseDateString
     }
 
     /**
-     * @param string $date
-     *
-     * @return array
-     */
-    public function parseRange(string $date): array
-    {
-        // several types of range can be submitted
-        $result = [
-            'exact' => new Carbon('1984-09-17'),
-        ];
-        switch (true) {
-            default:
-                break;
-            case $this->isDayRange($date):
-                $result = $this->parseDayRange($date);
-                break;
-            case $this->isMonthRange($date):
-                $result = $this->parseMonthRange($date);
-                break;
-            case $this->isYearRange($date):
-                $result = $this->parseYearRange($date);
-                break;
-            case $this->isMonthDayRange($date):
-                $result = $this->parseMonthDayRange($date);
-                break;
-            case $this->isDayYearRange($date):
-                $result = $this->parseDayYearRange($date);
-                break;
-            case $this->isMonthYearRange($date):
-                $result = $this->parseMonthYearRange($date);
-                break;
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param string $date
-     *
-     * @return bool
+     * Returns true if this matches regex for xxxx-xx-DD:
      */
     protected function isDayRange(string $date): bool
     {
-        // if regex for xxxx-xx-DD:
         $pattern = '/^xxxx-xx-(0[1-9]|[12]\d|3[01])$/';
-        if (false !== preg_match($pattern, $date)) {
+        $result  = preg_match($pattern, $date);
+        if (false !== $result && 0 !== $result) {
             app('log')->debug(sprintf('"%s" is a day range.', $date));
 
             return true;
@@ -277,10 +268,6 @@ class ParseDateString
 
     /**
      * format of string is xxxx-xx-DD
-     *
-     * @param string $date
-     *
-     * @return array
      */
     protected function parseDayRange(string $date): array
     {
@@ -291,16 +278,12 @@ class ParseDateString
         ];
     }
 
-    /**
-     * @param string $date
-     *
-     * @return bool
-     */
     protected function isMonthRange(string $date): bool
     {
         // if regex for xxxx-MM-xx:
         $pattern = '/^xxxx-(0[1-9]|1[012])-xx$/';
-        if (false !== preg_match($pattern, $date)) {
+        $result  = preg_match($pattern, $date);
+        if (false !== $result && 0 !== $result) {
             app('log')->debug(sprintf('"%s" is a month range.', $date));
 
             return true;
@@ -312,10 +295,6 @@ class ParseDateString
 
     /**
      * format of string is xxxx-MM-xx
-     *
-     * @param string $date
-     *
-     * @return array
      */
     protected function parseMonthRange(string $date): array
     {
@@ -327,16 +306,12 @@ class ParseDateString
         ];
     }
 
-    /**
-     * @param string $date
-     *
-     * @return bool
-     */
     protected function isYearRange(string $date): bool
     {
         // if regex for YYYY-xx-xx:
         $pattern = '/^(19|20)\d\d-xx-xx$/';
-        if (false !== preg_match($pattern, $date)) {
+        $result  = preg_match($pattern, $date);
+        if (false !== $result && 0 !== $result) {
             app('log')->debug(sprintf('"%s" is a year range.', $date));
 
             return true;
@@ -348,10 +323,6 @@ class ParseDateString
 
     /**
      * format of string is YYYY-xx-xx
-     *
-     * @param string $date
-     *
-     * @return array
      */
     protected function parseYearRange(string $date): array
     {
@@ -363,16 +334,12 @@ class ParseDateString
         ];
     }
 
-    /**
-     * @param string $date
-     *
-     * @return bool
-     */
     protected function isMonthDayRange(string $date): bool
     {
         // if regex for xxxx-MM-DD:
         $pattern = '/^xxxx-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/';
-        if (false !== preg_match($pattern, $date)) {
+        $result  = preg_match($pattern, $date);
+        if (false !== $result && 0 !== $result) {
             app('log')->debug(sprintf('"%s" is a month/day range.', $date));
 
             return true;
@@ -382,12 +349,52 @@ class ParseDateString
         return false;
     }
 
+    protected function isDayYearRange(string $date): bool
+    {
+        // if regex for YYYY-xx-DD:
+        $pattern = '/^(19|20)\d\d-xx-(0[1-9]|[12]\d|3[01])$/';
+        $result  = preg_match($pattern, $date);
+        if (false !== $result && 0 !== $result) {
+            app('log')->debug(sprintf('"%s" is a day/year range.', $date));
+
+            return true;
+        }
+        app('log')->debug(sprintf('"%s" is not a day/year range.', $date));
+
+        return false;
+    }
+
+    protected function isMonthYearRange(string $date): bool
+    {
+        // if regex for YYYY-MM-xx:
+        $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-xx$/';
+        $result  = preg_match($pattern, $date);
+        if (false !== $result && 0 !== $result) {
+            app('log')->debug(sprintf('"%s" is a month/year range.', $date));
+
+            return true;
+        }
+        app('log')->debug(sprintf('"%s" is not a month/year range.', $date));
+
+        return false;
+    }
+
+    /**
+     * format of string is YYYY-MM-xx
+     */
+    protected function parseMonthYearRange(string $date): array
+    {
+        app('log')->debug(sprintf('parseMonthYearRange: Parsed "%s".', $date));
+        $parts = explode('-', $date);
+
+        return [
+            'year'  => $parts[0],
+            'month' => $parts[1],
+        ];
+    }
+
     /**
      * format of string is xxxx-MM-DD
-     *
-     * @param string $date
-     *
-     * @return array
      */
     private function parseMonthDayRange(string $date): array
     {
@@ -401,30 +408,7 @@ class ParseDateString
     }
 
     /**
-     * @param string $date
-     *
-     * @return bool
-     */
-    protected function isDayYearRange(string $date): bool
-    {
-        // if regex for YYYY-xx-DD:
-        $pattern = '/^(19|20)\d\d-xx-(0[1-9]|[12]\d|3[01])$/';
-        if (false !== preg_match($pattern, $date)) {
-            app('log')->debug(sprintf('"%s" is a day/year range.', $date));
-
-            return true;
-        }
-        app('log')->debug(sprintf('"%s" is not a day/year range.', $date));
-
-        return false;
-    }
-
-    /**
      * format of string is YYYY-xx-DD
-     *
-     * @param string $date
-     *
-     * @return array
      */
     private function parseDayYearRange(string $date): array
     {
@@ -434,43 +418,6 @@ class ParseDateString
         return [
             'year' => $parts[0],
             'day'  => $parts[2],
-        ];
-    }
-
-    /**
-     * @param string $date
-     *
-     * @return bool
-     */
-    protected function isMonthYearRange(string $date): bool
-    {
-        // if regex for YYYY-MM-xx:
-        $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-xx$/';
-        if (false !== preg_match($pattern, $date)) {
-            app('log')->debug(sprintf('"%s" is a month/year range.', $date));
-
-            return true;
-        }
-        app('log')->debug(sprintf('"%s" is not a month/year range.', $date));
-
-        return false;
-    }
-
-    /**
-     * format of string is YYYY-MM-xx
-     *
-     * @param string $date
-     *
-     * @return array
-     */
-    protected function parseMonthYearRange(string $date): array
-    {
-        app('log')->debug(sprintf('parseMonthYearRange: Parsed "%s".', $date));
-        $parts = explode('-', $date);
-
-        return [
-            'year'  => $parts[0],
-            'month' => $parts[1],
         ];
     }
 }

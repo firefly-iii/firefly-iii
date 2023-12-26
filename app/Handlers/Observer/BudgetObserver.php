@@ -31,11 +31,6 @@ use FireflyIII\Models\BudgetLimit;
  */
 class BudgetObserver
 {
-    /**
-     * @param Budget $budget
-     *
-     * @return void
-     */
     public function deleting(Budget $budget): void
     {
         app('log')->debug('Observe "deleting" of a budget.');
@@ -43,6 +38,7 @@ class BudgetObserver
             $attachment->delete();
         }
         $budgetLimits = $budget->budgetlimits()->get();
+
         /** @var BudgetLimit $budgetLimit */
         foreach($budgetLimits as $budgetLimit) {
             // this loop exists so several events are fired.
@@ -53,7 +49,5 @@ class BudgetObserver
         $budget->autoBudgets()->delete();
 
         // recalculate available budgets.
-
     }
-
 }

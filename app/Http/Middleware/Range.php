@@ -23,9 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use App;
 use Carbon\Carbon;
-use Closure;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\Request;
@@ -40,12 +38,9 @@ class Range
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     * @param Closure $next
-     *
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, \Closure $next)
     {
         if (null !== $request->user()) {
             // set start, end and finish:
@@ -101,7 +96,7 @@ class Range
         // get locale preference:
         $language = app('steam')->getLanguage();
         $locale   = app('steam')->getLocale();
-        App::setLocale($language);
+        \App::setLocale($language);
         Carbon::setLocale(substr($locale, 0, 2));
 
         $localeArray = app('steam')->getLocaleArray($locale);

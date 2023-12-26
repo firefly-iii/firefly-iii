@@ -34,8 +34,6 @@ trait ChecksLogin
 {
     /**
      * Verify the request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -47,13 +45,16 @@ trait ChecksLogin
         }
         if (!property_exists($this, 'acceptedRoles')) { // @phpstan-ignore-line
             app('log')->debug('Request class has no acceptedRoles array');
+
             return true; // check for false already took place.
         }
+
         /** @var User $user */
         $user      = auth()->user();
         $userGroup = $this->getUserGroup();
         if (null === $userGroup) {
             app('log')->error('User has no valid user group submitted or otherwise.');
+
             return false;
         }
 
@@ -65,21 +66,21 @@ trait ChecksLogin
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * Return the user group or NULL if none is set.
      * Will throw exception if invalid.
-     *
-     * @return UserGroup|null
      */
     public function getUserGroup(): ?UserGroup
     {
         /** @var User $user */
         $user = auth()->user();
         app('log')->debug('Now in getUserGroup()');
-        /** @var UserGroup|null $userGroup */
+
+        /** @var null|UserGroup $userGroup */
         $userGroup = $this->route()?->parameter('userGroup');
         if (null === $userGroup) {
             app('log')->debug('Request class has no userGroup parameter, but perhaps there is a parameter.');
@@ -91,10 +92,12 @@ trait ChecksLogin
             $userGroup = UserGroup::find($userGroupId);
             if (null === $userGroup) {
                 app('log')->error(sprintf('Request class has user_group_id (#%d), but group does not exist.', $userGroupId));
+
                 return null;
             }
             app('log')->debug('Request class has valid user_group_id.');
         }
+
         return $userGroup;
     }
 }

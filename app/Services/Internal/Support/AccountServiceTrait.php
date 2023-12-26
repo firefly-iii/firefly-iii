@@ -38,22 +38,14 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
-use JsonException;
-use Validator;
 
 /**
  * Trait AccountServiceTrait
- *
  */
 trait AccountServiceTrait
 {
     protected AccountRepositoryInterface $accountRepository;
 
-    /**
-     * @param null|string $iban
-     *
-     * @return null|string
-     */
     public function filterIban(?string $iban): ?string
     {
         if (null === $iban) {
@@ -61,23 +53,18 @@ trait AccountServiceTrait
         }
         $data      = ['iban' => $iban];
         $rules     = ['iban' => 'required|iban'];
-        $validator = Validator::make($data, $rules);
+        $validator = \Validator::make($data, $rules);
         if ($validator->fails()) {
             app('log')->info(sprintf('Detected invalid IBAN ("%s"). Return NULL instead.', $iban));
 
             return null;
         }
 
-
         return app('steam')->filterSpaces($iban);
     }
 
     /**
      * Returns true if the data in the array is submitted but empty.
-     *
-     * @param array $data
-     *
-     * @return bool
      */
     public function isEmptyOBData(array $data): bool
     {
@@ -101,16 +88,14 @@ trait AccountServiceTrait
     /**
      * Update metadata for account. Depends on type which fields are valid.
      *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
      * TODO this method treats expense accounts and liabilities the same way (tries to save interest)
-     *
-     * @param Account $account
-     * @param array   $data
-     *
      */
     public function updateMetaData(Account $account, array $data): void
     {
         $fields = $this->validFields;
-        if ($account->accountType->type === AccountType::ASSET) {
+        if (AccountType::ASSET === $account->accountType->type) {
             $fields = $this->validAssetFields;
         }
 
@@ -119,7 +104,7 @@ trait AccountServiceTrait
         $list = config('firefly.valid_currency_account_types');
         if (!in_array($type, $list, true)) {
             $pos = array_search('currency_id', $fields, true);
-            if ($pos !== false) {
+            if (false !== $pos) {
                 unset($fields[$pos]);
             }
         }
@@ -133,13 +118,14 @@ trait AccountServiceTrait
         }
 
         // only asset account may have a role:
-        if ($account->accountType->type !== AccountType::ASSET) {
+        if (AccountType::ASSET !== $account->accountType->type) {
             $data['account_role'] = '';
         }
 
-        if ($account->accountType->type === AccountType::ASSET && 'ccAsset' === $data['account_role']) {
+        if (AccountType::ASSET === $account->accountType->type && 'ccAsset' === $data['account_role']) {
             $fields = $this->validCCFields;
         }
+
         /** @var AccountMetaFactory $factory */
         $factory = app(AccountMetaFactory::class);
         foreach ($fields as $field) {
@@ -162,12 +148,6 @@ trait AccountServiceTrait
         }
     }
 
-    /**
-     * @param Account $account
-     * @param string  $note
-     *
-     * @return bool
-     */
     public function updateNote(Account $account, string $note): bool
     {
         $dbNote = $account->notes()->first();
@@ -190,10 +170,6 @@ trait AccountServiceTrait
 
     /**
      * Verify if array contains valid data to possibly store or update the opening balance.
-     *
-     * @param array $data
-     *
-     * @return bool
      */
     public function validOBData(array $data): bool
     {
@@ -213,12 +189,8 @@ trait AccountServiceTrait
     }
 
     /**
-     * @param Account $account
-     * @param array   $data
-     *
-     * @return TransactionGroup
      * @throws FireflyException
-     * @throws JsonException
+     *                          *
      * @deprecated
      */
     protected function createOBGroup(Account $account, array $data): TransactionGroup
@@ -250,6 +222,7 @@ trait AccountServiceTrait
         // amount is 0
         if (0 === bccomp($amount, '0')) {
             app('log')->debug('Amount is zero, so will not make an OB group.');
+
             throw new FireflyException('Amount for new opening balance was unexpectedly 0.');
         }
 
@@ -303,6 +276,7 @@ trait AccountServiceTrait
         } catch (DuplicateTransactionException $e) {
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
+
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -311,8 +285,6 @@ trait AccountServiceTrait
 
     /**
      * Delete TransactionGroup with liability credit in it.
-     *
-     * @param Account $account
      */
     protected function deleteCreditTransaction(Account $account): void
     {
@@ -321,6 +293,7 @@ trait AccountServiceTrait
 
         if (null !== $creditGroup) {
             app('log')->debug('Credit journal found, delete journal.');
+
             /** @var TransactionGroupDestroyService $service */
             $service = app(TransactionGroupDestroyService::class);
             $service->destroy($creditGroup);
@@ -329,10 +302,6 @@ trait AccountServiceTrait
 
     /**
      * Returns the credit transaction group, or NULL if it does not exist.
-     *
-     * @param Account $account
-     *
-     * @return TransactionGroup|null
      */
     protected function getCreditTransaction(Account $account): ?TransactionGroup
     {
@@ -343,8 +312,6 @@ trait AccountServiceTrait
 
     /**
      * Delete TransactionGroup with opening balance in it.
-     *
-     * @param Account $account
      */
     protected function deleteOBGroup(Account $account): void
     {
@@ -354,6 +321,7 @@ trait AccountServiceTrait
         // opening balance data? update it!
         if (null !== $openingBalanceGroup) {
             app('log')->debug('Opening balance journal found, delete journal.');
+
             /** @var TransactionGroupDestroyService $service */
             $service = app(TransactionGroupDestroyService::class);
             $service->destroy($openingBalanceGroup);
@@ -362,10 +330,6 @@ trait AccountServiceTrait
 
     /**
      * Returns the opening balance group, or NULL if it does not exist.
-     *
-     * @param Account $account
-     *
-     * @return TransactionGroup|null
      */
     protected function getOBGroup(Account $account): ?TransactionGroup
     {
@@ -373,19 +337,15 @@ trait AccountServiceTrait
     }
 
     /**
-     * @param int    $currencyId
-     * @param string $currencyCode
-     *
-     * @return TransactionCurrency
      * @throws FireflyException
-     * @throws JsonException
      */
     protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
     {
         // find currency, or use default currency instead.
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
-        /** @var TransactionCurrency|null $currency */
+
+        /** @var null|TransactionCurrency $currency */
         $currency = $factory->find($currencyId, $currencyCode);
 
         if (null === $currency) {
@@ -401,15 +361,7 @@ trait AccountServiceTrait
     /**
      * Create the opposing "credit liability" transaction for credit liabilities.
      *
-     *
-     * @param Account $account
-     * @param string  $direction
-     * @param string  $openingBalance
-     * @param Carbon  $openingBalanceDate
-     *
-     * @return TransactionGroup
      * @throws FireflyException
-     * @throws JsonException
      */
     protected function updateCreditTransaction(Account $account, string $direction, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
@@ -417,6 +369,7 @@ trait AccountServiceTrait
 
         if (0 === bccomp($openingBalance, '0')) {
             app('log')->debug('Amount is zero, so will not update liability credit/debit group.');
+
             throw new FireflyException('Amount for update liability credit/debit was unexpectedly 0.');
         }
         // if direction is "debit" (i owe this debt), amount is negative.
@@ -464,13 +417,7 @@ trait AccountServiceTrait
     }
 
     /**
-     * @param Account $account
-     * @param string  $openingBalance
-     * @param Carbon  $openingBalanceDate
-     *
-     * @return TransactionGroup
      * @throws FireflyException
-     * @throws JsonException
      */
     protected function createCreditTransaction(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
@@ -478,6 +425,7 @@ trait AccountServiceTrait
 
         if (0 === bccomp($openingBalance, '0')) {
             app('log')->debug('Amount is zero, so will not make an liability credit group.');
+
             throw new FireflyException('Amount for new liability credit was unexpectedly 0.');
         }
 
@@ -552,6 +500,7 @@ trait AccountServiceTrait
         } catch (DuplicateTransactionException $e) {
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
+
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -559,73 +508,10 @@ trait AccountServiceTrait
     }
 
     /**
-     * TODO refactor to "getfirstjournal"
-     *
-     * @param TransactionGroup $group
-     *
-     * @return TransactionJournal
-     * @throws FireflyException
-     */
-    private function getObJournal(TransactionGroup $group): TransactionJournal
-    {
-        /** @var TransactionJournal|null $journal */
-        $journal = $group->transactionJournals()->first();
-        if (null === $journal) {
-            throw new FireflyException(sprintf('Group #%d has no OB journal', $group->id));
-        }
-
-        return $journal;
-    }
-
-    /**
-     * TODO Rename to getOpposingTransaction
-     *
-     * @param TransactionJournal $journal
-     * @param Account            $account
-     *
-     * @return Transaction
-     * @throws FireflyException
-     */
-    private function getOBTransaction(TransactionJournal $journal, Account $account): Transaction
-    {
-        /** @var Transaction|null $transaction */
-        $transaction = $journal->transactions()->where('account_id', '!=', $account->id)->first();
-        if (null === $transaction) {
-            throw new FireflyException(sprintf('Could not get OB transaction for journal #%d', $journal->id));
-        }
-
-        return $transaction;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param Account            $account
-     *
-     * @return Transaction
-     * @throws FireflyException
-     */
-    private function getNotOBTransaction(TransactionJournal $journal, Account $account): Transaction
-    {
-        /** @var Transaction|null $transaction */
-        $transaction = $journal->transactions()->where('account_id', $account->id)->first();
-        if (null === $transaction) {
-            throw new FireflyException(sprintf('Could not get non-OB transaction for journal #%d', $journal->id));
-        }
-
-        return $transaction;
-    }
-
-    /**
      * Update or create the opening balance group.
      * Since opening balance and date can still be empty strings, it may fail.
      *
-     * @param Account $account
-     * @param string  $openingBalance
-     * @param Carbon  $openingBalanceDate
-     *
-     * @return TransactionGroup
      * @throws FireflyException
-     * @throws JsonException
      */
     protected function updateOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
@@ -649,7 +535,6 @@ trait AccountServiceTrait
         $accountTransaction = $this->getNotOBTransaction($journal, $account);
         $journal->date      = $openingBalanceDate;
         $journal->transactionCurrency()->associate($currency);
-
 
         // if amount is negative:
         if (1 === bccomp('0', $openingBalance)) {
@@ -682,13 +567,7 @@ trait AccountServiceTrait
     }
 
     /**
-     * @param Account $account
-     * @param string  $openingBalance
-     * @param Carbon  $openingBalanceDate
-     *
-     * @return TransactionGroup
      * @throws FireflyException
-     * @throws JsonException
      */
     protected function createOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
@@ -718,6 +597,7 @@ trait AccountServiceTrait
         // amount is 0
         if (0 === bccomp($openingBalance, '0')) {
             app('log')->debug('Amount is zero, so will not make an OB group.');
+
             throw new FireflyException('Amount for new opening balance was unexpectedly 0.');
         }
 
@@ -771,9 +651,56 @@ trait AccountServiceTrait
         } catch (DuplicateTransactionException $e) {
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
+
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
         return $group;
+    }
+
+    /**
+     * TODO refactor to "getfirstjournal"
+     *
+     * @throws FireflyException
+     */
+    private function getObJournal(TransactionGroup $group): TransactionJournal
+    {
+        /** @var null|TransactionJournal $journal */
+        $journal = $group->transactionJournals()->first();
+        if (null === $journal) {
+            throw new FireflyException(sprintf('Group #%d has no OB journal', $group->id));
+        }
+
+        return $journal;
+    }
+
+    /**
+     * TODO Rename to getOpposingTransaction
+     *
+     * @throws FireflyException
+     */
+    private function getOBTransaction(TransactionJournal $journal, Account $account): Transaction
+    {
+        /** @var null|Transaction $transaction */
+        $transaction = $journal->transactions()->where('account_id', '!=', $account->id)->first();
+        if (null === $transaction) {
+            throw new FireflyException(sprintf('Could not get OB transaction for journal #%d', $journal->id));
+        }
+
+        return $transaction;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function getNotOBTransaction(TransactionJournal $journal, Account $account): Transaction
+    {
+        /** @var null|Transaction $transaction */
+        $transaction = $journal->transactions()->where('account_id', $account->id)->first();
+        if (null === $transaction) {
+            throw new FireflyException(sprintf('Could not get non-OB transaction for journal #%d', $journal->id));
+        }
+
+        return $transaction;
     }
 }

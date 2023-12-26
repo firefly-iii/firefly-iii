@@ -25,16 +25,12 @@ namespace Database\Seeders;
 
 use FireflyIII\Models\LinkType;
 use Illuminate\Database\Seeder;
-use PDOException;
 
 /**
  * Class LinkTypeSeeder.
  */
 class LinkTypeSeeder extends Seeder
 {
-    /**
-     * @return void
-     */
     public function run(): void
     {
         $types = [
@@ -66,7 +62,7 @@ class LinkTypeSeeder extends Seeder
         foreach ($types as $type) {
             try {
                 LinkType::create($type);
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 // @ignoreException
             }
         }

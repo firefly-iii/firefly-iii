@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Closure;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
@@ -39,10 +38,6 @@ class UniqueAccountNumber implements ValidationRule
 
     /**
      * Create a new rule instance.
-     *
-     *
-     * @param Account|null $account
-     * @param string|null  $expectedType
      */
     public function __construct(?Account $account, ?string $expectedType)
     {
@@ -64,9 +59,6 @@ class UniqueAccountNumber implements ValidationRule
 
     /**
      * Get the validation error message.
-     *
-     *
-     * @return string
      */
     public function message(): string
     {
@@ -74,15 +66,9 @@ class UniqueAccountNumber implements ValidationRule
     }
 
     /**
-     * @param string  $attribute
-     * @param mixed   $value
-     * @param Closure $fail
-     *
-     * @return void
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function validate(string $attribute, mixed $value, Closure $fail): void
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         if (!auth()->check()) {
             return;
@@ -107,16 +93,13 @@ class UniqueAccountNumber implements ValidationRule
                 );
 
                 $fail('validation.unique_account_number_for_user')->translate();
+
                 return;
             }
         }
         app('log')->debug('Account number is valid.');
     }
 
-    /**
-     * @return array
-     *
-     */
     private function getMaxOccurrences(): array
     {
         $maxCounts = [
@@ -139,20 +122,15 @@ class UniqueAccountNumber implements ValidationRule
         return $maxCounts;
     }
 
-    /**
-     * @param string $type
-     * @param string $accountNumber
-     *
-     * @return int
-     */
     private function countHits(string $type, string $accountNumber): int
     {
         $query = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
-                            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                            ->where('accounts.user_id', auth()->user()->id)
-                            ->where('account_types.type', $type)
-                            ->where('account_meta.name', '=', 'account_number')
-                            ->where('account_meta.data', json_encode($accountNumber));
+            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->where('accounts.user_id', auth()->user()->id)
+            ->where('account_types.type', $type)
+            ->where('account_meta.name', '=', 'account_number')
+            ->where('account_meta.data', json_encode($accountNumber))
+        ;
 
         if (null !== $this->account) {
             $query->where('accounts.id', '!=', $this->account->id);

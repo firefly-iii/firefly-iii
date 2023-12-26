@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
-use DB;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 
@@ -35,95 +34,36 @@ class FixPostgresSequences extends Command
 {
     use ShowsFriendlyMessages;
 
-
     protected $description = 'Fixes issues with PostgreSQL sequences.';
 
     protected $signature = 'firefly-iii:fix-pgsql-sequences';
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
-        if (DB::connection()->getName() !== 'pgsql') {
+        if ('pgsql' !== \DB::connection()->getName()) {
             return 0;
         }
         $this->friendlyLine('Going to verify PostgreSQL table sequences.');
-        $tablesToCheck = [
-            '2fa_tokens',
-            'account_meta',
-            'account_types',
-            'accounts',
-            'attachments',
-            'auto_budgets',
-            'available_budgets',
-            'bills',
-            'budget_limits',
-            'budget_transaction',
-            'budget_transaction_journal',
-            'budgets',
-            'categories',
-            'category_transaction',
-            'category_transaction_journal',
-            'configuration',
-            'currency_exchange_rates',
-            'failed_jobs',
-            'group_journals',
-            'jobs',
-            'journal_links',
-            'journal_meta',
-            'limit_repetitions',
-            'link_types',
-            'locations',
-            'migrations',
-            'notes',
-            'oauth_clients',
-            'oauth_personal_access_clients',
-            'object_groups',
-            'permissions',
-            'piggy_bank_events',
-            'piggy_bank_repetitions',
-            'piggy_banks',
-            'preferences',
-            'recurrences',
-            'recurrences_meta',
-            'recurrences_repetitions',
-            'recurrences_transactions',
-            'roles',
-            'rt_meta',
-            'rule_actions',
-            'rule_groups',
-            'rule_triggers',
-            'rules',
-            'tag_transaction_journal',
-            'tags',
-            'transaction_currencies',
-            'transaction_groups',
-            'transaction_journals',
-            'transaction_types',
-            'transactions',
-            'users',
-            'webhook_attempts',
-            'webhook_messages',
-            'webhooks',
-        ];
+        $tablesToCheck = ['2fa_tokens', 'account_meta', 'account_types', 'accounts', 'attachments', 'auto_budgets', 'available_budgets', 'bills', 'budget_limits', 'budget_transaction', 'budget_transaction_journal', 'budgets', 'categories', 'category_transaction', 'category_transaction_journal', 'configuration', 'currency_exchange_rates', 'failed_jobs', 'group_journals', 'jobs', 'journal_links', 'journal_meta', 'limit_repetitions', 'link_types', 'locations', 'migrations', 'notes', 'oauth_clients', 'oauth_personal_access_clients', 'object_groups', 'permissions', 'piggy_bank_events', 'piggy_bank_repetitions', 'piggy_banks', 'preferences', 'recurrences', 'recurrences_meta', 'recurrences_repetitions', 'recurrences_transactions', 'roles', 'rt_meta', 'rule_actions', 'rule_groups', 'rule_triggers', 'rules', 'tag_transaction_journal', 'tags', 'transaction_currencies', 'transaction_groups', 'transaction_journals', 'transaction_types', 'transactions', 'users', 'webhook_attempts', 'webhook_messages', 'webhooks'];
 
         foreach ($tablesToCheck as $tableToCheck) {
             $this->friendlyLine(sprintf('Checking the next id sequence for table "%s".', $tableToCheck));
 
-            $highestId = DB::table($tableToCheck)->select(DB::raw('MAX(id)'))->first();
-            $nextId    = DB::table($tableToCheck)->select(DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))->first();
+            $highestId = \DB::table($tableToCheck)->select(\DB::raw('MAX(id)'))->first();
+            $nextId    = \DB::table($tableToCheck)->select(\DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))->first();
             if (null === $nextId) {
                 $this->friendlyInfo(sprintf('nextval is NULL for table "%s", go to next table.', $tableToCheck));
+
                 continue;
             }
 
             if ($nextId->nextval < $highestId->max) { // @phpstan-ignore-line
-                DB::select(sprintf('SELECT setval(\'%s_id_seq\', %d)', $tableToCheck, $highestId->max));
-                $highestId = DB::table($tableToCheck)->select(DB::raw('MAX(id)'))->first();
-                $nextId    = DB::table($tableToCheck)->select(DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))->first();
+                \DB::select(sprintf('SELECT setval(\'%s_id_seq\', %d)', $tableToCheck, $highestId->max));
+                $highestId = \DB::table($tableToCheck)->select(\DB::raw('MAX(id)'))->first();
+                $nextId    = \DB::table($tableToCheck)->select(\DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))->first();
                 if ($nextId->nextval > $highestId->max) { // @phpstan-ignore-line
                     $this->friendlyInfo(sprintf('Table "%s" autoincrement corrected.', $tableToCheck));
                 }
@@ -135,7 +75,6 @@ class FixPostgresSequences extends Command
                 $this->friendlyPositive(sprintf('Table "%s" autoincrement is correct.', $tableToCheck));
             }
         }
-
 
         return 0;
     }

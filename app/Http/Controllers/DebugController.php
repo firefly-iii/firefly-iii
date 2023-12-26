@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use DB;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
@@ -40,13 +39,9 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use const PHP_SAPI;
 
 /**
  * Class DebugController
- *
  */
 class DebugController extends Controller
 {
@@ -54,8 +49,6 @@ class DebugController extends Controller
 
     /**
      * DebugController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -78,15 +71,15 @@ class DebugController extends Controller
         Log::critical('This is a test message at the CRITICAL level.');
         Log::alert('This is a test message at the ALERT level.');
         Log::emergency('This is a test message at the EMERGENCY level.');
+
         throw new FireflyException('A very simple test error.');
     }
 
     /**
      * Clear log and session.
      *
-     * @param Request $request
+     * @return Redirector|RedirectResponse
      *
-     * @return RedirectResponse|Redirector
      * @throws FireflyException
      */
     public function flush(Request $request)
@@ -101,9 +94,10 @@ class DebugController extends Controller
         app('log')->debug('Call route:clear...');
         Artisan::call('route:clear');
         app('log')->debug('Call twig:clean...');
+
         try {
             Artisan::call('twig:clean');
-        } catch (Exception $e) {  // intentional generic exception
+        } catch (\Exception $e) {  // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -117,6 +111,7 @@ class DebugController extends Controller
      * Show debug info.
      *
      * @return Factory|View
+     *
      * @throws FireflyException
      */
     public function index()
@@ -140,15 +135,27 @@ class DebugController extends Controller
         }
         if ('' !== $logContent) {
             // last few lines
-            $logContent = 'Truncated from this point <----|' . substr((string)$logContent, -16384);
+            $logContent = 'Truncated from this point <----|'.substr((string)$logContent, -16384);
         }
 
         return view('debug', compact('table', 'now', 'logContent'));
     }
 
     /**
-     * @return string
+     * Flash all types of messages.
+     *
+     * @return Redirector|RedirectResponse
      */
+    public function testFlash(Request $request)
+    {
+        $request->session()->flash('success', 'This is a success message.');
+        $request->session()->flash('info', 'This is an info message.');
+        $request->session()->flash('warning', 'This is a warning.');
+        $request->session()->flash('error', 'This is an error!');
+
+        return redirect(route('home'));
+    }
+
     private function generateTable(): string
     {
         // system information:
@@ -160,20 +167,18 @@ class DebugController extends Controller
         return (string)view('partials.debug-table', compact('system', 'docker', 'app', 'user'));
     }
 
-    /**
-     * @return array
-     */
     private function getSystemInformation(): array
     {
         $maxFileSize   = app('steam')->phpBytes((string)ini_get('upload_max_filesize'));
         $maxPostSize   = app('steam')->phpBytes((string)ini_get('post_max_size'));
-        $drivers       = DB::availableDrivers();
-        $currentDriver = DB::getDriverName();
+        $drivers       = \DB::availableDrivers();
+        $currentDriver = \DB::getDriverName();
+
         return [
             'db_version'      => app('fireflyconfig')->get('db_version', 1)->data,
             'php_version'     => PHP_VERSION,
             'php_os'          => PHP_OS,
-            'interface'       => PHP_SAPI,
+            'interface'       => \PHP_SAPI,
             'bcscale'         => bcscale(),
             'display_errors'  => ini_get('display_errors'),
             'error_reporting' => $this->errorReporting((int)ini_get('error_reporting')),
@@ -183,9 +188,6 @@ class DebugController extends Controller
         ];
     }
 
-    /**
-     * @return array
-     */
     private function getBuildInfo(): array
     {
         $return = [
@@ -194,21 +196,22 @@ class DebugController extends Controller
             'build_date'      => '(unknown)',
             'base_build'      => '(unknown)',
             'base_build_date' => '(unknown)',
-
         ];
+
         try {
             if (file_exists('/var/www/counter-main.txt')) {
                 $return['build'] = trim((string)file_get_contents('/var/www/counter-main.txt'));
             }
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (\Exception $e) { // @phpstan-ignore-line
             app('log')->debug('Could not check build counter, but thats ok.');
             app('log')->warning($e->getMessage());
         }
+
         try {
             if (file_exists('/var/www/build-date-main.txt')) {
                 $return['build_date'] = trim((string)file_get_contents('/var/www/build-date-main.txt'));
             }
-        } catch (Exception $e) { // @phpstan-ignore-line
+        } catch (\Exception $e) { // @phpstan-ignore-line
             app('log')->debug('Could not check build date, but thats ok.');
             app('log')->warning($e->getMessage());
         }
@@ -218,12 +221,10 @@ class DebugController extends Controller
         if ('' !== (string)env('BASE_IMAGE_DATE')) {
             $return['base_build_date'] = env('BASE_IMAGE_DATE');
         }
+
         return $return;
     }
 
-    /**
-     * @return array
-     */
     private function getAppInfo(): array
     {
         $userGuard = config('auth.defaults.guard');
@@ -243,8 +244,8 @@ class DebugController extends Controller
             'audit_log_channel'  => envNonEmpty('AUDIT_LOG_CHANNEL', '(empty)'),
             'default_language'   => (string)config('firefly.default_language'),
             'default_locale'     => (string)config('firefly.default_locale'),
-            'remote_header'      => $userGuard === 'remote_user_guard' ? config('auth.guard_header') : 'N/A',
-            'remote_mail_header' => $userGuard === 'remote_user_guard' ? config('auth.guard_email') : 'N/A',
+            'remote_header'      => 'remote_user_guard' === $userGuard ? config('auth.guard_header') : 'N/A',
+            'remote_mail_header' => 'remote_user_guard' === $userGuard ? config('auth.guard_email') : 'N/A',
             'stateful_domains'   => implode(', ', config('sanctum.stateful')),
 
             // the dates for the cron job are based on the recurring cron job's times.
@@ -256,11 +257,6 @@ class DebugController extends Controller
         ];
     }
 
-    /**
-     * @return array
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function getuserInfo(): array
     {
         $userFlags = $this->getUserFlags();
@@ -292,12 +288,10 @@ class DebugController extends Controller
         ];
     }
 
-    /**
-     * @return string
-     */
     private function getUserFlags(): string
     {
         $flags = [];
+
         /** @var User $user */
         $user = auth()->user();
 
@@ -338,24 +332,7 @@ class DebugController extends Controller
         if ($user->bills()->count() > 0) {
             $flags[] = '<span title="Has subscriptions">:email:</span>';
         }
+
         return implode(' ', $flags);
     }
-
-    /**
-     * Flash all types of messages.
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse|Redirector
-     */
-    public function testFlash(Request $request)
-    {
-        $request->session()->flash('success', 'This is a success message.');
-        $request->session()->flash('info', 'This is an info message.');
-        $request->session()->flash('warning', 'This is a warning.');
-        $request->session()->flash('error', 'This is an error!');
-
-        return redirect(route('home'));
-    }
-
 }

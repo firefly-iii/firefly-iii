@@ -35,18 +35,19 @@ use Illuminate\Database\Query\Builder;
 /**
  * FireflyIII\Models\TransactionJournalMeta
  *
- * @property int                     $id
- * @property Carbon|null             $created_at
- * @property Carbon|null             $updated_at
- * @property int                     $transaction_journal_id
- * @property string                  $name
- * @property mixed                   $data
- * @property string                  $hash
- * @property Carbon|null             $deleted_at
- * @property-read TransactionJournal $transactionJournal
+ * @property int                $id
+ * @property null|Carbon        $created_at
+ * @property null|Carbon        $updated_at
+ * @property int                $transaction_journal_id
+ * @property string             $name
+ * @property mixed              $data
+ * @property string             $hash
+ * @property null|Carbon        $deleted_at
+ * @property TransactionJournal $transactionJournal
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta newQuery()
- * @method static Builder|TransactionJournalMeta onlyTrashed()
+ * @method static Builder|TransactionJournalMeta                               onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta query()
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereData($value)
@@ -56,15 +57,15 @@ use Illuminate\Database\Query\Builder;
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereTransactionJournalId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|TransactionJournalMeta whereUpdatedAt($value)
- * @method static Builder|TransactionJournalMeta withTrashed()
- * @method static Builder|TransactionJournalMeta withoutTrashed()
+ * @method static Builder|TransactionJournalMeta                               withTrashed()
+ * @method static Builder|TransactionJournalMeta                               withoutTrashed()
+ *
  * @mixin Eloquent
  */
 class TransactionJournalMeta extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
-
 
     protected $casts
         = [
@@ -74,11 +75,11 @@ class TransactionJournalMeta extends Model
         ];
 
     protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
+
     /** @var string The table to store the data in */
     protected $table = 'journal_meta';
 
     /**
-     *
      * @param mixed $value
      *
      * @return mixed
@@ -89,7 +90,6 @@ class TransactionJournalMeta extends Model
     }
 
     /**
-     *
      * @param mixed $value
      */
     public function setDataAttribute($value): void
@@ -99,21 +99,15 @@ class TransactionJournalMeta extends Model
         $this->attributes['hash'] = hash('sha256', (string)$data);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function transactionJournal(): BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class);
     }
 
-    /**
-     * @return Attribute
-     */
     protected function transactionJournalId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

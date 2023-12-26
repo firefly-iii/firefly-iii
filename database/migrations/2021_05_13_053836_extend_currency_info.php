@@ -34,25 +34,20 @@ class ExtendCurrencyInfo extends Migration
 {
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down(): void
-    {
-        //
-    }
+    public function down(): void {}
 
     /**
      * Run the migrations.
+     *
      * @SuppressWarnings(PHPMD.ShortMethodName)
-     * @return void
      */
     public function up(): void
     {
         try {
             Schema::table(
                 'transaction_currencies',
-                static function (Blueprint $table) {
+                static function (Blueprint $table): void {
                     $table->string('code', 51)->change();
                     $table->string('symbol', 51)->change();
                 }

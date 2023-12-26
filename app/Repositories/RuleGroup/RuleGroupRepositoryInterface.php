@@ -38,17 +38,8 @@ interface RuleGroupRepositoryInterface
      */
     public function correctRuleGroupOrder(): void;
 
-    /**
-     * @return int
-     */
     public function count(): int;
 
-    /**
-     * @param RuleGroup      $ruleGroup
-     * @param RuleGroup|null $moveTo
-     *
-     * @return bool
-     */
     public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool;
 
     /**
@@ -56,131 +47,50 @@ interface RuleGroupRepositoryInterface
      */
     public function destroyAll(): void;
 
-    /**
-     * @param int $ruleGroupId
-     *
-     * @return RuleGroup|null
-     */
     public function find(int $ruleGroupId): ?RuleGroup;
 
-    /**
-     * @param string $title
-     *
-     * @return RuleGroup|null
-     */
     public function findByTitle(string $title): ?RuleGroup;
 
     /**
      * Get all rule groups.
-     *
-     * @return Collection
      */
     public function get(): Collection;
 
-    /**
-     * @return Collection
-     */
     public function getActiveGroups(): Collection;
 
-    /**
-     * @param RuleGroup $group
-     *
-     * @return Collection
-     */
     public function getActiveRules(RuleGroup $group): Collection;
 
-    /**
-     * @param RuleGroup $group
-     *
-     * @return Collection
-     */
     public function getActiveStoreRules(RuleGroup $group): Collection;
 
-    /**
-     * @param RuleGroup $group
-     *
-     * @return Collection
-     */
     public function getActiveUpdateRules(RuleGroup $group): Collection;
 
     /**
      * Also inactive groups.
-     *
-     * @param string|null $filter
-     *
-     * @return Collection
      */
     public function getAllRuleGroupsWithRules(?string $filter): Collection;
 
-    /**
-     * @return int
-     */
     public function getHighestOrderRuleGroup(): int;
 
-    /**
-     * @param string|null $filter
-     *
-     * @return Collection
-     */
     public function getRuleGroupsWithRules(?string $filter): Collection;
 
-    /**
-     * @param RuleGroup $group
-     *
-     * @return Collection
-     */
     public function getRules(RuleGroup $group): Collection;
 
     /**
      * Get highest possible order for a rule group.
-     *
-     * @return int
      */
     public function maxOrder(): int;
 
-    /**
-     * @return bool
-     */
     public function resetOrder(): bool;
 
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return bool
-     */
     public function resetRuleOrder(RuleGroup $ruleGroup): bool;
 
-    /**
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return Collection
-     */
     public function searchRuleGroup(string $query, int $limit): Collection;
 
-    /**
-     * @param RuleGroup $ruleGroup
-     * @param int       $newOrder
-     */
     public function setOrder(RuleGroup $ruleGroup, int $newOrder): void;
 
-    /**
-     * @param User|Authenticatable|null $user
-     */
-    public function setUser(User | Authenticatable | null $user): void;
+    public function setUser(null|Authenticatable|User $user): void;
 
-    /**
-     * @param array $data
-     *
-     * @return RuleGroup
-     */
     public function store(array $data): RuleGroup;
 
-    /**
-     * @param RuleGroup $ruleGroup
-     * @param array     $data
-     *
-     * @return RuleGroup
-     */
     public function update(RuleGroup $ruleGroup, array $data): RuleGroup;
 }

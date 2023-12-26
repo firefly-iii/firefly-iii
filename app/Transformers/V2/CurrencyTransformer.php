@@ -31,17 +31,10 @@ use Illuminate\Support\Collection;
  */
 class CurrencyTransformer extends AbstractTransformer
 {
-    /**
-     * @inheritDoc
-     */
     public function collectMetaData(Collection $objects): void {}
 
     /**
      * Transform the currency.
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return array
      */
     public function transform(TransactionCurrency $currency): array
     {
@@ -58,7 +51,7 @@ class CurrencyTransformer extends AbstractTransformer
             'links'          => [
                 [
                     'rel' => 'self',
-                    'uri' => '/currencies/' . $currency->id,
+                    'uri' => '/currencies/'.$currency->id,
                 ],
             ],
         ];

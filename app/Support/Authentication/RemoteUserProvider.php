@@ -30,7 +30,6 @@ use FireflyIII\Models\Role;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
-use Str;
 
 /**
  * Class RemoteUserProvider
@@ -38,16 +37,21 @@ use Str;
 class RemoteUserProvider implements UserProvider
 {
     /**
-     * @inheritDoc
+     * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function retrieveByCredentials(array $credentials)
+    public function retrieveByCredentials(array $credentials): null|Authenticatable
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
+
         throw new FireflyException(sprintf('Did not implement %s', __METHOD__));
     }
 
     /**
-     * @inheritDoc
+     * @param mixed $identifier
+     *
+     * @throws FireflyException
      */
     public function retrieveById($identifier): User
     {
@@ -60,7 +64,7 @@ class RemoteUserProvider implements UserProvider
                     'blocked'      => false,
                     'blocked_code' => null,
                     'email'        => $identifier,
-                    'password'     => bcrypt(Str::random(64)),
+                    'password'     => bcrypt(\Str::random(64)),
                 ]
             );
             // if this is the first user, give them admin as well.
@@ -77,29 +81,43 @@ class RemoteUserProvider implements UserProvider
     }
 
     /**
-     * @inheritDoc
+     * @param mixed $identifier
+     * @param mixed $token
+     *
+     * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function retrieveByToken($identifier, $token)
+    public function retrieveByToken($identifier, $token): null|Authenticatable
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
+
         throw new FireflyException(sprintf('A) Did not implement %s', __METHOD__));
     }
 
     /**
-     * @inheritDoc
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param mixed $token
+     *
+     * @throws FireflyException
      */
-    public function updateRememberToken(Authenticatable $user, $token)
+    public function updateRememberToken(Authenticatable $user, $token): void
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
+
         throw new FireflyException(sprintf('B) Did not implement %s', __METHOD__));
     }
 
     /**
-     * @inheritDoc
+     * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function validateCredentials(Authenticatable $user, array $credentials)
+    public function validateCredentials(Authenticatable $user, array $credentials): bool
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
+
         throw new FireflyException(sprintf('C) Did not implement %s', __METHOD__));
     }
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * OutputVersion.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -32,7 +31,6 @@ use Illuminate\Console\Command;
  */
 class OutputVersion extends Command
 {
-
     protected $description = 'Outputs the Firefly III version';
 
     protected $signature = 'firefly-iii:output-version';
@@ -43,6 +41,7 @@ class OutputVersion extends Command
     public function handle(): int
     {
         echo config('firefly.version');
+
         return 0;
     }
 }

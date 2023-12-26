@@ -33,9 +33,6 @@ use Illuminate\Database\QueryException;
 class TransactionCurrencyFactory
 {
     /**
-     * @param array $data
-     *
-     * @return TransactionCurrency
      * @throws FireflyException
      */
     public function create(array $data): TransactionCurrency
@@ -68,18 +65,13 @@ class TransactionCurrencyFactory
             $result = null;
             app('log')->error(sprintf('Could not create new currency: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
+
             throw new FireflyException('400004: Could not store new currency.', 0, $e);
         }
 
         return $result;
     }
 
-    /**
-     * @param int|null    $currencyId
-     * @param null|string $currencyCode
-     *
-     * @return TransactionCurrency|null
-     */
     public function find(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
         $currencyCode = e($currencyCode);

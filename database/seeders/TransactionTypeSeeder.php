@@ -25,7 +25,6 @@ namespace Database\Seeders;
 
 use FireflyIII\Models\TransactionType;
 use Illuminate\Database\Seeder;
-use PDOException;
 
 /**
  * Class TransactionTypeSeeder.
@@ -47,7 +46,7 @@ class TransactionTypeSeeder extends Seeder
         foreach ($types as $type) {
             try {
                 TransactionType::create(['type' => $type]);
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 // @ignoreException
             }
         }

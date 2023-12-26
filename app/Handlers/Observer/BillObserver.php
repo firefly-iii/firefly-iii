@@ -30,11 +30,6 @@ use FireflyIII\Models\Bill;
  */
 class BillObserver
 {
-    /**
-     * @param Bill $bill
-     *
-     * @return void
-     */
     public function deleting(Bill $bill): void
     {
         app('log')->debug('Observe "deleting" of a bill.');
@@ -43,5 +38,4 @@ class BillObserver
         }
         $bill->notes()->delete();
     }
-
 }

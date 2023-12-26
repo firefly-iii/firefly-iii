@@ -40,8 +40,6 @@ class DestroyController extends Controller
 
     /**
      * BudgetLimitController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -64,10 +62,6 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param Budget      $budget
-     * @param BudgetLimit $budgetLimit
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function destroy(Budget $budget, BudgetLimit $budgetLimit): JsonResponse

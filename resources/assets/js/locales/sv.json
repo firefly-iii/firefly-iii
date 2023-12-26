@@ -25,6 +25,7 @@
         "destination_account": "Till konto",
         "add_another_split": "L\u00e4gga till en annan delning",
         "submission": "Inskickning",
+        "stored_journal": "Skapade ny transaktion \":description\"",
         "create_another": "Efter sparat, \u00e5terkom hit f\u00f6r att skapa ytterligare en.",
         "reset_after": "\u00c5terst\u00e4ll formul\u00e4r efter inskickat",
         "submit": "Skicka",

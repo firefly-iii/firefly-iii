@@ -49,8 +49,6 @@ class TagReportController extends Controller
 
     /**
      * TagReportController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -67,14 +65,6 @@ class TagReportController extends Controller
         );
     }
 
-    /**
-     * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return JsonResponse
-     */
     public function budgetExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
         $result = [];
@@ -103,14 +93,6 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return JsonResponse
-     */
     public function categoryExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
         $result = [];
@@ -139,14 +121,6 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return JsonResponse
-     */
     public function categoryIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
         $result = [];
@@ -175,14 +149,6 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return JsonResponse
-     */
     public function destinationExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
         $result = [];
@@ -211,14 +177,6 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return JsonResponse
-     */
     public function destinationIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
         $result = [];
@@ -249,14 +207,6 @@ class TagReportController extends Controller
 
     /**
      * Generate main tag overview chart.
-     *
-     * @param Collection $accounts
-     * @param Tag        $tag
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return JsonResponse
-     *
      */
     public function mainChart(Collection $accounts, Tag $tag, Carbon $start, Carbon $end): JsonResponse
     {
@@ -324,39 +274,6 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * TODO duplicate function
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return array
-     */
-    private function makeEntries(Carbon $start, Carbon $end): array
-    {
-        $return         = [];
-        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
-        $currentStart   = clone $start;
-        while ($currentStart <= $end) {
-            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
-            $key          = $currentStart->isoFormat($format);
-            $return[$key] = '0';
-            $currentStart = clone $currentEnd;
-            $currentStart->addDay()->startOfDay();
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return JsonResponse
-     */
     public function sourceExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
         $result = [];
@@ -385,14 +302,6 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return JsonResponse
-     */
     public function sourceIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
         $result = [];
@@ -421,14 +330,6 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return JsonResponse
-     */
     public function tagExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
         $result = [];
@@ -455,14 +356,6 @@ class TagReportController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return JsonResponse
-     */
     public function tagIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
     {
         $result = [];
@@ -487,5 +380,25 @@ class TagReportController extends Controller
         $data = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
+    }
+
+    /**
+     * TODO duplicate function
+     */
+    private function makeEntries(Carbon $start, Carbon $end): array
+    {
+        $return         = [];
+        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $currentStart   = clone $start;
+        while ($currentStart <= $end) {
+            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
+            $key          = $currentStart->isoFormat($format);
+            $return[$key] = '0';
+            $currentStart = clone $currentEnd;
+            $currentStart->addDay()->startOfDay();
+        }
+
+        return $return;
     }
 }

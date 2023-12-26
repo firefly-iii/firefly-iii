@@ -47,13 +47,12 @@ class CorrectOpeningBalanceCurrencies extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
         $journals = $this->getJournals();
         $count    = 0;
+
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $count += $this->correctJournal($journal);
@@ -71,22 +70,15 @@ class CorrectOpeningBalanceCurrencies extends Command
         return 0;
     }
 
-    /**
-     * @return Collection
-     */
     private function getJournals(): Collection
     {
-        /** @var Collection */
+        // @var Collection
         return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                 ->whereNull('transaction_journals.deleted_at')
-                                 ->where('transaction_types.type', TransactionType::OPENING_BALANCE)->get(['transaction_journals.*']);
+            ->whereNull('transaction_journals.deleted_at')
+            ->where('transaction_types.type', TransactionType::OPENING_BALANCE)->get(['transaction_journals.*'])
+        ;
     }
 
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return int
-     */
     private function correctJournal(TransactionJournal $journal): int
     {
         // get the asset account for this opening balance:
@@ -103,17 +95,13 @@ class CorrectOpeningBalanceCurrencies extends Command
         return $this->setCorrectCurrency($account, $journal);
     }
 
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Account|null
-     */
     private function getAccount(TransactionJournal $journal): ?Account
     {
         $transactions = $journal->transactions()->get();
+
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            /** @var Account|null $account */
+            /** @var null|Account $account */
             $account = $transaction->account()->first();
             if (null !== $account && AccountType::INITIAL_BALANCE !== $account->accountType()->first()->type) {
                 return $account;
@@ -123,12 +111,6 @@ class CorrectOpeningBalanceCurrencies extends Command
         return null;
     }
 
-    /**
-     * @param Account            $account
-     * @param TransactionJournal $journal
-     *
-     * @return int
-     */
     private function setCorrectCurrency(Account $account, TransactionJournal $journal): int
     {
         $currency = $this->getCurrency($account);
@@ -151,11 +133,6 @@ class CorrectOpeningBalanceCurrencies extends Command
         return $count;
     }
 
-    /**
-     * @param Account $account
-     *
-     * @return TransactionCurrency
-     */
     private function getCurrency(Account $account): TransactionCurrency
     {
         /** @var AccountRepositoryInterface $repos */

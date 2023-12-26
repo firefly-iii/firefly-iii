@@ -36,8 +36,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class UpdateRequest
- *
-
  */
 class UpdateRequest extends FormRequest
 {
@@ -45,9 +43,6 @@ class UpdateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    /**
-     * @return array
-     */
     public function getUpdateData(): array
     {
         $fields = [
@@ -82,8 +77,6 @@ class UpdateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -109,7 +102,7 @@ class UpdateRequest extends FormRequest
             'include_net_worth'    => [new IsBoolean()],
             'account_role'         => sprintf('in:%s|nullable|required_if:type,asset', $accountRoles),
             'credit_card_type'     => sprintf('in:%s|nullable|required_if:account_role,ccAsset', $ccPaymentTypes),
-            'monthly_payment_date' => 'date' . '|nullable|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
+            'monthly_payment_date' => 'date|nullable|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
             'liability_type'       => 'required_if:type,liability|in:loan,debt,mortgage',
             'liability_direction'  => 'required_if:type,liability|in:credit,debit',
             'interest'             => 'required_if:type,liability|between:0,100|numeric',

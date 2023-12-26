@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Exception;
 use FireflyIII\Events\WarnUserAboutBill;
 use FireflyIII\Notifications\User\BillReminder;
 use Illuminate\Support\Facades\Notification;
@@ -34,31 +33,30 @@ use Illuminate\Support\Facades\Notification;
  */
 class BillEventHandler
 {
-    /**
-     * @param WarnUserAboutBill $event
-     *
-     * @return void
-     */
     public function warnAboutBill(WarnUserAboutBill $event): void
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
 
         $bill = $event->bill;
+
         /** @var bool $preference */
         $preference = app('preferences')->getForUser($bill->user, 'notification_bill_reminder', true)->data;
 
         if (true === $preference) {
             app('log')->debug('Bill reminder is true!');
+
             try {
                 Notification::send($bill->user, new BillReminder($bill, $event->field, $event->diff));
-            } catch (Exception $e) { // @phpstan-ignore-line
+            } catch (\Exception $e) { // @phpstan-ignore-line
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
                     app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
                     return;
                 }
                 if (str_contains($message, 'RFC 2822')) {
                     app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
                     return;
                 }
                 app('log')->error($e->getMessage());

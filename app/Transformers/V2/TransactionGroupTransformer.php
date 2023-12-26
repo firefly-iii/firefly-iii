@@ -35,7 +35,6 @@ use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use stdClass;
 
 /**
  * Class TransactionGroupTransformer
@@ -49,23 +48,22 @@ class TransactionGroupTransformer extends AbstractTransformer
     private array                 $notes;
     private array                 $tags;
 
-    /**
-     * @inheritDoc
-     */
     public function collectMetaData(Collection $objects): void
     {
         // start with currencies:
         $currencies = [];
         $journals   = [];
+
         /** @var array $object */
         foreach ($objects as $object) {
             foreach ($object['sums'] as $sum) {
-                $id              = (int)$sum['currency_id'];
+                $id              = (int) $sum['currency_id'];
                 $currencies[$id] ??= TransactionCurrency::find($sum['currency_id']);
             }
+
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
-                $id            = (int)$transaction['transaction_journal_id'];
+                $id            = (int) $transaction['transaction_journal_id'];
                 $journals[$id] = [];
             }
         }
@@ -74,6 +72,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         // grab meta for all journals:
         $meta = TransactionJournalMeta::whereIn('transaction_journal_id', array_keys($journals))->get();
+
         /** @var TransactionJournalMeta $entry */
         foreach ($meta as $entry) {
             $id                            = $entry->transaction_journal_id;
@@ -82,6 +81,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         // grab all notes for all journals:
         $notes = Note::whereNoteableType(TransactionJournal::class)->whereIn('noteable_id', array_keys($journals))->get();
+
         /** @var Note $note */
         foreach ($notes as $note) {
             $id               = $note->noteable_id;
@@ -90,12 +90,14 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         // grab all tags for all journals:
         $tags = DB::table('tag_transaction_journal')
-                  ->leftJoin('tags', 'tags.id', 'tag_transaction_journal.tag_id')
-                  ->whereIn('tag_transaction_journal.transaction_journal_id', array_keys($journals))
-                  ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag']);
-        /** @var stdClass $tag */
+            ->leftJoin('tags', 'tags.id', 'tag_transaction_journal.tag_id')
+            ->whereIn('tag_transaction_journal.transaction_journal_id', array_keys($journals))
+            ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag'])
+        ;
+
+        /** @var \stdClass $tag */
         foreach ($tags as $tag) {
-            $id                = (int)$tag->transaction_journal_id;
+            $id                = (int) $tag->transaction_journal_id;
             $this->tags[$id][] = $tag->tag;
         }
 
@@ -103,20 +105,16 @@ class TransactionGroupTransformer extends AbstractTransformer
         $this->converter = new ExchangeRateConverter();
     }
 
-    /**
-     * @param array $group
-     *
-     * @return array
-     */
     public function transform(array $group): array
     {
         $first = reset($group['transactions']);
+
         return [
-            'id'           => (string)$group['id'],
+            'id'           => (string) $group['id'],
             'created_at'   => $first['created_at']->toAtomString(),
             'updated_at'   => $first['updated_at']->toAtomString(),
-            'user'         => (string)$first['user_id'],
-            'user_group'   => (string)$first['user_group_id'],
+            'user'         => (string) $first['user_id'],
+            'user_group'   => (string) $first['user_group_id'],
             'group_title'  => $group['title'] ?? null,
             'transactions' => $this->transformTransactions($group['transactions'] ?? []),
             'links'        => [
@@ -128,52 +126,49 @@ class TransactionGroupTransformer extends AbstractTransformer
         ];
     }
 
-    /**
-     * @param array $transactions
-     *
-     * @return array
-     */
     private function transformTransactions(array $transactions): array
     {
         $return = [];
+
         /** @var array $transaction */
         foreach ($transactions as $transaction) {
             $return[] = $this->transformTransaction($transaction);
         }
+
         return $return;
     }
 
     /**
-     * @param array $transaction
-     *
-     * @return array
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function transformTransaction(array $transaction): array
     {
         $transaction = new NullArrayObject($transaction);
         $type        = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
-        $journalId   = (int)$transaction['transaction_journal_id'];
+        $journalId   = (int) $transaction['transaction_journal_id'];
         $meta        = new NullArrayObject($this->meta[$journalId] ?? []);
 
         /**
          * Convert and use amount:
          */
-        $amount              = app('steam')->positive((string)($transaction['amount'] ?? '0'));
-        $currencyId          = (int)$transaction['currency_id'];
+        $amount              = app('steam')->positive((string) ($transaction['amount'] ?? '0'));
+        $currencyId          = (int) $transaction['currency_id'];
         $nativeAmount        = $this->converter->convert($this->default, $this->currencies[$currencyId], $transaction['date'], $amount);
         $foreignAmount       = null;
         $nativeForeignAmount = null;
         if (null !== $transaction['foreign_amount']) {
-            $foreignCurrencyId   = (int)$transaction['foreign_currency_id'];
+            $foreignCurrencyId   = (int) $transaction['foreign_currency_id'];
             $foreignAmount       = app('steam')->positive($transaction['foreign_amount']);
             $nativeForeignAmount = $this->converter->convert($this->default, $this->currencies[$foreignCurrencyId], $transaction['date'], $foreignAmount);
         }
+        $this->converter->summarize();
 
         return [
-            'user'                            => (string)$transaction['user_id'],
-            'user_group'                      => (string)$transaction['user_group_id'],
-            'transaction_journal_id'          => (string)$transaction['transaction_journal_id'],
+            'user'                            => (string) $transaction['user_id'],
+            'user_group'                      => (string) $transaction['user_group_id'],
+            'transaction_journal_id'          => (string) $transaction['transaction_journal_id'],
             'type'                            => strtolower($type),
             'date'                            => $transaction['date']->toAtomString(),
             'order'                           => $transaction['order'],
@@ -181,14 +176,14 @@ class TransactionGroupTransformer extends AbstractTransformer
             'native_amount'                   => $nativeAmount,
             'foreign_amount'                  => $foreignAmount,
             'native_foreign_amount'           => $nativeForeignAmount,
-            'currency_id'                     => (string)$transaction['currency_id'],
+            'currency_id'                     => (string) $transaction['currency_id'],
             'currency_code'                   => $transaction['currency_code'],
             'currency_name'                   => $transaction['currency_name'],
             'currency_symbol'                 => $transaction['currency_symbol'],
-            'currency_decimal_places'         => (int)$transaction['currency_decimal_places'],
+            'currency_decimal_places'         => (int) $transaction['currency_decimal_places'],
 
             // converted to native currency
-            'native_currency_id'              => (string)$this->default->id,
+            'native_currency_id'              => (string) $this->default->id,
             'native_currency_code'            => $this->default->code,
             'native_currency_name'            => $this->default->name,
             'native_currency_symbol'          => $this->default->symbol,
@@ -203,11 +198,11 @@ class TransactionGroupTransformer extends AbstractTransformer
 
             // foreign converted to native:
             'description'                     => $transaction['description'],
-            'source_id'                       => (string)$transaction['source_account_id'],
+            'source_id'                       => (string) $transaction['source_account_id'],
             'source_name'                     => $transaction['source_account_name'],
             'source_iban'                     => $transaction['source_account_iban'],
             'source_type'                     => $transaction['source_account_type'],
-            'destination_id'                  => (string)$transaction['destination_account_id'],
+            'destination_id'                  => (string) $transaction['destination_account_id'],
             'destination_name'                => $transaction['destination_account_name'],
             'destination_iban'                => $transaction['destination_account_iban'],
             'destination_type'                => $transaction['destination_account_type'],
@@ -258,16 +253,10 @@ class TransactionGroupTransformer extends AbstractTransformer
      *
      * Used to extract a value from the given array, and fall back on a sensible default or NULL
      * if it can't be helped.
-     *
-     * @param NullArrayObject $array
-     * @param string          $key
-     * @param string|null     $default
-     *
-     * @return string|null
      */
     private function stringFromArray(NullArrayObject $array, string $key, ?string $default): ?string
     {
-        //app('log')->debug(sprintf('%s: %s', $key, var_export($array[$key], true)));
+        // app('log')->debug(sprintf('%s: %s', $key, var_export($array[$key], true)));
         if (null === $array[$key] && null === $default) {
             return null;
         }
@@ -278,7 +267,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             return $default;
         }
         if (null !== $array[$key]) {
-            return (string)$array[$key];
+            return (string) $array[$key];
         }
 
         if (null !== $default) {
@@ -288,11 +277,6 @@ class TransactionGroupTransformer extends AbstractTransformer
         return null;
     }
 
-    /**
-     * @param string|null $string
-     *
-     * @return Carbon|null
-     */
     private function date(?string $string): ?Carbon
     {
         if (null === $string) {
@@ -304,6 +288,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             if (false === $res) {
                 return null;
             }
+
             return $res;
         }
         if (25 === strlen($string)) {
@@ -314,6 +299,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             if (false === $res) {
                 return null;
             }
+
             return $res;
         }
 
@@ -322,6 +308,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         if (false === $res) {
             return null;
         }
+
         return $res;
     }
 }

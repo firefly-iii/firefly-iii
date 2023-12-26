@@ -32,8 +32,6 @@ use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Response as LaravelResponse;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class IndexController
@@ -44,8 +42,6 @@ class IndexController extends Controller
 
     /**
      * IndexController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -65,10 +61,7 @@ class IndexController extends Controller
     }
 
     /**
-     * @return LaravelResponse
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function export(): LaravelResponse
     {
@@ -90,19 +83,21 @@ class IndexController extends Controller
 
         $name   = sprintf('%s_transaction_export.csv', date('Y_m_d'));
         $quoted = sprintf('"%s"', addcslashes($name, '"\\'));
+
         // headers for CSV file.
         /** @var LaravelResponse $response */
         $response = response($result['transactions']);
         $response
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'text/x-csv')
-            ->header('Content-Disposition', 'attachment; filename=' . $quoted)
-            //->header('Content-Transfer-Encoding', 'binary')
+            ->header('Content-Disposition', 'attachment; filename='.$quoted)
+            // ->header('Content-Transfer-Encoding', 'binary')
             ->header('Connection', 'Keep-Alive')
             ->header('Expires', '0')
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Pragma', 'public')
-            ->header('Content-Length', (string)strlen($result['transactions']));
+            ->header('Content-Length', (string)strlen($result['transactions']))
+        ;
 
         // return CSV file made from 'transactions' array.
         return $response;

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * IndexController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -34,8 +33,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 class IndexController extends Controller
 {
@@ -44,8 +41,6 @@ class IndexController extends Controller
 
     /**
      * CurrencyController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -66,11 +61,7 @@ class IndexController extends Controller
     /**
      * Show overview of currencies.
      *
-     * @param Request $request
-     *
      * @return Factory|View
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function index(Request $request)
     {
@@ -87,6 +78,7 @@ class IndexController extends Controller
             static function (TransactionCurrency $currency) {
                 $default = true === $currency->userGroupDefault ? 0 : 1;
                 $enabled = true === $currency->userGroupEnabled ? 0 : 1;
+
                 return sprintf('%s-%s-%s', $default, $enabled, $currency->code);
             }
         );
@@ -101,5 +93,4 @@ class IndexController extends Controller
 
         return view('currencies.index', compact('currencies', 'isOwner'));
     }
-
 }

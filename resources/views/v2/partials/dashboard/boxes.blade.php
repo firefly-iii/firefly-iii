@@ -3,8 +3,8 @@
     <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12">
         <!--begin::Small Box Widget 1-->
         <div class="small-box text-bg-primary">
-            <div class="inner">
-                <h3 id="balanceAmount">
+                <div class="inner balance-box">
+                <h3>
                     <template x-for="(amount, index) in balanceBox.amounts" :key="index">
                         <span>
                             <span x-text="amount"></span><span

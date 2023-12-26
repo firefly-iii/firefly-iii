@@ -27,7 +27,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
-use JsonException;
 
 /**
  * Class PiggyBankEventTransformer
@@ -39,8 +38,6 @@ class PiggyBankEventTransformer extends AbstractTransformer
 
     /**
      * PiggyBankEventTransformer constructor.
-     *
-
      */
     public function __construct()
     {
@@ -51,11 +48,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
     /**
      * Convert piggy bank event.
      *
-     * @param PiggyBankEvent $event
-     *
-     * @return array
      * @throws FireflyException
-     * @throws JsonException
      */
     public function transform(PiggyBankEvent $event): array
     {
@@ -91,7 +84,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
             'links'                   => [
                 [
                     'rel' => 'self',
-                    'uri' => '/piggy_bank_events/' . $event->id,
+                    'uri' => '/piggy_bank_events/'.$event->id,
                 ],
             ],
         ];

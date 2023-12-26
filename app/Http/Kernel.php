@@ -54,8 +54,6 @@ use PragmaRX\Google2FALaravel\Middleware as MFAMiddleware;
 
 /**
  * Class Kernel
- *
-
  */
 class Kernel extends HttpKernel
 {
@@ -124,7 +122,7 @@ class Kernel extends HttpKernel
                 VerifyCsrfToken::class,
                 Binder::class,
                 Authenticate::class,
-                //RedirectIfTwoFactorAuthenticated::class,
+                // RedirectIfTwoFactorAuthenticated::class,
             ],
 
             // MUST be logged in
@@ -169,7 +167,7 @@ class Kernel extends HttpKernel
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 Authenticate::class,
-                //AuthenticateTwoFactor::class,
+                // AuthenticateTwoFactor::class,
                 IsAdmin::class,
                 Range::class,
                 Binder::class,

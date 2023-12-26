@@ -36,9 +36,6 @@ abstract class TestCase extends BaseTestCase
 
     protected const MAX_ITERATIONS = 2;
 
-    /**
-     * @return array
-     */
     public function dateRangeProvider(): array
     {
         return [

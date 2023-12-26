@@ -32,8 +32,12 @@ use PHPUnit\Framework\TestCase;
  * @group unit-test
  * @group support
  * @group navigation
+ *
+ * @internal
+ *
+ * @coversNothing
  */
-class NavigationPreferredRangeFormatTest extends TestCase
+final class NavigationPreferredRangeFormatTest extends TestCase
 {
     private Navigation $navigation;
 
@@ -64,7 +68,7 @@ class NavigationPreferredRangeFormatTest extends TestCase
     /**
      * @dataProvider providePeriods
      */
-    public function testGivenStartAndEndDatesWhenCallPreferredRangeFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected)
+    public function testGivenStartAndEndDatesWhenCallPreferredRangeFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
     {
         $formatPeriod = $this->navigation->preferredRangeFormat($start, $end);
         self::assertSame($expected, $formatPeriod);

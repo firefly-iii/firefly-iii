@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * DestroyController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -40,9 +39,6 @@ class DestroyController extends Controller
 {
     private UserGroupRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -55,11 +51,6 @@ class DestroyController extends Controller
         );
     }
 
-    /**
-     * @param UserGroup $userGroup
-     *
-     * @return JsonResponse
-     */
     public function destroy(UserGroup $userGroup): JsonResponse
     {
         /** @var User $user */
@@ -71,6 +62,7 @@ class DestroyController extends Controller
             throw new NotFoundHttpException();
         }
         $this->repository->destroy($userGroup);
+
         return response()->json([], 204);
     }
 }

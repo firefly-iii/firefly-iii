@@ -38,7 +38,6 @@ use FireflyIII\Support\NullArrayObject;
 
 /**
  * Trait JournalServiceTrait
- *
  */
 trait JournalServiceTrait
 {
@@ -48,11 +47,6 @@ trait JournalServiceTrait
     private TagFactory                  $tagFactory;
 
     /**
-     * @param string $transactionType
-     * @param string $direction
-     * @param array  $data
-     *
-     * @return Account|null
      * @throws FireflyException
      */
     protected function getAccount(string $transactionType, string $direction, array $data): ?Account
@@ -89,7 +83,6 @@ trait JournalServiceTrait
         // the account that Firefly III creates must be "creatable", aka select the one we can create from the list just in case
         $creatableType = $this->getCreatableType($expectedTypes[$transactionType]);
 
-
         // if the result is NULL but the ID is set, an account could exist of the wrong type.
         // that data can be used to create a new account of the right type.
         if (null === $result && null !== $data['id'] && null !== $creatableType) {
@@ -113,15 +106,128 @@ trait JournalServiceTrait
             app('log')->debug('If cant be created, return cash account.');
             $result = $this->getCashAccount($result, $data, $expectedTypes[$transactionType]);
         }
+
         return $result;
     }
 
     /**
-     * @param array $data
-     * @param array $types
-     *
-     * @return Account|null
+     * @throws FireflyException
      */
+    protected function getAmount(string $amount): string
+    {
+        if ('' === $amount) {
+            throw new FireflyException(sprintf('The amount cannot be an empty string: "%s"', $amount));
+        }
+        app('log')->debug(sprintf('Now in getAmount("%s")', $amount));
+        if (0 === bccomp('0', $amount)) {
+            throw new FireflyException(sprintf('The amount seems to be zero: "%s"', $amount));
+        }
+
+        return $amount;
+    }
+
+    protected function getForeignAmount(?string $amount): ?string
+    {
+        if (null === $amount) {
+            app('log')->debug('No foreign amount info in array. Return NULL');
+
+            return null;
+        }
+        if ('' === $amount) {
+            app('log')->debug('Foreign amount is empty string, return NULL.');
+
+            return null;
+        }
+        if (0 === bccomp('0', $amount)) {
+            app('log')->debug('Foreign amount is 0.0, return NULL.');
+
+            return null;
+        }
+        app('log')->debug(sprintf('Foreign amount is %s', $amount));
+
+        return $amount;
+    }
+
+    protected function storeBudget(TransactionJournal $journal, NullArrayObject $data): void
+    {
+        if (TransactionType::WITHDRAWAL !== $journal->transactionType->type) {
+            $journal->budgets()->sync([]);
+
+            return;
+        }
+        $budget = $this->budgetRepository->findBudget($data['budget_id'], $data['budget_name']);
+        if (null !== $budget) {
+            app('log')->debug(sprintf('Link budget #%d to journal #%d', $budget->id, $journal->id));
+            $journal->budgets()->sync([$budget->id]);
+
+            return;
+        }
+        // if the budget is NULL, sync empty.
+        $journal->budgets()->sync([]);
+    }
+
+    protected function storeCategory(TransactionJournal $journal, NullArrayObject $data): void
+    {
+        $category = $this->categoryRepository->findCategory($data['category_id'], $data['category_name']);
+        if (null !== $category) {
+            app('log')->debug(sprintf('Link category #%d to journal #%d', $category->id, $journal->id));
+            $journal->categories()->sync([$category->id]);
+
+            return;
+        }
+        // if the category is NULL, sync empty.
+        $journal->categories()->sync([]);
+    }
+
+    protected function storeNotes(TransactionJournal $journal, ?string $notes): void
+    {
+        $notes = (string)$notes;
+        $note  = $journal->notes()->first();
+        if ('' !== $notes) {
+            if (null === $note) {
+                $note = new Note();
+                $note->noteable()->associate($journal);
+            }
+            $note->text = $notes;
+            $note->save();
+            app('log')->debug(sprintf('Stored notes for journal #%d', $journal->id));
+
+            return;
+        }
+        // try to delete existing notes.
+        $note?->delete();
+    }
+
+    /**
+     * Link tags to journal.
+     */
+    protected function storeTags(TransactionJournal $journal, ?array $tags): void
+    {
+        app('log')->debug('Now in storeTags()', $tags ?? []);
+        $this->tagFactory->setUser($journal->user);
+        $set = [];
+        if (!is_array($tags)) {
+            app('log')->debug('Tags is not an array, break.');
+
+            return;
+        }
+        app('log')->debug('Start of loop.');
+        foreach ($tags as $string) {
+            $string = (string)$string;
+            app('log')->debug(sprintf('Now at tag "%s"', $string));
+            if ('' !== $string) {
+                $tag = $this->tagFactory->findOrCreate($string);
+                if (null !== $tag) {
+                    $set[] = $tag->id;
+                }
+            }
+        }
+        $set = array_unique($set);
+        app('log')->debug('End of loop.');
+        app('log')->debug(sprintf('Total nr. of tags: %d', count($tags)), $tags);
+        $journal->tags()->sync($set);
+    }
+
     private function findAccountById(array $data, array $types): ?Account
     {
         // first attempt, find by ID.
@@ -131,34 +237,32 @@ trait JournalServiceTrait
                 app('log')->debug(
                     sprintf('Found "account_id" object: #%d, "%s" of type %s (1)', $search->id, $search->name, $search->accountType->type)
                 );
+
                 return $search;
             }
             if (null !== $search && 0 === count($types)) {
                 app('log')->debug(
                     sprintf('Found "account_id" object: #%d, "%s" of type %s (2)', $search->id, $search->name, $search->accountType->type)
                 );
+
                 return $search;
             }
         }
         app('log')->debug(sprintf('Found no account by ID #%d of types', $data['id']), $types);
+
         return null;
     }
 
-    /**
-     * @param Account|null $account
-     * @param array        $data
-     * @param array        $types
-     *
-     * @return Account|null
-     */
     private function findAccountByIban(?Account $account, array $data, array $types): ?Account
     {
         if (null !== $account) {
             app('log')->debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
+
             return $account;
         }
         if (null === $data['iban'] || '' === $data['iban']) {
             app('log')->debug('IBAN is empty, will not search for IBAN.');
+
             return null;
         }
         // find by preferred type.
@@ -172,24 +276,20 @@ trait JournalServiceTrait
             return $source;
         }
         app('log')->debug(sprintf('Found no account with IBAN "%s" of expected types', $data['iban']), $types);
+
         return null;
     }
 
-    /**
-     * @param Account|null $account
-     * @param array        $data
-     * @param array        $types
-     *
-     * @return Account|null
-     */
     private function findAccountByNumber(?Account $account, array $data, array $types): ?Account
     {
         if (null !== $account) {
             app('log')->debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
+
             return $account;
         }
         if (null === $data['number'] || '' === $data['number']) {
             app('log')->debug('Account number is empty, will not search for account number.');
+
             return null;
         }
         // find by preferred type.
@@ -205,24 +305,20 @@ trait JournalServiceTrait
         }
 
         app('log')->debug(sprintf('Found no account with account number "%s" of expected types', $data['number']), $types);
+
         return null;
     }
 
-    /**
-     * @param Account|null $account
-     * @param array        $data
-     * @param array        $types
-     *
-     * @return Account|null
-     */
     private function findAccountByName(?Account $account, array $data, array $types): ?Account
     {
         if (null !== $account) {
             app('log')->debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
+
             return $account;
         }
         if (null === $data['name'] || '' === $data['name']) {
             app('log')->debug('Account name is empty, will not search for account name.');
+
             return null;
         }
 
@@ -238,34 +334,28 @@ trait JournalServiceTrait
             return $source;
         }
         app('log')->debug(sprintf('Found no account with account name "%s" of expected types', $data['name']), $types);
+
         return null;
     }
 
-    /**
-     * @param array $types
-     *
-     * @return null|string
-     */
     private function getCreatableType(array $types): ?string
     {
         $result = null;
         $list   = config('firefly.dynamic_creation_allowed');
+
         /** @var string $type */
         foreach ($types as $type) {
             if (true === in_array($type, $list, true)) {
                 $result = $type;
+
                 break;
             }
         }
+
         return $result;
     }
 
     /**
-     * @param Account|null $account
-     * @param array        $data
-     * @param string       $preferredType
-     *
-     * @return Account|null
      * @throws FireflyException
      */
     private function createAccount(?Account $account, array $data, string $preferredType): ?Account
@@ -300,9 +390,10 @@ trait JournalServiceTrait
             // if name is still NULL, return NULL.
             if ('' === (string)$data['name']) {
                 app('log')->debug('Account name is still NULL, return NULL.');
+
                 return null;
             }
-            //$data['name'] = $data['name'] ?? '(no name)';
+            // $data['name'] = $data['name'] ?? '(no name)';
 
             $account = $this->accountRepository->store(
                 [
@@ -333,13 +424,6 @@ trait JournalServiceTrait
         return $account;
     }
 
-    /**
-     * @param Account|null $account
-     * @param array        $data
-     * @param array        $types
-     *
-     * @return Account|null
-     */
     private function getCashAccount(?Account $account, array $data, array $types): ?Account
     {
         // return cash account.
@@ -348,155 +432,7 @@ trait JournalServiceTrait
             $account = $this->accountRepository->getCashAccount();
         }
         app('log')->debug('Cannot return cash account, return input instead.');
+
         return $account;
-    }
-
-    /**
-     * @param string $amount
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    protected function getAmount(string $amount): string
-    {
-        if ('' === $amount) {
-            throw new FireflyException(sprintf('The amount cannot be an empty string: "%s"', $amount));
-        }
-        app('log')->debug(sprintf('Now in getAmount("%s")', $amount));
-        if (0 === bccomp('0', $amount)) {
-            throw new FireflyException(sprintf('The amount seems to be zero: "%s"', $amount));
-        }
-
-        return $amount;
-    }
-
-    /**
-     * @param string|null $amount
-     *
-     * @return string|null
-     */
-    protected function getForeignAmount(?string $amount): ?string
-    {
-        if (null === $amount) {
-            app('log')->debug('No foreign amount info in array. Return NULL');
-
-            return null;
-        }
-        if ('' === $amount) {
-            app('log')->debug('Foreign amount is empty string, return NULL.');
-
-            return null;
-        }
-        if (0 === bccomp('0', $amount)) {
-            app('log')->debug('Foreign amount is 0.0, return NULL.');
-
-            return null;
-        }
-        app('log')->debug(sprintf('Foreign amount is %s', $amount));
-
-        return $amount;
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param NullArrayObject    $data
-     *
-
-     */
-    protected function storeBudget(TransactionJournal $journal, NullArrayObject $data): void
-    {
-        if (TransactionType::WITHDRAWAL !== $journal->transactionType->type) {
-            $journal->budgets()->sync([]);
-
-            return;
-        }
-        $budget = $this->budgetRepository->findBudget($data['budget_id'], $data['budget_name']);
-        if (null !== $budget) {
-            app('log')->debug(sprintf('Link budget #%d to journal #%d', $budget->id, $journal->id));
-            $journal->budgets()->sync([$budget->id]);
-
-            return;
-        }
-        // if the budget is NULL, sync empty.
-        $journal->budgets()->sync([]);
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param NullArrayObject    $data
-     *
-
-     */
-    protected function storeCategory(TransactionJournal $journal, NullArrayObject $data): void
-    {
-        $category = $this->categoryRepository->findCategory($data['category_id'], $data['category_name']);
-        if (null !== $category) {
-            app('log')->debug(sprintf('Link category #%d to journal #%d', $category->id, $journal->id));
-            $journal->categories()->sync([$category->id]);
-
-            return;
-        }
-        // if the category is NULL, sync empty.
-        $journal->categories()->sync([]);
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param string|null        $notes
-     *
-
-     */
-    protected function storeNotes(TransactionJournal $journal, ?string $notes): void
-    {
-        $notes = (string)$notes;
-        $note  = $journal->notes()->first();
-        if ('' !== $notes) {
-            if (null === $note) {
-                $note = new Note();
-                $note->noteable()->associate($journal);
-            }
-            $note->text = $notes;
-            $note->save();
-            app('log')->debug(sprintf('Stored notes for journal #%d', $journal->id));
-
-            return;
-        }
-        // try to delete existing notes.
-        $note?->delete();
-    }
-
-    /**
-     * Link tags to journal.
-     *
-     * @param TransactionJournal $journal
-     * @param array|null         $tags
-     *
-
-     */
-    protected function storeTags(TransactionJournal $journal, ?array $tags): void
-    {
-        app('log')->debug('Now in storeTags()', $tags ?? []);
-        $this->tagFactory->setUser($journal->user);
-        $set = [];
-        if (!is_array($tags)) {
-            app('log')->debug('Tags is not an array, break.');
-
-            return;
-        }
-        app('log')->debug('Start of loop.');
-        foreach ($tags as $string) {
-            $string = (string)$string;
-            app('log')->debug(sprintf('Now at tag "%s"', $string));
-            if ('' !== $string) {
-                $tag = $this->tagFactory->findOrCreate($string);
-                if (null !== $tag) {
-                    $set[] = $tag->id;
-                }
-            }
-        }
-        $set = array_unique($set);
-        app('log')->debug('End of loop.');
-        app('log')->debug(sprintf('Total nr. of tags: %d', count($tags)), $tags);
-        $journal->tags()->sync($set);
     }
 }

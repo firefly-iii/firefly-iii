@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * BudgetRepositoryInterface.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -34,22 +33,9 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
-    /**
-     * @return Collection
-     */
     public function getActiveBudgets(): Collection;
 
-    /**
-     * @param User $user
-     *
-     * @return void
-     */
     public function setUser(User $user): void;
 
-    /**
-     * @param UserGroup $userGroup
-     *
-     * @return void
-     */
     public function setUserGroup(UserGroup $userGroup): void;
 }

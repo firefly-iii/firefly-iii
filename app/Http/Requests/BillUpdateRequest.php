@@ -38,8 +38,6 @@ class BillUpdateRequest extends FormRequest
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getBillData(): array
     {
@@ -62,8 +60,6 @@ class BillUpdateRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {

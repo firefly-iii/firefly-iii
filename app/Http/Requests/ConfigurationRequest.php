@@ -28,8 +28,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class ConfigurationRequest.
- *
-
  */
 class ConfigurationRequest extends FormRequest
 {
@@ -37,8 +35,6 @@ class ConfigurationRequest extends FormRequest
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getConfigurationData(): array
     {
@@ -50,8 +46,6 @@ class ConfigurationRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {

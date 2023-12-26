@@ -27,17 +27,17 @@ use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
     /**
      * Run the migrations.
+     *
      * @SuppressWarnings(PHPMD.ShortMethodName)
-     * @return void
      */
     public function up(): void
     {
         if (!Schema::hasTable('notifications')) {
             try {
-                Schema::create('notifications', static function (Blueprint $table) {
+                Schema::create('notifications', static function (Blueprint $table): void {
                     $table->uuid('id')->primary();
                     $table->string('type');
                     $table->morphs('notifiable');
@@ -54,8 +54,6 @@ return new class () extends Migration {
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {

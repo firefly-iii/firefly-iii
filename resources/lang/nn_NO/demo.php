@@ -31,7 +31,6 @@
  *
  */
 
-
 declare(strict_types=1);
 
 return [
@@ -58,4 +57,3 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
-

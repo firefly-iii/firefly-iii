@@ -34,10 +34,6 @@ class ChartJsGenerator implements GeneratorInterface
      * Expects data as:.
      *
      * key => [value => x, 'currency_symbol' => 'x']
-     *
-     * @param array $data
-     *
-     * @return array
      */
     public function multiCurrencyPieChart(array $data): array
     {
@@ -99,10 +95,6 @@ class ChartJsGenerator implements GeneratorInterface
      *    ]
      *
      *  // it's five.
-     *
-     * @param array $data
-     *
-     * @return array
      */
     public function multiSet(array $data): array
     {
@@ -148,10 +140,6 @@ class ChartJsGenerator implements GeneratorInterface
      * Expects data as:.
      *
      * key => value
-     *
-     * @param array $data
-     *
-     * @return array
      */
     public function pieChart(array $data): array
     {
@@ -189,11 +177,6 @@ class ChartJsGenerator implements GeneratorInterface
      * Will generate a (ChartJS) compatible array from the given input. Expects this format:.
      *
      * 'label-of-entry' => value
-     *
-     * @param string $setLabel
-     * @param array  $data
-     *
-     * @return array
      */
     public function singleSet(string $setLabel, array $data): array
     {

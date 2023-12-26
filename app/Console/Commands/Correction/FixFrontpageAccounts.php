@@ -43,12 +43,11 @@ class FixFrontpageAccounts extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
         $users = User::get();
+
         /** @var User $user */
         foreach ($users as $user) {
             $preference = app('preferences')->getForUser($user, 'frontPageAccounts');
@@ -61,12 +60,10 @@ class FixFrontpageAccounts extends Command
         return 0;
     }
 
-    /**
-     * @param Preference $preference
-     */
     private function fixPreference(Preference $preference): void
     {
         $fixed = [];
+
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         if (null === $preference->user) {

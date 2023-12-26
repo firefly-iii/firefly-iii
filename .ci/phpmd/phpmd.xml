@@ -37,14 +37,14 @@
 
     <rule ref="rulesets/design.xml/NumberOfChildren">
         <properties>
-            <!-- TODO we want to be at minimum 15. But we start high, and drop the bar slowly. -->
-            <property name="minimum" value="256"/>
+            <!-- This is now at 32, which excludes the controllers but should prevent more monoliths. -->
+            <property name="minimum" value="32"/>
         </properties>
     </rule>
     <rule ref="rulesets/design.xml/CouplingBetweenObjects">
         <properties>
-            <!-- TODO we want to be at maximum 13. But we start high, and drop the bar slowly. -->
-            <property name="maximum" value="256"/>
+            <!-- Leaving this at 28 excuses most current code but it can't get worse than that. -->
+            <property name="maximum" value="28"/>
         </properties>
     </rule>
 
@@ -58,20 +58,21 @@
     <!-- code size -->
     <rule ref="rulesets/codesize.xml/CyclomaticComplexity">
         <properties>
-            <!-- TODO we want to be at report level 5. But we start high, and drop the bar slowly. -->
-            <property name="reportLevel" value="500"/>
+            <!-- Leave at 20. This means methods will be pretty complex before the system starts complaining. -->
+            <property name="reportLevel" value="20"/>
         </properties>
     </rule>
     <rule ref="rulesets/codesize.xml/NPathComplexity">
         <properties>
-            <!-- TODO we want to be at a value of 128. But we start high, and drop the bar slowly. -->
-            <property name="minimum" value="24062500"/>
+            <!-- 2000 results in some pretty complex methods, but it's OK. -->
+            <!-- They should not be much more complex than that though -->
+            <property name="minimum" value="2000"/>
         </properties>
     </rule>
     <rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
         <properties>
-            <!-- TODO we want to be at a value of 40. But we start high, and drop the bar slowly. -->
-            <property name="minimum" value="100"/>
+            <!-- 75 seems like a nice number. Shorter isn't always feasible and there are a few exceptions already -->
+            <property name="minimum" value="75"/>
             <property name="ignore-whitespace" value="true"/>
         </properties>
     </rule>

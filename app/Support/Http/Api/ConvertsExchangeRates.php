@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Api;
 
 use Carbon\Carbon;
-use DateTimeInterface;
 use FireflyIII\Models\TransactionCurrency;
 
 /**
@@ -36,9 +35,6 @@ trait ConvertsExchangeRates
     private ?bool $enabled = null;
 
     /**
-     * @param array $set
-     *
-     * @return array
      * @deprecated
      */
     public function cerChartSet(array $set): array
@@ -52,10 +48,12 @@ trait ConvertsExchangeRates
         $this->enabled = false;
         if (false === $this->enabled) {
             $set['converted'] = false;
+
             return $set;
         }
 
         $set['converted'] = true;
+
         /** @var TransactionCurrency $native */
         $native   = app('amount')->getDefaultCurrency();
         $currency = $this->getCurrency((int)$set['currency_id']);
@@ -64,50 +62,24 @@ trait ConvertsExchangeRates
             $set['native_code']           = $currency->code;
             $set['native_symbol']         = $currency->symbol;
             $set['native_decimal_places'] = $currency->decimal_places;
+
             return $set;
         }
         foreach ($set['entries'] as $date => $entry) {
-            $carbon = Carbon::createFromFormat(DateTimeInterface::ATOM, $date);
+            $carbon = Carbon::createFromFormat(\DateTimeInterface::ATOM, $date);
             $rate   = $this->getRate($currency, $native, $carbon);
             $rate   = '0' === $rate ? '1' : $rate;
             app('log')->debug(sprintf('bcmul("%s", "%s")', (string)$entry, $rate));
             $set['entries'][$date] = (float)bcmul((string)$entry, $rate);
         }
+
         return $set;
     }
-
-    /**
-     * @return void
-     * @deprecated
-     */
-    private function getPreference(): void
-    {
-        $this->enabled = config('cer.currency_conversion');
-    }
-
-    /**
-     * @param int $currencyId
-     *
-     * @return TransactionCurrency
-     * @deprecated
-     */
-    private function getCurrency(int $currencyId): TransactionCurrency
-    {
-        $result = TransactionCurrency::find($currencyId);
-        if (null === $result) {
-            return app('amount')->getDefaultCurrency();
-        }
-        return $result;
-    }
-
 
     /**
      * For a sum of entries, get the exchange rate to the native currency of
      * the user.
      *
-     * @param array $entries
-     *
-     * @return array
      * @deprecated
      */
     public function cerSum(array $entries): array
@@ -119,18 +91,20 @@ trait ConvertsExchangeRates
         // if false, return the same array without conversion info
         if (false === $this->enabled) {
             $return = [];
+
             /** @var array $entry */
             foreach ($entries as $entry) {
                 $entry['converted'] = false;
                 $return[]           = $entry;
             }
+
             return $return;
         }
-
 
         /** @var TransactionCurrency $native */
         $native = app('amount')->getDefaultCurrency();
         $return = [];
+
         /** @var array $entry */
         foreach ($entries as $entry) {
             $currency = $this->getCurrency((int)$entry['id']);
@@ -155,17 +129,32 @@ trait ConvertsExchangeRates
             }
             $return[] = $entry;
         }
+
         return $return;
     }
 
     /**
-     * @param string              $amount
-     * @param TransactionCurrency $from
-     * @param TransactionCurrency $to
-     * @param Carbon|null         $date
-     *
-     * @return string
-     *
+     * @deprecated
+     */
+    private function getPreference(): void
+    {
+        $this->enabled = config('cer.currency_conversion');
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getCurrency(int $currencyId): TransactionCurrency
+    {
+        $result = TransactionCurrency::find($currencyId);
+        if (null === $result) {
+            return app('amount')->getDefaultCurrency();
+        }
+
+        return $result;
+    }
+
+    /**
      * @deprecated
      */
     private function convertAmount(string $amount, TransactionCurrency $from, TransactionCurrency $to, ?Carbon $date = null): string

@@ -43,7 +43,6 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 /**
- *
  * Class BudgetLimitController
  */
 class BudgetLimitController extends Controller
@@ -76,10 +75,6 @@ class BudgetLimitController extends Controller
     }
 
     /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
      * @return Factory|View
      */
     public function create(Budget $budget, Carbon $start, Carbon $end)
@@ -106,9 +101,7 @@ class BudgetLimitController extends Controller
     }
 
     /**
-     * @param BudgetLimit $budgetLimit
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function delete(BudgetLimit $budgetLimit)
     {
@@ -121,12 +114,9 @@ class BudgetLimitController extends Controller
     /**
      * TODO why redirect AND json response?
      *
-     * @param Request $request
-     *
-     * @return RedirectResponse|JsonResponse
      * @throws FireflyException
      */
-    public function store(Request $request): RedirectResponse | JsonResponse
+    public function store(Request $request): JsonResponse|RedirectResponse
     {
         app('log')->debug('Going to store new budget-limit.', $request->all());
         // first search for existing one and update it if necessary.
@@ -159,6 +149,7 @@ class BudgetLimitController extends Controller
             if (null !== $limit) {
                 $this->blRepository->destroyBudgetLimit($limit);
             }
+
             // return empty=ish array:
             return response()->json([]);
         }
@@ -205,12 +196,6 @@ class BudgetLimitController extends Controller
         return redirect(route('budgets.index'));
     }
 
-    /**
-     * @param Request     $request
-     * @param BudgetLimit $budgetLimit
-     *
-     * @return JsonResponse
-     */
     public function update(Request $request, BudgetLimit $budgetLimit): JsonResponse
     {
         $amount = (string)$request->get('amount');
@@ -229,6 +214,7 @@ class BudgetLimitController extends Controller
                 'left_per_day_formatted'  => app('amount')->formatAnything($currency, '0'),
                 'transaction_currency_id' => $currency->id,
             ];
+
             return response()->json($array);
         }
         if ((int)$amount > 268435456) { // 268 million, intentional integer

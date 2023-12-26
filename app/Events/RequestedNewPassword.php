@@ -29,8 +29,6 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class RequestedNewPassword.
- *
-
  */
 class RequestedNewPassword extends Event
 {
@@ -38,17 +36,15 @@ class RequestedNewPassword extends Event
 
     /** @var string The users IP address */
     public $ipAddress;
+
     /** @var string The token */
     public $token;
+
     /** @var User The user */
     public $user;
 
     /**
      * Create a new event instance. This event is triggered when a users tries to reset his or her password.
-     *
-     * @param User   $user
-     * @param string $token
-     * @param string $ipAddress
      */
     public function __construct(User $user, string $token, string $ipAddress)
     {

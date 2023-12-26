@@ -31,21 +31,11 @@ use FireflyIII\Models\ObjectGroup;
  */
 trait CreatesObjectGroups
 {
-    /**
-     * @param int $groupId
-     *
-     * @return ObjectGroup|null
-     */
     protected function findObjectGroupById(int $groupId): ?ObjectGroup
     {
         return $this->user->objectGroups()->where('id', $groupId)->first();
     }
 
-    /**
-     * @param string $title
-     *
-     * @return ObjectGroup|null
-     */
     protected function findOrCreateObjectGroup(string $title): ?ObjectGroup
     {
         $title    = substr($title, 0, 255);
@@ -64,29 +54,16 @@ trait CreatesObjectGroups
         return $this->findObjectGroup($title);
     }
 
-    /**
-     * @return int
-     */
     protected function getObjectGroupMaxOrder(): int
     {
         return (int)$this->user->objectGroups()->max('order');
     }
 
-    /**
-     * @param string $title
-     *
-     * @return bool
-     */
     protected function hasObjectGroup(string $title): bool
     {
         return 1 === $this->user->objectGroups()->where('title', $title)->count();
     }
 
-    /**
-     * @param string $title
-     *
-     * @return null|ObjectGroup
-     */
     protected function findObjectGroup(string $title): ?ObjectGroup
     {
         return $this->user->objectGroups()->where('title', $title)->first();

@@ -40,13 +40,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class UserGroup
  *
- * @property int                                        $id
- * @property Carbon|null                                $created_at
- * @property Carbon|null                                $updated_at
- * @property string|null                                $deleted_at
- * @property string                                     $title
- * @property-read Collection|GroupMembership[]          $groupMemberships
- * @property-read int|null                              $group_memberships_count
+ * @property int                          $id
+ * @property null|Carbon                  $created_at
+ * @property null|Carbon                  $updated_at
+ * @property null|string                  $deleted_at
+ * @property string                       $title
+ * @property Collection|GroupMembership[] $groupMemberships
+ * @property null|int                     $group_memberships_count
+ *
  * @method static Builder|UserGroup newModelQuery()
  * @method static Builder|UserGroup newQuery()
  * @method static Builder|UserGroup query()
@@ -55,40 +56,42 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static Builder|UserGroup whereId($value)
  * @method static Builder|UserGroup whereTitle($value)
  * @method static Builder|UserGroup whereUpdatedAt($value)
- * @property-read Collection<int, Account>              $accounts
- * @property-read int|null                              $accounts_count
- * @property-read Collection<int, AvailableBudget>      $availableBudgets
- * @property-read int|null                              $available_budgets_count
- * @property-read Collection<int, Bill>                 $bills
- * @property-read int|null                              $bills_count
- * @property-read Collection<int, Budget>               $budgets
- * @property-read int|null                              $budgets_count
- * @property-read Collection<int, PiggyBank>            $piggyBanks
- * @property-read int|null                              $piggy_banks_count
- * @property-read Collection<int, TransactionJournal>   $transactionJournals
- * @property-read int|null                              $transaction_journals_count
- * @property-read Collection<int, Attachment>           $attachments
- * @property-read int|null                              $attachments_count
- * @property-read Collection<int, Category>             $categories
- * @property-read int|null                              $categories_count
- * @property-read Collection<int, CurrencyExchangeRate> $currencyExchangeRates
- * @property-read int|null                              $currency_exchange_rates_count
- * @property-read Collection<int, ObjectGroup>          $objectGroups
- * @property-read int|null                              $object_groups_count
- * @property-read Collection<int, Recurrence>           $recurrences
- * @property-read int|null                              $recurrences_count
- * @property-read Collection<int, RuleGroup>            $ruleGroups
- * @property-read int|null                              $rule_groups_count
- * @property-read Collection<int, Rule>                 $rules
- * @property-read int|null                              $rules_count
- * @property-read Collection<int, Tag>                  $tags
- * @property-read int|null                              $tags_count
- * @property-read Collection<int, TransactionGroup>     $transactionGroups
- * @property-read int|null                              $transaction_groups_count
- * @property-read Collection<int, Webhook>              $webhooks
- * @property-read int|null                              $webhooks_count
- * @property-read Collection<int, TransactionCurrency>  $currencies
- * @property-read int|null                              $currencies_count
+ *
+ * @property Collection<int, Account>              $accounts
+ * @property null|int                              $accounts_count
+ * @property Collection<int, AvailableBudget>      $availableBudgets
+ * @property null|int                              $available_budgets_count
+ * @property Collection<int, Bill>                 $bills
+ * @property null|int                              $bills_count
+ * @property Collection<int, Budget>               $budgets
+ * @property null|int                              $budgets_count
+ * @property Collection<int, PiggyBank>            $piggyBanks
+ * @property null|int                              $piggy_banks_count
+ * @property Collection<int, TransactionJournal>   $transactionJournals
+ * @property null|int                              $transaction_journals_count
+ * @property Collection<int, Attachment>           $attachments
+ * @property null|int                              $attachments_count
+ * @property Collection<int, Category>             $categories
+ * @property null|int                              $categories_count
+ * @property Collection<int, CurrencyExchangeRate> $currencyExchangeRates
+ * @property null|int                              $currency_exchange_rates_count
+ * @property Collection<int, ObjectGroup>          $objectGroups
+ * @property null|int                              $object_groups_count
+ * @property Collection<int, Recurrence>           $recurrences
+ * @property null|int                              $recurrences_count
+ * @property Collection<int, RuleGroup>            $ruleGroups
+ * @property null|int                              $rule_groups_count
+ * @property Collection<int, Rule>                 $rules
+ * @property null|int                              $rules_count
+ * @property Collection<int, Tag>                  $tags
+ * @property null|int                              $tags_count
+ * @property Collection<int, TransactionGroup>     $transactionGroups
+ * @property null|int                              $transaction_groups_count
+ * @property Collection<int, Webhook>              $webhooks
+ * @property null|int                              $webhooks_count
+ * @property Collection<int, TransactionCurrency>  $currencies
+ * @property null|int                              $currencies_count
+ *
  * @mixin Eloquent
  */
 class UserGroup extends Model
@@ -100,18 +103,17 @@ class UserGroup extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
-     * @param string $value
-     *
-     * @return UserGroup
      * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
             $userGroupId = (int)$value;
+
             /** @var User $user */
             $user = auth()->user();
-            /** @var UserGroup|null $userGroup */
+
+            /** @var null|UserGroup $userGroup */
             $userGroup = self::find($userGroupId);
             if (null === $userGroup) {
                 throw new NotFoundHttpException();
@@ -123,13 +125,12 @@ class UserGroup extends Model
                 return $userGroup;
             }
         }
+
         throw new NotFoundHttpException();
     }
 
     /**
      * Link to accounts.
-     *
-     * @return HasMany
      */
     public function accounts(): HasMany
     {
@@ -138,8 +139,6 @@ class UserGroup extends Model
 
     /**
      * Link to attachments.
-     *
-     * @return HasMany
      */
     public function attachments(): HasMany
     {
@@ -148,8 +147,6 @@ class UserGroup extends Model
 
     /**
      * Link to bills.
-     *
-     * @return HasMany
      */
     public function availableBudgets(): HasMany
     {
@@ -158,8 +155,6 @@ class UserGroup extends Model
 
     /**
      * Link to bills.
-     *
-     * @return HasMany
      */
     public function bills(): HasMany
     {
@@ -168,8 +163,6 @@ class UserGroup extends Model
 
     /**
      * Link to budgets.
-     *
-     * @return HasMany
      */
     public function budgets(): HasMany
     {
@@ -178,8 +171,6 @@ class UserGroup extends Model
 
     /**
      * Link to categories.
-     *
-     * @return HasMany
      */
     public function categories(): HasMany
     {
@@ -188,8 +179,6 @@ class UserGroup extends Model
 
     /**
      * Link to currencies
-     *
-     * @return BelongsToMany
      */
     public function currencies(): BelongsToMany
     {
@@ -198,26 +187,17 @@ class UserGroup extends Model
 
     /**
      * Link to exchange rates.
-     *
-     * @return HasMany
      */
     public function currencyExchangeRates(): HasMany
     {
         return $this->hasMany(CurrencyExchangeRate::class);
     }
 
-    /**
-     *
-     * @return HasMany
-     */
     public function groupMemberships(): HasMany
     {
         return $this->hasMany(GroupMembership::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function objectGroups(): HasMany
     {
         return $this->hasMany(ObjectGroup::class);
@@ -225,49 +205,32 @@ class UserGroup extends Model
 
     /**
      * Link to piggy banks.
-     *
-     * @return HasManyThrough
      */
     public function piggyBanks(): HasManyThrough
     {
         return $this->hasManyThrough(PiggyBank::class, Account::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function recurrences(): HasMany
     {
         return $this->hasMany(Recurrence::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function ruleGroups(): HasMany
     {
         return $this->hasMany(RuleGroup::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function rules(): HasMany
     {
         return $this->hasMany(Rule::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function tags(): HasMany
     {
         return $this->hasMany(Tag::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function transactionGroups(): HasMany
     {
         return $this->hasMany(TransactionGroup::class);
@@ -275,17 +238,12 @@ class UserGroup extends Model
 
     /**
      * Link to transaction journals.
-     *
-     * @return HasMany
      */
     public function transactionJournals(): HasMany
     {
         return $this->hasMany(TransactionJournal::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function webhooks(): HasMany
     {
         return $this->hasMany(Webhook::class);

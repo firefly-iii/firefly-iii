@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * PiggyBankRepository.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -35,18 +34,16 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 {
     use UserGroupTrait;
 
-    /**
-     * @inheritDoc
-     */
     public function getPiggyBanks(): Collection
     {
         return $this->userGroup->piggyBanks()
-                               ->with(
-                                   [
-                                       'account',
-                                       'objectGroups',
-                                   ]
-                               )
-                               ->orderBy('order', 'ASC')->get();
+            ->with(
+                [
+                    'account',
+                    'objectGroups',
+                ]
+            )
+            ->orderBy('order', 'ASC')->get()
+        ;
     }
 }

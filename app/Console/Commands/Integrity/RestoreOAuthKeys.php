@@ -40,8 +40,6 @@ class RestoreOAuthKeys extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
@@ -50,9 +48,6 @@ class RestoreOAuthKeys extends Command
         return 0;
     }
 
-    /**
-     *
-     */
     private function restoreOAuthKeys(): void
     {
         if (!$this->keysInDatabase() && !$this->keysOnDrive()) {
@@ -84,41 +79,26 @@ class RestoreOAuthKeys extends Command
         $this->friendlyPositive('OAuth keys are OK');
     }
 
-    /**
-     * @return bool
-     */
     private function keysInDatabase(): bool
     {
         return OAuthKeys::keysInDatabase();
     }
 
-    /**
-     * @return bool
-     */
     private function keysOnDrive(): bool
     {
         return OAuthKeys::hasKeyFiles();
     }
 
-    /**
-     *
-     */
     private function generateKeys(): void
     {
         OAuthKeys::generateKeys();
     }
 
-    /**
-     *
-     */
     private function storeKeysInDB(): void
     {
         OAuthKeys::storeKeysInDB();
     }
 
-    /**
-     *
-     */
     private function restoreKeysFromDB(): bool
     {
         return OAuthKeys::restoreKeysFromDB();

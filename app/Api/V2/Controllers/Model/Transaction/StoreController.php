@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * StoreController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -55,6 +54,7 @@ class StoreController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
+
                 return $next($request);
             }
         );
@@ -63,13 +63,11 @@ class StoreController extends Controller
     /**
      * TODO this method is practically the same as the V1 method and borrows as much code as possible.
      *
-     * @return JsonResponse
      * @throws FireflyException
      * @throws ValidationException
      */
     public function post(StoreRequest $request): JsonResponse
     {
-
         app('log')->debug('Now in API v2 StoreController::store()');
         $data               = $request->getAll();
         $userGroup          = $request->getUserGroup();
@@ -88,12 +86,14 @@ class StoreController extends Controller
                 ['transactions' => [['description' => $e->getMessage()]]],
                 ['transactions.0.description' => new IsDuplicateTransaction()]
             );
+
             throw new ValidationException($validator); // @phpstan-ignore-line
         } catch (FireflyException $e) { // @phpstan-ignore-line
             app('log')->warning('Caught an exception. Return error message.');
             app('log')->error($e->getMessage());
             $message   = sprintf('Internal exception: %s', $e->getMessage());
             $validator = Validator::make(['transactions' => [['description' => $message]]], ['transactions.0.description' => new IsDuplicateTransaction()]);
+
             throw new ValidationException($validator); // @phpstan-ignore-line
         }
         app('preferences')->mark();
@@ -103,13 +103,15 @@ class StoreController extends Controller
 
         /** @var User $admin */
         $admin = auth()->user();
+
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // filter on transaction group.
-            ->setTransactionGroup($transactionGroup);
+            ->setTransactionGroup($transactionGroup)
+        ;
 
         $selectedGroup = $collector->getGroups()->first();
         if (null === $selectedGroup) {
@@ -121,8 +123,7 @@ class StoreController extends Controller
 
         return response()
             ->api($this->jsonApiObject('transactions', $selectedGroup, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
-
-
 }

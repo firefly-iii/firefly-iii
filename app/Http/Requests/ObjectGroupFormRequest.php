@@ -38,8 +38,6 @@ class ObjectGroupFormRequest extends FormRequest
 
     /**
      * Returns the data required by the controller.
-     *
-     * @return array
      */
     public function getObjectGroupData(): array
     {
@@ -50,12 +48,10 @@ class ObjectGroupFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {
-        /** @var ObjectGroup|null $objectGroup */
+        /** @var null|ObjectGroup $objectGroup */
         $objectGroup = $this->route()->parameter('objectGroup');
         $titleRule   = 'required|between:1,255|uniqueObjectGroup';
 

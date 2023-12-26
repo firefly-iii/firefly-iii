@@ -29,8 +29,6 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class RequestedVersionCheckStatus
- *
-
  */
 class RequestedVersionCheckStatus extends Event
 {
@@ -42,8 +40,6 @@ class RequestedVersionCheckStatus extends Event
     /**
      * Create a new event instance. This event is triggered when Firefly III wants to know
      * what the deal is with the version checker.
-     *
-     * @param User $user
      */
     public function __construct(User $user)
     {

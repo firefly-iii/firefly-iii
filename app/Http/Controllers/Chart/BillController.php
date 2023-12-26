@@ -41,8 +41,6 @@ class BillController extends Controller
 
     /**
      * BillController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -52,10 +50,6 @@ class BillController extends Controller
 
     /**
      * Shows all bills and whether or not they've been paid this month (pie chart).
-     *
-     * @param BillRepositoryInterface $repository
-     *
-     * @return JsonResponse
      */
     public function frontpage(BillRepositoryInterface $repository): JsonResponse
     {
@@ -85,6 +79,7 @@ class BillController extends Controller
                 'currency_code'   => $info['code'],
             ];
         }
+
         /**
          * @var array $info
          */
@@ -107,9 +102,6 @@ class BillController extends Controller
     /**
      * Shows overview for a single bill.
      *
-     * @param Bill $bill
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function single(Bill $bill): JsonResponse
@@ -178,7 +170,6 @@ class BillController extends Controller
             if ($currencyId === $journal['foreign_currency_id']) {
                 $amount = bcmul($journal['foreign_amount'], '-1');
             }
-
 
             $chartData[2]['entries'][$date] = bcadd($chartData[2]['entries'][$date], $amount);  // amount of journal
         }

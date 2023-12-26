@@ -40,8 +40,6 @@ class StoreController extends Controller
 
     /**
      * TagController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -64,15 +62,12 @@ class StoreController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/tags/storeTag
      *
      * Store new object.
-     *
-     * @param StoreRequest $request
-     *
-     * @return JsonResponse
      */
     public function store(StoreRequest $request): JsonResponse
     {
         $rule    = $this->repository->store($request->getAll());
         $manager = $this->getManager();
+
         /** @var TagTransformer $transformer */
         $transformer = app(TagTransformer::class);
         $transformer->setParameters($this->parameters);

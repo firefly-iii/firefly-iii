@@ -23,64 +23,50 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use Cache;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use Illuminate\Database\QueryException;
 
 /**
  * Class FireflyConfig.
- *
-
  */
 class FireflyConfig
 {
-    /**
-     * @param string $name
-     */
     public function delete(string $name): void
     {
-        $fullName = 'ff-config-' . $name;
-        if (Cache::has($fullName)) {
-            Cache::forget($fullName);
+        $fullName = 'ff-config-'.$name;
+        if (\Cache::has($fullName)) {
+            \Cache::forget($fullName);
         }
         Configuration::where('name', $name)->forceDelete();
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
     public function has(string $name): bool
     {
-        return Configuration::where('name', $name)->count() === 1;
+        return 1 === Configuration::where('name', $name)->count();
     }
 
     /**
-     * @param string               $name
-     * @param bool|string|int|null $default
+     * @param null|bool|int|string $default
      *
-     * @return Configuration|null
      * @throws FireflyException
      */
     public function get(string $name, $default = null): ?Configuration
     {
-        $fullName = 'ff-config-' . $name;
-        if (Cache::has($fullName)) {
-            return Cache::get($fullName);
+        $fullName = 'ff-config-'.$name;
+        if (\Cache::has($fullName)) {
+            return \Cache::get($fullName);
         }
 
         try {
-            /** @var Configuration|null $config */
+            /** @var null|Configuration $config */
             $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        } catch (QueryException | Exception $e) {
+        } catch (\Exception|QueryException $e) {
             throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()), 0, $e);
         }
 
         if (null !== $config) {
-            Cache::forever($fullName, $config);
+            \Cache::forever($fullName, $config);
 
             return $config;
         }
@@ -93,10 +79,7 @@ class FireflyConfig
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
-     *
-     * @return Configuration
+     * @param mixed $value
      */
     public function set(string $name, $value): Configuration
     {
@@ -116,22 +99,19 @@ class FireflyConfig
             $item->name = $name;
             $item->data = $value;
             $item->save();
-            Cache::forget('ff-config-' . $name);
+            \Cache::forget('ff-config-'.$name);
 
             return $item;
         }
         $config->data = $value;
         $config->save();
-        Cache::forget('ff-config-' . $name);
+        \Cache::forget('ff-config-'.$name);
 
         return $config;
     }
 
     /**
-     * @param string $name
-     * @param mixed  $default
-     *
-     * @return Configuration|null
+     * @param mixed $default
      */
     public function getFresh(string $name, $default = null): ?Configuration
     {
@@ -148,10 +128,7 @@ class FireflyConfig
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
-     *
-     * @return Configuration
+     * @param mixed $value
      */
     public function put(string $name, $value): Configuration
     {

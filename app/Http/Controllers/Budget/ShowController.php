@@ -37,11 +37,8 @@ use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
- *
  * Class ShowController
  */
 class ShowController extends Controller
@@ -54,8 +51,6 @@ class ShowController extends Controller
 
     /**
      * ShowController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -76,20 +71,15 @@ class ShowController extends Controller
     /**
      * Show transactions without a budget.
      *
-     * @param Request     $request
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function noBudget(Request $request, Carbon $start = null, Carbon $end = null)
     {
-        /** @var Carbon $start */
+        // @var Carbon $start
         $start ??= session('start');
-        /** @var Carbon $end */
+        // @var Carbon $end
         $end      ??= session('end');
         $subTitle = trans(
             'firefly.without_budget_between',
@@ -106,7 +96,8 @@ class ShowController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
-                  ->withoutBudget()->withAccountInformation()->withCategoryInformation();
+            ->withoutBudget()->withAccountInformation()->withCategoryInformation()
+        ;
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.no-budget'));
 
@@ -116,11 +107,7 @@ class ShowController extends Controller
     /**
      * Shows ALL transactions without a budget.
      *
-     * @param Request $request
-     *
      * @return Factory|View
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function noBudgetAll(Request $request)
     {
@@ -134,7 +121,8 @@ class ShowController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
-                  ->withoutBudget()->withAccountInformation()->withCategoryInformation();
+            ->withoutBudget()->withAccountInformation()->withCategoryInformation()
+        ;
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.no-budget-all'));
 
@@ -144,12 +132,7 @@ class ShowController extends Controller
     /**
      * Show a single budget.
      *
-     * @param Request $request
-     * @param Budget  $budget
-     *
      * @return Factory|View
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Budget $budget)
     {
@@ -166,8 +149,9 @@ class ShowController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setRange($allStart, $allEnd)->setBudget($budget)
-                  ->withAccountInformation()
-                  ->setLimit($pageSize)->setPage($page)->withBudgetInformation()->withCategoryInformation();
+            ->withAccountInformation()
+            ->setLimit($pageSize)->setPage($page)->withBudgetInformation()->withCategoryInformation()
+        ;
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.show', [$budget->id]));
 
@@ -179,14 +163,9 @@ class ShowController extends Controller
     /**
      * Show a single budget by a budget limit.
      *
-     * @param Request     $request
-     * @param Budget      $budget
-     * @param BudgetLimit $budgetLimit
-     *
      * @return Factory|View
+     *
      * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit)
     {
@@ -211,9 +190,11 @@ class ShowController extends Controller
         $collector = app(GroupCollectorInterface::class);
 
         $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date)->withAccountInformation()
-                  ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation()->withCategoryInformation();
+            ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation()->withCategoryInformation()
+        ;
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.show.limit', [$budget->id, $budgetLimit->id]));
+
         /** @var Carbon $start */
         $start       = session('first', today(config('app.timezone'))->startOfYear());
         $end         = today(config('app.timezone'));

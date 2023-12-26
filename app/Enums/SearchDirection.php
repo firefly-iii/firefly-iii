@@ -28,5 +28,4 @@ enum SearchDirection
     case SOURCE;
     case DESTINATION;
     case BOTH;
-
 }

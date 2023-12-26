@@ -26,8 +26,6 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Console\Command;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class AppendBudgetLimitPeriods
@@ -44,10 +42,6 @@ class AppendBudgetLimitPeriods extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function handle(): int
     {
@@ -63,11 +57,6 @@ class AppendBudgetLimitPeriods extends Command
         return 0;
     }
 
-    /**
-     * @return bool
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
@@ -75,21 +64,16 @@ class AppendBudgetLimitPeriods extends Command
         return (bool)$configVar->data;
     }
 
-    /**
-     *
-     */
     private function theresNoLimit(): void
     {
         $limits = BudgetLimit::whereNull('period')->get();
+
         /** @var BudgetLimit $limit */
         foreach ($limits as $limit) {
             $this->fixLimit($limit);
         }
     }
 
-    /**
-     * @param BudgetLimit $limit
-     */
     private function fixLimit(BudgetLimit $limit): void
     {
         $period = $this->getLimitPeriod($limit);
@@ -119,11 +103,6 @@ class AppendBudgetLimitPeriods extends Command
         app('log')->debug($msg);
     }
 
-    /**
-     * @param BudgetLimit $limit
-     *
-     * @return string|null
-     */
     private function getLimitPeriod(BudgetLimit $limit): ?string
     {
         // is daily
@@ -172,9 +151,6 @@ class AppendBudgetLimitPeriods extends Command
         return null;
     }
 
-    /**
-     *
-     */
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

@@ -36,7 +36,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use JsonException;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -50,8 +49,6 @@ class IndexController extends Controller
 
     /**
      * PiggyBankController constructor.
-     *
-
      */
     public function __construct()
     {
@@ -75,8 +72,8 @@ class IndexController extends Controller
      * TODO very complicated function.
      *
      * @return Factory|View
+     *
      * @throws FireflyException
-     * @throws JsonException
      */
     public function index()
     {
@@ -84,6 +81,7 @@ class IndexController extends Controller
         $this->piggyRepos->resetOrder();
         $collection = $this->piggyRepos->getPiggyBanks();
         $accounts   = [];
+
         /** @var Carbon $end */
         $end = session('end', today(config('app.timezone'))->endOfMonth());
 
@@ -101,6 +99,7 @@ class IndexController extends Controller
         /** @var AccountTransformer $accountTransformer */
         $accountTransformer = app(AccountTransformer::class);
         $accountTransformer->setParameters($parameters);
+
         /** @var PiggyBank $piggy */
         foreach ($collection as $piggy) {
             $array      = $transformer->transform($piggy);
@@ -143,10 +142,23 @@ class IndexController extends Controller
     }
 
     /**
-     * @param array $piggyBanks
-     *
-     * @return array
+     * Set the order of a piggy bank.
      */
+    public function setOrder(Request $request, PiggyBank $piggyBank): JsonResponse
+    {
+        $objectGroupTitle = (string)$request->get('objectGroupTitle');
+        $newOrder         = (int)$request->get('order');
+        $this->piggyRepos->setOrder($piggyBank, $newOrder);
+        if ('' !== $objectGroupTitle) {
+            $this->piggyRepos->setObjectGroup($piggyBank, $objectGroupTitle);
+        }
+        if ('' === $objectGroupTitle) {
+            $this->piggyRepos->removeObjectGroup($piggyBank);
+        }
+
+        return response()->json(['data' => 'OK']);
+    }
+
     private function makeSums(array $piggyBanks): array
     {
         $sums = [];
@@ -180,28 +192,5 @@ class IndexController extends Controller
         }
 
         return $piggyBanks;
-    }
-
-    /**
-     * Set the order of a piggy bank.
-     *
-     * @param Request   $request
-     * @param PiggyBank $piggyBank
-     *
-     * @return JsonResponse
-     */
-    public function setOrder(Request $request, PiggyBank $piggyBank): JsonResponse
-    {
-        $objectGroupTitle = (string)$request->get('objectGroupTitle');
-        $newOrder         = (int)$request->get('order');
-        $this->piggyRepos->setOrder($piggyBank, $newOrder);
-        if ('' !== $objectGroupTitle) {
-            $this->piggyRepos->setObjectGroup($piggyBank, $objectGroupTitle);
-        }
-        if ('' === $objectGroupTitle) {
-            $this->piggyRepos->removeObjectGroup($piggyBank);
-        }
-
-        return response()->json(['data' => 'OK']);
     }
 }

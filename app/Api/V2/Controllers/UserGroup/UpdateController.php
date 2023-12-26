@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * UpdateController.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -43,9 +42,6 @@ class UpdateController extends Controller
 
     private UserGroupRepositoryInterface $repository;
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -58,12 +54,6 @@ class UpdateController extends Controller
         );
     }
 
-    /**
-     * @param UpdateRequest $request
-     * @param UserGroup     $userGroup
-     *
-     * @return JsonResponse
-     */
     public function update(UpdateRequest $request, UserGroup $userGroup): JsonResponse
     {
         $all         = $request->getAll();
@@ -73,15 +63,10 @@ class UpdateController extends Controller
 
         return response()
             ->api($this->jsonApiObject('user-groups', $userGroup, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 
-    /**
-     * @param UpdateMembershipRequest $request
-     * @param UserGroup               $userGroup
-     *
-     * @return JsonResponse
-     */
     public function updateMembership(UpdateMembershipRequest $request, UserGroup $userGroup): JsonResponse
     {
         $all         = $request->getAll();
@@ -91,6 +76,7 @@ class UpdateController extends Controller
 
         return response()
             ->api($this->jsonApiObject('user-groups', $userGroup, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

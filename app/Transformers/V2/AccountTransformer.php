@@ -46,7 +46,6 @@ class AccountTransformer extends AbstractTransformer
     private TransactionCurrency $default;
 
     /**
-     * @inheritDoc
      * @throws FireflyException
      */
     public function collectMetaData(Collection $objects): void
@@ -64,8 +63,9 @@ class AccountTransformer extends AbstractTransformer
         // get currencies:
         $accountIds  = $objects->pluck('id')->toArray();
         $meta        = AccountMeta::whereIn('account_id', $accountIds)
-                                  ->where('name', 'currency_id')
-                                  ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data']);
+            ->where('name', 'currency_id')
+            ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data'])
+        ;
         $currencyIds = $meta->pluck('data')->toArray();
 
         $currencies = $repository->getByIds($currencyIds);
@@ -80,8 +80,10 @@ class AccountTransformer extends AbstractTransformer
         // get account types:
         // select accounts.id, account_types.type from account_types left join accounts on accounts.account_type_id = account_types.id;
         $accountTypes = AccountType::leftJoin('accounts', 'accounts.account_type_id', '=', 'account_types.id')
-                                   ->whereIn('accounts.id', $accountIds)
-                                   ->get(['accounts.id', 'account_types.type']);
+            ->whereIn('accounts.id', $accountIds)
+            ->get(['accounts.id', 'account_types.type'])
+        ;
+
         /** @var AccountType $row */
         foreach ($accountTypes as $row) {
             $this->accountTypes[$row->id] = (string)config(sprintf('firefly.shortNamesByFullName.%s', $row->type));
@@ -89,24 +91,7 @@ class AccountTransformer extends AbstractTransformer
     }
 
     /**
-     * @return Carbon
-     */
-    private function getDate(): Carbon
-    {
-        $date = today(config('app.timezone'));
-        if (null !== $this->parameters->get('date')) {
-            $date = $this->parameters->get('date');
-        }
-
-        return $date;
-    }
-
-    /**
      * Transform the account.
-     *
-     * @param Account $account
-     *
-     * @return array
      */
     public function transform(Account $account): array
     {
@@ -178,9 +163,19 @@ class AccountTransformer extends AbstractTransformer
             'links'                          => [
                 [
                     'rel' => 'self',
-                    'uri' => '/accounts/' . $account->id,
+                    'uri' => '/accounts/'.$account->id,
                 ],
             ],
         ];
+    }
+
+    private function getDate(): Carbon
+    {
+        $date = today(config('app.timezone'));
+        if (null !== $this->parameters->get('date')) {
+            $date = $this->parameters->get('date');
+        }
+
+        return $date;
     }
 }

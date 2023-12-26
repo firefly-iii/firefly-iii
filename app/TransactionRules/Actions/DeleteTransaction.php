@@ -39,17 +39,12 @@ class DeleteTransaction implements ActionInterface
 
     /**
      * TriggerInterface constructor.
-     *
-     * @param RuleAction $action
      */
     public function __construct(RuleAction $action)
     {
         $this->action = $action;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function actOnArray(array $journal): bool
     {
         $count = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
@@ -63,6 +58,7 @@ class DeleteTransaction implements ActionInterface
                     $journal['description']
                 )
             );
+
             /** @var TransactionGroup $group */
             $group   = TransactionGroup::find($journal['transaction_group_id']);
             $service = app(TransactionGroupDestroyService::class);
@@ -77,7 +73,7 @@ class DeleteTransaction implements ActionInterface
         );
 
         // trigger delete factory:
-        /** @var TransactionJournal|null $object */
+        /** @var null|TransactionJournal $object */
         $object = TransactionJournal::find($journal['transaction_journal_id']);
         if (null !== $object) {
             /** @var JournalDestroyService $service */

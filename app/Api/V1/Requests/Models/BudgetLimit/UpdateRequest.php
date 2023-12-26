@@ -31,8 +31,6 @@ use Illuminate\Validation\Validator;
 
 /**
  * Class UpdateRequest
- *
-
  */
 class UpdateRequest extends FormRequest
 {
@@ -41,8 +39,6 @@ class UpdateRequest extends FormRequest
 
     /**
      * Get all data from the request.
-     *
-     * @return array
      */
     public function getAll(): array
     {
@@ -59,8 +55,6 @@ class UpdateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
-     *
-     * @return array
      */
     public function rules(): array
     {
@@ -77,14 +71,12 @@ class UpdateRequest extends FormRequest
      * Configure the validator instance with special rules for after the basic validation rules.
      *
      * @param Validator $validator
-     * TODO duplicate code
-     *
-     * @return void
+     *                             TODO duplicate code
      */
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            static function (Validator $validator) {
+            static function (Validator $validator): void {
                 // validate start before end only if both are there.
                 $data = $validator->getData();
                 if (array_key_exists('start', $data) && array_key_exists('end', $data)) {

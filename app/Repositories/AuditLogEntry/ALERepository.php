@@ -33,18 +33,12 @@ use Illuminate\Support\Collection;
  */
 class ALERepository implements ALERepositoryInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function getForObject(Model $model): Collection
     {
         // all Models have an ID.
         return AuditLogEntry::where('auditable_id', $model->id)->where('auditable_type', get_class($model))->get(); // @phpstan-ignore-line
     }
 
-    /**
-     * @inheritDoc
-     */
     public function store(array $data): AuditLogEntry
     {
         $auditLogEntry = new AuditLogEntry();
@@ -55,6 +49,7 @@ class ALERepository implements ALERepositoryInterface
         $auditLogEntry->before = $data['before'];
         $auditLogEntry->after  = $data['after'];
         $auditLogEntry->save();
+
         return $auditLogEntry;
     }
 }

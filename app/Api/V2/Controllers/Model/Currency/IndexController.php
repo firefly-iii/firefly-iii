@@ -53,8 +53,6 @@ class IndexController extends Controller
      * TODO This endpoint is not yet documented.
      *
      * Display a listing of the resource.
-     *
-     * @return JsonResponse
      */
     public function index(): JsonResponse
     {
@@ -68,7 +66,7 @@ class IndexController extends Controller
 
         return response()
             ->json($this->jsonApiList('currencies', $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
-
 }

@@ -34,17 +34,12 @@ class TagFactory
 {
     private User $user;
 
-    /**
-     * @param string $tag
-     *
-     * @return Tag|null
-     */
     public function findOrCreate(string $tag): ?Tag
     {
         $tag = trim($tag);
         app('log')->debug(sprintf('Now in TagFactory::findOrCreate("%s")', $tag));
 
-        /** @var Tag|null $dbTag */
+        /** @var null|Tag $dbTag */
         $dbTag = $this->user->tags()->where('tag', $tag)->first();
         if (null !== $dbTag) {
             app('log')->debug(sprintf('Tag exists (#%d), return it.', $dbTag->id));
@@ -71,11 +66,6 @@ class TagFactory
         return $newTag;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return Tag|null
-     */
     public function create(array $data): ?Tag
     {
         $zoomLevel = 0 === (int)$data['zoom_level'] ? null : (int)$data['zoom_level'];
@@ -92,7 +82,8 @@ class TagFactory
             'longitude'     => null,
             'zoomLevel'     => null,
         ];
-        /** @var Tag|null $tag */
+
+        /** @var null|Tag $tag */
         $tag = Tag::create($array);
         if (null !== $tag && null !== $latitude && null !== $longitude) {
             // create location object.
@@ -107,9 +98,6 @@ class TagFactory
         return $tag;
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user): void
     {
         $this->user = $user;

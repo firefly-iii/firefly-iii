@@ -34,37 +34,33 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class BudgetList implements BinderInterface
 {
     /**
-     * @param string $value
-     * @param Route  $route
-     *
-     * @return Collection
      * @throws NotFoundHttpException
-     *
      */
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
             if ('allBudgets' === $value) {
                 return auth()->user()->budgets()->where('active', true)
-                             ->orderBy('order', 'ASC')
-                             ->orderBy('name', 'ASC')
-                             ->get();
+                    ->orderBy('order', 'ASC')
+                    ->orderBy('name', 'ASC')
+                    ->get()
+                ;
             }
 
             $list = array_unique(array_map('\intval', explode(',', $value)));
 
-
             if (0 === count($list)) { // @phpstan-ignore-line
                 app('log')->warning('Budget list count is zero, return 404.');
+
                 throw new NotFoundHttpException();
             }
 
-
             /** @var Collection $collection */
             $collection = auth()->user()->budgets()
-                                ->where('active', true)
-                                ->whereIn('id', $list)
-                                ->get();
+                ->where('active', true)
+                ->whereIn('id', $list)
+                ->get()
+            ;
 
             // add empty budget if applicable.
             if (in_array(0, $list, true)) {
@@ -76,6 +72,7 @@ class BudgetList implements BinderInterface
             }
         }
         app('log')->warning('BudgetList fallback to 404.');
+
         throw new NotFoundHttpException();
     }
 }

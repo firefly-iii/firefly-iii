@@ -28,8 +28,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class ProfileFormRequest.
- *
-
  */
 class ProfileFormRequest extends FormRequest
 {
@@ -37,8 +35,6 @@ class ProfileFormRequest extends FormRequest
 
     /**
      * Rules for this request.
-     *
-     * @return array
      */
     public function rules(): array
     {

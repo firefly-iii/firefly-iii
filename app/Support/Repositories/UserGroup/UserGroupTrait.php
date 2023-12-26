@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * UserGroupTrait.php
  * Copyright (c) 2023 james@firefly-iii.org
@@ -39,9 +38,6 @@ trait UserGroupTrait
     protected User      $user;
     protected UserGroup $userGroup;
 
-    /**
-     * @return UserGroup
-     */
     public function getUserGroup(): UserGroup
     {
         return $this->userGroup;
@@ -49,10 +45,6 @@ trait UserGroupTrait
 
     /**
      * TODO This method does not check if the user has access to this particular user group.
-     *
-     * @param UserGroup $userGroup
-     *
-     * @return void
      */
     public function setUserGroup(UserGroup $userGroup): void
     {
@@ -60,12 +52,9 @@ trait UserGroupTrait
     }
 
     /**
-     * @param Authenticatable|User|null $user
-     *
-     * @return void
      * @throws FireflyException
      */
-    public function setUser(Authenticatable | User | null $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;
@@ -77,25 +66,23 @@ trait UserGroupTrait
     }
 
     /**
-     * @param int $userGroupId
-     *
      * @throws FireflyException
      */
     public function setUserGroupById(int $userGroupId): void
     {
         $memberships = GroupMembership::where('user_id', $this->user->id)
-                                      ->where('user_group_id', $userGroupId)
-                                      ->count();
+            ->where('user_group_id', $userGroupId)
+            ->count()
+        ;
         if (0 === $memberships) {
             throw new FireflyException(sprintf('User #%d has no access to administration #%d', $this->user->id, $userGroupId));
         }
-        /** @var UserGroup|null $userGroup */
+
+        /** @var null|UserGroup $userGroup */
         $userGroup = UserGroup::find($userGroupId);
         if (null === $userGroup) {
             throw new FireflyException(sprintf('Cannot find administration for user #%d', $this->user->id));
         }
         $this->userGroup = $userGroup;
     }
-
-
 }

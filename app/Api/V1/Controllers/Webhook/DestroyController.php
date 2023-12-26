@@ -39,8 +39,6 @@ class DestroyController extends Controller
 {
     private WebhookRepositoryInterface $repository;
 
-    /**
-     */
     public function __construct()
     {
         parent::__construct();
@@ -59,10 +57,6 @@ class DestroyController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/webhooks/deleteWebhook
      *
      * Remove the specified resource from storage.
-     *
-     * @param Webhook $webhook
-     *
-     * @return JsonResponse
      */
     public function destroy(Webhook $webhook): JsonResponse
     {
@@ -78,11 +72,6 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param Webhook        $webhook
-     * @param WebhookMessage $message
-     * @param WebhookAttempt $attempt
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function destroyAttempt(Webhook $webhook, WebhookMessage $message, WebhookAttempt $attempt): JsonResponse
@@ -106,10 +95,6 @@ class DestroyController extends Controller
      *
      * Remove the specified resource from storage.
      *
-     * @param Webhook        $webhook
-     * @param WebhookMessage $message
-     *
-     * @return JsonResponse
      * @throws FireflyException
      */
     public function destroyMessage(Webhook $webhook, WebhookMessage $message): JsonResponse
