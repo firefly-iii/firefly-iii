@@ -156,7 +156,7 @@ class ExchangeRateConverter
 
         // perhaps the rate has been cached during this particular run
         $preparedRate = $this->prepared[$date][$from][$to] ?? null;
-        if (null !== $preparedRate && '0' !== $preparedRate) {
+        if (null !== $preparedRate && 0 !== bccomp('0', $preparedRate)) {
             return $preparedRate;
         }
 
@@ -187,7 +187,7 @@ class ExchangeRateConverter
         if ('' === $rate) {
             return null;
         }
-        if('0' === $rate) {
+        if (0 === bccomp('0', $preparedRate)) {
             return null;
         }
 
