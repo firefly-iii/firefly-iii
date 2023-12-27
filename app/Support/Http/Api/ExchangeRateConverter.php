@@ -187,7 +187,7 @@ class ExchangeRateConverter
         if ('' === $rate) {
             return null;
         }
-        if (0 === bccomp('0', $preparedRate)) {
+        if (0 === bccomp('0', $rate)) {
             return null;
         }
 
