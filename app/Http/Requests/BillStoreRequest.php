@@ -68,6 +68,7 @@ class BillStoreRequest extends FormRequest
             'amount_max'              => 'required|numeric|gt:0|max:1000000000',
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
             'date'                    => 'required|date',
+            'notes'                   => 'between:1,65536|nullable',
             'bill_end_date'           => 'nullable|date',
             'extension_date'          => 'nullable|date',
             'repeat_freq'             => sprintf('required|in:%s', implode(',', config('firefly.bill_periods'))),
