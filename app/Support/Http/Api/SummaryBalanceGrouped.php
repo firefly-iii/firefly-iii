@@ -45,7 +45,7 @@ class SummaryBalanceGrouped
 
     public function groupTransactions(string $key, array $journals): void
     {
-        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         Log::debug(sprintf('Now in groupTransactions with key "%s" and %d journal(s)', $key, count($journals)));
         $converter    = new ExchangeRateConverter();
         $this->keys[] = $key;

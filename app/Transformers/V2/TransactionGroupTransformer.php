@@ -103,7 +103,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         // create converter
-        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $this->converter = new ExchangeRateConverter();
     }
 

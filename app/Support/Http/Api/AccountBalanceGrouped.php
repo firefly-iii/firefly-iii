@@ -118,7 +118,7 @@ class AccountBalanceGrouped
      */
     public function groupByCurrencyAndPeriod(): void
     {
-        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $converter = new ExchangeRateConverter();
 
         // loop. group by currency and by period.

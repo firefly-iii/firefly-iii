@@ -104,7 +104,7 @@ class Cron extends Command
 
     private function exchangeRatesCronJob(bool $force, ?Carbon $date): void
     {
-        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $exchangeRates = new ExchangeRatesCronjob();
         $exchangeRates->setForce($force);
         // set date in cron job:

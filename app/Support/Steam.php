@@ -239,7 +239,7 @@ class Steam
         $balances[$formatted] = $startBalance;
 
         Log::debug(sprintf('Start balance on %s is %s', $formatted, $startBalance));
-        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $converter = new ExchangeRateConverter();
 
         // not sure why this is happening:
@@ -423,7 +423,7 @@ class Steam
         // need to convert the others. All sets use the "amount" value as their base (that's easy)
         // but we need to convert each transaction separately because the date difference may
         // incur huge currency changes.
-        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $start     = clone $date;
         $end       = clone $date;
         $converter = new ExchangeRateConverter();

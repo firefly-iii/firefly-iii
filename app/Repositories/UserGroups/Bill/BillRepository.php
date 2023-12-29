@@ -67,7 +67,7 @@ class BillRepository implements BillRepositoryInterface
 
     public function sumPaidInRange(Carbon $start, Carbon $end): array
     {
-        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $bills     = $this->getActiveBills();
         $default   = app('amount')->getDefaultCurrency();
         $return    = [];
@@ -136,7 +136,7 @@ class BillRepository implements BillRepositoryInterface
 
     public function sumUnpaidInRange(Carbon $start, Carbon $end): array
     {
-        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $bills     = $this->getActiveBills();
         $return    = [];
         $default   = app('amount')->getDefaultCurrency();

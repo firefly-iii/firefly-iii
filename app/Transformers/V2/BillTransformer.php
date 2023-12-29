@@ -93,7 +93,7 @@ class BillTransformer extends AbstractTransformer
                 'object_group_order' => $order,
             ];
         }
-        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $this->default   = app('amount')->getDefaultCurrency();
         $this->converter = new ExchangeRateConverter();
 

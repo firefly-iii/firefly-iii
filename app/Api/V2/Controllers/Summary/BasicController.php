@@ -245,7 +245,7 @@ class BasicController extends Controller
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
-        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         app('log')->debug('Now in getLeftToSpendInfo');
         $return     = [];
         $today      = today(config('app.timezone'));

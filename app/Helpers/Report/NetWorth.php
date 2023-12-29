@@ -73,7 +73,7 @@ class NetWorth implements NetWorthInterface
             return $cache->get();
         }
         app('log')->debug(sprintf('Now in byAccounts("%s", "%s")', $ids, $date->format('Y-m-d')));
-        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $default   = app('amount')->getDefaultCurrency();
         $converter = new ExchangeRateConverter();
 

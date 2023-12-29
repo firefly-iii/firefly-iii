@@ -39,7 +39,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array
     {
-        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $return           = [];
         $converter        = new ExchangeRateConverter();
         $default          = app('amount')->getDefaultCurrency();
