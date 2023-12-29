@@ -116,7 +116,7 @@ class UpdateRequest extends FormRequest
 
             // amount
             'transactions.*.amount'                 => 'numeric|gt:0|max:100000000000',
-            'transactions.*.foreign_amount'         => 'nullable|numeric|gte:0',
+            'transactions.*.foreign_amount'         => 'nullable|numeric|gte:0|max:1000000000',
 
             // description
             'transactions.*.description'            => 'nullable|between:1,1000',

@@ -75,8 +75,8 @@ class UpdateRequest extends FormRequest
 
         return [
             'name'           => sprintf('between:1,255|uniqueObjectForUser:bills,name,%d', $bill->id),
-            'amount_min'     => 'numeric|gt:0',
-            'amount_max'     => 'numeric|gt:0',
+            'amount_min'     => 'numeric|gt:0|max:1000000000',
+            'amount_max'     => 'numeric|gt:0|max:1000000000',
             'currency_id'    => 'numeric|exists:transaction_currencies,id',
             'currency_code'  => 'min:3|max:51|exists:transaction_currencies,code',
             'date'           => 'date',

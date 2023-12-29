@@ -58,10 +58,10 @@ trait ConvertsExchangeRates
         $native   = app('amount')->getDefaultCurrency();
         $currency = $this->getCurrency((int)$set['currency_id']);
         if ($native->id === $currency->id) {
-            $set['native_id']             = (string)$currency->id;
-            $set['native_code']           = $currency->code;
-            $set['native_symbol']         = $currency->symbol;
-            $set['native_decimal_places'] = $currency->decimal_places;
+            $set['native_currency_id']             = (string)$currency->id;
+            $set['native_currency_code']           = $currency->code;
+            $set['native_currency_symbol']         = $currency->symbol;
+            $set['native_currency_decimal_places'] = $currency->decimal_places;
 
             return $set;
         }
@@ -112,20 +112,20 @@ trait ConvertsExchangeRates
                 $amount                         = $this->convertAmount($entry['sum'], $currency, $native);
                 $entry['converted']             = true;
                 $entry['native_sum']            = $amount;
-                $entry['native_id']             = (string)$native->id;
-                $entry['native_name']           = $native->name;
-                $entry['native_symbol']         = $native->symbol;
-                $entry['native_code']           = $native->code;
-                $entry['native_decimal_places'] = $native->decimal_places;
+                $entry['native_currency_id']             = (string)$native->id;
+                $entry['native_currency_name']           = $native->name;
+                $entry['native_currency_symbol']         = $native->symbol;
+                $entry['native_currency_code']           = $native->code;
+                $entry['native_currency_decimal_places'] = $native->decimal_places;
             }
             if ($currency->id === $native->id) {
                 $entry['converted']             = false;
                 $entry['native_sum']            = $entry['sum'];
-                $entry['native_id']             = (string)$native->id;
-                $entry['native_name']           = $native->name;
-                $entry['native_symbol']         = $native->symbol;
-                $entry['native_code']           = $native->code;
-                $entry['native_decimal_places'] = $native->decimal_places;
+                $entry['native_currency_id']             = (string)$native->id;
+                $entry['native_currency_name']           = $native->name;
+                $entry['native_currency_symbol']         = $native->symbol;
+                $entry['native_currency_code']           = $native->code;
+                $entry['native_currency_decimal_places'] = $native->decimal_places;
             }
             $return[] = $entry;
         }

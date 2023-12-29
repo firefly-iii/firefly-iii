@@ -223,7 +223,6 @@ class TransactionGroupTransformer extends AbstractTransformer
             'recurrence_id'                   => $meta['recurrence_id'],
             'recurrence_total'                => $meta['recurrence_total'],
             'recurrence_count'                => $meta['recurrence_count'],
-            'bunq_payment_id'                 => $meta['bunq_payment_id'],
             'external_url'                    => $meta['external_url'],
             'import_hash_v2'                  => $meta['import_hash_v2'],
             'sepa_cc'                         => $meta['sepa_cc'],

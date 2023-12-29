@@ -127,24 +127,24 @@ class BudgetController extends Controller
         $return = [];
         foreach ($rows as $row) {
             $current  = [
-                'label'                   => $budget->name,
-                'currency_id'             => (string)$row['currency_id'],
-                'currency_code'           => $row['currency_code'],
-                'currency_name'           => $row['currency_name'],
-                'currency_decimal_places' => $row['currency_decimal_places'],
-                'native_id'               => (string)$row['native_id'],
-                'native_code'             => $row['native_code'],
-                'native_name'             => $row['native_name'],
-                'native_decimal_places'   => $row['native_decimal_places'],
-                'period'                  => null,
-                'start'                   => $row['start'],
-                'end'                     => $row['end'],
-                'entries'                 => [
+                'label'                          => $budget->name,
+                'currency_id'                    => (string) $row['currency_id'],
+                'currency_code'                  => $row['currency_code'],
+                'currency_name'                  => $row['currency_name'],
+                'currency_decimal_places'        => $row['currency_decimal_places'],
+                'native_currency_id'             => (string) $row['native_currency_id'],
+                'native_currency_code'           => $row['native_currency_code'],
+                'native_currency_name'           => $row['native_currency_name'],
+                'native_currency_decimal_places' => $row['native_currency_decimal_places'],
+                'period'                         => null,
+                'start'                          => $row['start'],
+                'end'                            => $row['end'],
+                'entries'                        => [
                     'spent'     => $row['spent'],
                     'left'      => $row['left'],
                     'overspent' => $row['overspent'],
                 ],
-                'native_entries'          => [
+                'native_entries'                 => [
                     'spent'     => $row['native_spent'],
                     'left'      => $row['native_left'],
                     'overspent' => $row['native_overspent'],
@@ -170,7 +170,8 @@ class BudgetController extends Controller
     }
 
     /**
-     * Shared between the "noBudgetLimits" function and "processLimit". Will take a single set of expenses and return its info.
+     * Shared between the "noBudgetLimits" function and "processLimit". Will take a single set of expenses and return
+     * its info.
      *
      * @param array<int, array<int, string>> $array
      *
@@ -192,24 +193,24 @@ class BudgetController extends Controller
         foreach ($array as $currencyId => $block) {
             $this->currencies[$currencyId] ??= TransactionCurrency::find($currencyId);
             $return[$currencyId]           ??= [
-                'currency_id'             => (string)$currencyId,
-                'currency_code'           => $block['currency_code'],
-                'currency_name'           => $block['currency_name'],
-                'currency_symbol'         => $block['currency_symbol'],
-                'currency_decimal_places' => (int)$block['currency_decimal_places'],
-                'native_id'               => (string)$this->currency->id,
-                'native_code'             => $this->currency->code,
-                'native_name'             => $this->currency->name,
-                'native_symbol'           => $this->currency->symbol,
-                'native_decimal_places'   => $this->currency->decimal_places,
-                'start'                   => $start->toAtomString(),
-                'end'                     => $end->toAtomString(),
-                'spent'                   => '0',
-                'native_spent'            => '0',
-                'left'                    => '0',
-                'native_left'             => '0',
-                'overspent'               => '0',
-                'native_overspent'        => '0',
+                'currency_id'                    => (string) $currencyId,
+                'currency_code'                  => $block['currency_code'],
+                'currency_name'                  => $block['currency_name'],
+                'currency_symbol'                => $block['currency_symbol'],
+                'currency_decimal_places'        => (int) $block['currency_decimal_places'],
+                'native_currency_id'             => (string) $this->currency->id,
+                'native_currency_code'           => $this->currency->code,
+                'native_currency_name'           => $this->currency->name,
+                'native_currency_symbol'         => $this->currency->symbol,
+                'native_currency_decimal_places' => $this->currency->decimal_places,
+                'start'                          => $start->toAtomString(),
+                'end'                            => $end->toAtomString(),
+                'spent'                          => '0',
+                'native_spent'                   => '0',
+                'left'                           => '0',
+                'native_left'                    => '0',
+                'overspent'                      => '0',
+                'native_overspent'               => '0',
             ];
             $currentBudgetArray            = $block['budgets'][$budgetId];
 

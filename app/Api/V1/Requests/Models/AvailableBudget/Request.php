@@ -62,7 +62,7 @@ class Request extends FormRequest
         return [
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
-            'amount'        => 'numeric|gt:0',
+            'amount'        => 'numeric|gt:0|max:1000000000',
             'start'         => 'date',
             'end'           => 'date',
         ];

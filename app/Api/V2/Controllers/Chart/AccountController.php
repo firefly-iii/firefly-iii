@@ -134,10 +134,10 @@ class AccountController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
 
                 // the default currency of the user (could be the same!)
-                'native_id'               => (string)$default->id,
-                'native_code'             => $default->code,
-                'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => $default->decimal_places,
+                'native_currency_id'               => (string)$default->id,
+                'native_currency_code'             => $default->code,
+                'native_currency_symbol'           => $default->symbol,
+                'native_currency_decimal_places'   => $default->decimal_places,
                 'start'                   => $start->toAtomString(),
                 'end'                     => $end->toAtomString(),
                 'period'                  => '1D',

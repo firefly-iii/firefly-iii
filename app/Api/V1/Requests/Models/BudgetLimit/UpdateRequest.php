@@ -61,7 +61,7 @@ class UpdateRequest extends FormRequest
         return [
             'start'         => 'date',
             'end'           => 'date',
-            'amount'        => 'gt:0',
+            'amount'        => 'gt:0|max:1000000000',
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
         ];

@@ -57,7 +57,7 @@ class StoreRequest extends FormRequest
         return [
             'start'         => 'required|before:end|date',
             'end'           => 'required|after:start|date',
-            'amount'        => 'required|gt:0',
+            'amount'        => 'required|gt:0|max:1000000000',
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
         ];

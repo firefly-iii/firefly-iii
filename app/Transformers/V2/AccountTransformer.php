@@ -139,7 +139,7 @@ class AccountTransformer extends AbstractTransformer
             // balance:
             'current_balance'                => $balance,
             'native_current_balance'         => $nativeBalance,
-            'current_balance_date'           => $this->getDate(),
+            'current_balance_date'           => $this->getDate()->endOfDay()->toAtomString(),
 
             // more meta
 

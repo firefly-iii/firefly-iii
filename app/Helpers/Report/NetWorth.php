@@ -51,7 +51,7 @@ class NetWorth implements NetWorthInterface
 
     private CurrencyRepositoryInterface $currencyRepos;
     private User                        $user;
-    private null|UserGroup            $userGroup;
+    private null | UserGroup            $userGroup;
 
     /**
      * This method collects the user's net worth in ALL the user's currencies
@@ -80,18 +80,18 @@ class NetWorth implements NetWorthInterface
         // default "native" currency has everything twice, for consistency.
         $netWorth = [
             'native' => [
-                'balance'                 => '0',
-                'native_balance'          => '0',
-                'currency_id'             => $default->id,
-                'currency_code'           => $default->code,
-                'currency_name'           => $default->name,
-                'currency_symbol'         => $default->symbol,
-                'currency_decimal_places' => $default->decimal_places,
-                'native_id'               => $default->id,
-                'native_code'             => $default->code,
-                'native_name'             => $default->name,
-                'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => $default->decimal_places,
+                'balance'                        => '0',
+                'native_balance'                 => '0',
+                'currency_id'                    => $default->id,
+                'currency_code'                  => $default->code,
+                'currency_name'                  => $default->name,
+                'currency_symbol'                => $default->symbol,
+                'currency_decimal_places'        => $default->decimal_places,
+                'native_currency_id'             => $default->id,
+                'native_currency_code'           => $default->code,
+                'native_currency_name'           => $default->name,
+                'native_currency_symbol'         => $default->symbol,
+                'native_currency_decimal_places' => $default->decimal_places,
             ],
         ];
         $balances = app('steam')->balancesByAccountsConverted($accounts, $date);
@@ -103,7 +103,7 @@ class NetWorth implements NetWorthInterface
             if (null === $currency) {
                 $currency = app('amount')->getDefaultCurrency();
             }
-            $currencyId    = $currency->id;
+            $currencyCode  = $currency->code;
             $balance       = '0';
             $nativeBalance = '0';
             if (array_key_exists($account->id, $balances)) {
@@ -118,25 +118,25 @@ class NetWorth implements NetWorthInterface
                 $nativeVirtualBalance = $converter->convert($default, $currency, $account->created_at, $virtualBalance);
                 $nativeBalance        = bcsub($nativeBalance, $nativeVirtualBalance);
             }
-            $netWorth[$currencyId] ??= [
-                'balance'                 => '0',
-                'native_balance'          => '0',
-                'currency_id'             => $currencyId,
-                'currency_code'           => $currency->code,
-                'currency_name'           => $currency->name,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'native_id'               => $default->id,
-                'native_code'             => $default->code,
-                'native_name'             => $default->name,
-                'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => $default->decimal_places,
+            $netWorth[$currencyCode] ??= [
+                'balance'                        => '0',
+                'native_balance'                 => '0',
+                'currency_id'                    => (string) $currency->id,
+                'currency_code'                  => $currency->code,
+                'currency_name'                  => $currency->name,
+                'currency_symbol'                => $currency->symbol,
+                'currency_decimal_places'        => $currency->decimal_places,
+                'native_currency_id'             => (string) $default->id,
+                'native_currency_code'           => $default->code,
+                'native_currency_name'           => $default->name,
+                'native_currency_symbol'         => $default->symbol,
+                'native_currency_decimal_places' => $default->decimal_places,
             ];
 
-            $netWorth[$currencyId]['balance']        = bcadd($balance, $netWorth[$currencyId]['balance']);
-            $netWorth[$currencyId]['native_balance'] = bcadd($nativeBalance, $netWorth[$currencyId]['native_balance']);
-            $netWorth['native']['balance']           = bcadd($nativeBalance, $netWorth['native']['balance']);
-            $netWorth['native']['native_balance']    = bcadd($nativeBalance, $netWorth['native']['native_balance']);
+            $netWorth[$currencyCode]['balance']        = bcadd($balance, $netWorth[$currencyCode]['balance']);
+            $netWorth[$currencyCode]['native_balance'] = bcadd($nativeBalance, $netWorth[$currencyCode]['native_balance']);
+            $netWorth['native']['balance']             = bcadd($nativeBalance, $netWorth['native']['balance']);
+            $netWorth['native']['native_balance']      = bcadd($nativeBalance, $netWorth['native']['native_balance']);
         }
         $cache->store($netWorth);
         $converter->summarize();
@@ -144,7 +144,7 @@ class NetWorth implements NetWorthInterface
         return $netWorth;
     }
 
-    public function setUser(null|Authenticatable|User $user): void
+    public function setUser(null | Authenticatable | User $user): void
     {
         if (!$user instanceof User) {
             return;
@@ -189,7 +189,7 @@ class NetWorth implements NetWorthInterface
             }
 
             $return[$currency->id]        ??= [
-                'id'             => (string)$currency->id,
+                'id'             => (string) $currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,
                 'code'           => $currency->code,
@@ -202,7 +202,7 @@ class NetWorth implements NetWorthInterface
         return $return;
     }
 
-    private function getRepository(): AccountRepositoryInterface|AdminAccountRepositoryInterface
+    private function getRepository(): AccountRepositoryInterface | AdminAccountRepositoryInterface
     {
         if (null === $this->userGroup) {
             return $this->accountRepository;
@@ -220,7 +220,7 @@ class NetWorth implements NetWorthInterface
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            if (1 === (int)$this->getRepository()->getMetaValue($account, 'include_net_worth')) {
+            if (1 === (int) $this->getRepository()->getMetaValue($account, 'include_net_worth')) {
                 $filtered->push($account);
             }
         }

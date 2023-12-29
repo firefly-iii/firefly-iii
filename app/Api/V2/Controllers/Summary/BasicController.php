@@ -206,10 +206,10 @@ class BasicController extends Controller
             $return[]     = [
                 'key'                     => 'bills-paid-in-native',
                 'value'                   => $nativeAmount,
-                'currency_id'             => (string)$info['native_id'],
-                'currency_code'           => $info['native_code'],
-                'currency_symbol'         => $info['native_symbol'],
-                'currency_decimal_places' => $info['native_decimal_places'],
+                'currency_id'             => (string)$info['native_currency_id'],
+                'currency_code'           => $info['native_currency_code'],
+                'currency_symbol'         => $info['native_currency_symbol'],
+                'currency_decimal_places' => $info['native_currency_decimal_places'],
             ];
         }
 
@@ -230,10 +230,10 @@ class BasicController extends Controller
             $return[]     = [
                 'key'                     => 'bills-unpaid-in-native',
                 'value'                   => $nativeAmount,
-                'currency_id'             => (string)$info['native_id'],
-                'currency_code'           => $info['native_code'],
-                'currency_symbol'         => $info['native_symbol'],
-                'currency_decimal_places' => $info['native_decimal_places'],
+                'currency_id'             => (string)$info['native_currency_id'],
+                'currency_code'           => $info['native_currency_code'],
+                'currency_symbol'         => $info['native_currency_symbol'],
+                'currency_decimal_places' => $info['native_currency_decimal_places'],
             ];
         }
 

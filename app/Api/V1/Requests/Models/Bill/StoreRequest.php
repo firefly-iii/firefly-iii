@@ -72,8 +72,8 @@ class StoreRequest extends FormRequest
     {
         return [
             'name'           => 'between:1,255|uniqueObjectForUser:bills,name',
-            'amount_min'     => 'numeric|gt:0|required',
-            'amount_max'     => 'numeric|gt:0|required',
+            'amount_min'     => 'numeric|gt:0|required|max:1000000000',
+            'amount_max'     => 'numeric|gt:0|required|max:1000000000',
             'currency_id'    => 'numeric|exists:transaction_currencies,id',
             'currency_code'  => 'min:3|max:51|exists:transaction_currencies,code',
             'date'           => 'date|required',
