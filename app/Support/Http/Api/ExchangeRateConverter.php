@@ -124,7 +124,7 @@ class ExchangeRateConverter
     private function getRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
     {
         if($this->isPrepared && !$this->noPreparedRates) {
-            Log::debug(sprintf('Return fallback rate from #%d to #%d on %s.', $from, $to, $date));
+            Log::debug(sprintf('Return fallback rate from #%d to #%d on %s.', $from->id, $to->id, $date->format('Y-m-d')));
             return $this->fallback[$from->id][$to->id] ?? '0';
         }
         // first attempt:
