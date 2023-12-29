@@ -55,6 +55,7 @@ class IndexController extends Controller
     public function index()
     {
         Log::channel('audit')->info('User visits webhook index page.');
+
         return view('webhooks.index');
     }
 }

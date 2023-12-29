@@ -78,6 +78,7 @@ class CategoryController extends Controller
     public function dashboard(DateRequest $request): JsonResponse
     {
         Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+
         /** @var Carbon $start */
         $start = $this->parameters->get('start');
 

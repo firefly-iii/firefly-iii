@@ -120,6 +120,7 @@ class ShowController extends Controller
     {
         app('log')->debug(sprintf('Now in triggerTransaction(%d, %d)', $webhook->id, $group->id));
         Log::channel('audit')->info(sprintf('User triggers webhook #%d on transaction group #%d.', $webhook->id, $group->id));
+
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser(auth()->user());

@@ -339,7 +339,6 @@ class Steam
      */
     public function balanceConverted(Account $account, Carbon $date, TransactionCurrency $native): string
     {
-        app('log')->debug(sprintf('Now in balanceConverted (%s) for account #%d, converting to %s', $date->format('Y-m-d'), $account->id, $native->code));
         $cache = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty('balance');
@@ -359,6 +358,7 @@ class Steam
             //            Log::debug('No conversion necessary!');
             return $this->balance($account, $date);
         }
+        app('log')->info(sprintf('Now in balanceConverted (%s) for account #%d, converting to %s', $date->format('Y-m-d'), $account->id, $native->code));
 
         $new      = [];
         $existing = [];
