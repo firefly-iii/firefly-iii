@@ -62,10 +62,11 @@ class ShowController extends Controller
      */
     public function index(Webhook $webhook)
     {
-        Log::channel('audit')->info(sprintf('User visits webhook #%d page.', $webhook->id));
         if(false === config('firefly.allow_webhooks')) {
+            Log::channel('audit')->info(sprintf('User visits webhook #%d page, but webhooks are DISABLED.', $webhook->id));
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
+        Log::channel('audit')->info(sprintf('User visits webhook #%d page.', $webhook->id));
         $subTitle = (string)trans('firefly.show_webhook', ['title' => $webhook->title]);
 
         return view('webhooks.show', compact('webhook', 'subTitle'));

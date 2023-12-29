@@ -55,10 +55,11 @@ class IndexController extends Controller
      */
     public function index()
     {
-        Log::channel('audit')->info('User visits webhook index page.');
         if(false === config('firefly.allow_webhooks')) {
+            Log::channel('audit')->info('User visits webhook index page, but webhooks are DISABLED.');
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
+        Log::channel('audit')->info('User visits webhook index page.');
 
         return view('webhooks.index');
     }

@@ -62,10 +62,11 @@ class EditController extends Controller
      */
     public function index(Webhook $webhook)
     {
-        Log::channel('audit')->info('User visits webhook edit page.');
         if(false === config('firefly.allow_webhooks')) {
+            Log::channel('audit')->info('User visits webhook edit page, but webhooks are DISABLED.');
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
+        Log::channel('audit')->info('User visits webhook edit page.');
         $subTitle = (string)trans('firefly.edit_webhook', ['title' => $webhook->title]);
         $this->rememberPreviousUrl('webhooks.edit.url');
 
