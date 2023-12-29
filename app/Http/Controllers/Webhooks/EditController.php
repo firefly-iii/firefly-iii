@@ -29,6 +29,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class EditController
@@ -62,6 +63,9 @@ class EditController extends Controller
     public function index(Webhook $webhook)
     {
         Log::channel('audit')->info('User visits webhook edit page.');
+        if(false === config('firefly.allow_webhooks')) {
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
         $subTitle = (string)trans('firefly.edit_webhook', ['title' => $webhook->title]);
         $this->rememberPreviousUrl('webhooks.edit.url');
 

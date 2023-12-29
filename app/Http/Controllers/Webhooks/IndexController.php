@@ -28,6 +28,7 @@ use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class IndexController
@@ -55,6 +56,9 @@ class IndexController extends Controller
     public function index()
     {
         Log::channel('audit')->info('User visits webhook index page.');
+        if(false === config('firefly.allow_webhooks')) {
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
 
         return view('webhooks.index');
     }
