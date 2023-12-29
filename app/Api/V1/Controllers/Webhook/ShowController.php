@@ -73,6 +73,7 @@ class ShowController extends Controller
     {
         if(false === config('firefly.allow_webhooks')) {
             Log::channel('audit')->info('User tries to view all webhooks, but webhooks are DISABLED.');
+
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
 
@@ -107,6 +108,7 @@ class ShowController extends Controller
     {
         if(false === config('firefly.allow_webhooks')) {
             Log::channel('audit')->info(sprintf('User tries to view webhook #%d, but webhooks are DISABLED.', $webhook->id));
+
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
 
@@ -131,6 +133,7 @@ class ShowController extends Controller
     {
         if(false === config('firefly.allow_webhooks')) {
             Log::channel('audit')->info(sprintf('User tries to trigger webhook #%d on transaction group #%d, but webhooks are DISABLED.', $webhook->id, $group->id));
+
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
 

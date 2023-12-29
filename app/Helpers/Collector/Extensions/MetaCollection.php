@@ -670,11 +670,11 @@ trait MetaCollection
     }
 
     /**
-     * Limit results to a specific set of tags.
+     * Limit results to a SPECIFIC set of tags.
      */
-    public function setTags(Collection $tags): GroupCollectorInterface
+    public function setAllTags(Collection $tags): GroupCollectorInterface
     {
-        Log::debug(sprintf('Now in setTags(%d tag(s))', $tags->count()));
+        Log::debug(sprintf('Now in setAllTags(%d tag(s))', $tags->count()));
         $this->withTagInformation();
         $this->query->whereNotNull('tag_transaction_journal.tag_id');
 
@@ -682,7 +682,7 @@ trait MetaCollection
         $list                = $tags->pluck('tag')->toArray();
         $list                = array_map('strtolower', $list);
         $filter              = static function (array $object) use ($list): bool {
-            Log::debug(sprintf('Now in setTags(%s) filter', implode(', ', $list)));
+            Log::debug(sprintf('Now in setAllTags(%s) filter', implode(', ', $list)));
             $expectedTagCount = count($list);
             $foundTagCount    = 0;
             foreach ($object['transactions'] as $transaction) {
@@ -705,6 +705,39 @@ trait MetaCollection
 
             // found at least the expected tags.
             return $foundTagCount >= $expectedTagCount;
+        };
+        $this->postFilters[] = $filter;
+
+        return $this;
+    }
+
+    /**
+     * Limit results to any of the tags in the list.
+     */
+    public function setTags(Collection $tags): GroupCollectorInterface
+    {
+        Log::debug(sprintf('Now in setTags(%d tag(s))', $tags->count()));
+        $this->withTagInformation();
+        $this->query->whereNotNull('tag_transaction_journal.tag_id');
+
+        // this method adds a "postFilter" to the collector.
+        $list                = $tags->pluck('tag')->toArray();
+        $list                = array_map('strtolower', $list);
+        $filter              = static function (array $object) use ($list): bool {
+            Log::debug(sprintf('Now in setTags(%s) filter', implode(', ', $list)));
+            foreach ($object['transactions'] as $transaction) {
+                foreach ($transaction['tags'] as $tag) {
+                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
+                    if (in_array(strtolower($tag['name']), $list, true)) {
+                        app('log')->debug(sprintf('Transaction has tag "%s" so return true.', $tag['name']));
+
+                        return true;
+                    }
+                }
+            }
+            app('log')->debug('Transaction has no tags from the list, so return false.');
+
+            return false;
         };
         $this->postFilters[] = $filter;
 

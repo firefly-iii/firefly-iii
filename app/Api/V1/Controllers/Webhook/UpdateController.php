@@ -62,6 +62,7 @@ class UpdateController extends Controller
         $data    = $request->getData();
         if(false === config('firefly.allow_webhooks')) {
             Log::channel('audit')->info(sprintf('User tries to update webhook #%d, but webhooks are DISABLED.', $webhook->id), $data);
+
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
 

@@ -2754,7 +2754,7 @@ class OperatorQuerySearch implements SearchInterface
                     $collection->push($tag);
                 }
             }
-            $this->collector->setTags($collection);
+            $this->collector->setAllTags($collection);
         }
     }
 }

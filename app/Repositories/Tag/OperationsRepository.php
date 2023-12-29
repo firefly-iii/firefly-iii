@@ -36,8 +36,7 @@ use Illuminate\Support\Collection;
  */
 class OperationsRepository implements OperationsRepositoryInterface
 {
-    /** @var User */
-    private $user;
+    private User $user;
 
     /**
      * This method returns a list of all the withdrawal transaction journals (as arrays) set in that period
@@ -58,7 +57,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null === $tags || 0 === $tags->count()) {
             $collector->setTags($this->getTags());
         }
-        $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation()->withTagInformation();
+        $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
         $journals       = $collector->getExtractedJournals();
         $array          = [];
         $listedJournals = [];

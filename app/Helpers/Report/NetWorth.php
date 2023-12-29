@@ -51,7 +51,7 @@ class NetWorth implements NetWorthInterface
 
     private CurrencyRepositoryInterface $currencyRepos;
     private User                        $user;
-    private null | UserGroup            $userGroup;
+    private null|UserGroup            $userGroup;
 
     /**
      * This method collects the user's net worth in ALL the user's currencies
@@ -144,7 +144,7 @@ class NetWorth implements NetWorthInterface
         return $netWorth;
     }
 
-    public function setUser(null | Authenticatable | User $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if (!$user instanceof User) {
             return;
@@ -202,7 +202,7 @@ class NetWorth implements NetWorthInterface
         return $return;
     }
 
-    private function getRepository(): AccountRepositoryInterface | AdminAccountRepositoryInterface
+    private function getRepository(): AccountRepositoryInterface|AdminAccountRepositoryInterface
     {
         if (null === $this->userGroup) {
             return $this->accountRepository;

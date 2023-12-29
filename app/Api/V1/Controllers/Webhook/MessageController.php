@@ -68,6 +68,7 @@ class MessageController extends Controller
     {
         if(false === config('firefly.allow_webhooks')) {
             Log::channel('audit')->info(sprintf('User tries to view messages of webhook #%d, but webhooks are DISABLED.', $webhook->id));
+
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
         Log::channel('audit')->info(sprintf('User views messages of webhook #%d.', $webhook->id));
@@ -107,6 +108,7 @@ class MessageController extends Controller
         }
         if(false === config('firefly.allow_webhooks')) {
             Log::channel('audit')->info(sprintf('User tries to view message #%d of webhook #%d, but webhooks are DISABLED.', $message->id, $webhook->id));
+
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
 

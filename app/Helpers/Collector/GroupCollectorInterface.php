@@ -559,9 +559,14 @@ interface GroupCollectorInterface
     public function setTag(Tag $tag): self;
 
     /**
-     * Limit results to a specific set of tags.
+     * Limit results to any of the specified tags.
      */
     public function setTags(Collection $tags): self;
+
+    /**
+     * Limit results to a SPECIFIC set of tags.
+     */
+    public function setAllTags(Collection $tags): self;
 
     /**
      * Limit the search to one specific transaction group.

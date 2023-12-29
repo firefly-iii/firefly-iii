@@ -64,6 +64,7 @@ class EditController extends Controller
     {
         if(false === config('firefly.allow_webhooks')) {
             Log::channel('audit')->info('User visits webhook edit page, but webhooks are DISABLED.');
+
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
         Log::channel('audit')->info('User visits webhook edit page.');

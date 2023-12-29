@@ -34,7 +34,6 @@ use Illuminate\Http\JsonResponse;
  */
 class TransactionController extends Controller
 {
-
     public function list(ListRequest $request): JsonResponse
     {
         // collect transactions:
