@@ -54,7 +54,7 @@ class ExchangeRateConverter
     {
         $start->startOfDay();
         $end->endOfDay();
-        Log::info(sprintf('Preparing for %s to %s between %s and %s', $from->code, $to->code, $start->format('Y-m-d'), $end->format('Y-m-d')));
+        Log::debug(sprintf('Preparing for %s to %s between %s and %s', $from->code, $to->code, $start->format('Y-m-d'), $end->format('Y-m-d')));
         $set      = auth()->user()
             ->currencyExchangeRates()
             ->where('from_currency_id', $from->id)
@@ -63,13 +63,13 @@ class ExchangeRateConverter
             ->where('date', '>=', $start->format('Y-m-d'))
             ->orderBy('date', 'DESC')->get()
         ;
-        $fallback = $this->getRate($from, $to, $start);
         ++$this->queryCount;
         if (0 === $set->count()) {
-            Log::info('No rates found in this period.');
+            Log::debug('No prepared rates found in this period.');
 
             return;
         }
+        $fallback = $this->getRate($from, $to, $start);
         /*
          * Je moet een fallback rate hebben van voor de periode zodat je die altijd kan gebruiken.
          * Dus de laatste met de meest recente datum voor je periode.
@@ -86,7 +86,7 @@ class ExchangeRateConverter
             ];
             ++$count;
         }
-        Log::info(sprintf('Found %d rates in this period.', $count));
+        Log::debug(sprintf('Found %d rates in this period.', $count));
         $currentStart = clone $start;
         while ($currentStart->lte($end)) {
             $currentDate                  = $currentStart->format('Y-m-d');
@@ -157,7 +157,7 @@ class ExchangeRateConverter
         // perhaps the rate has been cached during this particular run
         $preparedRate = $this->prepared[$date][$from][$to] ?? null;
         if (null !== $preparedRate && 0 !== bccomp('0', $preparedRate)) {
-            Log::info(sprintf('Found prepared rate from #%d to #%d on %s.', $from, $to, $date));
+            Log::debug(sprintf('Found prepared rate from #%d to #%d on %s.', $from, $to, $date));
             return $preparedRate;
         }
 
@@ -168,11 +168,11 @@ class ExchangeRateConverter
             if ('' === $rate) {
                 return null;
             }
-            Log::info(sprintf('Found cached rate from #%d to #%d on %s.', $from, $to, $date));
+            Log::debug(sprintf('Found cached rate from #%d to #%d on %s.', $from, $to, $date));
 
             return $rate;
         }
-        app('log')->info(sprintf('Going to get rate #%d->#%d (%s) from DB.', $from, $to, $date));
+        app('log')->debug(sprintf('Going to get rate #%d->#%d (%s) from DB.', $from, $to, $date));
 
         /** @var null|CurrencyExchangeRate $result */
         $result = auth()->user()
