@@ -122,8 +122,7 @@ class ExchangeRateConverter
 
     public function summarize(): void
     {
-        Log::debug('summarize()');
-        Log::info(sprintf('ExchangeRateConverter ran %d queries.', $this->queryCount));
+        Log::debug(sprintf('ExchangeRateConverter ran %d queries.', $this->queryCount));
     }
 
     /**
