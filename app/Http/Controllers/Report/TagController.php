@@ -392,6 +392,7 @@ class TagController extends Controller
                     $report[$tagId]['currencies'][$currencyId]          ??= [
                         'spent'                   => '0',
                         'earned'                  => '0',
+                        $tagId                    => $tagId,
                         'sum'                     => '0',
                         'currency_id'             => $currency['currency_id'],
                         'currency_symbol'         => $currency['currency_symbol'],
@@ -428,6 +429,7 @@ class TagController extends Controller
                         'spent'                   => '0',
                         'earned'                  => '0',
                         'sum'                     => '0',
+                        $tagId                    => $tagId,
                         'currency_id'             => $currency['currency_id'],
                         'currency_symbol'         => $currency['currency_symbol'],
                         'currency_name'           => $currency['currency_name'],
