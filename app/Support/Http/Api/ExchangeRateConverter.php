@@ -37,11 +37,11 @@ use Illuminate\Support\Facades\Log;
 class ExchangeRateConverter
 {
     // use ConvertsExchangeRates;
-    private int   $queryCount = 0;
-    private array $prepared   = [];
-    private array $fallback   = [];
-    private bool $isPrepared = false;
-    private bool $noPreparedRates = false;
+    private int   $queryCount      = 0;
+    private array $prepared        = [];
+    private array $fallback        = [];
+    private bool  $isPrepared      = false;
+    private bool  $noPreparedRates = false;
 
     /**
      * @throws FireflyException
@@ -123,7 +123,7 @@ class ExchangeRateConverter
      */
     private function getRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
     {
-        if($this->isPrepared && !$this->noPreparedRates) {
+        if ($this->isPrepared && !$this->noPreparedRates) {
             Log::debug(sprintf('Return fallback rate from #%d to #%d on %s.', $from->id, $to->id, $date->format('Y-m-d')));
             return $this->fallback[$from->id][$to->id] ?? '0';
         }
@@ -289,6 +289,7 @@ class ExchangeRateConverter
     private function fallback(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): void
     {
         $fallback                           = $this->getRate($from, $to, $date);
+        $fallback                           = 0 === bccomp('0', $fallback) ? '1' : $fallback;
         $this->fallback[$from->id][$to->id] = $fallback;
         $this->fallback[$to->id][$from->id] = bcdiv('1', $fallback);
         Log::debug(sprintf('Fallback rate %s > %s = %s', $from->code, $to->code, $fallback));
