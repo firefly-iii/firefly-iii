@@ -30,6 +30,7 @@ use FireflyIII\Transformers\WebhookTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class StoreController
@@ -58,6 +59,10 @@ class StoreController extends Controller
      */
     public function store(CreateRequest $request): JsonResponse
     {
+        if(false === config('firefly.allow_webhooks')) {
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
+
         $data    = $request->getData();
         $webhook = $this->repository->store($data);
         $manager = $this->getManager();

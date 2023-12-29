@@ -32,6 +32,7 @@ use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class DestroyController
@@ -61,6 +62,10 @@ class DestroyController extends Controller
      */
     public function destroy(Webhook $webhook): JsonResponse
     {
+        if(false === config('firefly.allow_webhooks')) {
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
+
         Log::channel('audit')->info(sprintf('User destroys webhook #%d.', $webhook->id));
         $this->repository->destroy($webhook);
         app('preferences')->mark();
@@ -84,7 +89,13 @@ class DestroyController extends Controller
         if ($attempt->webhook_message_id !== $message->id) {
             throw new FireflyException('200041: Webhook message and webhook attempt are no match');
         }
+
+        if (false === config('firefly.allow_webhooks')) {
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
+
         Log::channel('audit')->info(sprintf('User destroys webhook #%d, message #%d, attempt #%d.', $webhook->id, $message->id, $attempt->id));
+
 
         $this->repository->destroyAttempt($attempt);
         app('preferences')->mark();
@@ -106,6 +117,11 @@ class DestroyController extends Controller
         if ($message->webhook_id !== $webhook->id) {
             throw new FireflyException('200040: Webhook and webhook message are no match');
         }
+
+        if(false === config('firefly.allow_webhooks')) {
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
+
         $this->repository->destroyMessage($message);
         app('preferences')->mark();
 

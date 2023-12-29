@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Log;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ShowController
@@ -70,6 +71,10 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
+        if(false === config('firefly.allow_webhooks')) {
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
+
         Log::channel('audit')->info('User views all webhooks.');
         $manager    = $this->getManager();
         $collection = $this->repository->all();
@@ -99,6 +104,10 @@ class ShowController extends Controller
      */
     public function show(Webhook $webhook): JsonResponse
     {
+        if(false === config('firefly.allow_webhooks')) {
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
+
         Log::channel('audit')->info(sprintf('User views webhook #%d.', $webhook->id));
         $manager = $this->getManager();
 
@@ -118,6 +127,10 @@ class ShowController extends Controller
      */
     public function triggerTransaction(Webhook $webhook, TransactionGroup $group): JsonResponse
     {
+        if(false === config('firefly.allow_webhooks')) {
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
+
         app('log')->debug(sprintf('Now in triggerTransaction(%d, %d)', $webhook->id, $group->id));
         Log::channel('audit')->info(sprintf('User triggers webhook #%d on transaction group #%d.', $webhook->id, $group->id));
 

@@ -31,6 +31,7 @@ use FireflyIII\Transformers\WebhookTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class UpdateController
@@ -58,6 +59,10 @@ class UpdateController extends Controller
      */
     public function update(Webhook $webhook, UpdateRequest $request): JsonResponse
     {
+        if(false === config('firefly.allow_webhooks')) {
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
+        
         $data    = $request->getData();
         $webhook = $this->repository->update($webhook, $data);
         $manager = $this->getManager();

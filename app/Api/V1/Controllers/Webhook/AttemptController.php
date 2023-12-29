@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Log;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class AttemptController
@@ -69,7 +70,12 @@ class AttemptController extends Controller
         if ($message->webhook_id !== $webhook->id) {
             throw new FireflyException('200040: Webhook and webhook message are no match');
         }
+        if(false === config('firefly.allow_webhooks')) {
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
         Log::channel('audit')->info(sprintf('User lists webhook attempts of webhook #%d and message #%d.', $webhook->id, $message->id));
+
+
         $manager    = $this->getManager();
         $pageSize   = $this->parameters->get('limit');
         $collection = $this->repository->getAttempts($message);
@@ -106,6 +112,12 @@ class AttemptController extends Controller
         if ($attempt->webhook_message_id !== $message->id) {
             throw new FireflyException('200041: Webhook message and webhook attempt are no match');
         }
+
+        if(false === config('firefly.allow_webhooks')) {
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
+
+        Log::channel('audit')->info(sprintf('User views single webhook attempt #%d of webhook #%d and message #%d.', $attempt->id, $webhook->id, $message->id));
 
         $manager = $this->getManager();
 
