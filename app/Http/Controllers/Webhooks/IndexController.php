@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers\Webhooks;
 
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -53,6 +54,7 @@ class IndexController extends Controller
      */
     public function index()
     {
+        Log::channel('audit')->info('User visits webhook index page.');
         return view('webhooks.index');
     }
 }

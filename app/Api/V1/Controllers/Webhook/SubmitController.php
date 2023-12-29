@@ -28,6 +28,7 @@ use FireflyIII\Jobs\SendWebhookMessage;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class SubmitController
@@ -55,6 +56,7 @@ class SubmitController extends Controller
      */
     public function submit(Webhook $webhook): JsonResponse
     {
+        Log::channel('audit')->info(sprintf('User submits webhook #%d', $webhook->id));
         // count messages that can be sent.
         $messages = $this->repository->getReadyMessages($webhook);
         if (0 === $messages->count()) {

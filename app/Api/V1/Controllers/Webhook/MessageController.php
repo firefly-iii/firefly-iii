@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Transformers\WebhookMessageTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -64,6 +65,7 @@ class MessageController extends Controller
      */
     public function index(Webhook $webhook): JsonResponse
     {
+        Log::channel('audit')->info(sprintf('User views messages of webhook #%d.', $webhook->id));
         $manager    = $this->getManager();
         $pageSize   = $this->parameters->get('limit');
         $collection = $this->repository->getMessages($webhook);
@@ -98,6 +100,7 @@ class MessageController extends Controller
         if ($message->webhook_id !== $webhook->id) {
             throw new FireflyException('200040: Webhook and webhook message are no match');
         }
+        Log::channel('audit')->info(sprintf('User views message #%d of webhook #%d.', $message->id, $webhook->id));
 
         $manager = $this->getManager();
 

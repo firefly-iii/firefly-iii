@@ -28,6 +28,7 @@ use FireflyIII\Models\Webhook;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ShowController
@@ -60,6 +61,7 @@ class ShowController extends Controller
      */
     public function index(Webhook $webhook)
     {
+        Log::channel('audit')->info(sprintf('User visits webhook #%d page.', $webhook->id));
         $subTitle = (string)trans('firefly.show_webhook', ['title' => $webhook->title]);
 
         return view('webhooks.show', compact('webhook', 'subTitle'));

@@ -29,6 +29,7 @@ use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Transformers\WebhookTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
 
 /**
@@ -60,6 +61,8 @@ class UpdateController extends Controller
         $data    = $request->getData();
         $webhook = $this->repository->update($webhook, $data);
         $manager = $this->getManager();
+
+        Log::channel('audit')->info(sprintf('User updates webhook #%d', $webhook->id), $data);
 
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);

@@ -34,6 +34,7 @@ use FireflyIII\Transformers\WebhookTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -69,6 +70,7 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
+        Log::channel('audit')->info('User views all webhooks.');
         $manager    = $this->getManager();
         $collection = $this->repository->all();
         $pageSize   = $this->parameters->get('limit');
@@ -97,6 +99,7 @@ class ShowController extends Controller
      */
     public function show(Webhook $webhook): JsonResponse
     {
+        Log::channel('audit')->info(sprintf('User views webhook #%d.', $webhook->id));
         $manager = $this->getManager();
 
         /** @var WebhookTransformer $transformer */
@@ -116,7 +119,7 @@ class ShowController extends Controller
     public function triggerTransaction(Webhook $webhook, TransactionGroup $group): JsonResponse
     {
         app('log')->debug(sprintf('Now in triggerTransaction(%d, %d)', $webhook->id, $group->id));
-
+        Log::channel('audit')->info(sprintf('User triggers webhook #%d on transaction group #%d.', $webhook->id, $group->id));
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser(auth()->user());

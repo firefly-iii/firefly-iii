@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Transformers\WebhookAttemptTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -68,7 +69,7 @@ class AttemptController extends Controller
         if ($message->webhook_id !== $webhook->id) {
             throw new FireflyException('200040: Webhook and webhook message are no match');
         }
-
+        Log::channel('audit')->info(sprintf('User lists webhook attempts of webhook #%d and message #%d.', $webhook->id, $message->id));
         $manager    = $this->getManager();
         $pageSize   = $this->parameters->get('limit');
         $collection = $this->repository->getAttempts($message);

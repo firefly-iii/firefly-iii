@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers\Webhooks;
 
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -57,6 +58,7 @@ class CreateController extends Controller
      */
     public function index()
     {
+        Log::channel('audit')->info('User visits webhook create page.');
         $previousUrl = $this->rememberPreviousUrl('webhooks.create.url');
 
         return view('webhooks.create', compact('previousUrl'));

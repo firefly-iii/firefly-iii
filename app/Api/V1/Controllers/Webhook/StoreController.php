@@ -28,6 +28,7 @@ use FireflyIII\Api\V1\Requests\Models\Webhook\CreateRequest;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Transformers\WebhookTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
 
 /**
@@ -60,6 +61,8 @@ class StoreController extends Controller
         $data    = $request->getData();
         $webhook = $this->repository->store($data);
         $manager = $this->getManager();
+
+        Log::channel('audit')->info('User stores new webhook', $data);
 
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
