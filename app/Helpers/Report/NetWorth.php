@@ -36,6 +36,7 @@ use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * This class can handle both request with and without a user group and will return the appropriate repository when
@@ -72,7 +73,7 @@ class NetWorth implements NetWorthInterface
             return $cache->get();
         }
         app('log')->debug(sprintf('Now in byAccounts("%s", "%s")', $ids, $date->format('Y-m-d')));
-
+        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $default   = app('amount')->getDefaultCurrency();
         $converter = new ExchangeRateConverter();
 

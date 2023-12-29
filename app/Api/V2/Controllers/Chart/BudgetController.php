@@ -39,6 +39,7 @@ use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BudgetController
@@ -177,6 +178,7 @@ class BudgetController extends Controller
      */
     private function processExpenses(int $budgetId, array $array, Carbon $start, Carbon $end): array
     {
+        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $converter = new ExchangeRateConverter();
         $return    = [];
 
@@ -258,6 +260,7 @@ class BudgetController extends Controller
      */
     private function processLimit(Budget $budget, BudgetLimit $limit): array
     {
+        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $end = clone $limit->end_date;
         $end->endOfDay();
         $spent                = $this->opsRepository->listExpenses($limit->start_date, $end, null, new Collection([$budget]));

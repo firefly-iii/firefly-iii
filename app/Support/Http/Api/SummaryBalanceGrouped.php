@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Http\Api;
 
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 class SummaryBalanceGrouped
 {
@@ -44,7 +45,8 @@ class SummaryBalanceGrouped
 
     public function groupTransactions(string $key, array $journals): void
     {
-        \Log::debug(sprintf('Now in groupTransactions with key "%s" and %d journal(s)', $key, count($journals)));
+        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Now in groupTransactions with key "%s" and %d journal(s)', $key, count($journals)));
         $converter    = new ExchangeRateConverter();
         $this->keys[] = $key;
         $multiplier   = 'income' === $key ? '-1' : '1';

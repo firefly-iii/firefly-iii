@@ -37,6 +37,7 @@ use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BudgetController
@@ -76,6 +77,7 @@ class CategoryController extends Controller
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
+        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         /** @var Carbon $start */
         $start = $this->parameters->get('start');
 

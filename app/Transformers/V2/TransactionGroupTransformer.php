@@ -35,6 +35,7 @@ use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionGroupTransformer
@@ -102,6 +103,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         // create converter
+        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $this->converter = new ExchangeRateConverter();
     }
 

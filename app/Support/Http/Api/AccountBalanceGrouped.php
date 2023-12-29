@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountBalanceGrouped
@@ -117,6 +118,7 @@ class AccountBalanceGrouped
      */
     public function groupByCurrencyAndPeriod(): void
     {
+        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $converter = new ExchangeRateConverter();
 
         // loop. group by currency and by period.

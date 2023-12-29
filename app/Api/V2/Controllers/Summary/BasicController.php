@@ -45,6 +45,7 @@ use FireflyIII\Support\Http\Api\SummaryBalanceGrouped;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BasicController
@@ -244,6 +245,7 @@ class BasicController extends Controller
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
+        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         app('log')->debug('Now in getLeftToSpendInfo');
         $return     = [];
         $today      = today(config('app.timezone'));

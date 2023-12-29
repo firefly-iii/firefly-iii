@@ -36,6 +36,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class PiggyBankTransformer
@@ -131,6 +132,7 @@ class PiggyBankTransformer extends AbstractTransformer
             $this->notes[$id] = $note;
         }
 
+        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $this->default   = app('amount')->getDefaultCurrencyByUserGroup(auth()->user()->userGroup);
         $this->converter = new ExchangeRateConverter();
     }

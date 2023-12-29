@@ -32,6 +32,7 @@ use FireflyIII\Support\Cronjobs\BillWarningCronjob;
 use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Cron
@@ -103,6 +104,7 @@ class Cron extends Command
 
     private function exchangeRatesCronJob(bool $force, ?Carbon $date): void
     {
+        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $exchangeRates = new ExchangeRatesCronjob();
         $exchangeRates->setForce($force);
         // set date in cron job:

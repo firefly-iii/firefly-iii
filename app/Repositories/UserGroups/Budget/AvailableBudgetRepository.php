@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AvailableBudgetRepository
@@ -38,6 +39,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array
     {
+        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $return           = [];
         $converter        = new ExchangeRateConverter();
         $default          = app('amount')->getDefaultCurrency();

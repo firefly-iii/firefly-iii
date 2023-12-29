@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BillTransformer
@@ -92,6 +93,7 @@ class BillTransformer extends AbstractTransformer
                 'object_group_order' => $order,
             ];
         }
+        Log::info(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $this->default   = app('amount')->getDefaultCurrency();
         $this->converter = new ExchangeRateConverter();
 

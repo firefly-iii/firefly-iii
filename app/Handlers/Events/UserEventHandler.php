@@ -220,7 +220,7 @@ class UserEventHandler
 
     public function sendAdminRegistrationNotification(RegisteredUser $event): void
     {
-        $sendMail = (bool)app('fireflyconfig')->get('notification_admin_new_reg', true)->data;
+        $sendMail = (bool) app('fireflyconfig')->get('notification_admin_new_reg', true)->data;
         if ($sendMail) {
             /** @var UserRepositoryInterface $repository */
             $repository = app(UserRepositoryInterface::class);
@@ -285,7 +285,7 @@ class UserEventHandler
         $oldEmail = $event->oldEmail;
         $user     = $event->user;
         $token    = app('preferences')->getForUser($user, 'email_change_undo_token', 'invalid');
-        $hashed   = hash('sha256', sprintf('%s%s', (string)config('app.key'), $oldEmail));
+        $hashed   = hash('sha256', sprintf('%s%s', (string) config('app.key'), $oldEmail));
         $url      = route('profile.undo-email-change', [$token->data, $hashed]);
 
         try {
@@ -347,7 +347,7 @@ class UserEventHandler
      */
     public function sendRegistrationMail(RegisteredUser $event): void
     {
-        $sendMail = (bool)app('fireflyconfig')->get('notification_user_new_reg', true)->data;
+        $sendMail = (bool) app('fireflyconfig')->get('notification_user_new_reg', true)->data;
         if ($sendMail) {
             try {
                 Notification::send($event->user, new UserRegistrationNotification());
