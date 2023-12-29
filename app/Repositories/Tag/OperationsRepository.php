@@ -48,14 +48,17 @@ class OperationsRepository implements OperationsRepositoryInterface
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
+        $tagIds = [];
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
         if (null !== $tags && $tags->count() > 0) {
             $collector->setTags($tags);
+            $tagIds = $tags->pluck('id')->toArray();
         }
         if (null === $tags || 0 === $tags->count()) {
             $collector->setTags($this->getTags());
+            $tagIds = $this->getTags()->pluck('id')->toArray();
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
         $journals       = $collector->getExtractedJournals();
@@ -77,7 +80,11 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $tagId     = (int)$tag['id'];
                 $tagName   = (string)$tag['name'];
                 $journalId = (int)$journal['transaction_journal_id'];
+                if(!in_array($tagId, $tagIds, true)){
+                    continue;
+                }
 
+                // TODO not sure what this check does.
                 if (in_array($journalId, $listedJournals, true)) {
                     continue;
                 }
@@ -123,14 +130,17 @@ class OperationsRepository implements OperationsRepositoryInterface
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);
+        $tagIds = [];
         if (null !== $accounts && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
         if (null !== $tags && $tags->count() > 0) {
             $collector->setTags($tags);
+            $tagIds = $tags->pluck('id')->toArray();
         }
         if (null === $tags || 0 === $tags->count()) {
             $collector->setTags($this->getTags());
+            $tagIds = $this->getTags()->pluck('id')->toArray();
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation()->withTagInformation();
         $journals       = $collector->getExtractedJournals();
@@ -150,6 +160,9 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // may have multiple tags:
             foreach ($journal['tags'] as $tag) {
+                if(!in_array($tagId, $tagIds, true)){
+                    continue;
+                }
                 $tagId     = (int)$tag['id'];
                 $tagName   = (string)$tag['name'];
                 $journalId = (int)$journal['transaction_journal_id'];
@@ -204,6 +217,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     private function getTags(): Collection
     {
+        /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
 
         return $repository->get();

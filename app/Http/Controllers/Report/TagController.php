@@ -155,7 +155,6 @@ class TagController extends Controller
      */
     public function accounts(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
-        $tagIds = $tags->pluck('id')->toArray();
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $tags);
         $earned = $this->opsRepository->listIncome($start, $end, $accounts, $tags);
         $report = [];
@@ -185,9 +184,6 @@ class TagController extends Controller
                 'total_sum'               => '0',
             ];
             foreach ($currency['tags'] as $tag) {
-                if(!array_key_exists($tag['id'], $tagIds)) {
-                    continue;
-                }
                 foreach ($tag['transaction_journals'] as $journal) {
                     $sourceAccountId                                              = $journal['source_account_id'];
                     $report[$sourceAccountId]['currencies'][$currencyId]          ??= [
@@ -226,9 +222,6 @@ class TagController extends Controller
                 'total_sum'               => '0',
             ];
             foreach ($currency['tags'] as $tag) {
-                if(!array_key_exists($tag['id'], $tagIds)) {
-                    continue;
-                }
                 foreach ($tag['transaction_journals'] as $journal) {
                     $destinationAccountId                                               = $journal['destination_account_id'];
                     $report[$destinationAccountId]['currencies'][$currencyId]           ??= [
