@@ -75,7 +75,6 @@ class AttemptController extends Controller
         }
         Log::channel('audit')->info(sprintf('User lists webhook attempts of webhook #%d and message #%d.', $webhook->id, $message->id));
 
-
         $manager    = $this->getManager();
         $pageSize   = $this->parameters->get('limit');
         $collection = $this->repository->getAttempts($message);

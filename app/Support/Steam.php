@@ -46,19 +46,21 @@ class Steam
 
         $currencyId    = (int) $repository->getMetaValue($account, 'currency_id');
         $transactions  = $account->transactions()
-                                 ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                 ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                                 ->where('transactions.transaction_currency_id', $currencyId)
-                                 ->get(['transactions.amount'])->toArray();
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+            ->where('transactions.transaction_currency_id', $currencyId)
+            ->get(['transactions.amount'])->toArray()
+        ;
         $nativeBalance = $this->sumTransactions($transactions, 'amount');
 
         // get all balances in foreign currency:
         $transactions = $account->transactions()
-                                ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                                ->where('transactions.foreign_currency_id', $currencyId)
-                                ->where('transactions.transaction_currency_id', '!=', $currencyId)
-                                ->get(['transactions.foreign_amount'])->toArray();
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+            ->where('transactions.foreign_currency_id', $currencyId)
+            ->where('transactions.transaction_currency_id', '!=', $currencyId)
+            ->get(['transactions.foreign_amount'])->toArray()
+        ;
 
         $foreignBalance = $this->sumTransactions($transactions, 'foreign_amount');
 
@@ -116,23 +118,24 @@ class Steam
 
         // query!
         $set = $account->transactions()
-                       ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                       ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
-                       ->where('transaction_journals.date', '<=', $end->format('Y-m-d  23:59:59'))
-                       ->groupBy('transaction_journals.date')
-                       ->groupBy('transactions.transaction_currency_id')
-                       ->groupBy('transactions.foreign_currency_id')
-                       ->orderBy('transaction_journals.date', 'ASC')
-                       ->whereNull('transaction_journals.deleted_at')
-                       ->get(
-                           [ // @phpstan-ignore-line
-                             'transaction_journals.date',
-                             'transactions.transaction_currency_id',
-                             \DB::raw('SUM(transactions.amount) AS modified'),
-                             'transactions.foreign_currency_id',
-                             \DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
-                           ]
-                       );
+            ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
+            ->where('transaction_journals.date', '<=', $end->format('Y-m-d  23:59:59'))
+            ->groupBy('transaction_journals.date')
+            ->groupBy('transactions.transaction_currency_id')
+            ->groupBy('transactions.foreign_currency_id')
+            ->orderBy('transaction_journals.date', 'ASC')
+            ->whereNull('transaction_journals.deleted_at')
+            ->get(
+                [ // @phpstan-ignore-line
+                    'transaction_journals.date',
+                    'transactions.transaction_currency_id',
+                    \DB::raw('SUM(transactions.amount) AS modified'),
+                    'transactions.foreign_currency_id',
+                    \DB::raw('SUM(transactions.foreign_amount) AS modified_foreign'),
+                ]
+            )
+        ;
 
         $currentBalance = $startBalance;
 
@@ -186,18 +189,20 @@ class Steam
         }
         // first part: get all balances in own currency:
         $transactions  = $account->transactions()
-                                 ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                 ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                                 ->where('transactions.transaction_currency_id', $currency->id)
-                                 ->get(['transactions.amount'])->toArray();
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+            ->where('transactions.transaction_currency_id', $currency->id)
+            ->get(['transactions.amount'])->toArray()
+        ;
         $nativeBalance = $this->sumTransactions($transactions, 'amount');
         // get all balances in foreign currency:
         $transactions   = $account->transactions()
-                                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                  ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                                  ->where('transactions.foreign_currency_id', $currency->id)
-                                  ->where('transactions.transaction_currency_id', '!=', $currency->id)
-                                  ->get(['transactions.foreign_amount'])->toArray();
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+            ->where('transactions.foreign_currency_id', $currency->id)
+            ->where('transactions.transaction_currency_id', '!=', $currency->id)
+            ->get(['transactions.foreign_amount'])->toArray()
+        ;
         $foreignBalance = $this->sumTransactions($transactions, 'foreign_amount');
         $balance        = bcadd($nativeBalance, $foreignBalance);
         $virtual        = null === $account->virtual_balance ? '0' : $account->virtual_balance;
@@ -242,20 +247,21 @@ class Steam
 
         // grab all transactions between start and end:
         $set = $account->transactions()
-                       ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                       ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
-                       ->where('transaction_journals.date', '<=', $end->format('Y-m-d  23:59:59'))
-                       ->orderBy('transaction_journals.date', 'ASC')
-                       ->whereNull('transaction_journals.deleted_at')
-                       ->get(
-                           [
-                               'transaction_journals.date',
-                               'transactions.transaction_currency_id',
-                               'transactions.amount',
-                               'transactions.foreign_currency_id',
-                               'transactions.foreign_amount',
-                           ]
-                       )->toArray();
+            ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
+            ->where('transaction_journals.date', '<=', $end->format('Y-m-d  23:59:59'))
+            ->orderBy('transaction_journals.date', 'ASC')
+            ->whereNull('transaction_journals.deleted_at')
+            ->get(
+                [
+                    'transaction_journals.date',
+                    'transactions.transaction_currency_id',
+                    'transactions.amount',
+                    'transactions.foreign_currency_id',
+                    'transactions.foreign_amount',
+                ]
+            )->toArray()
+        ;
 
         // loop the set and convert if necessary:
         $currentBalance = $startBalance;
@@ -295,15 +301,15 @@ class Steam
             $balances[$format] = $currentBalance;
 
             Log::debug(sprintf(
-                           '%s: transaction in %s(!). Conversion rate is %s. %s %s = %s %s',
-                           $format,
-                           $currency->code,
-                           $rate,
-                           $currency->code,
-                           $transaction['amount'],
-                           $native->code,
-                           $convertedAmount
-                       ));
+                '%s: transaction in %s(!). Conversion rate is %s. %s %s = %s %s',
+                $format,
+                $currency->code,
+                $rate,
+                $currency->code,
+                $transaction['amount'],
+                $native->code,
+                $convertedAmount
+            ));
         }
 
         $cache->store($balances);
@@ -342,7 +348,7 @@ class Steam
         if ($cache->has()) {
             Log::debug('Cached!');
 
-            //return $cache->get();
+            // return $cache->get();
         }
 
         /** @var AccountRepositoryInterface $repository */
@@ -351,55 +357,62 @@ class Steam
         $currency   = null === $currency ? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup) : $currency;
         if ($native->id === $currency->id) {
             Log::debug('No conversion necessary!');
+
             return $this->balance($account, $date);
         }
 
         $new      = [];
         $existing = [];
         $new[]    = $account->transactions() // 1
-                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                            ->where('transactions.transaction_currency_id', $currency->id)
-                            ->whereNull('transactions.foreign_currency_id')
-                            ->get(['transaction_journals.date', 'transactions.amount'])->toArray();
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+            ->where('transactions.transaction_currency_id', $currency->id)
+            ->whereNull('transactions.foreign_currency_id')
+            ->get(['transaction_journals.date', 'transactions.amount'])->toArray()
+        ;
         Log::debug(sprintf('%d transaction(s) in set #1', count($new[0])));
         $existing[] = $account->transactions()         // 2
-                              ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                              ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                              ->where('transactions.transaction_currency_id', $native->id)
-                              ->whereNull('transactions.foreign_currency_id')
-                              ->get(['transactions.amount'])->toArray();
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+            ->where('transactions.transaction_currency_id', $native->id)
+            ->whereNull('transactions.foreign_currency_id')
+            ->get(['transactions.amount'])->toArray()
+        ;
         Log::debug(sprintf('%d transaction(s) in set #2', count($existing[0])));
         $new[] = $account->transactions()         // 3
-                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                         ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                         ->where('transactions.transaction_currency_id', '!=', $currency->id)
-                         ->where('transactions.transaction_currency_id', '!=', $native->id)
-                         ->whereNull('transactions.foreign_currency_id')
-                         ->get(['transaction_journals.date', 'transactions.amount'])->toArray();
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+            ->where('transactions.transaction_currency_id', '!=', $currency->id)
+            ->where('transactions.transaction_currency_id', '!=', $native->id)
+            ->whereNull('transactions.foreign_currency_id')
+            ->get(['transaction_journals.date', 'transactions.amount'])->toArray()
+        ;
         Log::debug(sprintf('%d transactions in set #3', count($new[1])));
         $existing[] = $account->transactions() // 4
-                              ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                              ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                              ->where('transactions.foreign_currency_id', $native->id)
-                              ->whereNotNull('transactions.foreign_amount')
-                              ->get(['transactions.foreign_amount'])->toArray();
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+            ->where('transactions.foreign_currency_id', $native->id)
+            ->whereNotNull('transactions.foreign_amount')
+            ->get(['transactions.foreign_amount'])->toArray()
+        ;
         Log::debug(sprintf('%d transactions in set #4', count($existing[1])));
         $new[] = $account->transactions()// 5
-                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                         ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                         ->where('transactions.transaction_currency_id', $currency->id)
-                         ->where('transactions.foreign_currency_id', '!=', $native->id)
-                         ->whereNotNull('transactions.foreign_amount')
-                         ->get(['transaction_journals.date', 'transactions.amount'])->toArray();
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+            ->where('transactions.transaction_currency_id', $currency->id)
+            ->where('transactions.foreign_currency_id', '!=', $native->id)
+            ->whereNotNull('transactions.foreign_amount')
+            ->get(['transaction_journals.date', 'transactions.amount'])->toArray()
+        ;
         Log::debug(sprintf('%d transactions in set #5', count($new[2])));
         $new[] = $account->transactions()// 6
-                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                         ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                         ->where('transactions.transaction_currency_id', '!=', $currency->id)
-                         ->where('transactions.foreign_currency_id', '!=', $native->id)
-                         ->whereNotNull('transactions.foreign_amount')
-                         ->get(['transaction_journals.date', 'transactions.amount'])->toArray();
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+            ->where('transactions.transaction_currency_id', '!=', $currency->id)
+            ->where('transactions.foreign_currency_id', '!=', $native->id)
+            ->whereNotNull('transactions.foreign_amount')
+            ->get(['transaction_journals.date', 'transactions.amount'])->toArray()
+        ;
         Log::debug(sprintf('%d transactions in set #6', count($new[3])));
 
         // process both sets of transactions. Of course, no need to convert set "existing".
@@ -507,9 +520,9 @@ class Steam
             $default = app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
             $result[$account->id]
                      = [
-                'balance'        => $this->balance($account, $date),
-                'native_balance' => $this->balanceConverted($account, $date, $default),
-            ];
+                         'balance'        => $this->balance($account, $date),
+                         'native_balance' => $this->balanceConverted($account, $date, $default),
+                     ];
         }
 
         $cache->store($result);
@@ -556,9 +569,10 @@ class Steam
             return $cache->get();
         }
         $query    = $account->transactions()
-                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
-                            ->groupBy('transactions.transaction_currency_id');
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+            ->groupBy('transactions.transaction_currency_id')
+        ;
         $balances = $query->get(['transactions.transaction_currency_id', \DB::raw('SUM(transactions.amount) as sum_for_currency')]); // @phpstan-ignore-line
         $return   = [];
 
@@ -590,10 +604,10 @@ class Steam
         // Log::debug(sprintf('Trying bcround("%s",%d)', $number, $precision));
         if (str_contains($number, '.')) {
             if ('-' !== $number[0]) {
-                return bcadd($number, '0.' . str_repeat('0', $precision) . '5', $precision);
+                return bcadd($number, '0.'.str_repeat('0', $precision).'5', $precision);
             }
 
-            return bcsub($number, '0.' . str_repeat('0', $precision) . '5', $precision);
+            return bcsub($number, '0.'.str_repeat('0', $precision).'5', $precision);
         }
 
         return $number;
@@ -675,9 +689,9 @@ class Steam
         $list = [];
 
         $set = auth()->user()->transactions()
-                     ->whereIn('transactions.account_id', $accounts)
-                     ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
-                     ->get(['transactions.account_id', \DB::raw('MAX(transaction_journals.date) AS max_date')]) // @phpstan-ignore-line
+            ->whereIn('transactions.account_id', $accounts)
+            ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
+            ->get(['transactions.account_id', \DB::raw('MAX(transaction_journals.date) AS max_date')]) // @phpstan-ignore-line
         ;
 
         /** @var Transaction $entry */

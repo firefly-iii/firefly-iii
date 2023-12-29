@@ -96,7 +96,6 @@ class DestroyController extends Controller
 
         Log::channel('audit')->info(sprintf('User destroys webhook #%d, message #%d, attempt #%d.', $webhook->id, $message->id, $attempt->id));
 
-
         $this->repository->destroyAttempt($attempt);
         app('preferences')->mark();
 
