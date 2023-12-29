@@ -78,6 +78,7 @@ class ExchangeRateConverter
             $this->noPreparedRates = true;
             $this->isPrepared = true;
             Log::debug('prepare DONE()');
+
             return;
         }
         $this->isPrepared = true;

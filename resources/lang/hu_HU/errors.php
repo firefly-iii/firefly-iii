@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'        => 'További információk gyűjthetők a <code>storage/logs</code> könyvtárban lévő napló fájlokból. Vagy ha Dockert használ, akkor a <code>docker logs -f [container]</code> paranccsal.',
-    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
+    'collect_info_more'   => 'Tovább olvashat a hibainformációk gyűjtéséről <a href="https://docs.firefly-iii.org/how-to/general/debug/">a GYIK-ben</a>.',
     'github_help'         => 'Segítség kérése GitHub-on',
     'github_instructions' => 'Örömmel fogadjuk ha <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>-on hibajegyet nyitsz.',
     'use_search'          => 'Használd a keresőt!',

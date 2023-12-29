@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'        => 'Zberite več informacij v imeniku <code>storage/logs</code>, kjer boste našli dnevniške datoteke. Če uporabljate Docker, uporabite <code>docker logs -f [container]</code>.',
-    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
+    'collect_info_more'   => 'Več o zbiranju informacij o napakah lahko preberete v <a href="https://docs.firefly-iii.org/how-to/general/debug/">pogostih vprašanjih</a>.',
     'github_help'         => 'Pridobite pomoč na GitHub-u',
     'github_instructions' => 'Vabimo vas, da odprete novo težavo <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">na GitHub-u</a></strong>.',
     'use_search'          => 'Uporabite iskanje!',

@@ -34,16 +34,16 @@
 declare(strict_types=1);
 
 return [
-    '404_header'              => 'Firefly III non riesce a trovare questa pagina.',
+    '404_header'              => 'Firefly III non riesce a trovare l\'etichetta ":tag"',
     '404_page_does_not_exist' => 'La pagina che hai richiesto non esiste. Controlla di non aver inserito l\'URL sbagliato. Hai fatto un errore di battitura?',
-    '404_send_error'          => 'Se sei stato reindirizzato a questa pagina automaticamente, accetta le mie scuse. Nei tuoi file di log puoi trovare questo errore e ti sarei grato se me lo inviassi.',
+    '404_send_error'          => 'Se sei stato reindirizzato a questa pagina automaticamente, accetta le mie scuse. Nei tuoi file di Los puoi trovare questo errore e ti sarei grato se me lo inviassi.',
     '404_github_link'         => 'Se sei sicuro che questa pagina dovrebbe esistere, apri un ticket su <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
-    'whoops'                  => 'Oops!',
-    'fatal_error'             => 'Si è verificato un errore fatale. Controlla i file di log in "storage/logs" o usa "docker logs -f [container]" per vedere cosa sta succedendo.',
-    'maintenance_mode'        => 'Firefly III è in modalità di manutenzione.',
+    'whoops'                  => 'Oops',
+    'fatal_error'             => 'Si è verificato un errore fatale. Controlla i file di login "storage/Los" o usa "Docker Los f [container]" per vedere cosa sta succedendo.',
+    'maintenance_mode'        => 'Firefox III è in modalità di manutenzione.',
     'be_right_back'           => 'Torno subito!',
     'check_back'              => 'Firefly III non è in funzione per una manutenzione necessaria. Ricontrolla tra qualche secondo.',
-    'error_occurred'          => 'Ops! Si è verificato un errore.',
+    'error_occurred'          => 'Oops! Si è verificato un errore.',
     'db_error_occurred'       => 'Oops! Si è verificato un errore del database.',
     'error_not_recoverable'   => 'Sfortunatamente questo errore non è riparabile :(. Firefly III è rotto. L\'errore è:',
     'error'                   => 'Errore',
@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'        => 'Raccogli ulteriori informazioni nella cartella <code>storage/log</code> dove troverai i file di log. Se stai eseguendo Docker, usa <code>docker logs -f [container]</code>.',
-    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
+    'collect_info_more'   => 'Puoi leggere di più sulla raccolta di informazioni di errore in <a href="https://docs.firefly-iii.org/how-to/general/debug/">FAQ</a>.',
     'github_help'         => 'Ottieni aiuto su GitHub',
     'github_instructions' => 'Sei più che benvenuto ad aprire una nuova issue <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">su GitHub</a></strong>.',
     'use_search'          => 'Usa la ricerca!',
