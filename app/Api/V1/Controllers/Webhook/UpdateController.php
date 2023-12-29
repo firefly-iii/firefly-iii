@@ -62,7 +62,7 @@ class UpdateController extends Controller
         if(false === config('firefly.allow_webhooks')) {
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
-        
+
         $data    = $request->getData();
         $webhook = $this->repository->update($webhook, $data);
         $manager = $this->getManager();

@@ -39,6 +39,9 @@ class ExchangeRateConverter
     // use ConvertsExchangeRates;
     private int   $queryCount = 0;
     private array $prepared   = [];
+    private array $fallback   = [];
+    private bool $isPrepared = false;
+    private bool $noPreparedRates = false;
 
     /**
      * @throws FireflyException
@@ -50,31 +53,31 @@ class ExchangeRateConverter
         return bcmul($amount, $rate);
     }
 
+    /**
+     * @throws FireflyException
+     */
     public function prepare(TransactionCurrency $from, TransactionCurrency $to, Carbon $start, Carbon $end): void
     {
+        $this->isPrepared = true;
         $start->startOfDay();
         $end->endOfDay();
         Log::debug(sprintf('Preparing for %s to %s between %s and %s', $from->code, $to->code, $start->format('Y-m-d'), $end->format('Y-m-d')));
-        $set      = auth()->user()
-            ->currencyExchangeRates()
-            ->where('from_currency_id', $from->id)
-            ->where('to_currency_id', $to->id)
-            ->where('date', '<=', $end->format('Y-m-d'))
-            ->where('date', '>=', $start->format('Y-m-d'))
-            ->orderBy('date', 'DESC')->get()
-        ;
+        $set = auth()->user()
+                     ->currencyExchangeRates()
+                     ->where('from_currency_id', $from->id)
+                     ->where('to_currency_id', $to->id)
+                     ->where('date', '<=', $end->format('Y-m-d'))
+                     ->where('date', '>=', $start->format('Y-m-d'))
+                     ->orderBy('date', 'DESC')->get();
         ++$this->queryCount;
         if (0 === $set->count()) {
-            Log::debug('No prepared rates found in this period.');
-
+            Log::debug('No prepared rates found in this period, use the fallback');
+            $this->fallback($from, $to, $start);
+            $this->noPreparedRates = true;
             return;
         }
-        $fallback = $this->getRate($from, $to, $start);
-        /*
-         * Je moet een fallback rate hebben van voor de periode zodat je die altijd kan gebruiken.
-         * Dus de laatste met de meest recente datum voor je periode.
-         * Dan moet je gaan loopen per dag, en als er iets in $temp zit toevallig gebruik je die.
-         */
+
+        // so there is a fallback just in case. Now loop the set of rates we DO have.
         $temp  = [];
         $count = 0;
         foreach ($set as $rate) {
@@ -91,7 +94,7 @@ class ExchangeRateConverter
         while ($currentStart->lte($end)) {
             $currentDate                  = $currentStart->format('Y-m-d');
             $this->prepared[$currentDate] ??= [];
-            $fallback                     = $temp[$currentDate][$from->id][$to->id] ?? $fallback;
+            $fallback                     = $temp[$currentDate][$from->id][$to->id] ?? $this->fallback[$from->id][$to->id] ?? '0';
             if (0 === count($this->prepared[$currentDate]) && 0 !== bccomp('0', $fallback)) {
                 // fill from temp or fallback or from temp (see before)
                 $this->prepared[$currentDate][$from->id][$to->id] = $fallback;
@@ -120,6 +123,10 @@ class ExchangeRateConverter
      */
     private function getRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
     {
+        if($this->isPrepared && !$this->noPreparedRates) {
+            Log::debug(sprintf('Return fallback rate from #%d to #%d on %s.', $from, $to, $date));
+            return $this->fallback[$from->id][$to->id] ?? '0';
+        }
         // first attempt:
         $rate = $this->getFromDB($from->id, $to->id, $date->format('Y-m-d'));
         if (null !== $rate) {
@@ -172,27 +179,28 @@ class ExchangeRateConverter
 
             return $rate;
         }
-        app('log')->debug(sprintf('Going to get rate #%d->#%d (%s) from DB.', $from, $to, $date));
 
         /** @var null|CurrencyExchangeRate $result */
         $result = auth()->user()
-            ->currencyExchangeRates()
-            ->where('from_currency_id', $from)
-            ->where('to_currency_id', $to)
-            ->where('date', '<=', $date)
-            ->orderBy('date', 'DESC')
-            ->first()
-        ;
+                        ->currencyExchangeRates()
+                        ->where('from_currency_id', $from)
+                        ->where('to_currency_id', $to)
+                        ->where('date', '<=', $date)
+                        ->orderBy('date', 'DESC')
+                        ->first();
         ++$this->queryCount;
         $rate = (string) $result?->rate;
 
         if ('' === $rate) {
+            app('log')->debug(sprintf('Found no rate for #%d->#%d (%s) in the DB.', $from, $to, $date));
+
             return null;
         }
         if (0 === bccomp('0', $rate)) {
+            app('log')->debug(sprintf('Found rate for #%d->#%d (%s) in the DB, but it\'s zero.', $from, $to, $date));
             return null;
         }
-
+        app('log')->debug(sprintf('Found rate for #%d->#%d (%s) in the DB: %s.', $from, $to, $date, $rate));
         $cache->store($rate);
 
         // if the rate has not been cached during this particular run, save it
@@ -262,5 +270,28 @@ class ExchangeRateConverter
         $cache->store($euro->id);
 
         return $euro->id;
+    }
+
+    /**
+     * If there are no exchange rate in the "prepare" array, future searches for any exchange rate
+     * will result in nothing: otherwise the preparation had been unnecessary. So, to fix this Firefly III
+     * will set two fallback currency exchange rates, A > B and B > A using the regular getCurrencyRate method.
+     *
+     * This method in turn will fall back on the default exchange rate (if present) or on "1" if necessary.
+     *
+     * @param TransactionCurrency $from
+     * @param TransactionCurrency $to
+     * @param Carbon              $date
+     *
+     * @return void
+     * @throws FireflyException
+     */
+    private function fallback(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): void
+    {
+        $fallback                           = $this->getRate($from, $to, $date);
+        $this->fallback[$from->id][$to->id] = $fallback;
+        $this->fallback[$to->id][$from->id] = bcdiv('1', $fallback);
+        Log::debug(sprintf('Fallback rate %s > %s = %s', $from->code, $to->code, $fallback));
+        Log::debug(sprintf('Fallback rate %s > %s = %s', $to->code, $from->code, bcdiv('1', $fallback)));
     }
 }
