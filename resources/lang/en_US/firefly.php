@@ -234,6 +234,7 @@ return [
     // Webhooks
     'webhooks'                             => 'Webhooks',
     'webhooks_breadcrumb'                  => 'Webhooks',
+    'webhooks_menu_disabled' => 'disabled',
     'no_webhook_messages'                  => 'There are no webhook messages',
     'webhook_trigger_STORE_TRANSACTION'    => 'After transaction creation',
     'webhook_trigger_UPDATE_TRANSACTION'   => 'After transaction update',
