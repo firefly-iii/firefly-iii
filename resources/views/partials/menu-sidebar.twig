@@ -84,12 +84,14 @@
                     <span>{{ 'recurrences'|_ }}</span>
                 </a>
             </li>
+            {% if true == featuringWebhooks %}
             <li class="{{ activeRoutePartial('webhooks') }}">
                 <a href="{{ route('webhooks.index') }}">
                     <span class="fa fa-angle-right fa-fw"></span>
                     <span>{{ 'webhooks'|_ }}</span>
                 </a>
             </li>
+            {% endif %}
         </ul>
     </li>
 
@@ -210,14 +212,6 @@
                     <span>{{ 'currencies'|_ }}</span>
                 </a>
             </li>
-            {% if true == featuringWebhooks %}
-                <li class="{{ activeRoutePartial('webhooks') }}">
-                    <a class="{{ activeRoutePartial('webhooks') }}" href="{{ route('webhooks.index') }}">
-                        <span class="fa fa-angle-right fa-fw"></span>
-                        <span>{{ 'webhooks'|_ }}</span>
-                    </a>
-                </li>
-            {% endif %}
             {% if hasRole('owner') %}
                 <li class="{{ activeRoutePartial('admin') }}">
                     <a class="{{ activeRoutePartial('admin') }}" href="{{ route('admin.index') }}">
