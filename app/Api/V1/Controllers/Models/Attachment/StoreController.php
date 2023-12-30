@@ -34,7 +34,9 @@ use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class StoreController
@@ -72,6 +74,11 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
+        if(true === auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->info(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
+
+            throw new NotFoundHttpException();
+        }
         app('log')->debug(sprintf('Now in %s', __METHOD__));
         $data       = $request->getAll();
         $attachment = $this->repository->store($data);
@@ -91,6 +98,12 @@ class StoreController extends Controller
      */
     public function upload(Request $request, Attachment $attachment): JsonResponse
     {
+        if(true === auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->info(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
+
+            throw new NotFoundHttpException();
+        }
+
         /** @var AttachmentHelperInterface $helper */
         $helper = app(AttachmentHelperInterface::class);
         $body   = $request->getContent();

@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers\V2;
 
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\ObjectGroup;
@@ -49,7 +50,7 @@ class BillTransformer extends AbstractTransformer
     private array                 $paidDates;
 
     /**
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */

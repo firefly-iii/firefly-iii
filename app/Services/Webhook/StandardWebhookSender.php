@@ -29,6 +29,7 @@ use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 
 /**
@@ -45,7 +46,7 @@ class StandardWebhookSender implements WebhookSenderInterface
     }
 
     /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */

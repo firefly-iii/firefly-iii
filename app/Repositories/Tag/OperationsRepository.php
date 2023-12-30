@@ -160,12 +160,13 @@ class OperationsRepository implements OperationsRepositoryInterface
 
             // may have multiple tags:
             foreach ($journal['tags'] as $tag) {
-                if(!in_array($tagId, $tagIds, true)) {
-                    continue;
-                }
                 $tagId     = (int)$tag['id'];
                 $tagName   = (string)$tag['name'];
                 $journalId = (int)$journal['transaction_journal_id'];
+
+                if(!in_array($tagId, $tagIds, true)) {
+                    continue;
+                }
 
                 if (in_array($journalId, $listedJournals, true)) {
                     continue;

@@ -33,9 +33,11 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response as LaravelResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ShowController
@@ -73,6 +75,11 @@ class ShowController extends Controller
      */
     public function download(Attachment $attachment): LaravelResponse
     {
+        if(true === auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->info(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
+
+            throw new NotFoundHttpException();
+        }
         if (false === $attachment->uploaded) {
             throw new FireflyException('200000: File has not been uploaded (yet).');
         }
@@ -116,6 +123,12 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
+        if(true === auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->info(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
+
+            throw new NotFoundHttpException();
+        }
+
         $manager = $this->getManager();
 
         // types to get, page size:
@@ -148,6 +161,11 @@ class ShowController extends Controller
      */
     public function show(Attachment $attachment): JsonResponse
     {
+        if(true === auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->info(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
+
+            throw new NotFoundHttpException();
+        }
         $manager = $this->getManager();
 
         /** @var AttachmentTransformer $transformer */

@@ -29,6 +29,8 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class DestroyController
@@ -64,6 +66,12 @@ class DestroyController extends Controller
      */
     public function destroy(Attachment $attachment): JsonResponse
     {
+        if(true === auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->info(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
+
+            throw new NotFoundHttpException();
+        }
+
         $this->repository->destroy($attachment);
         app('preferences')->mark();
 

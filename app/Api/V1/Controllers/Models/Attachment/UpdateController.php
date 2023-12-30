@@ -31,7 +31,9 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class UpdateController
@@ -67,6 +69,11 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Attachment $attachment): JsonResponse
     {
+        if(true === auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->info(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
+
+            throw new NotFoundHttpException();
+        }
         $data = $request->getAll();
         $this->repository->update($attachment, $data);
         $manager = $this->getManager();
