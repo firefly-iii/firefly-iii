@@ -92,9 +92,11 @@
                 </a>
             </li>
             {% else %}
-                <li class="{{ activeRoutePartial('webhooks') }}">
+                <li class="">
+                    <a href="#">
                         <span class="fa fa-angle-right fa-fw"></span>
                         <span>{{ 'webhooks'|_ }} ({{ 'webhooks_menu_disabled'|_ }})</span>
+                    </a>
                 </li>
             {% endif %}
         </ul>
