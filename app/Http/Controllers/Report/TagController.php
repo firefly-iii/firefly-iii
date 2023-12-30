@@ -57,6 +57,7 @@ class TagController extends Controller
 
     /**
      * @return Factory|View
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function accountPerTag(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
     {
