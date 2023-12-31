@@ -53,7 +53,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->find((int)$accountId);
+                $account = $repository->find((int) $accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -74,7 +74,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $budgetId) {
-                $budget = $repository->find((int)$budgetId);
+                $budget = $repository->find((int) $budgetId);
                 if (null !== $budget) {
                     $collection->push($budget);
                 }
@@ -95,7 +95,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $categoryId) {
-                $category = $repository->find((int)$categoryId);
+                $category = $repository->find((int) $categoryId);
                 if (null !== $category) {
                     $collection->push($category);
                 }
@@ -116,7 +116,7 @@ class ReportFormRequest extends FormRequest
         $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->find((int)$accountId);
+                $account = $repository->find((int) $accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -135,13 +135,13 @@ class ReportFormRequest extends FormRequest
     {
         $date  = today(config('app.timezone'));
         $range = $this->get('daterange');
-        $parts = explode(' - ', (string)$range);
+        $parts = explode(' - ', (string) $range);
         if (2 === count($parts)) {
             $string = $parts[1];
             // validate as date
             // if regex for YYYY-MM-DD:
             $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
-            $result = preg_match($pattern, $string);
+            $result  = preg_match($pattern, $string);
             if (false !== $result && 0 !== $result) {
                 try {
                     $date = new Carbon($parts[1]);
@@ -173,13 +173,13 @@ class ReportFormRequest extends FormRequest
     {
         $date  = today(config('app.timezone'));
         $range = $this->get('daterange');
-        $parts = explode(' - ', (string)$range);
+        $parts = explode(' - ', (string) $range);
         if (2 === count($parts)) {
             $string = $parts[0];
             // validate as date
             // if regex for YYYY-MM-DD:
             $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
-            $result = preg_match($pattern, $string);
+            $result  = preg_match($pattern, $string);
             if (false !== $result && 0 !== $result) {
                 try {
                     $date = new Carbon($parts[0]);
@@ -227,7 +227,7 @@ class ReportFormRequest extends FormRequest
 
                 continue;
             }
-            $tag = $repository->find((int)$tagTag);
+            $tag = $repository->find((int) $tagTag);
             if (null !== $tag) {
                 $collection->push($tag);
             }

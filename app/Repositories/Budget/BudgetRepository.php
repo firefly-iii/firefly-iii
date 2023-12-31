@@ -60,7 +60,8 @@ class BudgetRepository implements BudgetRepositoryInterface
             $search->where('name', 'LIKE', sprintf('%%%s', $query));
         }
         $search->orderBy('order', 'ASC')
-               ->orderBy('name', 'ASC')->where('active', true);
+            ->orderBy('name', 'ASC')->where('active', true)
+        ;
 
         return $search->take($limit)->get();
     }
@@ -72,7 +73,8 @@ class BudgetRepository implements BudgetRepositoryInterface
             $search->where('name', 'LIKE', sprintf('%s%%', $query));
         }
         $search->orderBy('order', 'ASC')
-               ->orderBy('name', 'ASC')->where('active', true);
+            ->orderBy('name', 'ASC')->where('active', true)
+        ;
 
         return $search->take($limit)->get();
     }
@@ -151,7 +153,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $return;
     }
 
-    public function setUser(null | Authenticatable | User $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;
@@ -161,9 +163,10 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getActiveBudgets(): Collection
     {
         return $this->user->budgets()->where('active', true)
-                          ->orderBy('order', 'ASC')
-                          ->orderBy('name', 'ASC')
-                          ->get();
+            ->orderBy('order', 'ASC')
+            ->orderBy('name', 'ASC')
+            ->get()
+        ;
     }
 
     public function budgetedInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array
@@ -331,7 +334,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getBudgets(): Collection
     {
         return $this->user->budgets()->orderBy('order', 'ASC')
-                          ->orderBy('name', 'ASC')->get();
+            ->orderBy('name', 'ASC')->get()
+        ;
     }
 
     public function destroyAutoBudget(Budget $budget): void
@@ -415,8 +419,9 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getInactiveBudgets(): Collection
     {
         return $this->user->budgets()
-                          ->orderBy('order', 'ASC')
-                          ->orderBy('name', 'ASC')->where('active', 0)->get();
+            ->orderBy('order', 'ASC')
+            ->orderBy('name', 'ASC')->where('active', 0)->get()
+        ;
     }
 
     public function getNoteText(Budget $budget): ?string
@@ -436,7 +441,8 @@ class BudgetRepository implements BudgetRepositoryInterface
             $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
         }
         $search->orderBy('order', 'ASC')
-               ->orderBy('name', 'ASC')->where('active', true);
+            ->orderBy('name', 'ASC')->where('active', true)
+        ;
 
         return $search->take($limit)->get();
     }
@@ -470,10 +476,11 @@ class BudgetRepository implements BudgetRepositoryInterface
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)
-                  ->setRange($start, $end)
-                  ->excludeDestinationAccounts($selection)
-                  ->setTypes([TransactionType::WITHDRAWAL])
-                  ->setBudgets($this->getActiveBudgets());
+            ->setRange($start, $end)
+            ->excludeDestinationAccounts($selection)
+            ->setTypes([TransactionType::WITHDRAWAL])
+            ->setBudgets($this->getActiveBudgets())
+        ;
 
         $journals = $collector->getExtractedJournals();
         $array    = [];
@@ -531,10 +538,11 @@ class BudgetRepository implements BudgetRepositoryInterface
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)
-                  ->setRange($start, $end)
-                  ->excludeDestinationAccounts($selection)
-                  ->setTypes([TransactionType::WITHDRAWAL])
-                  ->setBudget($budget);
+            ->setRange($start, $end)
+            ->excludeDestinationAccounts($selection)
+            ->setTypes([TransactionType::WITHDRAWAL])
+            ->setBudget($budget)
+        ;
 
         $journals = $collector->getExtractedJournals();
         $array    = [];
@@ -705,10 +713,11 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         $types   = ['set_budget'];
         $actions = RuleAction::leftJoin('rules', 'rules.id', '=', 'rule_actions.rule_id')
-                             ->where('rules.user_id', $this->user->id)
-                             ->whereIn('rule_actions.action_type', $types)
-                             ->where('rule_actions.action_value', $oldName)
-                             ->get(['rule_actions.*']);
+            ->where('rules.user_id', $this->user->id)
+            ->whereIn('rule_actions.action_type', $types)
+            ->where('rule_actions.action_value', $oldName)
+            ->get(['rule_actions.*'])
+        ;
         app('log')->debug(sprintf('Found %d actions to update.', $actions->count()));
 
         /** @var RuleAction $action */
@@ -723,10 +732,11 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         $types    = ['budget_is'];
         $triggers = RuleTrigger::leftJoin('rules', 'rules.id', '=', 'rule_triggers.rule_id')
-                               ->where('rules.user_id', $this->user->id)
-                               ->whereIn('rule_triggers.trigger_type', $types)
-                               ->where('rule_triggers.trigger_value', $oldName)
-                               ->get(['rule_triggers.*']);
+            ->where('rules.user_id', $this->user->id)
+            ->whereIn('rule_triggers.trigger_type', $types)
+            ->where('rule_triggers.trigger_value', $oldName)
+            ->get(['rule_triggers.*'])
+        ;
         app('log')->debug(sprintf('Found %d triggers to update.', $triggers->count()));
 
         /** @var RuleTrigger $trigger */

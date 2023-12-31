@@ -62,7 +62,7 @@ class ShowController extends Controller
         return response()
             ->api($this->jsonApiObject('budgets', $budget, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE)
-            ;
+        ;
     }
 
     /**

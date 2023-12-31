@@ -161,7 +161,7 @@ class RecurrenceFormRequest extends FormRequest
             'first_date'              => 'required|date|after:'.$today->format('Y-m-d'),
             'repetition_type'         => ['required', new ValidRecurrenceRepetitionValue(), new ValidRecurrenceRepetitionType(), 'between:1,20'],
             'skip'                    => 'required|numeric|integer|gte:0|lte:31',
-
+            'notes'                   => 'between:1,65536|nullable',
             // optional for recurrence:
             'recurring_description'   => 'between:0,65000',
             'active'                  => 'numeric|between:0,1',

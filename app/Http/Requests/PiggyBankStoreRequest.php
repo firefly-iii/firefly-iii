@@ -64,7 +64,7 @@ class PiggyBankStoreRequest extends FormRequest
             'targetdate'   => 'date|nullable',
             'order'        => 'integer|min:1',
             'object_group' => 'min:0|max:255',
-            'notes' => 'between:1,65536|nullable',
+            'notes'        => 'between:1,65536|nullable',
         ];
     }
 }
