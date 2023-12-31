@@ -126,6 +126,7 @@ class StoreRequest extends FormRequest
             'transactions.*.reconciled'            => [new IsBoolean()],
             'transactions.*.notes'                 => 'min:1|max:50000|nullable',
             'transactions.*.tags'                  => 'between:0,255',
+            'transactions.*.tags.*'                  => 'between:0,255',
 
             // meta info fields
             'transactions.*.internal_reference'    => 'min:1|max:255|nullable',
