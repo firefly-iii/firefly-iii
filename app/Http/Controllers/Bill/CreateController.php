@@ -105,6 +105,8 @@ class CreateController extends Controller
 
             return redirect(route('bills.create'))->withInput();
         }
+
+        Log::channel('audit')->info('Stored new bill.', $billData);
         $request->session()->flash('success', (string)trans('firefly.stored_new_bill', ['name' => $bill->name]));
         app('preferences')->mark();
 

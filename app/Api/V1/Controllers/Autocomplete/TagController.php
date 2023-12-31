@@ -62,7 +62,6 @@ class TagController extends Controller
     public function tags(AutocompleteRequest $request): JsonResponse
     {
         $data = $request->getData();
-
         $result = $this->repository->searchTags($data['query'], $this->parameters->get('limit'));
         $array  = [];
 
