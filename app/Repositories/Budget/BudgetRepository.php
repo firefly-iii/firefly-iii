@@ -88,7 +88,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $limitRepository = app(BudgetLimitRepository::class);
         $limitRepository->setUser($this->user);
         $budgets         = $this->getActiveBudgets();
-        $defaultCurrency = Amount::getDefaultCurrencyByUser($this->user);
+        $defaultCurrency = app('amount')->getDefaultCurrency();
         $converter       = new ExchangeRateConverter();
 
         /** @var Budget $budget */

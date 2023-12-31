@@ -92,8 +92,8 @@ class StoreRequest extends FormRequest
             'transactions.*.foreign_currency_code' => 'min:3|max:51|exists:transaction_currencies,code|nullable',
 
             // amount
-            'transactions.*.amount'                => 'required|numeric|gt:0',
-            'transactions.*.foreign_amount'        => 'numeric',
+            'transactions.*.amount'                => 'required|numeric|gt:0|max:1000000000',
+            'transactions.*.foreign_amount'        => 'numeric|max:1000000000',
 
             // description
             'transactions.*.description'           => 'nullable|between:1,1000',
