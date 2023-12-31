@@ -117,7 +117,7 @@ class UpdateRequest extends FormRequest
             'transactions.*.category_name'         => 'between:1,255|nullable',
             'transactions.*.piggy_bank_id'         => ['nullable', 'numeric', 'mustExist:piggy_banks,id', new BelongsUser()],
             'transactions.*.piggy_bank_name'       => ['between:1,255', 'nullable', new BelongsUser()],
-            'transactions.*.tags'                  => 'nullable|between:1,64000',
+            'transactions.*.tags'                  => 'nullable|between:1,255',
         ];
     }
 
