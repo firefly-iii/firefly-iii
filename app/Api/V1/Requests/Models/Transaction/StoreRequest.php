@@ -93,7 +93,7 @@ class StoreRequest extends FormRequest
 
             // amount
             'transactions.*.amount'                => 'required|numeric|gt:0|max:1000000000',
-            'transactions.*.foreign_amount'        => 'numeric|max:1000000000',
+            'transactions.*.foreign_amount'        => 'numeric|max:1000000000|gt:0|',
 
             // description
             'transactions.*.description'           => 'nullable|between:1,1000',
