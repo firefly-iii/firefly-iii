@@ -39,7 +39,7 @@ return [
     'is_already_deposit'                          => 'Ta transakcija je že depozit',
     'is_already_transfer'                         => 'Ta transakcija je že prenos',
     'is_not_transfer'                             => 'Ta transakcija ni prenos',
-    'complex_error'                               => 'Nekaj ​​zapletenega je šlo narobe. Oprostite za to. Prosimo, preglejte dnevnike Firefly III',
+    'complex_error'                               => "Nekaj \u{200b}\u{200b}zapletenega je šlo narobe. Oprostite za to. Prosimo, preglejte dnevnike Firefly III",
     'no_valid_opposing'                           => 'Pretvorba ni uspela, ker ni veljavnega računa z imenom ":account"',
     'new_notes_empty'                             => 'Opombe, ki jih želite nastaviti, so prazne',
     'unsupported_transaction_type_withdrawal'     => 'Firefly III ne more pretvoriti ":type" v dvig',
