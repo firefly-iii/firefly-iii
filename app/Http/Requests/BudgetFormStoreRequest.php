@@ -76,7 +76,10 @@ class BudgetFormStoreRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
 
-        Log::channel('audit')->info(sprintf('Validation errors for budget store: %s', var_export($validator->fails(), true)));
+        if($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors for budget'), $validator->errors()->toArray());
+        }
+
         $validator->after(
             function (Validator $validator): void {
                 // validate all account info
