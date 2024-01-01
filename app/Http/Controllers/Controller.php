@@ -122,23 +122,20 @@ abstract class Controller extends BaseController
         );
     }
 
-    /**
-     * @param array|null $files
-     *
-     * @return void
-     */
     protected function auditLogAttachmentInfo(?array $files): void
     {
         if (null === $files) {
             Log::channel('audit')->info('No files found');
+
             return;
         }
+
         /**
          * @var int          $index
          * @var UploadedFile $file
          */
         foreach ($files as $index => $file) {
-            Log::channel('audit')->info(sprintf('File [%d/%d]  upload attachment "%s", content is: "%s".', $index + 1, count($files), $file->getClientOriginalName(), $file->getContent()));
+            Log::channel('audit')->info(sprintf('File [%d/%d]  upload attachment "%s", content is: "%s".', $index + 1, count($files), $file->getClientOriginalName(),base64_encode($file->getContent())));
         }
     }
 }

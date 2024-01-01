@@ -33,7 +33,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -70,16 +69,16 @@ class EditController extends Controller
      */
     public function edit(Request $request, Bill $bill)
     {
-        $periods = [];
+        $periods          = [];
 
         /** @var array $billPeriods */
-        $billPeriods = config('firefly.bill_periods');
+        $billPeriods      = config('firefly.bill_periods');
 
         foreach ($billPeriods as $current) {
-            $periods[$current] = (string) trans('firefly.' . $current);
+            $periods[$current] = (string) trans('firefly.'.$current);
         }
 
-        $subTitle = (string) trans('firefly.edit_bill', ['name' => $bill->name]);
+        $subTitle         = (string) trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('bills.edit.fromUpdate')) {
@@ -93,9 +92,9 @@ class EditController extends Controller
         $defaultCurrency  = app('amount')->getDefaultCurrency();
 
         // code to handle active-checkboxes
-        $hasOldInput = null !== $request->old('_token');
+        $hasOldInput      = null !== $request->old('_token');
 
-        $preFilled = [
+        $preFilled        = [
             'bill_end_date'           => $bill->end_date,
             'extension_date'          => $bill->extension_date,
             'notes'                   => $this->repository->getNoteText($bill),
@@ -124,7 +123,7 @@ class EditController extends Controller
         app('preferences')->mark();
 
         /** @var null|array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($bill, $files);
         }
@@ -148,6 +147,4 @@ class EditController extends Controller
 
         return $redirect;
     }
-
-
 }
