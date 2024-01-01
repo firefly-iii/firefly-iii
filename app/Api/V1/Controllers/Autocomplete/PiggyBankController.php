@@ -104,12 +104,12 @@ class PiggyBankController extends Controller
         /** @var PiggyBank $piggy */
         foreach ($piggies as $piggy) {
             $currency      = $this->accountRepository->getAccountCurrency($piggy->account) ?? $defaultCurrency;
-            $currentAmount = $this->piggyRepository->getRepetition($piggy)->currentamount ?? '0';
+            $currentAmount = $this->piggyRepository->getRepetition($piggy)->currentamount  ?? '0';
             $objectGroup   = $piggy->objectGroups()->first();
             $response[]    = [
-                'id'                      => (string) $piggy->id,
-                'name'                    => $piggy->name,
-                'name_with_balance'       => sprintf(
+                'id'                => (string) $piggy->id,
+                'name'              => $piggy->name,
+                'name_with_balance' => sprintf(
                     '%s (%s / %s)',
                     $piggy->name,
                     app('amount')->formatAnything($currency, $currentAmount, false),

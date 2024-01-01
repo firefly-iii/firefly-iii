@@ -22,12 +22,12 @@
 $current = __DIR__;
 
 $paths = [
-    $current . '/../../app',
-    $current . '/../../config',
-    $current . '/../../database',
-    $current . '/../../routes',
-    $current . '/../../tests',
-    $current . '/../../resources/lang',
+    $current . '/../../app/Api/V1/Controllers/Autocomplete',
+//    $current . '/../../config',
+//    $current . '/../../database',
+//    $current . '/../../routes',
+//    $current . '/../../tests',
+//    $current . '/../../resources/lang',
 ];
 
 $finder = PhpCsFixer\Finder::create()
@@ -57,7 +57,13 @@ return $config->setRules([
                              'statement_indentation'         => true,
                              'type_declaration_spaces'       => false,
                              'cast_spaces'                   => false,
-                             'binary_operator_spaces'        => false,
+                             'binary_operator_spaces'        => [
+                                 'default' => 'at_least_single_space',
+                                 'operators' => [
+                                     '=>' => 'align_single_space_minimal',
+                                     '='  => 'align_single_space_minimal',
+                                 ],
+                             ],
                              'void_return'                   => true,
                          ])
               ->setFinder($finder);
