@@ -75,6 +75,8 @@ class RecurrenceController extends Controller
         $repetitionType   = explode(',', $request->get('type'))[0];
         $repetitions      = (int)$request->get('reps');
         $repetitionMoment = '';
+        $skip = (int)$request->get('skip');
+        $skip = $skip < 1 || $skip > 31 ? 1 : $skip;
 
         if (false === $start || false === $end || false === $firstDate || false === $endDate) {
             return response()->json();
@@ -102,7 +104,7 @@ class RecurrenceController extends Controller
         $repetition                    = new RecurrenceRepetition();
         $repetition->repetition_type   = $repetitionType;
         $repetition->repetition_moment = $repetitionMoment;
-        $repetition->repetition_skip   = (int)$request->get('skip');
+        $repetition->repetition_skip   = $skip;
         $repetition->weekend           = (int)$request->get('weekend');
         $actualEnd                     = clone $end;
 
