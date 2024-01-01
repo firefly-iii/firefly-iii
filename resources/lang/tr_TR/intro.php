@@ -31,40 +31,41 @@
  *
  */
 
+
 declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Firefly III indeks sayfasına hoşgeldiniz. Firefly III\'nin nasıl çalıştığını öğrenmek için lütfen bu tanıtımı izleyin.',
-    'index_accounts-chart'                  => 'Bu grafik, varlık hesaplarınızın geçerli bakiyesini gösterir. Burada görünen hesapları tercihlerinizde seçebilirsiniz.',
-    'index_box_out_holder'                  => 'Bu küçük kutu ve bunun yanındaki kutular size finansal durumunuza hızlı bir bakış sunar.',
-    'index_help'                            => 'Bir sayfa veya formla ilgili yardıma ihtiyacınız varsa, bu düğmeye basın.',
-    'index_outro'                           => 'Firefly III\'ün çoğu sayfası bunun gibi küçük bir turla başlayacak. Sorularınız ve yorumlarınız olursa lütfen benimle iletişime geçin. Keyfini çıkarın!',
-    'index_sidebar-toggle'                  => 'Yeni işlemler, hesaplar veya başka şeyler oluşturmak için bu simgenin altındaki menüyü kullanın.',
-    'index_cash_account'                    => 'Bunlar şimdiye kadar oluşturulmuş hesaplardır. Nakit harcamaları takip etmek için nakit hesabını kullanabilirsiniz ancak elbette zorunlu değildir.',
+    'index_intro'                                             => 'Firefly III indeks sayfasına hoşgeldiniz. Firefly III\'nin nasıl çalıştığını öğrenmek için lütfen bu tanıtımı izleyin.',
+    'index_accounts-chart'                                    => 'Bu grafik, varlık hesaplarınızın geçerli bakiyesini gösterir. Burada görünen hesapları tercihlerinizde seçebilirsiniz.',
+    'index_box_out_holder'                                    => 'Bu küçük kutu ve bunun yanındaki kutular size finansal durumunuza hızlı bir bakış sunar.',
+    'index_help'                                              => 'Bir sayfa veya formla ilgili yardıma ihtiyacınız varsa, bu düğmeye basın.',
+    'index_outro'                                             => 'Firefly III\'ün çoğu sayfası bunun gibi küçük bir turla başlayacak. Sorularınız ve yorumlarınız olursa lütfen benimle iletişime geçin. Keyfini çıkarın!',
+    'index_sidebar-toggle'                                    => 'Yeni işlemler, hesaplar veya başka şeyler oluşturmak için bu simgenin altındaki menüyü kullanın.',
+    'index_cash_account'                                      => 'Bunlar şimdiye kadar oluşturulmuş hesaplardır. Nakit harcamaları takip etmek için nakit hesabını kullanabilirsiniz ancak elbette zorunlu değildir.',
 
     // transactions
-    'transactions_create_basic_info'        => 'İşleminizin temel bilgilerini giriniz. Gönderen, alıcı, tarih ve tanım.',
-    'transactions_create_amount_info'       => 'İşlem tutarını girin. Gerekirse alanlar diğer para birimi için otomatik olarak güncellenir.',
-    'transactions_create_optional_info'     => 'Bu alanların tümü isteğe bağlıdır. Buraya meta veri eklemek, işlemlerinizi daha iyi organize edecektir.',
-    'transactions_create_split'             => 'Bir işlemi bölmek istiyorsanız, bu buton ile daha fazla bölüm ekleyin',
+    'transactions_create_basic_info'                          => 'İşleminizin temel bilgilerini giriniz. Gönderen, alıcı, tarih ve tanım.',
+    'transactions_create_amount_info'                         => 'İşlem tutarını girin. Gerekirse alanlar diğer para birimi için otomatik olarak güncellenir.',
+    'transactions_create_optional_info'                       => 'Bu alanların tümü isteğe bağlıdır. Buraya meta veri eklemek, işlemlerinizi daha iyi organize edecektir.',
+    'transactions_create_split'                               => 'Bir işlemi bölmek istiyorsanız, bu buton ile daha fazla bölüm ekleyin',
 
     // create account:
-    'accounts_create_iban'                  => 'Hesaplarınıza geçerli IBAN girin. Bu, ileride veri aktarma işlemini kolaylaştırabilir.',
-    'accounts_create_asset_opening_balance' => 'Aktif hesapların, Firefly\'da bu hesap geçmişinin başlangıcını gösteren bir "açılış bakiyesi" olabilir.',
-    'accounts_create_asset_currency'        => 'Firefly III, birden fazla para birimini destekliyor. Varlık hesaplarının bir ana para birimi var, burada ayarlamanız gerekir.',
-    'accounts_create_asset_virtual'         => 'Bazen hesabınıza sanal bir bakiye sağlamanıza yardımcı olabilir: ek bir miktar her zaman gerçek bakiyeye eklenir veya gerçek bakiyeden çıkarılır.',
+    'accounts_create_iban'                                    => 'Hesaplarınıza geçerli IBAN girin. Bu, ileride veri aktarma işlemini kolaylaştırabilir.',
+    'accounts_create_asset_opening_balance'                   => 'Aktif hesapların, Firefly\'da bu hesap geçmişinin başlangıcını gösteren bir "açılış bakiyesi" olabilir.',
+    'accounts_create_asset_currency'                          => 'Firefly III, birden fazla para birimini destekliyor. Varlık hesaplarının bir ana para birimi var, burada ayarlamanız gerekir.',
+    'accounts_create_asset_virtual'                           => 'Bazen hesabınıza sanal bir bakiye sağlamanıza yardımcı olabilir: ek bir miktar her zaman gerçek bakiyeye eklenir veya gerçek bakiyeden çıkarılır.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Bütçeler, finansmanınızı yönetmek ve Firefly III\'nin temel işlevlerinden birini oluşturmak için kullanılır.',
-    'budgets_index_set_budget'              => 'Toplam bütçenizi her dönem için belirleyin, böylelikle Firefly size mevcut tüm parayı bütçelendirdiğinizde söyleyebilir.',
-    'budgets_index_see_expenses_bar'        => 'Para harcamak yavaşça bu çubuğu dolduracaktır.',
-    'budgets_index_navigate_periods'        => 'Bütçeleri önceden kolayca ayarlamak için dönemleri gezinin.',
-    'budgets_index_new_budget'              => 'Uygun gördüğünüz yeni bütçeler oluşturun.',
-    'budgets_index_list_of_budgets'         => 'Her bütçe için tutarları ayarlamak ve ne durumda olduğunuzu görmek için bu tabloyu kullanın.',
-    'budgets_index_outro'                   => 'Bütçeleme hakkında daha fazla bilgi almak için sağ üst köşedeki yardım simgesini kontrol edin.',
+    'budgets_index_intro'                                     => 'Bütçeler, finansmanınızı yönetmek ve Firefly III\'nin temel işlevlerinden birini oluşturmak için kullanılır.',
+    'budgets_index_set_budget'                                => 'Toplam bütçenizi her dönem için belirleyin, böylelikle Firefly size mevcut tüm parayı bütçelendirdiğinizde söyleyebilir.',
+    'budgets_index_see_expenses_bar'                          => 'Para harcamak yavaşça bu çubuğu dolduracaktır.',
+    'budgets_index_navigate_periods'                          => 'Bütçeleri önceden kolayca ayarlamak için dönemleri gezinin.',
+    'budgets_index_new_budget'                                => 'Uygun gördüğünüz yeni bütçeler oluşturun.',
+    'budgets_index_list_of_budgets'                           => 'Her bütçe için tutarları ayarlamak ve ne durumda olduğunuzu görmek için bu tabloyu kullanın.',
+    'budgets_index_outro'                                     => 'Bütçeleme hakkında daha fazla bilgi almak için sağ üst köşedeki yardım simgesini kontrol edin.',
 
-    /*
+/*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
  * YOUR CHANGES WILL BE OVERWRITTEN!
  * YOUR PR WITH CHANGES TO THIS FILE WILL BE REJECTED!
@@ -75,25 +76,26 @@ return [
  *
  */
 
+
     // reports (index)
-    'reports_index_intro'                   => 'Maliyetlerinizde ayrıntılı bilgi edinmek için bu raporları kullanın.',
-    'reports_index_inputReportType'         => 'Bir rapor türü seçin. Her bir raporun neyi gösterdiğini görmek için yardım sayfalarına göz atın.',
-    'reports_index_inputAccountsSelect'     => 'Varlık hesaplarını uygun gördüğünüz gibi hariç tutabilir veya ekleyebilirsiniz.',
-    'reports_index_inputDateRange'          => 'Seçilen tarih aralığı tamamen size kalmış: 1 günden 10 yıla kadar.',
-    'reports_index_extra-options-box'       => 'Seçtiğiniz rapora bağlı olarak, burada ekstra filtre ve seçenekleri belirleyebilirsiniz. Rapor türlerini değiştirirken bu kutuya dikkat edin.',
+    'reports_index_intro'                                     => 'Maliyetlerinizde ayrıntılı bilgi edinmek için bu raporları kullanın.',
+    'reports_index_inputReportType'                           => 'Bir rapor türü seçin. Her bir raporun neyi gösterdiğini görmek için yardım sayfalarına göz atın.',
+    'reports_index_inputAccountsSelect'                       => 'Varlık hesaplarını uygun gördüğünüz gibi hariç tutabilir veya ekleyebilirsiniz.',
+    'reports_index_inputDateRange'                            => 'Seçilen tarih aralığı tamamen size kalmış: 1 günden 10 yıla kadar.',
+    'reports_index_extra-options-box'                         => 'Seçtiğiniz rapora bağlı olarak, burada ekstra filtre ve seçenekleri belirleyebilirsiniz. Rapor türlerini değiştirirken bu kutuya dikkat edin.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'Bu rapor size mali durumunuz hakkında hızlı ve kapsamlı bir bilgi verecektir. Başka bir şey görmek isterseniz, lütfen benimle iletişime geçmekten çekinmeyin!',
-    'reports_report_audit_intro'            => 'Bu rapor size aktif hesaplarınızla ilgili ayrıntılı bilgiler verecektir.',
-    'reports_report_audit_optionsBox'       => 'İlgilendiğiniz sütunları göstermek veya gizlemek için bu onay kutularını kullanın.',
+    'reports_report_default_intro'                            => 'Bu rapor size mali durumunuz hakkında hızlı ve kapsamlı bir bilgi verecektir. Başka bir şey görmek isterseniz, lütfen benimle iletişime geçmekten çekinmeyin!',
+    'reports_report_audit_intro'                              => 'Bu rapor size aktif hesaplarınızla ilgili ayrıntılı bilgiler verecektir.',
+    'reports_report_audit_optionsBox'                         => 'İlgilendiğiniz sütunları göstermek veya gizlemek için bu onay kutularını kullanın.',
 
-    'reports_report_category_intro'                  => 'Bu rapor size bir veya birden fazla kategoride fikir verecektir.',
-    'reports_report_category_pieCharts'              => 'Bu grafikler, size her bir kategori veya hesaptaki gelir ve giderler konusunda fikir verecektir.',
-    'reports_report_category_incomeAndExpensesChart' => 'Bu grafik her bir kategori için gelir ve giderlerinizi gösterir.',
+    'reports_report_category_intro'                           => 'Bu rapor size bir veya birden fazla kategoride fikir verecektir.',
+    'reports_report_category_pieCharts'                       => 'Bu grafikler, size her bir kategori veya hesaptaki gelir ve giderler konusunda fikir verecektir.',
+    'reports_report_category_incomeAndExpensesChart'          => 'Bu grafik her bir kategori için gelir ve giderlerinizi gösterir.',
 
-    'reports_report_tag_intro'                  => 'Bu rapor size bir veya birden fazla etikette fikir verecektir.',
-    'reports_report_tag_pieCharts'              => 'Bu grafikler, her bir etiket, hesap, kategori veya bütçe için gelir ve giderler konusunda size fikir verecektir.',
-    'reports_report_tag_incomeAndExpensesChart' => 'Bu grafik her bir etiket için gelir ve giderlerinizi gösterir.',
+    'reports_report_tag_intro'                                => 'Bu rapor size bir veya birden fazla etikette fikir verecektir.',
+    'reports_report_tag_pieCharts'                            => 'Bu grafikler, her bir etiket, hesap, kategori veya bütçe için gelir ve giderler konusunda size fikir verecektir.',
+    'reports_report_tag_incomeAndExpensesChart'               => 'Bu grafik her bir etiket için gelir ve giderlerinizi gösterir.',
 
     'reports_report_budget_intro'                             => 'Bu rapor size bir veya birden fazla bütçede fikir verecektir.',
     'reports_report_budget_pieCharts'                         => 'Bu grafikler her bir bütçe veya hesaptaki giderler konusunda size fikir verecektir.',
@@ -112,7 +114,7 @@ return [
     'piggy-banks_index_button'                                => 'Her bir kumbaraya para eklemek veya çıkarmak için bu ilerleme çubuğunun yanında iki düğme (+ ve -) bulunur.',
     'piggy-banks_index_accountStatus'                         => 'En az bir kumbarası olan her bir aktif hesap için durum bu tabloda listelenir.',
 
-    /*
+/*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
  * YOUR CHANGES WILL BE OVERWRITTEN!
  * YOUR PR WITH CHANGES TO THIS FILE WILL BE REJECTED!
@@ -122,6 +124,7 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+
 
     // create piggy
     'piggy-banks_create_name'                                 => 'Hedefin nedir? Yeni bir kanepe, bir kamera ya da acil durumlar için para mı?',
@@ -165,7 +168,7 @@ return [
     'rules_create_test_rule_triggers'                         => 'Hangi işlemlerin kurallarınıza uyacağını görmek için bu tuşu kullanın.',
     'rules_create_actions'                                    => 'İstediğiniz kadar eylem belirleyin.',
 
-    /*
+/*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
  * YOUR CHANGES WILL BE OVERWRITTEN!
  * YOUR PR WITH CHANGES TO THIS FILE WILL BE REJECTED!
@@ -175,6 +178,7 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+
 
     // preferences
     'preferences_index_tabs'                                  => 'Bu sekmelerin arkasında daha fazla seçenek bulunmaktadır.',
@@ -197,3 +201,4 @@ return [
  * https://crowdin.com/project/firefly-iii
  *
  */
+

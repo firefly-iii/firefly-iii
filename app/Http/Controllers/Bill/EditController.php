@@ -33,6 +33,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -52,7 +53,7 @@ class EditController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.bills'));
+                app('view')->share('title', (string) trans('firefly.bills'));
                 app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->repository  = app(BillRepositoryInterface::class);
@@ -69,16 +70,16 @@ class EditController extends Controller
      */
     public function edit(Request $request, Bill $bill)
     {
-        $periods          = [];
+        $periods = [];
 
         /** @var array $billPeriods */
-        $billPeriods      = config('firefly.bill_periods');
+        $billPeriods = config('firefly.bill_periods');
 
         foreach ($billPeriods as $current) {
-            $periods[$current] = (string)trans('firefly.'.$current);
+            $periods[$current] = (string) trans('firefly.' . $current);
         }
 
-        $subTitle         = (string)trans('firefly.edit_bill', ['name' => $bill->name]);
+        $subTitle = (string) trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('bills.edit.fromUpdate')) {
@@ -92,14 +93,14 @@ class EditController extends Controller
         $defaultCurrency  = app('amount')->getDefaultCurrency();
 
         // code to handle active-checkboxes
-        $hasOldInput      = null !== $request->old('_token');
+        $hasOldInput = null !== $request->old('_token');
 
-        $preFilled        = [
+        $preFilled = [
             'bill_end_date'           => $bill->end_date,
             'extension_date'          => $bill->extension_date,
             'notes'                   => $this->repository->getNoteText($bill),
             'transaction_currency_id' => $bill->transaction_currency_id,
-            'active'                  => $hasOldInput ? (bool)$request->old('active') : $bill->active,
+            'active'                  => $hasOldInput ? (bool) $request->old('active') : $bill->active,
             'object_group'            => null !== $bill->objectGroups->first() ? $bill->objectGroups->first()->title : '',
         ];
 
@@ -119,17 +120,18 @@ class EditController extends Controller
 
         Log::channel('audit')->info(sprintf('Updated bill #%d.', $bill->id), $billData);
 
-        $request->session()->flash('success', (string)trans('firefly.updated_bill', ['name' => $bill->name]));
+        $request->session()->flash('success', (string) trans('firefly.updated_bill', ['name' => $bill->name]));
         app('preferences')->mark();
 
         /** @var null|array $files */
-        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($bill, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
             Log::channel('audit')->info(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
-            session()->flash('info', (string)trans('firefly.no_att_demo_user'));
+            $this->auditLogAttachments($files);
+            session()->flash('info', (string) trans('firefly.no_att_demo_user'));
         }
 
         // flash messages
@@ -138,12 +140,32 @@ class EditController extends Controller
         }
         $redirect = redirect($this->getPreviousUrl('bills.edit.url'));
 
-        if (1 === (int)$request->get('return_to_edit')) {
+        if (1 === (int) $request->get('return_to_edit')) {
             $request->session()->put('bills.edit.fromUpdate', true);
 
             $redirect = redirect(route('bills.edit', [$bill->id]))->withInput(['return_to_edit' => 1]);
         }
 
         return $redirect;
+    }
+
+    /**
+     * @param array|null $files
+     *
+     * @return void
+     */
+    private function auditLogAttachments(?array $files): void
+    {
+        if (null === $files) {
+            Log::channel('audit')->info('No files found');
+            return;
+        }
+        /**
+         * @var int          $index
+         * @var UploadedFile $file
+         */
+        foreach ($files as $index => $file) {
+            Log::channel('audit')->info(sprintf('File [%d/%d]  upload attachment "%s", content is: "%s".', $index + 1, count($files), $file->getClientOriginalName(), $file->getContent()));
+        }
     }
 }

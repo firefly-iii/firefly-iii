@@ -31,6 +31,7 @@
  *
  */
 
+
 declare(strict_types=1);
 
 return [
@@ -59,3 +60,4 @@ Računi obveznosti so vaši dolgovi in krediti, kot na primer dolg na kreditni k
  * https://crowdin.com/project/firefly-iii
  *
  */
+
