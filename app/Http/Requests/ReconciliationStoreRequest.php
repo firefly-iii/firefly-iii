@@ -67,9 +67,9 @@ class ReconciliationStoreRequest extends FormRequest
         return [
             'start'        => 'required|date',
             'end'          => 'required|date',
-            'startBalance' => 'numeric|max:1000000000',
-            'endBalance'   => 'numeric|max:1000000000',
-            'difference'   => 'required|numeric|max:1000000000',
+            'startBalance' => 'numeric|max:1000000000|min:-1000000000',
+            'endBalance'   => 'numeric|max:1000000000|min:-1000000000',
+            'difference'   => 'required|numeric|max:1000000000|min:-1000000000',
             'journals'     => [new ValidJournals()],
             'reconcile'    => 'required|in:create,nothing',
         ];

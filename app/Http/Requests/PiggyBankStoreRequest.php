@@ -59,7 +59,7 @@ class PiggyBankStoreRequest extends FormRequest
         return [
             'name'         => 'required|between:1,255|uniquePiggyBankForUser',
             'account_id'   => 'required|belongsToUser:accounts',
-            'targetamount' => 'nullable|numeric|max:1000000000',
+            'targetamount' => 'nullable|numeric|max:1000000000|min:-1000000000',
             'startdate'    => 'date',
             'targetdate'   => 'date|nullable',
             'order'        => 'integer|min:1',

@@ -63,7 +63,7 @@ class PiggyBankUpdateRequest extends FormRequest
         return [
             'name'         => sprintf('required|between:1,255|uniquePiggyBankForUser:%d', $piggy->id),
             'account_id'   => 'required|belongsToUser:accounts',
-            'targetamount' => 'nullable|numeric|max:1000000000',
+            'targetamount' => 'nullable|numeric|max:1000000000|min:-1000000000',
             'startdate'    => 'date',
             'targetdate'   => 'date|nullable',
             'order'        => 'integer|max:65536|min:1',
