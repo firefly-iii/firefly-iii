@@ -347,7 +347,7 @@ trait PeriodOverview
         $cache->addProperty('tag-period-entries');
         $cache->addProperty($tag->id);
         if ($cache->has()) {
-            return $cache->get();
+            // return $cache->get();
         }
 
         /** @var array $dates */
@@ -377,6 +377,11 @@ trait PeriodOverview
         $collector->setRange($start, $end);
         $collector->setTypes([TransactionType::TRANSFER]);
         $transferSet = $collector->getExtractedJournals();
+
+        // filer all of them:
+        $earnedSet   = $this->filterJournalsByTag($earnedSet, $tag);
+        $spentSet    = $this->filterJournalsByTag($spentSet, $tag);
+        $transferSet = $this->filterJournalsByTag($transferSet, $tag);
 
         foreach ($dates as $currentDate) {
             $spent       = $this->filterJournalsByDate($spentSet, $currentDate['start'], $currentDate['end']);
@@ -485,7 +490,7 @@ trait PeriodOverview
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            if ($account->id === (int)$journal['source_account_id']) {
+            if ($account->id === (int) $journal['source_account_id']) {
                 $return[] = $journal;
             }
         }
@@ -502,7 +507,7 @@ trait PeriodOverview
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            if ($account->id === (int)$journal['destination_account_id']) {
+            if ($account->id === (int) $journal['destination_account_id']) {
                 $return[] = $journal;
             }
         }
@@ -516,7 +521,7 @@ trait PeriodOverview
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId        = (int)$journal['currency_id'];
+            $currencyId        = (int) $journal['currency_id'];
             $foreignCurrencyId = $journal['foreign_currency_id'];
             if (!array_key_exists($currencyId, $return)) {
                 $return[$currencyId] = [
@@ -537,7 +542,7 @@ trait PeriodOverview
                     $return[$foreignCurrencyId] = [
                         'amount'                  => '0',
                         'count'                   => 0,
-                        'currency_id'             => (int)$foreignCurrencyId,
+                        'currency_id'             => (int) $foreignCurrencyId,
                         'currency_name'           => $journal['foreign_currency_name'],
                         'currency_code'           => $journal['foreign_currency_code'],
                         'currency_symbol'         => $journal['foreign_currency_symbol'],
@@ -547,6 +552,27 @@ trait PeriodOverview
                 ++$return[$foreignCurrencyId]['count'];
                 $return[$foreignCurrencyId]['amount'] = bcadd($return[$foreignCurrencyId]['amount'], $journal['foreign_amount']);
             }
+        }
+
+        return $return;
+    }
+
+    private function filterJournalsByTag(array $set, Tag $tag): array
+    {
+        $return = [];
+        foreach ($set as $entry) {
+            $found = false;
+
+            /** @var array $localTag */
+            foreach ($entry['tags'] as $localTag) {
+                if ($localTag['id'] === $tag->id) {
+                    $found = true;
+                }
+            }
+            if (false === $found) {
+                continue;
+            }
+            $return[] = $entry;
         }
 
         return $return;

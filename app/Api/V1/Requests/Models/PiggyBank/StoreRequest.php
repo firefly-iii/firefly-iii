@@ -64,11 +64,11 @@ class StoreRequest extends FormRequest
     {
         return [
             'name'               => 'required|between:1,255|uniquePiggyBankForUser',
-            'current_amount'     => ['numeric', 'gte:0', 'lte:target_amount','max:1000000000'],
+            'current_amount'     => ['numeric', 'gte:0', 'lte:target_amount', 'max:1000000000'],
             'account_id'         => 'required|numeric|belongsToUser:accounts,id',
             'object_group_id'    => 'numeric|belongsToUser:object_groups,id',
             'object_group_title' => 'between:1,255',
-            'target_amount'      => ['numeric', 'gte:0', 'lte:target_amount', 'required','max:1000000000'],
+            'target_amount'      => ['numeric', 'gte:0', 'lte:target_amount', 'required', 'max:1000000000'],
             'start_date'         => 'date|nullable',
             'target_date'        => 'date|nullable|after:start_date',
             'notes'              => 'max:65000',

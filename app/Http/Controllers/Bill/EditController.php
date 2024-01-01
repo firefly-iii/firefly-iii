@@ -117,6 +117,8 @@ class EditController extends Controller
         $billData = $request->getBillData();
         $bill     = $this->repository->update($bill, $billData);
 
+        Log::channel('audit')->info(sprintf('Updated bill #%d.', $bill->id), $billData);
+
         $request->session()->flash('success', (string)trans('firefly.updated_bill', ['name' => $bill->name]));
         app('preferences')->mark();
 
