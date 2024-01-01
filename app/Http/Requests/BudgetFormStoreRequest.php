@@ -27,6 +27,7 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AutoBudget\ValidatesAutoBudgetRequest;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
@@ -74,6 +75,8 @@ class BudgetFormStoreRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
+
+        Log::channel('audit')->info(sprintf('Validation errors for budget store: %s', var_export($validator->fails(), true)));
         $validator->after(
             function (Validator $validator): void {
                 // validate all account info
