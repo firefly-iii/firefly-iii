@@ -48,17 +48,20 @@ class MigrateRecurrenceType extends Command
      */
     public function handle(): int
     {
-        return 0;
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->friendlyInfo('This command has already been executed.');
 
             return 0;
         }
-
-        $this->migrateTypes();
-        $this->markAsExecuted();
+        $this->friendlyWarning('This command has been disabled.');
 
         return 0;
+
+
+//        $this->migrateTypes();
+//        $this->markAsExecuted();
+//
+//        return 0;
     }
 
     private function isExecuted(): bool
