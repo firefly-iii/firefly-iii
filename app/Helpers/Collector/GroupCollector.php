@@ -43,6 +43,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class GroupCollector
@@ -560,6 +561,7 @@ class GroupCollector implements GroupCollectorInterface
         if (0 !== count($journalIds)) {
             // make all integers.
             $integerIDs = array_map('intval', $journalIds);
+            Log::debug(sprintf('GroupCollector: setJournalIds: %s', join(', ', $integerIDs)));
 
             $this->query->whereIn('transaction_journals.id', $integerIDs);
         }
@@ -948,7 +950,14 @@ class GroupCollector implements GroupCollectorInterface
                     // skip other filters, continue to next item.
                     continue;
                 }
-                $nextCollection->push($item);
+                // if the result is a bool, use the unedited results.
+                if(true === $result) {
+                    $nextCollection->push($item);
+                }
+                // if the result is an array, the filter has changed what's being returned.
+                if(is_array($result)) {
+                    $nextCollection->push($result);
+                }
             }
             $currentCollection = $nextCollection;
             app('log')->debug(sprintf('GroupCollector: postFilterCollection has %d transaction(s) left.', count($currentCollection)));

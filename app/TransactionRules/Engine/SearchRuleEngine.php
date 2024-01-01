@@ -183,7 +183,7 @@ class SearchRuleEngine implements RuleEngineInterface
                 continue;
             }
 
-            // if needs no context, value is different:
+            // if the trigger needs no context, value is different:
             $needsContext = (bool) (config(sprintf('search.operators.%s.needs_context', $ruleTrigger->trigger_type)) ?? true);
             if (false === $needsContext) {
                 app('log')->debug(sprintf('SearchRuleEngine:: add a rule trigger (no context): %s:true', $ruleTrigger->trigger_type));
@@ -211,7 +211,7 @@ class SearchRuleEngine implements RuleEngineInterface
         $searchEngine->setPage(1);
         $searchEngine->setLimit(31337);
         $searchEngine->setDate($date);
-
+        app('log')->debug('Search array', $searchArray);
         foreach ($searchArray as $type => $searches) {
             foreach ($searches as $value) {
                 $query = sprintf('%s:%s', $type, $value);

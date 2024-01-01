@@ -681,13 +681,16 @@ trait MetaCollection
         // this method adds a "postFilter" to the collector.
         $list                = $tags->pluck('tag')->toArray();
         $list                = array_map('strtolower', $list);
-        $filter              = static function (array $object) use ($list): bool {
+        $filter              = static function (array $object) use ($list): bool | array {
+            $return = $object;
+            unset($return['transactions']);
+            $return['transactions'] = [];
             Log::debug(sprintf('Now in setAllTags(%s) filter', implode(', ', $list)));
             $expectedTagCount = count($list);
             $foundTagCount    = 0;
             foreach ($object['transactions'] as $transaction) {
                 $transactionTagCount = count($transaction['tags']);
-                app('log')->debug(sprintf('Transaction has %d tag(s)', $transactionTagCount));
+                app('log')->debug(sprintf('Transaction #%d has %d tag(s)', $transaction['transaction_journal_id'], $transactionTagCount));
                 if ($transactionTagCount < $expectedTagCount) {
                     app('log')->debug(sprintf('Transaction has %d tag(s), we expect %d tag(s), return false.', $transactionTagCount, $expectedTagCount));
 
@@ -698,13 +701,18 @@ trait MetaCollection
                     if (in_array(strtolower($tag['name']), $list, true)) {
                         app('log')->debug(sprintf('Transaction has tag "%s" so count++.', $tag['name']));
                         ++$foundTagCount;
+                        $return['transactions'][] = $transaction;
                     }
                 }
             }
             Log::debug(sprintf('Found %d tags, need at least %d.', $foundTagCount, $expectedTagCount));
 
             // found at least the expected tags.
-            return $foundTagCount >= $expectedTagCount;
+            $result = $foundTagCount >= $expectedTagCount;
+            if (true === $result) {
+                return $return;
+            }
+            return false;
         };
         $this->postFilters[] = $filter;
 

@@ -156,8 +156,6 @@ class OperatorQuerySearch implements SearchInterface
         foreach ($query1->getNodes() as $searchNode) {
             $this->handleSearchNode($searchNode);
         }
-        $this->parseTagInstructions();
-
         $this->collector->setSearchWords($this->words);
         $this->collector->excludeSearchWords($this->prohibitedWords);
     }
@@ -199,6 +197,7 @@ class OperatorQuerySearch implements SearchInterface
 
     public function searchTransactions(): LengthAwarePaginator
     {
+        $this->parseTagInstructions();
         if (0 === count($this->getWords()) && 0 === count($this->getOperators())) {
             return new LengthAwarePaginator([], 0, 5, 1);
         }
