@@ -126,6 +126,8 @@ class EditController extends Controller
         $this->repository->cleanupBudgets();
         app('preferences')->mark();
 
+        Log::channel('audit')->info(sprintf('Updated budget #%d.', $budget->id), $data);
+
         $redirect = redirect($this->getPreviousUrl('budgets.edit.url'));
 
         // store new attachment(s):

@@ -118,6 +118,8 @@ class CreateController extends Controller
         $request->session()->flash('success', (string)trans('firefly.stored_new_budget', ['name' => $budget->name]));
         app('preferences')->mark();
 
+        Log::channel('audit')->info('Stored new budget.', $data);
+
         // store attachment(s):
         /** @var null|array $files */
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
