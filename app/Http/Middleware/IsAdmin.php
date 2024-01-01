@@ -51,7 +51,7 @@ class IsAdmin
         }
 
         /** @var User $user */
-        $user = auth()->user();
+        $user       = auth()->user();
 
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);

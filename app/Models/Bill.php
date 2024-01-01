@@ -113,7 +113,7 @@ class Bill extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
+                      = [
             'created_at'      => 'datetime',
             'updated_at'      => 'datetime',
             'deleted_at'      => 'datetime',
@@ -128,7 +128,7 @@ class Bill extends Model
         ];
 
     protected $fillable
-        = [
+                      = [
             'name',
             'match',
             'amount_min',
@@ -158,10 +158,10 @@ class Bill extends Model
             $billId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user   = auth()->user();
 
             /** @var null|Bill $bill */
-            $bill = $user->bills()->find($billId);
+            $bill   = $user->bills()->find($billId);
             if (null !== $bill) {
                 return $bill;
             }

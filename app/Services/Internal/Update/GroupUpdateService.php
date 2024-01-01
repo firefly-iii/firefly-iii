@@ -88,8 +88,8 @@ class GroupUpdateService
 
         app('log')->debug('Going to update split group.');
 
-        $existing = $transactionGroup->transactionJournals->pluck('id')->toArray();
-        $updated  = $this->updateTransactions($transactionGroup, $transactions);
+        $existing     = $transactionGroup->transactionJournals->pluck('id')->toArray();
+        $updated      = $this->updateTransactions($transactionGroup, $transactions);
         app('log')->debug('Array of updated IDs: ', $updated);
 
         if (0 === count($updated)) {
@@ -101,7 +101,7 @@ class GroupUpdateService
             return $transactionGroup;
         }
 
-        $result = array_diff($existing, $updated);
+        $result       = array_diff($existing, $updated);
         app('log')->debug('Result of DIFF: ', $result);
         if (count($result) > 0) {
             /** @var string $deletedId */
@@ -165,7 +165,7 @@ class GroupUpdateService
             $journalId = (int)($transaction['transaction_journal_id'] ?? 0);
 
             /** @var null|TransactionJournal $journal */
-            $journal = $transactionGroup->transactionJournals()->find($journalId);
+            $journal   = $transactionGroup->transactionJournals()->find($journalId);
             if (null === $journal) {
                 app('log')->debug('This entry has no existing journal: make a new split.');
                 // force the transaction type on the transaction data.
@@ -216,7 +216,7 @@ class GroupUpdateService
         ];
 
         /** @var TransactionJournalFactory $factory */
-        $factory = app(TransactionJournalFactory::class);
+        $factory    = app(TransactionJournalFactory::class);
         $factory->setUser($transactionGroup->user);
 
         try {

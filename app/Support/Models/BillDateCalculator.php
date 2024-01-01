@@ -48,7 +48,7 @@ class BillDateCalculator
 
         // 2023-06-23 subDay to fix 7655
         $currentStart->subDay();
-        $loop = 0;
+        $loop         = 0;
         Log::debug('Start of loop');
         while ($currentStart <= $latest) {
             Log::debug(sprintf('Current start is %s', $currentStart->format('Y-m-d')));
@@ -82,7 +82,7 @@ class BillDateCalculator
             // 2023-10
             // for the next loop, go to end of period, THEN add day.
             $nextExpectedMatch->addDay();
-            $currentStart = clone $nextExpectedMatch;
+            $currentStart      = clone $nextExpectedMatch;
 
             ++$loop;
             if ($loop > 12) {
@@ -92,7 +92,7 @@ class BillDateCalculator
             }
         }
         Log::debug('end of loop');
-        $simple = $set->map(
+        $simple       = $set->map(
             static function (Carbon $date) {
                 return $date->format('Y-m-d');
             }

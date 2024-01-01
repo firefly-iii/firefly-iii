@@ -69,10 +69,10 @@ class CreateController extends Controller
      */
     public function create(Request $request)
     {
-        $periods = [];
+        $periods         = [];
 
         /** @var array $billPeriods */
-        $billPeriods = config('firefly.bill_periods');
+        $billPeriods     = config('firefly.bill_periods');
         foreach ($billPeriods as $current) {
             $periods[$current] = (string)trans('firefly.repeat_freq_'.$current);
         }
@@ -93,7 +93,7 @@ class CreateController extends Controller
      */
     public function store(BillStoreRequest $request): RedirectResponse
     {
-        $billData = $request->getBillData();
+        $billData           = $request->getBillData();
 
         $billData['active'] = true;
 
@@ -111,7 +111,7 @@ class CreateController extends Controller
         app('preferences')->mark();
 
         /** @var null|array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files              = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($bill, $files);
         }

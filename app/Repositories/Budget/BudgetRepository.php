@@ -82,7 +82,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function budgetedInPeriod(Carbon $start, Carbon $end): array
     {
         app('log')->debug(sprintf('Now in budgetedInPeriod("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d')));
-        $return = [];
+        $return          = [];
 
         /** @var BudgetLimitRepository $limitRepository */
         $limitRepository = app(BudgetLimitRepository::class);
@@ -99,9 +99,9 @@ class BudgetRepository implements BudgetRepositoryInterface
             /** @var BudgetLimit $limit */
             foreach ($limits as $limit) {
                 app('log')->debug(sprintf('Budget limit #%d', $limit->id));
-                $currency              = $limit->transactionCurrency;
-                $rate                  = $converter->getCurrencyRate($currency, $defaultCurrency, $end);
-                $currencyCode          = $currency->code;
+                $currency                            = $limit->transactionCurrency;
+                $rate                                = $converter->getCurrencyRate($currency, $defaultCurrency, $end);
+                $currencyCode                        = $currency->code;
                 $return[$currencyCode] ??= [
                     'currency_id'                    => (string) $currency->id,
                     'currency_name'                  => $currency->name,
@@ -172,19 +172,19 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function budgetedInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array
     {
         app('log')->debug(sprintf('Now in budgetedInPeriod(#%d, "%s", "%s")', $budget->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
-        $return = [];
+        $return          = [];
 
         /** @var BudgetLimitRepository $limitRepository */
         $limitRepository = app(BudgetLimitRepository::class);
         $limitRepository->setUser($this->user);
 
         app('log')->debug(sprintf('Budget #%d: "%s"', $budget->id, $budget->name));
-        $limits = $limitRepository->getBudgetLimits($budget, $start, $end);
+        $limits          = $limitRepository->getBudgetLimits($budget, $start, $end);
 
         /** @var BudgetLimit $limit */
         foreach ($limits as $limit) {
             app('log')->debug(sprintf('Budget limit #%d', $limit->id));
-            $currency              = $limit->transactionCurrency;
+            $currency                     = $limit->transactionCurrency;
             $return[$currency->id] ??= [
                 'id'             => (string) $currency->id,
                 'name'           => $currency->name,
@@ -253,7 +253,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         app('log')->debug('Now in update()');
 
-        $oldName = $budget->name;
+        $oldName        = $budget->name;
         if (array_key_exists('name', $data)) {
             $budget->name = $data['name'];
             $this->updateRuleActions($oldName, $budget->name);
@@ -268,7 +268,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $budget->save();
 
         // update or create auto-budget:
-        $autoBudget = $this->getAutoBudget($budget);
+        $autoBudget     = $this->getAutoBudget($budget);
 
         // first things first: delete when no longer required:
         $autoBudgetType = array_key_exists('auto_budget_type', $data) ? $data['auto_budget_type'] : null;
@@ -392,7 +392,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     public function getAttachments(Budget $budget): Collection
     {
-        $set = $budget->attachments()->get();
+        $set  = $budget->attachments()->get();
 
         /** @var \Storage $disk */
         $disk = \Storage::disk('upload');
@@ -462,8 +462,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         // exclude specific liabilities
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
-        $subset    = $repository->getAccountsByType(config('firefly.valid_liabilities'));
-        $selection = new Collection();
+        $subset     = $repository->getAccountsByType(config('firefly.valid_liabilities'));
+        $selection  = new Collection();
 
         /** @var Account $account */
         foreach ($subset as $account) {
@@ -474,7 +474,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         // start collecting:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)
             ->setRange($start, $end)
             ->excludeDestinationAccounts($selection)
@@ -482,12 +482,12 @@ class BudgetRepository implements BudgetRepositoryInterface
             ->setBudgets($this->getActiveBudgets())
         ;
 
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals   = $collector->getExtractedJournals();
+        $array      = [];
 
         foreach ($journals as $journal) {
             $currencyId                = (int) $journal['currency_id'];
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'id'             => (string) $currencyId,
                 'name'           => $journal['currency_name'],
                 'symbol'         => $journal['currency_symbol'],
@@ -498,9 +498,9 @@ class BudgetRepository implements BudgetRepositoryInterface
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
 
             // also do foreign amount:
-            $foreignId = (int) $journal['foreign_currency_id'];
+            $foreignId                 = (int) $journal['foreign_currency_id'];
             if (0 !== $foreignId) {
-                $array[$foreignId]        ??= [
+                $array[$foreignId] ??= [
                     'id'             => (string) $foreignId,
                     'name'           => $journal['foreign_currency_name'],
                     'symbol'         => $journal['foreign_currency_symbol'],
@@ -524,8 +524,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         // exclude specific liabilities
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
-        $subset    = $repository->getAccountsByType(config('firefly.valid_liabilities'));
-        $selection = new Collection();
+        $subset     = $repository->getAccountsByType(config('firefly.valid_liabilities'));
+        $selection  = new Collection();
 
         /** @var Account $account */
         foreach ($subset as $account) {
@@ -536,7 +536,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         // start collecting:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)
             ->setRange($start, $end)
             ->excludeDestinationAccounts($selection)
@@ -544,12 +544,12 @@ class BudgetRepository implements BudgetRepositoryInterface
             ->setBudget($budget)
         ;
 
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals   = $collector->getExtractedJournals();
+        $array      = [];
 
         foreach ($journals as $journal) {
             $currencyId                = (int) $journal['currency_id'];
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'id'             => (string) $currencyId,
                 'name'           => $journal['currency_name'],
                 'symbol'         => $journal['currency_symbol'],
@@ -560,9 +560,9 @@ class BudgetRepository implements BudgetRepositoryInterface
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
 
             // also do foreign amount:
-            $foreignId = (int) $journal['foreign_currency_id'];
+            $foreignId                 = (int) $journal['foreign_currency_id'];
             if (0 !== $foreignId) {
-                $array[$foreignId]        ??= [
+                $array[$foreignId] ??= [
                     'id'             => (string) $foreignId,
                     'name'           => $journal['foreign_currency_name'],
                     'symbol'         => $journal['foreign_currency_symbol'],
@@ -584,7 +584,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function store(array $data): Budget
     {
-        $order = $this->getMaxOrder();
+        $order                               = $this->getMaxOrder();
 
         try {
             $newBudget = Budget::create(
@@ -611,7 +611,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         if (!array_key_exists('auto_budget_type', $data) || !array_key_exists('auto_budget_amount', $data) || !array_key_exists('auto_budget_period', $data)) {
             return $newBudget;
         }
-        $type = $data['auto_budget_type'];
+        $type                                = $data['auto_budget_type'];
         if ('none' === $type) {
             return $newBudget;
         }
@@ -630,8 +630,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         /** @var CurrencyRepositoryInterface $repos */
-        $repos    = app(CurrencyRepositoryInterface::class);
-        $currency = null;
+        $repos                               = app(CurrencyRepositoryInterface::class);
+        $currency                            = null;
         if (array_key_exists('currency_id', $data)) {
             $currency = $repos->find((int) $data['currency_id']);
         }
@@ -642,7 +642,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $currency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         }
 
-        $autoBudget = new AutoBudget();
+        $autoBudget                          = new AutoBudget();
         $autoBudget->budget()->associate($newBudget);
         $autoBudget->transaction_currency_id = $currency->id;
         $autoBudget->auto_budget_type        = $type;
@@ -651,11 +651,11 @@ class BudgetRepository implements BudgetRepositoryInterface
         $autoBudget->save();
 
         // create initial budget limit.
-        $today = today(config('app.timezone'));
-        $start = app('navigation')->startOfPeriod($today, $autoBudget->period);
-        $end   = app('navigation')->endOfPeriod($start, $autoBudget->period);
+        $today                               = today(config('app.timezone'));
+        $start                               = app('navigation')->startOfPeriod($today, $autoBudget->period);
+        $end                                 = app('navigation')->endOfPeriod($start, $autoBudget->period);
 
-        $limitRepos = app(BudgetLimitRepositoryInterface::class);
+        $limitRepos                          = app(BudgetLimitRepositoryInterface::class);
         $limitRepos->setUser($this->user);
         $limitRepos->store(
             [
@@ -774,7 +774,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         $autoBudget = $this->getAutoBudget($budget);
 
         // grab default currency:
-        $currency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
+        $currency   = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
 
         if (null === $autoBudget) {
             // at this point it's a blind assumption auto_budget_type is 1 or 2.

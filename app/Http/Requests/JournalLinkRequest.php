@@ -66,7 +66,7 @@ class JournalLinkRequest extends FormRequest
             $combinations[] = sprintf('%d_inward', $type->id);
             $combinations[] = sprintf('%d_outward', $type->id);
         }
-        $string = implode(',', $combinations);
+        $string       = implode(',', $combinations);
 
         // fixed
         return [

@@ -36,11 +36,11 @@ class TagFactory
 
     public function findOrCreate(string $tag): ?Tag
     {
-        $tag = trim($tag);
+        $tag    = trim($tag);
         app('log')->debug(sprintf('Now in TagFactory::findOrCreate("%s")', $tag));
 
         /** @var null|Tag $dbTag */
-        $dbTag = $this->user->tags()->where('tag', $tag)->first();
+        $dbTag  = $this->user->tags()->where('tag', $tag)->first();
         if (null !== $dbTag) {
             app('log')->debug(sprintf('Tag exists (#%d), return it.', $dbTag->id));
 
@@ -84,7 +84,7 @@ class TagFactory
         ];
 
         /** @var null|Tag $tag */
-        $tag = Tag::create($array);
+        $tag       = Tag::create($array);
         if (null !== $tag && null !== $latitude && null !== $longitude) {
             // create location object.
             $location             = new Location();

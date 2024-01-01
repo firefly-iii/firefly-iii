@@ -52,24 +52,24 @@ class UpdatedGroupEventHandler
             return;
         }
 
-        $journals = $updatedGroupEvent->transactionGroup->transactionJournals;
-        $array    = [];
+        $journals            = $updatedGroupEvent->transactionGroup->transactionJournals;
+        $array               = [];
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $array[] = $journal->id;
         }
-        $journalIds = implode(',', $array);
+        $journalIds          = implode(',', $array);
         app('log')->debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
         $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
         $ruleGroupRepository->setUser($updatedGroupEvent->transactionGroup->user);
 
-        $groups = $ruleGroupRepository->getRuleGroupsWithRules('update-journal');
+        $groups              = $ruleGroupRepository->getRuleGroupsWithRules('update-journal');
 
         // file rule engine.
-        $newRuleEngine = app(RuleEngineInterface::class);
+        $newRuleEngine       = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($updatedGroupEvent->transactionGroup->user);
         $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
@@ -78,7 +78,7 @@ class UpdatedGroupEventHandler
 
     public function recalculateCredit(UpdatedTransactionGroup $event): void
     {
-        $group = $event->transactionGroup;
+        $group  = $event->transactionGroup;
 
         /** @var CreditRecalculateService $object */
         $object = app(CreditRecalculateService::class);
@@ -89,13 +89,13 @@ class UpdatedGroupEventHandler
     public function triggerWebhooks(UpdatedTransactionGroup $updatedGroupEvent): void
     {
         app('log')->debug(__METHOD__);
-        $group = $updatedGroupEvent->transactionGroup;
+        $group  = $updatedGroupEvent->transactionGroup;
         if (false === $updatedGroupEvent->fireWebhooks) {
             app('log')->info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
 
             return;
         }
-        $user = $group->user;
+        $user   = $group->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
@@ -112,14 +112,14 @@ class UpdatedGroupEventHandler
      */
     public function unifyAccounts(UpdatedTransactionGroup $updatedGroupEvent): void
     {
-        $group = $updatedGroupEvent->transactionGroup;
+        $group         = $updatedGroupEvent->transactionGroup;
         if (1 === $group->transactionJournals->count()) {
             return;
         }
 
         // first journal:
         /** @var null|TransactionJournal $first */
-        $first = $group->transactionJournals()
+        $first         = $group->transactionJournals()
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.order', 'ASC')
             ->orderBy('transaction_journals.id', 'DESC')
@@ -133,15 +133,15 @@ class UpdatedGroupEventHandler
             return;
         }
 
-        $all = $group->transactionJournals()->get()->pluck('id')->toArray();
+        $all           = $group->transactionJournals()->get()->pluck('id')->toArray();
 
         /** @var Account $sourceAccount */
         $sourceAccount = $first->transactions()->where('amount', '<', '0')->first()->account;
 
         /** @var Account $destAccount */
-        $destAccount = $first->transactions()->where('amount', '>', '0')->first()->account;
+        $destAccount   = $first->transactions()->where('amount', '>', '0')->first()->account;
 
-        $type = $first->transactionType->type;
+        $type          = $first->transactionType->type;
         if (TransactionType::TRANSFER === $type || TransactionType::WITHDRAWAL === $type) {
             // set all source transactions to source account:
             Transaction::whereIn('transaction_journal_id', $all)

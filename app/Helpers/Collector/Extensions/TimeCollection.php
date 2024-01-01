@@ -65,7 +65,7 @@ trait TimeCollection
         if ($end < $start) {
             [$start, $end] = [$end, $start];
         }
-        $end = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
+        $end                 = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
         $end->endOfDay();
         $start->startOfDay();
         $this->withMetaDate($field);
@@ -536,7 +536,7 @@ trait TimeCollection
         if ($end < $start) {
             [$start, $end] = [$end, $start];
         }
-        $end = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
+        $end                 = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
         $end->endOfDay();
         $start->startOfDay();
         $this->withMetaDate($field);

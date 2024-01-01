@@ -76,7 +76,7 @@ class AmountController extends Controller
             $leftToSave = bcsub($piggyBank->targetamount, $savedSoFar);
             $maxAmount  = min($leftOnAccount, $leftToSave);
         }
-        $currency = $this->accountRepos->getAccountCurrency($piggyBank->account) ?? app('amount')->getDefaultCurrency();
+        $currency      = $this->accountRepos->getAccountCurrency($piggyBank->account) ?? app('amount')->getDefaultCurrency();
 
         return view('piggy-banks.add', compact('piggyBank', 'maxAmount', 'currency'));
     }
@@ -98,7 +98,7 @@ class AmountController extends Controller
             $leftToSave = bcsub($piggyBank->targetamount, $savedSoFar);
             $maxAmount  = min($leftOnAccount, $leftToSave);
         }
-        $currency = $this->accountRepos->getAccountCurrency($piggyBank->account) ?? app('amount')->getDefaultCurrency();
+        $currency      = $this->accountRepos->getAccountCurrency($piggyBank->account) ?? app('amount')->getDefaultCurrency();
 
         return view('piggy-banks.add-mobile', compact('piggyBank', 'maxAmount', 'currency'));
     }
@@ -164,7 +164,7 @@ class AmountController extends Controller
 
             return redirect(route('piggy-banks.index'));
         }
-        $amount = (string)$request->get('amount');
+        $amount   = (string)$request->get('amount');
 
         session()->flash(
             'error',

@@ -51,7 +51,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {
             $currencyId                           = $availableBudget->transaction_currency_id;
-            $return[$currencyId]                  ??= [
+            $return[$currencyId] ??= [
                 'currency_id'                    => $currencyId,
                 'currency_code'                  => $availableBudget->transactionCurrency->code,
                 'currency_symbol'                => $availableBudget->transactionCurrency->symbol,

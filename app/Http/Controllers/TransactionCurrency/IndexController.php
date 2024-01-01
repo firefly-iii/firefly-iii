@@ -85,7 +85,7 @@ class IndexController extends Controller
 
         $currencies = new LengthAwarePaginator($collection, $total, $pageSize, $page);
         $currencies->setPath(route('currencies.index'));
-        $isOwner = true;
+        $isOwner    = true;
         if (!$this->userRepository->hasRole($user, 'owner')) {
             $request->session()->flash('info', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
             $isOwner = false;

@@ -49,11 +49,11 @@ class RuleActionFailed extends Notification
     public function __construct(array $params)
     {
         [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink] = $params;
-        $this->message    = $mainMessage;
-        $this->groupTitle = $groupTitle;
-        $this->groupLink  = $groupLink;
-        $this->ruleTitle  = $ruleTitle;
-        $this->ruleLink   = $ruleLink;
+        $this->message                                                 = $mainMessage;
+        $this->groupTitle                                              = $groupTitle;
+        $this->groupLink                                               = $groupLink;
+        $this->ruleTitle                                               = $ruleTitle;
+        $this->ruleLink                                                = $ruleLink;
     }
 
     /**

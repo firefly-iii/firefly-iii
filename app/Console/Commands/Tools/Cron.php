@@ -43,14 +43,14 @@ class Cron extends Command
 
     protected $description = 'Runs all Firefly III cron-job related commands. Configure a cron job according to the official Firefly III documentation.';
 
-    protected $signature = 'firefly-iii:cron
+    protected $signature   = 'firefly-iii:cron
         {--F|force : Force the cron job(s) to execute.}
         {--date= : Set the date in YYYY-MM-DD to make Firefly III think that\'s the current date.}
         ';
 
     public function handle(): int
     {
-        $date = null;
+        $date  = null;
 
         try {
             $date = new Carbon($this->option('date'));

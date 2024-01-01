@@ -76,7 +76,7 @@ trait LiabilityValidation
         app('log')->debug('Now in validateLCSource', $array);
         // if the array has an ID and ID is not null, try to find it and check type.
         // this account must be a liability
-        $accountId = array_key_exists('id', $array) ? $array['id'] : null;
+        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
         if (null !== $accountId) {
             app('log')->debug('Source ID is not null, assume were looking for a liability.');
             // find liability credit:
@@ -95,7 +95,7 @@ trait LiabilityValidation
         // if array has name and is not null, return true.
         $accountName = array_key_exists('name', $array) ? $array['name'] : null;
 
-        $result = true;
+        $result      = true;
         if ('' === $accountName || null === $accountName) {
             app('log')->error('Array must have a name, is not the case, return false.');
             $result = false;

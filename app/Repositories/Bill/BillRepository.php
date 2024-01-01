@@ -155,7 +155,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getAttachments(Bill $bill): Collection
     {
-        $set = $bill->attachments()->get();
+        $set  = $bill->attachments()->get();
 
         /** @var \Storage $disk */
         $disk = \Storage::disk('upload');
@@ -244,7 +244,7 @@ class BillRepository implements BillRepositoryInterface
     public function getOverallAverage(Bill $bill): array
     {
         /** @var JournalRepositoryInterface $repos */
-        $repos = app(JournalRepositoryInterface::class);
+        $repos    = app(JournalRepositoryInterface::class);
         $repos->setUser($this->user);
 
         // get and sort on currency
@@ -257,7 +257,7 @@ class BillRepository implements BillRepositoryInterface
             $transaction                = $journal->transactions()->where('amount', '<', 0)->first();
             $currencyId                 = (int) $journal->transaction_currency_id;
             $currency                   = $journal->transactionCurrency;
-            $result[$currencyId]        ??= [
+            $result[$currencyId] ??= [
                 'sum'                     => '0',
                 'count'                   => 0,
                 'avg'                     => '0',
@@ -336,16 +336,16 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getRulesForBills(Collection $collection): array
     {
-        $rules = $this->user->rules()
+        $rules  = $this->user->rules()
             ->leftJoin('rule_actions', 'rule_actions.rule_id', '=', 'rules.id')
             ->where('rule_actions.action_type', 'link_to_bill')
             ->get(['rules.id', 'rules.title', 'rule_actions.action_value', 'rules.active'])
         ;
-        $array = [];
+        $array  = [];
 
         /** @var Rule $rule */
         foreach ($rules as $rule) {
-            $array[$rule->action_value]   ??= [];
+            $array[$rule->action_value] ??= [];
             $array[$rule->action_value][] = ['id' => $rule->id, 'title' => $rule->title, 'active' => $rule->active];
         }
         $return = [];
@@ -359,11 +359,11 @@ class BillRepository implements BillRepositoryInterface
     public function getYearAverage(Bill $bill, Carbon $date): array
     {
         /** @var JournalRepositoryInterface $repos */
-        $repos = app(JournalRepositoryInterface::class);
+        $repos    = app(JournalRepositoryInterface::class);
         $repos->setUser($this->user);
 
         // get and sort on currency
-        $result = [];
+        $result   = [];
 
         $journals = $bill->transactionJournals()
             ->where('date', '>=', $date->year.'-01-01 00:00:00')
@@ -374,13 +374,13 @@ class BillRepository implements BillRepositoryInterface
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             /** @var null|Transaction $transaction */
-            $transaction = $journal->transactions()->where('amount', '<', 0)->first();
+            $transaction                = $journal->transactions()->where('amount', '<', 0)->first();
             if (null === $transaction) {
                 continue;
             }
             $currencyId                 = (int) $journal->transaction_currency_id;
             $currency                   = $journal->transactionCurrency;
-            $result[$currencyId]        ??= [
+            $result[$currencyId] ??= [
                 'sum'                     => '0',
                 'count'                   => 0,
                 'avg'                     => '0',
@@ -424,7 +424,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon
     {
-        $cache = new CacheProperties();
+        $cache        = new CacheProperties();
         $cache->addProperty($bill->id);
         $cache->addProperty('nextExpectedMatch');
         $cache->addProperty($date);
@@ -432,7 +432,7 @@ class BillRepository implements BillRepositoryInterface
             return $cache->get();
         }
         // find the most recent date for this bill NOT in the future. Cache this date:
-        $start = clone $bill->date;
+        $start        = clone $bill->date;
         app('log')->debug('nextExpectedMatch: Start is '.$start->format('Y-m-d'));
 
         while ($start < $date) {
@@ -441,7 +441,7 @@ class BillRepository implements BillRepositoryInterface
             app('log')->debug('Start is now '.$start->format('Y-m-d'));
         }
 
-        $end = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
+        $end          = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
 
         // see if the bill was paid in this period.
         $journalCount = $bill->transactionJournals()->before($end)->after($start)->count();
@@ -527,7 +527,7 @@ class BillRepository implements BillRepositoryInterface
                 /** @var null|Transaction $sourceTransaction */
                 $sourceTransaction = $transactionJournal->transactions()->where('amount', '<', 0)->first();
                 if (null !== $sourceTransaction) {
-                    $amount = $sourceTransaction->amount;
+                    $amount                       = $sourceTransaction->amount;
                     if ((int) $sourceTransaction->foreign_currency_id === $currency->id) {
                         // use foreign amount instead!
                         $amount = (string) $sourceTransaction->foreign_amount;
@@ -567,7 +567,7 @@ class BillRepository implements BillRepositoryInterface
             if ($total > 0) {
                 $currency                     = $bill->transactionCurrency;
                 $average                      = bcdiv(bcadd($bill->amount_max, $bill->amount_min), '2');
-                $return[$currency->id]        ??= [
+                $return[$currency->id] ??= [
                     'id'             => (string) $currency->id,
                     'name'           => $currency->name,
                     'symbol'         => $currency->symbol,
@@ -605,7 +605,7 @@ class BillRepository implements BillRepositoryInterface
 
             // app('log')->debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
 
-            $currentStart = clone $nextExpectedMatch;
+            $currentStart      = clone $nextExpectedMatch;
         }
 
         return $set;

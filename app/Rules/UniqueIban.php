@@ -145,7 +145,7 @@ class UniqueIban implements ValidationRule
             $typesArray = [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
         }
         $query
-            = auth()->user()
+                    = auth()->user()
                 ->accounts()
                 ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                 ->where('accounts.iban', $iban)

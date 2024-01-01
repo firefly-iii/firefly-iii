@@ -37,7 +37,7 @@ class ScanAttachments extends Command
 
     protected $description = 'Rescan all attachments and re-set the correct MD5 hash and mime.';
 
-    protected $signature = 'firefly-iii:scan-attachments';
+    protected $signature   = 'firefly-iii:scan-attachments';
 
     /**
      * Execute the console command.
@@ -63,7 +63,7 @@ class ScanAttachments extends Command
                 app('log')->error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
                 $decryptedContent = $encryptedContent;
             }
-            $tempFileName = tempnam(sys_get_temp_dir(), 'FireflyIII');
+            $tempFileName     = tempnam(sys_get_temp_dir(), 'FireflyIII');
             if (false === $tempFileName) {
                 app('log')->error(sprintf('Could not create temporary file for attachment #%d', $attachment->id));
 

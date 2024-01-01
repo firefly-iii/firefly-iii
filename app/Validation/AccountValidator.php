@@ -135,37 +135,37 @@ class AccountValidator
                 $this->destError = sprintf('AccountValidator::validateDestination cannot handle "%s", so it will always return false.', $this->transactionType);
                 app('log')->error(sprintf('AccountValidator::validateDestination cannot handle "%s", so it will always return false.', $this->transactionType));
 
-                $result = false;
+                $result          = false;
 
                 break;
 
             case TransactionType::WITHDRAWAL:
-                $result = $this->validateWithdrawalDestination($array);
+                $result          = $this->validateWithdrawalDestination($array);
 
                 break;
 
             case TransactionType::DEPOSIT:
-                $result = $this->validateDepositDestination($array);
+                $result          = $this->validateDepositDestination($array);
 
                 break;
 
             case TransactionType::TRANSFER:
-                $result = $this->validateTransferDestination($array);
+                $result          = $this->validateTransferDestination($array);
 
                 break;
 
             case TransactionType::OPENING_BALANCE:
-                $result = $this->validateOBDestination($array);
+                $result          = $this->validateOBDestination($array);
 
                 break;
 
             case TransactionType::LIABILITY_CREDIT:
-                $result = $this->validateLCDestination($array);
+                $result          = $this->validateLCDestination($array);
 
                 break;
 
             case TransactionType::RECONCILIATION:
-                $result = $this->validateReconciliationDestination($array);
+                $result          = $this->validateReconciliationDestination($array);
 
                 break;
         }

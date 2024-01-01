@@ -47,7 +47,7 @@ class RemoteUserGuard implements Guard
     public function __construct(UserProvider $provider, Application $app)
     {
         /** @var null|Request $request */
-        $request = $app->get('request');
+        $request           = $app->get('request');
         app('log')->debug(sprintf('Created RemoteUserGuard for %s "%s"', $request?->getMethod(), $request?->getRequestUri()));
         $this->application = $app;
         $this->provider    = $provider;
@@ -63,8 +63,8 @@ class RemoteUserGuard implements Guard
             return;
         }
         // Get the user identifier from $_SERVER or apache filtered headers
-        $header = config('auth.guard_header', 'REMOTE_USER');
-        $userID = request()->server($header) ?? null;
+        $header        = config('auth.guard_header', 'REMOTE_USER');
+        $userID        = request()->server($header) ?? null;
 
         if (function_exists('apache_request_headers')) {
             app('log')->debug('Use apache_request_headers to find user ID.');
@@ -83,7 +83,7 @@ class RemoteUserGuard implements Guard
         $retrievedUser = $this->provider->retrieveById($userID);
 
         // store email address if present in header and not already set.
-        $header = config('auth.guard_email');
+        $header        = config('auth.guard_email');
 
         if (null !== $header) {
             $emailAddress = (string)(request()->server($header) ?? apache_request_headers()[$header] ?? null);
@@ -99,7 +99,7 @@ class RemoteUserGuard implements Guard
         }
 
         app('log')->debug(sprintf('Result of getting user from provider: %s', $retrievedUser->email));
-        $this->user = $retrievedUser;
+        $this->user    = $retrievedUser;
     }
 
     public function guest(): bool

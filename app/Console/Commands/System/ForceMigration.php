@@ -42,7 +42,7 @@ class ForceMigration extends Command
 
     protected $description = 'This command will force-run all database migrations.';
 
-    protected $signature = 'firefly-iii:force-migrations
+    protected $signature   = 'firefly-iii:force-migrations
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}';
 

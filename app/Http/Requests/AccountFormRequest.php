@@ -120,7 +120,7 @@ class AccountFormRequest extends FormRequest
         $rules          = Location::requestRules($rules);
 
         /** @var null|Account $account */
-        $account = $this->route()->parameter('account');
+        $account        = $this->route()->parameter('account');
         if (null !== $account) {
             // add rules:
             $rules['id']   = 'belongsToUser:accounts';

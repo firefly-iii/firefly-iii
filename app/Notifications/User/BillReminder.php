@@ -105,8 +105,8 @@ class BillReminder extends Notification
         if (0 === $this->diff) {
             $message = (string)trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
         }
-        $bill = $this->bill;
-        $url  = route('bills.show', [$bill->id]);
+        $bill    = $this->bill;
+        $url     = route('bills.show', [$bill->id]);
 
         return (new SlackMessage())
             ->warning()

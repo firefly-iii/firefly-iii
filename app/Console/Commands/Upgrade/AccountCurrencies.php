@@ -44,8 +44,8 @@ class AccountCurrencies extends Command
 
     public const string CONFIG_NAME = '480_account_currencies';
 
-    protected $description = 'Give all accounts proper currency info.';
-    protected $signature   = 'firefly-iii:account-currencies {--F|force : Force the execution of this command.}';
+    protected $description          = 'Give all accounts proper currency info.';
+    protected $signature            = 'firefly-iii:account-currencies {--F|force : Force the execution of this command.}';
     private AccountRepositoryInterface $accountRepos;
     private int                        $count;
     private UserRepositoryInterface    $userRepos;
@@ -109,7 +109,7 @@ class AccountCurrencies extends Command
     private function updateCurrenciesForUser(User $user): void
     {
         $this->accountRepos->setUser($user);
-        $accounts = $this->accountRepos->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accounts        = $this->accountRepos->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
 
         // get user's currency preference:
         $defaultCurrency = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);

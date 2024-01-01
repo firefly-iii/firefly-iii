@@ -59,7 +59,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ++$count;
             app('log')->debug(sprintf('Found %d budget limits. Per day is %s, total is %s', $count, $perDay, $total));
         }
-        $avg = $total;
+        $avg   = $total;
         if ($count > 0) {
             $avg = bcdiv($total, (string)$count);
         }
@@ -81,21 +81,21 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         // get all transactions:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setBudgets($budgets);
-        $journals = $collector->getExtractedJournals();
+        $journals     = $collector->getExtractedJournals();
 
         // loop transactions:
         /** @var array $journal */
         foreach ($journals as $journal) {
             // prep data array for currency:
-            $budgetId   = (int)$journal['budget_id'];
-            $budgetName = $journal['budget_name'];
-            $currencyId = (int)$journal['currency_id'];
-            $key        = sprintf('%d-%d', $budgetId, $currencyId);
+            $budgetId                     = (int)$journal['budget_id'];
+            $budgetName                   = $journal['budget_name'];
+            $currencyId                   = (int)$journal['currency_id'];
+            $key                          = sprintf('%d-%d', $budgetId, $currencyId);
 
-            $data[$key]                   ??= [
+            $data[$key] ??= [
                 'id'                      => $budgetId,
                 'name'                    => sprintf('%s (%s)', $budgetName, $journal['currency_name']),
                 'sum'                     => '0',
@@ -133,13 +133,13 @@ class OperationsRepository implements OperationsRepositoryInterface
             $collector->setBudgets($this->getBudgets());
         }
         $collector->withBudgetInformation()->withAccountInformation()->withCategoryInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId = (int)$journal['currency_id'];
-            $budgetId   = (int)$journal['budget_id'];
-            $budgetName = (string)$journal['budget_name'];
+            $currencyId                                                                   = (int)$journal['currency_id'];
+            $budgetId                                                                     = (int)$journal['budget_id'];
+            $budgetName                                                                   = (string)$journal['budget_name'];
 
             // catch "no category" entries.
             if (0 === $budgetId) {
@@ -147,7 +147,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] ??= [
+            $array[$currencyId]                       ??= [
                 'budgets'                 => [],
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -210,8 +210,8 @@ class OperationsRepository implements OperationsRepositoryInterface
         // TODO this filter must be somewhere in AccountRepositoryInterface because I suspect its needed more often (A113)
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
-        $subset    = $repository->getAccountsByType(config('firefly.valid_liabilities'));
-        $selection = new Collection();
+        $subset     = $repository->getAccountsByType(config('firefly.valid_liabilities'));
+        $selection  = new Collection();
 
         /** @var Account $account */
         foreach ($subset as $account) {
@@ -221,7 +221,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)
             ->setRange($start, $end)
             ->excludeDestinationAccounts($selection)
@@ -238,7 +238,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             $collector->setCurrency($currency);
         }
         $collector->setBudgets($budgets);
-        $journals = $collector->getExtractedJournals();
+        $journals   = $collector->getExtractedJournals();
 
         // same but for foreign currencies:
         if (null !== $currency) {
@@ -252,16 +252,16 @@ class OperationsRepository implements OperationsRepositoryInterface
             if (null !== $accounts) {
                 $collector->setAccounts($accounts);
             }
-            $result = $collector->getExtractedJournals();
+            $result    = $collector->getExtractedJournals();
             // app('log')->debug(sprintf('Found %d journals with currency %s.', count($result), $currency->code));
             // do not use array_merge because you want keys to overwrite (otherwise you get double results):
-            $journals = $result + $journals;
+            $journals  = $result + $journals;
         }
-        $array = [];
+        $array      = [];
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -272,9 +272,9 @@ class OperationsRepository implements OperationsRepositoryInterface
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
 
             // also do foreign amount:
-            $foreignId = (int)$journal['foreign_currency_id'];
+            $foreignId                 = (int)$journal['foreign_currency_id'];
             if (0 !== $foreignId) {
-                $array[$foreignId]        ??= [
+                $array[$foreignId] ??= [
                     'sum'                     => '0',
                     'currency_id'             => $foreignId,
                     'currency_name'           => $journal['foreign_currency_name'],

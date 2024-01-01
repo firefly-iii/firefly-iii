@@ -131,7 +131,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     private function generateMessage(Webhook $webhook, Model $model): void
     {
-        $class = get_class($model);
+        $class        = get_class($model);
         // Line is ignored because all of Firefly III's Models have an id property.
         app('log')->debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id));
 
@@ -179,7 +179,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
             case WebhookResponse::TRANSACTIONS->value:
                 /** @var TransactionGroup $model */
-                $transformer = new TransactionGroupTransformer();
+                $transformer             = new TransactionGroupTransformer();
 
                 try {
                     $basicMessage['content'] = $transformer->transformObject($model);
@@ -196,9 +196,9 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
             case WebhookResponse::ACCOUNTS->value:
                 /** @var TransactionGroup $model */
-                $accounts = $this->collectAccounts($model);
+                $accounts                = $this->collectAccounts($model);
                 foreach ($accounts as $account) {
-                    $transformer = new AccountTransformer();
+                    $transformer               = new AccountTransformer();
                     $transformer->setParameters(new ParameterBag());
                     $basicMessage['content'][] = $transformer->transform($account);
                 }
@@ -223,7 +223,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
     private function storeMessage(Webhook $webhook, array $message): void
     {
-        $webhookMessage = new WebhookMessage();
+        $webhookMessage          = new WebhookMessage();
         $webhookMessage->webhook()->associate($webhook);
         $webhookMessage->sent    = false;
         $webhookMessage->errored = false;

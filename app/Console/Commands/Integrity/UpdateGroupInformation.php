@@ -83,7 +83,7 @@ class UpdateGroupInformation extends Command
 
             return;
         }
-        $set = [
+        $set   = [
             Account::class,
             Attachment::class,
             AvailableBudget::class,

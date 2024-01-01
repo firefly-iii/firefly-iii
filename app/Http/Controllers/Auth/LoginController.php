@@ -139,8 +139,8 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        $authGuard = config('firefly.authentication_guard');
-        $logoutUrl = config('firefly.custom_logout_url');
+        $authGuard  = config('firefly.authentication_guard');
+        $logoutUrl  = config('firefly.custom_logout_url');
         if ('remote_user_guard' === $authGuard && '' !== $logoutUrl) {
             return redirect($logoutUrl);
         }
@@ -176,9 +176,9 @@ class LoginController extends Controller
     {
         Log::channel('audit')->info('Show login form (1.1).');
 
-        $count = \DB::table('users')->count();
-        $guard = config('auth.defaults.guard');
-        $title = (string)trans('firefly.login_page_title');
+        $count             = \DB::table('users')->count();
+        $guard             = config('auth.defaults.guard');
+        $title             = (string)trans('firefly.login_page_title');
 
         if (0 === $count && 'web' === $guard) {
             return redirect(route('register'));
@@ -198,15 +198,15 @@ class LoginController extends Controller
             $allowReset        = false;
         }
 
-        $email    = $request->old('email');
-        $remember = $request->old('remember');
+        $email             = $request->old('email');
+        $remember          = $request->old('remember');
 
-        $storeInCookie = config('google2fa.store_in_cookie', false);
+        $storeInCookie     = config('google2fa.store_in_cookie', false);
         if (false !== $storeInCookie) {
             $cookieName = config('google2fa.cookie_name', 'google2fa_token');
             request()->cookies->set($cookieName, 'invalid');
         }
-        $usernameField = $this->username();
+        $usernameField     = $this->username();
 
         return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title', 'usernameField'));
     }

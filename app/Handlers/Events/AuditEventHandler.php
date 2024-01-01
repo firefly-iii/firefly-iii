@@ -35,7 +35,7 @@ class AuditEventHandler
 {
     public function storeAuditEvent(TriggeredAuditLog $event): void
     {
-        $array = [
+        $array      = [
             'auditable' => $event->auditable,
             'changer'   => $event->changer,
             'action'    => $event->field,

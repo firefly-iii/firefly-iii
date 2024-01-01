@@ -115,7 +115,7 @@ class TagRepository implements TagRepositoryInterface
 
     public function getAttachments(Tag $tag): Collection
     {
-        $set = $tag->attachments()->get();
+        $set  = $tag->attachments()->get();
 
         /** @var \Storage $disk */
         $disk = \Storage::disk('upload');
@@ -123,7 +123,7 @@ class TagRepository implements TagRepositoryInterface
         return $set->each(
             static function (Attachment $attachment) use ($disk): void {
                 /** @var null|Note $note */
-                $note = $attachment->notes()->first();
+                $note                    = $attachment->notes()->first();
                 // only used in v1 view of tags
                 $attachment->file_exists = $disk->exists($attachment->fileName());
                 $attachment->notes_text  = null === $note ? '' : $note->text;
@@ -134,7 +134,7 @@ class TagRepository implements TagRepositoryInterface
     public function getTagsInYear(?int $year): array
     {
         // get all tags in the year (if present):
-        $tagQuery = $this->user->tags()->with(['locations', 'attachments'])->orderBy('tags.tag');
+        $tagQuery   = $this->user->tags()->with(['locations', 'attachments'])->orderBy('tags.tag');
 
         // add date range (or not):
         if (null === $year) {
@@ -240,13 +240,13 @@ class TagRepository implements TagRepositoryInterface
         }
 
         $collector->setTag($tag)->withAccountInformation();
-        $journals = $collector->getExtractedJournals();
+        $journals  = $collector->getExtractedJournals();
 
-        $sums = [];
+        $sums      = [];
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $found = false;
+            $found                    = false;
 
             /** @var array $localTag */
             foreach ($journal['tags'] as $localTag) {
@@ -257,7 +257,7 @@ class TagRepository implements TagRepositoryInterface
             if (false === $found) {
                 continue;
             }
-            $currencyId        = (int) $journal['currency_id'];
+            $currencyId               = (int) $journal['currency_id'];
             $sums[$currencyId] ??= [
                 'currency_id'                    => $currencyId,
                 'currency_name'                  => $journal['currency_name'],
@@ -271,14 +271,14 @@ class TagRepository implements TagRepositoryInterface
             ];
 
             // add amount to correct type:
-            $amount = app('steam')->positive((string) $journal['amount']);
-            $type   = $journal['transaction_type_type'];
+            $amount                   = app('steam')->positive((string) $journal['amount']);
+            $type                     = $journal['transaction_type_type'];
             if (TransactionType::WITHDRAWAL === $type) {
                 $amount = bcmul($amount, '-1');
             }
             $sums[$currencyId][$type] = bcadd($sums[$currencyId][$type], $amount);
 
-            $foreignCurrencyId = $journal['foreign_currency_id'];
+            $foreignCurrencyId        = $journal['foreign_currency_id'];
             if (null !== $foreignCurrencyId && 0 !== $foreignCurrencyId) {
                 $sums[$foreignCurrencyId] ??= [
                     'currency_id'                    => $foreignCurrencyId,
@@ -292,7 +292,7 @@ class TagRepository implements TagRepositoryInterface
                     TransactionType::OPENING_BALANCE => '0',
                 ];
                 // add foreign amount to correct type:
-                $amount = app('steam')->positive((string) $journal['foreign_amount']);
+                $amount                          = app('steam')->positive((string) $journal['foreign_amount']);
                 if (TransactionType::WITHDRAWAL === $type) {
                     $amount = bcmul($amount, '-1');
                 }
@@ -357,7 +357,7 @@ class TagRepository implements TagRepositoryInterface
 
             // otherwise, update or create.
             if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
-                $location = $this->getLocation($tag);
+                $location             = $this->getLocation($tag);
                 if (null === $location) {
                     $location = new Location();
                     $location->locatable()->associate($tag);

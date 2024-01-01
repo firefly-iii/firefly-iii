@@ -76,14 +76,14 @@ class NoCategoryController extends Controller
         // @var Carbon $start
         $start ??= session('start');
         // @var Carbon $end
-        $end      ??= session('end');
-        $page     = (int)$request->get('page');
-        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
-        $subTitle = trans(
+        $end   ??= session('end');
+        $page      = (int)$request->get('page');
+        $pageSize  = (int)app('preferences')->get('listPageSize', 50)->data;
+        $subTitle  = trans(
             'firefly.without_category_between',
             ['start' => $start->isoFormat($this->monthAndDayFormat), 'end' => $end->isoFormat($this->monthAndDayFormat)]
         );
-        $periods  = $this->getNoCategoryPeriodOverview($start);
+        $periods   = $this->getNoCategoryPeriodOverview($start);
 
         app('log')->debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
         app('log')->debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
@@ -95,7 +95,7 @@ class NoCategoryController extends Controller
             ->withAccountInformation()->withBudgetInformation()
             ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER])
         ;
-        $groups = $collector->getPaginatedGroups();
+        $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
 
         return view('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));
@@ -109,16 +109,16 @@ class NoCategoryController extends Controller
     public function showAll(Request $request)
     {
         // default values:
-        $start    = null;
-        $end      = null;
-        $periods  = new Collection();
-        $page     = (int)$request->get('page');
-        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
+        $start     = null;
+        $end       = null;
+        $periods   = new Collection();
+        $page      = (int)$request->get('page');
+        $pageSize  = (int)app('preferences')->get('listPageSize', 50)->data;
         app('log')->debug('Start of noCategory()');
-        $subTitle = (string)trans('firefly.all_journals_without_category');
-        $first    = $this->journalRepos->firstNull();
-        $start    = null === $first ? new Carbon() : $first->date;
-        $end      = today(config('app.timezone'));
+        $subTitle  = (string)trans('firefly.all_journals_without_category');
+        $first     = $this->journalRepos->firstNull();
+        $start     = null === $first ? new Carbon() : $first->date;
+        $end       = today(config('app.timezone'));
         app('log')->debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
         app('log')->debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
 
@@ -128,7 +128,7 @@ class NoCategoryController extends Controller
             ->withAccountInformation()->withBudgetInformation()
             ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER])
         ;
-        $groups = $collector->getPaginatedGroups();
+        $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category.all'));
 
         return view('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));

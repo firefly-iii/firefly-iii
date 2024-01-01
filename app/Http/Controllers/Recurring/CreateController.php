@@ -93,19 +93,19 @@ class CreateController extends Controller
             $this->rememberPreviousUrl('recurring.create.url');
         }
         $request->session()->forget('recurring.create.fromStore');
-        $repetitionEnds   = [
+        $repetitionEnds    = [
             'forever'    => (string)trans('firefly.repeat_forever'),
             'until_date' => (string)trans('firefly.repeat_until_date'),
             'times'      => (string)trans('firefly.repeat_times'),
         ];
-        $weekendResponses = [
+        $weekendResponses  = [
             RecurrenceRepetition::WEEKEND_DO_NOTHING    => (string)trans('firefly.do_nothing'),
             RecurrenceRepetition::WEEKEND_SKIP_CREATION => (string)trans('firefly.skip_transaction'),
             RecurrenceRepetition::WEEKEND_TO_FRIDAY     => (string)trans('firefly.jump_to_friday'),
             RecurrenceRepetition::WEEKEND_TO_MONDAY     => (string)trans('firefly.jump_to_monday'),
         ];
-        $hasOldInput      = null !== $request->old('_token'); // flash some data
-        $preFilled        = [
+        $hasOldInput       = null !== $request->old('_token'); // flash some data
+        $preFilled         = [
             'first_date'       => $tomorrow->format('Y-m-d'),
             'transaction_type' => $hasOldInput ? $request->old('transaction_type') : 'withdrawal',
             'active'           => $hasOldInput ? (bool)$request->old('active') : true,
@@ -138,12 +138,12 @@ class CreateController extends Controller
             $this->rememberPreviousUrl('recurring.create.url');
         }
         $request->session()->forget('recurring.create.fromStore');
-        $repetitionEnds   = [
+        $repetitionEnds    = [
             'forever'    => (string)trans('firefly.repeat_forever'),
             'until_date' => (string)trans('firefly.repeat_until_date'),
             'times'      => (string)trans('firefly.repeat_times'),
         ];
-        $weekendResponses = [
+        $weekendResponses  = [
             RecurrenceRepetition::WEEKEND_DO_NOTHING    => (string)trans('firefly.do_nothing'),
             RecurrenceRepetition::WEEKEND_SKIP_CREATION => (string)trans('firefly.skip_transaction'),
             RecurrenceRepetition::WEEKEND_TO_FRIDAY     => (string)trans('firefly.jump_to_friday'),
@@ -151,18 +151,18 @@ class CreateController extends Controller
         ];
 
         // fill prefilled with journal info
-        $type = strtolower($journal->transactionType->type);
+        $type              = strtolower($journal->transactionType->type);
 
         /** @var Transaction $source */
-        $source = $journal->transactions()->where('amount', '<', 0)->first();
+        $source            = $journal->transactions()->where('amount', '<', 0)->first();
 
         /** @var Transaction $dest */
-        $dest        = $journal->transactions()->where('amount', '>', 0)->first();
-        $category    = null !== $journal->categories()->first() ? $journal->categories()->first()->name : '';
-        $budget      = null !== $journal->budgets()->first() ? $journal->budgets()->first()->id : 0;
-        $bill        = null !== $journal->bill ? $journal->bill->id : 0;
-        $hasOldInput = null !== $request->old('_token'); // flash some data
-        $preFilled   = [];
+        $dest              = $journal->transactions()->where('amount', '>', 0)->first();
+        $category          = null !== $journal->categories()->first() ? $journal->categories()->first()->name : '';
+        $budget            = null !== $journal->budgets()->first() ? $journal->budgets()->first()->id : 0;
+        $bill              = null !== $journal->bill ? $journal->bill->id : 0;
+        $hasOldInput       = null !== $request->old('_token'); // flash some data
+        $preFilled         = [];
         if (true === $hasOldInput) {
             $preFilled = [
                 'title'                     => $request->old('title'),
@@ -222,7 +222,7 @@ class CreateController extends Controller
      */
     public function store(RecurrenceFormRequest $request)
     {
-        $data = $request->getAll();
+        $data     = $request->getAll();
 
         try {
             $recurrence = $this->recurring->store($data);
@@ -237,7 +237,7 @@ class CreateController extends Controller
 
         // store attachment(s):
         /** @var null|array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($recurrence, $files);
         }

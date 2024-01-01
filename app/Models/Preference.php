@@ -62,7 +62,7 @@ class Preference extends Model
     use ReturnsIntegerUserIdTrait;
 
     protected $casts
-        = [
+                        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'data'       => 'array',
@@ -79,7 +79,7 @@ class Preference extends Model
     {
         if (auth()->check()) {
             /** @var User $user */
-            $user = auth()->user();
+            $user       = auth()->user();
 
             /** @var null|Preference $preference */
             $preference = $user->preferences()->where('name', $value)->first();
@@ -89,7 +89,7 @@ class Preference extends Model
             if (null !== $preference) {
                 return $preference;
             }
-            $default = config('firefly.default_preferences');
+            $default    = config('firefly.default_preferences');
             if (array_key_exists($value, $default)) {
                 $preference          = new self();
                 $preference->name    = $value;

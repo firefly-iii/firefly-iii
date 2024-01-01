@@ -98,7 +98,7 @@ class Transaction extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
+                      = [
             'created_at'          => 'datetime',
             'updated_at'          => 'datetime',
             'deleted_at'          => 'datetime',
@@ -109,7 +109,7 @@ class Transaction extends Model
         ];
 
     protected $fillable
-        = [
+                      = [
             'account_id',
             'transaction_journal_id',
             'description',

@@ -184,8 +184,8 @@ class OperationsRepository implements OperationsRepositoryInterface
     {
         $array = [];
         foreach ($journals as $journal) {
-            $currencyId         = (int)$journal['currency_id'];
-            $journalId          = (int)$journal['transaction_journal_id'];
+            $currencyId                                             = (int)$journal['currency_id'];
+            $journalId                                              = (int)$journal['transaction_journal_id'];
             $array[$currencyId] ??= [
                 'currency_id'             => $journal['currency_id'],
                 'currency_name'           => $journal['currency_name'],
@@ -260,7 +260,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         if (null !== $currency) {
             $collector->setCurrency($currency);
         }
-        $journals = $collector->getExtractedJournals();
+        $journals  = $collector->getExtractedJournals();
 
         // same but for foreign currencies:
         if (null !== $currency) {
@@ -286,10 +286,10 @@ class OperationsRepository implements OperationsRepositoryInterface
                 }
             }
 
-            $result = $collector->getExtractedJournals();
+            $result    = $collector->getExtractedJournals();
 
             // do not use array_merge because you want keys to overwrite (otherwise you get double results):
-            $journals = $result + $journals;
+            $journals  = $result + $journals;
         }
 
         return $journals;
@@ -301,7 +301,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -312,9 +312,9 @@ class OperationsRepository implements OperationsRepositoryInterface
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->{$direction}($journal['amount'])); // @phpstan-ignore-line
 
             // also do foreign amount:
-            $foreignId = (int)$journal['foreign_currency_id'];
+            $foreignId                 = (int)$journal['foreign_currency_id'];
             if (0 !== $foreignId) {
-                $array[$foreignId]        ??= [
+                $array[$foreignId] ??= [
                     'sum'                     => '0',
                     'currency_id'             => $foreignId,
                     'currency_name'           => $journal['foreign_currency_name'],
@@ -337,7 +337,7 @@ class OperationsRepository implements OperationsRepositoryInterface
 
         foreach ($journals as $journal) {
             $key                = sprintf('%s-%s', $journal[$idKey], $journal['currency_id']);
-            $array[$key]        ??= [
+            $array[$key] ??= [
                 'id'                      => $journal[$idKey],
                 'name'                    => $journal[$nameKey],
                 'sum'                     => '0',
@@ -352,7 +352,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             // also do foreign amount:
             if (0 !== (int)$journal['foreign_currency_id']) {
                 $key                = sprintf('%s-%s', $journal[$idKey], $journal['foreign_currency_id']);
-                $array[$key]        ??= [
+                $array[$key] ??= [
                     'id'                      => $journal[$idKey],
                     'name'                    => $journal[$nameKey],
                     'sum'                     => '0',
@@ -377,7 +377,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         foreach ($journals as $journal) {
             $return = $this->groupByEitherJournal($return, $journal);
         }
-        $final = [];
+        $final  = [];
         foreach ($return as $array) {
             $array['difference_float'] = (float)$array['difference'];
             $array['in_float']         = (float)$array['in'];
@@ -390,12 +390,12 @@ class OperationsRepository implements OperationsRepositoryInterface
 
     private function groupByEitherJournal(array $return, array $journal): array
     {
-        $sourceId      = $journal['source_account_id'];
-        $destinationId = $journal['destination_account_id'];
-        $currencyId    = $journal['currency_id'];
-        $sourceKey     = sprintf('%d-%d', $currencyId, $sourceId);
-        $destKey       = sprintf('%d-%d', $currencyId, $destinationId);
-        $amount        = app('steam')->positive($journal['amount']);
+        $sourceId                         = $journal['source_account_id'];
+        $destinationId                    = $journal['destination_account_id'];
+        $currencyId                       = $journal['currency_id'];
+        $sourceKey                        = sprintf('%d-%d', $currencyId, $sourceId);
+        $destKey                          = sprintf('%d-%d', $currencyId, $destinationId);
+        $amount                           = app('steam')->positive($journal['amount']);
 
         // source first
         $return[$sourceKey] ??= [
@@ -412,7 +412,7 @@ class OperationsRepository implements OperationsRepositoryInterface
         ];
 
         // dest next:
-        $return[$destKey] ??= [
+        $return[$destKey]   ??= [
             'id'               => (string)$destinationId,
             'name'             => $journal['destination_account_name'],
             'difference'       => '0',
@@ -430,15 +430,15 @@ class OperationsRepository implements OperationsRepositoryInterface
         $return[$sourceKey]['difference'] = bcadd($return[$sourceKey]['out'], $return[$sourceKey]['in']);
 
         // destination  account? money comes in:
-        $return[$destKey]['in']         = bcadd($return[$destKey]['in'], $amount);
-        $return[$destKey]['difference'] = bcadd($return[$destKey]['out'], $return[$destKey]['in']);
+        $return[$destKey]['in']           = bcadd($return[$destKey]['in'], $amount);
+        $return[$destKey]['difference']   = bcadd($return[$destKey]['out'], $return[$destKey]['in']);
 
         // foreign currency
         if (null !== $journal['foreign_currency_id'] && null !== $journal['foreign_amount']) {
-            $currencyId = $journal['foreign_currency_id'];
-            $sourceKey  = sprintf('%d-%d', $currencyId, $sourceId);
-            $destKey    = sprintf('%d-%d', $currencyId, $destinationId);
-            $amount     = app('steam')->positive($journal['foreign_amount']);
+            $currencyId                       = $journal['foreign_currency_id'];
+            $sourceKey                        = sprintf('%d-%d', $currencyId, $sourceId);
+            $destKey                          = sprintf('%d-%d', $currencyId, $destinationId);
+            $amount                           = app('steam')->positive($journal['foreign_amount']);
 
             // same as above:
             // source first
@@ -456,7 +456,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             ];
 
             // dest next:
-            $return[$destKey] ??= [
+            $return[$destKey]   ??= [
                 'id'               => (string)$destinationId,
                 'name'             => $journal['destination_account_name'],
                 'difference'       => '0',
@@ -473,8 +473,8 @@ class OperationsRepository implements OperationsRepositoryInterface
             $return[$sourceKey]['difference'] = bcadd($return[$sourceKey]['out'], $return[$sourceKey]['in']);
 
             // destination  account? money comes in:
-            $return[$destKey]['in']         = bcadd($return[$destKey]['in'], $amount);
-            $return[$destKey]['difference'] = bcadd($return[$destKey]['out'], $return[$destKey]['in']);
+            $return[$destKey]['in']           = bcadd($return[$destKey]['in'], $amount);
+            $return[$destKey]['difference']   = bcadd($return[$destKey]['out'], $return[$destKey]['in']);
         }
 
         return $return;

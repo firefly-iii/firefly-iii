@@ -70,22 +70,22 @@ class IndexController extends Controller
      *                                              */
     public function inactive(Request $request, string $objectType)
     {
-        $inactivePage = true;
-        $subTitle     = (string)trans(sprintf('firefly.%s_accounts_inactive', $objectType));
-        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
-        $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
-        $collection   = $this->repository->getInactiveAccountsByType($types);
-        $total        = $collection->count();
-        $page         = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
+        $inactivePage  = true;
+        $subTitle      = (string)trans(sprintf('firefly.%s_accounts_inactive', $objectType));
+        $subTitleIcon  = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $types         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
+        $collection    = $this->repository->getInactiveAccountsByType($types);
+        $total         = $collection->count();
+        $page          = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize      = (int)app('preferences')->get('listPageSize', 50)->data;
+        $accounts      = $collection->slice(($page - 1) * $pageSize, $pageSize);
         unset($collection);
 
         /** @var Carbon $start */
-        $start = clone session('start', today(config('app.timezone'))->startOfMonth());
+        $start         = clone session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
@@ -108,7 +108,7 @@ class IndexController extends Controller
         );
 
         // make paginator:
-        $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
+        $accounts      = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
         $accounts->setPath(route('accounts.inactive.index', [$objectType]));
 
         return view('accounts.index', compact('objectType', 'inactivePage', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
@@ -124,9 +124,9 @@ class IndexController extends Controller
     public function index(Request $request, string $objectType)
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
-        $subTitle     = (string)trans(sprintf('firefly.%s_accounts', $objectType));
-        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
-        $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
+        $subTitle      = (string)trans(sprintf('firefly.%s_accounts', $objectType));
+        $subTitleIcon  = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $types         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
 
         $this->repository->resetAccountOrder();
 
@@ -142,10 +142,10 @@ class IndexController extends Controller
         unset($collection);
 
         /** @var Carbon $start */
-        $start = clone session('start', today(config('app.timezone'))->startOfMonth());
+        $start         = clone session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
         $start->subDay();
 
         $ids           = $accounts->pluck('id')->toArray();
@@ -155,8 +155,8 @@ class IndexController extends Controller
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances): void {
-                $interest = (string)$this->repository->getMetaValue($account, 'interest');
-                $interest = '' === $interest ? '0' : $interest;
+                $interest                     = (string)$this->repository->getMetaValue($account, 'interest');
+                $interest                     = '' === $interest ? '0' : $interest;
 
                 // See reference nr. 68
                 $account->lastActivityDate    = $this->isInArrayDate($activities, $account->id);
@@ -178,7 +178,7 @@ class IndexController extends Controller
         app('log')->debug(sprintf('Count of accounts before LAP: %d', $accounts->count()));
 
         /** @var LengthAwarePaginator $accounts */
-        $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
+        $accounts      = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
         $accounts->setPath(route('accounts.index', [$objectType]));
 
         app('log')->debug(sprintf('Count of accounts after LAP (1): %d', $accounts->count()));

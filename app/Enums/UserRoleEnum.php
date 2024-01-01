@@ -30,13 +30,13 @@ namespace FireflyIII\Enums;
 enum UserRoleEnum: string
 {
     // most basic rights, cannot see other members, can see everything else.
-    case READ_ONLY = 'ro';
+    case READ_ONLY            = 'ro';
 
     // required to even USE the group properly (in this order)
-    case MANAGE_TRANSACTIONS = 'mng_trx';
+    case MANAGE_TRANSACTIONS  = 'mng_trx';
 
     // required to edit, add or change categories/tags/object-groups
-    case MANAGE_META = 'mng_meta';
+    case MANAGE_META          = 'mng_meta';
 
     // manage other financial objects:
     case MANAGE_BUDGETS       = 'mng_budgets';
@@ -49,14 +49,14 @@ enum UserRoleEnum: string
     case MANAGE_CURRENCIES    = 'mng_currencies';
 
     // view and generate reports
-    case VIEW_REPORTS = 'view_reports';
+    case VIEW_REPORTS         = 'view_reports';
 
     // view memberships. needs FULL to manage them.
-    case VIEW_MEMBERSHIPS = 'view_memberships';
+    case VIEW_MEMBERSHIPS     = 'view_memberships';
 
     // everything the creator can, except remove/change original creator and delete group
-    case FULL = 'full';
+    case FULL                 = 'full';
 
     // reserved for original creator
-    case OWNER = 'owner';
+    case OWNER                = 'owner';
 }

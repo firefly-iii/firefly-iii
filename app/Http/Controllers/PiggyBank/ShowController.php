@@ -70,9 +70,9 @@ class ShowController extends Controller
     public function show(PiggyBank $piggyBank)
     {
         /** @var Carbon $end */
-        $end = session('end', today(config('app.timezone'))->endOfMonth());
+        $end         = session('end', today(config('app.timezone'))->endOfMonth());
         // transform piggies using the transformer:
-        $parameters = new ParameterBag();
+        $parameters  = new ParameterBag();
         $parameters->set('end', $end);
 
         /** @var PiggyBankTransformer $transformer */

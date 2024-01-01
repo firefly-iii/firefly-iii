@@ -62,7 +62,7 @@ class BudgetFormUpdateRequest extends FormRequest
         $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name';
 
         /** @var null|Budget $budget */
-        $budget = $this->route()->parameter('budget');
+        $budget   = $this->route()->parameter('budget');
 
         if (null !== $budget) {
             $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name,'.$budget->id;

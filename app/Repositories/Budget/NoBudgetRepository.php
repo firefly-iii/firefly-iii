@@ -44,17 +44,17 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         $carbonFormat = app('navigation')->preferredCarbonFormat($start, $end);
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
 
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setTypes([TransactionType::WITHDRAWAL]);
         $collector->withoutBudget();
-        $journals = $collector->getExtractedJournals();
-        $data     = [];
+        $journals     = $collector->getExtractedJournals();
+        $data         = [];
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId = (int)$journal['currency_id'];
+            $currencyId                          = (int)$journal['currency_id'];
 
             $data[$currencyId] ??= [
                 'id'                      => 0,
@@ -67,7 +67,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
                 'currency_decimal_places' => $journal['currency_decimal_places'],
                 'entries'                 => [],
             ];
-            $date              = $journal['date']->format($carbonFormat);
+            $date                                = $journal['date']->format($carbonFormat);
 
             if (!array_key_exists($date, $data[$currencyId]['entries'])) {
                 $data[$currencyId]['entries'][$date] = '0';
@@ -84,7 +84,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
     public function spentInPeriodWoBudgetMc(Collection $accounts, Carbon $start, Carbon $end): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
 
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
@@ -99,7 +99,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $code = $journal['currency_code'];
+            $code         = $journal['currency_code'];
             if (!array_key_exists($code, $currencies)) {
                 $currencies[$code] = [
                     'id'             => $journal['currency_id'],
@@ -151,12 +151,12 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface
         }
         $collector->withoutBudget();
         $collector->withBudgetInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],

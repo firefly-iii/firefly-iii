@@ -88,7 +88,7 @@ class TransactionCurrency extends Model
     public ?bool $userGroupDefault;
     public ?bool $userGroupEnabled;
     protected $casts
-        = [
+                        = [
             'created_at'     => 'datetime',
             'updated_at'     => 'datetime',
             'deleted_at'     => 'datetime',

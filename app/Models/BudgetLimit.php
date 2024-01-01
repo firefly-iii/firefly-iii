@@ -73,7 +73,7 @@ class BudgetLimit extends Model
     use ReturnsIntegerIdTrait;
 
     protected $casts
-        = [
+                        = [
             'created_at'  => 'datetime',
             'updated_at'  => 'datetime',
             'start_date'  => 'date',
@@ -81,7 +81,7 @@ class BudgetLimit extends Model
             'auto_budget' => 'boolean',
         ];
     protected $dispatchesEvents
-        = [
+                        = [
             'created' => Created::class,
             'updated' => Updated::class,
             'deleted' => Deleted::class,

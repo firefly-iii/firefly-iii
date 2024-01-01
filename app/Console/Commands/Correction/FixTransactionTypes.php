@@ -80,7 +80,7 @@ class FixTransactionTypes extends Command
 
     private function fixJournal(TransactionJournal $journal): bool
     {
-        $type = $journal->transactionType->type;
+        $type         = $journal->transactionType->type;
 
         try {
             $source      = $this->getSourceAccount($journal);
@@ -115,7 +115,7 @@ class FixTransactionTypes extends Command
      */
     private function getSourceAccount(TransactionJournal $journal): Account
     {
-        $collection = $journal->transactions->filter(
+        $collection  = $journal->transactions->filter(
             static function (Transaction $transaction) {
                 return $transaction->amount < 0;
             }
@@ -131,7 +131,7 @@ class FixTransactionTypes extends Command
         $transaction = $collection->first();
 
         /** @var null|Account $account */
-        $account = $transaction->account;
+        $account     = $transaction->account;
         if (null === $account) {
             throw new FireflyException(sprintf('300003: Journal #%d, transaction #%d has no source account.', $journal->id, $transaction->id));
         }
@@ -144,7 +144,7 @@ class FixTransactionTypes extends Command
      */
     private function getDestinationAccount(TransactionJournal $journal): Account
     {
-        $collection = $journal->transactions->filter(
+        $collection  = $journal->transactions->filter(
             static function (Transaction $transaction) {
                 return $transaction->amount > 0;
             }
@@ -160,7 +160,7 @@ class FixTransactionTypes extends Command
         $transaction = $collection->first();
 
         /** @var null|Account $account */
-        $account = $transaction->account;
+        $account     = $transaction->account;
         if (null === $account) {
             throw new FireflyException(sprintf('300006: Journal #%d, transaction #%d has no destination account.', $journal->id, $transaction->id));
         }

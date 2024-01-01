@@ -64,30 +64,30 @@ class PiggyBankController extends Controller
     public function history(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank): JsonResponse
     {
         // chart properties for cache:
-        $cache = new CacheProperties();
+        $cache                  = new CacheProperties();
         $cache->addProperty('chart.piggy-bank.history');
         $cache->addProperty($piggyBank->id);
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        $set    = $repository->getEvents($piggyBank);
-        $set    = $set->reverse();
-        $locale = app('steam')->getLocale();
+        $set                    = $repository->getEvents($piggyBank);
+        $set                    = $set->reverse();
+        $locale                 = app('steam')->getLocale();
 
         // get first event or start date of piggy bank or today
-        $startDate = $piggyBank->startdate ?? today(config('app.timezone'));
+        $startDate              = $piggyBank->startdate ?? today(config('app.timezone'));
 
         /** @var null|PiggyBankEvent $firstEvent */
-        $firstEvent = $set->first();
-        $firstDate  = null === $firstEvent ? new Carbon() : $firstEvent->date;
+        $firstEvent             = $set->first();
+        $firstDate              = null === $firstEvent ? new Carbon() : $firstEvent->date;
 
         // which ever is older:
-        $oldest = $startDate->lt($firstDate) ? $startDate : $firstDate;
-        $today  = today(config('app.timezone'));
+        $oldest                 = $startDate->lt($firstDate) ? $startDate : $firstDate;
+        $today                  = today(config('app.timezone'));
         // depending on diff, do something with range of chart.
-        $step = $this->calculateStep($oldest, $today);
+        $step                   = $this->calculateStep($oldest, $today);
 
-        $chartData = [];
+        $chartData              = [];
         while ($oldest <= $today) {
             $filtered          = $set->filter(
                 static function (PiggyBankEvent $event) use ($oldest) {
@@ -108,7 +108,7 @@ class PiggyBankController extends Controller
         $finalLabel             = $today->isoFormat((string)trans('config.month_and_day_js', [], $locale));
         $chartData[$finalLabel] = $finalSum;
 
-        $data = $this->generator->singleSet($piggyBank->name, $chartData);
+        $data                   = $this->generator->singleSet($piggyBank->name, $chartData);
         $cache->store($data);
 
         return response()->json($data);

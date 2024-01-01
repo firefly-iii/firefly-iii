@@ -77,7 +77,7 @@ class ShowController extends Controller
      *                                              */
     public function show(Request $request, Account $account, Carbon $start = null, Carbon $end = null)
     {
-        $objectType = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
+        $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
 
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);
@@ -86,7 +86,7 @@ class ShowController extends Controller
         // @var Carbon $start
         $start ??= session('start');
         // @var Carbon $end
-        $end ??= session('end');
+        $end   ??= session('end');
 
         if ($end < $start) {
             [$start, $end] = [$end, $start];
@@ -111,7 +111,7 @@ class ShowController extends Controller
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector        = app(GroupCollectorInterface::class);
         $collector
             ->setAccounts(new Collection([$account]))
             ->setLimit($pageSize)
@@ -123,11 +123,11 @@ class ShowController extends Controller
         // is just part of ONE of the journals. To force this:
         $collector->setExpandGroupSearch(true);
 
-        $groups = $collector->getPaginatedGroups();
+        $groups           = $collector->getPaginatedGroups();
 
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
-        $showAll = false;
-        $balance = app('steam')->balance($account, $end);
+        $showAll          = false;
+        $balance          = app('steam')->balance($account, $end);
 
         return view(
             'accounts.show',
@@ -178,18 +178,18 @@ class ShowController extends Controller
         $periods      = new Collection();
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page)->withAccountInformation()->withCategoryInformation();
 
         // this search will not include transaction groups where this asset account (or liability)
         // is just part of ONE of the journals. To force this:
         $collector->setExpandGroupSearch(true);
 
-        $groups = $collector->getPaginatedGroups();
+        $groups       = $collector->getPaginatedGroups();
         $groups->setPath(route('accounts.show.all', [$account->id]));
-        $chartUrl = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
-        $showAll  = true;
-        $balance  = app('steam')->balance($account, $end);
+        $chartUrl     = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $showAll      = true;
+        $balance      = app('steam')->balance($account, $end);
 
         return view(
             'accounts.show',

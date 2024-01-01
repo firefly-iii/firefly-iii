@@ -75,7 +75,7 @@ class DoubleReportController extends Controller
             foreach ($currency['transaction_journals'] as $journal) {
                 $categoryName             = $journal['budget_name'] ?? trans('firefly.no_budget');
                 $title                    = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
-                $result[$title]           ??= [
+                $result[$title] ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
                     'currency_code'   => $currency['currency_code'],
@@ -85,7 +85,7 @@ class DoubleReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data     = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -102,7 +102,7 @@ class DoubleReportController extends Controller
             foreach ($currency['transaction_journals'] as $journal) {
                 $categoryName             = $journal['category_name'] ?? trans('firefly.no_category');
                 $title                    = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
-                $result[$title]           ??= [
+                $result[$title] ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
                     'currency_code'   => $currency['currency_code'],
@@ -112,7 +112,7 @@ class DoubleReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data     = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -129,7 +129,7 @@ class DoubleReportController extends Controller
             foreach ($currency['transaction_journals'] as $journal) {
                 $categoryName             = $journal['category_name'] ?? trans('firefly.no_category');
                 $title                    = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
-                $result[$title]           ??= [
+                $result[$title] ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
                     'currency_code'   => $currency['currency_code'],
@@ -139,7 +139,7 @@ class DoubleReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data     = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -148,11 +148,11 @@ class DoubleReportController extends Controller
     {
         $chartData = [];
 
-        $opposing = $this->repository->expandWithDoubles(new Collection([$account]));
-        $accounts = $accounts->merge($opposing);
-        $spent    = $this->opsRepository->listExpenses($start, $end, $accounts);
-        $earned   = $this->opsRepository->listIncome($start, $end, $accounts);
-        $format   = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $opposing  = $this->repository->expandWithDoubles(new Collection([$account]));
+        $accounts  = $accounts->merge($opposing);
+        $spent     = $this->opsRepository->listExpenses($start, $end, $accounts);
+        $earned    = $this->opsRepository->listIncome($start, $end, $accounts);
+        $format    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
 
         // loop expenses.
         foreach ($spent as $currency) {
@@ -207,7 +207,7 @@ class DoubleReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiSet($chartData);
+        $data      = $this->generator->multiSet($chartData);
 
         return response()->json($data);
     }
@@ -226,11 +226,11 @@ class DoubleReportController extends Controller
 
                 // no tags? also deserves a sport
                 if (0 === count($journal['tags'])) {
-                    $includedJournals[] = $journalId;
+                    $includedJournals[]       = $journalId;
                     // do something
                     $tagName                  = trans('firefly.no_tags');
                     $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
-                    $result[$title]           ??= [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -245,11 +245,11 @@ class DoubleReportController extends Controller
                     if (in_array($journalId, $includedJournals, true)) {
                         continue;
                     }
-                    $includedJournals[] = $journalId;
+                    $includedJournals[]       = $journalId;
                     // do something
                     $tagName                  = $tag['name'];
                     $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
-                    $result[$title]           ??= [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -260,7 +260,7 @@ class DoubleReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data             = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -279,11 +279,11 @@ class DoubleReportController extends Controller
 
                 // no tags? also deserves a sport
                 if (0 === count($journal['tags'])) {
-                    $includedJournals[] = $journalId;
+                    $includedJournals[]       = $journalId;
                     // do something
                     $tagName                  = trans('firefly.no_tags');
                     $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
-                    $result[$title]           ??= [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -298,11 +298,11 @@ class DoubleReportController extends Controller
                     if (in_array($journalId, $includedJournals, true)) {
                         continue;
                     }
-                    $includedJournals[] = $journalId;
+                    $includedJournals[]       = $journalId;
                     // do something
                     $tagName                  = $tag['name'];
                     $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
-                    $result[$title]           ??= [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -313,7 +313,7 @@ class DoubleReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data             = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }

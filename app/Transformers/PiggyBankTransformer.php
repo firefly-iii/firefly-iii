@@ -53,25 +53,25 @@ class PiggyBankTransformer extends AbstractTransformer
      */
     public function transform(PiggyBank $piggyBank): array
     {
-        $account = $piggyBank->account;
+        $account          = $piggyBank->account;
 
         // set up repositories
         $this->accountRepos->setUser($account->user);
         $this->piggyRepos->setUser($account->user);
 
         // get currency from account, or use default.
-        $currency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
+        $currency         = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
 
         // note
-        $notes = $this->piggyRepos->getNoteText($piggyBank);
-        $notes = '' === $notes ? null : $notes;
+        $notes            = $this->piggyRepos->getNoteText($piggyBank);
+        $notes            = '' === $notes ? null : $notes;
 
         $objectGroupId    = null;
         $objectGroupOrder = null;
         $objectGroupTitle = null;
 
         /** @var null|ObjectGroup $objectGroup */
-        $objectGroup = $piggyBank->objectGroups->first();
+        $objectGroup      = $piggyBank->objectGroups->first();
         if (null !== $objectGroup) {
             $objectGroupId    = $objectGroup->id;
             $objectGroupOrder = $objectGroup->order;
@@ -79,13 +79,13 @@ class PiggyBankTransformer extends AbstractTransformer
         }
 
         // get currently saved amount:
-        $currentAmount = app('steam')->bcround($this->piggyRepos->getCurrentAmount($piggyBank), $currency->decimal_places);
+        $currentAmount    = app('steam')->bcround($this->piggyRepos->getCurrentAmount($piggyBank), $currency->decimal_places);
 
         // Amounts, depending on 0.0 state of target amount
-        $percentage   = null;
-        $targetAmount = $piggyBank->targetamount;
-        $leftToSave   = null;
-        $savePerMonth = null;
+        $percentage       = null;
+        $targetAmount     = $piggyBank->targetamount;
+        $leftToSave       = null;
+        $savePerMonth     = null;
         if (0 !== bccomp($targetAmount, '0')) { // target amount is not 0.00
             $leftToSave   = bcsub($piggyBank->targetamount, $currentAmount);
             $percentage   = (int)bcmul(bcdiv($currentAmount, $targetAmount), '100');
@@ -93,8 +93,8 @@ class PiggyBankTransformer extends AbstractTransformer
             $leftToSave   = app('steam')->bcround($leftToSave, $currency->decimal_places);
             $savePerMonth = app('steam')->bcround($this->piggyRepos->getSuggestedMonthlyAmount($piggyBank), $currency->decimal_places);
         }
-        $startDate  = $piggyBank->startdate?->format('Y-m-d');
-        $targetDate = $piggyBank->targetdate?->format('Y-m-d');
+        $startDate        = $piggyBank->startdate?->format('Y-m-d');
+        $targetDate       = $piggyBank->targetdate?->format('Y-m-d');
 
         return [
             'id'                      => (string)$piggyBank->id,

@@ -682,12 +682,12 @@ trait MetaCollection
         $list                = $tags->pluck('tag')->toArray();
         $list                = array_map('strtolower', $list);
         $filter              = static function (array $object) use ($list): bool|array {
-            $return = $object;
+            $return                 = $object;
             unset($return['transactions']);
             $return['transactions'] = [];
             Log::debug(sprintf('Now in setAllTags(%s) filter', implode(', ', $list)));
-            $expectedTagCount = count($list);
-            $foundTagCount    = 0;
+            $expectedTagCount       = count($list);
+            $foundTagCount          = 0;
             foreach ($object['transactions'] as $transaction) {
                 $transactionTagCount = count($transaction['tags']);
                 app('log')->debug(sprintf('Transaction #%d has %d tag(s)', $transaction['transaction_journal_id'], $transactionTagCount));
@@ -708,7 +708,7 @@ trait MetaCollection
             Log::debug(sprintf('Found %d tags, need at least %d.', $foundTagCount, $expectedTagCount));
 
             // found at least the expected tags.
-            $result = $foundTagCount >= $expectedTagCount;
+            $result                 = $foundTagCount >= $expectedTagCount;
             if (true === $result) {
                 return $return;
             }
@@ -941,8 +941,8 @@ trait MetaCollection
         if (false === $this->hasJoinedMetaTables) {
             $this->hasJoinedMetaTables = true;
             $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
-            $this->fields[] = 'journal_meta.name as meta_name';
-            $this->fields[] = 'journal_meta.data as meta_data';
+            $this->fields[]            = 'journal_meta.name as meta_name';
+            $this->fields[]            = 'journal_meta.data as meta_data';
         }
     }
 

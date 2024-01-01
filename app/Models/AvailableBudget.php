@@ -79,7 +79,7 @@ class AvailableBudget extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
+                        = [
             'created_at'              => 'datetime',
             'updated_at'              => 'datetime',
             'deleted_at'              => 'datetime',
@@ -101,10 +101,10 @@ class AvailableBudget extends Model
             $availableBudgetId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user              = auth()->user();
 
             /** @var null|AvailableBudget $availableBudget */
-            $availableBudget = $user->availableBudgets()->find($availableBudgetId);
+            $availableBudget   = $user->availableBudgets()->find($availableBudgetId);
             if (null !== $availableBudget) {
                 return $availableBudget;
             }

@@ -43,7 +43,7 @@ class AccountController extends Controller
     public function general(Collection $accounts, Carbon $start, Carbon $end): string
     {
         // chart properties for cache:
-        $cache = new CacheProperties();
+        $cache         = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('account-report');

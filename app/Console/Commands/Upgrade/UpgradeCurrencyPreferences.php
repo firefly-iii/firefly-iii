@@ -41,9 +41,9 @@ class UpgradeCurrencyPreferences extends Command
 
     public const string CONFIG_NAME = '610_upgrade_currency_prefs';
 
-    protected $description = 'Upgrade user currency preferences';
+    protected $description          = 'Upgrade user currency preferences';
 
-    protected $signature = 'firefly-iii:upgrade-currency-preferences {--F|force : Force the execution of this command.}';
+    protected $signature            = 'firefly-iii:upgrade-currency-preferences {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -83,7 +83,7 @@ class UpgradeCurrencyPreferences extends Command
             $this->upgradeGroupPreferences($group);
         }
 
-        $users = User::get();
+        $users  = User::get();
 
         /** @var User $user */
         foreach ($users as $user) {
@@ -107,8 +107,8 @@ class UpgradeCurrencyPreferences extends Command
 
     private function upgradeUserPreferences(User $user): void
     {
-        $currencies = TransactionCurrency::get();
-        $enabled    = new Collection();
+        $currencies      = TransactionCurrency::get();
+        $enabled         = new Collection();
 
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {

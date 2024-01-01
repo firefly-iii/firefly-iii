@@ -74,7 +74,7 @@ class AccountUpdateService
 
         // find currency, or use default currency instead.
         if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
-            $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
+            $currency            = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
             unset($data['currency_code'], $data['currency_id']);
             $data['currency_id'] = $currency->id;
         }
@@ -118,17 +118,17 @@ class AccountUpdateService
             return $account;
         }
         // skip if not of orderable type.
-        $type = $account->accountType->type;
+        $type           = $account->accountType->type;
         if (!in_array($type, [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], true)) {
             app('log')->debug('Will not change order of this account.');
 
             return $account;
         }
         // get account type ID's because a join and an update is hard:
-        $oldOrder = $account->order;
-        $newOrder = $data['order'];
+        $oldOrder       = $account->order;
+        $newOrder       = $data['order'];
         app('log')->debug(sprintf('Order is set to be updated from %s to %s', $oldOrder, $newOrder));
-        $list = $this->getTypeIds([AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT]);
+        $list           = $this->getTypeIds([AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT]);
         if (AccountType::ASSET === $type) {
             $list = $this->getTypeIds([AccountType::ASSET]);
         }
@@ -235,7 +235,7 @@ class AccountUpdateService
 
             // otherwise, update or create.
             if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
-                $location = $this->accountRepository->getLocation($account);
+                $location             = $this->accountRepository->getLocation($account);
                 if (null === $location) {
                     $location = new Location();
                     $location->locatable()->associate($account);
@@ -291,11 +291,11 @@ class AccountUpdateService
         if (true === $account->active) {
             return;
         }
-        $preference = app('preferences')->getForUser($account->user, 'frontpageAccounts');
+        $preference      = app('preferences')->getForUser($account->user, 'frontpageAccounts');
         if (null === $preference) {
             return;
         }
-        $array = $preference->data;
+        $array           = $preference->data;
         if (!is_array($array)) {
             $array = [$array];
         }

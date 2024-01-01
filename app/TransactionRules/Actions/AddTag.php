@@ -52,9 +52,9 @@ class AddTag implements ActionInterface
         $factory = app(TagFactory::class);
 
         /** @var User $user */
-        $user = User::find($journal['user_id']);
+        $user    = User::find($journal['user_id']);
         $factory->setUser($user);
-        $tag = $factory->findOrCreate($this->action->action_value);
+        $tag     = $factory->findOrCreate($this->action->action_value);
 
         if (null === $tag) {
             // could not find, could not create tag.
@@ -63,7 +63,7 @@ class AddTag implements ActionInterface
             return false;
         }
 
-        $count = \DB::table('tag_transaction_journal')
+        $count   = \DB::table('tag_transaction_journal')
             ->where('tag_id', $tag->id)
             ->where('transaction_journal_id', $journal['transaction_journal_id'])
             ->count()

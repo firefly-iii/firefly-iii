@@ -37,7 +37,7 @@ class BillEventHandler
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
 
-        $bill = $event->bill;
+        $bill       = $event->bill;
 
         /** @var bool $preference */
         $preference = app('preferences')->getForUser($bill->user, 'notification_bill_reminder', true)->data;

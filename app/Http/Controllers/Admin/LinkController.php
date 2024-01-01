@@ -237,7 +237,7 @@ class LinkController extends Controller
             return redirect(route('admin.links.index'));
         }
 
-        $data = [
+        $data     = [
             'name'    => $request->convertString('name'),
             'inward'  => $request->convertString('inward'),
             'outward' => $request->convertString('outward'),

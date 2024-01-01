@@ -91,7 +91,7 @@ class PiggyBank extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
+                        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
@@ -104,7 +104,7 @@ class PiggyBank extends Model
 
     protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate', 'active'];
 
-    protected $hidden = ['targetamount_encrypted', 'encrypted'];
+    protected $hidden   = ['targetamount_encrypted', 'encrypted'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

@@ -25,9 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Models\Recurrence;
-use FireflyIII\Models\RecurrenceTransaction;
-use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
 
 /**
@@ -39,9 +36,9 @@ class MigrateRecurrenceType extends Command
 
     public const string CONFIG_NAME = '550_migrate_recurrence_type';
 
-    protected $description = 'Migrate transaction type of recurring transaction.';
+    protected $description          = 'Migrate transaction type of recurring transaction.';
 
-    protected $signature = 'firefly-iii:migrate-recurrence-type {--F|force : Force the execution of this command.}';
+    protected $signature            = 'firefly-iii:migrate-recurrence-type {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -65,7 +62,6 @@ class MigrateRecurrenceType extends Command
 
         return (bool)$configVar?->data;
     }
-
 
     private function markAsExecuted(): void
     {

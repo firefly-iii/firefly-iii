@@ -42,7 +42,7 @@ class BillController extends Controller
      */
     public function overview(Collection $accounts, Carbon $start, Carbon $end)   // chart properties for cache:
     {
-        $cache = new CacheProperties();
+        $cache  = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('bill-report');

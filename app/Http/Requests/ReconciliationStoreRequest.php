@@ -45,7 +45,7 @@ class ReconciliationStoreRequest extends FormRequest
         if (!is_array($transactions)) {
             $transactions = [];
         }
-        $data = [
+        $data         = [
             'start'         => $this->getCarbonDate('start'),
             'end'           => $this->getCarbonDate('end'),
             'start_balance' => $this->convertString('startBalance'),

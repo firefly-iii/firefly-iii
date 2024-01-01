@@ -67,7 +67,7 @@ class DeleteController extends Controller
      */
     public function delete(Recurrence $recurrence)
     {
-        $subTitle = (string)trans('firefly.delete_recurring', ['title' => $recurrence->title]);
+        $subTitle        = (string)trans('firefly.delete_recurring', ['title' => $recurrence->title]);
         // put previous url in session
         $this->rememberPreviousUrl('recurrences.delete.url');
 

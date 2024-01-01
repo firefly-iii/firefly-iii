@@ -36,7 +36,7 @@ class RenameMetaFields extends Command
     protected $description = 'Rename changed meta fields.';
     protected $signature   = 'firefly-iii:rename-meta-fields';
 
-    private int $count = 0;
+    private int $count     = 0;
 
     /**
      * Execute the console command.
@@ -72,7 +72,7 @@ class RenameMetaFields extends Command
 
     private function rename(string $original, string $update): void
     {
-        $total       = \DB::table('journal_meta')
+        $total = \DB::table('journal_meta')
             ->where('name', '=', $original)
             ->update(['name' => $update])
         ;

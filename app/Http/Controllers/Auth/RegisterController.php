@@ -92,7 +92,7 @@ class RegisterController extends Controller
         }
 
         $this->validator($request->all())->validate();
-        $user = $this->createUser($request->all());
+        $user              = $this->createUser($request->all());
         app('log')->info(sprintf('Registered new user %s', $user->email));
         event(new RegisteredUser($user));
 
@@ -136,7 +136,7 @@ class RegisterController extends Controller
             return view('error', compact('message'));
         }
 
-        $email = $request->old('email');
+        $email             = $request->old('email');
 
         return view('auth.register', compact('isDemoSite', 'email', 'pageTitle', 'inviteCode'));
     }
@@ -160,7 +160,7 @@ class RegisterController extends Controller
             return view('error', compact('message'));
         }
 
-        $email = $request->old('email');
+        $email             = $request->old('email');
 
         return view('auth.register', compact('isDemoSite', 'email', 'pageTitle'));
     }
@@ -178,8 +178,8 @@ class RegisterController extends Controller
         } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
             $singleUserMode = true;
         }
-        $userCount = User::count();
-        $guard     = config('auth.defaults.guard');
+        $userCount         = User::count();
+        $guard             = config('auth.defaults.guard');
         if (true === $singleUserMode && $userCount > 0 && 'web' === $guard) {
             $allowRegistration = false;
         }

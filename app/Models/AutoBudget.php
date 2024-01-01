@@ -74,7 +74,7 @@ class AutoBudget extends Model
     public const int AUTO_BUDGET_ADJUSTED = 3;
     public const int AUTO_BUDGET_RESET    = 1;
     public const int AUTO_BUDGET_ROLLOVER = 2;
-    protected $fillable = ['budget_id', 'amount', 'period'];
+    protected $fillable                   = ['budget_id', 'amount', 'period'];
 
     public function budget(): BelongsTo
     {

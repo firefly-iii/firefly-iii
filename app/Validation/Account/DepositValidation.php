@@ -41,13 +41,13 @@ trait DepositValidation
         app('log')->debug('Now in validateDepositDestination', $array);
 
         // source can be any of the following types.
-        $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
+        $validTypes  = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
         if (null === $accountId && null === $accountName && null === $accountIban && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the destination of a deposit can't be created.
             $this->destError = (string) trans('validation.deposit_dest_need_data');
             app('log')->error('Both values are NULL, cant create deposit destination.');
-            $result = false;
+            $result          = false;
         }
         // if the account can be created anyway we don't need to search.
         if (null === $result && true === $this->canCreateTypes($validTypes)) {
@@ -94,10 +94,10 @@ trait DepositValidation
 
         // null = we found nothing at all or didn't even search
         // false = invalid results
-        $result = null;
+        $result        = null;
 
         // source can be any of the following types.
-        $validTypes = array_keys($this->combinations[$this->transactionType]);
+        $validTypes    = array_keys($this->combinations[$this->transactionType]);
         if (null === $accountId
             && null === $accountName
             && null === $accountIban
@@ -168,7 +168,7 @@ trait DepositValidation
 
         // if the account can be created anyway we don't need to search.
         if (null === $result && true === $this->canCreateTypes($validTypes)) {
-            $result = true;
+            $result               = true;
 
             // set the source to be a (dummy) revenue account.
             $account              = new Account();

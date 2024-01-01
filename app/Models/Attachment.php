@@ -96,7 +96,7 @@ class Attachment extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
+                        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
@@ -116,10 +116,10 @@ class Attachment extends Model
             $attachmentId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user         = auth()->user();
 
             /** @var null|Attachment $attachment */
-            $attachment = $user->attachments()->find($attachmentId);
+            $attachment   = $user->attachments()->find($attachmentId);
             if (null !== $attachment) {
                 return $attachment;
             }

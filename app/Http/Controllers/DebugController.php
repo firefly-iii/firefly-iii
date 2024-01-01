@@ -116,14 +116,14 @@ class DebugController extends Controller
      */
     public function index()
     {
-        $table = $this->generateTable();
-        $table = str_replace(["\n", "\t", '  '], '', $table);
-        $now   = now(config('app.timezone'))->format('Y-m-d H:i:s');
+        $table      = $this->generateTable();
+        $table      = str_replace(["\n", "\t", '  '], '', $table);
+        $now        = now(config('app.timezone'))->format('Y-m-d H:i:s');
 
         // get latest log file:
-        $logger = Log::driver();
+        $logger     = Log::driver();
         // PHPstan doesn't recognize the method because of its polymorphic nature.
-        $handlers = $logger->getHandlers(); // @phpstan-ignore-line
+        $handlers   = $logger->getHandlers(); // @phpstan-ignore-line
         $logContent = '';
         foreach ($handlers as $handler) {
             if ($handler instanceof RotatingFileHandler) {
@@ -227,7 +227,7 @@ class DebugController extends Controller
 
     private function getAppInfo(): array
     {
-        $userGuard = config('auth.defaults.guard');
+        $userGuard      = config('auth.defaults.guard');
 
         $config         = app('fireflyconfig')->get('last_rt_job', 0);
         $lastTime       = (int)$config->data;
@@ -252,24 +252,24 @@ class DebugController extends Controller
             // any of the cron jobs will do, they always run at the same time.
             // but this job is the oldest, so the biggest chance it ran once
 
-            'last_cronjob'     => $lastCronjob,
-            'last_cronjob_ago' => $lastCronjobAgo,
+            'last_cronjob'       => $lastCronjob,
+            'last_cronjob_ago'   => $lastCronjobAgo,
         ];
     }
 
     private function getuserInfo(): array
     {
-        $userFlags = $this->getUserFlags();
+        $userFlags      = $this->getUserFlags();
 
         // user info
-        $userAgent = request()->header('user-agent');
+        $userAgent      = request()->header('user-agent');
 
         // set languages, see what happens:
         $original       = setlocale(LC_ALL, '0');
         $localeAttempts = [];
         $parts          = app('steam')->getLocaleArray(app('steam')->getLocale());
         foreach ($parts as $code) {
-            $code = trim($code);
+            $code                  = trim($code);
             app('log')->debug(sprintf('Trying to set %s', $code));
             $result                = setlocale(LC_ALL, $code);
             $localeAttempts[$code] = $result === $code;
@@ -293,7 +293,7 @@ class DebugController extends Controller
         $flags = [];
 
         /** @var User $user */
-        $user = auth()->user();
+        $user  = auth()->user();
 
         // has liabilities
         if ($user->accounts()->accountTypeIn([AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE])->count() > 0) {
@@ -306,7 +306,7 @@ class DebugController extends Controller
         }
 
         // has stored reconciliations
-        $type = TransactionType::whereType(TransactionType::RECONCILIATION)->first();
+        $type  = TransactionType::whereType(TransactionType::RECONCILIATION)->first();
         if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count() > 0) {
             $flags[] = '<span title="Has reconciled">:ledger:</span>';
         }

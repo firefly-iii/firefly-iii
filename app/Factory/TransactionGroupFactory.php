@@ -63,8 +63,8 @@ class TransactionGroupFactory
 
             throw new DuplicateTransactionException($e->getMessage(), 0, $e);
         }
-        $title = $data['group_title'] ?? null;
-        $title = '' === $title ? null : $title;
+        $title        = $data['group_title'] ?? null;
+        $title        = '' === $title ? null : $title;
 
         if (null !== $title) {
             $title = substr($title, 0, 1000);
@@ -73,7 +73,7 @@ class TransactionGroupFactory
             throw new FireflyException('Created zero transaction journals.');
         }
 
-        $group = new TransactionGroup();
+        $group        = new TransactionGroup();
         $group->user()->associate($this->user);
         $group->userGroup()->associate($data['user_group'] ?? $this->user->userGroup);
         $group->title = $title;

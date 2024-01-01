@@ -63,7 +63,7 @@ class ExchangeRateConverter
         $start->startOfDay();
         $end->endOfDay();
         Log::debug(sprintf('Preparing for %s to %s between %s and %s', $from->code, $to->code, $start->format('Y-m-d'), $end->format('Y-m-d')));
-        $set = auth()->user()
+        $set              = auth()->user()
             ->currencyExchangeRates()
             ->where('from_currency_id', $from->id)
             ->where('to_currency_id', $to->id)
@@ -76,7 +76,7 @@ class ExchangeRateConverter
             Log::debug('No prepared rates found in this period, use the fallback');
             $this->fallback($from, $to, $start);
             $this->noPreparedRates = true;
-            $this->isPrepared = true;
+            $this->isPrepared      = true;
             Log::debug('prepare DONE()');
 
             return;
@@ -84,10 +84,10 @@ class ExchangeRateConverter
         $this->isPrepared = true;
 
         // so there is a fallback just in case. Now loop the set of rates we DO have.
-        $temp  = [];
-        $count = 0;
+        $temp             = [];
+        $count            = 0;
         foreach ($set as $rate) {
-            $date        = $rate->date->format('Y-m-d');
+            $date = $rate->date->format('Y-m-d');
             $temp[$date] ??= [
                 $from->id => [
                     $to->id => $rate->rate,
@@ -96,11 +96,11 @@ class ExchangeRateConverter
             ++$count;
         }
         Log::debug(sprintf('Found %d rates in this period.', $count));
-        $currentStart = clone $start;
+        $currentStart     = clone $start;
         while ($currentStart->lte($end)) {
-            $currentDate                  = $currentStart->format('Y-m-d');
+            $currentDate = $currentStart->format('Y-m-d');
             $this->prepared[$currentDate] ??= [];
-            $fallback                     = $temp[$currentDate][$from->id][$to->id] ?? $this->fallback[$from->id][$to->id] ?? '0';
+            $fallback    = $temp[$currentDate][$from->id][$to->id] ?? $this->fallback[$from->id][$to->id] ?? '0';
             if (0 === count($this->prepared[$currentDate]) && 0 !== bccomp('0', $fallback)) {
                 // fill from temp or fallback or from temp (see before)
                 $this->prepared[$currentDate][$from->id][$to->id] = $fallback;
@@ -138,12 +138,12 @@ class ExchangeRateConverter
             return $fallback;
         }
         // first attempt:
-        $rate = $this->getFromDB($from->id, $to->id, $date->format('Y-m-d'));
+        $rate   = $this->getFromDB($from->id, $to->id, $date->format('Y-m-d'));
         if (null !== $rate) {
             return $rate;
         }
         // no result. perhaps the other way around?
-        $rate = $this->getFromDB($to->id, $from->id, $date->format('Y-m-d'));
+        $rate   = $this->getFromDB($to->id, $from->id, $date->format('Y-m-d'));
         if (null !== $rate) {
             return bcdiv('1', $rate);
         }
@@ -170,7 +170,7 @@ class ExchangeRateConverter
         if ($from === $to) {
             return '1';
         }
-        $key = sprintf('cer-%d-%d-%s', $from, $to, $date);
+        $key          = sprintf('cer-%d-%d-%s', $from, $to, $date);
 
         // perhaps the rate has been cached during this particular run
         $preparedRate = $this->prepared[$date][$from][$to] ?? null;
@@ -180,7 +180,7 @@ class ExchangeRateConverter
             return $preparedRate;
         }
 
-        $cache = new CacheProperties();
+        $cache        = new CacheProperties();
         $cache->addProperty($key);
         if ($cache->has()) {
             $rate = $cache->get();
@@ -193,7 +193,7 @@ class ExchangeRateConverter
         }
 
         /** @var null|CurrencyExchangeRate $result */
-        $result = auth()->user()
+        $result       = auth()->user()
             ->currencyExchangeRates()
             ->where('from_currency_id', $from)
             ->where('to_currency_id', $to)
@@ -202,7 +202,7 @@ class ExchangeRateConverter
             ->first()
         ;
         ++$this->queryCount;
-        $rate = (string) $result?->rate;
+        $rate         = (string) $result?->rate;
 
         if ('' === $rate) {
             app('log')->debug(sprintf('Found no rate for #%d->#%d (%s) in the DB.', $from, $to, $date));
@@ -243,13 +243,13 @@ class ExchangeRateConverter
         if ($euroId === $currency->id) {
             return '1';
         }
-        $rate = $this->getFromDB($currency->id, $euroId, $date->format('Y-m-d'));
+        $rate   = $this->getFromDB($currency->id, $euroId, $date->format('Y-m-d'));
 
         if (null !== $rate) {
             //            app('log')->debug(sprintf('Rate for %s to EUR is %s.', $currency->code, $rate));
             return $rate;
         }
-        $rate = $this->getFromDB($euroId, $currency->id, $date->format('Y-m-d'));
+        $rate   = $this->getFromDB($euroId, $currency->id, $date->format('Y-m-d'));
         if (null !== $rate) {
             return bcdiv('1', $rate);
             //            app('log')->debug(sprintf('Inverted rate for %s to EUR is %s.', $currency->code, $rate));
@@ -278,7 +278,7 @@ class ExchangeRateConverter
         if ($cache->has()) {
             return (int) $cache->get();
         }
-        $euro = TransactionCurrency::whereCode('EUR')->first();
+        $euro  = TransactionCurrency::whereCode('EUR')->first();
         ++$this->queryCount;
         if (null === $euro) {
             throw new FireflyException('Cannot find EUR in system, cannot do currency conversion.');

@@ -121,7 +121,7 @@ class Account extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
+                                     = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'user_id'    => 'integer',
@@ -130,9 +130,9 @@ class Account extends Model
             'encrypted'  => 'boolean',
         ];
 
-    protected $fillable = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
+    protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
 
-    protected $hidden             = ['encrypted'];
+    protected $hidden                = ['encrypted'];
     private bool $joinedAccountTypes = false;
 
     /**
@@ -146,10 +146,10 @@ class Account extends Model
             $accountId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user      = auth()->user();
 
             /** @var null|Account $account */
-            $account = $user->accounts()->with(['accountType'])->find($accountId);
+            $account   = $user->accounts()->with(['accountType'])->find($accountId);
             if (null !== $account) {
                 return $account;
             }
@@ -240,7 +240,7 @@ class Account extends Model
 
     public function setVirtualBalanceAttribute(mixed $value): void
     {
-        $value = (string)$value;
+        $value                               = (string)$value;
         if ('' === $value) {
             $value = null;
         }

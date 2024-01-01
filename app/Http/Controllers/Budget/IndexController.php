@@ -91,8 +91,8 @@ class IndexController extends Controller
         app('log')->debug(sprintf('Start of IndexController::index("%s", "%s")', $start?->format('Y-m-d'), $end?->format('Y-m-d')));
 
         // collect some basic vars:
-        $range         = app('navigation')->getViewRange(true);
-        $isCustomRange = session('is_custom_range', false);
+        $range            = app('navigation')->getViewRange(true);
+        $isCustomRange    = session('is_custom_range', false);
         if (false === $isCustomRange) {
             $start ??= session('start', today(config('app.timezone'))->startOfMonth());
             $end   ??= app('navigation')->endOfPeriod($start, $range);
@@ -104,22 +104,22 @@ class IndexController extends Controller
             $end   ??= session('end', today(config('app.timezone'))->endOfMonth());
         }
 
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $currencies      = $this->currencyRepository->get();
-        $budgeted        = '0';
-        $spent           = '0';
+        $defaultCurrency  = app('amount')->getDefaultCurrency();
+        $currencies       = $this->currencyRepository->get();
+        $budgeted         = '0';
+        $spent            = '0';
 
         // new period stuff:
-        $periodTitle = app('navigation')->periodShow($start, $range);
-        $prevLoop    = $this->getPreviousPeriods($start, $range);
-        $nextLoop    = $this->getNextPeriods($start, $range);
+        $periodTitle      = app('navigation')->periodShow($start, $range);
+        $prevLoop         = $this->getPreviousPeriods($start, $range);
+        $nextLoop         = $this->getNextPeriods($start, $range);
 
         // get all available budgets:
         $availableBudgets = $this->getAllAvailableBudgets($start, $end);
 
         // get all active budgets:
-        $budgets = $this->getAllBudgets($start, $end, $currencies, $defaultCurrency);
-        $sums    = $this->getSums($budgets);
+        $budgets          = $this->getAllBudgets($start, $end, $currencies, $defaultCurrency);
+        $sums             = $this->getSums($budgets);
 
         // get budgeted for default currency:
         if (0 === count($availableBudgets)) {
@@ -134,7 +134,7 @@ class IndexController extends Controller
         $activeDaysLeft   = $this->activeDaysLeft($start, $end);   // see method description.
 
         // get all inactive budgets, and simply list them:
-        $inactive = $this->repository->getInactiveBudgets();
+        $inactive         = $this->repository->getInactiveBudgets();
 
         return view(
             'budgets.index',
@@ -191,13 +191,13 @@ class IndexController extends Controller
             $array['end_date']   = $entry->end_date;
 
             // spent in period:
-            $spentArr       = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency);
-            $array['spent'] = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
+            $spentArr            = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency);
+            $array['spent']      = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
 
             // budgeted in period:
-            $budgeted           = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency);
-            $array['budgeted']  = $budgeted;
-            $availableBudgets[] = $array;
+            $budgeted            = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency);
+            $array['budgeted']   = $budgeted;
+            $availableBudgets[]  = $array;
             unset($spentArr);
         }
 
@@ -252,7 +252,7 @@ class IndexController extends Controller
                     $array['spent'][$currency->id]['currency_decimal_places'] = $currency->decimal_places;
                 }
             }
-            $budgets[] = $array;
+            $budgets[]            = $array;
         }
 
         return $budgets;
@@ -295,7 +295,7 @@ class IndexController extends Controller
 
                 // also calculate how much left from budgeted:
                 $sums['left'][$currencyId]
-                    ??= [
+                                                         ??= [
                         'amount'                  => '0',
                         'currency_id'             => $budgeted['currency_id'],
                         'currency_symbol'         => $budgeted['currency_symbol'],

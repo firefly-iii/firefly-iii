@@ -75,7 +75,7 @@ class UpdateController extends Controller
             1  => (string)trans('firefly.updates_enable_check'),
         ];
 
-        $channelOptions = [
+        $channelOptions  = [
             'stable' => (string)trans('firefly.update_channel_stable'),
             'beta'   => (string)trans('firefly.update_channel_beta'),
             'alpha'  => (string)trans('firefly.update_channel_alpha'),

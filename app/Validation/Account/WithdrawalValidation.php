@@ -38,7 +38,7 @@ trait WithdrawalValidation
         $accountIban = array_key_exists('iban', $array) ? $array['iban'] : null;
         app('log')->debug('Now in validateGenericSource', $array);
         // source can be any of the following types.
-        $validTypes = [AccountType::ASSET, AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
+        $validTypes  = [AccountType::ASSET, AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE];
         if (null === $accountId && null === $accountName && null === $accountIban && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return TRUE
             // because we assume the user doesn't want to submit / change anything.
@@ -49,7 +49,7 @@ trait WithdrawalValidation
         }
 
         // otherwise try to find the account:
-        $search = $this->findExistingAccount($validTypes, $array);
+        $search      = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
             $this->sourceError = (string)trans('validation.withdrawal_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
             app('log')->warning('Not a valid source. Cant find it.', $validTypes);
@@ -74,7 +74,7 @@ trait WithdrawalValidation
         $accountNumber = array_key_exists('number', $array) ? $array['number'] : null;
         app('log')->debug('Now in validateWithdrawalDestination()', $array);
         // source can be any of the following types.
-        $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
+        $validTypes    = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
         app('log')->debug('Source type can be: ', $validTypes);
         if (null === $accountId && null === $accountName && null === $accountIban && null === $accountNumber && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL return false,
@@ -88,7 +88,7 @@ trait WithdrawalValidation
         if (null !== $accountId && 0 !== $accountId) {
             $found = $this->getRepository()->find($accountId);
             if (null !== $found) {
-                $type = $found->accountType->type;
+                $type            = $found->accountType->type;
                 if (in_array($type, $validTypes, true)) {
                     $this->setDestination($found);
 
@@ -126,7 +126,7 @@ trait WithdrawalValidation
 
         app('log')->debug('Now in validateWithdrawalSource', $array);
         // source can be any of the following types.
-        $validTypes = array_keys($this->combinations[$this->transactionType]);
+        $validTypes    = array_keys($this->combinations[$this->transactionType]);
         if (null === $accountId && null === $accountName && null === $accountNumber && null === $accountIban && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the source of a withdrawal can't be created.
@@ -137,7 +137,7 @@ trait WithdrawalValidation
         }
 
         // otherwise try to find the account:
-        $search = $this->findExistingAccount($validTypes, $array);
+        $search        = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
             $this->sourceError = (string)trans('validation.withdrawal_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
             app('log')->warning('Not a valid source. Cant find it.', $validTypes);

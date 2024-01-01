@@ -95,8 +95,8 @@ class JavascriptController extends Controller
      *                                              */
     public function variables(Request $request, AccountRepositoryInterface $repository): Response
     {
-        $account  = $repository->find((int)$request->get('account'));
-        $currency = app('amount')->getDefaultCurrency();
+        $account                   = $repository->find((int)$request->get('account'));
+        $currency                  = app('amount')->getDefaultCurrency();
         if (null !== $account) {
             $currency = $repository->getAccountCurrency($account) ?? $currency;
         }
@@ -108,7 +108,7 @@ class JavascriptController extends Controller
         $dateRange                 = $this->getDateRangeConfig();
         $uid                       = substr(hash('sha256', sprintf('%s-%s-%s', (string)config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
 
-        $data = [
+        $data                      = [
             'currencyCode'         => $currency->code,
             'currencySymbol'       => $currency->symbol,
             'accountingLocaleInfo' => $accounting,
@@ -135,9 +135,9 @@ class JavascriptController extends Controller
         $start = clone session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $end   = clone session('end', today(config('app.timezone'))->endOfMonth());
 
-        $data = [
+        $data  = [
             'start' => $start->format('Y-m-d'),
             'end'   => $end->format('Y-m-d'),
         ];

@@ -68,7 +68,7 @@ class Note extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
+                        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',

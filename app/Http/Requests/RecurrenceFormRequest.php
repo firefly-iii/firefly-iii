@@ -52,8 +52,8 @@ class RecurrenceFormRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $repetitionData = $this->parseRepetitionData();
-        $return         = [
+        $repetitionData                                = $this->parseRepetitionData();
+        $return                                        = [
             'recurrence'   => [
                 'type'              => $this->convertString('transaction_type'),
                 'title'             => $this->convertString('title'),
@@ -128,7 +128,7 @@ class RecurrenceFormRequest extends FormRequest
         }
 
         // replace category name with a new category:
-        $factory = app(CategoryFactory::class);
+        $factory                                       = app(CategoryFactory::class);
         $factory->setUser(auth()->user());
 
         /**
@@ -153,9 +153,9 @@ class RecurrenceFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        $today    = today(config('app.timezone'));
-        $tomorrow = today(config('app.timezone'))->addDay();
-        $rules    = [
+        $today      = today(config('app.timezone'));
+        $tomorrow   = today(config('app.timezone'))->addDay();
+        $rules      = [
             // mandatory info for recurrence.
             'title'                   => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
             'first_date'              => 'required|date|after:'.$today->format('Y-m-d'),
@@ -206,7 +206,7 @@ class RecurrenceFormRequest extends FormRequest
         }
 
         // switch on type to expand rules for source and destination accounts:
-        $type = strtolower($this->convertString('transaction_type'));
+        $type       = strtolower($this->convertString('transaction_type'));
         if (strtolower(TransactionType::WITHDRAWAL) === $type) {
             $rules['source_id']        = 'required|exists:accounts,id|belongsToUser:accounts';
             $rules['destination_name'] = 'between:1,255|nullable';
@@ -263,13 +263,13 @@ class RecurrenceFormRequest extends FormRequest
         $accountValidator->setTransactionType($transactionType);
 
         // default values:
-        $sourceId      = null;
-        $destinationId = null;
+        $sourceId         = null;
+        $destinationId    = null;
 
         // TODO typeOverrule: the account validator may have another opinion the transaction type.
         // TODO either use 'withdrawal' or the strtolower() variant, not both.
-        $type       = $this->convertString('transaction_type');
-        $throwError = true;
+        $type             = $this->convertString('transaction_type');
+        $throwError       = true;
         if ('withdrawal' === $type) {
             $throwError    = false;
             $sourceId      = (int) $data['source_id'];
@@ -290,7 +290,7 @@ class RecurrenceFormRequest extends FormRequest
         }
 
         // validate source account.
-        $validSource = $accountValidator->validateSource(['id' => $sourceId]);
+        $validSource      = $accountValidator->validateSource(['id' => $sourceId]);
 
         // do something with result:
         if (false === $validSource) {

@@ -136,7 +136,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function findByName(string $name, array $types): ?Account
     {
-        $query = $this->user->accounts();
+        $query   = $this->user->accounts();
 
         if (0 !== count($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -203,7 +203,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function getAttachments(Account $account): Collection
     {
-        $set = $account->attachments()->get();
+        $set  = $account->attachments()->get();
 
         /** @var \Storage $disk */
         $disk = \Storage::disk('upload');
@@ -225,7 +225,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function getCashAccount(): Account
     {
         /** @var AccountType $type */
-        $type = AccountType::where('type', AccountType::CASH)->first();
+        $type    = AccountType::where('type', AccountType::CASH)->first();
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -291,7 +291,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getOpeningBalanceAmount(Account $account): ?string
     {
-        $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $journal     = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->transactionTypes([TransactionType::OPENING_BALANCE, TransactionType::LIABILITY_CREDIT])
             ->first(['transaction_journals.*'])
@@ -352,10 +352,10 @@ class AccountRepository implements AccountRepositoryInterface
         $name     = trans('firefly.reconciliation_account_name', ['name' => $account->name, 'currency' => $currency->code]);
 
         /** @var AccountType $type */
-        $type = AccountType::where('type', AccountType::RECONCILIATION)->first();
+        $type     = AccountType::where('type', AccountType::RECONCILIATION)->first();
 
         /** @var null|Account $current */
-        $current = $this->user->accounts()->where('account_type_id', $type->id)
+        $current  = $this->user->accounts()->where('account_type_id', $type->id)
             ->where('name', $name)
             ->first()
         ;
@@ -364,7 +364,7 @@ class AccountRepository implements AccountRepositoryInterface
             return $current;
         }
 
-        $data = [
+        $data     = [
             'account_type_id'   => null,
             'account_type_name' => AccountType::RECONCILIATION,
             'active'            => true,
@@ -374,7 +374,7 @@ class AccountRepository implements AccountRepositoryInterface
         ];
 
         /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
+        $factory  = app(AccountFactory::class);
         $factory->setUser($account->user);
 
         return $factory->create($data);
@@ -382,8 +382,8 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
-        $type = $account->accountType->type;
-        $list = config('firefly.valid_currency_account_types');
+        $type       = $account->accountType->type;
+        $list       = config('firefly.valid_currency_account_types');
 
         // return null if not in this list.
         if (!in_array($type, $list, true)) {
@@ -447,7 +447,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function maxOrder(string $type): int
     {
-        $sets = [
+        $sets     = [
             AccountType::ASSET    => [AccountType::DEFAULT, AccountType::ASSET],
             AccountType::EXPENSE  => [AccountType::EXPENSE, AccountType::BENEFICIARY],
             AccountType::REVENUE  => [AccountType::REVENUE],
@@ -463,7 +463,7 @@ class AccountRepository implements AccountRepositoryInterface
         }
         $specials = [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION];
 
-        $order = (int)$this->getAccountsByType($specials)->max('order');
+        $order    = (int)$this->getAccountsByType($specials)->max('order');
         app('log')->debug(sprintf('Return max order of "%s" set (specials!): %d', $type, $order));
 
         return $order;

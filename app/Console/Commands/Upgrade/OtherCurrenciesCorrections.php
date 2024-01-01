@@ -43,8 +43,8 @@ class OtherCurrenciesCorrections extends Command
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '480_other_currencies';
-    protected $description = 'Update all journal currency information.';
-    protected $signature   = 'firefly-iii:other-currencies {--F|force : Force the execution of this command.}';
+    protected $description          = 'Update all journal currency information.';
+    protected $signature            = 'firefly-iii:other-currencies {--F|force : Force the execution of this command.}';
     private array                         $accountCurrencies;
     private AccountRepositoryInterface    $accountRepos;
     private JournalCLIRepositoryInterface $cliRepos;
@@ -120,7 +120,7 @@ class OtherCurrenciesCorrections extends Command
         $this->journalRepos->setUser($journal->user);
         $this->cliRepos->setUser($journal->user);
 
-        $leadTransaction = $this->getLeadTransaction($journal);
+        $leadTransaction                  = $this->getLeadTransaction($journal);
 
         if (null === $leadTransaction) {
             $this->friendlyError(sprintf('Could not reliably determine which transaction is in the lead for transaction journal #%d.', $journal->id));
@@ -128,8 +128,8 @@ class OtherCurrenciesCorrections extends Command
             return;
         }
 
-        $account  = $leadTransaction->account;
-        $currency = $this->getCurrency($account);
+        $account                          = $leadTransaction->account;
+        $currency                         = $this->getCurrency($account);
         if (null === $currency) {
             $this->friendlyError(
                 sprintf(
@@ -217,14 +217,14 @@ class OtherCurrenciesCorrections extends Command
 
     private function getCurrency(Account $account): ?TransactionCurrency
     {
-        $accountId = $account->id;
+        $accountId                           = $account->id;
         if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
             return null;
         }
         if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId];
         }
-        $currency = $this->accountRepos->getAccountCurrency($account);
+        $currency                            = $this->accountRepos->getAccountCurrency($account);
         if (null === $currency) {
             $this->accountCurrencies[$accountId] = 0;
 

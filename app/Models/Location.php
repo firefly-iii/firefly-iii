@@ -70,7 +70,7 @@ class Location extends Model
     use ReturnsIntegerIdTrait;
 
     protected $casts
-        = [
+                        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',

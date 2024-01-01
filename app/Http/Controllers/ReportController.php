@@ -246,12 +246,12 @@ class ReportController extends Controller
         );
 
         // group accounts by role:
-        $groupedAccounts = [];
+        $groupedAccounts  = [];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $type = $account->accountType->type;
-            $role = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
+            $type                                                                       = $account->accountType->type;
+            $role                                                                       = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
 
             if (in_array($type, [AccountType::MORTGAGE, AccountType::DEBT, AccountType::LOAN], true)) {
                 $role = sprintf('opt_group_l_%s', $type);
@@ -264,7 +264,7 @@ class ReportController extends Controller
         }
         ksort($groupedAccounts);
 
-        $accountList = implode(',', $accounts->pluck('id')->toArray());
+        $accountList      = implode(',', $accounts->pluck('id')->toArray());
         $this->repository->cleanupBudgets();
 
         return view('reports.index', compact('months', 'accounts', 'start', 'accountList', 'groupedAccounts', 'customFiscalYear'));
@@ -342,7 +342,7 @@ class ReportController extends Controller
             return view('error')->with('message', (string)trans('firefly.end_after_start_date'));
         }
 
-        $url = match ($reportType) {
+        $url        = match ($reportType) {
             default    => route('reports.report.default', [$accounts, $start, $end]),
             'category' => route('reports.report.category', [$accounts, $categories, $start, $end]),
             'audit'    => route('reports.report.audit', [$accounts, $start, $end]),

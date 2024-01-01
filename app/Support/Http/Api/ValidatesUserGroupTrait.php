@@ -48,14 +48,14 @@ trait ValidatesUserGroupTrait
         }
 
         /** @var User $user */
-        $user = auth()->user();
+        $user       = auth()->user();
         if (!$request->has('user_group_id')) {
             $group = $user->userGroup;
             app('log')->debug(sprintf('validateUserGroup: no user group submitted, return default group #%d.', $group?->id));
 
             return $group;
         }
-        $groupId = (int)$request->get('user_group_id');
+        $groupId    = (int)$request->get('user_group_id');
 
         /** @var null|GroupMembership $membership */
         $membership = $user->groupMemberships()->where('user_group_id', $groupId)->first();

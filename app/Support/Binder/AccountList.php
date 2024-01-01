@@ -50,8 +50,8 @@ class AccountList implements BinderInterface
                 ;
             }
             if ('allAssetAccounts' !== $value) {
-                $incoming = array_map('\intval', explode(',', $value));
-                $list     = array_merge(array_unique($incoming), [0]);
+                $incoming   = array_map('\intval', explode(',', $value));
+                $list       = array_merge(array_unique($incoming), [0]);
 
                 /** @var Collection $collection */
                 $collection = auth()->user()->accounts()

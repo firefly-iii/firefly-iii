@@ -43,8 +43,8 @@ class UpgradeLiabilitiesEight extends Command
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '600_upgrade_liabilities';
-    protected $description = 'Upgrade liabilities to new 6.0.0 structure.';
-    protected $signature   = 'firefly-iii:liabilities-600 {--F|force : Force the execution of this command.}';
+    protected $description          = 'Upgrade liabilities to new 6.0.0 structure.';
+    protected $signature            = 'firefly-iii:liabilities-600 {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -105,7 +105,7 @@ class UpgradeLiabilitiesEight extends Command
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
 
-        $direction = $repository->getMetaValue($account, 'liability_direction');
+        $direction  = $repository->getMetaValue($account, 'liability_direction');
         if ('credit' === $direction && $this->hasBadOpening($account)) {
             $this->deleteCreditTransaction($account);
             $this->reverseOpeningBalance($account);
@@ -131,7 +131,7 @@ class UpgradeLiabilitiesEight extends Command
         if (null === $openingJournal) {
             return false;
         }
-        $liabilityJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $liabilityJournal   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->where('transaction_journals.transaction_type_id', $liabilityType->id)
             ->first(['transaction_journals.*'])
@@ -168,17 +168,17 @@ class UpgradeLiabilitiesEight extends Command
         $openingBalanceType = TransactionType::whereType(TransactionType::OPENING_BALANCE)->first();
 
         /** @var TransactionJournal $openingJournal */
-        $openingJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $openingJournal     = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->where('transaction_journals.transaction_type_id', $openingBalanceType->id)
             ->first(['transaction_journals.*'])
         ;
 
         /** @var null|Transaction $source */
-        $source = $openingJournal->transactions()->where('amount', '<', 0)->first();
+        $source             = $openingJournal->transactions()->where('amount', '<', 0)->first();
 
         /** @var null|Transaction $dest */
-        $dest = $openingJournal->transactions()->where('amount', '>', 0)->first();
+        $dest               = $openingJournal->transactions()->where('amount', '>', 0)->first();
         if (null !== $source && null !== $dest) {
             $sourceId           = $source->account_id;
             $destId             = $dest->account_id;

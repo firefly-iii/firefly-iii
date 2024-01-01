@@ -69,7 +69,7 @@ class EditController extends Controller
      */
     public function edit(Request $request, Category $category)
     {
-        $subTitle = (string)trans('firefly.edit_category', ['name' => $category->name]);
+        $subTitle  = (string)trans('firefly.edit_category', ['name' => $category->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('categories.edit.fromUpdate')) {
@@ -91,7 +91,7 @@ class EditController extends Controller
      */
     public function update(CategoryFormRequest $request, Category $category)
     {
-        $data = $request->getCategoryData();
+        $data     = $request->getCategoryData();
         $this->repository->update($category, $data);
 
         $request->session()->flash('success', (string)trans('firefly.updated_category', ['name' => $category->name]));
@@ -99,7 +99,7 @@ class EditController extends Controller
 
         // store new attachment(s):
         /** @var null|array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($category, $files);
         }

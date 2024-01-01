@@ -40,13 +40,13 @@ trait OBValidation
         app('log')->debug('Now in validateOBDestination', $array);
 
         // source can be any of the following types.
-        $validTypes = $this->combinations[$this->transactionType][$this->source?->accountType->type] ?? [];
+        $validTypes  = $this->combinations[$this->transactionType][$this->source?->accountType->type] ?? [];
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the destination of a deposit can't be created.
             $this->destError = (string)trans('validation.ob_dest_need_data');
             app('log')->error('Both values are NULL, cant create OB destination.');
-            $result = false;
+            $result          = false;
         }
         // if the account can be created anyway we don't need to search.
         if (null === $result && true === $this->canCreateTypes($validTypes)) {
@@ -84,9 +84,9 @@ trait OBValidation
         $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
         $accountName = array_key_exists('name', $array) ? $array['name'] : null;
         app('log')->debug('Now in validateOBSource', $array);
-        $result = null;
+        $result      = null;
         // source can be any of the following types.
-        $validTypes = array_keys($this->combinations[$this->transactionType]);
+        $validTypes  = array_keys($this->combinations[$this->transactionType]);
 
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL return false,
@@ -104,7 +104,7 @@ trait OBValidation
 
             // the source resulted in an account, but it's not of a valid type.
             if (null !== $search && !in_array($search->accountType->type, $validTypes, true)) {
-                $message = sprintf('User submitted only an ID (#%d), which is a "%s", so this is not a valid source.', $accountId, $search->accountType->type);
+                $message           = sprintf('User submitted only an ID (#%d), which is a "%s", so this is not a valid source.', $accountId, $search->accountType->type);
                 app('log')->debug($message);
                 $this->sourceError = $message;
                 $result            = false;
@@ -120,10 +120,10 @@ trait OBValidation
         // if the account can be created anyway we don't need to search.
         if (null === $result && true === $this->canCreateTypes($validTypes)) {
             app('log')->debug('Result is still null.');
-            $result = true;
+            $result               = true;
 
             // set the source to be a (dummy) initial balance account.
-            $account = new Account();
+            $account              = new Account();
 
             /** @var AccountType $accountType */
             $accountType          = AccountType::whereType(AccountType::INITIAL_BALANCE)->first();

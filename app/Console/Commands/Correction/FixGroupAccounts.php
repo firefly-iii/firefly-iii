@@ -46,8 +46,8 @@ class FixGroupAccounts extends Command
      */
     public function handle(): int
     {
-        $groups = [];
-        $res    = TransactionJournal::groupBy('transaction_group_id')
+        $groups  = [];
+        $res     = TransactionJournal::groupBy('transaction_group_id')
             ->get(['transaction_group_id', \DB::raw('COUNT(transaction_group_id) as the_count')])// @phpstan-ignore-line
         ;
 

@@ -68,7 +68,7 @@ trait UserNavigation
     final protected function isEditableGroup(TransactionGroup $group): bool
     {
         /** @var null|TransactionJournal $journal */
-        $journal = $group->transactionJournals()->first();
+        $journal  = $group->transactionJournals()->first();
         if (null === $journal) {
             return false;
         }
@@ -95,10 +95,10 @@ trait UserNavigation
 
                 return redirect(route('index'));
             }
-            $journal = $transaction->transactionJournal;
+            $journal     = $transaction->transactionJournal;
 
             /** @var null|Transaction $other */
-            $other = $journal->transactions()->where('id', '!=', $transaction->id)->first();
+            $other       = $journal->transactions()->where('id', '!=', $transaction->id)->first();
             if (null === $other) {
                 app('log')->error(sprintf('Account #%d has no valid journals. Dont know where it belongs.', $account->id));
                 session()->flash('error', trans('firefly.cant_find_redirect_account'));
@@ -118,7 +118,7 @@ trait UserNavigation
     final protected function redirectGroupToAccount(TransactionGroup $group)
     {
         /** @var null|TransactionJournal $journal */
-        $journal = $group->transactionJournals()->first();
+        $journal      = $group->transactionJournals()->first();
         if (null === $journal) {
             app('log')->error(sprintf('No journals in group #%d', $group->id));
 

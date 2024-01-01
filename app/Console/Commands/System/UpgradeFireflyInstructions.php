@@ -35,7 +35,7 @@ class UpgradeFireflyInstructions extends Command
 
     protected $description = 'Instructions in case of upgrade trouble.';
 
-    protected $signature = 'firefly:instructions {task}';
+    protected $signature   = 'firefly:instructions {task}';
 
     /**
      * Execute the console command.
@@ -61,8 +61,8 @@ class UpgradeFireflyInstructions extends Command
         $version = (string)config('firefly.version');
 
         /** @var array $config */
-        $config = config('upgrade.text.upgrade');
-        $text   = '';
+        $config  = config('upgrade.text.upgrade');
+        $text    = '';
 
         /** @var string $compare */
         foreach (array_keys($config) as $compare) {
@@ -99,8 +99,8 @@ class UpgradeFireflyInstructions extends Command
      */
     private function showLogo(): void
     {
-        $today = date('m-d');
-        $month = date('m');
+        $today  = date('m-d');
+        $month  = date('m');
         // variation in colors and effects just because I can!
         // default is Ukraine flag:
         $colors = ['blue', 'blue', 'blue', 'yellow', 'yellow', 'yellow', 'default', 'default'];
@@ -171,8 +171,8 @@ class UpgradeFireflyInstructions extends Command
         $version = (string)config('firefly.version');
 
         /** @var array $config */
-        $config = config('upgrade.text.install');
-        $text   = '';
+        $config  = config('upgrade.text.install');
+        $text    = '';
 
         /** @var string $compare */
         foreach (array_keys($config) as $compare) {

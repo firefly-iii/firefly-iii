@@ -49,7 +49,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function changeEmail(User $user, string $newEmail): bool
     {
-        $oldEmail = $user->email;
+        $oldEmail           = $user->email;
 
         // save old email as pref
         app('preferences')->setForUser($user, 'previous_email_latest', $oldEmail);
@@ -170,7 +170,7 @@ class UserRepository implements UserRepositoryInterface
     public function getRolesInGroup(User $user, int $groupId): array
     {
         /** @var null|UserGroup $group */
-        $group = UserGroup::find($groupId);
+        $group       = UserGroup::find($groupId);
         if (null === $group) {
             throw new FireflyException(sprintf('Could not find group #%d', $groupId));
         }
@@ -196,7 +196,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function getUserData(User $user): array
     {
-        $return = [];
+        $return                        = [];
 
         // two factor:
         $return['has_2fa']             = null !== $user->mfa_secret;
@@ -244,9 +244,9 @@ class UserRepository implements UserRepositoryInterface
 
     public function inviteUser(null|Authenticatable|User $user, string $email): InvitedUser
     {
-        $now = today(config('app.timezone'));
+        $now                  = today(config('app.timezone'));
         $now->addDays(2);
-        $invitee = new InvitedUser();
+        $invitee              = new InvitedUser();
         $invitee->user()->associate($user);
         $invitee->invite_code = \Str::random(64);
         $invitee->email       = $email;
@@ -356,7 +356,7 @@ class UserRepository implements UserRepositoryInterface
         if ('' === $newEmail) {
             return true;
         }
-        $oldEmail = $user->email;
+        $oldEmail    = $user->email;
 
         // save old email as pref
         app('preferences')->setForUser($user, 'admin_previous_email_latest', $oldEmail);

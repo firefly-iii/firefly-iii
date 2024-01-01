@@ -71,12 +71,12 @@ class AccountType extends Model
     public const string REVENUE          = 'Revenue account';
 
     protected $casts
-        = [
+                                         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
 
-    protected $fillable = ['type'];
+    protected $fillable                  = ['type'];
 
     public function accounts(): HasMany
     {

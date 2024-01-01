@@ -36,7 +36,7 @@ class FixPostgresSequences extends Command
 
     protected $description = 'Fixes issues with PostgreSQL sequences.';
 
-    protected $signature = 'firefly-iii:fix-pgsql-sequences';
+    protected $signature   = 'firefly-iii:fix-pgsql-sequences';
 
     /**
      * Execute the console command.

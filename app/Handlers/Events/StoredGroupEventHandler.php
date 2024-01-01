@@ -50,14 +50,14 @@ class StoredGroupEventHandler
         }
         app('log')->debug('Now in StoredGroupEventHandler::processRules()');
 
-        $journals = $storedGroupEvent->transactionGroup->transactionJournals;
-        $array    = [];
+        $journals            = $storedGroupEvent->transactionGroup->transactionJournals;
+        $array               = [];
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $array[] = $journal->id;
         }
-        $journalIds = implode(',', $array);
+        $journalIds          = implode(',', $array);
         app('log')->debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
@@ -66,10 +66,10 @@ class StoredGroupEventHandler
 
         // add the groups to the rule engine.
         // it should run the rules in the group and cancel the group if necessary.
-        $groups = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
+        $groups              = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
 
         // create and fire rule engine.
-        $newRuleEngine = app(RuleEngineInterface::class);
+        $newRuleEngine       = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($storedGroupEvent->transactionGroup->user);
         $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
@@ -78,7 +78,7 @@ class StoredGroupEventHandler
 
     public function recalculateCredit(StoredTransactionGroup $event): void
     {
-        $group = $event->transactionGroup;
+        $group  = $event->transactionGroup;
 
         /** @var CreditRecalculateService $object */
         $object = app(CreditRecalculateService::class);
@@ -92,14 +92,14 @@ class StoredGroupEventHandler
     public function triggerWebhooks(StoredTransactionGroup $storedGroupEvent): void
     {
         app('log')->debug(__METHOD__);
-        $group = $storedGroupEvent->transactionGroup;
+        $group  = $storedGroupEvent->transactionGroup;
         if (false === $storedGroupEvent->fireWebhooks) {
             app('log')->info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
 
             return;
         }
 
-        $user = $group->user;
+        $user   = $group->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);

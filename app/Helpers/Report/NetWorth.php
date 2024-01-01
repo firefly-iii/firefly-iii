@@ -64,8 +64,8 @@ class NetWorth implements NetWorthInterface
     public function byAccounts(Collection $accounts, Carbon $date): array
     {
         // start in the past, end in the future? use $date
-        $ids   = implode(',', $accounts->pluck('id')->toArray());
-        $cache = new CacheProperties();
+        $ids       = implode(',', $accounts->pluck('id')->toArray());
+        $cache     = new CacheProperties();
         $cache->addProperty($date);
         $cache->addProperty('net-worth-by-accounts');
         $cache->addProperty($ids);
@@ -78,7 +78,7 @@ class NetWorth implements NetWorthInterface
         $converter = new ExchangeRateConverter();
 
         // default "native" currency has everything twice, for consistency.
-        $netWorth = [
+        $netWorth  = [
             'native' => [
                 'balance'                        => '0',
                 'native_balance'                 => '0',
@@ -94,25 +94,25 @@ class NetWorth implements NetWorthInterface
                 'native_currency_decimal_places' => $default->decimal_places,
             ],
         ];
-        $balances = app('steam')->balancesByAccountsConverted($accounts, $date);
+        $balances  = app('steam')->balancesByAccountsConverted($accounts, $date);
 
         /** @var Account $account */
         foreach ($accounts as $account) {
             app('log')->debug(sprintf('Now at account #%d ("%s")', $account->id, $account->name));
-            $currency = $this->getRepository()->getAccountCurrency($account);
+            $currency                                  = $this->getRepository()->getAccountCurrency($account);
             if (null === $currency) {
                 $currency = app('amount')->getDefaultCurrency();
             }
-            $currencyCode  = $currency->code;
-            $balance       = '0';
-            $nativeBalance = '0';
+            $currencyCode                              = $currency->code;
+            $balance                                   = '0';
+            $nativeBalance                             = '0';
             if (array_key_exists($account->id, $balances)) {
                 $balance       = $balances[$account->id]['balance'] ?? '0';
                 $nativeBalance = $balances[$account->id]['native_balance'] ?? '0';
             }
             app('log')->debug(sprintf('Balance is %s, native balance is %s', $balance, $nativeBalance));
             // always subtract virtual balance
-            $virtualBalance = $account->virtual_balance;
+            $virtualBalance                            = $account->virtual_balance;
             if ('' !== $virtualBalance) {
                 $balance              = bcsub($balance, $virtualBalance);
                 $nativeVirtualBalance = $converter->convert($default, $currency, $account->created_at, $virtualBalance);
@@ -149,14 +149,14 @@ class NetWorth implements NetWorthInterface
         if (!$user instanceof User) {
             return;
         }
-        $this->user      = $user;
-        $this->userGroup = null;
+        $this->user              = $user;
+        $this->userGroup         = null;
 
         // make repository:
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $this->accountRepository->setUser($this->user);
 
-        $this->currencyRepos = app(CurrencyRepositoryInterface::class);
+        $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
         $this->currencyRepos->setUser($this->user);
     }
 
@@ -179,16 +179,16 @@ class NetWorth implements NetWorthInterface
         $return   = [];
         $balances = app('steam')->balancesByAccounts($accounts, $date);
         foreach ($accounts as $account) {
-            $currency = $this->getRepository()->getAccountCurrency($account);
-            $balance  = $balances[$account->id] ?? '0';
+            $currency                     = $this->getRepository()->getAccountCurrency($account);
+            $balance                      = $balances[$account->id] ?? '0';
 
             // always subtract virtual balance.
-            $virtualBalance = $account->virtual_balance;
+            $virtualBalance               = $account->virtual_balance;
             if ('' !== $virtualBalance) {
                 $balance = bcsub($balance, $virtualBalance);
             }
 
-            $return[$currency->id]        ??= [
+            $return[$currency->id] ??= [
                 'id'             => (string) $currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,

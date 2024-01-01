@@ -90,7 +90,7 @@ class RecurrenceTransaction extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
+                     = [
             'created_at'     => 'datetime',
             'updated_at'     => 'datetime',
             'deleted_at'     => 'datetime',
@@ -100,7 +100,7 @@ class RecurrenceTransaction extends Model
         ];
 
     protected $fillable
-        = [
+                     = [
             'recurrence_id',
             'transaction_currency_id',
             'foreign_currency_id',

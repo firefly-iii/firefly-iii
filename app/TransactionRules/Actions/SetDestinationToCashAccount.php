@@ -50,11 +50,11 @@ class SetDestinationToCashAccount implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */
-        $user = User::find($journal['user_id']);
+        $user        = User::find($journal['user_id']);
 
         /** @var null|TransactionJournal $object */
-        $object     = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
-        $repository = app(AccountRepositoryInterface::class);
+        $object      = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
+        $repository  = app(AccountRepositoryInterface::class);
 
         if (null === $object) {
             app('log')->error('Could not find journal.');
@@ -62,7 +62,7 @@ class SetDestinationToCashAccount implements ActionInterface
 
             return false;
         }
-        $type = $object->transactionType->type;
+        $type        = $object->transactionType->type;
         if (TransactionType::WITHDRAWAL !== $type) {
             app('log')->error('Transaction must be withdrawal.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.not_withdrawal')));
@@ -76,7 +76,7 @@ class SetDestinationToCashAccount implements ActionInterface
 
         // new destination account must be different from the current source account:
         /** @var null|Transaction $source */
-        $source = $object->transactions()->where('amount', '<', 0)->first();
+        $source      = $object->transactions()->where('amount', '<', 0)->first();
         if (null === $source) {
             app('log')->error('Could not find source transaction.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_source_transaction')));

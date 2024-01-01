@@ -137,7 +137,7 @@ class ReportFormRequest extends FormRequest
         $range = $this->get('daterange');
         $parts = explode(' - ', (string) $range);
         if (2 === count($parts)) {
-            $string = $parts[1];
+            $string  = $parts[1];
             // validate as date
             // if regex for YYYY-MM-DD:
             $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
@@ -155,7 +155,7 @@ class ReportFormRequest extends FormRequest
 
                 return $date;
             }
-            $error = sprintf('"%s" is not a valid date range: %s', $range, 'invalid format :(');
+            $error   = sprintf('"%s" is not a valid date range: %s', $range, 'invalid format :(');
             app('log')->error($error);
 
             throw new FireflyException($error, 0);
@@ -175,7 +175,7 @@ class ReportFormRequest extends FormRequest
         $range = $this->get('daterange');
         $parts = explode(' - ', (string) $range);
         if (2 === count($parts)) {
-            $string = $parts[0];
+            $string  = $parts[0];
             // validate as date
             // if regex for YYYY-MM-DD:
             $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][\d]|3[01])$/';
@@ -193,7 +193,7 @@ class ReportFormRequest extends FormRequest
 
                 return $date;
             }
-            $error = sprintf('"%s" is not a valid date range: %s', $range, 'invalid format :(');
+            $error   = sprintf('"%s" is not a valid date range: %s', $range, 'invalid format :(');
             app('log')->error($error);
 
             throw new FireflyException($error, 0);

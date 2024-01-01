@@ -70,8 +70,8 @@ class CurrencyForm
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
         // get all currencies:
-        $list  = $currencyRepos->get();
-        $array = [];
+        $list          = $currencyRepos->get();
+        $array         = [];
 
         /** @var TransactionCurrency $currency */
         foreach ($list as $currency) {
@@ -92,8 +92,8 @@ class CurrencyForm
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
         // get all currencies:
-        $list  = $currencyRepos->get();
-        $array = [
+        $list          = $currencyRepos->get();
+        $array         = [
             0 => (string)trans('firefly.no_currency'),
         ];
 
@@ -118,15 +118,15 @@ class CurrencyForm
         $defaultCurrency = $options['currency'] ?? app('amount')->getDefaultCurrency();
 
         /** @var Collection $currencies */
-        $currencies = app('amount')->getCurrencies();
+        $currencies      = app('amount')->getCurrencies();
         unset($options['currency'], $options['placeholder']);
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
-        $preFilled = session('preFilled');
+        $preFilled       = session('preFilled');
         if (!is_array($preFilled)) {
             $preFilled = [];
         }
-        $key            = 'amount_currency_id_'.$name;
-        $sentCurrencyId = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $defaultCurrency->id;
+        $key             = 'amount_currency_id_'.$name;
+        $sentCurrencyId  = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $defaultCurrency->id;
 
         app('log')->debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
 
@@ -174,16 +174,16 @@ class CurrencyForm
         $defaultCurrency = $options['currency'] ?? app('amount')->getDefaultCurrency();
 
         /** @var Collection $currencies */
-        $currencies = app('amount')->getAllCurrencies();
+        $currencies      = app('amount')->getAllCurrencies();
         unset($options['currency'], $options['placeholder']);
 
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
-        $preFilled = session('preFilled');
+        $preFilled       = session('preFilled');
         if (!is_array($preFilled)) {
             $preFilled = [];
         }
-        $key            = 'amount_currency_id_'.$name;
-        $sentCurrencyId = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $defaultCurrency->id;
+        $key             = 'amount_currency_id_'.$name;
+        $sentCurrencyId  = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $defaultCurrency->id;
 
         app('log')->debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
 

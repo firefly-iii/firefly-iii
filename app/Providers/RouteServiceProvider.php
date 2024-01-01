@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Route;
 class RouteServiceProvider extends ServiceProvider
 {
     public const string   HOME = '/';
-    protected $namespace = '';
+    protected $namespace       = '';
 
     /**
      * Define the routes for the application.

@@ -95,7 +95,7 @@ class CreateController extends Controller
         ];
 
         // interest calculation periods:
-        $interestPeriods = [
+        $interestPeriods     = [
             'daily'   => (string)trans('firefly.interest_calc_daily'),
             'monthly' => (string)trans('firefly.interest_calc_monthly'),
             'yearly'  => (string)trans('firefly.interest_calc_yearly'),
@@ -132,8 +132,8 @@ class CreateController extends Controller
      */
     public function store(AccountFormRequest $request)
     {
-        $data    = $request->getAccountData();
-        $account = $this->repository->store($data);
+        $data      = $request->getAccountData();
+        $account   = $this->repository->store($data);
         $request->session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
         app('preferences')->mark();
 
@@ -151,7 +151,7 @@ class CreateController extends Controller
 
         // store attachment(s):
         /** @var null|array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files     = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($account, $files);
         }
@@ -165,7 +165,7 @@ class CreateController extends Controller
         }
 
         // redirect to previous URL.
-        $redirect = redirect($this->getPreviousUrl('accounts.create.url'));
+        $redirect  = redirect($this->getPreviousUrl('accounts.create.url'));
         if (1 === (int)$request->get('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('accounts.create.fromStore', true);

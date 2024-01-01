@@ -74,19 +74,19 @@ class IndexController extends Controller
         // get first transaction in DB:
         $firstDate = today(config('app.timezone'));
         $firstDate->subYear();
-        $journal = $this->journalRepository->firstNull();
+        $journal   = $this->journalRepository->firstNull();
         if (null !== $journal) {
             $firstDate = clone $journal->date;
         }
         $generator->setStart($firstDate);
-        $result = $generator->export();
+        $result    = $generator->export();
 
-        $name   = sprintf('%s_transaction_export.csv', date('Y_m_d'));
-        $quoted = sprintf('"%s"', addcslashes($name, '"\\'));
+        $name      = sprintf('%s_transaction_export.csv', date('Y_m_d'));
+        $quoted    = sprintf('"%s"', addcslashes($name, '"\\'));
 
         // headers for CSV file.
         /** @var LaravelResponse $response */
-        $response = response($result['transactions']);
+        $response  = response($result['transactions']);
         $response
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'text/x-csv')

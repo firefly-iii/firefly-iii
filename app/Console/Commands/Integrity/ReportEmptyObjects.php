@@ -39,7 +39,7 @@ class ReportEmptyObjects extends Command
 
     protected $description = 'Reports on empty database objects.';
 
-    protected $signature = 'firefly-iii:report-empty-objects';
+    protected $signature   = 'firefly-iii:report-empty-objects';
 
     /**
      * Execute the console command.

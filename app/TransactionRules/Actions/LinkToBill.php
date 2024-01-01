@@ -49,16 +49,16 @@ class LinkToBill implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */
-        $user = User::find($journal['user_id']);
+        $user       = User::find($journal['user_id']);
 
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($user);
-        $billName = (string)$this->action->action_value;
-        $bill     = $repository->findByName($billName);
+        $billName   = (string)$this->action->action_value;
+        $bill       = $repository->findByName($billName);
 
         if (null !== $bill && TransactionType::WITHDRAWAL === $journal['transaction_type_type']) {
-            $count = \DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])
+            $count  = \DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])
                 ->where('bill_id', $bill->id)->count()
             ;
             if (0 !== $count) {

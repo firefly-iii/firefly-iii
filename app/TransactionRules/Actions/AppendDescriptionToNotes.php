@@ -55,9 +55,9 @@ class AppendDescriptionToNotes implements ActionInterface
 
             return false;
         }
-        $note = $object->notes()->first();
+        $note   = $object->notes()->first();
         if (null === $note) {
-            $note = new Note();
+            $note       = new Note();
             $note->noteable()->associate($object);
             $note->text = '';
         }
@@ -68,7 +68,7 @@ class AppendDescriptionToNotes implements ActionInterface
         if ('' === $note->text) {
             $note->text = (string)$object->description;
         }
-        $after = $note->text;
+        $after  = $note->text;
 
         // event for audit log entry
         event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $before, $after));

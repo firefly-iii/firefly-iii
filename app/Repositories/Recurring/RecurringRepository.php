@@ -288,7 +288,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector   = app(GroupCollectorInterface::class);
 
         $collector->setUser($recurrence->user);
         $collector->withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page)
@@ -325,7 +325,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector   = app(GroupCollectorInterface::class);
 
         $collector->setUser($recurrence->user);
         $collector->withCategoryInformation()->withBudgetInformation()->withAccountInformation();
@@ -441,21 +441,21 @@ class RecurringRepository implements RecurringRepositoryInterface
             );
         }
         if ('ndom' === $repetition->repetition_type) {
-            $parts = explode(',', $repetition->repetition_moment);
+            $parts     = explode(',', $repetition->repetition_moment);
             // first part is number of week, second is weekday.
             $dayOfWeek = trans(sprintf('config.dow_%s', $parts[1]), [], $language);
 
             return (string)trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $parts[0]], $language);
         }
         if ('yearly' === $repetition->repetition_type) {
-            $today   = today(config('app.timezone'))->endOfYear();
-            $repDate = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
+            $today       = today(config('app.timezone'))->endOfYear();
+            $repDate     = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
             if (false === $repDate) {
                 $repDate = clone $today;
             }
             $diffInYears = $today->diffInYears($repDate);
             $repDate->addYears($diffInYears); // technically not necessary.
-            $string = $repDate->isoFormat((string)trans('config.month_and_day_no_year_js'));
+            $string      = $repDate->isoFormat((string)trans('config.month_and_day_no_year_js'));
 
             return (string)trans('firefly.recurring_yearly', ['date' => $string], $language);
         }
@@ -517,7 +517,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         $occurrences = [];
         $mutator     = clone $start;
         $mutator->startOfDay();
-        $skipMod = $repetition->repetition_skip + 1;
+        $skipMod     = $repetition->repetition_skip + 1;
         app('log')->debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
         app('log')->debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
 

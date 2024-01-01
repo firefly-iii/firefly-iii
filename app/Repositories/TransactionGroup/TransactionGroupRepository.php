@@ -97,22 +97,22 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     {
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($this->user);
-        $journals = $group->transactionJournals->pluck('id')->toArray();
-        $set      = Attachment::whereIn('attachable_id', $journals)
+        $journals   = $group->transactionJournals->pluck('id')->toArray();
+        $set        = Attachment::whereIn('attachable_id', $journals)
             ->where('attachable_type', TransactionJournal::class)
             ->where('uploaded', true)
             ->whereNull('deleted_at')->get()
         ;
 
-        $result = [];
+        $result     = [];
 
         /** @var Attachment $attachment */
         foreach ($set as $attachment) {
-            $journalId              = $attachment->attachable_id;
-            $result[$journalId]     ??= [];
-            $current                = $attachment->toArray();
-            $current['file_exists'] = true;
-            $current['notes']       = $repository->getNoteText($attachment);
+            $journalId                = $attachment->attachable_id;
+            $result[$journalId] ??= [];
+            $current                  = $attachment->toArray();
+            $current['file_exists']   = true;
+            $current['notes']         = $repository->getNoteText($attachment);
             // already determined that this attachable is a TransactionJournal.
             $current['journal_title'] = $attachment->attachable->description; // @phpstan-ignore-line
             $result[$journalId][]     = $current;
@@ -165,7 +165,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
 
         /** @var TransactionJournalLink $entry */
         foreach ($set as $entry) {
-            $journalId          = in_array($entry->source_id, $journals, true) ? $entry->source_id : $entry->destination_id;
+            $journalId = in_array($entry->source_id, $journals, true) ? $entry->source_id : $entry->destination_id;
             $return[$journalId] ??= [];
 
             // phpstan: the editable field is provided by the query.
@@ -272,14 +272,14 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                 continue;
             }
             // get currency preference.
-            $currencyPreference = AccountMeta::where('account_id', $row->piggyBank->account_id)
+            $currencyPreference   = AccountMeta::where('account_id', $row->piggyBank->account_id)
                 ->where('name', 'currency_id')
                 ->first()
             ;
             if (null !== $currencyPreference) {
                 $currency = TransactionCurrency::where('id', $currencyPreference->data)->first();
             }
-            $journalId          = $row->transaction_journal_id;
+            $journalId            = $row->transaction_journal_id;
             $return[$journalId] ??= [];
 
             $return[$journalId][] = [
@@ -420,10 +420,10 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         if (0 === bccomp('0', $transaction->foreign_amount)) {
             return '';
         }
-        $currency = $transaction->foreignCurrency;
-        $type     = $journal->transactionType->type;
-        $amount   = app('steam')->positive($transaction->foreign_amount);
-        $return   = '';
+        $currency    = $transaction->foreignCurrency;
+        $type        = $journal->transactionType->type;
+        $amount      = app('steam')->positive($transaction->foreign_amount);
+        $return      = '';
         if (TransactionType::WITHDRAWAL === $type) {
             $return = app('amount')->formatAnything($currency, app('steam')->negative($amount));
         }

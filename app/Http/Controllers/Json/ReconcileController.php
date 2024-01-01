@@ -92,13 +92,13 @@ class ReconcileController extends Controller
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
             $collector->setJournalIds($selectedIds);
-            $journals = $collector->getExtractedJournals();
+            $journals  = $collector->getExtractedJournals();
         }
 
         // Collect all journals already reconciled
         if (count($clearedIds) > 0) {
             /** @var GroupCollectorInterface $collector */
-            $collector = app(GroupCollectorInterface::class);
+            $collector       = app(GroupCollectorInterface::class);
             $collector->setJournalIds($clearedIds);
             $clearedJournals = $collector->getExtractedJournals();
         }
@@ -118,11 +118,11 @@ class ReconcileController extends Controller
                 $clearedAmount = $this->processJournal($account, $accountCurrency, $journal, $clearedAmount);
             }
         }
-        $difference   = bcadd(bcadd(bcsub($startBalance, $endBalance), $clearedAmount), $amount);
-        $diffCompare  = bccomp($difference, '0');
-        $countCleared = count($clearedJournals);
+        $difference      = bcadd(bcadd(bcsub($startBalance, $endBalance), $clearedAmount), $amount);
+        $diffCompare     = bccomp($difference, '0');
+        $countCleared    = count($clearedJournals);
 
-        $reconSum = bcadd(bcadd($startBalance, $amount), $clearedAmount);
+        $reconSum        = bcadd(bcadd($startBalance, $amount), $clearedAmount);
 
         try {
             $view = view(
@@ -151,7 +151,7 @@ class ReconcileController extends Controller
             throw new FireflyException($view, 0, $e);
         }
 
-        $return = [
+        $return          = [
             'post_url' => $route,
             'html'     => $view,
         ];
@@ -174,29 +174,29 @@ class ReconcileController extends Controller
         if ($end->lt($start)) {
             [$end, $start] = [$start, $end];
         }
-        $startDate = clone $start;
+        $startDate      = clone $start;
         $startDate->subDay();
 
-        $currency     = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
-        $startBalance = app('steam')->bcround(app('steam')->balance($account, $startDate), $currency->decimal_places);
-        $endBalance   = app('steam')->bcround(app('steam')->balance($account, $end), $currency->decimal_places);
+        $currency       = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $startBalance   = app('steam')->bcround(app('steam')->balance($account, $startDate), $currency->decimal_places);
+        $endBalance     = app('steam')->bcround(app('steam')->balance($account, $end), $currency->decimal_places);
 
         // get the transactions
         $selectionStart = clone $start;
         $selectionStart->subDays(3);
-        $selectionEnd = clone $end;
+        $selectionEnd   = clone $end;
         $selectionEnd->addDays(3);
 
         // grab transactions:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector      = app(GroupCollectorInterface::class);
 
         $collector->setAccounts(new Collection([$account]))
             ->setRange($selectionStart, $selectionEnd)
             ->withBudgetInformation()->withCategoryInformation()->withAccountInformation()
         ;
-        $array    = $collector->getExtractedJournals();
-        $journals = $this->processTransactions($account, $array);
+        $array          = $collector->getExtractedJournals();
+        $journals       = $this->processTransactions($account, $array);
 
         try {
             $html = view(
@@ -216,7 +216,7 @@ class ReconcileController extends Controller
 
     private function processJournal(Account $account, TransactionCurrency $currency, array $journal, string $amount): string
     {
-        $toAdd = '0';
+        $toAdd  = '0';
         app('log')->debug(sprintf('User submitted %s #%d: "%s"', $journal['transaction_type_type'], $journal['transaction_journal_id'], $journal['description']));
 
         // not much magic below we need to cover using tests.
@@ -254,7 +254,7 @@ class ReconcileController extends Controller
 
         /** @var array $journal */
         foreach ($array as $journal) {
-            $inverse = false;
+            $inverse    = false;
 
             if (TransactionType::DEPOSIT === $journal['transaction_type_type']) {
                 $inverse = true;

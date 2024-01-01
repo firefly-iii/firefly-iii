@@ -69,8 +69,8 @@ class EditController extends Controller
      */
     public function edit(Request $request, Budget $budget)
     {
-        $subTitle   = (string)trans('firefly.edit_budget', ['name' => $budget->name]);
-        $autoBudget = $this->repository->getAutoBudget($budget);
+        $subTitle          = (string)trans('firefly.edit_budget', ['name' => $budget->name]);
+        $autoBudget        = $this->repository->getAutoBudget($budget);
 
         // auto budget types
         $autoBudgetTypes   = [
@@ -89,14 +89,14 @@ class EditController extends Controller
         ];
 
         // code to handle active-checkboxes
-        $hasOldInput = null !== $request->old('_token');
-        $currency    = app('amount')->getDefaultCurrency();
-        $preFilled   = [
+        $hasOldInput       = null !== $request->old('_token');
+        $currency          = app('amount')->getDefaultCurrency();
+        $preFilled         = [
             'active'                  => $hasOldInput ? (bool)$request->old('active') : $budget->active,
             'auto_budget_currency_id' => $hasOldInput ? (int)$request->old('auto_budget_currency_id') : $currency->id,
         ];
         if (null !== $autoBudget) {
-            $amount = $hasOldInput ? $request->old('auto_budget_amount') : $autoBudget->amount;
+            $amount                          = $hasOldInput ? $request->old('auto_budget_amount') : $autoBudget->amount;
             if (is_array($amount)) {
                 $amount = '0';
             }
@@ -119,7 +119,7 @@ class EditController extends Controller
      */
     public function update(BudgetFormUpdateRequest $request, Budget $budget): RedirectResponse
     {
-        $data = $request->getBudgetData();
+        $data     = $request->getBudgetData();
         $this->repository->update($budget, $data);
 
         $request->session()->flash('success', (string)trans('firefly.updated_budget', ['name' => $budget->name]));
@@ -132,7 +132,7 @@ class EditController extends Controller
 
         // store new attachment(s):
         /** @var null|array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($budget, $files);
         }

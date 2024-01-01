@@ -79,12 +79,12 @@ class EditController extends Controller
         $expectedSourceTypes  = config('firefly.expected_source_types');
         $allowedSourceDests   = config('firefly.source_dests');
 
-        $defaultCurrency = app('amount')->getDefaultCurrency();
-        $cash            = $repository->getCashAccount();
-        $previousUrl     = $this->rememberPreviousUrl('transactions.edit.url');
-        $parts           = parse_url($previousUrl);
-        $search          = sprintf('?%s', $parts['query'] ?? '');
-        $previousUrl     = str_replace($search, '', $previousUrl);
+        $defaultCurrency      = app('amount')->getDefaultCurrency();
+        $cash                 = $repository->getCashAccount();
+        $previousUrl          = $this->rememberPreviousUrl('transactions.edit.url');
+        $parts                = parse_url($previousUrl);
+        $search               = sprintf('?%s', $parts['query'] ?? '');
+        $previousUrl          = str_replace($search, '', $previousUrl);
 
         return view(
             'transactions.edit',

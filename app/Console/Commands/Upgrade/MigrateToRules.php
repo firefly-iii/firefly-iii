@@ -44,9 +44,9 @@ class MigrateToRules extends Command
 
     public const string CONFIG_NAME = '480_bills_to_rules';
 
-    protected $description = 'Migrate bills to rules.';
+    protected $description          = 'Migrate bills to rules.';
 
-    protected $signature = 'firefly-iii:bills-to-rules {--F|force : Force the execution of this command.}';
+    protected $signature            = 'firefly-iii:bills-to-rules {--F|force : Force the execution of this command.}';
     private BillRepositoryInterface      $billRepository;
     private int                          $count;
     private RuleGroupRepositoryInterface $ruleGroupRepository;
@@ -137,7 +137,7 @@ class MigrateToRules extends Command
                 ]
             );
         }
-        $bills = $this->billRepository->getBills();
+        $bills      = $this->billRepository->getBills();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -153,8 +153,8 @@ class MigrateToRules extends Command
         $languageString = null !== $language->data && !is_array($language->data) ? (string)$language->data : 'en_US';
 
         // get match thing:
-        $match   = implode(' ', explode(',', $bill->match));
-        $newRule = [
+        $match          = implode(' ', explode(',', $bill->match));
+        $newRule        = [
             'rule_group_id'   => $ruleGroup->id,
             'active'          => true,
             'strict'          => false,
@@ -197,7 +197,7 @@ class MigrateToRules extends Command
         $this->ruleRepository->store($newRule);
 
         // update bill:
-        $newBillData = [
+        $newBillData    = [
             'currency_id' => $bill->transaction_currency_id,
             'name'        => $bill->name,
             'match'       => 'MIGRATED_TO_RULES',

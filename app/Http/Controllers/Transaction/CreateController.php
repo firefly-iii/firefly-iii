@@ -74,8 +74,8 @@ class CreateController extends Controller
 
                 app('preferences')->mark();
 
-                $title = $newGroup->title ?? $newGroup->transactionJournals->first()->description;
-                $link  = route('transactions.show', [$newGroup->id]);
+                $title    = $newGroup->title ?? $newGroup->transactionJournals->first()->description;
+                $link     = route('transactions.show', [$newGroup->id]);
                 session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
                 session()->flash('success_url', $link);
 
@@ -101,8 +101,8 @@ class CreateController extends Controller
     {
         app('preferences')->mark();
 
-        $sourceId      = (int)request()->get('source');
-        $destinationId = (int)request()->get('destination');
+        $sourceId             = (int)request()->get('source');
+        $destinationId        = (int)request()->get('destination');
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository    = app(AccountRepositoryInterface::class);

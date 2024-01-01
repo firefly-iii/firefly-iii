@@ -41,7 +41,7 @@ class IsTransferAccount implements ValidationRule
         app('log')->debug(sprintf('Now in %s(%s)', __METHOD__, $value));
 
         /** @var AccountValidator $validator */
-        $validator = app(AccountValidator::class);
+        $validator    = app(AccountValidator::class);
         $validator->setTransactionType(TransactionType::TRANSFER);
         $validator->setUser(auth()->user());
 

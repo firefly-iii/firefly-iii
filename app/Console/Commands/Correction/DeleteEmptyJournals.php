@@ -38,7 +38,7 @@ class DeleteEmptyJournals extends Command
 
     protected $description = 'Delete empty and uneven transaction journals.';
 
-    protected $signature = 'firefly-iii:delete-empty-journals';
+    protected $signature   = 'firefly-iii:delete-empty-journals';
 
     /**
      * Execute the console command.
@@ -56,7 +56,7 @@ class DeleteEmptyJournals extends Command
      */
     private function deleteUnevenJournals(): void
     {
-        $set = Transaction::whereNull('deleted_at')
+        $set   = Transaction::whereNull('deleted_at')
             ->groupBy('transactions.transaction_journal_id')
             ->get([\DB::raw('COUNT(transactions.transaction_journal_id) as the_count'), 'transaction_journal_id']) // @phpstan-ignore-line
         ;

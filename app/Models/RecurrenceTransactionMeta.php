@@ -66,7 +66,7 @@ class RecurrenceTransactionMeta extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
+                        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
@@ -77,7 +77,7 @@ class RecurrenceTransactionMeta extends Model
     protected $fillable = ['rt_id', 'name', 'value'];
 
     /** @var string The table to store the data in */
-    protected $table = 'rt_meta';
+    protected $table    = 'rt_meta';
 
     public function recurrenceTransaction(): BelongsTo
     {

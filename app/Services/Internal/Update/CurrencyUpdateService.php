@@ -44,7 +44,7 @@ class CurrencyUpdateService
             $currency->name = e($data['name']);
         }
 
-        $currency->enabled = false;
+        $currency->enabled          = false;
 
         if (array_key_exists('decimal_places', $data) && is_int($data['decimal_places'])) {
             $currency->decimal_places = $data['decimal_places'];

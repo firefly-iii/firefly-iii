@@ -61,18 +61,18 @@ class SearchController extends Controller
     public function index(Request $request, SearchInterface $searcher)
     {
         // search params:
-        $fullQuery = $request->get('search');
+        $fullQuery        = $request->get('search');
         if (is_array($request->get('search'))) {
             $fullQuery = '';
         }
-        $fullQuery   = (string)$fullQuery;
-        $page        = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $ruleId      = (int)$request->get('rule');
-        $ruleChanged = false;
+        $fullQuery        = (string)$fullQuery;
+        $page             = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $ruleId           = (int)$request->get('rule');
+        $ruleChanged      = false;
 
         // find rule, check if query is different, offer to update.
-        $ruleRepository = app(RuleRepositoryInterface::class);
-        $rule           = $ruleRepository->find($ruleId);
+        $ruleRepository   = app(RuleRepositoryInterface::class);
+        $rule             = $ruleRepository->find($ruleId);
         if (null !== $rule) {
             $originalQuery = $ruleRepository->getSearchQuery($rule);
             if ($originalQuery !== $fullQuery) {
@@ -98,12 +98,12 @@ class SearchController extends Controller
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
-        $entry = $request->get('query');
+        $entry      = $request->get('query');
         if (!is_scalar($entry)) {
             $entry = '';
         }
-        $fullQuery = (string)$entry;
-        $page      = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $fullQuery  = (string)$entry;
+        $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
 
         $searcher->parseQuery($fullQuery);
 

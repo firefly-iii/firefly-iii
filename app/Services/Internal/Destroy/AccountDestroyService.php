@@ -75,8 +75,8 @@ class AccountDestroyService
         }
 
         /** @var JournalDestroyService $service */
-        $service = app(JournalDestroyService::class);
-        $user    = $account->user;
+        $service    = app(JournalDestroyService::class);
+        $user       = $account->user;
 
         /** @var \stdClass $row */
         foreach ($collection as $row) {
@@ -101,7 +101,7 @@ class AccountDestroyService
             ->get(['transactions.transaction_journal_id'])
         ;
         if ($set->count() > 0) {
-            $journalId = $set->first()->transaction_journal_id;
+            $journalId    = $set->first()->transaction_journal_id;
             app('log')->debug(sprintf('Found opening balance journal with ID #%d', $journalId));
 
             // get transactions with this journal (should be just one):
@@ -120,7 +120,7 @@ class AccountDestroyService
                 $transaction->delete();
                 $ibAccount->delete();
             }
-            $journal = TransactionJournal::find($journalId);
+            $journal      = TransactionJournal::find($journalId);
             if (null !== $journal) {
                 /** @var JournalDestroyService $service */
                 $service = app(JournalDestroyService::class);
@@ -157,7 +157,7 @@ class AccountDestroyService
 
     private function destroyRecurrences(Account $account): void
     {
-        $recurrences = RecurrenceTransaction::where(
+        $recurrences    = RecurrenceTransaction::where(
             static function (Builder $q) use ($account): void {
                 $q->where('source_id', $account->id);
                 $q->orWhere('destination_id', $account->id);

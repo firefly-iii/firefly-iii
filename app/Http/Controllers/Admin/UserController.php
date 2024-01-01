@@ -133,11 +133,11 @@ class UserController extends Controller
         }
         session()->forget('users.edit.fromUpdate');
 
-        $subTitle     = (string)trans('firefly.edit_user', ['email' => $user->email]);
-        $subTitleIcon = 'fa-user-o';
-        $currentUser  = auth()->user();
-        $isAdmin      = $this->repository->hasRole($user, 'owner');
-        $codes        = [
+        $subTitle       = (string)trans('firefly.edit_user', ['email' => $user->email]);
+        $subTitleIcon   = 'fa-user-o';
+        $currentUser    = auth()->user();
+        $isAdmin        = $this->repository->hasRole($user, 'owner');
+        $codes          = [
             ''              => (string)trans('firefly.no_block_code'),
             'bounced'       => (string)trans('firefly.block_code_bounced'),
             'expired'       => (string)trans('firefly.block_code_expired'),
@@ -164,7 +164,7 @@ class UserController extends Controller
             $allowInvites = true;
         }
 
-        $invitedUsers = $this->repository->getInvitedUsers();
+        $invitedUsers   = $this->repository->getInvitedUsers();
 
         // add meta stuff.
         $users->each(
@@ -223,7 +223,7 @@ class UserController extends Controller
     public function update(UserFormRequest $request, User $user)
     {
         app('log')->debug('Actually here');
-        $data = $request->getUserData();
+        $data     = $request->getUserData();
 
         // var_dump($data);
 

@@ -54,7 +54,7 @@ class TransactionController extends Controller
      */
     public function budgets(Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties();
+        $cache     = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.transactions.budgets');
@@ -68,22 +68,22 @@ class TransactionController extends Controller
         $collector->withBudgetInformation();
         $collector->setTypes([TransactionType::WITHDRAWAL]);
 
-        $result = $collector->getExtractedJournals();
-        $data   = [];
+        $result    = $collector->getExtractedJournals();
+        $data      = [];
 
         // group by category.
         /** @var array $journal */
         foreach ($result as $journal) {
             $budget                 = $journal['budget_name'] ?? (string)trans('firefly.no_budget');
             $title                  = sprintf('%s (%s)', $budget, $journal['currency_symbol']);
-            $data[$title]           ??= [
+            $data[$title] ??= [
                 'amount'          => '0',
                 'currency_symbol' => $journal['currency_symbol'],
                 'currency_code'   => $journal['currency_code'],
             ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
         }
-        $chart = $this->generator->multiCurrencyPieChart($data);
+        $chart     = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
 
         return response()->json($chart);
@@ -94,7 +94,7 @@ class TransactionController extends Controller
      */
     public function categories(string $objectType, Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties();
+        $cache     = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($objectType);
@@ -118,22 +118,22 @@ class TransactionController extends Controller
             $collector->setTypes([TransactionType::TRANSFER]);
         }
 
-        $result = $collector->getExtractedJournals();
-        $data   = [];
+        $result    = $collector->getExtractedJournals();
+        $data      = [];
 
         // group by category.
         /** @var array $journal */
         foreach ($result as $journal) {
             $category               = $journal['category_name'] ?? (string)trans('firefly.no_category');
             $title                  = sprintf('%s (%s)', $category, $journal['currency_symbol']);
-            $data[$title]           ??= [
+            $data[$title] ??= [
                 'amount'          => '0',
                 'currency_symbol' => $journal['currency_symbol'],
                 'currency_code'   => $journal['currency_code'],
             ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
         }
-        $chart = $this->generator->multiCurrencyPieChart($data);
+        $chart     = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
 
         return response()->json($chart);
@@ -144,7 +144,7 @@ class TransactionController extends Controller
      */
     public function destinationAccounts(string $objectType, Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties();
+        $cache     = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($objectType);
@@ -168,22 +168,22 @@ class TransactionController extends Controller
             $collector->setTypes([TransactionType::TRANSFER]);
         }
 
-        $result = $collector->getExtractedJournals();
-        $data   = [];
+        $result    = $collector->getExtractedJournals();
+        $data      = [];
 
         // group by category.
         /** @var array $journal */
         foreach ($result as $journal) {
             $name                   = $journal['destination_account_name'];
             $title                  = sprintf('%s (%s)', $name, $journal['currency_symbol']);
-            $data[$title]           ??= [
+            $data[$title] ??= [
                 'amount'          => '0',
                 'currency_symbol' => $journal['currency_symbol'],
                 'currency_code'   => $journal['currency_code'],
             ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
         }
-        $chart = $this->generator->multiCurrencyPieChart($data);
+        $chart     = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
 
         return response()->json($chart);
@@ -194,7 +194,7 @@ class TransactionController extends Controller
      */
     public function sourceAccounts(string $objectType, Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties();
+        $cache     = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($objectType);
@@ -218,22 +218,22 @@ class TransactionController extends Controller
             $collector->setTypes([TransactionType::TRANSFER]);
         }
 
-        $result = $collector->getExtractedJournals();
-        $data   = [];
+        $result    = $collector->getExtractedJournals();
+        $data      = [];
 
         // group by category.
         /** @var array $journal */
         foreach ($result as $journal) {
             $name                   = $journal['source_account_name'];
             $title                  = sprintf('%s (%s)', $name, $journal['currency_symbol']);
-            $data[$title]           ??= [
+            $data[$title] ??= [
                 'amount'          => '0',
                 'currency_symbol' => $journal['currency_symbol'],
                 'currency_code'   => $journal['currency_code'],
             ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], $journal['amount']);
         }
-        $chart = $this->generator->multiCurrencyPieChart($data);
+        $chart     = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
 
         return response()->json($chart);

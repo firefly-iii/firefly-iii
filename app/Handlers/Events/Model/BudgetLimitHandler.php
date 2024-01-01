@@ -66,7 +66,7 @@ class BudgetLimitHandler
     private function updateAvailableBudget(BudgetLimit $budgetLimit): void
     {
         app('log')->debug(sprintf('Now in updateAvailableBudget(#%d)', $budgetLimit->id));
-        $budget = Budget::find($budgetLimit->budget_id);
+        $budget      = Budget::find($budgetLimit->budget_id);
         if (null === $budget) {
             app('log')->warning('Budget is null, probably deleted, find deleted version.');
             $budget = Budget::withTrashed()->find($budgetLimit->budget_id);
@@ -79,7 +79,7 @@ class BudgetLimitHandler
         }
 
         /** @var null|User $user */
-        $user = $budget->user;
+        $user        = $budget->user;
 
         // sanity check. It happens when the budget has been deleted so the original user is unknown.
         if (null === $user) {
@@ -102,20 +102,20 @@ class BudgetLimitHandler
         if (null === $viewRange || is_array($viewRange)) {
             $viewRange = '1M';
         }
-        $viewRange = (string)$viewRange;
+        $viewRange   = (string)$viewRange;
 
-        $start = app('navigation')->startOfPeriod($budgetLimit->start_date, $viewRange);
-        $end   = app('navigation')->startOfPeriod($budgetLimit->end_date, $viewRange);
-        $end   = app('navigation')->endOfPeriod($end, $viewRange);
+        $start       = app('navigation')->startOfPeriod($budgetLimit->start_date, $viewRange);
+        $end         = app('navigation')->startOfPeriod($budgetLimit->end_date, $viewRange);
+        $end         = app('navigation')->endOfPeriod($end, $viewRange);
 
         // limit period in total is:
         $limitPeriod = Period::make($start, $end, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
         app('log')->debug(sprintf('Limit period is from %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         // from the start until the end of the budget limit, need to loop!
-        $current = clone $start;
+        $current     = clone $start;
         while ($current <= $end) {
-            $currentEnd = app('navigation')->endOfPeriod($current, $viewRange);
+            $currentEnd      = app('navigation')->endOfPeriod($current, $viewRange);
 
             // create or find AB for this particular period, and set the amount accordingly.
             /** @var null|AvailableBudget $availableBudget */
@@ -158,16 +158,16 @@ class BudgetLimitHandler
             }
 
             // prep for next loop
-            $current = app('navigation')->addPeriod($current, $viewRange, 0);
+            $current         = app('navigation')->addPeriod($current, $viewRange, 0);
         }
     }
 
     private function calculateAmount(AvailableBudget $availableBudget): void
     {
-        $repository = app(BudgetLimitRepositoryInterface::class);
+        $repository              = app(BudgetLimitRepositoryInterface::class);
         $repository->setUser($availableBudget->user);
-        $newAmount = '0';
-        $abPeriod  = Period::make($availableBudget->start_date, $availableBudget->end_date, Precision::DAY());
+        $newAmount               = '0';
+        $abPeriod                = Period::make($availableBudget->start_date, $availableBudget->end_date, Precision::DAY());
         app('log')->debug(
             sprintf(
                 'Now at AB #%d, ("%s" to "%s")',
@@ -177,7 +177,7 @@ class BudgetLimitHandler
             )
         );
         // have to recalculate everything just in case.
-        $set = $repository->getAllBudgetLimitsByCurrency($availableBudget->transactionCurrency, $availableBudget->start_date, $availableBudget->end_date);
+        $set                     = $repository->getAllBudgetLimitsByCurrency($availableBudget->transactionCurrency, $availableBudget->start_date, $availableBudget->end_date);
         app('log')->debug(sprintf('Found %d interesting budget limit(s).', $set->count()));
 
         /** @var BudgetLimit $budgetLimit */

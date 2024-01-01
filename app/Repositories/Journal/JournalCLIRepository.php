@@ -118,7 +118,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
      */
     public function getMetaField(TransactionJournal $journal, string $field): ?string
     {
-        $cache = new CacheProperties();
+        $cache  = new CacheProperties();
         $cache->addProperty('journal-meta-updated');
         $cache->addProperty($journal->id);
         $cache->addProperty($field);
@@ -127,12 +127,12 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
             return $cache->get();
         }
 
-        $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
+        $entry  = $journal->transactionJournalMeta()->where('name', $field)->first();
         if (null === $entry) {
             return null;
         }
 
-        $value = $entry->data;
+        $value  = $entry->data;
 
         if (is_array($value)) {
             $return = implode(',', $value);
@@ -167,10 +167,10 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface
      */
     public function getSplitJournals(): Collection
     {
-        $query  = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+        $query      = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->groupBy('transaction_journals.id')
         ;
-        $result = $query->get(['transaction_journals.id as id', \DB::raw('count(transactions.id) as transaction_count')]); // @phpstan-ignore-line
+        $result     = $query->get(['transaction_journals.id as id', \DB::raw('count(transactions.id) as transaction_count')]); // @phpstan-ignore-line
         $journalIds = [];
 
         /** @var \stdClass $row */

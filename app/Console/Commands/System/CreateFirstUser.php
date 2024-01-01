@@ -38,7 +38,7 @@ class CreateFirstUser extends Command
 
     protected $description = 'Creates a new user and gives admin rights. Outputs the password on the command line. Strictly for testing.';
 
-    protected $signature = 'firefly-iii:create-first-user {email}';
+    protected $signature   = 'firefly-iii:create-first-user {email}';
     private UserRepositoryInterface $repository;
 
     /**
@@ -52,7 +52,7 @@ class CreateFirstUser extends Command
             return 1;
         }
         $this->stupidLaravel();
-        $count = $this->repository->count();
+        $count          = $this->repository->count();
         if ($count > 0) {
             $this->friendlyError('Already have more than zero users in DB.');
 

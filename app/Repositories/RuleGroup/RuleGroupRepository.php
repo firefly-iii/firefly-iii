@@ -365,7 +365,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
     public function setOrder(RuleGroup $ruleGroup, int $newOrder): void
     {
-        $oldOrder = $ruleGroup->order;
+        $oldOrder         = $ruleGroup->order;
 
         if ($newOrder > $oldOrder) {
             $this->user->ruleGroups()->where('rule_groups.order', '<=', $newOrder)->where('rule_groups.order', '>', $oldOrder)

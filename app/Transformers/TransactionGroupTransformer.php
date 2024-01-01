@@ -143,7 +143,7 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     private function transformTransaction(array $transaction): array
     {
-        $row = new NullArrayObject($transaction);
+        $row           = new NullArrayObject($transaction);
 
         // amount:
         $amount        = app('steam')->positive((string) ($row['amount'] ?? '0'));
@@ -156,10 +156,10 @@ class TransactionGroupTransformer extends AbstractTransformer
         $metaDateData  = $this->groupRepos->getMetaDateFields((int) $row['transaction_journal_id'], $this->metaDateFields);
         $type          = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
 
-        $longitude = null;
-        $latitude  = null;
-        $zoomLevel = null;
-        $location  = $this->getLocationById((int) $row['transaction_journal_id']);
+        $longitude     = null;
+        $latitude      = null;
+        $zoomLevel     = null;
+        $location      = $this->getLocationById((int) $row['transaction_journal_id']);
         if (null !== $location) {
             $longitude = $location->longitude;
             $latitude  = $location->latitude;
@@ -167,83 +167,83 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         return [
-            'user'                   => (string) $row['user_id'],
-            'transaction_journal_id' => (string) $row['transaction_journal_id'],
-            'type'                   => strtolower($type),
-            'date'                   => $row['date']->toAtomString(),
-            'order'                  => $row['order'],
+            'user'                            => (string) $row['user_id'],
+            'transaction_journal_id'          => (string) $row['transaction_journal_id'],
+            'type'                            => strtolower($type),
+            'date'                            => $row['date']->toAtomString(),
+            'order'                           => $row['order'],
 
-            'currency_id'             => (string) $row['currency_id'],
-            'currency_code'           => $row['currency_code'],
-            'currency_name'           => $row['currency_name'],
-            'currency_symbol'         => $row['currency_symbol'],
-            'currency_decimal_places' => (int) $row['currency_decimal_places'],
+            'currency_id'                     => (string) $row['currency_id'],
+            'currency_code'                   => $row['currency_code'],
+            'currency_name'                   => $row['currency_name'],
+            'currency_symbol'                 => $row['currency_symbol'],
+            'currency_decimal_places'         => (int) $row['currency_decimal_places'],
 
             'foreign_currency_id'             => $this->stringFromArray($transaction, 'foreign_currency_id', null),
             'foreign_currency_code'           => $row['foreign_currency_code'],
             'foreign_currency_symbol'         => $row['foreign_currency_symbol'],
             'foreign_currency_decimal_places' => $row['foreign_currency_decimal_places'],
 
-            'amount'         => $amount,
-            'foreign_amount' => $foreignAmount,
+            'amount'                          => $amount,
+            'foreign_amount'                  => $foreignAmount,
 
-            'description' => $row['description'],
+            'description'                     => $row['description'],
 
-            'source_id'   => (string) $row['source_account_id'],
-            'source_name' => $row['source_account_name'],
-            'source_iban' => $row['source_account_iban'],
-            'source_type' => $row['source_account_type'],
+            'source_id'                       => (string) $row['source_account_id'],
+            'source_name'                     => $row['source_account_name'],
+            'source_iban'                     => $row['source_account_iban'],
+            'source_type'                     => $row['source_account_type'],
 
-            'destination_id'   => (string) $row['destination_account_id'],
-            'destination_name' => $row['destination_account_name'],
-            'destination_iban' => $row['destination_account_iban'],
-            'destination_type' => $row['destination_account_type'],
+            'destination_id'                  => (string) $row['destination_account_id'],
+            'destination_name'                => $row['destination_account_name'],
+            'destination_iban'                => $row['destination_account_iban'],
+            'destination_type'                => $row['destination_account_type'],
 
-            'budget_id'   => $this->stringFromArray($transaction, 'budget_id', null),
-            'budget_name' => $row['budget_name'],
+            'budget_id'                       => $this->stringFromArray($transaction, 'budget_id', null),
+            'budget_name'                     => $row['budget_name'],
 
-            'category_id'   => $this->stringFromArray($transaction, 'category_id', null),
-            'category_name' => $row['category_name'],
+            'category_id'                     => $this->stringFromArray($transaction, 'category_id', null),
+            'category_name'                   => $row['category_name'],
 
-            'bill_id'   => $this->stringFromArray($transaction, 'bill_id', null),
-            'bill_name' => $row['bill_name'],
+            'bill_id'                         => $this->stringFromArray($transaction, 'bill_id', null),
+            'bill_name'                       => $row['bill_name'],
 
-            'reconciled' => $row['reconciled'],
-            'notes'      => $this->groupRepos->getNoteText((int) $row['transaction_journal_id']),
-            'tags'       => $this->groupRepos->getTags((int) $row['transaction_journal_id']),
+            'reconciled'                      => $row['reconciled'],
+            'notes'                           => $this->groupRepos->getNoteText((int) $row['transaction_journal_id']),
+            'tags'                            => $this->groupRepos->getTags((int) $row['transaction_journal_id']),
 
-            'internal_reference' => $metaFieldData['internal_reference'],
-            'external_id'        => $metaFieldData['external_id'],
-            'original_source'    => $metaFieldData['original_source'],
-            'recurrence_id'      => $this->stringFromArray($metaFieldData->getArrayCopy(), 'recurrence_id', null),
-            'recurrence_total'   => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_total'),
-            'recurrence_count'   => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_count'),
-            'bunq_payment_id'    => $metaFieldData['bunq_payment_id'],
-            'external_url'       => $metaFieldData['external_url'],
-            'import_hash_v2'     => $metaFieldData['import_hash_v2'],
+            'internal_reference'              => $metaFieldData['internal_reference'],
+            'external_id'                     => $metaFieldData['external_id'],
+            'original_source'                 => $metaFieldData['original_source'],
+            'recurrence_id'                   => $this->stringFromArray($metaFieldData->getArrayCopy(), 'recurrence_id', null),
+            'recurrence_total'                => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_total'),
+            'recurrence_count'                => $this->integerFromArray($metaFieldData->getArrayCopy(), 'recurrence_count'),
+            'bunq_payment_id'                 => $metaFieldData['bunq_payment_id'],
+            'external_url'                    => $metaFieldData['external_url'],
+            'import_hash_v2'                  => $metaFieldData['import_hash_v2'],
 
-            'sepa_cc'       => $metaFieldData['sepa_cc'],
-            'sepa_ct_op'    => $metaFieldData['sepa_ct_op'],
-            'sepa_ct_id'    => $metaFieldData['sepa_ct_id'],
-            'sepa_db'       => $metaFieldData['sepa_db'],
-            'sepa_country'  => $metaFieldData['sepa_country'],
-            'sepa_ep'       => $metaFieldData['sepa_ep'],
-            'sepa_ci'       => $metaFieldData['sepa_ci'],
-            'sepa_batch_id' => $metaFieldData['sepa_batch_id'],
+            'sepa_cc'                         => $metaFieldData['sepa_cc'],
+            'sepa_ct_op'                      => $metaFieldData['sepa_ct_op'],
+            'sepa_ct_id'                      => $metaFieldData['sepa_ct_id'],
+            'sepa_db'                         => $metaFieldData['sepa_db'],
+            'sepa_country'                    => $metaFieldData['sepa_country'],
+            'sepa_ep'                         => $metaFieldData['sepa_ep'],
+            'sepa_ci'                         => $metaFieldData['sepa_ci'],
+            'sepa_batch_id'                   => $metaFieldData['sepa_batch_id'],
 
-            'interest_date' => $this->dateFromArray($metaDateData, 'interest_date'),
-            'book_date'     => $this->dateFromArray($metaDateData, 'book_date'),
-            'process_date'  => $this->dateFromArray($metaDateData, 'process_date'),
-            'due_date'      => $this->dateFromArray($metaDateData, 'due_date'),
-            'payment_date'  => $this->dateFromArray($metaDateData, 'payment_date'),
-            'invoice_date'  => $this->dateFromArray($metaDateData, 'invoice_date'),
+            'interest_date'                   => $this->dateFromArray($metaDateData, 'interest_date'),
+            'book_date'                       => $this->dateFromArray($metaDateData, 'book_date'),
+            'process_date'                    => $this->dateFromArray($metaDateData, 'process_date'),
+            'due_date'                        => $this->dateFromArray($metaDateData, 'due_date'),
+            'payment_date'                    => $this->dateFromArray($metaDateData, 'payment_date'),
+            'invoice_date'                    => $this->dateFromArray($metaDateData, 'invoice_date'),
 
             // location data
-            'longitude'     => $longitude,
-            'latitude'      => $latitude,
-            'zoom_level'    => $zoomLevel,
+            'longitude'                       => $longitude,
+            'latitude'                        => $latitude,
+            'zoom_level'                      => $zoomLevel,
 
-            'has_attachments' => $this->hasAttachments((int) $row['transaction_journal_id']),
+            'has_attachments'                 => $this->hasAttachments((int) $row['transaction_journal_id']),
         ];
     }
 
@@ -342,10 +342,10 @@ class TransactionGroupTransformer extends AbstractTransformer
             $foreignAmount = app('steam')->bcround($foreignAmount, $foreignCurrency['decimal_places'] ?? 0);
         }
 
-        $longitude = null;
-        $latitude  = null;
-        $zoomLevel = null;
-        $location  = $this->getLocation($journal);
+        $longitude       = null;
+        $latitude        = null;
+        $zoomLevel       = null;
+        $location        = $this->getLocation($journal);
         if (null !== $location) {
             $longitude = $location->longitude;
             $latitude  = $location->latitude;
@@ -353,77 +353,77 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         return [
-            'user'                   => $journal->user_id,
-            'transaction_journal_id' => $journal->id,
-            'type'                   => strtolower($type),
-            'date'                   => $journal->date->toAtomString(),
-            'order'                  => $journal->order,
+            'user'                            => $journal->user_id,
+            'transaction_journal_id'          => $journal->id,
+            'type'                            => strtolower($type),
+            'date'                            => $journal->date->toAtomString(),
+            'order'                           => $journal->order,
 
-            'currency_id'             => $currency->id,
-            'currency_code'           => $currency->code,
-            'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => $currency->decimal_places,
+            'currency_id'                     => $currency->id,
+            'currency_code'                   => $currency->code,
+            'currency_symbol'                 => $currency->symbol,
+            'currency_decimal_places'         => $currency->decimal_places,
 
             'foreign_currency_id'             => $foreignCurrency['id'],
             'foreign_currency_code'           => $foreignCurrency['code'],
             'foreign_currency_symbol'         => $foreignCurrency['symbol'],
             'foreign_currency_decimal_places' => $foreignCurrency['decimal_places'],
 
-            'amount'         => app('steam')->bcround($amount, $currency->decimal_places),
-            'foreign_amount' => $foreignAmount,
+            'amount'                          => app('steam')->bcround($amount, $currency->decimal_places),
+            'foreign_amount'                  => $foreignAmount,
 
-            'description' => $journal->description,
+            'description'                     => $journal->description,
 
-            'source_id'   => $source->account_id,
-            'source_name' => $source->account->name,
-            'source_iban' => $source->account->iban,
-            'source_type' => $source->account->accountType->type,
+            'source_id'                       => $source->account_id,
+            'source_name'                     => $source->account->name,
+            'source_iban'                     => $source->account->iban,
+            'source_type'                     => $source->account->accountType->type,
 
-            'destination_id'   => $destination->account_id,
-            'destination_name' => $destination->account->name,
-            'destination_iban' => $destination->account->iban,
-            'destination_type' => $destination->account->accountType->type,
+            'destination_id'                  => $destination->account_id,
+            'destination_name'                => $destination->account->name,
+            'destination_iban'                => $destination->account->iban,
+            'destination_type'                => $destination->account->accountType->type,
 
-            'budget_id'   => $budget['id'],
-            'budget_name' => $budget['name'],
+            'budget_id'                       => $budget['id'],
+            'budget_name'                     => $budget['name'],
 
-            'category_id'   => $category['id'],
-            'category_name' => $category['name'],
+            'category_id'                     => $category['id'],
+            'category_name'                   => $category['name'],
 
-            'bill_id'   => $bill['id'],
-            'bill_name' => $bill['name'],
+            'bill_id'                         => $bill['id'],
+            'bill_name'                       => $bill['name'],
 
-            'reconciled' => $source->reconciled,
-            'notes'      => $this->groupRepos->getNoteText($journal->id),
-            'tags'       => $this->groupRepos->getTags($journal->id),
+            'reconciled'                      => $source->reconciled,
+            'notes'                           => $this->groupRepos->getNoteText($journal->id),
+            'tags'                            => $this->groupRepos->getTags($journal->id),
 
-            'internal_reference' => $metaFieldData['internal_reference'],
-            'external_id'        => $metaFieldData['external_id'],
-            'original_source'    => $metaFieldData['original_source'],
-            'recurrence_id'      => $metaFieldData['recurrence_id'],
-            'bunq_payment_id'    => $metaFieldData['bunq_payment_id'],
-            'import_hash_v2'     => $metaFieldData['import_hash_v2'],
+            'internal_reference'              => $metaFieldData['internal_reference'],
+            'external_id'                     => $metaFieldData['external_id'],
+            'original_source'                 => $metaFieldData['original_source'],
+            'recurrence_id'                   => $metaFieldData['recurrence_id'],
+            'bunq_payment_id'                 => $metaFieldData['bunq_payment_id'],
+            'import_hash_v2'                  => $metaFieldData['import_hash_v2'],
 
-            'sepa_cc'       => $metaFieldData['sepa_cc'],
-            'sepa_ct_op'    => $metaFieldData['sepa_ct_op'],
-            'sepa_ct_id'    => $metaFieldData['sepa_ct_id'],
-            'sepa_db'       => $metaFieldData['sepa_db'],
-            'sepa_country'  => $metaFieldData['sepa_country'],
-            'sepa_ep'       => $metaFieldData['sepa_ep'],
-            'sepa_ci'       => $metaFieldData['sepa_ci'],
-            'sepa_batch_id' => $metaFieldData['sepa_batch_id'],
+            'sepa_cc'                         => $metaFieldData['sepa_cc'],
+            'sepa_ct_op'                      => $metaFieldData['sepa_ct_op'],
+            'sepa_ct_id'                      => $metaFieldData['sepa_ct_id'],
+            'sepa_db'                         => $metaFieldData['sepa_db'],
+            'sepa_country'                    => $metaFieldData['sepa_country'],
+            'sepa_ep'                         => $metaFieldData['sepa_ep'],
+            'sepa_ci'                         => $metaFieldData['sepa_ci'],
+            'sepa_batch_id'                   => $metaFieldData['sepa_batch_id'],
 
-            'interest_date' => $metaDates['interest_date'],
-            'book_date'     => $metaDates['book_date'],
-            'process_date'  => $metaDates['process_date'],
-            'due_date'      => $metaDates['due_date'],
-            'payment_date'  => $metaDates['payment_date'],
-            'invoice_date'  => $metaDates['invoice_date'],
+            'interest_date'                   => $metaDates['interest_date'],
+            'book_date'                       => $metaDates['book_date'],
+            'process_date'                    => $metaDates['process_date'],
+            'due_date'                        => $metaDates['due_date'],
+            'payment_date'                    => $metaDates['payment_date'],
+            'invoice_date'                    => $metaDates['invoice_date'],
 
             // location data
-            'longitude'     => $longitude,
-            'latitude'      => $latitude,
-            'zoom_level'    => $zoomLevel,
+            'longitude'                       => $longitude,
+            'latitude'                        => $latitude,
+            'zoom_level'                      => $zoomLevel,
         ];
     }
 
@@ -499,7 +499,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     private function getForeignCurrency(?TransactionCurrency $currency): array
     {
-        $array = [
+        $array                   = [
             'id'             => null,
             'code'           => null,
             'symbol'         => null,
@@ -518,7 +518,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     private function getBudget(?Budget $budget): array
     {
-        $array = [
+        $array         = [
             'id'   => null,
             'name' => null,
         ];
@@ -533,7 +533,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     private function getCategory(?Category $category): array
     {
-        $array = [
+        $array         = [
             'id'   => null,
             'name' => null,
         ];
@@ -548,7 +548,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     private function getBill(?Bill $bill): array
     {
-        $array = [
+        $array         = [
             'id'   => null,
             'name' => null,
         ];

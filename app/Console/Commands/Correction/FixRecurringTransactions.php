@@ -40,9 +40,9 @@ class FixRecurringTransactions extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description = 'Fixes recurring transactions with the wrong transaction type.';
-    protected $signature   = 'firefly-iii:fix-recurring-transactions';
-    private int                          $count       = 0;
+    protected $description                      = 'Fixes recurring transactions with the wrong transaction type.';
+    protected $signature                        = 'firefly-iii:fix-recurring-transactions';
+    private int                          $count = 0;
     private RecurringRepositoryInterface $recurringRepos;
     private UserRepositoryInterface      $userRepos;
 
