@@ -62,15 +62,15 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Budget $budget): JsonResponse
     {
-        $data    = $request->getAll();
-        $budget  = $this->repository->update($budget, $data);
-        $manager = $this->getManager();
+        $data        = $request->getAll();
+        $budget      = $this->repository->update($budget, $data);
+        $manager     = $this->getManager();
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($budget, $transformer, 'budgets');
+        $resource    = new Item($budget, $transformer, 'budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

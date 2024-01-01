@@ -62,15 +62,15 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Recurrence $recurrence): JsonResponse
     {
-        $data       = $request->getAll();
-        $recurrence = $this->repository->update($recurrence, $data);
-        $manager    = $this->getManager();
+        $data        = $request->getAll();
+        $recurrence  = $this->repository->update($recurrence, $data);
+        $manager     = $this->getManager();
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($recurrence, $transformer, 'recurrences');
+        $resource    = new Item($recurrence, $transformer, 'recurrences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

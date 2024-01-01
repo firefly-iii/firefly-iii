@@ -44,7 +44,7 @@ class StoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $fields = [
+        $fields           = [
             'title'            => ['title', 'convertString'],
             'description'      => ['description', 'convertString'],
             'rule_group_id'    => ['rule_group_id', 'convertInteger'],
@@ -55,7 +55,7 @@ class StoreRequest extends FormRequest
             'stop_processing'  => ['stop_processing', 'boolean'],
             'active'           => ['active', 'boolean'],
         ];
-        $data   = $this->getAllData($fields);
+        $data             = $this->getAllData($fields);
 
         $data['triggers'] = $this->getRuleTriggers();
         $data['actions']  = $this->getRuleActions();
@@ -68,8 +68,8 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        $validTriggers = $this->getTriggers();
-        $validActions  = array_keys(config('firefly.rule-actions'));
+        $validTriggers   = $this->getTriggers();
+        $validActions    = array_keys(config('firefly.rule-actions'));
 
         // some triggers and actions require text:
         $contextTriggers = implode(',', $this->getTriggersWithContext());
@@ -141,10 +141,10 @@ class StoreRequest extends FormRequest
      */
     protected function atLeastOneActiveTrigger(Validator $validator): void
     {
-        $data = $validator->getData();
+        $data          = $validator->getData();
 
         /** @var null|array|int|string $triggers */
-        $triggers = $data['triggers'] ?? [];
+        $triggers      = $data['triggers'] ?? [];
         // need at least one trigger
         if (!is_countable($triggers) || 0 === count($triggers)) {
             return;
@@ -170,10 +170,10 @@ class StoreRequest extends FormRequest
      */
     protected function atLeastOneActiveAction(Validator $validator): void
     {
-        $data = $validator->getData();
+        $data          = $validator->getData();
 
         /** @var null|array|int|string $actions */
-        $actions = $data['actions'] ?? [];
+        $actions       = $data['actions'] ?? [];
         // need at least one trigger
         if (!is_countable($actions) || 0 === count($actions)) {
             return;

@@ -22,7 +22,7 @@
 $current = __DIR__;
 
 $paths = [
-    $current . '/../../app/Api/V1/Controllers/Autocomplete',
+    $current . '/../../app/Api/V1',
 //    $current . '/../../config',
 //    $current . '/../../database',
 //    $current . '/../../routes',
@@ -61,7 +61,8 @@ return $config->setRules([
                                  'default' => 'at_least_single_space',
                                  'operators' => [
                                      '=>' => 'align_single_space_by_scope',
-                                     '='  => 'align_single_space_minimal',
+                                     '='  => 'align_single_space_minimal_by_scope',
+                                     '??='  => 'align_single_space_minimal_by_scope',
                                  ],
                              ],
                              'void_return'                   => true,

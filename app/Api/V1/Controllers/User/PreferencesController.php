@@ -61,14 +61,14 @@ class PreferencesController extends Controller
         $preferences = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($preferences, $count, $pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($preferences, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.preferences.index').$this->buildParams());
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($preferences, $transformer, self::RESOURCE_KEY);
+        $resource    = new FractalCollection($preferences, $transformer, self::RESOURCE_KEY);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -82,13 +82,13 @@ class PreferencesController extends Controller
      */
     public function show(Preference $preference): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($preference, $transformer, 'preferences');
+        $resource    = new Item($preference, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -101,15 +101,15 @@ class PreferencesController extends Controller
      */
     public function store(PreferenceStoreRequest $request): JsonResponse
     {
-        $manager = $this->getManager();
-        $data    = $request->getAll();
-        $pref    = app('preferences')->set($data['name'], $data['data']);
+        $manager     = $this->getManager();
+        $data        = $request->getAll();
+        $pref        = app('preferences')->set($data['name'], $data['data']);
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($pref, $transformer, 'preferences');
+        $resource    = new Item($pref, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -122,15 +122,15 @@ class PreferencesController extends Controller
      */
     public function update(PreferenceUpdateRequest $request, Preference $preference): JsonResponse
     {
-        $manager = $this->getManager();
-        $data    = $request->getAll();
-        $pref    = app('preferences')->set($preference->name, $data['data']);
+        $manager     = $this->getManager();
+        $data        = $request->getAll();
+        $pref        = app('preferences')->set($preference->name, $data['data']);
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($pref, $transformer, 'preferences');
+        $resource    = new Item($pref, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

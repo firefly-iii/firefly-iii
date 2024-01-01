@@ -53,7 +53,7 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         // this is the way:
-        $fields       = [
+        $fields                 = [
             'title'             => ['title', 'convertString'],
             'description'       => ['description', 'convertString'],
             'first_date'        => ['first_date', 'convertDateTime'],
@@ -63,9 +63,9 @@ class UpdateRequest extends FormRequest
             'active'            => ['active', 'boolean'],
             'notes'             => ['notes', 'convertString'],
         ];
-        $reps         = $this->getRepetitionData();
-        $transactions = $this->getTransactionData();
-        $return       = [
+        $reps                   = $this->getRepetitionData();
+        $transactions           = $this->getTransactionData();
+        $return                 = [
             'recurrence' => $this->getAllData($fields),
         ];
         if (null !== $reps) {
@@ -85,18 +85,18 @@ class UpdateRequest extends FormRequest
         $recurrence = $this->route()->parameter('recurrence');
 
         return [
-            'title'             => sprintf('between:1,255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
-            'description'       => 'between:1,65000',
-            'first_date'        => 'date',
-            'apply_rules'       => [new IsBoolean()],
-            'active'            => [new IsBoolean()],
-            'repeat_until'      => 'nullable|date',
-            'nr_of_repetitions' => 'nullable|numeric|between:1,31',
+            'title'                                => sprintf('between:1,255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
+            'description'                          => 'between:1,65000',
+            'first_date'                           => 'date',
+            'apply_rules'                          => [new IsBoolean()],
+            'active'                               => [new IsBoolean()],
+            'repeat_until'                         => 'nullable|date',
+            'nr_of_repetitions'                    => 'nullable|numeric|between:1,31',
 
-            'repetitions.*.type'    => 'in:daily,weekly,ndom,monthly,yearly',
-            'repetitions.*.moment'  => 'between:0,10',
-            'repetitions.*.skip'    => 'nullable|numeric|between:0,31',
-            'repetitions.*.weekend' => 'nullable|numeric|min:1|max:4',
+            'repetitions.*.type'                   => 'in:daily,weekly,ndom,monthly,yearly',
+            'repetitions.*.moment'                 => 'between:0,10',
+            'repetitions.*.skip'                   => 'nullable|numeric|between:0,31',
+            'repetitions.*.weekend'                => 'nullable|numeric|min:1|max:4',
 
             'transactions.*.description'           => 'between:1,255',
             'transactions.*.amount'                => 'numeric|gt:0|max:1000000000',
@@ -147,7 +147,7 @@ class UpdateRequest extends FormRequest
      */
     private function getRepetitionData(): ?array
     {
-        $return = [];
+        $return      = [];
 
         // repetition data:
         /** @var null|array $repetitions */
@@ -158,7 +158,7 @@ class UpdateRequest extends FormRequest
 
         /** @var array $repetition */
         foreach ($repetitions as $repetition) {
-            $current = [];
+            $current  = [];
             if (array_key_exists('type', $repetition)) {
                 $current['type'] = $repetition['type'];
             }
@@ -189,7 +189,7 @@ class UpdateRequest extends FormRequest
      */
     private function getTransactionData(): array
     {
-        $return = [];
+        $return       = [];
 
         // transaction data:
         /** @var null|array $transactions */

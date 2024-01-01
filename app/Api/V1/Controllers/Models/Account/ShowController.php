@@ -73,32 +73,32 @@ class ShowController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $manager = $this->getManager();
-        $type    = $request->get('type') ?? 'all';
+        $manager     = $this->getManager();
+        $type        = $request->get('type') ?? 'all';
         $this->parameters->set('type', $type);
 
         // types to get, page size:
-        $types    = $this->mapAccountTypes($this->parameters->get('type'));
-        $pageSize = $this->parameters->get('limit');
+        $types       = $this->mapAccountTypes($this->parameters->get('type'));
+        $pageSize    = $this->parameters->get('limit');
 
         // get list of accounts. Count it and split it.
         $this->repository->resetAccountOrder();
-        $collection = $this->repository->getAccountsByType($types, $this->parameters->get('sort') ?? []);
-        $count      = $collection->count();
+        $collection  = $this->repository->getAccountsByType($types, $this->parameters->get('sort') ?? []);
+        $count       = $collection->count();
 
         // continue sort:
 
-        $accounts = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $accounts    = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.accounts.index').$this->buildParams());
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($accounts, $transformer, self::RESOURCE_KEY);
+        $resource    = new FractalCollection($accounts, $transformer, self::RESOURCE_KEY);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -115,12 +115,12 @@ class ShowController extends Controller
         // get list of accounts. Count it and split it.
         $this->repository->resetAccountOrder();
         $account->refresh();
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($account, $transformer, self::RESOURCE_KEY);
+        $resource    = new Item($account, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

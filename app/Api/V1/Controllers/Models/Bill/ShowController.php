@@ -68,18 +68,18 @@ class ShowController extends Controller
     public function index(): JsonResponse
     {
         $this->repository->correctOrder();
-        $bills     = $this->repository->getBills();
-        $manager   = $this->getManager();
-        $pageSize  = $this->parameters->get('limit');
-        $count     = $bills->count();
-        $bills     = $bills->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
+        $bills       = $this->repository->getBills();
+        $manager     = $this->getManager();
+        $pageSize    = $this->parameters->get('limit');
+        $count       = $bills->count();
+        $bills       = $bills->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator   = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
 
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($bills, $transformer, 'bills');
+        $resource    = new FractalCollection($bills, $transformer, 'bills');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -93,13 +93,13 @@ class ShowController extends Controller
      */
     public function show(Bill $bill): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($bill, $transformer, 'bills');
+        $resource    = new Item($bill, $transformer, 'bills');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

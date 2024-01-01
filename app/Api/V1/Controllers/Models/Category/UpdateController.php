@@ -62,15 +62,15 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Category $category): JsonResponse
     {
-        $data     = $request->getAll();
-        $category = $this->repository->update($category, $data);
-        $manager  = $this->getManager();
+        $data        = $request->getAll();
+        $category    = $this->repository->update($category, $data);
+        $manager     = $this->getManager();
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($category, $transformer, 'categories');
+        $resource    = new Item($category, $transformer, 'categories');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

@@ -52,7 +52,7 @@ class StoreRequest extends FormRequest
         if (null !== $this->get('include_net_worth')) {
             $includeNetWorth = $this->boolean('include_net_worth');
         }
-        $data = [
+        $data            = [
             'name'                    => $this->convertString('name'),
             'active'                  => $active,
             'include_net_worth'       => $includeNetWorth,
@@ -75,7 +75,7 @@ class StoreRequest extends FormRequest
             'interest_period'         => $this->convertString('interest_period'),
         ];
         // append location information.
-        $data = $this->appendLocationData($data, null);
+        $data            = $this->appendLocationData($data, null);
 
         if ('liability' === $data['account_type_name'] || 'liabilities' === $data['account_type_name']) {
             $data['account_type_name']   = $this->convertString('liability_type');

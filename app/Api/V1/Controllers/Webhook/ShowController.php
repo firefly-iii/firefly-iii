@@ -78,21 +78,21 @@ class ShowController extends Controller
         }
 
         Log::channel('audit')->info('User views all webhooks.');
-        $manager    = $this->getManager();
-        $collection = $this->repository->all();
-        $pageSize   = $this->parameters->get('limit');
-        $count      = $collection->count();
-        $webhooks   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $manager     = $this->getManager();
+        $collection  = $this->repository->all();
+        $pageSize    = $this->parameters->get('limit');
+        $count       = $collection->count();
+        $webhooks    = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($webhooks, $count, $pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($webhooks, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.webhooks.index').$this->buildParams());
 
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($webhooks, $transformer, self::RESOURCE_KEY);
+        $resource    = new FractalCollection($webhooks, $transformer, self::RESOURCE_KEY);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -113,12 +113,12 @@ class ShowController extends Controller
         }
 
         Log::channel('audit')->info(sprintf('User views webhook #%d.', $webhook->id));
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($webhook, $transformer, self::RESOURCE_KEY);
+        $resource    = new Item($webhook, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

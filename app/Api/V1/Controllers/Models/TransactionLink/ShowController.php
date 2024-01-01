@@ -53,7 +53,7 @@ class ShowController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user = auth()->user();
+                $user             = auth()->user();
 
                 $this->repository = app(LinkTypeRepositoryInterface::class);
 
@@ -75,13 +75,13 @@ class ShowController extends Controller
     public function index(Request $request): JsonResponse
     {
         // create some objects:
-        $manager = $this->getManager();
+        $manager      = $this->getManager();
         // read type from URL
-        $name = $request->get('name');
+        $name         = $request->get('name');
 
         // types to get, page size:
-        $pageSize = $this->parameters->get('limit');
-        $linkType = $this->repository->findByName($name);
+        $pageSize     = $this->parameters->get('limit');
+        $linkType     = $this->repository->findByName($name);
 
         // get list of transaction links. Count it and split it.
         $collection   = $this->repository->getJournalLinks($linkType);
@@ -89,14 +89,14 @@ class ShowController extends Controller
         $journalLinks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($journalLinks, $count, $pageSize, $this->parameters->get('page'));
+        $paginator    = new LengthAwarePaginator($journalLinks, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.transaction-links.index').$this->buildParams());
 
         /** @var TransactionLinkTransformer $transformer */
-        $transformer = app(TransactionLinkTransformer::class);
+        $transformer  = app(TransactionLinkTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($journalLinks, $transformer, 'transaction_links');
+        $resource     = new FractalCollection($journalLinks, $transformer, 'transaction_links');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -110,13 +110,13 @@ class ShowController extends Controller
      */
     public function show(TransactionJournalLink $journalLink): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var TransactionLinkTransformer $transformer */
         $transformer = app(TransactionLinkTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($journalLink, $transformer, 'transaction_links');
+        $resource    = new Item($journalLink, $transformer, 'transaction_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

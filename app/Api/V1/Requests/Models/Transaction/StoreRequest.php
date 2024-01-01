@@ -76,82 +76,82 @@ class StoreRequest extends FormRequest
 
         return [
             // basic fields for group:
-            'group_title'                          => 'between:1,1000|nullable',
-            'error_if_duplicate_hash'              => [new IsBoolean()],
-            'apply_rules'                          => [new IsBoolean()],
+            'group_title'                            => 'between:1,1000|nullable',
+            'error_if_duplicate_hash'                => [new IsBoolean()],
+            'apply_rules'                            => [new IsBoolean()],
 
             // transaction rules (in array for splits):
-            'transactions.*.type'                  => 'required|in:withdrawal,deposit,transfer,opening-balance,reconciliation',
-            'transactions.*.date'                  => ['required', new IsDateOrTime()],
-            'transactions.*.order'                 => 'numeric|min:0',
+            'transactions.*.type'                    => 'required|in:withdrawal,deposit,transfer,opening-balance,reconciliation',
+            'transactions.*.date'                    => ['required', new IsDateOrTime()],
+            'transactions.*.order'                   => 'numeric|min:0',
 
             // currency info
-            'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id|nullable',
-            'transactions.*.currency_code'         => 'min:3|max:51|exists:transaction_currencies,code|nullable',
-            'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id|nullable',
-            'transactions.*.foreign_currency_code' => 'min:3|max:51|exists:transaction_currencies,code|nullable',
+            'transactions.*.currency_id'             => 'numeric|exists:transaction_currencies,id|nullable',
+            'transactions.*.currency_code'           => 'min:3|max:51|exists:transaction_currencies,code|nullable',
+            'transactions.*.foreign_currency_id'     => 'numeric|exists:transaction_currencies,id|nullable',
+            'transactions.*.foreign_currency_code'   => 'min:3|max:51|exists:transaction_currencies,code|nullable',
 
             // amount
-            'transactions.*.amount'                => 'required|numeric|gt:0|max:1000000000',
-            'transactions.*.foreign_amount'        => 'numeric|max:1000000000|gt:0|',
+            'transactions.*.amount'                  => 'required|numeric|gt:0|max:1000000000',
+            'transactions.*.foreign_amount'          => 'numeric|max:1000000000|gt:0|',
 
             // description
-            'transactions.*.description'           => 'nullable|between:1,1000',
+            'transactions.*.description'             => 'nullable|between:1,1000',
 
             // source of transaction
-            'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser()],
-            'transactions.*.source_name'           => 'between:1,255|nullable',
-            'transactions.*.source_iban'           => 'between:1,255|nullable|iban',
-            'transactions.*.source_number'         => 'between:1,255|nullable',
-            'transactions.*.source_bic'            => 'between:1,255|nullable|bic',
+            'transactions.*.source_id'               => ['numeric', 'nullable', new BelongsUser()],
+            'transactions.*.source_name'             => 'between:1,255|nullable',
+            'transactions.*.source_iban'             => 'between:1,255|nullable|iban',
+            'transactions.*.source_number'           => 'between:1,255|nullable',
+            'transactions.*.source_bic'              => 'between:1,255|nullable|bic',
 
             // destination of transaction
-            'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser()],
-            'transactions.*.destination_name'      => 'between:1,255|nullable',
-            'transactions.*.destination_iban'      => 'between:1,255|nullable|iban',
-            'transactions.*.destination_number'    => 'between:1,255|nullable',
-            'transactions.*.destination_bic'       => 'between:1,255|nullable|bic',
+            'transactions.*.destination_id'          => ['numeric', 'nullable', new BelongsUser()],
+            'transactions.*.destination_name'        => 'between:1,255|nullable',
+            'transactions.*.destination_iban'        => 'between:1,255|nullable|iban',
+            'transactions.*.destination_number'      => 'between:1,255|nullable',
+            'transactions.*.destination_bic'         => 'between:1,255|nullable|bic',
 
             // budget, category, bill and piggy
-            'transactions.*.budget_id'             => ['mustExist:budgets,id', new BelongsUser()],
-            'transactions.*.budget_name'           => ['between:1,255', 'nullable', new BelongsUser()],
-            'transactions.*.category_id'           => ['mustExist:categories,id', new BelongsUser(), 'nullable'],
-            'transactions.*.category_name'         => 'between:1,255|nullable',
-            'transactions.*.bill_id'               => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser()],
-            'transactions.*.bill_name'             => ['between:1,255', 'nullable', new BelongsUser()],
-            'transactions.*.piggy_bank_id'         => ['numeric', 'nullable', 'mustExist:piggy_banks,id', new BelongsUser()],
-            'transactions.*.piggy_bank_name'       => ['between:1,255', 'nullable', new BelongsUser()],
+            'transactions.*.budget_id'               => ['mustExist:budgets,id', new BelongsUser()],
+            'transactions.*.budget_name'             => ['between:1,255', 'nullable', new BelongsUser()],
+            'transactions.*.category_id'             => ['mustExist:categories,id', new BelongsUser(), 'nullable'],
+            'transactions.*.category_name'           => 'between:1,255|nullable',
+            'transactions.*.bill_id'                 => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser()],
+            'transactions.*.bill_name'               => ['between:1,255', 'nullable', new BelongsUser()],
+            'transactions.*.piggy_bank_id'           => ['numeric', 'nullable', 'mustExist:piggy_banks,id', new BelongsUser()],
+            'transactions.*.piggy_bank_name'         => ['between:1,255', 'nullable', new BelongsUser()],
 
             // other interesting fields
-            'transactions.*.reconciled'            => [new IsBoolean()],
-            'transactions.*.notes'                 => 'min:1|max:50000|nullable',
-            'transactions.*.tags'                  => 'between:0,255',
+            'transactions.*.reconciled'              => [new IsBoolean()],
+            'transactions.*.notes'                   => 'min:1|max:50000|nullable',
+            'transactions.*.tags'                    => 'between:0,255',
             'transactions.*.tags.*'                  => 'between:0,255',
 
             // meta info fields
-            'transactions.*.internal_reference'    => 'min:1|max:255|nullable',
-            'transactions.*.external_id'           => 'min:1|max:255|nullable',
-            'transactions.*.recurrence_id'         => 'min:1|max:255|nullable',
-            'transactions.*.bunq_payment_id'       => 'min:1|max:255|nullable',
-            'transactions.*.external_url'          => sprintf('min:1|max:255|nullable|url:%s', $validProtocols),
+            'transactions.*.internal_reference'      => 'min:1|max:255|nullable',
+            'transactions.*.external_id'             => 'min:1|max:255|nullable',
+            'transactions.*.recurrence_id'           => 'min:1|max:255|nullable',
+            'transactions.*.bunq_payment_id'         => 'min:1|max:255|nullable',
+            'transactions.*.external_url'            => sprintf('min:1|max:255|nullable|url:%s', $validProtocols),
 
             // SEPA fields:
-            'transactions.*.sepa_cc'               => 'min:1|max:255|nullable',
-            'transactions.*.sepa_ct_op'            => 'min:1|max:255|nullable',
-            'transactions.*.sepa_ct_id'            => 'min:1|max:255|nullable',
-            'transactions.*.sepa_db'               => 'min:1|max:255|nullable',
-            'transactions.*.sepa_country'          => 'min:1|max:255|nullable',
-            'transactions.*.sepa_ep'               => 'min:1|max:255|nullable',
-            'transactions.*.sepa_ci'               => 'min:1|max:255|nullable',
-            'transactions.*.sepa_batch_id'         => 'min:1|max:255|nullable',
+            'transactions.*.sepa_cc'                 => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ct_op'              => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ct_id'              => 'min:1|max:255|nullable',
+            'transactions.*.sepa_db'                 => 'min:1|max:255|nullable',
+            'transactions.*.sepa_country'            => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ep'                 => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ci'                 => 'min:1|max:255|nullable',
+            'transactions.*.sepa_batch_id'           => 'min:1|max:255|nullable',
 
             // dates
-            'transactions.*.interest_date'         => 'date|nullable',
-            'transactions.*.book_date'             => 'date|nullable',
-            'transactions.*.process_date'          => 'date|nullable',
-            'transactions.*.due_date'              => 'date|nullable',
-            'transactions.*.payment_date'          => 'date|nullable',
-            'transactions.*.invoice_date'          => 'date|nullable',
+            'transactions.*.interest_date'           => 'date|nullable',
+            'transactions.*.book_date'               => 'date|nullable',
+            'transactions.*.process_date'            => 'date|nullable',
+            'transactions.*.due_date'                => 'date|nullable',
+            'transactions.*.payment_date'            => 'date|nullable',
+            'transactions.*.invoice_date'            => 'date|nullable',
         ];
     }
 
@@ -204,9 +204,9 @@ class StoreRequest extends FormRequest
         foreach ($this->get('transactions') as $transaction) {
             $object   = new NullArrayObject($transaction);
             $return[] = [
-                'type'  => $this->clearString($object['type']),
-                'date'  => $this->dateFromValue($object['date']),
-                'order' => $this->integerFromValue((string)$object['order']),
+                'type'                  => $this->clearString($object['type']),
+                'date'                  => $this->dateFromValue($object['date']),
+                'order'                 => $this->integerFromValue((string)$object['order']),
 
                 'currency_id'           => $this->integerFromValue((string)$object['currency_id']),
                 'currency_code'         => $this->clearString((string)$object['currency_code']),
@@ -265,21 +265,21 @@ class StoreRequest extends FormRequest
                 'bunq_payment_id'       => $this->clearString((string)$object['bunq_payment_id']),
                 'external_url'          => $this->clearString((string)$object['external_url']),
 
-                'sepa_cc'       => $this->clearString((string)$object['sepa_cc']),
-                'sepa_ct_op'    => $this->clearString((string)$object['sepa_ct_op']),
-                'sepa_ct_id'    => $this->clearString((string)$object['sepa_ct_id']),
-                'sepa_db'       => $this->clearString((string)$object['sepa_db']),
-                'sepa_country'  => $this->clearString((string)$object['sepa_country']),
-                'sepa_ep'       => $this->clearString((string)$object['sepa_ep']),
-                'sepa_ci'       => $this->clearString((string)$object['sepa_ci']),
-                'sepa_batch_id' => $this->clearString((string)$object['sepa_batch_id']),
+                'sepa_cc'               => $this->clearString((string)$object['sepa_cc']),
+                'sepa_ct_op'            => $this->clearString((string)$object['sepa_ct_op']),
+                'sepa_ct_id'            => $this->clearString((string)$object['sepa_ct_id']),
+                'sepa_db'               => $this->clearString((string)$object['sepa_db']),
+                'sepa_country'          => $this->clearString((string)$object['sepa_country']),
+                'sepa_ep'               => $this->clearString((string)$object['sepa_ep']),
+                'sepa_ci'               => $this->clearString((string)$object['sepa_ci']),
+                'sepa_batch_id'         => $this->clearString((string)$object['sepa_batch_id']),
                 // custom date fields. Must be Carbon objects. Presence is optional.
-                'interest_date' => $this->dateFromValue($object['interest_date']),
-                'book_date'     => $this->dateFromValue($object['book_date']),
-                'process_date'  => $this->dateFromValue($object['process_date']),
-                'due_date'      => $this->dateFromValue($object['due_date']),
-                'payment_date'  => $this->dateFromValue($object['payment_date']),
-                'invoice_date'  => $this->dateFromValue($object['invoice_date']),
+                'interest_date'         => $this->dateFromValue($object['interest_date']),
+                'book_date'             => $this->dateFromValue($object['book_date']),
+                'process_date'          => $this->dateFromValue($object['process_date']),
+                'due_date'              => $this->dateFromValue($object['due_date']),
+                'payment_date'          => $this->dateFromValue($object['payment_date']),
+                'invoice_date'          => $this->dateFromValue($object['invoice_date']),
             ];
         }
 

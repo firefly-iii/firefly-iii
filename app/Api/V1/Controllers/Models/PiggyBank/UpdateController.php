@@ -62,20 +62,20 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, PiggyBank $piggyBank): JsonResponse
     {
-        $data      = $request->getAll();
-        $piggyBank = $this->repository->update($piggyBank, $data);
+        $data        = $request->getAll();
+        $piggyBank   = $this->repository->update($piggyBank, $data);
 
         if (array_key_exists('current_amount', $data) && '' !== $data['current_amount']) {
             $this->repository->setCurrentAmount($piggyBank, $data['current_amount']);
         }
 
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($piggyBank, $transformer, 'piggy_banks');
+        $resource    = new Item($piggyBank, $transformer, 'piggy_banks');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

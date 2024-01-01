@@ -65,22 +65,22 @@ class ListController extends Controller
      */
     public function attachments(PiggyBank $piggyBank): JsonResponse
     {
-        $manager    = $this->getManager();
-        $pageSize   = $this->parameters->get('limit');
-        $collection = $this->repository->getAttachments($piggyBank);
+        $manager     = $this->getManager();
+        $pageSize    = $this->parameters->get('limit');
+        $collection  = $this->repository->getAttachments($piggyBank);
 
         $count       = $collection->count();
         $attachments = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.piggy-banks.attachments', [$piggyBank->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($attachments, $transformer, 'attachments');
+        $resource    = new FractalCollection($attachments, $transformer, 'attachments');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -97,22 +97,22 @@ class ListController extends Controller
     public function piggyBankEvents(PiggyBank $piggyBank): JsonResponse
     {
         // types to get, page size:
-        $pageSize = $this->parameters->get('limit');
-        $manager  = $this->getManager();
+        $pageSize    = $this->parameters->get('limit');
+        $manager     = $this->getManager();
 
-        $collection = $this->repository->getEvents($piggyBank);
-        $count      = $collection->count();
-        $events     = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $collection  = $this->repository->getEvents($piggyBank);
+        $count       = $collection->count();
+        $events      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.piggy-banks.events', [$piggyBank->id]).$this->buildParams());
 
         /** @var PiggyBankEventTransformer $transformer */
         $transformer = app(PiggyBankEventTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($events, $transformer, 'piggy_bank_events');
+        $resource    = new FractalCollection($events, $transformer, 'piggy_bank_events');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

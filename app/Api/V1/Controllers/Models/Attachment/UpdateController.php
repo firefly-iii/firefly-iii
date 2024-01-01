@@ -74,15 +74,15 @@ class UpdateController extends Controller
 
             throw new NotFoundHttpException();
         }
-        $data = $request->getAll();
+        $data        = $request->getAll();
         $this->repository->update($attachment, $data);
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($attachment, $transformer, 'attachments');
+        $resource    = new Item($attachment, $transformer, 'attachments');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

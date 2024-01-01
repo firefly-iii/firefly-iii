@@ -62,41 +62,41 @@ class TagController extends Controller
      */
     public function noTag(GenericRequest $request): JsonResponse
     {
-        $accounts = $request->getAssetAccounts();
-        $start    = $request->getStart();
-        $end      = $request->getEnd();
-        $response = [];
+        $accounts   = $request->getAssetAccounts();
+        $start      = $request->getStart();
+        $end        = $request->getEnd();
+        $response   = [];
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionType::WITHDRAWAL])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->withoutTags();
 
         $genericSet = $collector->getExtractedJournals();
 
         foreach ($genericSet as $journal) {
-            $currencyId        = (int)$journal['currency_id'];
-            $foreignCurrencyId = (int)$journal['foreign_currency_id'];
+            $currencyId        = (int) $journal['currency_id'];
+            $foreignCurrencyId = (int) $journal['foreign_currency_id'];
 
             if (0 !== $currencyId) {
-                $response[$currencyId]                     ??= [
+                $response[$currencyId] ??= [
                     'difference'       => '0',
                     'difference_float' => 0,
-                    'currency_id'      => (string)$currencyId,
+                    'currency_id'      => (string) $currencyId,
                     'currency_code'    => $journal['currency_code'],
                 ];
                 $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], $journal['amount']);
-                $response[$currencyId]['difference_float'] = (float)$response[$currencyId]['difference']; // float but on purpose.
+                $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference']; // float but on purpose.
             }
             if (0 !== $foreignCurrencyId) {
-                $response[$foreignCurrencyId]                     ??= [
+                $response[$foreignCurrencyId] ??= [
                     'difference'       => '0',
                     'difference_float' => 0,
-                    'currency_id'      => (string)$foreignCurrencyId,
+                    'currency_id'      => (string) $foreignCurrencyId,
                     'currency_code'    => $journal['foreign_currency_code'],
                 ];
                 $response[$foreignCurrencyId]['difference']       = bcadd($response[$foreignCurrencyId]['difference'], $journal['foreign_amount']);
-                $response[$foreignCurrencyId]['difference_float'] = (float)$response[$foreignCurrencyId]['difference']; // float but on purpose.
+                $response[$foreignCurrencyId]['difference_float'] = (float) $response[$foreignCurrencyId]['difference']; // float but on purpose.
             }
         }
 
@@ -111,11 +111,11 @@ class TagController extends Controller
      */
     public function tag(GenericRequest $request): JsonResponse
     {
-        $accounts = $request->getAssetAccounts();
-        $tags     = $request->getTags();
-        $start    = $request->getStart();
-        $end      = $request->getEnd();
-        $response = [];
+        $accounts   = $request->getAssetAccounts();
+        $tags       = $request->getTags();
+        $start      = $request->getStart();
+        $end        = $request->getEnd();
+        $response   = [];
 
         // get all tags:
         if (0 === $tags->count()) {
@@ -123,15 +123,15 @@ class TagController extends Controller
         }
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionType::WITHDRAWAL])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->setTags($tags);
         $genericSet = $collector->getExtractedJournals();
 
         /** @var array $journal */
         foreach ($genericSet as $journal) {
-            $currencyId        = (int)$journal['currency_id'];
-            $foreignCurrencyId = (int)$journal['foreign_currency_id'];
+            $currencyId        = (int) $journal['currency_id'];
+            $foreignCurrencyId = (int) $journal['foreign_currency_id'];
 
             /** @var array $tag */
             foreach ($journal['tags'] as $tag) {
@@ -141,16 +141,16 @@ class TagController extends Controller
 
                 // on currency ID
                 if (0 !== $currencyId) {
-                    $response[$key]                     ??= [
-                        'id'               => (string)$tagId,
+                    $response[$key] ??= [
+                        'id'               => (string) $tagId,
                         'name'             => $tag['name'],
                         'difference'       => '0',
                         'difference_float' => 0,
-                        'currency_id'      => (string)$currencyId,
+                        'currency_id'      => (string) $currencyId,
                         'currency_code'    => $journal['currency_code'],
                     ];
                     $response[$key]['difference']       = bcadd($response[$key]['difference'], $journal['amount']);
-                    $response[$key]['difference_float'] = (float)$response[$key]['difference']; // float but on purpose.
+                    $response[$key]['difference_float'] = (float) $response[$key]['difference']; // float but on purpose.
                 }
 
                 // on foreign ID
@@ -158,11 +158,11 @@ class TagController extends Controller
                     $response[$foreignKey]                     = $journal[$foreignKey] ?? [
                         'difference'       => '0',
                         'difference_float' => 0,
-                        'currency_id'      => (string)$foreignCurrencyId,
+                        'currency_id'      => (string) $foreignCurrencyId,
                         'currency_code'    => $journal['foreign_currency_code'],
                     ];
                     $response[$foreignKey]['difference']       = bcadd($response[$foreignKey]['difference'], $journal['foreign_amount']);
-                    $response[$foreignKey]['difference_float'] = (float)$response[$foreignKey]['difference']; // float but on purpose.
+                    $response[$foreignKey]['difference_float'] = (float) $response[$foreignKey]['difference']; // float but on purpose.
                 }
             }
         }

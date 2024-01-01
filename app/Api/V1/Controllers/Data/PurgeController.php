@@ -62,7 +62,7 @@ class PurgeController extends Controller
         Bill::whereUserId($user->id)->onlyTrashed()->forceDelete();
 
         // piggies
-        $set = PiggyBank::leftJoin('accounts', 'accounts.id', 'piggy_banks.account_id')
+        $set  = PiggyBank::leftJoin('accounts', 'accounts.id', 'piggy_banks.account_id')
             ->where('accounts.user_id', $user->id)->onlyTrashed()->get(['piggy_banks.*'])
         ;
 

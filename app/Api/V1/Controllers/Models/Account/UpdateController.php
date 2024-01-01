@@ -73,9 +73,9 @@ class UpdateController extends Controller
         app('preferences')->mark();
 
         /** @var AccountTransformer $transformer */
-        $transformer = app(AccountTransformer::class);
+        $transformer  = app(AccountTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($account, $transformer, self::RESOURCE_KEY);
+        $resource     = new Item($account, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

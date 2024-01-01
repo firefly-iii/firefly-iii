@@ -72,20 +72,20 @@ class AccountController extends Controller
     public function overview(DateRequest $request): JsonResponse
     {
         // parameters for chart:
-        $dates = $request->getAll();
+        $dates      = $request->getAll();
 
         /** @var Carbon $start */
-        $start = $dates['start'];
+        $start      = $dates['start'];
 
         /** @var Carbon $end */
-        $end = $dates['end'];
+        $end        = $dates['end'];
 
         // user's preferences
         $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
 
         /** @var Preference $frontPage */
-        $frontPage = app('preferences')->get('frontPageAccounts', $defaultSet);
-        $default   = app('amount')->getDefaultCurrency();
+        $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
+        $default    = app('amount')->getDefaultCurrency();
 
         if (!(is_array($frontPage->data) && count($frontPage->data) > 0)) {
             $frontPage->data = $defaultSet;
@@ -93,16 +93,16 @@ class AccountController extends Controller
         }
 
         // get accounts:
-        $accounts  = $this->repository->getAccountsById($frontPage->data);
-        $chartData = [];
+        $accounts   = $this->repository->getAccountsById($frontPage->data);
+        $chartData  = [];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $currency = $this->repository->getAccountCurrency($account);
+            $currency     = $this->repository->getAccountCurrency($account);
             if (null === $currency) {
                 $currency = $default;
             }
-            $currentSet = [
+            $currentSet   = [
                 'label'                   => $account->name,
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -118,16 +118,16 @@ class AccountController extends Controller
             $currentStart = clone $start;
             $range        = app('steam')->balanceInRange($account, $start, clone $end);
             // 2022-10-11 this method no longer converts to float.
-            $previous = array_values($range)[0];
+            $previous     = array_values($range)[0];
             while ($currentStart <= $end) {
-                $format   = $currentStart->format('Y-m-d');
-                $label    = $currentStart->toAtomString();
-                $balance  = array_key_exists($format, $range) ? $range[$format] : $previous;
-                $previous = $balance;
+                $format                        = $currentStart->format('Y-m-d');
+                $label                         = $currentStart->toAtomString();
+                $balance                       = array_key_exists($format, $range) ? $range[$format] : $previous;
+                $previous                      = $balance;
                 $currentStart->addDay();
                 $currentSet['entries'][$label] = $balance;
             }
-            $chartData[] = $currentSet;
+            $chartData[]  = $currentSet;
         }
 
         return response()->json($chartData);
