@@ -54,14 +54,9 @@ class MigrateRecurrenceType extends Command
             return 0;
         }
         $this->friendlyWarning('This command has been disabled.');
+        $this->markAsExecuted();
 
         return 0;
-
-
-//        $this->migrateTypes();
-//        $this->markAsExecuted();
-//
-//        return 0;
     }
 
     private function isExecuted(): bool
@@ -71,37 +66,6 @@ class MigrateRecurrenceType extends Command
         return (bool)$configVar?->data;
     }
 
-    private function migrateTypes(): void
-    {
-        $set = Recurrence::get();
-
-        /** @var Recurrence $recurrence */
-        foreach ($set as $recurrence) {
-            if (TransactionType::INVALID !== $recurrence->transactionType->type) {
-                $this->migrateRecurrence($recurrence);
-            }
-        }
-    }
-
-    private function migrateRecurrence(Recurrence $recurrence): void
-    {
-        $originalType                    = $recurrence->transaction_type_id;
-        $newType                         = $this->getInvalidType();
-        $recurrence->transaction_type_id = $newType->id;
-        $recurrence->save();
-
-        /** @var RecurrenceTransaction $transaction */
-        foreach ($recurrence->recurrenceTransactions as $transaction) {
-            $transaction->transaction_type_id = $originalType;
-            $transaction->save();
-        }
-        $this->friendlyInfo(sprintf('Updated recurrence #%d to new transaction type model.', $recurrence->id));
-    }
-
-    private function getInvalidType(): TransactionType
-    {
-        return TransactionType::whereType(TransactionType::INVALID)->firstOrCreate(['type' => TransactionType::INVALID]);
-    }
 
     private function markAsExecuted(): void
     {

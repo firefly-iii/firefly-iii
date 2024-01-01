@@ -60,6 +60,7 @@ class RecurrenceController extends Controller
      * Shows all events for a repetition. Used in calendar.
      *
      * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      * @throws FireflyException
      */
@@ -126,7 +127,7 @@ class RecurrenceController extends Controller
         foreach ($occurrences as $current) {
             if ($current->gte($start)) {
                 $event    = [
-                    'id'        => $repetitionType . $firstDate->format('Ymd'),
+                    'id'        => $repetitionType.$firstDate->format('Ymd'),
                     'title'     => 'X',
                     'allDay'    => true,
                     'start'     => $current->format('Y-m-d'),

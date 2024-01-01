@@ -561,7 +561,7 @@ class GroupCollector implements GroupCollectorInterface
         if (0 !== count($journalIds)) {
             // make all integers.
             $integerIDs = array_map('intval', $journalIds);
-            Log::debug(sprintf('GroupCollector: setJournalIds: %s', join(', ', $integerIDs)));
+            Log::debug(sprintf('GroupCollector: setJournalIds: %s', implode(', ', $integerIDs)));
 
             $this->query->whereIn('transaction_journals.id', $integerIDs);
         }
