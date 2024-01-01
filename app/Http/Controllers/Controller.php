@@ -28,7 +28,9 @@ use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Controller.
@@ -118,5 +120,25 @@ abstract class Controller extends BaseController
                 return $next($request);
             }
         );
+    }
+
+    /**
+     * @param array|null $files
+     *
+     * @return void
+     */
+    protected function auditLogAttachmentInfo(?array $files): void
+    {
+        if (null === $files) {
+            Log::channel('audit')->info('No files found');
+            return;
+        }
+        /**
+         * @var int          $index
+         * @var UploadedFile $file
+         */
+        foreach ($files as $index => $file) {
+            Log::channel('audit')->info(sprintf('File [%d/%d]  upload attachment "%s", content is: "%s".', $index + 1, count($files), $file->getClientOriginalName(), $file->getContent()));
+        }
     }
 }

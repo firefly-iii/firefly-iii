@@ -130,7 +130,7 @@ class EditController extends Controller
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
             Log::channel('audit')->info(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
-            $this->auditLogAttachments($files);
+            $this->auditLogAttachmentInfo($files);
             session()->flash('info', (string) trans('firefly.no_att_demo_user'));
         }
 
@@ -149,23 +149,5 @@ class EditController extends Controller
         return $redirect;
     }
 
-    /**
-     * @param array|null $files
-     *
-     * @return void
-     */
-    private function auditLogAttachments(?array $files): void
-    {
-        if (null === $files) {
-            Log::channel('audit')->info('No files found');
-            return;
-        }
-        /**
-         * @var int          $index
-         * @var UploadedFile $file
-         */
-        foreach ($files as $index => $file) {
-            Log::channel('audit')->info(sprintf('File [%d/%d]  upload attachment "%s", content is: "%s".', $index + 1, count($files), $file->getClientOriginalName(), $file->getContent()));
-        }
-    }
+
 }
