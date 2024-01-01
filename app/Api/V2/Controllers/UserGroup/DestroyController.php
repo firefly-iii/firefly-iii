@@ -54,7 +54,7 @@ class DestroyController extends Controller
     public function destroy(UserGroup $userGroup): JsonResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user   = auth()->user();
         // to access this function: must be group owner or sysadmin.
         // need owner role or system owner role to delete user group.
         $access = $user->hasSpecificRoleInGroup($userGroup, UserRoleEnum::OWNER) || $user->hasRole('owner');

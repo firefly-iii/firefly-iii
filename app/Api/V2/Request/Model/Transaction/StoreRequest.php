@@ -175,7 +175,7 @@ class StoreRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user      = auth()->user();
 
         /** @var UserGroup $userGroup */
         $userGroup = $this->getUserGroup();
@@ -223,9 +223,9 @@ class StoreRequest extends FormRequest
         foreach ($this->get('transactions') as $transaction) {
             $object   = new NullArrayObject($transaction);
             $return[] = [
-                'type'  => $this->clearString($object['type']),
-                'date'  => $this->dateFromValue($object['date']),
-                'order' => $this->integerFromValue((string)$object['order']),
+                'type'                  => $this->clearString($object['type']),
+                'date'                  => $this->dateFromValue($object['date']),
+                'order'                 => $this->integerFromValue((string)$object['order']),
 
                 'currency_id'           => $this->integerFromValue((string)$object['currency_id']),
                 'currency_code'         => $this->clearString((string)$object['currency_code']),
@@ -284,21 +284,21 @@ class StoreRequest extends FormRequest
                 'bunq_payment_id'       => $this->clearString((string)$object['bunq_payment_id']),
                 'external_url'          => $this->clearString((string)$object['external_url']),
 
-                'sepa_cc'       => $this->clearString((string)$object['sepa_cc']),
-                'sepa_ct_op'    => $this->clearString((string)$object['sepa_ct_op']),
-                'sepa_ct_id'    => $this->clearString((string)$object['sepa_ct_id']),
-                'sepa_db'       => $this->clearString((string)$object['sepa_db']),
-                'sepa_country'  => $this->clearString((string)$object['sepa_country']),
-                'sepa_ep'       => $this->clearString((string)$object['sepa_ep']),
-                'sepa_ci'       => $this->clearString((string)$object['sepa_ci']),
-                'sepa_batch_id' => $this->clearString((string)$object['sepa_batch_id']),
+                'sepa_cc'               => $this->clearString((string)$object['sepa_cc']),
+                'sepa_ct_op'            => $this->clearString((string)$object['sepa_ct_op']),
+                'sepa_ct_id'            => $this->clearString((string)$object['sepa_ct_id']),
+                'sepa_db'               => $this->clearString((string)$object['sepa_db']),
+                'sepa_country'          => $this->clearString((string)$object['sepa_country']),
+                'sepa_ep'               => $this->clearString((string)$object['sepa_ep']),
+                'sepa_ci'               => $this->clearString((string)$object['sepa_ci']),
+                'sepa_batch_id'         => $this->clearString((string)$object['sepa_batch_id']),
                 // custom date fields. Must be Carbon objects. Presence is optional.
-                'interest_date' => $this->dateFromValue($object['interest_date']),
-                'book_date'     => $this->dateFromValue($object['book_date']),
-                'process_date'  => $this->dateFromValue($object['process_date']),
-                'due_date'      => $this->dateFromValue($object['due_date']),
-                'payment_date'  => $this->dateFromValue($object['payment_date']),
-                'invoice_date'  => $this->dateFromValue($object['invoice_date']),
+                'interest_date'         => $this->dateFromValue($object['interest_date']),
+                'book_date'             => $this->dateFromValue($object['book_date']),
+                'process_date'          => $this->dateFromValue($object['process_date']),
+                'due_date'              => $this->dateFromValue($object['due_date']),
+                'payment_date'          => $this->dateFromValue($object['payment_date']),
+                'invoice_date'          => $this->dateFromValue($object['invoice_date']),
             ];
         }
 

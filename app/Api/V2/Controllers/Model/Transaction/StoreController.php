@@ -97,28 +97,28 @@ class StoreController extends Controller
             throw new ValidationException($validator); // @phpstan-ignore-line
         }
         app('preferences')->mark();
-        $applyRules   = $data['apply_rules'] ?? true;
-        $fireWebhooks = $data['fire_webhooks'] ?? true;
+        $applyRules         = $data['apply_rules'] ?? true;
+        $fireWebhooks       = $data['fire_webhooks'] ?? true;
         event(new StoredTransactionGroup($transactionGroup, $applyRules, $fireWebhooks));
 
         /** @var User $admin */
-        $admin = auth()->user();
+        $admin              = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector          = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // filter on transaction group.
             ->setTransactionGroup($transactionGroup)
         ;
 
-        $selectedGroup = $collector->getGroups()->first();
+        $selectedGroup      = $collector->getGroups()->first();
         if (null === $selectedGroup) {
             throw new FireflyException('200032: Cannot find transaction. Possibly, a rule deleted this transaction after its creation.');
         }
 
-        $transformer = new TransactionGroupTransformer();
+        $transformer        = new TransactionGroupTransformer();
         $transformer->setParameters($this->parameters);
 
         return response()

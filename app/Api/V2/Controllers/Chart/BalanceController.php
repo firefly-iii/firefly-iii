@@ -59,13 +59,13 @@ class BalanceController extends Controller
      */
     public function balance(BalanceChartRequest $request): JsonResponse
     {
-        $params = $request->getAll();
+        $params         = $request->getAll();
 
         /** @var Carbon $start */
-        $start = $this->parameters->get('start');
+        $start          = $this->parameters->get('start');
 
         /** @var Carbon $end */
-        $end = $this->parameters->get('end');
+        $end            = $this->parameters->get('end');
         $end->endOfDay();
 
         /** @var Collection $accounts */
@@ -76,17 +76,17 @@ class BalanceController extends Controller
 
         // prepare for currency conversion and data collection:
         /** @var TransactionCurrency $default */
-        $default    = app('amount')->getDefaultCurrency();
+        $default        = app('amount')->getDefaultCurrency();
 
         // get journals for entire period:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector      = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withAccountInformation();
         $collector->setXorAccounts($accounts);
         $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::RECONCILIATION, TransactionType::TRANSFER]);
-        $journals = $collector->getExtractedJournals();
+        $journals       = $collector->getExtractedJournals();
 
-        $object = new AccountBalanceGrouped();
+        $object         = new AccountBalanceGrouped();
         $object->setPreferredRange($preferredRange);
         $object->setDefault($default);
         $object->setAccounts($accounts);
@@ -94,7 +94,7 @@ class BalanceController extends Controller
         $object->setStart($start);
         $object->setEnd($end);
         $object->groupByCurrencyAndPeriod();
-        $chartData = $object->convertToChartData();
+        $chartData      = $object->convertToChartData();
 
         return response()->json($this->clean($chartData));
     }

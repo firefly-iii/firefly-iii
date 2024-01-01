@@ -65,7 +65,7 @@ class BudgetController extends Controller
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
                 $this->currency      = app('amount')->getDefaultCurrency();
 
-                $userGroup = $this->validateUserGroup($request);
+                $userGroup           = $this->validateUserGroup($request);
                 if (null !== $userGroup) {
                     $this->repository->setUserGroup($userGroup);
                     $this->opsRepository->setUserGroup($userGroup);
@@ -85,13 +85,13 @@ class BudgetController extends Controller
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
-        $params = $request->getAll();
+        $params  = $request->getAll();
 
         /** @var Carbon $start */
-        $start = $params['start'];
+        $start   = $params['start'];
 
         /** @var Carbon $end */
-        $end = $params['end'];
+        $end     = $params['end'];
 
         // code from FrontpageChartGenerator, but not in separate class
         $budgets = $this->repository->getActiveBudgets();
@@ -212,14 +212,14 @@ class BudgetController extends Controller
                 'overspent'                      => '0',
                 'native_overspent'               => '0',
             ];
-            $currentBudgetArray            = $block['budgets'][$budgetId];
+            $currentBudgetArray = $block['budgets'][$budgetId];
 
             // var_dump($return);
             /** @var array $journal */
             foreach ($currentBudgetArray['transaction_journals'] as $journal) {
                 // convert the amount to the native currency.
-                $rate            = $converter->getCurrencyRate($this->currencies[$currencyId], $this->currency, $journal['date']);
-                $convertedAmount = bcmul($journal['amount'], $rate);
+                $rate                                = $converter->getCurrencyRate($this->currencies[$currencyId], $this->currency, $journal['date']);
+                $convertedAmount                     = bcmul($journal['amount'], $rate);
                 if ($journal['foreign_currency_id'] === $this->currency->id) {
                     $convertedAmount = $journal['foreign_amount'];
                 }
@@ -262,7 +262,7 @@ class BudgetController extends Controller
     private function processLimit(Budget $budget, BudgetLimit $limit): array
     {
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
-        $end = clone $limit->end_date;
+        $end                  = clone $limit->end_date;
         $end->endOfDay();
         $spent                = $this->opsRepository->listExpenses($limit->start_date, $end, null, new Collection([$budget]));
         $limitCurrencyId      = $limit->transaction_currency_id;
@@ -280,7 +280,7 @@ class BudgetController extends Controller
                 $filtered[$currencyId] = $entry;
             }
         }
-        $result = $this->processExpenses($budget->id, $filtered, $limit->start_date, $end);
+        $result               = $this->processExpenses($budget->id, $filtered, $limit->start_date, $end);
         if (1 === count($result)) {
             $compare = bccomp($limit->amount, app('steam')->positive($result[$limitCurrencyId]['spent']));
             if (1 === $compare) {
