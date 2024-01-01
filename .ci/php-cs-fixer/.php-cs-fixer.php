@@ -60,7 +60,7 @@ return $config->setRules([
                              'binary_operator_spaces'        => [
                                  'default' => 'at_least_single_space',
                                  'operators' => [
-                                     '=>' => 'align_single_space_minimal',
+                                     '=>' => 'align_single_space_by_scope',
                                      '='  => 'align_single_space_minimal',
                                  ],
                              ],
