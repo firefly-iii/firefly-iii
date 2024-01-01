@@ -80,13 +80,13 @@ class AvailableBudget extends Model
 
     protected $casts
                         = [
-            'created_at'              => 'datetime',
-            'updated_at'              => 'datetime',
-            'deleted_at'              => 'datetime',
-            'start_date'              => 'date',
-            'end_date'                => 'date',
-            'transaction_currency_id' => 'int',
-        ];
+                            'created_at'              => 'datetime',
+                            'updated_at'              => 'datetime',
+                            'deleted_at'              => 'datetime',
+                            'start_date'              => 'date',
+                            'end_date'                => 'date',
+                            'transaction_currency_id' => 'int',
+                        ];
 
     protected $fillable = ['user_id', 'user_group_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date'];
 

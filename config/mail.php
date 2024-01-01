@@ -32,10 +32,10 @@ return [
     | and used as needed; however, this mailer will be used by default.
     |
     */
-    'default' => envNonEmpty('MAIL_MAILER', 'log'),
+    'default'  => envNonEmpty('MAIL_MAILER', 'log'),
 
-    'mailers' => [
-        'smtp' => [
+    'mailers'  => [
+        'smtp'     => [
             'transport'   => 'smtp',
             'host'        => envNonEmpty('MAIL_HOST', 'smtp.mailtrap.io'),
             'port'        => (int)env('MAIL_PORT', 2525),
@@ -46,11 +46,11 @@ return [
             'verify_peer' => null !== env('MAIL_ENCRYPTION'),
         ],
 
-        'ses' => [
+        'ses'      => [
             'transport' => 'ses',
         ],
 
-        'mailgun' => [
+        'mailgun'  => [
             'transport' => 'mailgun',
         ],
 
@@ -77,7 +77,7 @@ return [
             'level'     => 'notice',
         ],
 
-        'array' => [
+        'array'    => [
             'transport' => 'array',
         ],
     ],

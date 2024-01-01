@@ -72,11 +72,11 @@ class LinkType extends Model
 
     protected $casts
                         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'editable'   => 'boolean',
-        ];
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'deleted_at' => 'datetime',
+                            'editable'   => 'boolean',
+                        ];
 
     protected $fillable = ['name', 'inward', 'outward', 'editable'];
 

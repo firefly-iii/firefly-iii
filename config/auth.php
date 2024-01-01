@@ -37,12 +37,12 @@ return [
     |
     */
 
-    'defaults'     => [
+    'defaults'         => [
         'guard'     => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
         'passwords' => 'users',
     ],
-    'guard_header' => envNonEmpty('AUTHENTICATION_GUARD_HEADER', 'REMOTE_USER'),
-    'guard_email'  => envNonEmpty('AUTHENTICATION_GUARD_EMAIL', null),
+    'guard_header'     => envNonEmpty('AUTHENTICATION_GUARD_HEADER', 'REMOTE_USER'),
+    'guard_email'      => envNonEmpty('AUTHENTICATION_GUARD_EMAIL', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -61,7 +61,7 @@ return [
     |
     */
 
-    'guards' => [
+    'guards'           => [
         'web'               => [
             'driver'   => 'session',
             'provider' => 'users',
@@ -93,7 +93,7 @@ return [
     |
     */
 
-    'providers' => [
+    'providers'        => [
         'users'                => [
             'driver' => 'eloquent',
             'model'  => FireflyIII\User::class,
@@ -119,7 +119,7 @@ return [
     |
     */
 
-    'passwords' => [
+    'passwords'        => [
         'users' => [
             'provider' => 'users',
             'table'    => 'password_resets',

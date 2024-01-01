@@ -37,7 +37,7 @@ return [
     |
     */
 
-    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', '')),
+    'stateful'   => explode(',', env('SANCTUM_STATEFUL_DOMAINS', '')),
 
     /*
     |--------------------------------------------------------------------------
@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'guard' => [env('AUTHENTICATION_GUARD', 'web')],
+    'guard'      => [env('AUTHENTICATION_GUARD', 'web')],
 
     /*
     |--------------------------------------------------------------------------
