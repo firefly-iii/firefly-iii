@@ -6,7 +6,7 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "axios": "^1.6.1",
+        "axios": "^1.6.3",
         "laravel-vite-plugin": "^0.8.1",
         "sass": "^1.69.4",
         "vite": "^4.5.1",
