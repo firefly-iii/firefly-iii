@@ -33,7 +33,7 @@ class TransactionCurrencySeeder extends Seeder
 {
     public function run(): void
     {
-        $currencies = [];
+        $currencies   = [];
         // european currencies
         $currencies[] = ['code' => 'EUR', 'name' => 'Euro', 'symbol' => '€', 'decimal_places' => 2, 'enabled' => 1];
         $currencies[] = ['code' => 'HUF', 'name' => 'Hungarian forint', 'symbol' => 'Ft', 'decimal_places' => 2];

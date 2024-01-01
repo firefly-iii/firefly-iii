@@ -24,7 +24,7 @@ $current = __DIR__;
 $paths = [
     $current . '/../../app',
     $current . '/../../config',
-//    $current . '/../../database',
+    $current . '/../../database',
 //    $current . '/../../routes',
 //    $current . '/../../tests',
 //    $current . '/../../resources/lang',
