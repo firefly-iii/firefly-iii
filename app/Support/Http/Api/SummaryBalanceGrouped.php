@@ -92,7 +92,7 @@ class SummaryBalanceGrouped
             };
             $return[] = [
                 'key'                     => sprintf('%s-in-native', $title),
-                'value'                   => $this->amounts[$key]['native'],
+                'value'                   => $this->amounts[$key]['native'] ?? '0',
                 'currency_id'             => (string)$this->default->id,
                 'currency_code'           => $this->default->code,
                 'currency_symbol'         => $this->default->symbol,
