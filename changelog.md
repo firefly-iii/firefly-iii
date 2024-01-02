@@ -5,17 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 6.1.2 - 2024-01-03
 
-### Added
-
-- Initial release.
-
 ### Changed
 
 - [Issue 8304](https://github.com/firefly-iii/firefly-iii/issues/8304) Several issues with searching for and displaying of tag-related transactions
-
-### Deprecated
-
-- Initial release.
 
 ### Removed
 
@@ -35,10 +27,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Webhooks now properly disabled in the UI.
 - [Issue 8322](https://github.com/firefly-iii/firefly-iii/issues/8322) Duplicate detection did not distinguish between users
-
-### API
-
-- Initial release.
 
 ## 6.1.1 - 2023-12-27
 
