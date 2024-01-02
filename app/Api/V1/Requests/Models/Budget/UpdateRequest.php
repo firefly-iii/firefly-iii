@@ -25,6 +25,7 @@ namespace FireflyIII\Api\V1\Requests\Models\Budget;
 
 use FireflyIII\Models\Budget;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AutoBudget\ValidatesAutoBudgetRequest;
@@ -86,7 +87,7 @@ class UpdateRequest extends FormRequest
             'auto_budget_type'          => 'in:reset,rollover,adjusted,none',
             'auto_budget_currency_id'   => 'exists:transaction_currencies,id',
             'auto_budget_currency_code' => 'exists:transaction_currencies,code',
-            'auto_budget_amount'        => 'min:0|max:1000000000',
+            'auto_budget_amount'        => ['nullable', new IsValidPositiveAmount()],
             'auto_budget_period'        => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
         ];
     }

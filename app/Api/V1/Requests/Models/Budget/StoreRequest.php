@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Models\Budget;
 
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AutoBudget\ValidatesAutoBudgetRequest;
@@ -74,7 +75,7 @@ class StoreRequest extends FormRequest
             'notes'              => 'nullable|between:1,65536',
             // auto budget info
             'auto_budget_type'   => 'in:reset,rollover,adjusted,none',
-            'auto_budget_amount' => 'numeric|min:0|max:1000000000|required_if:auto_budget_type,reset|required_if:auto_budget_type,rollover|required_if:auto_budget_type,adjusted',
+            'auto_budget_amount' => ['required_if:auto_budget_type,reset', 'required_if:auto_budget_type,rollover', 'required_if:auto_budget_type,adjusted', new IsValidPositiveAmount()],
             'auto_budget_period' => 'in:daily,weekly,monthly,quarterly,half_year,yearly|required_if:auto_budget_type,reset|required_if:auto_budget_type,rollover|required_if:auto_budget_type,adjusted',
         ];
     }

@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Location;
+use FireflyIII\Rules\IsValidAmount;
 use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -101,11 +102,11 @@ class AccountFormRequest extends FormRequest
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
         $rules          = [
             'name'                               => 'required|max:1024|min:1|uniqueAccountForUser',
-            'opening_balance'                    => 'numeric|nullable|max:1000000000|min:-1000000000',
+            'opening_balance'                    => ['nullable', new IsValidAmount()],
             'opening_balance_date'               => 'date|required_with:opening_balance|nullable',
             'iban'                               => ['iban', 'nullable', new UniqueIban(null, $this->convertString('objectType'))],
             'BIC'                                => 'bic|nullable',
-            'virtual_balance'                    => 'numeric|nullable|max:1000000000|min:-1000000000',
+            'virtual_balance'                    => ['nullable', new IsValidAmount()],
             'currency_id'                        => 'exists:transaction_currencies,id',
             'account_number'                     => 'between:1,255|uniqueAccountNumberForUser|nullable',
             'account_role'                       => 'in:'.$accountRoles,

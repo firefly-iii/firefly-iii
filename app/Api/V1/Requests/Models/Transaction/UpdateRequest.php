@@ -29,6 +29,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\GroupValidation;
@@ -115,8 +116,8 @@ class UpdateRequest extends FormRequest
             'transactions.*.foreign_currency_code'   => 'nullable|min:3|max:51|exists:transaction_currencies,code',
 
             // amount
-            'transactions.*.amount'                  => 'numeric|gt:0|max:100000000000',
-            'transactions.*.foreign_amount'          => 'nullable|numeric|gte:0|max:1000000000',
+            'transactions.*.amount'                  => ['nullable', new IsValidPositiveAmount()],
+            'transactions.*.foreign_amount'          => ['nullable', new IsValidPositiveAmount()],
 
             // description
             'transactions.*.description'             => 'nullable|between:1,1000',

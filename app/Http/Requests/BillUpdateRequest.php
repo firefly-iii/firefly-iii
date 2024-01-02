@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Bill;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -68,8 +69,8 @@ class BillUpdateRequest extends FormRequest
 
         return [
             'name'                    => sprintf('required|between:1,255|uniqueObjectForUser:bills,name,%d', $bill->id),
-            'amount_min'              => 'required|numeric|gt:0|max:1000000000',
-            'amount_max'              => 'required|numeric|gt:0|max:1000000000',
+            'amount_min'              => ['required', new IsValidPositiveAmount()],
+            'amount_max'              => ['required', new IsValidPositiveAmount()],
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
             'date'                    => 'required|date',
             'bill_end_date'           => 'nullable|date',

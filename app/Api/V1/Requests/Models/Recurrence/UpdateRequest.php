@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Requests\Models\Recurrence;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\GetRecurrenceData;
@@ -99,8 +100,8 @@ class UpdateRequest extends FormRequest
             'repetitions.*.weekend'                => 'nullable|numeric|min:1|max:4',
 
             'transactions.*.description'           => 'between:1,255',
-            'transactions.*.amount'                => 'numeric|gt:0|max:1000000000',
-            'transactions.*.foreign_amount'        => 'nullable|numeric|gt:0|max:1000000000',
+            'transactions.*.amount'                => [new IsValidPositiveAmount()],
+            'transactions.*.foreign_amount'        => ['nullable', new IsValidPositiveAmount()],
             'transactions.*.currency_id'           => 'nullable|numeric|exists:transaction_currencies,id',
             'transactions.*.currency_code'         => 'nullable|min:3|max:51|exists:transaction_currencies,code',
             'transactions.*.foreign_currency_id'   => 'nullable|numeric|exists:transaction_currencies,id',
@@ -164,15 +165,15 @@ class UpdateRequest extends FormRequest
             }
 
             if (array_key_exists('moment', $repetition)) {
-                $current['moment'] = (string)$repetition['moment'];
+                $current['moment'] = (string) $repetition['moment'];
             }
 
             if (array_key_exists('skip', $repetition)) {
-                $current['skip'] = (int)$repetition['skip'];
+                $current['skip'] = (int) $repetition['skip'];
             }
 
             if (array_key_exists('weekend', $repetition)) {
-                $current['weekend'] = (int)$repetition['weekend'];
+                $current['weekend'] = (int) $repetition['weekend'];
             }
             $return[] = $current;
         }

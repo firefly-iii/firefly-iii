@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Budget;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AutoBudget\ValidatesAutoBudgetRequest;
@@ -73,7 +74,7 @@ class BudgetFormUpdateRequest extends FormRequest
             'active'                  => 'numeric|between:0,1',
             'auto_budget_type'        => 'numeric|integer|gte:0|lte:31',
             'auto_budget_currency_id' => 'exists:transaction_currencies,id',
-            'auto_budget_amount'      => 'min:0|max:1000000000|required_if:auto_budget_type,1|required_if:auto_budget_type,2|numeric',
+            'auto_budget_amount'      => ['required_if:auto_budget_type,1', 'required_if:auto_budget_type,2|numeric', new IsValidPositiveAmount()],
             'auto_budget_period'      => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
             'notes'                   => 'between:1,65536|nullable',
         ];

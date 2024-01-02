@@ -27,6 +27,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Rules\ValidRecurrenceRepetitionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionValue;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -171,7 +172,7 @@ class RecurrenceFormRequest extends FormRequest
             'transaction_description' => 'required|between:1,255',
             'transaction_type'        => 'required|in:withdrawal,deposit,transfer',
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
-            'amount'                  => 'numeric|required|gt:0|max:1000000000',
+            'amount'                  => ['required', new IsValidPositiveAmount()],
             // mandatory account info:
             'source_id'               => 'numeric|belongsToUser:accounts,id|nullable',
             'source_name'             => 'between:1,255|nullable',
@@ -179,7 +180,7 @@ class RecurrenceFormRequest extends FormRequest
             'destination_name'        => 'between:1,255|nullable',
 
             // foreign amount data:
-            'foreign_amount'          => 'nullable|gt:0|max:1000000000',
+            'foreign_amount'          => ['nullable', new IsValidPositiveAmount()],
 
             // optional fields:
             'budget_id'               => 'mustExist:budgets,id|belongsToUser:budgets,id|nullable',

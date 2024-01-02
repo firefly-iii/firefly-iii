@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Requests\Models\Account;
 
 use FireflyIII\Models\Location;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Rules\UniqueAccountNumber;
 use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\Request\AppendsLocationData;
@@ -113,7 +114,7 @@ class StoreRequest extends FormRequest
             'credit_card_type'     => sprintf('nullable|in:%s|required_if:account_role,ccAsset', $ccPaymentTypes),
             'monthly_payment_date' => 'nullable|date|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
             'liability_type'       => 'nullable|required_if:type,liability|required_if:type,liabilities|in:loan,debt,mortgage',
-            'liability_amount'     => 'required_with:liability_start_date|min:0|numeric|max:1000000000',
+            'liability_amount'     => ['required_with:liability_start_date', new IsValidPositiveAmount()],
             'liability_start_date' => 'required_with:liability_amount|date',
             'liability_direction'  => 'nullable|required_if:type,liability|required_if:type,liabilities|in:credit,debit',
             'interest'             => 'between:0,100|numeric',

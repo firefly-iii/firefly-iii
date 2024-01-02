@@ -25,6 +25,7 @@ namespace FireflyIII\Api\V1\Requests\Models\Recurrence;
 
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\GetRecurrenceData;
@@ -92,8 +93,8 @@ class StoreRequest extends FormRequest
             'repetitions.*.weekend'                => 'numeric|min:1|max:4',
 
             'transactions.*.description'           => 'required|between:1,255',
-            'transactions.*.amount'                => 'required|numeric|gt:0|max:1000000000',
-            'transactions.*.foreign_amount'        => 'nullable|numeric|gt:0|max:1000000000',
+            'transactions.*.amount'                => ['required', new IsValidPositiveAmount()],
+            'transactions.*.foreign_amount'        => ['nullable', new IsValidPositiveAmount()],
             'transactions.*.currency_id'           => 'nullable|numeric|exists:transaction_currencies,id',
             'transactions.*.currency_code'         => 'nullable|min:3|max:51|exists:transaction_currencies,code',
             'transactions.*.foreign_currency_id'   => 'nullable|numeric|exists:transaction_currencies,id',
