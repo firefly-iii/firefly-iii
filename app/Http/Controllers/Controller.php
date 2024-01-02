@@ -121,21 +121,4 @@ abstract class Controller extends BaseController
             }
         );
     }
-
-    final protected function auditLogAttachmentInfo(?array $files): void
-    {
-        if (null === $files) {
-            Log::channel('audit')->info('No files found');
-
-            return;
-        }
-
-        /**
-         * @var int          $index
-         * @var UploadedFile $file
-         */
-        foreach ($files as $index => $file) {
-            Log::channel('audit')->info(sprintf('File [%d/%d]  upload attachment "%s", mime is: "%s".', $index + 1, count($files), $file->getClientOriginalName(), $file->getMimeType()));
-        }
-    }
 }

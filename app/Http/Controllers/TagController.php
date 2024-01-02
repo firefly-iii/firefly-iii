@@ -306,7 +306,6 @@ class TagController extends Controller
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
             Log::channel('audit')->info(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
-            $this->auditLogAttachmentInfo($files);
             session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 
@@ -342,7 +341,6 @@ class TagController extends Controller
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
             Log::channel('audit')->info(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
-            $this->auditLogAttachmentInfo($files);
             session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 

@@ -47,8 +47,12 @@ trait ValidatesAutoBudgetRequest
         if ('' === $type || 0 === $type) {
             return;
         }
+        // TODO should be present at more places, stop scientific notification
+        if (str_contains(strtoupper($amount), 'E')) {
+            $amount = '';
+        }
         // basic float check:
-        if (!is_numeric($amount)) {
+        if (!is_numeric($amount) || '' === $amount) {
             $validator->errors()->add('auto_budget_amount', (string) trans('validation.amount_required_for_auto_budget'));
 
             return;
