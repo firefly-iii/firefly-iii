@@ -243,7 +243,7 @@ return [
     // Webhooks
     'webhooks'                                            => 'Webhook',
     'webhooks_breadcrumb'                                 => 'Webhook',
-    'webhooks_menu_disabled'                              => 'disabled',
+    'webhooks_menu_disabled'                              => 'disabilitato',
     'no_webhook_messages'                                 => 'Non ci sono messaggi webhook',
     'webhook_trigger_STORE_TRANSACTION'                   => 'Dopo aver creato la transazione',
     'webhook_trigger_UPDATE_TRANSACTION'                  => 'Dopo aver aggiornato la transazione',

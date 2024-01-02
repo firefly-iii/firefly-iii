@@ -23,6 +23,7 @@ class IsValidAmount implements ValidationRule
         if($this->emptyString($value)) {
             $fail('validation.filled')->translate();
             Log::info(sprintf('IsValidAmount: "%s" cannot be empty.', $value));
+
             return;
         }
 
@@ -30,6 +31,7 @@ class IsValidAmount implements ValidationRule
         if(!$this->isValidNumber($value)) {
             $fail('validation.numeric')->translate();
             Log::info(sprintf('IsValidAmount: "%s" is not a number.', $value));
+
             return;
         }
 
@@ -37,6 +39,7 @@ class IsValidAmount implements ValidationRule
         if($this->scientificNumber($value)) {
             $fail('validation.scientific_notation')->translate();
             Log::info(sprintf('IsValidAmount: "%s" cannot be in the scientific notation.', $value));
+
             return;
         }
 
@@ -45,6 +48,7 @@ class IsValidAmount implements ValidationRule
             $amount = bcmul('-1', self::BIG_AMOUNT);
             $fail('validation.gte.numeric')->translate(['value' => $amount]);
             Log::info(sprintf('IsValidAmount: "%s" must be more than %s.', $value, $amount));
+
             return;
         }
 

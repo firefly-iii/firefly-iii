@@ -30,6 +30,5 @@ interface TagRepositoryInterface
     /**
      * Find one or more tags based on the query.
      */
-    public function searchTag(string $query): Collection;
-
+    public function searchTag(string $query, int $limit): Collection;
 }

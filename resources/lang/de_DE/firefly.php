@@ -243,7 +243,7 @@ return [
     // Webhooks
     'webhooks'                                            => 'Webhooks',
     'webhooks_breadcrumb'                                 => 'Webhooks',
-    'webhooks_menu_disabled'                              => 'disabled',
+    'webhooks_menu_disabled'                              => 'deaktiviert',
     'no_webhook_messages'                                 => 'Es gibt keine Webhook Nachrichten',
     'webhook_trigger_STORE_TRANSACTION'                   => 'Nach Erstellen einer Buchung',
     'webhook_trigger_UPDATE_TRANSACTION'                  => 'Nach Aktualisierung einer Buchung',

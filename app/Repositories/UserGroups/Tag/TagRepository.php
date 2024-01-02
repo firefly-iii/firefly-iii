@@ -33,16 +33,13 @@ class TagRepository implements TagRepositoryInterface
 {
     use UserGroupTrait;
 
-    /**
-     * @inheritDoc
-     */
-    public function searchTag(string $query): Collection
+    public function searchTag(string $query, int $limit): Collection
     {
-        $query  = sprintf('%%%s%%', $query);
         $search = $this->user->tags();
         if ('' !== $query) {
-            $search->where('tag', 'LIKE', $query);
+            $search->where('tag', 'LIKE', sprintf('%%%s%%', $query));
         }
-        return $search->get(['tags.*']);
+
+        return $search->take($limit)->get(['tags.*']);
     }
 }

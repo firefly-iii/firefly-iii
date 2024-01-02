@@ -243,7 +243,7 @@ return [
     // Webhooks
     'webhooks'                                            => 'Веб-хуки',
     'webhooks_breadcrumb'                                 => 'Вебхуки',
-    'webhooks_menu_disabled'                              => 'disabled',
+    'webhooks_menu_disabled'                              => 'отключено',
     'no_webhook_messages'                                 => 'Нет сообщений от вебхуков',
     'webhook_trigger_STORE_TRANSACTION'                   => 'После создания транзакции',
     'webhook_trigger_UPDATE_TRANSACTION'                  => 'После обновления транзакции',

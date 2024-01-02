@@ -148,10 +148,10 @@
     "list": {
         "active": "\u00c4r aktiv?",
         "trigger": "Trigger",
-        "response": "Response",
-        "delivery": "Delivery",
+        "response": "Svar",
+        "delivery": "Leverans",
         "url": "URL",
-        "secret": "Secret"
+        "secret": "Hemlighet"
     },
     "config": {
         "html_language": "sv",

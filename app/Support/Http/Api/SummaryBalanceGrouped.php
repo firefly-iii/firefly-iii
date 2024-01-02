@@ -91,7 +91,6 @@ class SummaryBalanceGrouped
                 default   => 'something'
             };
 
-
             $return[] = [
                 'key'                     => sprintf('%s-in-native', $title),
                 'value'                   => $this->amounts[$key]['native'] ?? '0',

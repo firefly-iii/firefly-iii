@@ -36,6 +36,11 @@ import {I18n} from "i18n-js";
 import {loadTranslations} from "../../support/load-translations.js";
 import Tags from "bootstrap5-tags";
 
+import L from "leaflet";
+
+import 'leaflet/dist/leaflet.css';
+
+
 let i18n;
 
 const urls = {
@@ -181,6 +186,7 @@ let transactions = function () {
         budgets: [],
         piggyBanks: {},
         subscriptions: [],
+        dateFields: ['interest_date','book_date','process_date','due_date','payment_date','invoice_date'],
 
         foreignAmountEnabled: true,
         filters: {
@@ -206,6 +212,12 @@ let transactions = function () {
         // used to display the success message
         newGroupTitle: '',
         newGroupId: 0,
+
+        // map things:
+        hasLocation: false,
+        latitude: 51.959659235274,
+        longitude: 5.756805887265858,
+        zoomLevel: 13,
 
 
         detectTransactionType() {
@@ -792,6 +804,7 @@ let transactions = function () {
         addSplit() {
             this.entries.push(createEmptySplit());
             setTimeout(() => {
+                // render tags:
                 Tags.init('select.ac-tags', {
                     allowClear: true,
                     server: urls.tag,
@@ -805,6 +818,16 @@ let transactions = function () {
                         }
                     }
                 });
+                const count = this.entries.length - 1;
+                this.entries[count].map = L.map('mappie').setView([this.latitude, this.longitude], this.zoomLevel);
+
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(this.entries[count].map);
+                this.entries[count].map.on('click', this.addPointToMap);
+                this.entries[count].map.on('zoomend', this.saveZoomOfMap);
+
             }, 250);
 
         },
@@ -816,6 +839,52 @@ let transactions = function () {
         },
         formattedTotalAmount() {
             return formatMoney(this.totalAmount, 'EUR');
+        },
+        clearLocation(e) {
+            e.preventDefault();
+            const target = e.currentTarget;
+            const index = parseInt(target.attributes['data-index'].value);
+            this.entries[index].hasLocation = false;
+            this.entries[index].marker.remove();
+            return false;
+        },
+        saveZoomOfMap(e) {
+            let index = parseInt(e.sourceTarget._container.attributes['data-index'].value);
+            let map = document.querySelector('#form')._x_dataStack[0].$data.entries[index].map;
+            document.querySelector('#form')._x_dataStack[0].$data.entries[index].zoomLevel = map.getZoom();
+            console.log('New zoom level: ' + map.getZoom());
+        },
+        addPointToMap(e) {
+            let index = parseInt(e.originalEvent.currentTarget.attributes['data-index'].value);
+            let map = document.querySelector('#form')._x_dataStack[0].$data.entries[index].map;
+            let hasLocation = document.querySelector('#form')._x_dataStack[0].$data.entries[index].hasLocation;
+            console.log('Has location: ' + hasLocation);
+            if (false === hasLocation) {
+                console.log('False!');
+                const marker = new L.marker(e.latlng, {draggable: true});
+                marker.on('dragend', function (event) {
+                    var marker = event.target;
+
+                    var position = marker.getLatLng();
+                    marker.setLatLng(new L.LatLng(position.lat, position.lng), {draggable: 'true'});
+                    document.querySelector('#form')._x_dataStack[0].$data.entries[index].latitude = position.lat;
+                    document.querySelector('#form')._x_dataStack[0].$data.entries[index].longitude = position.lng;
+                });
+
+                marker.addTo(map);
+                document.querySelector('#form')._x_dataStack[0].$data.entries[index].hasLocation = true;
+                document.querySelector('#form')._x_dataStack[0].$data.entries[index].marker = marker;
+                document.querySelector('#form')._x_dataStack[0].$data.entries[index].latitude = e.latlng.lat;
+                document.querySelector('#form')._x_dataStack[0].$data.entries[index].longitude = e.latlng.lng;
+                document.querySelector('#form')._x_dataStack[0].$data.entries[index].zoomLevel = map.getZoom();
+            }
+            //this.entries[index].hasLocation = true;
+            // map.on('click', function (e) {
+            //     if (false === this.hasLocation) {
+            //         let marker = new L.marker(e.latlng).addTo(map);
+            //         this.hasLocation = true;
+            //     }
+            // });
         }
     }
 }

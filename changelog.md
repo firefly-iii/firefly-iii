@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.2 - 2024-01-03
+
+### Added
+
+- Initial release.
+
+### Changed
+
+- [Issue 8304](https://github.com/firefly-iii/firefly-iii/issues/8304) Several issues with searching for and displaying of tag-related transactions
+
+### Deprecated
+
+- Initial release.
+
+### Removed
+
+- Double reference to webhooks in the menu
+
+### Fixed
+
+- [Issue 8297](https://github.com/firefly-iii/firefly-iii/issues/8297) Division by zero
+- [Issue 8320](https://github.com/firefly-iii/firefly-iii/issues/8320) nullpointer in new layout
+- [Issue 8321](https://github.com/firefly-iii/firefly-iii/issues/8321) Networth checkbox for expense and revenue accounts removed
+- Long date ranges will throw an error
+- 
+- Max sizes and reasonable limits for most numbers and strings
+- Links in readme to documentation.
+
+### Security
+
+- Webhooks now properly disabled in the UI.
+- [Issue 8322](https://github.com/firefly-iii/firefly-iii/issues/8322) Duplicate detection did not distinguish between users
+
+### API
+
+- Initial release.
+
 ## 6.1.1 - 2023-12-27
 
 ### Changed

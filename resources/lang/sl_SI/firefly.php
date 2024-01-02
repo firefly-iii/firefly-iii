@@ -243,7 +243,7 @@ return [
     // Webhooks
     'webhooks'                                            => 'Webhooks',
     'webhooks_breadcrumb'                                 => 'Webhooks',
-    'webhooks_menu_disabled'                              => 'disabled',
+    'webhooks_menu_disabled'                              => 'onemogočeno',
     'no_webhook_messages'                                 => 'Tukaj ni webhook sporočil',
     'webhook_trigger_STORE_TRANSACTION'                   => 'Po ustvarjanju transakcije',
     'webhook_trigger_UPDATE_TRANSACTION'                  => 'Po posodabljanju transakcije',

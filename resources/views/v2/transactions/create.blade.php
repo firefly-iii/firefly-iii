@@ -22,7 +22,7 @@
                     </template>
                     <template x-if="showWaitMessage">
                         <div class="alert alert-info alert-dismissible fade show" role="alert">
-                            <em  class="fa-solid fa-spinner fa-spin"></em> Please wait for the attachments to upload.
+                            <em class="fa-solid fa-spinner fa-spin"></em> Please wait for the attachments to upload.
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     </template>
@@ -205,14 +205,16 @@
                                                             any</label>
                                                     </template>
                                                     <template x-if="transactionType == 'transfer'">
-                                                        <label class="small form-label">Amount in currency of destination
+                                                        <label class="small form-label">Amount in currency of
+                                                            destination
                                                             account</label>
                                                     </template>
                                                     <input type="number" step="any" min="0"
                                                            :id="'amount_' + index"
                                                            :data-index="index"
                                                            :class="{'is-invalid': transaction.errors.foreign_amount.length > 0, 'input-mask' : true, 'form-control': true}"
-                                                           x-model="transaction.foreign_amount" data-inputmask="currency"
+                                                           x-model="transaction.foreign_amount"
+                                                           data-inputmask="currency"
                                                            @change="changedAmount"
                                                            placeholder="0.00">
                                                     <template x-if="transaction.errors.foreign_amount.length > 0">
@@ -272,7 +274,8 @@
                                                        placeholder="{{ __('firefly.category')  }}">
                                             </div>
                                         </div>
-                                        <template x-if="transactionType != 'deposit' && transactionType != 'withdrawal'">
+                                        <template
+                                            x-if="transactionType != 'deposit' && transactionType != 'withdrawal'">
                                             <div class="row mb-3">
                                                 <label :for="'piggy_bank_id_' + index"
                                                        class="col-sm-1 col-form-label d-none d-sm-block">
@@ -318,7 +321,8 @@
                                                                 x-model="transaction.bill_id">
                                                             <template x-for="group in subscriptions">
                                                                 <optgroup :label="group.name">
-                                                                    <template x-for="subscription in group.subscriptions">
+                                                                    <template
+                                                                        x-for="subscription in group.subscriptions">
                                                                         <option :label="subscription.name"
                                                                                 :value="subscription.id"
                                                                                 x-text="subscription.name"></option>
@@ -336,13 +340,13 @@
                                                 <i class="fa-solid fa-tag"></i>
                                             </label>
                                             <div class="col-sm-10">
-                                            <select
-                                                class="form-select ac-tags"
-                                                :id="'tags_' + index"
-                                                :name="'tags['+index+'][]'"
-                                                multiple>
-                                                <option value="">Type a tag...</option>
-                                            </select>
+                                                <select
+                                                    class="form-select ac-tags"
+                                                    :id="'tags_' + index"
+                                                    :name="'tags['+index+'][]'"
+                                                    multiple>
+                                                    <option value="">Type a tag...</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -382,21 +386,69 @@
                                                        placeholder="{{ __('firefly.category')  }}">
                                             </div>
                                         </div>
+                                        <div class="row mb-3">
+                                            <label :for="'internal_reference_' + index"
+                                                   class="col-sm-1 col-form-label d-none d-sm-block">
+                                                <i class="fa-solid fa-anchor"></i>
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <input type="search"
+                                                       class="form-control"
+                                                       :id="'internal_reference_' + index"
+                                                       x-model="transaction.internal_reference"
+                                                       :data-index="index"
+                                                       placeholder="{{ __('firefly.internal_reference')  }}">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label :for="'external_url_' + index"
+                                                   class="col-sm-1 col-form-label d-none d-sm-block">
+                                                <i class="fa-solid fa-link"></i>
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <input type="search"
+                                                       class="form-control"
+                                                       :id="'external_url_' + index"
+                                                       x-model="transaction.external_url"
+                                                       :data-index="index"
+                                                       placeholder="{{ __('firefly.external_url')  }}">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label :for="'map_' + index"
+                                                   class="col-sm-1 col-form-label d-none d-sm-block">
+                                                <i class="fa-solid fa-earth-europe"></i>
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <div id="mappie" style="height:300px;" :data-index="index"></div>
+                                                <span class="muted small">
+                                                    <template x-if="!transaction.hasLocation">
+                                                        <span>Tap the map to add a location</span>
+                                                    </template>
+                                                    <template x-if="transaction.hasLocation">
+                                                        <a :data-index="index" href="#" @click="clearLocation">Clear point</a>
+                                                        </template>
+                                                </span>
+                                            </div>
 
-                                        Attachments<br>
-                                        Internal ref<br>
-                                        External URL<br>
-                                        Location<br>
-                                        Links?<br>
-                                        Date 1<br>
-                                        Date 2<br>
-                                        Date 3<br>
-                                        Date 4<br>
-                                        Date 5<br>
-                                        Date 6<br>
-                                    </div>
-                                    <div class="card-footer">
-                                        Less important meta
+                                        </div>
+                                        <!-- -->
+                                        <template x-for="dateField in dateFields">
+                                            <div class="row mb-1">
+                                                <label :for="dateField + '_date_' + index"
+                                                       class="col-sm-1 col-form-label d-none d-sm-block">
+                                                    <i class="fa-solid fa-calendar-alt" :title="dateField"></i>
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <input type="date"
+                                                           class="form-control"
+                                                           :id="dateField + '_date_' + index"
+                                                           x-model="transaction[dateField]"
+                                                           :data-index="index"
+                                                           placeholder="">
+                                                </div>
+                                            </div>
+                                        </template>
                                     </div>
                                 </div>
 

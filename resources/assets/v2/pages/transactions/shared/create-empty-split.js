@@ -49,9 +49,31 @@ export function createEmptySplit() {
         budget_id: null,
         category_name: '',
         piggy_bank_id: null,
+        bill_id: null,
+        tags: [],
+        notes: '',
+
+        // other meta fields:
+        internal_reference: '',
+        external_url: '',
+
+        // map
+        hasLocation: false,
+        map: null,
+        latitude: null,
+        longitude: null,
+        zoomLevel: null,
+        marker: null,
+
 
         // date and time
         date: formatted,
+        interest_date: '',
+        book_date: '',
+        process_date: '',
+        due_date: '',
+        payment_date: '',
+        invoice_date: '',
 
         errors: {
             'amount': [],

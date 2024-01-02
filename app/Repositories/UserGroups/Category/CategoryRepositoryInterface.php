@@ -29,11 +29,6 @@ interface CategoryRepositoryInterface
 {
     /**
      * Search for a category using wild cards. Uses the database, so case sensitive.
-     *
-     * @param string $query
-     * @param int    $limit
-     *
-     * @return Collection
      */
     public function searchCategory(string $query, int $limit): Collection;
 }

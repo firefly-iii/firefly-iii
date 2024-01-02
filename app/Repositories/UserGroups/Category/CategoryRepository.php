@@ -30,9 +30,6 @@ class CategoryRepository implements CategoryRepositoryInterface
 {
     use UserGroupTrait;
 
-    /**
-     * @inheritDoc
-     */
     public function searchCategory(string $query, int $limit): Collection
     {
         $search = $this->userGroup->categories();

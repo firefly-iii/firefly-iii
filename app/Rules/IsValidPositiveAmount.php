@@ -30,18 +30,21 @@ class IsValidPositiveAmount implements ValidationRule
         if(!$this->isValidNumber($value)) {
             $fail('validation.numeric')->translate();
             Log::info(sprintf('IsValidPositiveAmount: "%s" is not a number.', $value));
+
             return;
         }
         // must not be scientific notation:
         if($this->scientificNumber($value)) {
             $fail('validation.scientific_notation')->translate();
             Log::info(sprintf('IsValidPositiveAmount: "%s" cannot be in the scientific notation.', $value));
+
             return;
         }
         // must be more than zero:
         if($this->lessOrEqualToZero($value)) {
             $fail('validation.more_than_zero')->translate();
             Log::info(sprintf('IsValidPositiveAmount: "%s" must be more than zero.', $value));
+
             return;
         }
         // must be less than 100 million and 1709:

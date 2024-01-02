@@ -25,10 +25,8 @@ namespace FireflyIII\Api\V2\Controllers\Autocomplete;
 
 use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Autocomplete\AutocompleteRequest;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\UserGroups\Tag\TagRepositoryInterface;
-use FireflyIII\Repositories\UserGroups\Category\CategoryRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -48,7 +46,7 @@ class TagController extends Controller
             function ($request, $next) {
                 $this->repository = app(TagRepositoryInterface::class);
 
-                $userGroup = $this->validateUserGroup($request);
+                $userGroup        = $this->validateUserGroup($request);
                 if (null !== $userGroup) {
                     $this->repository->setUserGroup($userGroup);
                 }
@@ -70,14 +68,14 @@ class TagController extends Controller
     public function tags(AutocompleteRequest $request): JsonResponse
     {
         $data     = $request->getData();
-        $result   = $this->repository->searchTag($data['query'], $this->parameters->get('limit'));
+        $result   = $this->repository->searchTag($data['query'], $data['limit']);
         $filtered = $result->map(
             static function (Tag $item) {
                 return [
-                    'id'   => (string) $item->id,
-                    'name' => $item->tag,
+                    'id'      => (string) $item->id,
+                    'name'    => $item->tag,
                     'value'   => (string) $item->id,
-                    'label' => $item->tag,
+                    'label'   => $item->tag,
                 ];
             }
         );
