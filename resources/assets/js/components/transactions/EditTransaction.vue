@@ -451,7 +451,7 @@ export default {
             if (typeof window.expectedSourceTypes === 'undefined') {
                 console.error('window.expectedSourceTypes is unexpectedly empty.')
             }
-            this.transactions.push({
+            let result = {
                 transaction_journal_id: transaction.transaction_journal_id,
                 description: transaction.description,
                 date: transaction.date.substring(0, 16),
@@ -521,7 +521,11 @@ export default {
                     currency_decimal_places: transaction.currency_decimal_places,
                     allowed_types: window.expectedSourceTypes.destination[this.ucFirst(transaction.type)]
                 }
-            });
+            };
+            if(null === transaction.foreign_amount) {
+                result.foreign_amount.amount = '';
+            }
+            this.transactions.push(result);
         },
         limitSourceType: function (type) {
             // let i;
