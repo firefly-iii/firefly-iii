@@ -81,7 +81,7 @@ class SummaryBalanceGrouped
 
     public function groupData(): array
     {
-        \Log::debug('Now going to group data.');
+        Log::debug('Now going to group data.');
         $return      = [];
         foreach ($this->keys as $key) {
             $title    = match ($key) {
@@ -90,6 +90,8 @@ class SummaryBalanceGrouped
                 'income'  => 'earned',
                 default   => 'something'
             };
+
+
             $return[] = [
                 'key'                     => sprintf('%s-in-native', $title),
                 'value'                   => $this->amounts[$key]['native'] ?? '0',
@@ -100,7 +102,7 @@ class SummaryBalanceGrouped
             ];
         }
         // loop 3: format amounts:
-        $currencyIds = array_keys($this->amounts[self::SUM]);
+        $currencyIds = array_keys($this->amounts[self::SUM] ?? []);
         foreach ($currencyIds as $currencyId) {
             if ('native' === $currencyId) {
                 // skip native entries.
