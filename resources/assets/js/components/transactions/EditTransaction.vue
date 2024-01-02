@@ -652,7 +652,7 @@ export default {
                 }
             }
             // set foreign currency info:
-            if (row.foreign_amount.amount !== '' && parseFloat(row.foreign_amount.amount) !== .00) {
+            if (row.foreign_amount.amount.toString() !== '' && parseFloat(row.foreign_amount.amount) !== .00) {
                 foreignAmount = row.foreign_amount.amount;
                 foreignCurrency = row.foreign_amount.currency_id;
             }
