@@ -355,6 +355,9 @@ class TransactionJournalFactory
 
         /** @var null|TransactionJournalMeta $result */
         $result = TransactionJournalMeta::withTrashed()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+            ->whereNotNull('transaction_journals.id')
+            ->where('transaction_journals.user_id', $this->user->id)
             ->where('data', json_encode($hash, JSON_THROW_ON_ERROR))
             ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
             ->first()
