@@ -24,7 +24,20 @@ import manifestSRI from 'vite-plugin-manifest-sri';
 
 const host = '127.0.0.1';
 
+function manualChunks(id) {
+    if (id.includes('node_modules')) {
+        return 'vendor';
+    }
+};
+
 export default defineConfig({
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks,
+            },
+        }
+    },
     plugins: [
         laravel({
             input: [
@@ -35,6 +48,7 @@ export default defineConfig({
             refresh: true,
         }),
         manifestSRI(),
+
     ],
 
 

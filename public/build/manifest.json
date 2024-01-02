@@ -1,7 +1,14 @@
 {
-  "_load-translations-36a0ce82.js": {
-    "file": "assets/load-translations-36a0ce82.js",
-    "integrity": "sha384-wTRO7jAxX9xxNgWUuXNrrSBjAyE0lWGOi3yVQ6S03bEYCk04Tc1C4BrVqHlnDSZL"
+  "_get-81296add.js": {
+    "file": "assets/get-81296add.js",
+    "imports": [
+      "_vendor-a1812e4c.js"
+    ],
+    "integrity": "sha384-M+BAywPbHrOwlgtpdSO5UBNfYxe17K8369Ahh4qYQCxX5oZC2W1trl8zHRV9r2t4"
+  },
+  "_vendor-a1812e4c.js": {
+    "file": "assets/vendor-a1812e4c.js",
+    "integrity": "sha384-2dMX4JO7IblsxMPq8LWcAad57Ek9CjK147pQCo6WlNUHOu2+xfXTOhFKceSCNkDU"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
     "file": "assets/fa-brands-400-5656d596.ttf",
@@ -34,22 +41,24 @@
     "integrity": "sha384-YxWlWCDksuL6Ljn1HkJNPH8l+jSRIWPpMpPw3pFa0QnmLXjwV/uPwpDm/b9vn/o1"
   },
   "resources/assets/v2/pages/dashboard/dashboard.js": {
-    "file": "assets/dashboard-9f02f998.js",
+    "file": "assets/dashboard-ada6c7cd.js",
     "imports": [
-      "_load-translations-36a0ce82.js"
+      "_get-81296add.js",
+      "_vendor-a1812e4c.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/dashboard/dashboard.js",
-    "integrity": "sha384-mH/cboBLbKf0nKndnDaPzbF4ogflUacPt4Meytovf5d92Z6dytPdAXaUTPhWb89+"
+    "integrity": "sha384-OnpPqpRCVbvhxqcX6plPs/9kJW5KcvuxSwl/NlYRA4DvIyVdZmZIMEcv/sUlygZS"
   },
   "resources/assets/v2/pages/transactions/create.js": {
-    "file": "assets/create-8d2b7efc.js",
+    "file": "assets/create-f052c3bb.js",
     "imports": [
-      "_load-translations-36a0ce82.js"
+      "_get-81296add.js",
+      "_vendor-a1812e4c.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/create.js",
-    "integrity": "sha384-AoSn0ASKb6wASHs6lp71iR/Siw9t2xU67Aos2Eq/osFPlEyJ58N7gHUoowy56/8z"
+    "integrity": "sha384-XdxhJ+VVga9b+RXvInTL51SXgzLh5aVvFOciuoP6M+LbyE7Ckhi7Vsc5hamU9yfS"
   },
   "resources/assets/v2/sass/app.scss": {
     "file": "assets/app-fb7b26ec.css",

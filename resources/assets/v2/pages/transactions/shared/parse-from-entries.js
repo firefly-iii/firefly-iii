@@ -31,11 +31,35 @@ export function parseFromEntries(entries, transactionType) {
 
             // fields for transaction
             current.description = entry.description;
+
+            // source and destination
             current.source_name = entry.source_account.name;
             current.destination_name = entry.destination_account.name;
+
+            // amount information:
             current.amount = entry.amount;
-            current.date = entry.date;
             current.currency_code = entry.currency_code;
+
+
+            // dates
+            current.date = entry.date;
+
+            // meta
+            current.budget_id = entry.budget_id;
+            current.category_name = entry.category_name;
+            current.piggy_bank_id = entry.piggy_bank_id;
+
+            // if foreign amount currency code is set:
+            if (typeof entry.foreign_currency_code !== 'undefined' && '' !== entry.foreign_currency_code.toString()) {
+                current.foreign_currency_code = entry.foreign_currency_code;
+                if(typeof entry.foreign_amount !== 'undefined' && '' !== entry.foreign_amount.toString()) {
+                    current.foreign_amount = entry.foreign_amount;
+                }
+                if(typeof entry.foreign_amount === 'undefined' || '' === entry.foreign_amount.toString()) {
+                    delete current.foreign_amount;
+                    delete current.foreign_currency_code;
+                }
+            }
 
             // if ID is set:
             if (typeof entry.source_account.id !== 'undefined' && '' !== entry.source_account.id.toString()) {

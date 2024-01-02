@@ -38,16 +38,27 @@ export function createEmptySplit() {
         // amount information:
         amount: '',
         currency_code: 'EUR',
+        foreign_amount: '',
+        foreign_currency_code: '',
 
         // source and destination
         source_account: getAccount(),
         destination_account: getAccount(),
+
+        // meta data information:
+        budget_id: null,
+        category_name: '',
+        piggy_bank_id: null,
 
         // date and time
         date: formatted,
 
         errors: {
             'amount': [],
+            'foreign_amount': [],
+            'budget_id': [],
+            'category_name': [],
+            'piggy_bank_id': [],
         },
     };
 }
