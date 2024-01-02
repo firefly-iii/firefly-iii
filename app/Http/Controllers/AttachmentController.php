@@ -103,8 +103,8 @@ class AttachmentController extends Controller
     public function download(Attachment $attachment)
     {
         if ($this->repository->exists($attachment)) {
-            $content = $this->repository->getContent($attachment);
-            $quoted  = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
+            $content  = $this->repository->getContent($attachment);
+            $quoted   = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
 
             /** @var LaravelResponse $response */
             $response = response($content);
@@ -141,7 +141,7 @@ class AttachmentController extends Controller
             $this->rememberPreviousUrl('attachments.edit.url');
         }
         $request->session()->forget('attachments.edit.fromUpdate');
-        $preFilled = [
+        $preFilled    = [
             'notes' => $this->repository->getNoteText($attachment),
         ];
         $request->session()->flash('preFilled', $preFilled);
@@ -173,7 +173,7 @@ class AttachmentController extends Controller
      */
     public function update(AttachmentFormRequest $request, Attachment $attachment): RedirectResponse
     {
-        $data = $request->getAttachmentData();
+        $data     = $request->getAttachmentData();
         $this->repository->update($attachment, $data);
 
         $request->session()->flash('success', (string)trans('firefly.attachment_updated', ['name' => $attachment->filename]));
@@ -202,7 +202,7 @@ class AttachmentController extends Controller
             $content = $this->repository->getContent($attachment);
 
             // prevent XSS by adding a new secure header.
-            $csp = [
+            $csp     = [
                 "default-src 'none'",
                 "object-src 'none'",
                 "script-src 'none'",

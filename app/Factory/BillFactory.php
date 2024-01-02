@@ -47,8 +47,8 @@ class BillFactory
     public function create(array $data): ?Bill
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__), $data);
-        $factory  = app(TransactionCurrencyFactory::class);
-        $currency = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null)) ??
+        $factory          = app(TransactionCurrencyFactory::class);
+        $currency         = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null)) ??
                     app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
 
         try {
@@ -56,7 +56,7 @@ class BillFactory
             $active = array_key_exists('active', $data) ? $data['active'] : 0;
 
             /** @var Bill $bill */
-            $bill = Bill::create(
+            $bill   = Bill::create(
                 [
                     'name'                    => $data['name'],
                     'match'                   => 'MIGRATED_TO_RULES',
@@ -93,7 +93,7 @@ class BillFactory
             }
         }
         // try also with ID:
-        $objectGroupId = (int)($data['object_group_id'] ?? 0);
+        $objectGroupId    = (int)($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
             $objectGroup = $this->findObjectGroupById($objectGroupId);
             if (null !== $objectGroup) {

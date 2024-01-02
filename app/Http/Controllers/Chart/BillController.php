@@ -53,9 +53,9 @@ class BillController extends Controller
      */
     public function frontpage(BillRepositoryInterface $repository): JsonResponse
     {
-        $start = session('start', today(config('app.timezone'))->startOfMonth());
-        $end   = session('end', today(config('app.timezone'))->endOfMonth());
-        $cache = new CacheProperties();
+        $start     = session('start', today(config('app.timezone'))->startOfMonth());
+        $end       = session('end', today(config('app.timezone'))->endOfMonth());
+        $cache     = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.bill.frontpage');
@@ -93,7 +93,7 @@ class BillController extends Controller
             ];
         }
 
-        $data = $this->generator->multiCurrencyPieChart($chartData);
+        $data      = $this->generator->multiCurrencyPieChart($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -106,17 +106,17 @@ class BillController extends Controller
      */
     public function single(Bill $bill): JsonResponse
     {
-        $cache = new CacheProperties();
+        $cache      = new CacheProperties();
         $cache->addProperty('chart.bill.single');
         $cache->addProperty($bill->id);
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        $locale = app('steam')->getLocale();
+        $locale     = app('steam')->getLocale();
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $journals  = $collector->setBill($bill)->getExtractedJournals();
+        $collector  = app(GroupCollectorInterface::class);
+        $journals   = $collector->setBill($bill)->getExtractedJournals();
 
         // sort the other way around:
         usort(
@@ -166,7 +166,7 @@ class BillController extends Controller
             if (!array_key_exists($date, $chartData[2]['entries'])) {
                 $chartData[2]['entries'][$date] = '0';
             }
-            $amount = bcmul($journal['amount'], '-1');
+            $amount                         = bcmul($journal['amount'], '-1');
             if ($currencyId === $journal['foreign_currency_id']) {
                 $amount = bcmul($journal['foreign_amount'], '-1');
             }
@@ -174,7 +174,7 @@ class BillController extends Controller
             $chartData[2]['entries'][$date] = bcadd($chartData[2]['entries'][$date], $amount);  // amount of journal
         }
 
-        $data = $this->generator->multiSet($chartData);
+        $data       = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);

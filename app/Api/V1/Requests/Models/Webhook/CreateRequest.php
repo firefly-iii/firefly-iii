@@ -39,11 +39,11 @@ class CreateRequest extends FormRequest
 
     public function getData(): array
     {
-        $triggers   = Webhook::getTriggersForValidation();
-        $responses  = Webhook::getResponsesForValidation();
-        $deliveries = Webhook::getDeliveriesForValidation();
+        $triggers           = Webhook::getTriggersForValidation();
+        $responses          = Webhook::getResponsesForValidation();
+        $deliveries         = Webhook::getDeliveriesForValidation();
 
-        $fields = [
+        $fields             = [
             'title'    => ['title', 'convertString'],
             'active'   => ['active', 'boolean'],
             'trigger'  => ['trigger', 'convertString'],

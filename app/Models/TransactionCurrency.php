@@ -88,13 +88,13 @@ class TransactionCurrency extends Model
     public ?bool $userGroupDefault;
     public ?bool $userGroupEnabled;
     protected $casts
-        = [
-            'created_at'     => 'datetime',
-            'updated_at'     => 'datetime',
-            'deleted_at'     => 'datetime',
-            'decimal_places' => 'int',
-            'enabled'        => 'bool',
-        ];
+                        = [
+                            'created_at'     => 'datetime',
+                            'updated_at'     => 'datetime',
+                            'deleted_at'     => 'datetime',
+                            'decimal_places' => 'int',
+                            'enabled'        => 'bool',
+                        ];
 
     protected $fillable = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
 

@@ -62,15 +62,15 @@ class PiggyBankEvent extends Model
     use ReturnsIntegerIdTrait;
 
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'date'       => 'date',
-        ];
+                        = [
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'date'       => 'date',
+                        ];
 
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
 
-    protected $hidden = ['amount_encrypted'];
+    protected $hidden   = ['amount_encrypted'];
 
     public function piggyBank(): BelongsTo
     {

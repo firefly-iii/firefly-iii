@@ -60,7 +60,7 @@ class FixAccountTypes extends Command
         $this->expected = config('firefly.source_dests');
         $expected       = config('firefly.source_dests');
 
-        $query = TransactionJournal::leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+        $query          = TransactionJournal::leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
             ->leftJoin(
                 'transactions as source',
                 static function (JoinClause $join): void {
@@ -94,7 +94,7 @@ class FixAccountTypes extends Command
             }
         });
 
-        $resultSet = $query->get(
+        $resultSet      = $query->get(
             [
                 'transaction_journals.id',
                 // 'transaction_type_id as type_id',
@@ -138,7 +138,7 @@ class FixAccountTypes extends Command
     private function inspectJournal(TransactionJournal $journal): void
     {
         app('log')->debug(sprintf('Now inspecting journal #%d', $journal->id));
-        $transactions = $journal->transactions()->count();
+        $transactions      = $journal->transactions()->count();
         if (2 !== $transactions) {
             app('log')->debug(sprintf('Journal has %d transactions, so can\'t fix.', $transactions));
             $this->friendlyError(sprintf('Cannot inspect transaction journal #%d because it has %d transaction(s) instead of 2.', $journal->id, $transactions));
@@ -165,7 +165,7 @@ class FixAccountTypes extends Command
 
             return;
         }
-        $expectedTypes = $this->expected[$type][$sourceAccountType];
+        $expectedTypes     = $this->expected[$type][$sourceAccountType];
         if (!in_array($destAccountType, $expectedTypes, true)) {
             app('log')->debug(sprintf('[b] Going to fix journal #%d', $journal->id));
             $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
@@ -187,9 +187,9 @@ class FixAccountTypes extends Command
         app('log')->debug(sprintf('Going to fix journal #%d', $journal->id));
         ++$this->count;
         // variables:
-        $sourceType      = $source->account->accountType->type;
-        $destinationType = $dest->account->accountType->type;
-        $combination     = sprintf('%s%s%s', $transactionType, $source->account->accountType->type, $dest->account->accountType->type);
+        $sourceType           = $source->account->accountType->type;
+        $destinationType      = $dest->account->accountType->type;
+        $combination          = sprintf('%s%s%s', $transactionType, $source->account->accountType->type, $dest->account->accountType->type);
         app('log')->debug(sprintf('Combination is "%s"', $combination));
 
         if ($this->shouldBeTransfer($transactionType, $sourceType, $destinationType)) {
@@ -214,9 +214,9 @@ class FixAccountTypes extends Command
         }
 
         // transaction has no valid source.
-        $validSources    = array_keys($this->expected[$transactionType]);
-        $canCreateSource = $this->canCreateSource($validSources);
-        $hasValidSource  = $this->hasValidAccountType($validSources, $sourceType);
+        $validSources         = array_keys($this->expected[$transactionType]);
+        $canCreateSource      = $this->canCreateSource($validSources);
+        $hasValidSource       = $this->hasValidAccountType($validSources, $sourceType);
         if (!$hasValidSource && $canCreateSource) {
             $this->giveNewRevenue($journal, $source);
 
@@ -279,7 +279,7 @@ class FixAccountTypes extends Command
         $withdrawal = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
         $journal->transactionType()->associate($withdrawal);
         $journal->save();
-        $message = sprintf('Converted transaction #%d from a transfer to a withdrawal.', $journal->id);
+        $message    = sprintf('Converted transaction #%d from a transfer to a withdrawal.', $journal->id);
         $this->friendlyInfo($message);
         app('log')->debug($message);
         // check it again:
@@ -329,7 +329,7 @@ class FixAccountTypes extends Command
         $oldSource = $source->account;
         $source->account()->associate($result);
         $source->save();
-        $message = sprintf(
+        $message   = sprintf(
             'Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").',
             $journal->id,
             $oldSource->id,

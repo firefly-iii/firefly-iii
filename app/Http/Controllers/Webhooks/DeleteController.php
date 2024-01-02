@@ -28,6 +28,8 @@ use FireflyIII\Models\Webhook;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class DeleteController
@@ -61,6 +63,12 @@ class DeleteController extends Controller
      */
     public function index(Webhook $webhook)
     {
+        if(false === config('firefly.allow_webhooks')) {
+            Log::channel('audit')->info('User visits webhook delete page, but webhooks are DISABLED.');
+
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
+        Log::channel('audit')->info('User visits webhook delete page.');
         $subTitle = (string)trans('firefly.delete_webhook', ['title' => $webhook->title]);
         $this->rememberPreviousUrl('webhooks.delete.url');
 

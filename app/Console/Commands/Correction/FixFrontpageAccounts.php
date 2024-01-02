@@ -62,7 +62,7 @@ class FixFrontpageAccounts extends Command
 
     private function fixPreference(Preference $preference): void
     {
-        $fixed = [];
+        $fixed      = [];
 
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -70,7 +70,7 @@ class FixFrontpageAccounts extends Command
             return;
         }
         $repository->setUser($preference->user);
-        $data = $preference->data;
+        $data       = $preference->data;
         if (is_array($data)) {
             /** @var string $accountId */
             foreach ($data as $accountId) {

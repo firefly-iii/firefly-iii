@@ -199,7 +199,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
             return $existing;
         }
 
-        $link = new TransactionJournalLink();
+        $link     = new TransactionJournalLink();
         $link->linkType()->associate($linkType);
         if ('inward' === $information['direction']) {
             app('log')->debug(sprintf('Link type is inwards ("%s"), so %d is source and %d is destination.', $linkType->inward, $inward->id, $outward->id));
@@ -285,7 +285,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
             $journalLink->refresh();
         }
 
-        $journalLink->link_type_id = null === $data['link_type_id'] ? $journalLink->link_type_id : $data['link_type_id'];
+        $journalLink->link_type_id   = null === $data['link_type_id'] ? $journalLink->link_type_id : $data['link_type_id'];
         $journalLink->save();
         if (array_key_exists('notes', $data) && null !== $data['notes']) {
             $this->setNoteText($journalLink, $data['notes']);

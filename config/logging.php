@@ -25,16 +25,16 @@ use FireflyIII\Support\Logging\AuditLogger;
 use Monolog\Handler\SyslogUdpHandler;
 
 // standard config for both log things:
-$defaultChannels = ['daily', 'stdout'];
-$auditChannels   = ['audit_daily', 'audit_stdout'];
+$defaultChannels    = ['daily', 'stdout'];
+$auditChannels      = ['audit_daily', 'audit_stdout'];
 
 // validChannels is missing 'stack' because we already check for that one.
 $validChannels      = ['single', 'papertrail', 'stdout', 'daily', 'syslog', 'errorlog'];
 $validAuditChannels = ['audit_papertrail', 'audit_stdout', 'audit_stdout', 'audit_daily', 'audit_syslog', 'audit_errorlog'];
 
 // which settings did the user set, if any?
-$defaultLogChannel = (string)envNonEmpty('LOG_CHANNEL', 'stack');
-$auditLogChannel   = (string)envNonEmpty('AUDIT_LOG_CHANNEL', '');
+$defaultLogChannel  = (string)envNonEmpty('LOG_CHANNEL', 'stack');
+$auditLogChannel    = (string)envNonEmpty('AUDIT_LOG_CHANNEL', '');
 
 if ('stack' === $defaultLogChannel) {
     $defaultChannels = ['daily', 'stdout'];
@@ -59,8 +59,8 @@ return [
     |
     */
 
-    'default' => envNonEmpty('LOG_CHANNEL', 'stack'),
-    'level'   => envNonEmpty('APP_LOG_LEVEL', 'info'),
+    'default'  => envNonEmpty('LOG_CHANNEL', 'stack'),
+    'level'    => envNonEmpty('APP_LOG_LEVEL', 'info'),
     /*
     |--------------------------------------------------------------------------
     | Log Channels

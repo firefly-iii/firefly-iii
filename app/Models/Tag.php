@@ -92,19 +92,19 @@ class Tag extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'date'       => 'date',
-            'zoomLevel'  => 'int',
-            'latitude'   => 'float',
-            'longitude'  => 'float',
-        ];
+                        = [
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'deleted_at' => 'datetime',
+                            'date'       => 'date',
+                            'zoomLevel'  => 'int',
+                            'latitude'   => 'float',
+                            'longitude'  => 'float',
+                        ];
 
     protected $fillable = ['user_id', 'user_group_id', 'tag', 'date', 'description', 'tagMode'];
 
-    protected $hidden = ['zoomLevel', 'latitude', 'longitude'];
+    protected $hidden   = ['zoomLevel', 'latitude', 'longitude'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -117,10 +117,10 @@ class Tag extends Model
             $tagId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user  = auth()->user();
 
             /** @var null|Tag $tag */
-            $tag = $user->tags()->find($tagId);
+            $tag   = $user->tags()->find($tagId);
             if (null !== $tag) {
                 return $tag;
             }

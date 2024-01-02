@@ -50,7 +50,7 @@ final class IntervalException extends \Exception
         int         $code = 0,
         ?\Throwable  $previous = null
     ): self {
-        $message = sprintf(
+        $message                       = sprintf(
             'The periodicity %s is unknown. Choose one of available periodicity: %s',
             $periodicity->name,
             implode(', ', $intervals)

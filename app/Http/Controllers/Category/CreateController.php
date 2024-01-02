@@ -32,6 +32,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -94,11 +95,12 @@ class CreateController extends Controller
 
         // store attachment(s):
         /** @var null|array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($category, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->info(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
             session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 

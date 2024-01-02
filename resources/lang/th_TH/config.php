@@ -78,15 +78,15 @@ return [
     // 'half_year'               => '%B %Y',
     'half_year_js'             => '\QQ YYYY',
 
-    'quarter_fns'   => "'Q'Q, yyyy",
-    'half_year_fns' => "'H{half}', yyyy",
-    'dow_1'         => 'จันทร์',
-    'dow_2'         => 'อังคาร',
-    'dow_3'         => 'พุธ',
-    'dow_4'         => 'พฤหัสบดี',
-    'dow_5'         => 'ศุกร์',
-    'dow_6'         => 'เสาร์',
-    'dow_7'         => 'อาทิตย์',
+    'quarter_fns'              => "'Q'Q, yyyy",
+    'half_year_fns'            => "'H{half}', yyyy",
+    'dow_1'                    => 'จันทร์',
+    'dow_2'                    => 'อังคาร',
+    'dow_3'                    => 'พุธ',
+    'dow_4'                    => 'พฤหัสบดี',
+    'dow_5'                    => 'ศุกร์',
+    'dow_6'                    => 'เสาร์',
+    'dow_7'                    => 'อาทิตย์',
 ];
 
 /*

@@ -78,15 +78,15 @@ return [
     // 'half_year'               => '%B %Y',
     'half_year_js'             => 'YYYY年第Q四半期',
 
-    'quarter_fns'   => 'yyyy年第Q四半期',
-    'half_year_fns' => 'yyyy年H半期',
-    'dow_1'         => '月曜日',
-    'dow_2'         => '火曜日',
-    'dow_3'         => '水曜日',
-    'dow_4'         => '木曜日',
-    'dow_5'         => '金曜日',
-    'dow_6'         => '土曜日',
-    'dow_7'         => '日曜日',
+    'quarter_fns'              => 'yyyy年第Q四半期',
+    'half_year_fns'            => 'yyyy年H半期',
+    'dow_1'                    => '月曜日',
+    'dow_2'                    => '火曜日',
+    'dow_3'                    => '水曜日',
+    'dow_4'                    => '木曜日',
+    'dow_5'                    => '金曜日',
+    'dow_6'                    => '土曜日',
+    'dow_7'                    => '日曜日',
 ];
 
 /*

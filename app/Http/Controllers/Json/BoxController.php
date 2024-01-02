@@ -56,22 +56,22 @@ class BoxController extends Controller
         app('log')->debug('Now in available()');
 
         /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository = app(OperationsRepositoryInterface::class);
+        $opsRepository     = app(OperationsRepositoryInterface::class);
 
         /** @var AvailableBudgetRepositoryInterface $abRepository */
-        $abRepository = app(AvailableBudgetRepositoryInterface::class);
+        $abRepository      = app(AvailableBudgetRepositoryInterface::class);
         $abRepository->cleanup();
 
         /** @var Carbon $start */
-        $start = session('start', today(config('app.timezone'))->startOfMonth());
+        $start             = session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end      = session('end', today(config('app.timezone'))->endOfMonth());
-        $today    = today(config('app.timezone'));
-        $display  = 2; // see method docs.
-        $boxTitle = (string)trans('firefly.spent');
+        $end               = session('end', today(config('app.timezone'))->endOfMonth());
+        $today             = today(config('app.timezone'));
+        $display           = 2; // see method docs.
+        $boxTitle          = (string)trans('firefly.spent');
 
-        $cache = new CacheProperties();
+        $cache             = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($today);
@@ -82,11 +82,11 @@ class BoxController extends Controller
         $leftPerDayAmount  = '0';
         $leftToSpendAmount = '0';
 
-        $currency = app('amount')->getDefaultCurrency();
+        $currency          = app('amount')->getDefaultCurrency();
         app('log')->debug(sprintf('Default currency is %s', $currency->code));
-        $availableBudgets = $abRepository->getAvailableBudgetsByExactDate($start, $end);
+        $availableBudgets  = $abRepository->getAvailableBudgetsByExactDate($start, $end);
         app('log')->debug(sprintf('Found %d available budget(s)', $availableBudgets->count()));
-        $availableBudgets = $availableBudgets->filter(
+        $availableBudgets  = $availableBudgets->filter(
             static function (AvailableBudget $availableBudget) use ($currency) { // @phpstan-ignore-line
                 if ($availableBudget->transaction_currency_id === $currency->id) {
                     app('log')->debug(sprintf(
@@ -106,13 +106,13 @@ class BoxController extends Controller
         app('log')->debug(sprintf('Filtered back to %d available budgets', $availableBudgets->count()));
         // spent in this period, in budgets, for default currency.
         // also calculate spent per day.
-        $spent       = $opsRepository->sumExpenses($start, $end, null, null, $currency);
-        $spentAmount = $spent[$currency->id]['sum'] ?? '0';
+        $spent             = $opsRepository->sumExpenses($start, $end, null, null, $currency);
+        $spentAmount       = $spent[$currency->id]['sum'] ?? '0';
         app('log')->debug(sprintf('Spent for default currency for all budgets in this period: %s', $spentAmount));
 
-        $days = $today->between($start, $end) ? $today->diffInDays($start) + 1 : $end->diffInDays($start) + 1;
+        $days              = $today->between($start, $end) ? $today->diffInDays($start) + 1 : $end->diffInDays($start) + 1;
         app('log')->debug(sprintf('Number of days left: %d', $days));
-        $spentPerDay = bcdiv($spentAmount, (string)$days);
+        $spentPerDay       = bcdiv($spentAmount, (string)$days);
         app('log')->debug(sprintf('Available to spend per day: %s', $spentPerDay));
         if ($availableBudgets->count() > 0) {
             $display           = 0; // assume user overspent
@@ -132,7 +132,7 @@ class BoxController extends Controller
             }
         }
 
-        $return = [
+        $return            = [
             'display'       => $display,
             'spent_total'   => app('amount')->formatAnything($currency, $spentAmount, false),
             'spent_per_day' => app('amount')->formatAnything($currency, $spentPerDay, false),
@@ -155,11 +155,11 @@ class BoxController extends Controller
     {
         // Cache result, return cache if present.
         /** @var Carbon $start */
-        $start = session('start', today(config('app.timezone'))->startOfMonth());
+        $start     = session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end   = session('end', today(config('app.timezone'))->endOfMonth());
-        $cache = new CacheProperties();
+        $end       = session('end', today(config('app.timezone'))->endOfMonth());
+        $cache     = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('box-balance');
@@ -167,10 +167,10 @@ class BoxController extends Controller
             return response()->json($cache->get());
         }
         // prep some arrays:
-        $incomes  = [];
-        $expenses = [];
-        $sums     = [];
-        $currency = app('amount')->getDefaultCurrency();
+        $incomes   = [];
+        $expenses  = [];
+        $sums      = [];
+        $currency  = app('amount')->getDefaultCurrency();
 
         // collect income of user:
         /** @var GroupCollectorInterface $collector */
@@ -178,7 +178,7 @@ class BoxController extends Controller
         $collector->setRange($start, $end)
             ->setTypes([TransactionType::DEPOSIT])
         ;
-        $set = $collector->getExtractedJournals();
+        $set       = $collector->getExtractedJournals();
 
         /** @var array $journal */
         foreach ($set as $journal) {
@@ -196,7 +196,7 @@ class BoxController extends Controller
         $collector->setRange($start, $end)
             ->setTypes([TransactionType::WITHDRAWAL])
         ;
-        $set = $collector->getExtractedJournals();
+        $set       = $collector->getExtractedJournals();
 
         /** @var array $journal */
         foreach ($set as $journal) {
@@ -208,7 +208,7 @@ class BoxController extends Controller
         }
 
         // format amounts:
-        $keys = array_keys($sums);
+        $keys      = array_keys($sums);
         foreach ($keys as $currencyId) {
             $currency              = $repository->find($currencyId);
             $sums[$currencyId]     = app('amount')->formatAnything($currency, $sums[$currencyId], false);
@@ -222,7 +222,7 @@ class BoxController extends Controller
             $expenses[$currency->id] = app('amount')->formatAnything($currency, '0', false);
         }
 
-        $response = [
+        $response  = [
             'incomes'   => $incomes,
             'expenses'  => $expenses,
             'sums'      => $sums,
@@ -239,7 +239,7 @@ class BoxController extends Controller
      */
     public function netWorth(): JsonResponse
     {
-        $date = today(config('app.timezone'))->endOfDay();
+        $date              = today(config('app.timezone'))->endOfDay();
 
         // start and end in the future? use $end
         if ($this->notInSessionRange($date)) {
@@ -248,7 +248,7 @@ class BoxController extends Controller
         }
 
         /** @var NetWorthInterface $netWorthHelper */
-        $netWorthHelper = app(NetWorthInterface::class);
+        $netWorthHelper    = app(NetWorthInterface::class);
         $netWorthHelper->setUser(auth()->user());
 
         /** @var AccountRepositoryInterface $accountRepository */
@@ -259,7 +259,7 @@ class BoxController extends Controller
         app('log')->debug(sprintf('Found %d accounts.', $allAccounts->count()));
 
         // filter list on preference of being included.
-        $filtered = $allAccounts->filter(
+        $filtered          = $allAccounts->filter(
             static function (Account $account) use ($accountRepository) {
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
                 $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
@@ -271,15 +271,15 @@ class BoxController extends Controller
             }
         );
 
-        $netWorthSet = $netWorthHelper->byAccounts($filtered, $date);
-        $return      = [];
+        $netWorthSet       = $netWorthHelper->byAccounts($filtered, $date);
+        $return            = [];
         foreach ($netWorthSet as $key => $data) {
             if ('native' === $key) {
                 continue;
             }
             $return[$data['currency_id']] = app('amount')->formatFlat($data['currency_symbol'], $data['currency_decimal_places'], $data['balance'], false);
         }
-        $return = [
+        $return            = [
             'net_worths' => array_values($return),
         ];
 

@@ -58,15 +58,15 @@ class AccountMeta extends Model
     use ReturnsIntegerIdTrait;
 
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
+                        = [
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                        ];
 
     protected $fillable = ['account_id', 'name', 'data'];
 
     /** @var string The table to store the data in */
-    protected $table = 'account_meta';
+    protected $table    = 'account_meta';
 
     public function account(): BelongsTo
     {

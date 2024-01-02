@@ -42,8 +42,8 @@ class UpgradeLiabilities extends Command
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '560_upgrade_liabilities';
-    protected $description = 'Upgrade liabilities to new 5.6.0 structure.';
-    protected $signature   = 'firefly-iii:upgrade-liabilities {--F|force : Force the execution of this command.}';
+    protected $description          = 'Upgrade liabilities to new 5.6.0 structure.';
+    protected $signature            = 'firefly-iii:upgrade-liabilities {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -102,7 +102,7 @@ class UpgradeLiabilities extends Command
     private function upgradeLiability(Account $account): void
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
+        $repository     = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
 
         // get opening balance, and correct if necessary.
@@ -113,7 +113,7 @@ class UpgradeLiabilities extends Command
         }
 
         // add liability direction property (if it does not yet exist!)
-        $value = $repository->getMetaValue($account, 'liability_direction');
+        $value          = $repository->getMetaValue($account, 'liability_direction');
         if (null === $value) {
             /** @var AccountMetaFactory $factory */
             $factory = app(AccountMetaFactory::class);

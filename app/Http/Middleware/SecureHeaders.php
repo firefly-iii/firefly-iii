@@ -41,13 +41,13 @@ class SecureHeaders
     public function handle(Request $request, \Closure $next)
     {
         // generate and share nonce.
-        $nonce = base64_encode(random_bytes(16));
+        $nonce              = base64_encode(random_bytes(16));
         Vite::useCspNonce($nonce);
         app('view')->share('JS_NONCE', $nonce);
 
-        $response          = $next($request);
-        $trackingScriptSrc = $this->getTrackingScriptSource();
-        $csp               = [
+        $response           = $next($request);
+        $trackingScriptSrc  = $this->getTrackingScriptSource();
+        $csp                = [
             "default-src 'none'",
             "object-src 'none'",
             sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'self' 'unsafe-inline' 'nonce-%1s' %2s", $nonce, $trackingScriptSrc),
@@ -59,10 +59,10 @@ class SecureHeaders
             "manifest-src 'self'",
         ];
 
-        $route     = $request->route();
-        $customUrl = '';
-        $authGuard = (string)config('firefly.authentication_guard');
-        $logoutUrl = (string)config('firefly.custom_logout_url');
+        $route              = $request->route();
+        $customUrl          = '';
+        $authGuard          = (string)config('firefly.authentication_guard');
+        $logoutUrl          = (string)config('firefly.custom_logout_url');
         if ('remote_user_guard' === $authGuard && '' !== $logoutUrl) {
             $customUrl = $logoutUrl;
         }
@@ -71,7 +71,7 @@ class SecureHeaders
             $csp[] = sprintf("form-action 'self' %s", $customUrl);
         }
 
-        $featurePolicies = [
+        $featurePolicies    = [
             "geolocation 'none'",
             "midi 'none'",
             // "notifications 'none'",

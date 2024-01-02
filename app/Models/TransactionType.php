@@ -72,12 +72,12 @@ class TransactionType extends Model
     public const string WITHDRAWAL       = 'Withdrawal';
 
     protected $casts
-                        = [
-                            'created_at' => 'datetime',
-                            'updated_at' => 'datetime',
-                            'deleted_at' => 'datetime',
-                        ];
-    protected $fillable = ['type'];
+                                         = [
+                                             'created_at' => 'datetime',
+                                             'updated_at' => 'datetime',
+                                             'deleted_at' => 'datetime',
+                                         ];
+    protected $fillable                  = ['type'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

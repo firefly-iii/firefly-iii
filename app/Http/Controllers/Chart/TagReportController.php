@@ -77,7 +77,7 @@ class TagReportController extends Controller
                 foreach ($tag['transaction_journals'] as $journal) {
                     $objectName               = $journal['budget_name'] ?? trans('firefly.no_budget');
                     $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
-                    $result[$title]           ??= [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -88,7 +88,7 @@ class TagReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -105,7 +105,7 @@ class TagReportController extends Controller
                 foreach ($tag['transaction_journals'] as $journal) {
                     $objectName               = $journal['category_name'] ?? trans('firefly.no_category');
                     $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
-                    $result[$title]           ??= [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -116,7 +116,7 @@ class TagReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -133,7 +133,7 @@ class TagReportController extends Controller
                 foreach ($tag['transaction_journals'] as $journal) {
                     $objectName               = $journal['category_name'] ?? trans('firefly.no_category');
                     $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
-                    $result[$title]           ??= [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -144,7 +144,7 @@ class TagReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -161,7 +161,7 @@ class TagReportController extends Controller
                 foreach ($tag['transaction_journals'] as $journal) {
                     $objectName               = $journal['destination_account_name'] ?? trans('firefly.empty');
                     $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
-                    $result[$title]           ??= [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -172,7 +172,7 @@ class TagReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -189,7 +189,7 @@ class TagReportController extends Controller
                 foreach ($tag['transaction_journals'] as $journal) {
                     $objectName               = $journal['destination_account_name'] ?? trans('firefly.empty');
                     $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
-                    $result[$title]           ??= [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -200,7 +200,7 @@ class TagReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -218,7 +218,7 @@ class TagReportController extends Controller
         // loop expenses.
         foreach ($spent as $currency) {
             // add things to chart Data for each currency:
-            $spentKey             = sprintf('%d-spent', $currency['currency_id']);
+            $spentKey = sprintf('%d-spent', $currency['currency_id']);
             $chartData[$spentKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
@@ -245,7 +245,7 @@ class TagReportController extends Controller
         // loop income.
         foreach ($earned as $currency) {
             // add things to chart Data for each currency:
-            $spentKey             = sprintf('%d-earned', $currency['currency_id']);
+            $spentKey = sprintf('%d-earned', $currency['currency_id']);
             $chartData[$spentKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
@@ -269,7 +269,7 @@ class TagReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiSet($chartData);
+        $data      = $this->generator->multiSet($chartData);
 
         return response()->json($data);
     }
@@ -286,7 +286,7 @@ class TagReportController extends Controller
                 foreach ($tag['transaction_journals'] as $journal) {
                     $objectName               = $journal['source_account_name'] ?? trans('firefly.empty');
                     $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
-                    $result[$title]           ??= [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -297,7 +297,7 @@ class TagReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -314,7 +314,7 @@ class TagReportController extends Controller
                 foreach ($tag['transaction_journals'] as $journal) {
                     $objectName               = $journal['source_account_name'] ?? trans('firefly.empty');
                     $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
-                    $result[$title]           ??= [
+                    $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
@@ -325,7 +325,7 @@ class TagReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -339,7 +339,7 @@ class TagReportController extends Controller
         foreach ($spent as $currency) {
             /** @var array $tag */
             foreach ($currency['tags'] as $tag) {
-                $title          = sprintf('%s (%s)', $tag['name'], $currency['currency_name']);
+                $title = sprintf('%s (%s)', $tag['name'], $currency['currency_name']);
                 $result[$title] ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
@@ -351,7 +351,7 @@ class TagReportController extends Controller
                 }
             }
         }
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -365,7 +365,7 @@ class TagReportController extends Controller
         foreach ($earned as $currency) {
             /** @var array $tag */
             foreach ($currency['tags'] as $tag) {
-                $title          = sprintf('%s (%s)', $tag['name'], $currency['currency_name']);
+                $title = sprintf('%s (%s)', $tag['name'], $currency['currency_name']);
                 $result[$title] ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
@@ -377,7 +377,7 @@ class TagReportController extends Controller
                 }
             }
         }
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }

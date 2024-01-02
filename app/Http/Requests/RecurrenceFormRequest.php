@@ -27,6 +27,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Rules\ValidRecurrenceRepetitionType;
 use FireflyIII\Rules\ValidRecurrenceRepetitionValue;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -52,8 +53,8 @@ class RecurrenceFormRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $repetitionData = $this->parseRepetitionData();
-        $return         = [
+        $repetitionData                                = $this->parseRepetitionData();
+        $return                                        = [
             'recurrence'   => [
                 'type'              => $this->convertString('transaction_type'),
                 'title'             => $this->convertString('title'),
@@ -128,7 +129,7 @@ class RecurrenceFormRequest extends FormRequest
         }
 
         // replace category name with a new category:
-        $factory = app(CategoryFactory::class);
+        $factory                                       = app(CategoryFactory::class);
         $factory->setUser(auth()->user());
 
         /**
@@ -153,15 +154,15 @@ class RecurrenceFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        $today    = today(config('app.timezone'));
-        $tomorrow = today(config('app.timezone'))->addDay();
-        $rules    = [
+        $today      = today(config('app.timezone'));
+        $tomorrow   = today(config('app.timezone'))->addDay();
+        $rules      = [
             // mandatory info for recurrence.
             'title'                   => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
             'first_date'              => 'required|date|after:'.$today->format('Y-m-d'),
             'repetition_type'         => ['required', new ValidRecurrenceRepetitionValue(), new ValidRecurrenceRepetitionType(), 'between:1,20'],
             'skip'                    => 'required|numeric|integer|gte:0|lte:31',
-
+            'notes'                   => 'between:1,65536|nullable',
             // optional for recurrence:
             'recurring_description'   => 'between:0,65000',
             'active'                  => 'numeric|between:0,1',
@@ -171,7 +172,7 @@ class RecurrenceFormRequest extends FormRequest
             'transaction_description' => 'required|between:1,255',
             'transaction_type'        => 'required|in:withdrawal,deposit,transfer',
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
-            'amount'                  => 'numeric|required|gt:0|max:1000000000',
+            'amount'                  => ['required', new IsValidPositiveAmount()],
             // mandatory account info:
             'source_id'               => 'numeric|belongsToUser:accounts,id|nullable',
             'source_name'             => 'between:1,255|nullable',
@@ -179,7 +180,7 @@ class RecurrenceFormRequest extends FormRequest
             'destination_name'        => 'between:1,255|nullable',
 
             // foreign amount data:
-            'foreign_amount'          => 'nullable|gt:0|max:1000000000',
+            'foreign_amount'          => ['nullable', new IsValidPositiveAmount()],
 
             // optional fields:
             'budget_id'               => 'mustExist:budgets,id|belongsToUser:budgets,id|nullable',
@@ -206,7 +207,7 @@ class RecurrenceFormRequest extends FormRequest
         }
 
         // switch on type to expand rules for source and destination accounts:
-        $type = strtolower($this->convertString('transaction_type'));
+        $type       = strtolower($this->convertString('transaction_type'));
         if (strtolower(TransactionType::WITHDRAWAL) === $type) {
             $rules['source_id']        = 'required|exists:accounts,id|belongsToUser:accounts';
             $rules['destination_name'] = 'between:1,255|nullable';
@@ -263,13 +264,13 @@ class RecurrenceFormRequest extends FormRequest
         $accountValidator->setTransactionType($transactionType);
 
         // default values:
-        $sourceId      = null;
-        $destinationId = null;
+        $sourceId         = null;
+        $destinationId    = null;
 
         // TODO typeOverrule: the account validator may have another opinion the transaction type.
         // TODO either use 'withdrawal' or the strtolower() variant, not both.
-        $type       = $this->convertString('transaction_type');
-        $throwError = true;
+        $type             = $this->convertString('transaction_type');
+        $throwError       = true;
         if ('withdrawal' === $type) {
             $throwError    = false;
             $sourceId      = (int) $data['source_id'];
@@ -290,7 +291,7 @@ class RecurrenceFormRequest extends FormRequest
         }
 
         // validate source account.
-        $validSource = $accountValidator->validateSource(['id' => $sourceId]);
+        $validSource      = $accountValidator->validateSource(['id' => $sourceId]);
 
         // do something with result:
         if (false === $validSource) {

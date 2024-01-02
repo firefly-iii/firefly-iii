@@ -33,6 +33,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -79,17 +80,17 @@ class EditController extends Controller
             return $this->redirectAccountToAccount($account);
         }
 
-        $objectType     = config('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle       = (string) trans(sprintf('firefly.edit_%s_account', $objectType), ['name' => $account->name]);
-        $subTitleIcon   = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
-        $roles          = $this->getRoles();
-        $liabilityTypes = $this->getLiabilityTypes();
-        $location       = $repository->getLocation($account);
-        $latitude       = null !== $location ? $location->latitude : config('firefly.default_location.latitude');
-        $longitude      = null !== $location ? $location->longitude : config('firefly.default_location.longitude');
-        $zoomLevel      = null !== $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
-        $hasLocation    = null !== $location;
-        $locations      = [
+        $objectType           = config('firefly.shortNamesByFullName')[$account->accountType->type];
+        $subTitle             = (string) trans(sprintf('firefly.edit_%s_account', $objectType), ['name' => $account->name]);
+        $subTitleIcon         = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $roles                = $this->getRoles();
+        $liabilityTypes       = $this->getLiabilityTypes();
+        $location             = $repository->getLocation($account);
+        $latitude             = null !== $location ? $location->latitude : config('firefly.default_location.latitude');
+        $longitude            = null !== $location ? $location->longitude : config('firefly.default_location.longitude');
+        $zoomLevel            = null !== $location ? $location->zoom_level : config('firefly.default_location.zoom_level');
+        $hasLocation          = null !== $location;
+        $locations            = [
             'location' => [
                 'latitude'     => null !== old('location_latitude') ? old('location_latitude') : $latitude,
                 'longitude'    => null !== old('location_longitude') ? old('location_longitude') : $longitude,
@@ -98,13 +99,13 @@ class EditController extends Controller
             ],
         ];
 
-        $liabilityDirections = [
+        $liabilityDirections  = [
             'debit'  => trans('firefly.liability_direction_debit'),
             'credit' => trans('firefly.liability_direction_credit'),
         ];
 
         // interest calculation periods:
-        $interestPeriods = [
+        $interestPeriods      = [
             'daily'   => (string) trans('firefly.interest_calc_daily'),
             'monthly' => (string) trans('firefly.interest_calc_monthly'),
             'yearly'  => (string) trans('firefly.interest_calc_yearly'),
@@ -120,17 +121,23 @@ class EditController extends Controller
         if ('0' === $openingBalanceAmount) {
             $openingBalanceAmount = '';
         }
-        $openingBalanceDate = $repository->getOpeningBalanceDate($account);
-        $currency           = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
+        $currency             = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
 
         // include this account in net-worth charts?
-        $includeNetWorth = $repository->getMetaValue($account, 'include_net_worth');
-        $includeNetWorth = null === $includeNetWorth ? true : '1' === $includeNetWorth;
+        $includeNetWorth      = $repository->getMetaValue($account, 'include_net_worth');
+        $includeNetWorth      = null === $includeNetWorth ? true : '1' === $includeNetWorth;
+
+        // issue #8321
+        $showNetWorth         = true;
+        if ('liabilities' !== $objectType && 'asset' !== $objectType) {
+            $showNetWorth = false;
+        }
 
         // code to handle active-checkboxes
-        $hasOldInput    = null !== $request->old('_token');
-        $virtualBalance = null === $account->virtual_balance ? '0' : $account->virtual_balance;
-        $preFilled      = [
+        $hasOldInput          = null !== $request->old('_token');
+        $virtualBalance       = null === $account->virtual_balance ? '0' : $account->virtual_balance;
+        $preFilled            = [
             'account_number'          => $repository->getMetaValue($account, 'account_number'),
             'account_role'            => $repository->getMetaValue($account, 'account_role'),
             'cc_type'                 => $repository->getMetaValue($account, 'cc_type'),
@@ -154,7 +161,7 @@ class EditController extends Controller
 
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('accounts.edit', compact('account', 'currency', 'subTitle', 'subTitleIcon', 'locations', 'liabilityDirections', 'objectType', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods'));
+        return view('accounts.edit', compact('account', 'currency', 'showNetWorth', 'subTitle', 'subTitleIcon', 'locations', 'liabilityDirections', 'objectType', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods'));
     }
 
     /**
@@ -168,18 +175,19 @@ class EditController extends Controller
             return $this->redirectAccountToAccount($account);
         }
 
-        $data = $request->getAccountData();
+        $data     = $request->getAccountData();
         $this->repository->update($account, $data);
-
+        Log::channel('audit')->info(sprintf('Updated account #%d.', $account->id), $data);
         $request->session()->flash('success', (string) trans('firefly.updated_account', ['name' => $account->name]));
 
         // store new attachment(s):
         /** @var null|array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($account, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->info(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
             session()->flash('info', (string) trans('firefly.no_att_demo_user'));
         }
 

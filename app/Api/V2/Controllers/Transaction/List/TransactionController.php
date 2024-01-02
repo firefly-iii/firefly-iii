@@ -37,9 +37,9 @@ class TransactionController extends Controller
     public function list(ListRequest $request): JsonResponse
     {
         // collect transactions:
-        $pageSize = $this->parameters->get('limit');
-        $page     = $request->getPage();
-        $page     = max($page, 1);
+        $pageSize  = $this->parameters->get('limit');
+        $page      = $request->getPage();
+        $page      = max($page, 1);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -50,8 +50,8 @@ class TransactionController extends Controller
             ->setTypes($request->getTransactionTypes())
         ;
 
-        $start = $this->parameters->get('start');
-        $end   = $this->parameters->get('end');
+        $start     = $this->parameters->get('start');
+        $end       = $this->parameters->get('end');
         if (null !== $start) {
             $collector->setStart($start);
         }

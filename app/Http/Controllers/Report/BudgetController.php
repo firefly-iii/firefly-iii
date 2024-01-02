@@ -79,7 +79,7 @@ class BudgetController extends Controller
         $generator->setEnd($end);
 
         $generator->accountPerBudget();
-        $report = $generator->getReport();
+        $report    = $generator->getReport();
 
         return view('reports.budget.partials.account-per-budget', compact('report', 'budgets'));
     }
@@ -95,7 +95,7 @@ class BudgetController extends Controller
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $accountId          = $account->id;
+            $accountId = $account->id;
             $report[$accountId] ??= [
                 'name'       => $account->name,
                 'id'         => $account->id,
@@ -106,7 +106,7 @@ class BudgetController extends Controller
 
         // loop expenses.
         foreach ($spent as $currency) {
-            $currencyId        = $currency['currency_id'];
+            $currencyId = $currency['currency_id'];
             $sums[$currencyId] ??= [
                 'currency_id'             => $currency['currency_id'],
                 'currency_symbol'         => $currency['currency_symbol'],
@@ -117,7 +117,7 @@ class BudgetController extends Controller
             foreach ($currency['budgets'] as $budget) {
                 foreach ($budget['transaction_journals'] as $journal) {
                     $sourceAccountId                                            = $journal['source_account_id'];
-                    $report[$sourceAccountId]['currencies'][$currencyId]        ??= [
+                    $report[$sourceAccountId]['currencies'][$currencyId] ??= [
                         'currency_id'             => $currency['currency_id'],
                         'currency_symbol'         => $currency['currency_symbol'],
                         'currency_name'           => $currency['currency_name'],
@@ -143,14 +143,14 @@ class BudgetController extends Controller
      */
     public function avgExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
-        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
-        $result = [];
+        $spent   = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
+        $result  = [];
         foreach ($spent as $currency) {
             foreach ($currency['budgets'] as $budget) {
                 foreach ($budget['transaction_journals'] as $journal) {
-                    $destinationId = $journal['destination_account_id'];
-                    $key           = sprintf('%d-%d', $destinationId, $currency['currency_id']);
-                    $result[$key]  ??= [
+                    $destinationId             = $journal['destination_account_id'];
+                    $key                       = sprintf('%d-%d', $destinationId, $currency['currency_id']);
+                    $result[$key] ??= [
                         'transactions'             => 0,
                         'sum'                      => '0',
                         'avg'                      => '0',
@@ -198,7 +198,7 @@ class BudgetController extends Controller
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $budgetId          = $budget->id;
+            $budgetId = $budget->id;
             $report[$budgetId] ??= [
                 'name'       => $budget->name,
                 'id'         => $budget->id,
@@ -206,7 +206,7 @@ class BudgetController extends Controller
             ];
         }
         foreach ($spent as $currency) {
-            $currencyId        = $currency['currency_id'];
+            $currencyId = $currency['currency_id'];
             $sums[$currencyId] ??= [
                 'currency_id'             => $currency['currency_id'],
                 'currency_symbol'         => $currency['currency_symbol'],
@@ -221,7 +221,7 @@ class BudgetController extends Controller
 
                 foreach ($budget['transaction_journals'] as $journal) {
                     // add currency info to report array:
-                    $report[$budgetId]['currencies'][$currencyId]        ??= [
+                    $report[$budgetId]['currencies'][$currencyId] ??= [
                         'sum'                     => '0',
                         'sum_pct'                 => '0',
                         'currency_id'             => $currency['currency_id'],
@@ -238,9 +238,9 @@ class BudgetController extends Controller
         // loop again to get percentages.
         foreach ($report as $budgetId => $data) {
             foreach ($data['currencies'] as $currencyId => $dataX) {
-                $sum   = $dataX['sum'];
-                $total = $sums[$currencyId]['sum'] ?? '0';
-                $pct   = '0';
+                $sum                                                     = $dataX['sum'];
+                $total                                                   = $sums[$currencyId]['sum'] ?? '0';
+                $pct                                                     = '0';
                 if (0 !== bccomp($sum, '0') && 0 !== bccomp($total, '9')) {
                     $pct = round((float)bcmul(bcdiv($sum, $total), '100')); // intentional float
                 }
@@ -269,7 +269,7 @@ class BudgetController extends Controller
         $generator->setEnd($end);
 
         $generator->general();
-        $report = $generator->getReport();
+        $report    = $generator->getReport();
 
         return view('reports.partials.budgets', compact('report'))->render();
     }
@@ -283,7 +283,7 @@ class BudgetController extends Controller
      */
     public function period(Collection $accounts, Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties();
+        $cache     = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('budget-period-report');
@@ -295,9 +295,9 @@ class BudgetController extends Controller
         $periods   = app('navigation')->listOfPeriods($start, $end);
         $keyFormat = app('navigation')->preferredCarbonFormat($start, $end);
         // list expenses for budgets in account(s)
-        $expenses = $this->opsRepository->listExpenses($start, $end, $accounts);
+        $expenses  = $this->opsRepository->listExpenses($start, $end, $accounts);
 
-        $report = [];
+        $report    = [];
         foreach ($expenses as $currency) {
             foreach ($currency['budgets'] as $budget) {
                 $count = 0;
@@ -346,8 +346,8 @@ class BudgetController extends Controller
      */
     public function topExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end)
     {
-        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
-        $result = [];
+        $spent   = $this->opsRepository->listExpenses($start, $end, $accounts, $budgets);
+        $result  = [];
         foreach ($spent as $currency) {
             foreach ($currency['budgets'] as $budget) {
                 foreach ($budget['transaction_journals'] as $journal) {

@@ -37,6 +37,7 @@ use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BudgetController
@@ -76,8 +77,10 @@ class CategoryController extends Controller
      */
     public function dashboard(DateRequest $request): JsonResponse
     {
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+
         /** @var Carbon $start */
-        $start = $this->parameters->get('start');
+        $start      = $this->parameters->get('start');
 
         /** @var Carbon $end */
         $end        = $this->parameters->get('end');
@@ -89,49 +92,49 @@ class CategoryController extends Controller
 
         // get journals for entire period:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withAccountInformation();
         $collector->setXorAccounts($accounts)->withCategoryInformation();
         $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::RECONCILIATION]);
-        $journals = $collector->getExtractedJournals();
+        $journals   = $collector->getExtractedJournals();
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId              = (int)$journal['currency_id'];
-            $currency                = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
-            $currencies[$currencyId] = $currency;
-            $categoryName            = null === $journal['category_name'] ? (string)trans('firefly.no_category') : $journal['category_name'];
-            $amount                  = app('steam')->positive($journal['amount']);
-            $nativeAmount            = $converter->convert($default, $currency, $journal['date'], $amount);
-            $key                     = sprintf('%s-%s', $categoryName, $currency->code);
+            $currencyId                    = (int)$journal['currency_id'];
+            $currency                      = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
+            $currencies[$currencyId]       = $currency;
+            $categoryName                  = null === $journal['category_name'] ? (string)trans('firefly.no_category') : $journal['category_name'];
+            $amount                        = app('steam')->positive($journal['amount']);
+            $nativeAmount                  = $converter->convert($default, $currency, $journal['date'], $amount);
+            $key                           = sprintf('%s-%s', $categoryName, $currency->code);
             if ((int)$journal['foreign_currency_id'] === $default->id) {
                 $nativeAmount = app('steam')->positive($journal['foreign_amount']);
             }
             // create arrays
             $return[$key] ??= [
-                'label'                   => $categoryName,
-                'currency_id'             => (string)$currency->id,
-                'currency_code'           => $currency->code,
-                'currency_name'           => $currency->name,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'native_id'               => (string)$default->id,
-                'native_code'             => $default->code,
-                'native_name'             => $default->name,
-                'native_symbol'           => $default->symbol,
-                'native_decimal_places'   => $default->decimal_places,
-                'period'                  => null,
-                'start'                   => $start->toAtomString(),
-                'end'                     => $end->toAtomString(),
-                'amount'                  => '0',
-                'native_amount'           => '0',
+                'label'                            => $categoryName,
+                'currency_id'                      => (string)$currency->id,
+                'currency_code'                    => $currency->code,
+                'currency_name'                    => $currency->name,
+                'currency_symbol'                  => $currency->symbol,
+                'currency_decimal_places'          => $currency->decimal_places,
+                'native_currency_id'               => (string)$default->id,
+                'native_currency_code'             => $default->code,
+                'native_currency_name'             => $default->name,
+                'native_currency_symbol'           => $default->symbol,
+                'native_currency_decimal_places'   => $default->decimal_places,
+                'period'                           => null,
+                'start'                            => $start->toAtomString(),
+                'end'                              => $end->toAtomString(),
+                'amount'                           => '0',
+                'native_amount'                    => '0',
             ];
 
             // add monies
             $return[$key]['amount']        = bcadd($return[$key]['amount'], $amount);
             $return[$key]['native_amount'] = bcadd($return[$key]['native_amount'], $nativeAmount);
         }
-        $return = array_values($return);
+        $return     = array_values($return);
 
         // order by native amount
         usort($return, static function (array $a, array $b) {

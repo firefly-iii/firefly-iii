@@ -79,14 +79,14 @@ class AvailableBudget extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
-            'created_at'              => 'datetime',
-            'updated_at'              => 'datetime',
-            'deleted_at'              => 'datetime',
-            'start_date'              => 'date',
-            'end_date'                => 'date',
-            'transaction_currency_id' => 'int',
-        ];
+                        = [
+                            'created_at'              => 'datetime',
+                            'updated_at'              => 'datetime',
+                            'deleted_at'              => 'datetime',
+                            'start_date'              => 'date',
+                            'end_date'                => 'date',
+                            'transaction_currency_id' => 'int',
+                        ];
 
     protected $fillable = ['user_id', 'user_group_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date'];
 
@@ -101,10 +101,10 @@ class AvailableBudget extends Model
             $availableBudgetId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user              = auth()->user();
 
             /** @var null|AvailableBudget $availableBudget */
-            $availableBudget = $user->availableBudgets()->find($availableBudgetId);
+            $availableBudget   = $user->availableBudgets()->find($availableBudgetId);
             if (null !== $availableBudget) {
                 return $availableBudget;
             }

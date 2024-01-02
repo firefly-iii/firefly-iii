@@ -56,7 +56,7 @@ class CurrencyFormRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        $rules = [
+        $rules    = [
             'name'           => 'required|max:48|min:1|uniqueCurrencyName',
             'code'           => 'required|min:3|max:51|uniqueCurrencyCode',
             'symbol'         => 'required|min:1|max:51|uniqueCurrencySymbol',

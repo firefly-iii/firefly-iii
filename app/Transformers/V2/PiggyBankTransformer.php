@@ -36,6 +36,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class PiggyBankTransformer
@@ -88,12 +89,12 @@ class PiggyBankTransformer extends AbstractTransformer
         foreach ($currencyPreferences as $preference) {
             $currencyId                   = (int)$preference->data;
             $accountId                    = $preference->account_id;
-            $currencies[$currencyId]      ??= TransactionJournal::find($currencyId);
+            $currencies[$currencyId] ??= TransactionJournal::find($currencyId);
             $this->currencies[$accountId] = $currencies[$currencyId];
         }
 
         // grab object groups:
-        $set = DB::table('object_groupables')
+        $set                 = DB::table('object_groupables')
             ->leftJoin('object_groups', 'object_groups.id', '=', 'object_groupables.object_group_id')
             ->where('object_groupables.object_groupable_type', PiggyBank::class)
             ->get(['object_groupables.*', 'object_groups.title', 'object_groups.order'])
@@ -105,14 +106,14 @@ class PiggyBankTransformer extends AbstractTransformer
             $id                         = (int)$entry->object_group_id;
             $order                      = $entry->order;
             $this->groups[$piggyBankId] = [
-                'object_group_id'    => $id,
+                'object_group_id'    => (string) $id,
                 'object_group_title' => $entry->title,
                 'object_group_order' => $order,
             ];
         }
 
         // grab repetitions (for current amount):
-        $repetitions = PiggyBankRepetition::whereIn('piggy_bank_id', $piggyBanks)->get();
+        $repetitions         = PiggyBankRepetition::whereIn('piggy_bank_id', $piggyBanks)->get();
 
         /** @var PiggyBankRepetition $repetition */
         foreach ($repetitions as $repetition) {
@@ -123,7 +124,7 @@ class PiggyBankTransformer extends AbstractTransformer
 
         // grab notes
         // continue with notes
-        $notes = Note::whereNoteableType(PiggyBank::class)->whereIn('noteable_id', array_keys($piggyBanks))->get();
+        $notes               = Note::whereNoteableType(PiggyBank::class)->whereIn('noteable_id', array_keys($piggyBanks))->get();
 
         /** @var Note $note */
         foreach ($notes as $note) {
@@ -131,8 +132,9 @@ class PiggyBankTransformer extends AbstractTransformer
             $this->notes[$id] = $note;
         }
 
-        $this->default   = app('amount')->getDefaultCurrencyByUserGroup(auth()->user()->userGroup);
-        $this->converter = new ExchangeRateConverter();
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        $this->default       = app('amount')->getDefaultCurrencyByUserGroup(auth()->user()->userGroup);
+        $this->converter     = new ExchangeRateConverter();
     }
 
     /**

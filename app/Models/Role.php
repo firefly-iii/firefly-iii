@@ -61,10 +61,10 @@ class Role extends Model
     use ReturnsIntegerIdTrait;
 
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
+                        = [
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                        ];
 
     protected $fillable = ['name', 'display_name', 'description'];
 

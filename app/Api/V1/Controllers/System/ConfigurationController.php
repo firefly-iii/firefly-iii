@@ -125,7 +125,7 @@ class ConfigurationController extends Controller
      */
     public function update(UpdateRequest $request, string $name): JsonResponse
     {
-        $rules = ['value' => 'required'];
+        $rules     = ['value' => 'required'];
         if (!$this->repository->hasRole(auth()->user(), 'owner')) {
             $messages = ['value' => '200005: You need the "owner" role to do this.'];
             \Validator::make([], $rules, $messages)->validate();

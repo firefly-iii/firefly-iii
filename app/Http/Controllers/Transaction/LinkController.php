@@ -109,10 +109,10 @@ class LinkController extends Controller
      */
     public function store(JournalLinkRequest $request, TransactionJournal $journal)
     {
-        $linkInfo = $request->getLinkInfo();
+        $linkInfo      = $request->getLinkInfo();
 
         app('log')->debug('We are here (store)');
-        $other = $this->journalRepository->find($linkInfo['transaction_journal_id']);
+        $other         = $this->journalRepository->find($linkInfo['transaction_journal_id']);
         if (null === $other) {
             session()->flash('error', (string)trans('firefly.invalid_link_selection'));
 

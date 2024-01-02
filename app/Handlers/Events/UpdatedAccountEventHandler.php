@@ -37,7 +37,7 @@ class UpdatedAccountEventHandler
         $account = $event->account;
 
         /** @var CreditRecalculateService $object */
-        $object = app(CreditRecalculateService::class);
+        $object  = app(CreditRecalculateService::class);
         $object->setAccount($account);
         $object->recalculate();
     }

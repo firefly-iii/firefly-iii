@@ -131,7 +131,7 @@ class CategoryUpdateService
      */
     private function updateNotes(Category $category, array $data): void
     {
-        $note = array_key_exists('notes', $data) ? $data['notes'] : null;
+        $note         = array_key_exists('notes', $data) ? $data['notes'] : null;
         if (null === $note) {
             return;
         }
@@ -143,7 +143,7 @@ class CategoryUpdateService
 
             return;
         }
-        $dbNote = $category->notes()->first();
+        $dbNote       = $category->notes()->first();
         if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($category);

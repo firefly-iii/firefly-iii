@@ -46,10 +46,10 @@ class AutoSum
         /** @var Model $object */
         foreach ($objects as $object) {
             /** @var TransactionCurrency $currency */
-            $currency = $getCurrency($object);
+            $currency                     = $getCurrency($object);
 
             /** @var string $amount */
-            $amount = $getSum($object);
+            $amount                       = $getSum($object);
 
             $return[$currency->id] ??= [
                 'id'             => (string)$currency->id,

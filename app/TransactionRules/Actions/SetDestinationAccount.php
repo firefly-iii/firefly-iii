@@ -52,7 +52,7 @@ class SetDestinationAccount implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */
-        $user = User::find($journal['user_id']);
+        $user             = User::find($journal['user_id']);
 
         /** @var null|TransactionJournal $object */
         $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
@@ -64,11 +64,11 @@ class SetDestinationAccount implements ActionInterface
 
             return false;
         }
-        $type = $object->transactionType->type;
+        $type             = $object->transactionType->type;
         $this->repository->setUser($user);
 
         // if this is a transfer or a deposit, the new destination account must be an asset account or a default account, and it MUST exist:
-        $newAccount = $this->findAssetAccount($type);
+        $newAccount       = $this->findAssetAccount($type);
         if ((TransactionType::DEPOSIT === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
             app('log')->error(
                 sprintf(
@@ -84,7 +84,7 @@ class SetDestinationAccount implements ActionInterface
 
         // new destination account must be different from the current source account:
         /** @var null|Transaction $source */
-        $source = $object->transactions()->where('amount', '<', 0)->first();
+        $source           = $object->transactions()->where('amount', '<', 0)->first();
         if (null === $source) {
             app('log')->error('Could not find source transaction.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_source_transaction')));

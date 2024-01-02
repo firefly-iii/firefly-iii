@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Rules\IsValidAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -43,9 +44,9 @@ class NewUserFormRequest extends FormRequest
         // fixed
         return [
             'bank_name'                            => 'required|between:1,200',
-            'bank_balance'                         => 'required|numeric|max:1000000000',
-            'savings_balance'                      => 'numeric|max:1000000000',
-            'credit_card_limit'                    => 'numeric|max:1000000000',
+            'bank_balance'                         => ['required', new IsValidAmount()],
+            'savings_balance'                      => ['nullable', new IsValidAmount()],
+            'credit_card_limit'                    => ['nullable', new IsValidAmount()],
             'amount_currency_id_bank_balance'      => 'exists:transaction_currencies,id',
             'amount_currency_id_savings_balance'   => 'exists:transaction_currencies,id',
             'amount_currency_id_credit_card_limit' => 'exists:transaction_currencies,id',

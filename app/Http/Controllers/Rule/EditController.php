@@ -76,18 +76,18 @@ class EditController extends Controller
      */
     public function edit(Request $request, Rule $rule)
     {
-        $triggerCount = 0;
-        $actionCount  = 0;
-        $oldActions   = [];
-        $oldTriggers  = [];
+        $triggerCount   = 0;
+        $actionCount    = 0;
+        $oldActions     = [];
+        $oldTriggers    = [];
 
         // build triggers from query, if present.
-        $query = (string)$request->get('from_query');
+        $query          = (string)$request->get('from_query');
         if ('' !== $query) {
-            $search = app(SearchInterface::class);
+            $search      = app(SearchInterface::class);
             $search->parseQuery($query);
-            $words     = $search->getWordsAsString();
-            $operators = $search->getOperators()->toArray();
+            $words       = $search->getWordsAsString();
+            $operators   = $search->getOperators()->toArray();
             if ('' !== $words) {
                 session()->flash('warning', trans('firefly.rule_from_search_words', ['string' => $words]));
                 $operators[] = ['type' => 'description_contains', 'value' => $words];
@@ -99,8 +99,8 @@ class EditController extends Controller
             $oldTriggers = $this->getPreviousTriggers($request);
             $oldActions  = $this->getPreviousActions($request);
         }
-        $triggerCount = count($oldTriggers);
-        $actionCount  = count($oldActions);
+        $triggerCount   = count($oldTriggers);
+        $actionCount    = count($oldActions);
 
         // overrule old input and query data when it has no rule data:
         if (0 === $triggerCount && 0 === $actionCount) {
@@ -110,8 +110,8 @@ class EditController extends Controller
             $actionCount  = count($oldActions);
         }
 
-        $hasOldInput = null !== $request->old('_token');
-        $preFilled   = [
+        $hasOldInput    = null !== $request->old('_token');
+        $preFilled      = [
             'active'          => $hasOldInput ? (bool)$request->old('active') : $rule->active,
             'stop_processing' => $hasOldInput ? (bool)$request->old('stop_processing') : $rule->stop_processing,
             'strict'          => $hasOldInput ? (bool)$request->old('strict') : $rule->strict,
@@ -139,7 +139,7 @@ class EditController extends Controller
      */
     public function update(RuleFormRequest $request, Rule $rule)
     {
-        $data = $request->getRuleData();
+        $data     = $request->getRuleData();
 
         $this->ruleRepos->update($rule, $data);
 
@@ -171,7 +171,7 @@ class EditController extends Controller
         }
         asort($triggers);
 
-        $index = 0;
+        $index           = 0;
         foreach ($submittedOperators as $operator) {
             try {
                 $renderedEntries[] = view(

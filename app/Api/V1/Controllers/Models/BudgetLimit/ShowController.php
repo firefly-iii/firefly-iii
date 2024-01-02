@@ -74,7 +74,7 @@ class ShowController extends Controller
      */
     public function index(Budget $budget): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager      = $this->getManager();
         $manager->parseIncludes('budget');
         $pageSize     = $this->parameters->get('limit');
         $collection   = $this->blRepository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
@@ -84,10 +84,10 @@ class ShowController extends Controller
         $paginator->setPath(route('api.v1.budgets.limits.index', [$budget->id]).$this->buildParams());
 
         /** @var BudgetLimitTransformer $transformer */
-        $transformer = app(BudgetLimitTransformer::class);
+        $transformer  = app(BudgetLimitTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
+        $resource     = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -103,7 +103,7 @@ class ShowController extends Controller
      */
     public function indexAll(SameDateRequest $request): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager      = $this->getManager();
         $manager->parseIncludes('budget');
         $pageSize     = $this->parameters->get('limit');
         $collection   = $this->blRepository->getAllBudgetLimits($this->parameters->get('start'), $this->parameters->get('end'));
@@ -113,10 +113,10 @@ class ShowController extends Controller
         $paginator->setPath(route('api.v1.budget-limits.index').$this->buildParams());
 
         /** @var BudgetLimitTransformer $transformer */
-        $transformer = app(BudgetLimitTransformer::class);
+        $transformer  = app(BudgetLimitTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
+        $resource     = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -134,13 +134,13 @@ class ShowController extends Controller
             throw new FireflyException('20028: The budget limit does not belong to the budget.');
         }
         // continue!
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($budgetLimit, $transformer, 'budget_limits');
+        $resource    = new Item($budgetLimit, $transformer, 'budget_limits');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

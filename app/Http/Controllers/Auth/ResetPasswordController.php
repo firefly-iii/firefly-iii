@@ -80,7 +80,7 @@ class ResetPasswordController extends Controller
 
             return view('error', compact('message'));
         }
-        $rules = [
+        $rules    = [
             'token'    => 'required',
             'email'    => 'required|email',
             'password' => 'required|confirmed|min:16|secure_password',

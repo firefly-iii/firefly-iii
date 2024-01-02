@@ -69,8 +69,8 @@ class NewUserController extends Controller
         app('view')->share('title', (string)trans('firefly.welcome'));
         app('view')->share('mainTitleIcon', 'fa-fire');
 
-        $types = config('firefly.accountTypesByIdentifier.asset');
-        $count = $this->repository->count($types);
+        $types     = config('firefly.accountTypesByIdentifier.asset');
+        $count     = $this->repository->count($types);
 
         $languages = [];
 
@@ -90,7 +90,7 @@ class NewUserController extends Controller
      */
     public function submit(NewUserFormRequest $request, CurrencyRepositoryInterface $currencyRepository)
     {
-        $language = $request->convertString('language');
+        $language      = $request->convertString('language');
         if (!array_key_exists($language, config('firefly.languages'))) {
             $language = 'en_US';
         }
@@ -98,7 +98,7 @@ class NewUserController extends Controller
         // set language preference:
         app('preferences')->set('language', $language);
         // Store currency preference from input:
-        $currency = $currencyRepository->find((int)$request->input('amount_currency_id_bank_balance'));
+        $currency      = $currencyRepository->find((int)$request->input('amount_currency_id_bank_balance'));
 
         // if is null, set to EUR:
         if (null === $currency) {
@@ -114,7 +114,7 @@ class NewUserController extends Controller
         $currencyRepository->makeDefault($currency);
 
         // store frontpage preferences:
-        $accounts = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
+        $accounts      = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
         app('preferences')->set('frontPageAccounts', $accounts);
 
         // mark.

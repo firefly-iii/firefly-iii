@@ -45,7 +45,7 @@ trait ConvertsExchangeRates
 
         // if not enabled, return the same array but without conversion:
         return $set;
-        $this->enabled = false;
+        $this->enabled    = false;
         if (false === $this->enabled) {
             $set['converted'] = false;
 
@@ -55,20 +55,20 @@ trait ConvertsExchangeRates
         $set['converted'] = true;
 
         /** @var TransactionCurrency $native */
-        $native   = app('amount')->getDefaultCurrency();
-        $currency = $this->getCurrency((int)$set['currency_id']);
+        $native           = app('amount')->getDefaultCurrency();
+        $currency         = $this->getCurrency((int)$set['currency_id']);
         if ($native->id === $currency->id) {
-            $set['native_id']             = (string)$currency->id;
-            $set['native_code']           = $currency->code;
-            $set['native_symbol']         = $currency->symbol;
-            $set['native_decimal_places'] = $currency->decimal_places;
+            $set['native_currency_id']             = (string)$currency->id;
+            $set['native_currency_code']           = $currency->code;
+            $set['native_currency_symbol']         = $currency->symbol;
+            $set['native_currency_decimal_places'] = $currency->decimal_places;
 
             return $set;
         }
         foreach ($set['entries'] as $date => $entry) {
-            $carbon = Carbon::createFromFormat(\DateTimeInterface::ATOM, $date);
-            $rate   = $this->getRate($currency, $native, $carbon);
-            $rate   = '0' === $rate ? '1' : $rate;
+            $carbon                = Carbon::createFromFormat(\DateTimeInterface::ATOM, $date);
+            $rate                  = $this->getRate($currency, $native, $carbon);
+            $rate                  = '0' === $rate ? '1' : $rate;
             app('log')->debug(sprintf('bcmul("%s", "%s")', (string)$entry, $rate));
             $set['entries'][$date] = (float)bcmul((string)$entry, $rate);
         }
@@ -109,23 +109,23 @@ trait ConvertsExchangeRates
         foreach ($entries as $entry) {
             $currency = $this->getCurrency((int)$entry['id']);
             if ($currency->id !== $native->id) {
-                $amount                         = $this->convertAmount($entry['sum'], $currency, $native);
-                $entry['converted']             = true;
-                $entry['native_sum']            = $amount;
-                $entry['native_id']             = (string)$native->id;
-                $entry['native_name']           = $native->name;
-                $entry['native_symbol']         = $native->symbol;
-                $entry['native_code']           = $native->code;
-                $entry['native_decimal_places'] = $native->decimal_places;
+                $amount                                  = $this->convertAmount($entry['sum'], $currency, $native);
+                $entry['converted']                      = true;
+                $entry['native_sum']                     = $amount;
+                $entry['native_currency_id']             = (string)$native->id;
+                $entry['native_currency_name']           = $native->name;
+                $entry['native_currency_symbol']         = $native->symbol;
+                $entry['native_currency_code']           = $native->code;
+                $entry['native_currency_decimal_places'] = $native->decimal_places;
             }
             if ($currency->id === $native->id) {
-                $entry['converted']             = false;
-                $entry['native_sum']            = $entry['sum'];
-                $entry['native_id']             = (string)$native->id;
-                $entry['native_name']           = $native->name;
-                $entry['native_symbol']         = $native->symbol;
-                $entry['native_code']           = $native->code;
-                $entry['native_decimal_places'] = $native->decimal_places;
+                $entry['converted']                      = false;
+                $entry['native_sum']                     = $entry['sum'];
+                $entry['native_currency_id']             = (string)$native->id;
+                $entry['native_currency_name']           = $native->name;
+                $entry['native_currency_symbol']         = $native->symbol;
+                $entry['native_currency_code']           = $native->code;
+                $entry['native_currency_decimal_places'] = $native->decimal_places;
             }
             $return[] = $entry;
         }

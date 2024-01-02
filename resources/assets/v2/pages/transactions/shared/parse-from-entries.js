@@ -31,11 +31,48 @@ export function parseFromEntries(entries, transactionType) {
 
             // fields for transaction
             current.description = entry.description;
+
+            // source and destination
             current.source_name = entry.source_account.name;
             current.destination_name = entry.destination_account.name;
+
+            // amount information:
             current.amount = entry.amount;
-            current.date = entry.date;
             current.currency_code = entry.currency_code;
+
+
+            // dates
+            current.date = entry.date;
+            current.interest_date = entry.interest_date;
+            current.book_date = entry.book_date;
+            current.process_date = entry.process_date;
+            current.due_date = entry.due_date;
+            current.payment_date = entry.payment_date;
+            current.invoice_date = entry.invoice_date;
+
+            // meta
+            current.budget_id = entry.budget_id;
+            current.category_name = entry.category_name;
+            current.piggy_bank_id = entry.piggy_bank_id;
+
+            // location
+            if (entry.hasLocation) {
+                current.longitude = entry.longitude.toString();
+                current.latitude = entry.latitude.toString();
+                current.zoom_level = entry.zoomLevel;
+            }
+
+            // if foreign amount currency code is set:
+            if (typeof entry.foreign_currency_code !== 'undefined' && '' !== entry.foreign_currency_code.toString()) {
+                current.foreign_currency_code = entry.foreign_currency_code;
+                if (typeof entry.foreign_amount !== 'undefined' && '' !== entry.foreign_amount.toString()) {
+                    current.foreign_amount = entry.foreign_amount;
+                }
+                if (typeof entry.foreign_amount === 'undefined' || '' === entry.foreign_amount.toString()) {
+                    delete current.foreign_amount;
+                    delete current.foreign_currency_code;
+                }
+            }
 
             // if ID is set:
             if (typeof entry.source_account.id !== 'undefined' && '' !== entry.source_account.id.toString()) {

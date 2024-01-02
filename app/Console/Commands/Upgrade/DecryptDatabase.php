@@ -119,8 +119,8 @@ class DecryptDatabase extends Command
         if (null === $original) {
             return;
         }
-        $id    = (int)$row->id;
-        $value = '';
+        $id       = (int)$row->id;
+        $value    = '';
 
         try {
             $value = $this->tryDecrypt($original);

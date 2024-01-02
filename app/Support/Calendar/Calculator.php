@@ -32,7 +32,7 @@ use FireflyIII\Exceptions\IntervalException;
  */
 class Calculator
 {
-    public const int DEFAULT_INTERVAL = 1;
+    public const int DEFAULT_INTERVAL              = 1;
     private static ?\SplObjectStorage $intervalMap = null;
     private static array              $intervals   = [];
 

@@ -51,12 +51,12 @@ class WarnAboutBills implements ShouldQueue
      */
     public function __construct(?Carbon $date)
     {
-        $newDate = new Carbon();
+        $newDate     = new Carbon();
         $newDate->startOfDay();
-        $this->date = $newDate;
+        $this->date  = $newDate;
 
         if (null !== $date) {
-            $newDate = clone $date;
+            $newDate    = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;
         }
@@ -94,7 +94,7 @@ class WarnAboutBills implements ShouldQueue
 
     public function setDate(Carbon $date): void
     {
-        $newDate = clone $date;
+        $newDate    = clone $date;
         $newDate->startOfDay();
         $this->date = $newDate;
     }

@@ -118,7 +118,7 @@ class CorrectOpeningBalanceCurrencies extends Command
         if ((int)$journal->transaction_currency_id !== $currency->id) {
             $journal->transaction_currency_id = $currency->id;
             $journal->save();
-            $count = 1;
+            $count                            = 1;
         }
 
         /** @var Transaction $transaction */
@@ -126,7 +126,7 @@ class CorrectOpeningBalanceCurrencies extends Command
             if ($transaction->transaction_currency_id !== $currency->id) {
                 $transaction->transaction_currency_id = $currency->id;
                 $transaction->save();
-                $count = 1;
+                $count                                = 1;
             }
         }
 

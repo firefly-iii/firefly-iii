@@ -73,7 +73,7 @@ class AccountFactory
     {
         app('log')->debug(sprintf('findOrCreate("%s", "%s")', $accountName, $accountType));
 
-        $type = $this->accountRepository->getAccountTypeByType($accountType);
+        $type   = $this->accountRepository->getAccountTypeByType($accountType);
         if (null === $type) {
             throw new FireflyException(sprintf('Cannot find account type "%s"', $accountType));
         }
@@ -108,13 +108,13 @@ class AccountFactory
         $data['iban'] = $this->filterIban($data['iban'] ?? null);
 
         // account may exist already:
-        $return = $this->find($data['name'], $type->type);
+        $return       = $this->find($data['name'], $type->type);
 
         if (null !== $return) {
             return $return;
         }
 
-        $return = $this->createAccount($type, $data);
+        $return       = $this->createAccount($type, $data);
 
         event(new StoredAccount($return));
 
@@ -198,11 +198,11 @@ class AccountFactory
             $databaseData['virtual_balance'] = null;
         }
         // create account!
-        $account = Account::create($databaseData);
+        $account        = Account::create($databaseData);
         Log::channel('audit')->info(sprintf('Account #%d ("%s") has been created.', $account->id, $account->name));
 
         // update meta data:
-        $data = $this->cleanMetaDataArray($account, $data);
+        $data           = $this->cleanMetaDataArray($account, $data);
         $this->storeMetaData($account, $data);
 
         // create opening balance (only asset accounts)
@@ -222,7 +222,7 @@ class AccountFactory
         }
 
         // create notes
-        $notes = array_key_exists('notes', $data) ? $data['notes'] : '';
+        $notes          = array_key_exists('notes', $data) ? $data['notes'] : '';
         $this->updateNote($account, $notes);
 
         // create location
@@ -242,10 +242,10 @@ class AccountFactory
      */
     private function cleanMetaDataArray(Account $account, array $data): array
     {
-        $currencyId   = array_key_exists('currency_id', $data) ? (int)$data['currency_id'] : 0;
-        $currencyCode = array_key_exists('currency_code', $data) ? (string)$data['currency_code'] : '';
-        $accountRole  = array_key_exists('account_role', $data) ? (string)$data['account_role'] : null;
-        $currency     = $this->getCurrency($currencyId, $currencyCode);
+        $currencyId           = array_key_exists('currency_id', $data) ? (int)$data['currency_id'] : 0;
+        $currencyCode         = array_key_exists('currency_code', $data) ? (string)$data['currency_code'] : '';
+        $accountRole          = array_key_exists('account_role', $data) ? (string)$data['account_role'] : null;
+        $currency             = $this->getCurrency($currencyId, $currencyCode);
 
         // only asset account may have a role:
         if (AccountType::ASSET !== $account->accountType->type) {
@@ -263,7 +263,7 @@ class AccountFactory
 
     private function storeMetaData(Account $account, array $data): void
     {
-        $fields = $this->validFields;
+        $fields  = $this->validFields;
         if (AccountType::ASSET === $account->accountType->type) {
             $fields = $this->validAssetFields;
         }
@@ -272,8 +272,8 @@ class AccountFactory
         }
 
         // remove currency_id if necessary.
-        $type = $account->accountType->type;
-        $list = config('firefly.valid_currency_account_types');
+        $type    = $account->accountType->type;
+        $list    = config('firefly.valid_currency_account_types');
         if (!in_array($type, $list, true)) {
             $pos = array_search('currency_id', $fields, true);
             if (false !== $pos) {
@@ -350,9 +350,9 @@ class AccountFactory
      */
     private function storeOrder(Account $account, array $data): void
     {
-        $accountType = $account->accountType->type;
-        $maxOrder    = $this->accountRepository->maxOrder($accountType);
-        $order       = null;
+        $accountType   = $account->accountType->type;
+        $maxOrder      = $this->accountRepository->maxOrder($accountType);
+        $order         = null;
         if (!array_key_exists('order', $data)) {
             $order = $maxOrder + 1;
         }

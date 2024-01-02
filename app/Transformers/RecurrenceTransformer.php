@@ -128,14 +128,14 @@ class RecurrenceTransformer extends AbstractTransformer
             ];
 
             // get the (future) occurrences for this specific type of repetition:
-            $occurrences = $this->repository->getXOccurrencesSince($repetition, $fromDate, new Carbon(), 5);
+            $occurrences     = $this->repository->getXOccurrencesSince($repetition, $fromDate, new Carbon(), 5);
 
             /** @var Carbon $carbon */
             foreach ($occurrences as $carbon) {
                 $repetitionArray['occurrences'][] = $carbon->toAtomString();
             }
 
-            $return[] = $repetitionArray;
+            $return[]        = $repetitionArray;
         }
 
         return $return;
@@ -153,7 +153,7 @@ class RecurrenceTransformer extends AbstractTransformer
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions()->get() as $transaction) {
             /** @var null|Account $sourceAccount */
-            $sourceAccount = $transaction->sourceAccount;
+            $sourceAccount         = $transaction->sourceAccount;
 
             /** @var null|Account $destinationAccount */
             $destinationAccount    = $transaction->destinationAccount;
@@ -169,32 +169,32 @@ class RecurrenceTransformer extends AbstractTransformer
             }
 
             // source info:
-            $sourceName = '';
-            $sourceId   = null;
-            $sourceType = null;
-            $sourceIban = null;
+            $sourceName            = '';
+            $sourceId              = null;
+            $sourceType            = null;
+            $sourceIban            = null;
             if (null !== $sourceAccount) {
                 $sourceName = $sourceAccount->name;
                 $sourceId   = $sourceAccount->id;
                 $sourceType = $sourceAccount->accountType->type;
                 $sourceIban = $sourceAccount->iban;
             }
-            $destinationName = '';
-            $destinationId   = null;
-            $destinationType = null;
-            $destinationIban = null;
+            $destinationName       = '';
+            $destinationId         = null;
+            $destinationType       = null;
+            $destinationIban       = null;
             if (null !== $destinationAccount) {
                 $destinationName = $destinationAccount->name;
                 $destinationId   = $destinationAccount->id;
                 $destinationType = $destinationAccount->accountType->type;
                 $destinationIban = $destinationAccount->iban;
             }
-            $amount        = app('steam')->bcround($transaction->amount, $transaction->transactionCurrency->decimal_places);
-            $foreignAmount = null;
+            $amount                = app('steam')->bcround($transaction->amount, $transaction->transactionCurrency->decimal_places);
+            $foreignAmount         = null;
             if (null !== $transaction->foreign_currency_id && null !== $transaction->foreign_amount) {
                 $foreignAmount = app('steam')->bcround($transaction->foreign_amount, $foreignCurrencyDp);
             }
-            $transactionArray = [
+            $transactionArray      = [
                 'id'                              => (string)$transaction->id,
                 'currency_id'                     => (string)$transaction->transaction_currency_id,
                 'currency_code'                   => $transaction->transactionCurrency->code,
@@ -216,7 +216,7 @@ class RecurrenceTransformer extends AbstractTransformer
                 'foreign_amount'                  => $foreignAmount,
                 'description'                     => $transaction->description,
             ];
-            $transactionArray = $this->getTransactionMeta($transaction, $transactionArray);
+            $transactionArray      = $this->getTransactionMeta($transaction, $transactionArray);
             if (null !== $transaction->foreign_currency_id) {
                 $transactionArray['foreign_currency_code']           = $transaction->foreignCurrency->code;
                 $transactionArray['foreign_currency_symbol']         = $transaction->foreignCurrency->symbol;
@@ -224,7 +224,7 @@ class RecurrenceTransformer extends AbstractTransformer
             }
 
             // store transaction in recurrence array.
-            $return[] = $transactionArray;
+            $return[]              = $transactionArray;
         }
 
         return $return;
@@ -253,7 +253,7 @@ class RecurrenceTransformer extends AbstractTransformer
                     throw new FireflyException(sprintf('Recurrence transformer cant handle field "%s"', $transactionMeta->name));
 
                 case 'bill_id':
-                    $bill = $this->billRepos->find((int)$transactionMeta->value);
+                    $bill          = $this->billRepos->find((int)$transactionMeta->value);
                     if (null !== $bill) {
                         $array['bill_id']   = (string)$bill->id;
                         $array['bill_name'] = $bill->name;
@@ -267,7 +267,7 @@ class RecurrenceTransformer extends AbstractTransformer
                     break;
 
                 case 'piggy_bank_id':
-                    $piggy = $this->piggyRepos->find((int)$transactionMeta->value);
+                    $piggy         = $this->piggyRepos->find((int)$transactionMeta->value);
                     if (null !== $piggy) {
                         $array['piggy_bank_id']   = (string)$piggy->id;
                         $array['piggy_bank_name'] = $piggy->name;
@@ -276,7 +276,7 @@ class RecurrenceTransformer extends AbstractTransformer
                     break;
 
                 case 'category_id':
-                    $category = $this->factory->findOrCreate((int)$transactionMeta->value, null);
+                    $category      = $this->factory->findOrCreate((int)$transactionMeta->value, null);
                     if (null !== $category) {
                         $array['category_id']   = (string)$category->id;
                         $array['category_name'] = $category->name;
@@ -285,7 +285,7 @@ class RecurrenceTransformer extends AbstractTransformer
                     break;
 
                 case 'category_name':
-                    $category = $this->factory->findOrCreate(null, $transactionMeta->value);
+                    $category      = $this->factory->findOrCreate(null, $transactionMeta->value);
                     if (null !== $category) {
                         $array['category_id']   = (string)$category->id;
                         $array['category_name'] = $category->name;
@@ -294,7 +294,7 @@ class RecurrenceTransformer extends AbstractTransformer
                     break;
 
                 case 'budget_id':
-                    $budget = $this->budgetRepos->find((int)$transactionMeta->value);
+                    $budget        = $this->budgetRepos->find((int)$transactionMeta->value);
                     if (null !== $budget) {
                         $array['budget_id']   = (string)$budget->id;
                         $array['budget_name'] = $budget->name;

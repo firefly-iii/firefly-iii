@@ -70,10 +70,10 @@ class SelectController extends Controller
     {
         // Get parameters specified by the user
         /** @var User $user */
-        $user      = auth()->user();
-        $accounts  = implode(',', $request->get('accounts'));
-        $startDate = new Carbon($request->get('start'));
-        $endDate   = new Carbon($request->get('end'));
+        $user          = auth()->user();
+        $accounts      = implode(',', $request->get('accounts'));
+        $startDate     = new Carbon($request->get('start'));
+        $endDate       = new Carbon($request->get('end'));
 
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
@@ -87,7 +87,7 @@ class SelectController extends Controller
         // set rules:
         $newRuleEngine->setRules(new Collection([$rule]));
         $newRuleEngine->fire();
-        $resultCount = $newRuleEngine->getResults();
+        $resultCount   = $newRuleEngine->getResults();
 
         session()->flash('success', trans_choice('firefly.applied_rule_selection', $resultCount, ['title' => $rule->title]));
 
@@ -121,14 +121,14 @@ class SelectController extends Controller
     public function testTriggers(TestRuleFormRequest $request): JsonResponse
     {
         // build fake rule
-        $rule = new Rule();
+        $rule               = new Rule();
 
         /** @var \Illuminate\Database\Eloquent\Collection<int, RuleTrigger> $triggers */
-        $triggers     = new Collection();
-        $rule->strict = '1' === $request->get('strict');
+        $triggers           = new Collection();
+        $rule->strict       = '1' === $request->get('strict');
 
         // build trigger array from response
-        $textTriggers = $this->getValidTriggerList($request);
+        $textTriggers       = $this->getValidTriggerList($request);
 
         // warn if nothing.
         if (0 === count($textTriggers)) {
@@ -150,22 +150,22 @@ class SelectController extends Controller
 
         // create new rule engine:
         /** @var RuleEngineInterface $newRuleEngine */
-        $newRuleEngine = app(RuleEngineInterface::class);
+        $newRuleEngine      = app(RuleEngineInterface::class);
 
         // set rules:
         $newRuleEngine->setRules(new Collection([$rule]));
         $newRuleEngine->setRefreshTriggers(false);
-        $collection = $newRuleEngine->find();
-        $collection = $collection->slice(0, 20);
+        $collection         = $newRuleEngine->find();
+        $collection         = $collection->slice(0, 20);
 
         // Warn the user if only a subset of transactions is returned
-        $warning = '';
+        $warning            = '';
         if (0 === count($collection)) {
             $warning = (string)trans('firefly.warning_no_matching_transactions');
         }
 
         // Return json response
-        $view = 'ERROR, see logs.';
+        $view               = 'ERROR, see logs.';
 
         try {
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
@@ -188,7 +188,7 @@ class SelectController extends Controller
      */
     public function testTriggersByRule(Rule $rule): JsonResponse
     {
-        $triggers = $rule->ruleTriggers;
+        $triggers      = $rule->ruleTriggers;
 
         if (0 === count($triggers)) {
             return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]);
@@ -198,16 +198,16 @@ class SelectController extends Controller
 
         // set rules:
         $newRuleEngine->setRules(new Collection([$rule]));
-        $collection = $newRuleEngine->find();
-        $collection = $collection->slice(0, 20);
+        $collection    = $newRuleEngine->find();
+        $collection    = $collection->slice(0, 20);
 
-        $warning = '';
+        $warning       = '';
         if (0 === count($collection)) {
             $warning = (string)trans('firefly.warning_no_matching_transactions');
         }
 
         // Return json response
-        $view = 'ERROR, see logs.';
+        $view          = 'ERROR, see logs.';
 
         try {
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();

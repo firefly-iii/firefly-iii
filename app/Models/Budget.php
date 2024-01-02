@@ -96,17 +96,17 @@ class Budget extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'active'     => 'boolean',
-            'encrypted'  => 'boolean',
-        ];
+                        = [
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'deleted_at' => 'datetime',
+                            'active'     => 'boolean',
+                            'encrypted'  => 'boolean',
+                        ];
 
     protected $fillable = ['user_id', 'name', 'active', 'order', 'user_group_id'];
 
-    protected $hidden = ['encrypted'];
+    protected $hidden   = ['encrypted'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -119,10 +119,10 @@ class Budget extends Model
             $budgetId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user     = auth()->user();
 
             /** @var null|Budget $budget */
-            $budget = $user->budgets()->find($budgetId);
+            $budget   = $user->budgets()->find($budgetId);
             if (null !== $budget) {
                 return $budget;
             }

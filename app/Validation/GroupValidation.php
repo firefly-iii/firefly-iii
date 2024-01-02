@@ -91,7 +91,7 @@ trait GroupValidation
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
 
-        $count = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+        $count     = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_groups', 'transaction_groups.id', 'transaction_journals.transaction_group_id')
             ->where('transaction_journals.transaction_group_id', $transactionGroup->id)
             ->where('transactions.reconciled', 1)->where('transactions.amount', '<', 0)->count('transactions.id')
@@ -156,7 +156,7 @@ trait GroupValidation
         $data         = $validator->getData();
         $transactions = $this->getTransactionsArray($validator);
 
-        $groupTitle = $data['group_title'] ?? '';
+        $groupTitle   = $data['group_title'] ?? '';
         if ('' === $groupTitle && count($transactions) > 1) {
             $validator->errors()->add('group_title', (string)trans('validation.group_title_mandatory'));
         }

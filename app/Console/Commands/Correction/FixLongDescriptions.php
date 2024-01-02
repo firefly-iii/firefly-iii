@@ -37,8 +37,8 @@ class FixLongDescriptions extends Command
     use ShowsFriendlyMessages;
 
     private const int MAX_LENGTH = 1000;
-    protected $description = 'Fixes long descriptions in journals and groups.';
-    protected $signature   = 'firefly-iii:fix-long-descriptions';
+    protected $description       = 'Fixes long descriptions in journals and groups.';
+    protected $signature         = 'firefly-iii:fix-long-descriptions';
 
     /**
      * Execute the console command.
@@ -58,7 +58,7 @@ class FixLongDescriptions extends Command
             }
         }
 
-        $groups = TransactionGroup::get(['id', 'title']);
+        $groups   = TransactionGroup::get(['id', 'title']);
 
         /** @var TransactionGroup $group */
         foreach ($groups as $group) {

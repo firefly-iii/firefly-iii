@@ -77,14 +77,14 @@ class TransactionGroup extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
-            'id'         => 'integer',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'title'      => 'string',
-            'date'       => 'datetime',
-        ];
+                        = [
+                            'id'         => 'integer',
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'deleted_at' => 'datetime',
+                            'title'      => 'string',
+                            'date'       => 'datetime',
+                        ];
 
     protected $fillable = ['user_id', 'user_group_id', 'title'];
 
@@ -100,11 +100,11 @@ class TransactionGroup extends Model
             $groupId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user    = auth()->user();
             app('log')->debug(sprintf('User authenticated as %s', $user->email));
 
             /** @var null|TransactionGroup $group */
-            $group = $user->transactionGroups()
+            $group   = $user->transactionGroups()
                 ->with(['transactionJournals', 'transactionJournals.transactions'])
                 ->where('transaction_groups.id', $groupId)->first(['transaction_groups.*'])
             ;

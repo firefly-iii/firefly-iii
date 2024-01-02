@@ -34,7 +34,9 @@ Route::group(
         Route::get('basic', ['uses' => 'BasicController@basic', 'as' => 'basic']);
     }
 );
-// V2 API route for TransactionList API endpoints
+// V2 API route for all kinds of Transaction lists.
+// A lot of endpoints involve transactions. So any time Firefly III needs to list transactions
+// it's coming from these endpoints.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Transaction\List',
@@ -42,7 +44,11 @@ Route::group(
         'as'        => 'api.v2.',
     ],
     static function (): void {
+        // basic list
         Route::get('transactions', ['uses' => 'TransactionController@list', 'as' => 'transactions.list']);
+
+        // list by parent or related object.
+        // note how the check is done on the user group, not the user itself.
         Route::get('accounts/{userGroupAccount}/transactions', ['uses' => 'AccountController@list', 'as' => 'accounts.transactions']);
     }
 );
@@ -58,6 +64,8 @@ Route::group(
         // Auto complete routes
         Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
         Route::get('transaction-descriptions', ['uses' => 'TransactionController@transactionDescriptions', 'as' => 'transaction-descriptions']);
+        Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
+        Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
     }
 );
 
@@ -152,6 +160,7 @@ Route::group(
 );
 
 // V2 API route for budgets and budget limits:
+// TODO Validate from here down.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Model',
@@ -162,8 +171,8 @@ Route::group(
         Route::get('', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);
         Route::get('{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
         Route::get('{budget}/limits', ['uses' => 'BudgetLimit\IndexController@index', 'as' => 'budget-limits.index']);
-        Route::get('sum/budgeted', ['uses' => 'Budget\IndexController@budgeted', 'as' => 'sum.budgeted']);
-        Route::get('sum/spent', ['uses' => 'Budget\IndexController@spent', 'as' => 'sum.spent']);
+        Route::get('sum/budgeted', ['uses' => 'Budget\SumController@budgeted', 'as' => 'sum.budgeted']);
+        Route::get('sum/spent', ['uses' => 'Budget\SumController@spent', 'as' => 'sum.spent']);
         // Route::get('{budget}/budgeted', ['uses' => 'Budget\ShowController@budgeted', 'as' => 'budget.budgeted']);
         // Route::get('{budget}/spent', ['uses' => 'Budget\ShowController@spent', 'as' => 'budget.spent']);
     }

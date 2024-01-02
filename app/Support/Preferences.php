@@ -129,11 +129,11 @@ class Preferences
         if ('currencyPreference' === $name) {
             throw new FireflyException('No longer supports "currencyPreference", please refactor me.');
         }
-        $fullName = sprintf('preference%s%s', $user->id, $name);
+        $fullName   = sprintf('preference%s%s', $user->id, $name);
         \Cache::forget($fullName);
 
         /** @var null|Preference $pref */
-        $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
+        $pref       = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
 
         if (null !== $pref && null === $value) {
             $pref->delete();

@@ -670,7 +670,58 @@ trait MetaCollection
     }
 
     /**
-     * Limit results to a specific set of tags.
+     * Limit results to a SPECIFIC set of tags.
+     */
+    public function setAllTags(Collection $tags): GroupCollectorInterface
+    {
+        Log::debug(sprintf('Now in setAllTags(%d tag(s))', $tags->count()));
+        $this->withTagInformation();
+        $this->query->whereNotNull('tag_transaction_journal.tag_id');
+
+        // this method adds a "postFilter" to the collector.
+        $list                = $tags->pluck('tag')->toArray();
+        $list                = array_map('strtolower', $list);
+        $filter              = static function (array $object) use ($list): bool|array {
+            $return                 = $object;
+            unset($return['transactions']);
+            $return['transactions'] = [];
+            Log::debug(sprintf('Now in setAllTags(%s) filter', implode(', ', $list)));
+            $expectedTagCount       = count($list);
+            $foundTagCount          = 0;
+            foreach ($object['transactions'] as $transaction) {
+                $transactionTagCount = count($transaction['tags']);
+                app('log')->debug(sprintf('Transaction #%d has %d tag(s)', $transaction['transaction_journal_id'], $transactionTagCount));
+                if ($transactionTagCount < $expectedTagCount) {
+                    app('log')->debug(sprintf('Transaction has %d tag(s), we expect %d tag(s), return false.', $transactionTagCount, $expectedTagCount));
+
+                    return false;
+                }
+                foreach ($transaction['tags'] as $tag) {
+                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
+                    if (in_array(strtolower($tag['name']), $list, true)) {
+                        app('log')->debug(sprintf('Transaction has tag "%s" so count++.', $tag['name']));
+                        ++$foundTagCount;
+                        $return['transactions'][] = $transaction;
+                    }
+                }
+            }
+            Log::debug(sprintf('Found %d tags, need at least %d.', $foundTagCount, $expectedTagCount));
+
+            // found at least the expected tags.
+            $result                 = $foundTagCount >= $expectedTagCount;
+            if (true === $result) {
+                return $return;
+            }
+
+            return false;
+        };
+        $this->postFilters[] = $filter;
+
+        return $this;
+    }
+
+    /**
+     * Limit results to any of the tags in the list.
      */
     public function setTags(Collection $tags): GroupCollectorInterface
     {
@@ -683,28 +734,19 @@ trait MetaCollection
         $list                = array_map('strtolower', $list);
         $filter              = static function (array $object) use ($list): bool {
             Log::debug(sprintf('Now in setTags(%s) filter', implode(', ', $list)));
-            $expectedTagCount = count($list);
-            $foundTagCount    = 0;
             foreach ($object['transactions'] as $transaction) {
-                $transactionTagCount = count($transaction['tags']);
-                app('log')->debug(sprintf('Transaction has %d tag(s)', $transactionTagCount));
-                if ($transactionTagCount < $expectedTagCount) {
-                    app('log')->debug(sprintf('Transaction has %d tag(s), we expect %d tag(s), return false.', $transactionTagCount, $expectedTagCount));
-
-                    return false;
-                }
                 foreach ($transaction['tags'] as $tag) {
                     Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
                     if (in_array(strtolower($tag['name']), $list, true)) {
-                        app('log')->debug(sprintf('Transaction has tag "%s" so count++.', $tag['name']));
-                        ++$foundTagCount;
+                        app('log')->debug(sprintf('Transaction has tag "%s" so return true.', $tag['name']));
+
+                        return true;
                     }
                 }
             }
-            Log::debug(sprintf('Found %d tags, need at least %d.', $foundTagCount, $expectedTagCount));
+            app('log')->debug('Transaction has no tags from the list, so return false.');
 
-            // found at least the expected tags.
-            return $foundTagCount >= $expectedTagCount;
+            return false;
         };
         $this->postFilters[] = $filter;
 
@@ -899,8 +941,8 @@ trait MetaCollection
         if (false === $this->hasJoinedMetaTables) {
             $this->hasJoinedMetaTables = true;
             $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
-            $this->fields[] = 'journal_meta.name as meta_name';
-            $this->fields[] = 'journal_meta.data as meta_data';
+            $this->fields[]            = 'journal_meta.name as meta_name';
+            $this->fields[]            = 'journal_meta.data as meta_data';
         }
     }
 

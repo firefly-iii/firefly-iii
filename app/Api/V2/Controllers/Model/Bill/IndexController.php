@@ -48,7 +48,7 @@ class IndexController extends Controller
                 $this->repository = app(BillRepositoryInterface::class);
 
                 // new way of user group validation
-                $userGroup = $this->validateUserGroup($request);
+                $userGroup        = $this->validateUserGroup($request);
                 if (null !== $userGroup) {
                     $this->repository->setUserGroup($userGroup);
                 }

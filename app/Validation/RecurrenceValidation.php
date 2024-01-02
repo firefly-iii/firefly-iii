@@ -42,9 +42,9 @@ trait RecurrenceValidation
      */
     public function valUpdateAccountInfo(Validator $validator): void
     {
-        $data = $validator->getData();
+        $data             = $validator->getData();
 
-        $transactionType = $data['type'] ?? 'invalid';
+        $transactionType  = $data['type'] ?? 'invalid';
 
         // grab model from parameter and try to set the transaction type from it
         if ('invalid' === $transactionType) {
@@ -69,14 +69,14 @@ trait RecurrenceValidation
             }
         }
 
-        $transactions = $data['transactions'] ?? [];
+        $transactions     = $data['transactions'] ?? [];
 
         /** @var AccountValidator $accountValidator */
         $accountValidator = app(AccountValidator::class);
 
         app('log')->debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
         foreach ($transactions as $index => $transaction) {
-            $transactionType = $transaction['type'] ?? $transactionType;
+            $transactionType  = $transaction['type'] ?? $transactionType;
             $accountValidator->setTransactionType($transactionType);
 
             if (
@@ -88,9 +88,9 @@ trait RecurrenceValidation
                 continue;
             }
             // validate source account.
-            $sourceId    = array_key_exists('source_id', $transaction) ? (int) $transaction['source_id'] : null;
-            $sourceName  = $transaction['source_name'] ?? null;
-            $validSource = $accountValidator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
+            $sourceId         = array_key_exists('source_id', $transaction) ? (int) $transaction['source_id'] : null;
+            $sourceName       = $transaction['source_name'] ?? null;
+            $validSource      = $accountValidator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
 
             // do something with result:
             if (false === $validSource) {
@@ -264,8 +264,8 @@ trait RecurrenceValidation
 
             return;
         }
-        $nthDay    = (int) ($parameters[0] ?? 0.0);
-        $dayOfWeek = (int) ($parameters[1] ?? 0.0);
+        $nthDay     = (int) ($parameters[0] ?? 0.0);
+        $dayOfWeek  = (int) ($parameters[1] ?? 0.0);
         if ($nthDay < 1 || $nthDay > 5) {
             $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string) trans('validation.valid_recurrence_rep_moment'));
 
@@ -314,15 +314,15 @@ trait RecurrenceValidation
 
             return;
         }
-        $originalTrCount = $recurrence->recurrenceTransactions()->count();
+        $originalTrCount  = $recurrence->recurrenceTransactions()->count();
         if (1 === $submittedTrCount && 1 === $originalTrCount) {
-            $first = $transactions[0]; // can safely assume index 0.
+            $first       = $transactions[0]; // can safely assume index 0.
             if (!array_key_exists('id', $first)) {
                 app('log')->debug('Single count and no ID, done.');
 
                 return; // home safe!
             }
-            $id = $first['id'];
+            $id          = $first['id'];
             if ('' === (string) $id) {
                 app('log')->debug('Single count and empty ID, done.');
 
@@ -340,7 +340,7 @@ trait RecurrenceValidation
         }
 
         app('log')->debug('Multi ID validation.');
-        $idsMandatory = false;
+        $idsMandatory     = false;
         if ($submittedTrCount < $originalTrCount) {
             app('log')->debug(sprintf('User submits %d transaction, recurrence has %d transactions. All entries must have ID.', $submittedTrCount, $originalTrCount));
             $idsMandatory = true;
@@ -357,7 +357,7 @@ trait RecurrenceValidation
          * 2. If the user submits more transactions than already present, count the number of existing transactions. At least those must be matched. After that, submit as many as you like.
          * 3. If the user submits the same number of transactions as already present, all but one must have an ID.
          */
-        $unmatchedIds = 0;
+        $unmatchedIds     = 0;
 
         foreach ($transactions as $index => $transaction) {
             app('log')->debug(sprintf('Now at %d/%d', $index + 1, $submittedTrCount));
@@ -387,7 +387,7 @@ trait RecurrenceValidation
             }
         }
         // if too many don't match, but you haven't submitted more than already present:
-        $maxUnmatched = max(1, $submittedTrCount - $originalTrCount);
+        $maxUnmatched     = max(1, $submittedTrCount - $originalTrCount);
         app('log')->debug(sprintf('Submitted: %d. Original: %d. User can submit %d unmatched transactions.', $submittedTrCount, $originalTrCount, $maxUnmatched));
         if ($unmatchedIds > $maxUnmatched) {
             app('log')->warning(sprintf('Too many unmatched transactions (%d).', $unmatchedIds));

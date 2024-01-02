@@ -61,7 +61,7 @@ class CategoryTransformer extends AbstractTransformer
             $earned = $this->beautify($this->opsRepository->sumIncome($start, $end, null, new Collection([$category])));
             $spent  = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$category])));
         }
-        $notes = $this->repository->getNoteText($category);
+        $notes  = $this->repository->getNoteText($category);
 
         return [
             'id'         => $category->id,

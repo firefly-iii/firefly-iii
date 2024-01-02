@@ -45,7 +45,7 @@ class PrependNotes implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
-        $dbNote = Note::where('noteable_id', (int)$journal['transaction_journal_id'])
+        $dbNote       = Note::where('noteable_id', (int)$journal['transaction_journal_id'])
             ->where('noteable_type', TransactionJournal::class)
             ->first(['notes.*'])
         ;
@@ -55,7 +55,7 @@ class PrependNotes implements ActionInterface
             $dbNote->noteable_type = TransactionJournal::class;
             $dbNote->text          = '';
         }
-        $before = $dbNote->text;
+        $before       = $dbNote->text;
         app('log')->debug(sprintf('RuleAction PrependNotes prepended "%s" to "%s".', $this->action->action_value, $dbNote->text));
         $text         = sprintf('%s%s', $this->action->action_value, $dbNote->text);
         $dbNote->text = $text;
@@ -63,7 +63,7 @@ class PrependNotes implements ActionInterface
 
         // journal
         /** @var TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         // audit log
         event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $before, $text));

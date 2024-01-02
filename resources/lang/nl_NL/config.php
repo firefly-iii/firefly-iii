@@ -63,7 +63,7 @@ return [
 
     // 'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'             => 'D MMMM YYYY @ HH:mm:ss',
-    'date_time_fns'            => 'D MMMM yyyy @ HH:mm:ss',
+    'date_time_fns'            => 'd MMMM yyyy @ HH:mm:ss',
 
     // 'specific_day'            => '%e %B %Y',
     'specific_day_js'          => 'D MMMM YYYY',
@@ -78,15 +78,15 @@ return [
     // 'half_year'               => '%B %Y',
     'half_year_js'             => '\QQ YYYY',
 
-    'quarter_fns'   => "'Q'Q, yyyy",
-    'half_year_fns' => "'H{half}', yyyy",
-    'dow_1'         => 'Maandag',
-    'dow_2'         => 'Dinsdag',
-    'dow_3'         => 'Woensdag',
-    'dow_4'         => 'Donderdag',
-    'dow_5'         => 'Vrijdag',
-    'dow_6'         => 'Zaterdag',
-    'dow_7'         => 'Zondag',
+    'quarter_fns'              => "'Q'Q, yyyy",
+    'half_year_fns'            => "'H{half}', yyyy",
+    'dow_1'                    => 'Maandag',
+    'dow_2'                    => 'Dinsdag',
+    'dow_3'                    => 'Woensdag',
+    'dow_4'                    => 'Donderdag',
+    'dow_5'                    => 'Vrijdag',
+    'dow_6'                    => 'Zaterdag',
+    'dow_7'                    => 'Zondag',
 ];
 
 /*

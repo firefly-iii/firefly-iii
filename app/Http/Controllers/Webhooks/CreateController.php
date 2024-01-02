@@ -26,7 +26,9 @@ namespace FireflyIII\Http\Controllers\Webhooks;
 
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class CreateController
@@ -57,6 +59,12 @@ class CreateController extends Controller
      */
     public function index()
     {
+        if(false === config('firefly.allow_webhooks')) {
+            Log::channel('audit')->info('User visits webhook create page, but webhooks are DISABLED.');
+
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
+        Log::channel('audit')->info('User visits webhook create page.');
         $previousUrl = $this->rememberPreviousUrl('webhooks.create.url');
 
         return view('webhooks.create', compact('previousUrl'));

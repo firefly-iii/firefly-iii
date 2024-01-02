@@ -71,7 +71,7 @@ class CategoryController extends Controller
     public function all(Category $category): JsonResponse
     {
         // cache results:
-        $cache = new CacheProperties();
+        $cache          = new CacheProperties();
         $cache->addProperty('chart.category.all');
         $cache->addProperty($category->id);
         if ($cache->has()) {
@@ -79,11 +79,11 @@ class CategoryController extends Controller
         }
 
         /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        $start      = $repository->firstUseDate($category) ?? $this->getDate();
-        $range      = app('navigation')->getViewRange(false);
-        $start      = app('navigation')->startOfPeriod($start, $range);
-        $end        = $this->getDate();
+        $repository     = app(CategoryRepositoryInterface::class);
+        $start          = $repository->firstUseDate($category) ?? $this->getDate();
+        $range          = app('navigation')->getViewRange(false);
+        $start          = app('navigation')->startOfPeriod($start, $range);
+        $end            = $this->getDate();
 
         /** @var WholePeriodChartGenerator $chartGenerator */
         $chartGenerator = app(WholePeriodChartGenerator::class);
@@ -100,10 +100,10 @@ class CategoryController extends Controller
      */
     public function frontPage(): JsonResponse
     {
-        $start = session('start', today(config('app.timezone'))->startOfMonth());
-        $end   = session('end', today(config('app.timezone'))->endOfMonth());
+        $start              = session('start', today(config('app.timezone'))->startOfMonth());
+        $end                = session('end', today(config('app.timezone'))->endOfMonth());
         // chart properties for cache:
-        $cache = new CacheProperties();
+        $cache              = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.category.frontpage');
@@ -134,7 +134,7 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        $data = $this->reportPeriodChart($accounts, $start, $end, $category);
+        $data  = $this->reportPeriodChart($accounts, $start, $end, $category);
 
         $cache->store($data);
 
@@ -155,7 +155,7 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        $data = $this->reportPeriodChart($accounts, $start, $end, null);
+        $data  = $this->reportPeriodChart($accounts, $start, $end, null);
 
         $cache->store($data);
 
@@ -170,14 +170,14 @@ class CategoryController extends Controller
      */
     public function specificPeriod(Category $category, Carbon $date): JsonResponse
     {
-        $range = app('navigation')->getViewRange(false);
-        $start = app('navigation')->startOfPeriod($date, $range);
-        $end   = session()->get('end');
+        $range          = app('navigation')->getViewRange(false);
+        $start          = app('navigation')->startOfPeriod($date, $range);
+        $end            = session()->get('end');
         if ($end < $start) {
             [$end, $start] = [$start, $end];
         }
 
-        $cache = new CacheProperties();
+        $cache          = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($category->id);
@@ -214,8 +214,8 @@ class CategoryController extends Controller
             $noCatRepository = app(NoCategoryRepositoryInterface::class);
 
             // this gives us all currencies
-            $expenses = $noCatRepository->listExpenses($start, $end, $accounts);
-            $income   = $noCatRepository->listIncome($start, $end, $accounts);
+            $expenses        = $noCatRepository->listExpenses($start, $end, $accounts);
+            $income          = $noCatRepository->listIncome($start, $end, $accounts);
         }
 
         if (null !== $category) {
@@ -223,9 +223,9 @@ class CategoryController extends Controller
             $opsRepository = app(OperationsRepositoryInterface::class);
             $categoryId    = $category->id;
             // this gives us all currencies
-            $collection = new Collection([$category]);
-            $expenses   = $opsRepository->listExpenses($start, $end, null, $collection);
-            $income     = $opsRepository->listIncome($start, $end, null, $collection);
+            $collection    = new Collection([$category]);
+            $expenses      = $opsRepository->listExpenses($start, $end, null, $collection);
+            $income        = $opsRepository->listIncome($start, $end, null, $collection);
         }
         $currencies = array_unique(array_merge(array_keys($income), array_keys($expenses)));
         $periods    = app('navigation')->listOfPeriods($start, $end);
@@ -246,12 +246,12 @@ class CategoryController extends Controller
                           ];
 
             $chartData[$inKey]
-                = [
-                    'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
-                    'entries'         => [],
-                    'type'            => 'bar',
-                    'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
-                ];
+                          = [
+                              'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
+                              'entries'         => [],
+                              'type'            => 'bar',
+                              'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
+                          ];
             // loop empty periods:
             foreach (array_keys($periods) as $period) {
                 $label                                 = $periods[$period];
@@ -259,7 +259,7 @@ class CategoryController extends Controller
                 $chartData[$inKey]['entries'][$label]  = '0';
             }
             // loop income and expenses for this category.:
-            $outSet = $expenses[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
+            $outSet       = $expenses[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
             foreach ($outSet['transaction_journals'] as $journal) {
                 $amount                               = app('steam')->positive($journal['amount']);
                 $date                                 = $journal['date']->isoFormat($format);
@@ -268,7 +268,7 @@ class CategoryController extends Controller
                 $chartData[$outKey]['entries'][$date] = bcadd($amount, $chartData[$outKey]['entries'][$date]);
             }
 
-            $inSet = $income[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
+            $inSet        = $income[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
             foreach ($inSet['transaction_journals'] as $journal) {
                 $amount                              = app('steam')->positive($journal['amount']);
                 $date                                = $journal['date']->isoFormat($format);

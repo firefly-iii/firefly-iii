@@ -80,10 +80,10 @@ class UpdateController extends Controller
         $manager           = $this->getManager();
 
         /** @var BudgetLimitTransformer $transformer */
-        $transformer = app(BudgetLimitTransformer::class);
+        $transformer       = app(BudgetLimitTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($budgetLimit, $transformer, 'budget_limits');
+        $resource          = new Item($budgetLimit, $transformer, 'budget_limits');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

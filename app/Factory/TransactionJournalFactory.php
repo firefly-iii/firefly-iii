@@ -96,7 +96,7 @@ class TransactionJournalFactory
     {
         app('log')->debug('Now in TransactionJournalFactory::create()');
         // convert to special object.
-        $dataObject = new NullArrayObject($data);
+        $dataObject   = new NullArrayObject($data);
 
         app('log')->debug('Start of TransactionJournalFactory::create()');
         $collection   = new Collection();
@@ -163,7 +163,7 @@ class TransactionJournalFactory
 
     protected function storeMeta(TransactionJournal $journal, NullArrayObject $data, string $field): void
     {
-        $set = [
+        $set     = [
             'journal' => $journal,
             'name'    => $field,
             'data'    => (string) ($data[$field] ?? ''),
@@ -197,14 +197,14 @@ class TransactionJournalFactory
         $this->errorIfDuplicate($row['import_hash_v2']);
 
         /** Some basic fields */
-        $type            = $this->typeRepository->findTransactionType(null, $row['type']);
-        $carbon          = $row['date'] ?? today(config('app.timezone'));
-        $order           = $row['order'] ?? 0;
-        $currency        = $this->currencyRepository->findCurrency((int) $row['currency_id'], $row['currency_code']);
-        $foreignCurrency = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);
-        $bill            = $this->billRepository->findBill((int) $row['bill_id'], $row['bill_name']);
-        $billId          = TransactionType::WITHDRAWAL === $type->type && null !== $bill ? $bill->id : null;
-        $description     = (string) $row['description'];
+        $type                  = $this->typeRepository->findTransactionType(null, $row['type']);
+        $carbon                = $row['date'] ?? today(config('app.timezone'));
+        $order                 = $row['order'] ?? 0;
+        $currency              = $this->currencyRepository->findCurrency((int) $row['currency_id'], $row['currency_code']);
+        $foreignCurrency       = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);
+        $bill                  = $this->billRepository->findBill((int) $row['bill_id'], $row['bill_name']);
+        $billId                = TransactionType::WITHDRAWAL === $type->type && null !== $bill ? $bill->id : null;
+        $description           = (string) $row['description'];
 
         // Manipulate basic fields
         $carbon->setTimezone(config('app.timezone'));
@@ -220,7 +220,7 @@ class TransactionJournalFactory
         }
 
         /** create or get source and destination accounts  */
-        $sourceInfo = [
+        $sourceInfo            = [
             'id'          => $row['source_id'],
             'name'        => $row['source_name'],
             'iban'        => $row['source_iban'],
@@ -229,7 +229,7 @@ class TransactionJournalFactory
             'currency_id' => $currency->id,
         ];
 
-        $destInfo = [
+        $destInfo              = [
             'id'          => $row['destination_id'],
             'name'        => $row['destination_name'],
             'iban'        => $row['destination_iban'],
@@ -239,8 +239,8 @@ class TransactionJournalFactory
         ];
         app('log')->debug('Source info:', $sourceInfo);
         app('log')->debug('Destination info:', $destInfo);
-        $sourceAccount      = $this->getAccount($type->type, 'source', $sourceInfo);
-        $destinationAccount = $this->getAccount($type->type, 'destination', $destInfo);
+        $sourceAccount         = $this->getAccount($type->type, 'source', $sourceInfo);
+        $destinationAccount    = $this->getAccount($type->type, 'destination', $destInfo);
         app('log')->debug('Done with getAccount(2x)');
 
         // this is the moment for a reconciliation sanity check (again).
@@ -248,15 +248,15 @@ class TransactionJournalFactory
             [$sourceAccount, $destinationAccount] = $this->reconciliationSanityCheck($sourceAccount, $destinationAccount);
         }
 
-        $currency        = $this->getCurrencyByAccount($type->type, $currency, $sourceAccount, $destinationAccount);
-        $foreignCurrency = $this->compareCurrencies($currency, $foreignCurrency);
-        $foreignCurrency = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
-        $description     = $this->getDescription($description);
+        $currency              = $this->getCurrencyByAccount($type->type, $currency, $sourceAccount, $destinationAccount);
+        $foreignCurrency       = $this->compareCurrencies($currency, $foreignCurrency);
+        $foreignCurrency       = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
+        $description           = $this->getDescription($description);
 
         app('log')->debug(sprintf('Date: %s (%s)', $carbon->toW3cString(), $carbon->getTimezone()->getName()));
 
         /** Create a basic journal. */
-        $journal = TransactionJournal::create(
+        $journal               = TransactionJournal::create(
             [
                 'user_id'                 => $this->user->id,
                 'user_group_id'           => $this->user->user_group_id,
@@ -273,7 +273,7 @@ class TransactionJournalFactory
         app('log')->debug(sprintf('Created new journal #%d: "%s"', $journal->id, $journal->description));
 
         /** Create two transactions. */
-        $transactionFactory = app(TransactionFactory::class);
+        $transactionFactory    = app(TransactionFactory::class);
         $transactionFactory->setUser($this->user);
         $transactionFactory->setJournal($journal);
         $transactionFactory->setAccount($sourceAccount);
@@ -292,7 +292,7 @@ class TransactionJournalFactory
         }
 
         /** @var TransactionFactory $transactionFactory */
-        $transactionFactory = app(TransactionFactory::class);
+        $transactionFactory    = app(TransactionFactory::class);
         $transactionFactory->setUser($this->user);
         $transactionFactory->setJournal($journal);
         $transactionFactory->setAccount($destinationAccount);
@@ -310,7 +310,7 @@ class TransactionJournalFactory
 
             throw new FireflyException($e->getMessage(), 0, $e);
         }
-        $journal->completed = true;
+        $journal->completed    = true;
         $journal->save();
         $this->storeBudget($journal, $row);
         $this->storeCategory($journal, $row);
@@ -334,7 +334,7 @@ class TransactionJournalFactory
             app('log')->error(sprintf('Could not encode dataRow: %s', $e->getMessage()));
             $json = microtime();
         }
-        $hash = hash('sha256', $json);
+        $hash    = hash('sha256', $json);
         app('log')->debug(sprintf('The hash is: %s', $hash), $dataRow);
 
         return $hash;
@@ -355,6 +355,9 @@ class TransactionJournalFactory
 
         /** @var null|TransactionJournalMeta $result */
         $result = TransactionJournalMeta::withTrashed()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+            ->whereNotNull('transaction_journals.id')
+            ->where('transaction_journals.user_id', $this->user->id)
             ->where('data', json_encode($hash, JSON_THROW_ON_ERROR))
             ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
             ->first()
@@ -378,18 +381,18 @@ class TransactionJournalFactory
     private function validateAccounts(NullArrayObject $data): void
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
-        $transactionType = $data['type'] ?? 'invalid';
+        $transactionType  = $data['type'] ?? 'invalid';
         $this->accountValidator->setUser($this->user);
         $this->accountValidator->setTransactionType($transactionType);
 
         // validate source account.
-        $array       = [
+        $array            = [
             'id'     => null !== $data['source_id'] ? (int) $data['source_id'] : null,
             'name'   => null !== $data['source_name'] ? (string) $data['source_name'] : null,
             'iban'   => null !== $data['source_iban'] ? (string) $data['source_iban'] : null,
             'number' => null !== $data['source_number'] ? (string) $data['source_number'] : null,
         ];
-        $validSource = $this->accountValidator->validateSource($array);
+        $validSource      = $this->accountValidator->validateSource($array);
 
         // do something with result:
         if (false === $validSource) {
@@ -398,7 +401,7 @@ class TransactionJournalFactory
         app('log')->debug('Source seems valid.');
 
         // validate destination account
-        $array = [
+        $array            = [
             'id'     => null !== $data['destination_id'] ? (int) $data['destination_id'] : null,
             'name'   => null !== $data['destination_name'] ? (string) $data['destination_name'] : null,
             'iban'   => null !== $data['destination_iban'] ? (string) $data['destination_iban'] : null,
@@ -466,7 +469,7 @@ class TransactionJournalFactory
             // return user's default:
             return app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
         }
-        $result = $preference ?? $currency;
+        $result     = $preference ?? $currency;
         app('log')->debug(sprintf('Currency is now #%d (%s) because of account #%d (%s)', $result->id, $result->code, $account->id, $account->name));
 
         return $result;

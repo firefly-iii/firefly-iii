@@ -76,7 +76,7 @@ class BudgetReportController extends Controller
         // loop expenses.
         foreach ($spent as $currency) {
             foreach ($currency['budgets'] as $budget) {
-                $title          = sprintf('%s (%s)', $budget['name'], $currency['currency_name']);
+                $title = sprintf('%s (%s)', $budget['name'], $currency['currency_name']);
                 $result[$title] ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
@@ -89,7 +89,7 @@ class BudgetReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -105,8 +105,8 @@ class BudgetReportController extends Controller
         foreach ($spent as $currency) {
             foreach ($currency['budgets'] as $budget) {
                 foreach ($budget['transaction_journals'] as $journal) {
-                    $categoryName   = $journal['category_name'] ?? trans('firefly.no_category');
-                    $title          = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
+                    $categoryName             = $journal['category_name'] ?? trans('firefly.no_category');
+                    $title                    = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
                     $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
@@ -119,7 +119,7 @@ class BudgetReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -136,7 +136,7 @@ class BudgetReportController extends Controller
         foreach ($spent as $currency) {
             foreach ($currency['budgets'] as $budget) {
                 foreach ($budget['transaction_journals'] as $journal) {
-                    $title          = sprintf('%s (%s)', $journal['destination_account_name'], $currency['currency_name']);
+                    $title                    = sprintf('%s (%s)', $journal['destination_account_name'], $currency['currency_name']);
                     $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
@@ -149,7 +149,7 @@ class BudgetReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -166,7 +166,7 @@ class BudgetReportController extends Controller
         // loop expenses.
         foreach ($spent as $currency) {
             // add things to chart Data for each currency:
-            $spentKey             = sprintf('%d-spent', $currency['currency_id']);
+            $spentKey = sprintf('%d-spent', $currency['currency_id']);
             $chartData[$spentKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
@@ -190,7 +190,7 @@ class BudgetReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiSet($chartData);
+        $data      = $this->generator->multiSet($chartData);
 
         return response()->json($data);
     }
@@ -207,7 +207,7 @@ class BudgetReportController extends Controller
         foreach ($spent as $currency) {
             foreach ($currency['budgets'] as $budget) {
                 foreach ($budget['transaction_journals'] as $journal) {
-                    $title          = sprintf('%s (%s)', $journal['source_account_name'], $currency['currency_name']);
+                    $title                    = sprintf('%s (%s)', $journal['source_account_name'], $currency['currency_name']);
                     $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
@@ -220,7 +220,7 @@ class BudgetReportController extends Controller
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }

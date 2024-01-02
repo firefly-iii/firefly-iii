@@ -71,22 +71,22 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $currency = $this->repository->store($request->getAll());
+        $currency    = $this->repository->store($request->getAll());
         if (true === $request->boolean('default')) {
             $this->repository->makeDefault($currency);
             app('preferences')->mark();
         }
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var User $user */
-        $user = auth()->user();
+        $user        = auth()->user();
         $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($currency, $transformer, 'currencies');
+        $resource    = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

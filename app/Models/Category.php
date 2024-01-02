@@ -85,16 +85,16 @@ class Category extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'encrypted'  => 'boolean',
-        ];
+                        = [
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'deleted_at' => 'datetime',
+                            'encrypted'  => 'boolean',
+                        ];
 
     protected $fillable = ['user_id', 'user_group_id', 'name'];
 
-    protected $hidden = ['encrypted'];
+    protected $hidden   = ['encrypted'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -107,10 +107,10 @@ class Category extends Model
             $categoryId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user       = auth()->user();
 
             /** @var null|Category $category */
-            $category = $user->categories()->find($categoryId);
+            $category   = $user->categories()->find($categoryId);
             if (null !== $category) {
                 return $category;
             }

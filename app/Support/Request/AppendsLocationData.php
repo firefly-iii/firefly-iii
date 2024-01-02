@@ -78,12 +78,12 @@ trait AppendsLocationData
         $data['latitude']        = null;
         $data['zoom_level']      = null;
 
-        $longitudeKey    = $this->getLocationKey($prefix, 'longitude');
-        $latitudeKey     = $this->getLocationKey($prefix, 'latitude');
-        $zoomLevelKey    = $this->getLocationKey($prefix, 'zoom_level');
-        $isValidPOST     = $this->isValidPost($prefix);
-        $isValidPUT      = $this->isValidPUT($prefix);
-        $isValidEmptyPUT = $this->isValidEmptyPUT($prefix);
+        $longitudeKey            = $this->getLocationKey($prefix, 'longitude');
+        $latitudeKey             = $this->getLocationKey($prefix, 'latitude');
+        $zoomLevelKey            = $this->getLocationKey($prefix, 'zoom_level');
+        $isValidPOST             = $this->isValidPost($prefix);
+        $isValidPUT              = $this->isValidPUT($prefix);
+        $isValidEmptyPUT         = $this->isValidEmptyPUT($prefix);
 
         // for a POST (store), all fields must be present and not NULL.
         if ($isValidPOST) {

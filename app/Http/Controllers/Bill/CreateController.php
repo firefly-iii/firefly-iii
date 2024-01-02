@@ -33,6 +33,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CreateController
@@ -68,10 +69,10 @@ class CreateController extends Controller
      */
     public function create(Request $request)
     {
-        $periods = [];
+        $periods         = [];
 
         /** @var array $billPeriods */
-        $billPeriods = config('firefly.bill_periods');
+        $billPeriods     = config('firefly.bill_periods');
         foreach ($billPeriods as $current) {
             $periods[$current] = (string)trans('firefly.repeat_freq_'.$current);
         }
@@ -92,7 +93,7 @@ class CreateController extends Controller
      */
     public function store(BillStoreRequest $request): RedirectResponse
     {
-        $billData = $request->getBillData();
+        $billData           = $request->getBillData();
 
         $billData['active'] = true;
 
@@ -104,15 +105,18 @@ class CreateController extends Controller
 
             return redirect(route('bills.create'))->withInput();
         }
+
+        Log::channel('audit')->info('Stored new bill.', $billData);
         $request->session()->flash('success', (string)trans('firefly.stored_new_bill', ['name' => $bill->name]));
         app('preferences')->mark();
 
         /** @var null|array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files              = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($bill, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->info(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
             session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 

@@ -63,11 +63,11 @@ class BillController extends Controller
      */
     public function bill(GenericRequest $request): JsonResponse
     {
-        $accounts = $request->getAssetAccounts();
-        $bills    = $request->getBills();
-        $start    = $request->getStart();
-        $end      = $request->getEnd();
-        $response = [];
+        $accounts   = $request->getAssetAccounts();
+        $bills      = $request->getBills();
+        $start      = $request->getStart();
+        $end        = $request->getEnd();
+        $response   = [];
 
         // get all bills:
         if (0 === $bills->count()) {
@@ -75,7 +75,7 @@ class BillController extends Controller
         }
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionType::WITHDRAWAL])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->setBills($bills);
 
@@ -88,7 +88,7 @@ class BillController extends Controller
             $foreignKey        = sprintf('%d-%d', $billId, $foreignCurrencyId);
 
             if (0 !== $currencyId) {
-                $response[$key]                     ??= [
+                $response[$key] ??= [
                     'id'               => (string)$billId,
                     'name'             => $journal['bill_name'],
                     'difference'       => '0',
@@ -100,7 +100,7 @@ class BillController extends Controller
                 $response[$key]['difference_float'] = (float)$response[$key]['difference']; // intentional float
             }
             if (0 !== $foreignCurrencyId) {
-                $response[$foreignKey]                     ??= [
+                $response[$foreignKey] ??= [
                     'difference'       => '0',
                     'difference_float' => 0,
                     'currency_id'      => (string)$foreignCurrencyId,
@@ -122,13 +122,13 @@ class BillController extends Controller
      */
     public function noBill(GenericRequest $request): JsonResponse
     {
-        $accounts = $request->getAssetAccounts();
-        $start    = $request->getStart();
-        $end      = $request->getEnd();
-        $response = [];
+        $accounts   = $request->getAssetAccounts();
+        $start      = $request->getStart();
+        $end        = $request->getEnd();
+        $response   = [];
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionType::WITHDRAWAL])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->withoutBill();
 
@@ -139,7 +139,7 @@ class BillController extends Controller
             $foreignCurrencyId = (int)$journal['foreign_currency_id'];
 
             if (0 !== $currencyId) {
-                $response[$currencyId]                     ??= [
+                $response[$currencyId] ??= [
                     'difference'       => '0',
                     'difference_float' => 0,
                     'currency_id'      => (string)$currencyId,
@@ -149,7 +149,7 @@ class BillController extends Controller
                 $response[$currencyId]['difference_float'] = (float)$response[$currencyId]['difference']; // intentional float
             }
             if (0 !== $foreignCurrencyId) {
-                $response[$foreignCurrencyId]                     ??= [
+                $response[$foreignCurrencyId] ??= [
                     'difference'       => '0',
                     'difference_float' => 0,
                     'currency_id'      => (string)$foreignCurrencyId,

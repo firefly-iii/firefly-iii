@@ -40,7 +40,7 @@ class IsDemoUser
     public function handle(Request $request, \Closure $next)
     {
         /** @var null|User $user */
-        $user = $request->user();
+        $user       = $request->user();
         if (null === $user) {
             return $next($request);
         }

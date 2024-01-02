@@ -86,17 +86,17 @@ class RuleFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        $validTriggers = $this->getTriggers();
-        $validActions  = array_keys(config('firefly.rule-actions'));
+        $validTriggers   = $this->getTriggers();
+        $validActions    = array_keys(config('firefly.rule-actions'));
 
         // some actions require text (aka context):
-        $contextActions = implode(',', config('firefly.context-rule-actions'));
+        $contextActions  = implode(',', config('firefly.context-rule-actions'));
 
         // some triggers require text (aka context):
         $contextTriggers = implode(',', $this->getTriggersWithContext());
 
         // initial set of rules:
-        $rules = [
+        $rules           = [
             'title'            => 'required|between:1,100|uniqueObjectForUser:rules,title',
             'description'      => 'between:1,5000|nullable',
             'stop_processing'  => 'boolean',
@@ -110,7 +110,7 @@ class RuleFormRequest extends FormRequest
         ];
 
         /** @var null|Rule $rule */
-        $rule = $this->route()->parameter('rule');
+        $rule            = $this->route()->parameter('rule');
 
         if (null !== $rule) {
             $rules['title'] = 'required|between:1,100|uniqueObjectForUser:rules,title,'.$rule->id;
@@ -130,8 +130,8 @@ class RuleFormRequest extends FormRequest
                 $set            = [
                     'type'            => $trigger['type'] ?? 'invalid',
                     'value'           => $trigger['value'] ?? '',
-                    'stop_processing' => 1 === (int)$stopProcessing,
-                    'prohibited'      => 1 === (int)$prohibited,
+                    'stop_processing' => 1 === (int) $stopProcessing,
+                    'prohibited'      => 1 === (int) $prohibited,
                 ];
                 $set            = self::replaceAmountTrigger($set);
                 $return[]       = $set;
@@ -151,7 +151,7 @@ class RuleFormRequest extends FormRequest
                 $return[]       = [
                     'type'            => $action['type'] ?? 'invalid',
                     'value'           => $action['value'] ?? '',
-                    'stop_processing' => 1 === (int)$stopProcessing,
+                    'stop_processing' => 1 === (int) $stopProcessing,
                 ];
             }
         }

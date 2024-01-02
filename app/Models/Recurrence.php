@@ -103,23 +103,23 @@ class Recurrence extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
-            'created_at'   => 'datetime',
-            'updated_at'   => 'datetime',
-            'deleted_at'   => 'datetime',
-            'title'        => 'string',
-            'id'           => 'int',
-            'description'  => 'string',
-            'first_date'   => 'date',
-            'repeat_until' => 'date',
-            'latest_date'  => 'date',
-            'repetitions'  => 'int',
-            'active'       => 'bool',
-            'apply_rules'  => 'bool',
-        ];
+                     = [
+                         'created_at'   => 'datetime',
+                         'updated_at'   => 'datetime',
+                         'deleted_at'   => 'datetime',
+                         'title'        => 'string',
+                         'id'           => 'int',
+                         'description'  => 'string',
+                         'first_date'   => 'date',
+                         'repeat_until' => 'date',
+                         'latest_date'  => 'date',
+                         'repetitions'  => 'int',
+                         'active'       => 'bool',
+                         'apply_rules'  => 'bool',
+                     ];
 
     protected $fillable
-        = ['user_id', 'transaction_type_id', 'title', 'description', 'first_date', 'repeat_until', 'latest_date', 'repetitions', 'apply_rules', 'active'];
+                     = ['user_id', 'transaction_type_id', 'title', 'description', 'first_date', 'repeat_until', 'latest_date', 'repetitions', 'apply_rules', 'active'];
 
     /** @var string The table to store the data in */
     protected $table = 'recurrences';
@@ -135,10 +135,10 @@ class Recurrence extends Model
             $recurrenceId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user         = auth()->user();
 
             /** @var null|Recurrence $recurrence */
-            $recurrence = $user->recurrences()->find($recurrenceId);
+            $recurrence   = $user->recurrences()->find($recurrenceId);
             if (null !== $recurrence) {
                 return $recurrence;
             }

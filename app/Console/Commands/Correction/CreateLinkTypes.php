@@ -36,7 +36,7 @@ class CreateLinkTypes extends Command
 
     protected $description = 'Creates all link types.';
 
-    protected $signature = 'firefly-iii:create-link-types';
+    protected $signature   = 'firefly-iii:create-link-types';
 
     /**
      * Execute the console command.
@@ -51,7 +51,7 @@ class CreateLinkTypes extends Command
             'Reimbursement' => ['(partially) reimburses', 'is (partially) reimbursed by'],
         ];
         foreach ($set as $name => $values) {
-            $link = LinkType::where('name', $name)
+            $link           = LinkType::where('name', $name)
                 ->first()
             ;
             if (null === $link) {

@@ -102,7 +102,7 @@ final class NavigationEndOfPeriodTest extends TestCase
     {
         Log::spy();
 
-        $period = $this->navigation->endOfPeriod($from, $frequency);
+        $period          = $this->navigation->endOfPeriod($from, $frequency);
         self::assertSame($expected->toDateString(), $period->toDateString());
         $expectedMessage = sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $frequency);
 

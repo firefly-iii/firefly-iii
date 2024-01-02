@@ -62,16 +62,16 @@ return [
  *
  */
 
-    'collect_info'        => 'További információk gyűjthetők a <code>storage/logs</code> könyvtárban lévő napló fájlokból. Vagy ha Dockert használ, akkor a <code>docker logs -f [container]</code> paranccsal.',
-    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
-    'github_help'         => 'Segítség kérése GitHub-on',
-    'github_instructions' => 'Örömmel fogadjuk ha <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>-on hibajegyet nyitsz.',
-    'use_search'          => 'Használd a keresőt!',
-    'include_info'        => 'Add hozzá a <a href=":link">debug</a> oldalon található információkat.',
-    'tell_more'           => 'Részletesebben írd le, mint hogy "azt írja hoppá, hiba történt!"',
-    'include_logs'        => 'Hiba naplók hozzáadása (lásd fentebb).',
-    'what_did_you_do'     => 'Meséld el mit csináltál.',
-    'offline_header'      => 'Az eszköz valószínűleg offline állapotban van',
-    'offline_unreachable' => 'A Firefly III elérhetetlen. Az eszköz nem kapcsolódik az internethez, vagy a szerver nem elérhető.',
-    'offline_github'      => 'Ha biztos benne, hogy az eszköz és a szerver is online állapotban van, kérem nyisson egy jegyet a <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>-on.',
+    'collect_info'            => 'További információk gyűjthetők a <code>storage/logs</code> könyvtárban lévő napló fájlokból. Vagy ha Dockert használ, akkor a <code>docker logs -f [container]</code> paranccsal.',
+    'collect_info_more'       => 'Tovább olvashat a hibainformációk gyűjtéséről <a href="https://docs.firefly-iii.org/how-to/general/debug/">a GYIK-ben</a>.',
+    'github_help'             => 'Segítség kérése GitHub-on',
+    'github_instructions'     => 'Örömmel fogadjuk ha <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>-on hibajegyet nyitsz.',
+    'use_search'              => 'Használd a keresőt!',
+    'include_info'            => 'Add hozzá a <a href=":link">debug</a> oldalon található információkat.',
+    'tell_more'               => 'Részletesebben írd le, mint hogy "azt írja hoppá, hiba történt!"',
+    'include_logs'            => 'Hiba naplók hozzáadása (lásd fentebb).',
+    'what_did_you_do'         => 'Meséld el mit csináltál.',
+    'offline_header'          => 'Az eszköz valószínűleg offline állapotban van',
+    'offline_unreachable'     => 'A Firefly III elérhetetlen. Az eszköz nem kapcsolódik az internethez, vagy a szerver nem elérhető.',
+    'offline_github'          => 'Ha biztos benne, hogy az eszköz és a szerver is online állapotban van, kérem nyisson egy jegyet a <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>-on.',
 ];

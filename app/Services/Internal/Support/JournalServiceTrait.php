@@ -61,23 +61,23 @@ trait JournalServiceTrait
         unset($array);
 
         // and now try to find it, based on the type of transaction.
-        $message = 'Transaction = %s, %s account should be in: %s. Direction is %s.';
+        $message       = 'Transaction = %s, %s account should be in: %s. Direction is %s.';
         app('log')->debug(sprintf($message, $transactionType, $direction, implode(', ', $expectedTypes[$transactionType] ?? ['UNKNOWN']), $direction));
 
-        $result       = $this->findAccountById($data, $expectedTypes[$transactionType]);
-        $result       = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType]);
-        $ibanResult   = $result;
-        $result       = $this->findAccountByNumber($result, $data, $expectedTypes[$transactionType]);
-        $numberResult = $result;
-        $result       = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
-        $nameResult   = $result;
+        $result        = $this->findAccountById($data, $expectedTypes[$transactionType]);
+        $result        = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType]);
+        $ibanResult    = $result;
+        $result        = $this->findAccountByNumber($result, $data, $expectedTypes[$transactionType]);
+        $numberResult  = $result;
+        $result        = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
+        $nameResult    = $result;
 
         // if $result (find by name) is NULL, but IBAN is set, any result of the search by NAME can't overrule
         // this account. In such a case, the name search must be retried with a new name.
         if (null !== $nameResult && null === $numberResult && null === $ibanResult && '' !== (string)$data['iban'] && '' !== (string)$nameResult->iban) {
             $data['name'] = sprintf('%s (%s)', $data['name'], $data['iban']);
             app('log')->debug(sprintf('Search again using the new name, "%s".', $data['name']));
-            $result = $this->findAccountByName(null, $data, $expectedTypes[$transactionType]);
+            $result       = $this->findAccountByName(null, $data, $expectedTypes[$transactionType]);
         }
 
         // the account that Firefly III creates must be "creatable", aka select the one we can create from the list just in case

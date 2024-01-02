@@ -188,7 +188,6 @@ export default () => ({
         let start = new Date(window.store.get('start'));
         let end = new Date(window.store.get('end'));
 
-        console.log('here we are');
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(getCacheKey('subscriptions-data-dashboard', start, end));
 

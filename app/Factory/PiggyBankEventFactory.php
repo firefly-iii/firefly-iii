@@ -54,7 +54,7 @@ class PiggyBankEventFactory
             return;
         }
         app('log')->debug('Found repetition');
-        $amount = $piggyRepos->getExactAmount($piggyBank, $repetition, $journal);
+        $amount     = $piggyRepos->getExactAmount($piggyBank, $repetition, $journal);
         if (0 === bccomp($amount, '0')) {
             app('log')->debug('Amount is zero, will not create event.');
 

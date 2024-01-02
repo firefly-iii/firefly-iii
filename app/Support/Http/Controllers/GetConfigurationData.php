@@ -59,13 +59,13 @@ trait GetConfigurationData
         $steps    = [];
         if (is_array($elements) && count($elements) > 0) {
             foreach ($elements as $key => $options) {
-                $currentStep = $options;
+                $currentStep          = $options;
 
                 // get the text:
                 $currentStep['intro'] = (string)trans('intro.'.$route.'_'.$key);
 
                 // save in array:
-                $steps[] = $currentStep;
+                $steps[]              = $currentStep;
             }
         }
         app('log')->debug(sprintf('Total basic steps for %s is %d', $routeKey, count($steps)));
@@ -80,20 +80,20 @@ trait GetConfigurationData
      */
     protected function getDateRangeConfig(): array // get configuration + get preferences.
     {
-        $viewRange = app('navigation')->getViewRange(false);
+        $viewRange      = app('navigation')->getViewRange(false);
 
         /** @var Carbon $start */
-        $start = session('start');
+        $start          = session('start');
 
         /** @var Carbon $end */
-        $end = session('end');
+        $end            = session('end');
 
         /** @var Carbon $first */
-        $first    = session('first');
-        $title    = sprintf('%s - %s', $start->isoFormat($this->monthAndDayFormat), $end->isoFormat($this->monthAndDayFormat));
-        $isCustom = true === session('is_custom_range', false);
-        $today    = today(config('app.timezone'));
-        $ranges   = [
+        $first          = session('first');
+        $title          = sprintf('%s - %s', $start->isoFormat($this->monthAndDayFormat), $end->isoFormat($this->monthAndDayFormat));
+        $isCustom       = true === session('is_custom_range', false);
+        $today          = today(config('app.timezone'));
+        $ranges         = [
             // first range is the current range:
             $title => [$start, $end],
         ];
@@ -122,10 +122,10 @@ trait GetConfigurationData
 
         // today:
         /** @var Carbon $todayStart */
-        $todayStart = app('navigation')->startOfPeriod($today, $viewRange);
+        $todayStart     = app('navigation')->startOfPeriod($today, $viewRange);
 
         /** @var Carbon $todayEnd */
-        $todayEnd = app('navigation')->endOfPeriod($todayStart, $viewRange);
+        $todayEnd       = app('navigation')->endOfPeriod($todayStart, $viewRange);
         if ($todayStart->ne($start) || $todayEnd->ne($end)) {
             $ranges[ucfirst((string)trans('firefly.today'))] = [$todayStart, $todayEnd];
         }
@@ -183,13 +183,13 @@ trait GetConfigurationData
             $elements = config(sprintf('intro.%s', $routeKey.'_'.$specificPage));
             if (is_array($elements) && count($elements) > 0) {
                 foreach ($elements as $key => $options) {
-                    $currentStep = $options;
+                    $currentStep          = $options;
 
                     // get the text:
                     $currentStep['intro'] = (string)trans('intro.'.$route.'_'.$specificPage.'_'.$key);
 
                     // save in array:
-                    $steps[] = $currentStep;
+                    $steps[]              = $currentStep;
                 }
             }
         }

@@ -66,7 +66,7 @@ class BalanceController extends Controller
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
-        $report = [
+        $report  = [
             'budgets'  => [],
             'accounts' => [],
         ];
@@ -85,26 +85,26 @@ class BalanceController extends Controller
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $budgetId                     = $budget->id;
-            $report['budgets'][$budgetId] = [
+            $budgetId                              = $budget->id;
+            $report['budgets'][$budgetId]          = [
                 'budget_id'   => $budgetId,
                 'budget_name' => $budget->name,
                 'spent'       => [], // per account
                 'sums'        => [], // per currency
             ];
-            $spent                        = [];
+            $spent                                 = [];
 
             /** @var GroupCollectorInterface $collector */
-            $collector = app(GroupCollectorInterface::class);
-            $journals  = $collector->setRange($start, $end)->setSourceAccounts($accounts)->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)
+            $collector                             = app(GroupCollectorInterface::class);
+            $journals                              = $collector->setRange($start, $end)->setSourceAccounts($accounts)->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)
                 ->getExtractedJournals()
             ;
 
             /** @var array $journal */
             foreach ($journals as $journal) {
-                $sourceAccount                  = $journal['source_account_id'];
-                $currencyId                     = $journal['currency_id'];
-                $spent[$sourceAccount]          ??= [
+                $sourceAccount                                                 = $journal['source_account_id'];
+                $currencyId                                                    = $journal['currency_id'];
+                $spent[$sourceAccount]                  ??= [
                     'source_account_id'       => $sourceAccount,
                     'currency_id'             => $journal['currency_id'],
                     'currency_code'           => $journal['currency_code'],
@@ -113,10 +113,10 @@ class BalanceController extends Controller
                     'currency_decimal_places' => $journal['currency_decimal_places'],
                     'spent'                   => '0',
                 ];
-                $spent[$sourceAccount]['spent'] = bcadd($spent[$sourceAccount]['spent'], $journal['amount']);
+                $spent[$sourceAccount]['spent']                                = bcadd($spent[$sourceAccount]['spent'], $journal['amount']);
 
                 // also fix sum:
-                $report['sums'][$budgetId][$currencyId]        ??= [
+                $report['sums'][$budgetId][$currencyId] ??= [
                     'sum'                     => '0',
                     'currency_id'             => $journal['currency_id'],
                     'currency_code'           => $journal['currency_code'],
@@ -124,8 +124,8 @@ class BalanceController extends Controller
                     'currency_symbol'         => $journal['currency_symbol'],
                     'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
-                $report['sums'][$budgetId][$currencyId]['sum'] = bcadd($report['sums'][$budgetId][$currencyId]['sum'], $journal['amount']);
-                $report['accounts'][$sourceAccount]['sum']     = bcadd($report['accounts'][$sourceAccount]['sum'], $journal['amount']);
+                $report['sums'][$budgetId][$currencyId]['sum']                 = bcadd($report['sums'][$budgetId][$currencyId]['sum'], $journal['amount']);
+                $report['accounts'][$sourceAccount]['sum']                     = bcadd($report['accounts'][$sourceAccount]['sum'], $journal['amount']);
 
                 // add currency info for account sum
                 $report['accounts'][$sourceAccount]['currency_id']             = $journal['currency_id'];

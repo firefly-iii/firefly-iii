@@ -62,16 +62,16 @@ return [
  *
  */
 
-    'collect_info'        => 'Zberite več informacij v imeniku <code>storage/logs</code>, kjer boste našli dnevniške datoteke. Če uporabljate Docker, uporabite <code>docker logs -f [container]</code>.',
-    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
-    'github_help'         => 'Pridobite pomoč na GitHub-u',
-    'github_instructions' => 'Vabimo vas, da odprete novo težavo <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">na GitHub-u</a></strong>.',
-    'use_search'          => 'Uporabite iskanje!',
-    'include_info'        => 'Vključite informacije <a href=":link">s te strani za odpravljanje napak</a>.',
-    'tell_more'           => 'Povejte nam kaj več kot "pravi Ups!"',
-    'include_logs'        => 'Vključite dnevnike napak (glejte zgoraj).',
-    'what_did_you_do'     => 'Povejte nam, kaj ste počeli.',
-    'offline_header'      => 'Verjetno ste brez povezave',
-    'offline_unreachable' => 'Firefly III je nedosegljiv. Vaša naprava je trenutno brez povezave ali pa strežnik ne deluje.',
-    'offline_github'      => 'Če ste prepričani, da sta vaša naprava in strežnik povezana, odprite težavo na <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub-u</a> </strong>.',
+    'collect_info'            => 'Zberite več informacij v imeniku <code>storage/logs</code>, kjer boste našli dnevniške datoteke. Če uporabljate Docker, uporabite <code>docker logs -f [container]</code>.',
+    'collect_info_more'       => 'Več o zbiranju informacij o napakah lahko preberete v <a href="https://docs.firefly-iii.org/how-to/general/debug/">pogostih vprašanjih</a>.',
+    'github_help'             => 'Pridobite pomoč na GitHub-u',
+    'github_instructions'     => 'Vabimo vas, da odprete novo težavo <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">na GitHub-u</a></strong>.',
+    'use_search'              => 'Uporabite iskanje!',
+    'include_info'            => 'Vključite informacije <a href=":link">s te strani za odpravljanje napak</a>.',
+    'tell_more'               => 'Povejte nam kaj več kot "pravi Ups!"',
+    'include_logs'            => 'Vključite dnevnike napak (glejte zgoraj).',
+    'what_did_you_do'         => 'Povejte nam, kaj ste počeli.',
+    'offline_header'          => 'Verjetno ste brez povezave',
+    'offline_unreachable'     => 'Firefly III je nedosegljiv. Vaša naprava je trenutno brez povezave ali pa strežnik ne deluje.',
+    'offline_github'          => 'Če ste prepričani, da sta vaša naprava in strežnik povezana, odprite težavo na <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub-u</a> </strong>.',
 ];

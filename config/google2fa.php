@@ -26,22 +26,22 @@ use PragmaRX\Google2FALaravel\Support\Constants;
 return [
     // Auth container binding
 
-    'enabled' => true,
+    'enabled'              => true,
 
     /*
      * Lifetime in minutes.
      * In case you need your users to be asked for a new one time passwords from time to time.
      */
 
-    'lifetime' => 0, // 0 = eternal
+    'lifetime'             => 0, // 0 = eternal
 
     // Renew lifetime at every new request.
 
-    'keep_alive' => true,
+    'keep_alive'           => true,
 
     // Auth container binding
 
-    'auth' => 'auth',
+    'auth'                 => 'auth',
 
     // 2FA verified session var
 
@@ -70,7 +70,7 @@ return [
     // Throw exceptions or just fire events?
     'throw_exceptions'     => true,
 
-    'store_in_cookie' => true,
+    'store_in_cookie'      => true,
 
     'qrcode_image_backend' => Constants::QRCODE_IMAGE_BACKEND_SVG,
 ];

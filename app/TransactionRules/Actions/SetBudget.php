@@ -48,10 +48,10 @@ class SetBudget implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */
-        $user   = User::find($journal['user_id']);
-        $search = $this->action->action_value;
+        $user          = User::find($journal['user_id']);
+        $search        = $this->action->action_value;
 
-        $budget = $user->budgets()->where('name', $search)->first();
+        $budget        = $user->budgets()->where('name', $search)->first();
         if (null === $budget) {
             app('log')->debug(
                 sprintf(
@@ -98,7 +98,7 @@ class SetBudget implements ActionInterface
         \DB::table('budget_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'budget_id' => $budget->id]);
 
         /** @var TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object        = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         event(new TriggeredAuditLog($this->action->rule, $object, 'set_budget', $oldBudgetName, $budget->name));
 
         return true;

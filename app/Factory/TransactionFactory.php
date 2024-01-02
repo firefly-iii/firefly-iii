@@ -221,7 +221,7 @@ class TransactionFactory
         }
 
         app('log')->debug('Will update account with IBAN information.');
-        $service = app(AccountUpdateService::class);
+        $service   = app(AccountUpdateService::class);
         $service->update($this->account, ['iban' => $this->accountInformation['iban']]);
     }
 }

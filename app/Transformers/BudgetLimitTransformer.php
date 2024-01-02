@@ -53,7 +53,7 @@ class BudgetLimitTransformer extends AbstractTransformer
      */
     public function transform(BudgetLimit $budgetLimit): array
     {
-        $repository = app(OperationsRepository::class);
+        $repository            = app(OperationsRepository::class);
         $repository->setUser($budgetLimit->budget->user);
         $expenses              = $repository->sumExpenses(
             $budgetLimit->start_date,
@@ -77,7 +77,7 @@ class BudgetLimitTransformer extends AbstractTransformer
             $currencySymbol        = $currency->symbol;
             $currencyDecimalPlaces = $currency->decimal_places;
         }
-        $amount = app('steam')->bcround($amount, $currencyDecimalPlaces);
+        $amount                = app('steam')->bcround($amount, $currencyDecimalPlaces);
 
         return [
             'id'                      => (string)$budgetLimit->id,

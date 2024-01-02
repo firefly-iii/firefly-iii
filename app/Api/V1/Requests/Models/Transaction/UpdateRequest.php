@@ -29,6 +29,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\GroupValidation;
@@ -66,11 +67,11 @@ class UpdateRequest extends FormRequest
         $this->dateFields     = ['date', 'interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
         $this->textareaFields = ['notes'];
         // not really floats, for validation.
-        $this->floatFields   = ['amount', 'foreign_amount'];
-        $this->stringFields  = ['type', 'currency_code', 'foreign_currency_code', 'description', 'source_name', 'source_iban', 'source_number', 'source_bic', 'destination_name', 'destination_iban', 'destination_number', 'destination_bic', 'budget_name', 'category_name', 'bill_name', 'internal_reference', 'external_id', 'bunq_payment_id', 'sepa_cc', 'sepa_ct_op', 'sepa_ct_id', 'sepa_db', 'sepa_country', 'sepa_ep', 'sepa_ci', 'sepa_batch_id', 'external_url'];
-        $this->booleanFields = ['reconciled'];
-        $this->arrayFields   = ['tags'];
-        $data                = [];
+        $this->floatFields    = ['amount', 'foreign_amount'];
+        $this->stringFields   = ['type', 'currency_code', 'foreign_currency_code', 'description', 'source_name', 'source_iban', 'source_number', 'source_bic', 'destination_name', 'destination_iban', 'destination_number', 'destination_bic', 'budget_name', 'category_name', 'bill_name', 'internal_reference', 'external_id', 'bunq_payment_id', 'sepa_cc', 'sepa_ct_op', 'sepa_ct_id', 'sepa_db', 'sepa_country', 'sepa_ep', 'sepa_ci', 'sepa_batch_id', 'external_url'];
+        $this->booleanFields  = ['reconciled'];
+        $this->arrayFields    = ['tags'];
+        $data                 = [];
         if ($this->has('transactions')) {
             $data['transactions'] = $this->getTransactionData();
         }
@@ -97,75 +98,76 @@ class UpdateRequest extends FormRequest
 
         return [
             // basic fields for group:
-            'group_title'                           => 'between:1,1000|nullable',
-            'apply_rules'                           => [new IsBoolean()],
+            'group_title'                            => 'between:1,1000|nullable',
+            'apply_rules'                            => [new IsBoolean()],
 
             // transaction rules (in array for splits):
-            'transactions.*.type'                   => 'in:withdrawal,deposit,transfer,opening-balance,reconciliation',
-            'transactions.*.date'                   => [new IsDateOrTime()],
-            'transactions.*.order'                  => 'numeric|min:0',
+            'transactions.*.type'                    => 'in:withdrawal,deposit,transfer,opening-balance,reconciliation',
+            'transactions.*.date'                    => [new IsDateOrTime()],
+            'transactions.*.order'                   => 'numeric|min:0',
 
             // group id:
-            'transactions.*.transaction_journal_id' => ['nullable', 'numeric', new BelongsUser()],
+            'transactions.*.transaction_journal_id'  => ['nullable', 'numeric', new BelongsUser()],
 
             // currency info
-            'transactions.*.currency_id'            => 'numeric|exists:transaction_currencies,id|nullable',
-            'transactions.*.currency_code'          => 'min:3|max:51|exists:transaction_currencies,code|nullable',
-            'transactions.*.foreign_currency_id'    => 'nullable|numeric|exists:transaction_currencies,id',
-            'transactions.*.foreign_currency_code'  => 'nullable|min:3|max:51|exists:transaction_currencies,code',
+            'transactions.*.currency_id'             => 'numeric|exists:transaction_currencies,id|nullable',
+            'transactions.*.currency_code'           => 'min:3|max:51|exists:transaction_currencies,code|nullable',
+            'transactions.*.foreign_currency_id'     => 'nullable|numeric|exists:transaction_currencies,id',
+            'transactions.*.foreign_currency_code'   => 'nullable|min:3|max:51|exists:transaction_currencies,code',
 
             // amount
-            'transactions.*.amount'                 => 'numeric|gt:0|max:100000000000',
-            'transactions.*.foreign_amount'         => 'nullable|numeric|gte:0',
+            'transactions.*.amount'                  => ['nullable', new IsValidPositiveAmount()],
+            'transactions.*.foreign_amount'          => ['nullable', new IsValidPositiveAmount()],
 
             // description
-            'transactions.*.description'            => 'nullable|between:1,1000',
+            'transactions.*.description'             => 'nullable|between:1,1000',
 
             // source of transaction
-            'transactions.*.source_id'              => ['numeric', 'nullable', new BelongsUser()],
-            'transactions.*.source_name'            => 'between:1,255|nullable',
+            'transactions.*.source_id'               => ['numeric', 'nullable', new BelongsUser()],
+            'transactions.*.source_name'             => 'between:1,255|nullable',
 
             // destination of transaction
-            'transactions.*.destination_id'         => ['numeric', 'nullable', new BelongsUser()],
-            'transactions.*.destination_name'       => 'between:1,255|nullable',
+            'transactions.*.destination_id'          => ['numeric', 'nullable', new BelongsUser()],
+            'transactions.*.destination_name'        => 'between:1,255|nullable',
 
             // budget, category, bill and piggy
-            'transactions.*.budget_id'              => ['mustExist:budgets,id', new BelongsUser(), 'nullable'],
-            'transactions.*.budget_name'            => ['between:1,255', 'nullable', new BelongsUser()],
-            'transactions.*.category_id'            => ['mustExist:categories,id', new BelongsUser(), 'nullable'],
-            'transactions.*.category_name'          => 'between:1,255|nullable',
-            'transactions.*.bill_id'                => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser()],
-            'transactions.*.bill_name'              => ['between:1,255', 'nullable', new BelongsUser()],
+            'transactions.*.budget_id'               => ['mustExist:budgets,id', new BelongsUser(), 'nullable'],
+            'transactions.*.budget_name'             => ['between:1,255', 'nullable', new BelongsUser()],
+            'transactions.*.category_id'             => ['mustExist:categories,id', new BelongsUser(), 'nullable'],
+            'transactions.*.category_name'           => 'between:1,255|nullable',
+            'transactions.*.bill_id'                 => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser()],
+            'transactions.*.bill_name'               => ['between:1,255', 'nullable', new BelongsUser()],
 
             // other interesting fields
-            'transactions.*.reconciled'             => [new IsBoolean()],
-            'transactions.*.notes'                  => 'min:1|max:50000|nullable',
-            'transactions.*.tags'                   => 'between:0,255|nullable',
+            'transactions.*.reconciled'              => [new IsBoolean()],
+            'transactions.*.notes'                   => 'min:1|max:50000|nullable',
+            'transactions.*.tags'                    => 'between:0,255|nullable',
+            'transactions.*.tags.*'                  => 'between:0,255',
 
             // meta info fields
-            'transactions.*.internal_reference'     => 'min:1|max:255|nullable',
-            'transactions.*.external_id'            => 'min:1|max:255|nullable',
-            'transactions.*.recurrence_id'          => 'min:1|max:255|nullable',
-            'transactions.*.bunq_payment_id'        => 'min:1|max:255|nullable',
-            'transactions.*.external_url'           => sprintf('min:1|max:255|nullable|url:%s', $validProtocols),
+            'transactions.*.internal_reference'      => 'min:1|max:255|nullable',
+            'transactions.*.external_id'             => 'min:1|max:255|nullable',
+            'transactions.*.recurrence_id'           => 'min:1|max:255|nullable',
+            'transactions.*.bunq_payment_id'         => 'min:1|max:255|nullable',
+            'transactions.*.external_url'            => sprintf('min:1|max:255|nullable|url:%s', $validProtocols),
 
             // SEPA fields:
-            'transactions.*.sepa_cc'                => 'min:1|max:255|nullable',
-            'transactions.*.sepa_ct_op'             => 'min:1|max:255|nullable',
-            'transactions.*.sepa_ct_id'             => 'min:1|max:255|nullable',
-            'transactions.*.sepa_db'                => 'min:1|max:255|nullable',
-            'transactions.*.sepa_country'           => 'min:1|max:255|nullable',
-            'transactions.*.sepa_ep'                => 'min:1|max:255|nullable',
-            'transactions.*.sepa_ci'                => 'min:1|max:255|nullable',
-            'transactions.*.sepa_batch_id'          => 'min:1|max:255|nullable',
+            'transactions.*.sepa_cc'                 => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ct_op'              => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ct_id'              => 'min:1|max:255|nullable',
+            'transactions.*.sepa_db'                 => 'min:1|max:255|nullable',
+            'transactions.*.sepa_country'            => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ep'                 => 'min:1|max:255|nullable',
+            'transactions.*.sepa_ci'                 => 'min:1|max:255|nullable',
+            'transactions.*.sepa_batch_id'           => 'min:1|max:255|nullable',
 
             // dates
-            'transactions.*.interest_date'          => 'date|nullable',
-            'transactions.*.book_date'              => 'date|nullable',
-            'transactions.*.process_date'           => 'date|nullable',
-            'transactions.*.due_date'               => 'date|nullable',
-            'transactions.*.payment_date'           => 'date|nullable',
-            'transactions.*.invoice_date'           => 'date|nullable',
+            'transactions.*.interest_date'           => 'date|nullable',
+            'transactions.*.book_date'               => 'date|nullable',
+            'transactions.*.process_date'            => 'date|nullable',
+            'transactions.*.due_date'                => 'date|nullable',
+            'transactions.*.payment_date'            => 'date|nullable',
+            'transactions.*.invoice_date'            => 'date|nullable',
         ];
     }
 
@@ -212,7 +214,7 @@ class UpdateRequest extends FormRequest
     private function getTransactionData(): array
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
-        $return = [];
+        $return       = [];
 
         /** @var null|array $transactions */
         $transactions = $this->get('transactions');

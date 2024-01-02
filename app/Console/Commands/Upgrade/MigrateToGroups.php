@@ -47,8 +47,8 @@ class MigrateToGroups extends Command
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '480_migrated_to_groups';
-    protected $description = 'Migrates a pre-4.7.8 transaction structure to the 4.7.8+ transaction structure.';
-    protected $signature   = 'firefly-iii:migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
+    protected $description          = 'Migrates a pre-4.7.8 transaction structure to the 4.7.8+ transaction structure.';
+    protected $signature            = 'firefly-iii:migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
     private JournalCLIRepositoryInterface $cliRepository;
     private int                           $count;
     private TransactionGroupFactory       $groupFactory;
@@ -157,7 +157,7 @@ class MigrateToGroups extends Command
             $data['transactions'][] = $this->generateTransaction($journal, $transaction);
         }
         app('log')->debug(sprintf('Now calling transaction journal factory (%d transactions in array)', count($data['transactions'])));
-        $group = $this->groupFactory->create($data);
+        $group            = $this->groupFactory->create($data);
         app('log')->debug('Done calling transaction journal factory');
 
         // delete the old transaction journal.
@@ -215,7 +215,7 @@ class MigrateToGroups extends Command
     private function generateTransaction(TransactionJournal $journal, Transaction $transaction): array
     {
         app('log')->debug(sprintf('Now going to add transaction #%d to the array.', $transaction->id));
-        $opposingTr = $this->findOpposingTransaction($journal, $transaction);
+        $opposingTr     = $this->findOpposingTransaction($journal, $transaction);
 
         if (null === $opposingTr) {
             $this->friendlyError(
@@ -256,8 +256,8 @@ class MigrateToGroups extends Command
         $invoiceDate    = $this->cliRepository->getMetaDate($journal, 'invoice_date');
 
         // overrule journal category with transaction category.
-        $budgetId   = $this->getTransactionBudget($transaction, $opposingTr) ?? $budgetId;
-        $categoryId = $this->getTransactionCategory($transaction, $opposingTr) ?? $categoryId;
+        $budgetId       = $this->getTransactionBudget($transaction, $opposingTr) ?? $budgetId;
+        $categoryId     = $this->getTransactionCategory($transaction, $opposingTr) ?? $categoryId;
 
         return [
             'type'                => strtolower($journal->transactionType->type),

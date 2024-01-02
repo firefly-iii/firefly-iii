@@ -39,9 +39,9 @@ class MigrateRecurrenceMeta extends Command
 
     public const string CONFIG_NAME = '481_migrate_recurrence_meta';
 
-    protected $description = 'Migrate recurrence meta data';
+    protected $description          = 'Migrate recurrence meta data';
 
-    protected $signature = 'firefly-iii:migrate-recurrence-meta {--F|force : Force the execution of this command.}';
+    protected $signature            = 'firefly-iii:migrate-recurrence-meta {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -79,7 +79,7 @@ class MigrateRecurrenceMeta extends Command
 
     private function migrateMetaData(): int
     {
-        $count = 0;
+        $count      = 0;
         // get all recurrence meta data:
         $collection = RecurrenceMeta::with('recurrence')->get();
 
@@ -94,7 +94,7 @@ class MigrateRecurrenceMeta extends Command
     private function migrateEntry(RecurrenceMeta $meta): int
     {
         /** @var null|Recurrence $recurrence */
-        $recurrence = $meta->recurrence;
+        $recurrence       = $meta->recurrence;
         if (null === $recurrence) {
             return 0;
         }
@@ -102,7 +102,7 @@ class MigrateRecurrenceMeta extends Command
         if (null === $firstTransaction) {
             return 0;
         }
-        $value = $meta->value;
+        $value            = $meta->value;
 
         if ('tags' === $meta->name) {
             $array = explode(',', $meta->value);

@@ -113,8 +113,8 @@ abstract class Controller extends BaseController
      */
     private function getParameters(): ParameterBag
     {
-        $bag  = new ParameterBag();
-        $page = (int)request()->get('page');
+        $bag      = new ParameterBag();
+        $page     = (int)request()->get('page');
         if ($page < 1) {
             $page = 1;
         }
@@ -124,7 +124,7 @@ abstract class Controller extends BaseController
         $bag->set('page', $page);
 
         // some date fields:
-        $dates = ['start', 'end', 'date'];
+        $dates    = ['start', 'end', 'date'];
         foreach ($dates as $field) {
             $date = null;
 
@@ -136,7 +136,7 @@ abstract class Controller extends BaseController
                 app('log')->error($e->getTraceAsString());
                 $value = null;
             }
-            $obj = null;
+            $obj  = null;
             if (null !== $date) {
                 try {
                     $obj = Carbon::parse((string)$date);
@@ -173,7 +173,7 @@ abstract class Controller extends BaseController
                 && auth()->check()) {
                 // set default for user:
                 /** @var User $user */
-                $user = auth()->user();
+                $user     = auth()->user();
 
                 /** @var Preference $pageSize */
                 $pageSize = (int)app('preferences')->getForUser($user, 'listPageSize', 50)->data;
@@ -200,7 +200,7 @@ abstract class Controller extends BaseController
         if ('' === $param) {
             return $bag;
         }
-        $parts = explode(',', $param);
+        $parts          = explode(',', $param);
         foreach ($parts as $part) {
             $part      = trim($part);
             $direction = 'asc';

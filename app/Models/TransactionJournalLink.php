@@ -70,10 +70,10 @@ class TransactionJournalLink extends Model
     use ReturnsIntegerIdTrait;
 
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
+                     = [
+                         'created_at' => 'datetime',
+                         'updated_at' => 'datetime',
+                     ];
 
     /** @var string The table to store the data in */
     protected $table = 'journal_links';

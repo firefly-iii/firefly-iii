@@ -12500,6 +12500,12 @@ textarea.form-control-lg {
   container: sidebar/inline-size;
 }
 
+.form-control {
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+  appearance: auto;
+}
+
 :root,
 [data-bs-theme=light] {
   --lte-sidebar-width: 250px;
@@ -14291,7 +14297,7 @@ html.maximized-card {
   }
   .col-xl-3 .small-box h3, .col-xl-3 .small-box .h3, .col-lg-3 .small-box h3, .col-lg-3 .small-box .h3, .col-md-3 .small-box h3, .col-md-3 .small-box .h3 {
     /* changed: font from 2.2rem to 1.5vw */
-    font-size: 1.5vw;
+    font-size: 1.5vwb;
   }
 }
 .small-box p {

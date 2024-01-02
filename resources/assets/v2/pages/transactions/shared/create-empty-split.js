@@ -38,16 +38,49 @@ export function createEmptySplit() {
         // amount information:
         amount: '',
         currency_code: 'EUR',
+        foreign_amount: '',
+        foreign_currency_code: '',
 
         // source and destination
         source_account: getAccount(),
         destination_account: getAccount(),
 
+        // meta data information:
+        budget_id: null,
+        category_name: '',
+        piggy_bank_id: null,
+        bill_id: null,
+        tags: [],
+        notes: '',
+
+        // other meta fields:
+        internal_reference: '',
+        external_url: '',
+
+        // map
+        hasLocation: false,
+        map: null,
+        latitude: null,
+        longitude: null,
+        zoomLevel: null,
+        marker: null,
+
+
         // date and time
         date: formatted,
+        interest_date: '',
+        book_date: '',
+        process_date: '',
+        due_date: '',
+        payment_date: '',
+        invoice_date: '',
 
         errors: {
             'amount': [],
+            'foreign_amount': [],
+            'budget_id': [],
+            'category_name': [],
+            'piggy_bank_id': [],
         },
     };
 }

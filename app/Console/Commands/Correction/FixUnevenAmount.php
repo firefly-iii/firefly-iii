@@ -100,13 +100,13 @@ class FixUnevenAmount extends Command
     private function fixJournal(int $param): void
     {
         // one of the transactions is bad.
-        $journal = TransactionJournal::find($param);
+        $journal             = TransactionJournal::find($param);
         if (null === $journal) {
             return;
         }
 
         /** @var null|Transaction $source */
-        $source = $journal->transactions()->where('amount', '<', 0)->first();
+        $source              = $journal->transactions()->where('amount', '<', 0)->first();
 
         if (null === $source) {
             $this->friendlyError(
@@ -122,11 +122,11 @@ class FixUnevenAmount extends Command
             return;
         }
 
-        $amount = bcmul('-1', $source->amount);
+        $amount              = bcmul('-1', $source->amount);
 
         // fix amount of destination:
         /** @var null|Transaction $destination */
-        $destination = $journal->transactions()->where('amount', '>', 0)->first();
+        $destination         = $journal->transactions()->where('amount', '>', 0)->first();
 
         if (null === $destination) {
             $this->friendlyError(
@@ -146,7 +146,7 @@ class FixUnevenAmount extends Command
         $destination->amount = $amount;
         $destination->save();
 
-        $message = sprintf('Corrected amount in transaction journal #%d', $param);
+        $message             = sprintf('Corrected amount in transaction journal #%d', $param);
         $this->friendlyInfo($message);
     }
 }

@@ -71,25 +71,25 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         // types to get, page size:
-        $pageSize = $this->parameters->get('limit');
+        $pageSize    = $this->parameters->get('limit');
 
         // get list of budgets. Count it and split it.
-        $collection = $this->repository->getBudgets();
-        $count      = $collection->count();
-        $budgets    = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $collection  = $this->repository->getBudgets();
+        $count       = $collection->count();
+        $budgets     = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($budgets, $count, $pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($budgets, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.budgets.index').$this->buildParams());
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($budgets, $transformer, 'budgets');
+        $resource    = new FractalCollection($budgets, $transformer, 'budgets');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -100,13 +100,13 @@ class ShowController extends Controller
      */
     public function show(Budget $budget): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($budget, $transformer, 'budgets');
+        $resource    = new Item($budget, $transformer, 'budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

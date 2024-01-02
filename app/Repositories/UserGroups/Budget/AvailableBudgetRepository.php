@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AvailableBudgetRepository
@@ -38,6 +39,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
 
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array
     {
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $return           = [];
         $converter        = new ExchangeRateConverter();
         $default          = app('amount')->getDefaultCurrency();
@@ -49,19 +51,19 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {
             $currencyId                           = $availableBudget->transaction_currency_id;
-            $return[$currencyId]                  ??= [
-                'currency_id'             => $currencyId,
-                'currency_code'           => $availableBudget->transactionCurrency->code,
-                'currency_symbol'         => $availableBudget->transactionCurrency->symbol,
-                'currency_name'           => $availableBudget->transactionCurrency->name,
-                'currency_decimal_places' => $availableBudget->transactionCurrency->decimal_places,
-                'native_id'               => $default->id,
-                'native_code'             => $default->code,
-                'native_symbol'           => $default->symbol,
-                'native_name'             => $default->name,
-                'native_decimal_places'   => $default->decimal_places,
-                'amount'                  => '0',
-                'native_amount'           => '0',
+            $return[$currencyId] ??= [
+                'currency_id'                    => $currencyId,
+                'currency_code'                  => $availableBudget->transactionCurrency->code,
+                'currency_symbol'                => $availableBudget->transactionCurrency->symbol,
+                'currency_name'                  => $availableBudget->transactionCurrency->name,
+                'currency_decimal_places'        => $availableBudget->transactionCurrency->decimal_places,
+                'native_currency_id'             => $default->id,
+                'native_currency_code'           => $default->code,
+                'native_currency_symbol'         => $default->symbol,
+                'native_currency_name'           => $default->name,
+                'native_currency_decimal_places' => $default->decimal_places,
+                'amount'                         => '0',
+                'native_amount'                  => '0',
             ];
             $nativeAmount                         = $converter->convert($availableBudget->transactionCurrency, $default, $availableBudget->start_date, $availableBudget->amount);
             $return[$currencyId]['amount']        = bcadd($return[$currencyId]['amount'], $availableBudget->amount);

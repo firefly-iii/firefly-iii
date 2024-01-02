@@ -39,7 +39,7 @@ trait VerifiesAccessToken
      */
     public function getUser(): User
     {
-        $userId = (int)$this->option('user');
+        $userId     = (int)$this->option('user');
 
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
@@ -67,12 +67,12 @@ trait VerifiesAccessToken
      */
     protected function verifyAccessToken(): bool
     {
-        $userId = (int)$this->option('user');
-        $token  = (string)$this->option('token');
+        $userId      = (int)$this->option('user');
+        $token       = (string)$this->option('token');
 
         /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->find($userId);
+        $repository  = app(UserRepositoryInterface::class);
+        $user        = $repository->find($userId);
 
         if (null === $user) {
             app('log')->error(sprintf('verifyAccessToken(): no such user for input "%d"', $userId));

@@ -48,8 +48,8 @@ class SetCategory implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var null|User $user */
-        $user   = User::find($journal['user_id']);
-        $search = $this->action->action_value;
+        $user            = User::find($journal['user_id']);
+        $search          = $this->action->action_value;
         if (null === $user) {
             app('log')->error(sprintf('Journal has no valid user ID so action SetCategory("%s") cannot be applied', $search), $journal);
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_such_journal')));
@@ -58,9 +58,9 @@ class SetCategory implements ActionInterface
         }
 
         /** @var CategoryFactory $factory */
-        $factory = app(CategoryFactory::class);
+        $factory         = app(CategoryFactory::class);
         $factory->setUser($user);
-        $category = $factory->findOrCreate(null, $search);
+        $category        = $factory->findOrCreate(null, $search);
         if (null === $category) {
             app('log')->debug(
                 sprintf(
@@ -98,7 +98,7 @@ class SetCategory implements ActionInterface
         \DB::table('category_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'category_id' => $category->id]);
 
         /** @var TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object          = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         event(new TriggeredAuditLog($this->action->rule, $object, 'set_category', $oldCategoryName, $category->name));
 
         return true;

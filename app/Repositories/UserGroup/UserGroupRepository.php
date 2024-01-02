@@ -49,7 +49,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         /** @var GroupMembership $membership */
         foreach ($memberships as $membership) {
             /** @var null|User $user */
-            $user = $membership->user()->first();
+            $user  = $membership->user()->first();
             if (null === $user) {
                 continue;
             }
@@ -78,7 +78,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         // all users are now moved away from user group.
         // time to DESTROY all objects.
         // we have to do this one by one to trigger the necessary observers :(
-        $objects = ['availableBudgets', 'bills', 'budgets', 'categories', 'currencyExchangeRates', 'objectGroups',
+        $objects     = ['availableBudgets', 'bills', 'budgets', 'categories', 'currencyExchangeRates', 'objectGroups',
             'recurrences', 'rules', 'ruleGroups', 'tags', 'transactionGroups', 'transactionJournals', 'piggyBanks', 'accounts', 'webhooks',
         ];
         foreach ($objects as $object) {
@@ -125,7 +125,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         $data['user'] = $this->user;
 
         /** @var UserGroupFactory $factory */
-        $factory = app(UserGroupFactory::class);
+        $factory      = app(UserGroupFactory::class);
 
         return $factory->create($data);
     }
@@ -163,11 +163,11 @@ class UserGroupRepository implements UserGroupRepositoryInterface
      */
     public function updateMembership(UserGroup $userGroup, array $data): UserGroup
     {
-        $owner = UserRole::whereTitle(UserRoleEnum::OWNER)->first();
+        $owner           = UserRole::whereTitle(UserRoleEnum::OWNER)->first();
         app('log')->debug('in update membership');
 
         /** @var null|User $user */
-        $user = null;
+        $user            = null;
         if (array_key_exists('id', $data)) {
             /** @var null|User $user */
             $user = User::find($data['id']);
@@ -252,7 +252,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         while ($exists && $loop < 10) {
             $existingGroup = $this->findByName($groupName);
             if (null === $existingGroup) {
-                $exists = false;
+                $exists        = false;
 
                 /** @var null|UserGroup $existingGroup */
                 $existingGroup = $this->store(['user' => $user, 'title' => $groupName]);

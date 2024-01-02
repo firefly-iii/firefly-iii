@@ -137,33 +137,33 @@ class TransactionJournal extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'deleted_at'    => 'datetime',
-            'date'          => 'datetime',
-            'interest_date' => 'date',
-            'book_date'     => 'date',
-            'process_date'  => 'date',
-            'order'         => 'int',
-            'tag_count'     => 'int',
-            'encrypted'     => 'boolean',
-            'completed'     => 'boolean',
-        ];
+                      = [
+                          'created_at'    => 'datetime',
+                          'updated_at'    => 'datetime',
+                          'deleted_at'    => 'datetime',
+                          'date'          => 'datetime',
+                          'interest_date' => 'date',
+                          'book_date'     => 'date',
+                          'process_date'  => 'date',
+                          'order'         => 'int',
+                          'tag_count'     => 'int',
+                          'encrypted'     => 'boolean',
+                          'completed'     => 'boolean',
+                      ];
 
     protected $fillable
-        = [
-            'user_id',
-            'user_group_id',
-            'transaction_type_id',
-            'bill_id',
-            'tag_count',
-            'transaction_currency_id',
-            'description',
-            'completed',
-            'order',
-            'date',
-        ];
+                      = [
+                          'user_id',
+                          'user_group_id',
+                          'transaction_type_id',
+                          'bill_id',
+                          'tag_count',
+                          'transaction_currency_id',
+                          'description',
+                          'completed',
+                          'order',
+                          'date',
+                      ];
 
     protected $hidden = ['encrypted'];
 
@@ -178,10 +178,10 @@ class TransactionJournal extends Model
             $journalId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user      = auth()->user();
 
             /** @var null|TransactionJournal $journal */
-            $journal = $user->transactionJournals()->where('transaction_journals.id', $journalId)->first(['transaction_journals.*']);
+            $journal   = $user->transactionJournals()->where('transaction_journals.id', $journalId)->first(['transaction_journals.*']);
             if (null !== $journal) {
                 return $journal;
             }

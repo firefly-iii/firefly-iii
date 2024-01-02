@@ -75,20 +75,20 @@ class RecurrenceRepetition extends Model
     public const int WEEKEND_TO_MONDAY     = 4;
 
     protected $casts
-        = [
-            'created_at'        => 'datetime',
-            'updated_at'        => 'datetime',
-            'deleted_at'        => 'datetime',
-            'repetition_type'   => 'string',
-            'repetition_moment' => 'string',
-            'repetition_skip'   => 'int',
-            'weekend'           => 'int',
-        ];
+                                           = [
+                                               'created_at'        => 'datetime',
+                                               'updated_at'        => 'datetime',
+                                               'deleted_at'        => 'datetime',
+                                               'repetition_type'   => 'string',
+                                               'repetition_moment' => 'string',
+                                               'repetition_skip'   => 'int',
+                                               'weekend'           => 'int',
+                                           ];
 
-    protected $fillable = ['recurrence_id', 'weekend', 'repetition_type', 'repetition_moment', 'repetition_skip'];
+    protected $fillable                    = ['recurrence_id', 'weekend', 'repetition_type', 'repetition_moment', 'repetition_skip'];
 
     /** @var string The table to store the data in */
-    protected $table = 'recurrences_repetitions';
+    protected $table                       = 'recurrences_repetitions';
 
     public function recurrence(): BelongsTo
     {

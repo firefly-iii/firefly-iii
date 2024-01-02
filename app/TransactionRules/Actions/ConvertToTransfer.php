@@ -57,14 +57,14 @@ class ConvertToTransfer implements ActionInterface
     {
         // make object from array (so the data is fresh).
         /** @var null|TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             app('log')->error(sprintf('Cannot find journal #%d, cannot convert to transfer.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_not_found')));
 
             return false;
         }
-        $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        $groupCount   = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
             app('log')->error(sprintf('Group #%d has more than one transaction in it, cannot convert to transfer.', $journal['transaction_group_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
@@ -72,9 +72,9 @@ class ConvertToTransfer implements ActionInterface
             return false;
         }
 
-        $type      = $object->transactionType->type;
-        $user      = $object->user;
-        $journalId = $object->id;
+        $type         = $object->transactionType->type;
+        $user         = $object->user;
+        $journalId    = $object->id;
         if (TransactionType::TRANSFER === $type) {
             app('log')->error(
                 sprintf('Journal #%d is already a transfer so cannot be converted (rule #%d).', $object->id, $this->action->rule_id)
@@ -91,7 +91,7 @@ class ConvertToTransfer implements ActionInterface
 
         // find the asset account in the action value.
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
+        $repository   = app(AccountRepositoryInterface::class);
         $repository->setUser($user);
         $expectedType = null;
         if (TransactionType::WITHDRAWAL === $type) {
@@ -102,7 +102,7 @@ class ConvertToTransfer implements ActionInterface
             $expectedType = $this->getDestinationType($journalId);
             // Deposit? Replace source with account with same type as destination.
         }
-        $opposing = $repository->findByName($this->action->action_value, [$expectedType]);
+        $opposing     = $repository->findByName($this->action->action_value, [$expectedType]);
 
         if (null === $opposing) {
             app('log')->error(
@@ -212,7 +212,7 @@ class ConvertToTransfer implements ActionInterface
         ;
 
         // change transaction type of journal:
-        $newType = TransactionType::whereType(TransactionType::TRANSFER)->first();
+        $newType       = TransactionType::whereType(TransactionType::TRANSFER)->first();
 
         \DB::table('transaction_journals')
             ->where('id', '=', $journal->id)
@@ -267,7 +267,7 @@ class ConvertToTransfer implements ActionInterface
         ;
 
         // change transaction type of journal:
-        $newType = TransactionType::whereType(TransactionType::TRANSFER)->first();
+        $newType     = TransactionType::whereType(TransactionType::TRANSFER)->first();
 
         \DB::table('transaction_journals')
             ->where('id', '=', $journal->id)

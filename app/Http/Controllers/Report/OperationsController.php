@@ -65,7 +65,7 @@ class OperationsController extends Controller
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
-        $cache = new CacheProperties();
+        $cache  = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('expense-report');
@@ -99,7 +99,7 @@ class OperationsController extends Controller
     public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
         // chart properties for cache:
-        $cache = new CacheProperties();
+        $cache  = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('income-report');
@@ -135,7 +135,7 @@ class OperationsController extends Controller
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
-        $cache = new CacheProperties();
+        $cache    = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('inc-exp-report');
@@ -152,7 +152,7 @@ class OperationsController extends Controller
         /** @var int $currencyId */
         foreach ($keys as $currencyId) {
             $currencyInfo             = $incomes['sums'][$currencyId] ?? $expenses['sums'][$currencyId];
-            $sums[$currencyId]        ??= [
+            $sums[$currencyId] ??= [
                 'currency_id'             => $currencyId,
                 'currency_name'           => $currencyInfo['currency_name'],
                 'currency_code'           => $currencyInfo['currency_code'],

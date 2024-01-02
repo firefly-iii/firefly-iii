@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Models\AvailableBudget;
 
 use Carbon\Carbon;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -62,7 +63,7 @@ class Request extends FormRequest
         return [
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
-            'amount'        => 'numeric|gt:0',
+            'amount'        => ['nullable', new IsValidPositiveAmount()],
             'start'         => 'date',
             'end'           => 'date',
         ];

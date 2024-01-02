@@ -111,16 +111,16 @@ class UserGroup extends Model
             $userGroupId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user        = auth()->user();
 
             /** @var null|UserGroup $userGroup */
-            $userGroup = self::find($userGroupId);
+            $userGroup   = self::find($userGroupId);
             if (null === $userGroup) {
                 throw new NotFoundHttpException();
             }
             // need at least ready only to be aware of the user group's existence,
             // but owner/full role (in the group) or global owner role may overrule this.
-            $access = $user->hasRoleInGroupOrOwner($userGroup, UserRoleEnum::READ_ONLY) || $user->hasRole('owner');
+            $access      = $user->hasRoleInGroupOrOwner($userGroup, UserRoleEnum::READ_ONLY) || $user->hasRole('owner');
             if ($access) {
                 return $userGroup;
             }

@@ -29,6 +29,7 @@ use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 
 /**
@@ -45,7 +46,7 @@ class StandardWebhookSender implements WebhookSenderInterface
     }
 
     /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
@@ -63,10 +64,10 @@ class StandardWebhookSender implements WebhookSenderInterface
             app('log')->error('Did not send message because of a Firefly III Exception.');
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
-            $attempt = new WebhookAttempt();
+            $attempt                = new WebhookAttempt();
             $attempt->webhookMessage()->associate($this->message);
-            $attempt->status_code = 0;
-            $attempt->logs        = sprintf('Exception: %s', $e->getMessage());
+            $attempt->status_code   = 0;
+            $attempt->logs          = sprintf('Exception: %s', $e->getMessage());
             $attempt->save();
             $this->message->errored = true;
             $this->message->sent    = false;
@@ -83,10 +84,10 @@ class StandardWebhookSender implements WebhookSenderInterface
             app('log')->error('Did not send message because of a JSON error.');
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
-            $attempt = new WebhookAttempt();
+            $attempt                = new WebhookAttempt();
             $attempt->webhookMessage()->associate($this->message);
-            $attempt->status_code = 0;
-            $attempt->logs        = sprintf('Json error: %s', $e->getMessage());
+            $attempt->status_code   = 0;
+            $attempt->logs          = sprintf('Json error: %s', $e->getMessage());
             $attempt->save();
             $this->message->errored = true;
             $this->message->sent    = false;
@@ -94,7 +95,7 @@ class StandardWebhookSender implements WebhookSenderInterface
 
             return;
         }
-        $options = [
+        $options             = [
             'body'    => $json,
             'headers' => [
                 'Content-Type'    => 'application/json',
@@ -105,7 +106,7 @@ class StandardWebhookSender implements WebhookSenderInterface
                 'timeout'         => 10,
             ],
         ];
-        $client  = new Client();
+        $client              = new Client();
 
         try {
             $res = $client->request('POST', $this->message->webhook->url, $options);
@@ -114,22 +115,22 @@ class StandardWebhookSender implements WebhookSenderInterface
             app('log')->error($e->getMessage());
             app('log')->error($e->getTraceAsString());
 
-            $logs = sprintf("%s\n%s", $e->getMessage(), $e->getTraceAsString());
+            $logs                   = sprintf("%s\n%s", $e->getMessage(), $e->getTraceAsString());
 
             $this->message->errored = true;
             $this->message->sent    = false;
             $this->message->save();
 
-            $attempt = new WebhookAttempt();
+            $attempt                = new WebhookAttempt();
             $attempt->webhookMessage()->associate($this->message);
-            $attempt->status_code = 0;
+            $attempt->status_code   = 0;
             if (method_exists($e, 'hasResponse') && method_exists($e, 'getResponse')) {
                 $attempt->status_code = $e->hasResponse() ? $e->getResponse()->getStatusCode() : 0;
                 app('log')->error(sprintf('The status code of the error response is: %d', $attempt->status_code));
-                $body = (string)($e->hasResponse() ? $e->getResponse()->getBody() : '');
+                $body                 = (string)($e->hasResponse() ? $e->getResponse()->getBody() : '');
                 app('log')->error(sprintf('The body of the error response is: %s', $body));
             }
-            $attempt->logs = $logs;
+            $attempt->logs          = $logs;
             $attempt->save();
 
             return;

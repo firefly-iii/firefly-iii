@@ -55,7 +55,7 @@ trait ModifiesPiggyBanks
 
     public function removeAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool
     {
-        $repetition = $this->getRepetition($piggyBank);
+        $repetition                = $this->getRepetition($piggyBank);
         if (null === $repetition) {
             return false;
         }
@@ -70,7 +70,7 @@ trait ModifiesPiggyBanks
 
     public function addAmount(PiggyBank $piggyBank, string $amount, ?TransactionJournal $journal = null): bool
     {
-        $repetition = $this->getRepetition($piggyBank);
+        $repetition                = $this->getRepetition($piggyBank);
         if (null === $repetition) {
             return false;
         }
@@ -96,8 +96,8 @@ trait ModifiesPiggyBanks
             $maxAmount  = 1 === bccomp($leftOnAccount, $leftToSave) ? $leftToSave : $leftOnAccount;
         }
 
-        $compare = bccomp($amount, $maxAmount);
-        $result  = $compare <= 0;
+        $compare       = bccomp($amount, $maxAmount);
+        $result        = $compare <= 0;
 
         app('log')->debug(sprintf('Left on account: %s on %s', $leftOnAccount, $today->format('Y-m-d')));
         app('log')->debug(sprintf('Saved so far: %s', $savedSoFar));
@@ -139,11 +139,11 @@ trait ModifiesPiggyBanks
 
     public function setCurrentAmount(PiggyBank $piggyBank, string $amount): PiggyBank
     {
-        $repetition = $this->getRepetition($piggyBank);
+        $repetition                = $this->getRepetition($piggyBank);
         if (null === $repetition) {
             return $piggyBank;
         }
-        $max = $piggyBank->targetamount;
+        $max                       = $piggyBank->targetamount;
         if (1 === bccomp($amount, $max) && 0 !== bccomp($piggyBank->targetamount, '0')) {
             $amount = $max;
         }
@@ -178,12 +178,12 @@ trait ModifiesPiggyBanks
      */
     public function store(array $data): PiggyBank
     {
-        $order = $this->getMaxOrder() + 1;
+        $order            = $this->getMaxOrder() + 1;
         if (array_key_exists('order', $data)) {
             $order = $data['order'];
         }
-        $data['order'] = 31337; // very high when creating.
-        $piggyData     = $data;
+        $data['order']    = 31337; // very high when creating.
+        $piggyData        = $data;
         // unset fields just in case.
         unset($piggyData['object_group_title'], $piggyData['object_group_id'], $piggyData['notes'], $piggyData['current_amount']);
 
@@ -208,7 +208,7 @@ trait ModifiesPiggyBanks
         $this->updateNote($piggyBank, $data['notes']);
 
         // repetition is auto created.
-        $repetition = $this->getRepetition($piggyBank);
+        $repetition       = $this->getRepetition($piggyBank);
         if (null !== $repetition && array_key_exists('current_amount', $data) && '' !== $data['current_amount']) {
             $repetition->currentamount = $data['current_amount'];
             $repetition->save();
@@ -223,7 +223,7 @@ trait ModifiesPiggyBanks
             }
         }
         // try also with ID
-        $objectGroupId = (int)($data['object_group_id'] ?? 0);
+        $objectGroupId    = (int)($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
             $objectGroup = $this->findObjectGroupById($objectGroupId);
             if (null !== $objectGroup) {
@@ -254,7 +254,7 @@ trait ModifiesPiggyBanks
 
     public function setOrder(PiggyBank $piggyBank, int $newOrder): bool
     {
-        $oldOrder = $piggyBank->order;
+        $oldOrder         = $piggyBank->order;
         // app('log')->debug(sprintf('Will move piggy bank #%d ("%s") from %d to %d', $piggyBank->id, $piggyBank->name, $oldOrder, $newOrder));
         if ($newOrder > $oldOrder) {
             $this->user->piggyBanks()->where('piggy_banks.order', '<=', $newOrder)->where('piggy_banks.order', '>', $oldOrder)
@@ -281,14 +281,14 @@ trait ModifiesPiggyBanks
 
     public function update(PiggyBank $piggyBank, array $data): PiggyBank
     {
-        $piggyBank = $this->updateProperties($piggyBank, $data);
+        $piggyBank  = $this->updateProperties($piggyBank, $data);
         if (array_key_exists('notes', $data)) {
             $this->updateNote($piggyBank, (string)$data['notes']);
         }
 
         // update the order of the piggy bank:
-        $oldOrder = $piggyBank->order;
-        $newOrder = (int)($data['order'] ?? $oldOrder);
+        $oldOrder   = $piggyBank->order;
+        $newOrder   = (int)($data['order'] ?? $oldOrder);
         if ($oldOrder !== $newOrder) {
             $this->setOrder($piggyBank, $newOrder);
         }
@@ -297,7 +297,7 @@ trait ModifiesPiggyBanks
         // remove money from the rep.
         $repetition = $this->getRepetition($piggyBank);
         if (null !== $repetition && $repetition->currentamount > $piggyBank->targetamount && 0 !== bccomp($piggyBank->targetamount, '0')) {
-            $difference = bcsub($piggyBank->targetamount, $repetition->currentamount);
+            $difference                = bcsub($piggyBank->targetamount, $repetition->currentamount);
 
             // an amount will be removed, create "negative" event:
             event(new ChangedAmount($piggyBank, $difference, null, null));
@@ -347,7 +347,7 @@ trait ModifiesPiggyBanks
 
             return true;
         }
-        $dbNote = $piggyBank->notes()->first();
+        $dbNote       = $piggyBank->notes()->first();
         if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($piggyBank);

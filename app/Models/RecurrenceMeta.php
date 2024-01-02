@@ -66,18 +66,18 @@ class RecurrenceMeta extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'name'       => 'string',
-            'value'      => 'string',
-        ];
+                        = [
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'deleted_at' => 'datetime',
+                            'name'       => 'string',
+                            'value'      => 'string',
+                        ];
 
     protected $fillable = ['recurrence_id', 'name', 'value'];
 
     /** @var string The table to store the data in */
-    protected $table = 'recurrences_meta';
+    protected $table    = 'recurrences_meta';
 
     public function recurrence(): BelongsTo
     {

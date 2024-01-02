@@ -102,7 +102,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getJournalTotal(TransactionJournal $journal): string
     {
-        $cache = new CacheProperties();
+        $cache  = new CacheProperties();
         $cache->addProperty($journal->id);
         $cache->addProperty('amount-positive');
         if ($cache->has()) {

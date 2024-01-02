@@ -57,7 +57,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface
      */
     public function getAttachments(TransactionJournal $journal): Collection
     {
-        $set = $journal->attachments;
+        $set  = $journal->attachments;
 
         /** @var \Storage $disk */
         $disk = \Storage::disk('upload');

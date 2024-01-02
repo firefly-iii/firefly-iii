@@ -95,10 +95,10 @@ class WebhookMessage extends Model
             $messageId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user      = auth()->user();
 
             /** @var null|WebhookMessage $message */
-            $message = self::find($messageId);
+            $message   = self::find($messageId);
             if (null !== $message && $message->webhook->user_id === $user->id) {
                 return $message;
             }

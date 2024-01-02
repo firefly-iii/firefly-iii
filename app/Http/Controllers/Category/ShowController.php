@@ -76,7 +76,7 @@ class ShowController extends Controller
         // @var Carbon $start
         $start ??= session('start', today(config('app.timezone'))->startOfMonth());
         // @var Carbon $end
-        $end          ??= session('end', today(config('app.timezone'))->endOfMonth());
+        $end   ??= session('end', today(config('app.timezone'))->endOfMonth());
         $subTitleIcon = 'fa-bookmark';
         $page         = (int)$request->get('page');
         $attachments  = $this->repository->getAttachments($category);
@@ -94,13 +94,13 @@ class ShowController extends Controller
         );
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)
             ->withAccountInformation()
             ->setCategory($category)->withBudgetInformation()->withCategoryInformation()
         ;
 
-        $groups = $collector->getPaginatedGroups();
+        $groups       = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
         return view('categories.show', compact('category', 'attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
@@ -121,23 +121,23 @@ class ShowController extends Controller
         $end          = null;
         $periods      = new Collection();
 
-        $subTitle = (string)trans('firefly.all_journals_for_category', ['name' => $category->name]);
-        $first    = $this->repository->firstUseDate($category);
+        $subTitle     = (string)trans('firefly.all_journals_for_category', ['name' => $category->name]);
+        $first        = $this->repository->firstUseDate($category);
 
         /** @var Carbon $start */
-        $start       = $first ?? today(config('app.timezone'));
-        $end         = today(config('app.timezone'));
-        $path        = route('categories.show.all', [$category->id]);
-        $attachments = $this->repository->getAttachments($category);
+        $start        = $first ?? today(config('app.timezone'));
+        $end          = today(config('app.timezone'));
+        $path         = route('categories.show.all', [$category->id]);
+        $attachments  = $this->repository->getAttachments($category);
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)
             ->withAccountInformation()
             ->setCategory($category)->withBudgetInformation()->withCategoryInformation()
         ;
 
-        $groups = $collector->getPaginatedGroups();
+        $groups       = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
         return view('categories.show', compact('category', 'attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));

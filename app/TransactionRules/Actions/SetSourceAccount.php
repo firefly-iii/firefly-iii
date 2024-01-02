@@ -52,7 +52,7 @@ class SetSourceAccount implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */
-        $user = User::find($journal['user_id']);
+        $user             = User::find($journal['user_id']);
 
         /** @var null|TransactionJournal $object */
         $object           = $user->transactionJournals()->find((int)$journal['transaction_journal_id']);
@@ -63,11 +63,11 @@ class SetSourceAccount implements ActionInterface
 
             return false;
         }
-        $type = $object->transactionType->type;
+        $type             = $object->transactionType->type;
         $this->repository->setUser($user);
 
         // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
-        $newAccount = $this->findAssetAccount($type);
+        $newAccount       = $this->findAssetAccount($type);
         if ((TransactionType::WITHDRAWAL === $type || TransactionType::TRANSFER === $type) && null === $newAccount) {
             app('log')->error(
                 sprintf('Cant change source account of journal #%d because no asset account with name "%s" exists.', $object->id, $this->action->action_value)
@@ -79,7 +79,7 @@ class SetSourceAccount implements ActionInterface
 
         // new source account must be different from the current destination account:
         /** @var null|Transaction $destination */
-        $destination = $object->transactions()->where('amount', '>', 0)->first();
+        $destination      = $object->transactions()->where('amount', '>', 0)->first();
         if (null === $destination) {
             app('log')->error('Could not find destination transaction.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_destination_transaction')));

@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 use Illuminate\Support\Str;
 
-$databaseUrl = getenv('DATABASE_URL');
-$host        = '';
-$username    = '';
-$password    = '';
-$database    = '';
-$port        = '';
+$databaseUrl       = getenv('DATABASE_URL');
+$host              = '';
+$username          = '';
+$password          = '';
+$database          = '';
+$port              = '';
 
 if (false !== $databaseUrl) {
     $options  = parse_url($databaseUrl);
@@ -47,8 +47,8 @@ $mysql_ssl_key     = envNonEmpty('MYSQL_SSL_KEY', null);
 $mysql_ssl_ciphers = envNonEmpty('MYSQL_SSL_CIPHER', null);
 $mysql_ssl_verify  = envNonEmpty('MYSQL_SSL_VERIFY_SERVER_CERT', null);
 
-$mySqlSSLOptions = [];
-$useSSL          = envNonEmpty('MYSQL_USE_SSL', false);
+$mySqlSSLOptions   = [];
+$useSSL            = envNonEmpty('MYSQL_USE_SSL', false);
 if (false !== $useSSL && null !== $useSSL && '' !== $useSSL) {
     if (null !== $mysql_ssl_ca_dir) {
         $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CAPATH] = $mysql_ssl_ca_dir;

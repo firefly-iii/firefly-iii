@@ -36,7 +36,7 @@ class ExchangeRateSeeder extends Seeder
 {
     public function run(): void
     {
-        $count = User::count();
+        $count  = User::count();
         if (0 === $count) {
             app('log')->debug('Will not seed exchange rates yet.');
 

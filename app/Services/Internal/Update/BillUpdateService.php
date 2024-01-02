@@ -52,22 +52,22 @@ class BillUpdateService
         $this->user = $bill->user;
 
         if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
-            $factory  = app(TransactionCurrencyFactory::class);
-            $currency = $factory->find((int) ($data['currency_id'] ?? null), $data['currency_code'] ?? null) ??
+            $factory                       = app(TransactionCurrencyFactory::class);
+            $currency                      = $factory->find((int) ($data['currency_id'] ?? null), $data['currency_code'] ?? null) ??
                         app('amount')->getDefaultCurrencyByUserGroup($bill->user->userGroup);
 
             // enable the currency if it isn't.
-            $currency->enabled = true;
+            $currency->enabled             = true;
             $currency->save();
             $bill->transaction_currency_id = $currency->id;
             $bill->save();
         }
         // update bill properties:
-        $bill = $this->updateBillProperties($bill, $data);
+        $bill       = $this->updateBillProperties($bill, $data);
         $bill->save();
         $bill->refresh();
         // old values
-        $oldData = [
+        $oldData    = [
             'name'                      => $bill->name,
             'amount_min'                => $bill->amount_min,
             'amount_max'                => $bill->amount_max,
@@ -197,14 +197,14 @@ class BillUpdateService
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($bill->user);
-        $rules = $repository->getRulesForBill($bill);
+        $rules      = $repository->getRulesForBill($bill);
         if (0 === $rules->count()) {
             app('log')->debug('Found no rules.');
 
             return;
         }
         app('log')->debug(sprintf('Found %d rules', $rules->count()));
-        $fields = [
+        $fields     = [
             'name'                      => 'description_contains',
             'amount_min'                => 'amount_more',
             'amount_max'                => 'amount_less',

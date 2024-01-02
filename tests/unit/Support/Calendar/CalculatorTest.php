@@ -103,7 +103,7 @@ final class CalculatorTest extends TestCase
 
         /** @var IntervalProvider $interval */
         foreach ($intervals as $index => $interval) {
-            $calculator = CalculatorProvider::from($periodicity, $interval);
+            $calculator                                             = CalculatorProvider::from($periodicity, $interval);
 
             $periodicityIntervals["#{$index} {$calculator->label}"] = [$calculator];
         }

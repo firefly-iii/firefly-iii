@@ -59,13 +59,13 @@ class OperationsRepository implements OperationsRepositoryInterface
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId   = (int)$journal['currency_id'];
-            $categoryId   = (int)$journal['category_id'];
-            $categoryName = (string)$journal['category_name'];
+            $currencyId                                                                        = (int)$journal['currency_id'];
+            $categoryId                                                                        = (int)$journal['category_id'];
+            $categoryName                                                                      = (string)$journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -73,7 +73,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] ??= [
+            $array[$currencyId]                            ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -135,13 +135,13 @@ class OperationsRepository implements OperationsRepositoryInterface
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId   = (int)$journal['currency_id'];
-            $categoryId   = (int)$journal['category_id'];
-            $categoryName = (string)$journal['category_name'];
+            $currencyId                                                                        = (int)$journal['currency_id'];
+            $categoryId                                                                        = (int)$journal['category_id'];
+            $categoryName                                                                      = (string)$journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -149,7 +149,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] ??= [
+            $array[$currencyId]                            ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -197,13 +197,13 @@ class OperationsRepository implements OperationsRepositoryInterface
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId   = (int)$journal['currency_id'];
-            $categoryId   = (int)$journal['category_id'];
-            $categoryName = (string)$journal['category_name'];
+            $currencyId                                                                        = (int)$journal['currency_id'];
+            $categoryId                                                                        = (int)$journal['category_id'];
+            $categoryName                                                                      = (string)$journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -211,7 +211,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] ??= [
+            $array[$currencyId]                            ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -260,13 +260,13 @@ class OperationsRepository implements OperationsRepositoryInterface
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId   = (int)$journal['currency_id'];
-            $categoryId   = (int)$journal['category_id'];
-            $categoryName = (string)$journal['category_name'];
+            $currencyId                                                                        = (int)$journal['currency_id'];
+            $categoryId                                                                        = (int)$journal['category_id'];
+            $categoryName                                                                      = (string)$journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -274,7 +274,7 @@ class OperationsRepository implements OperationsRepositoryInterface
             }
 
             // info about the currency:
-            $array[$currencyId] ??= [
+            $array[$currencyId]                            ??= [
                 'categories'              => [],
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -328,12 +328,12 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
         $collector->setCategories($categories);
         $collector->withCategoryInformation();
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -365,12 +365,12 @@ class OperationsRepository implements OperationsRepositoryInterface
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],
@@ -402,12 +402,12 @@ class OperationsRepository implements OperationsRepositoryInterface
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
             $currencyId                = (int)$journal['currency_id'];
-            $array[$currencyId]        ??= [
+            $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string)$currencyId,
                 'currency_name'           => $journal['currency_name'],

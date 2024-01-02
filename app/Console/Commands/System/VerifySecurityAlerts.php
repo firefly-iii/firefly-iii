@@ -38,7 +38,7 @@ class VerifySecurityAlerts extends Command
 
     protected $description = 'Verify security alerts';
 
-    protected $signature = 'firefly-iii:verify-security-alerts';
+    protected $signature   = 'firefly-iii:verify-security-alerts';
 
     /**
      * Execute the console command.

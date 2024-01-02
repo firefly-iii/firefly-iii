@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers\V2;
 
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\ObjectGroup;
@@ -34,6 +35,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BillTransformer
@@ -48,22 +50,22 @@ class BillTransformer extends AbstractTransformer
     private array                 $paidDates;
 
     /**
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function collectMetaData(Collection $objects): void
     {
-        $currencies      = [];
-        $bills           = [];
-        $this->notes     = [];
-        $this->groups    = [];
-        $this->paidDates = [];
+        $currencies       = [];
+        $bills            = [];
+        $this->notes      = [];
+        $this->groups     = [];
+        $this->paidDates  = [];
 
         /** @var Bill $object */
         foreach ($objects as $object) {
-            $id              = $object->transaction_currency_id;
-            $bills[]         = $object->id;
+            $id      = $object->transaction_currency_id;
+            $bills[] = $object->id;
             $currencies[$id] ??= TransactionCurrency::find($id);
         }
         $this->currencies = $currencies;
@@ -75,7 +77,7 @@ class BillTransformer extends AbstractTransformer
             $this->notes[$id] = $note;
         }
         // grab object groups:
-        $set = DB::table('object_groupables')
+        $set              = DB::table('object_groupables')
             ->leftJoin('object_groups', 'object_groups.id', '=', 'object_groupables.object_group_id')
             ->where('object_groupables.object_groupable_type', Bill::class)
             ->get(['object_groupables.*', 'object_groups.title', 'object_groups.order'])
@@ -92,17 +94,18 @@ class BillTransformer extends AbstractTransformer
                 'object_group_order' => $order,
             ];
         }
-        $this->default   = app('amount')->getDefaultCurrency();
-        $this->converter = new ExchangeRateConverter();
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        $this->default    = app('amount')->getDefaultCurrency();
+        $this->converter  = new ExchangeRateConverter();
 
         // grab all paid dates:
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $journals   = TransactionJournal::whereIn('bill_id', $bills)
+            $journals     = TransactionJournal::whereIn('bill_id', $bills)
                 ->where('date', '>=', $this->parameters->get('start'))
                 ->where('date', '<=', $this->parameters->get('end'))
                 ->get(['transaction_journals.id', 'transaction_journals.transaction_group_id', 'transaction_journals.date', 'transaction_journals.bill_id'])
             ;
-            $journalIds = $journals->pluck('id')->toArray();
+            $journalIds   = $journals->pluck('id')->toArray();
 
             // grab transactions for amount:
             $set          = Transaction::whereIn('transaction_journal_id', $journalIds)
@@ -120,26 +123,26 @@ class BillTransformer extends AbstractTransformer
             /** @var TransactionJournal $journal */
             foreach ($journals as $journal) {
                 app('log')->debug(sprintf('Processing journal #%d', $journal->id));
-                $transaction             = $transactions[$journal->id] ?? [];
-                $billId                  = (int) $journal->bill_id;
-                $currencyId              = (int) ($transaction['transaction_currency_id'] ?? 0);
+                $transaction                = $transactions[$journal->id] ?? [];
+                $billId                     = (int) $journal->bill_id;
+                $currencyId                 = (int) ($transaction['transaction_currency_id'] ?? 0);
                 $currencies[$currencyId] ??= TransactionCurrency::find($currencyId);
 
                 // foreign currency
-                $foreignCurrencyId     = null;
-                $foreignCurrencyCode   = null;
-                $foreignCurrencyName   = null;
-                $foreignCurrencySymbol = null;
-                $foreignCurrencyDp     = null;
+                $foreignCurrencyId          = null;
+                $foreignCurrencyCode        = null;
+                $foreignCurrencyName        = null;
+                $foreignCurrencySymbol      = null;
+                $foreignCurrencyDp          = null;
                 app('log')->debug('Foreign currency is NULL');
                 if (null !== $transaction['foreign_currency_id']) {
                     app('log')->debug(sprintf('Foreign currency is #%d', $transaction['foreign_currency_id']));
-                    $foreignCurrencyId              = (int) $transaction['foreign_currency_id'];
+                    $foreignCurrencyId     = (int) $transaction['foreign_currency_id'];
                     $currencies[$foreignCurrencyId] ??= TransactionCurrency::find($foreignCurrencyId);
-                    $foreignCurrencyCode            = $currencies[$foreignCurrencyId]->code;
-                    $foreignCurrencyName            = $currencies[$foreignCurrencyId]->name;
-                    $foreignCurrencySymbol          = $currencies[$foreignCurrencyId]->symbol;
-                    $foreignCurrencyDp              = $currencies[$foreignCurrencyId]->decimal_places;
+                    $foreignCurrencyCode   = $currencies[$foreignCurrencyId]->code;
+                    $foreignCurrencyName   = $currencies[$foreignCurrencyId]->name;
+                    $foreignCurrencySymbol = $currencies[$foreignCurrencyId]->symbol;
+                    $foreignCurrencyDp     = $currencies[$foreignCurrencyId]->decimal_places;
                 }
 
                 $this->paidDates[$billId][] = [
@@ -179,18 +182,18 @@ class BillTransformer extends AbstractTransformer
      */
     public function transform(Bill $bill): array
     {
-        $paidData          = $this->paidDates[$bill->id] ?? [];
-        $nextExpectedMatch = $this->nextExpectedMatch($bill, $this->paidDates[$bill->id] ?? []);
-        $payDates          = $this->payDates($bill);
-        $currency          = $this->currencies[$bill->transaction_currency_id];
-        $group             = $this->groups[$bill->id] ?? null;
+        $paidData              = $this->paidDates[$bill->id] ?? [];
+        $nextExpectedMatch     = $this->nextExpectedMatch($bill, $this->paidDates[$bill->id] ?? []);
+        $payDates              = $this->payDates($bill);
+        $currency              = $this->currencies[$bill->transaction_currency_id];
+        $group                 = $this->groups[$bill->id] ?? null;
 
         // date for currency conversion
         /** @var null|Carbon $startParam */
-        $startParam = $this->parameters->get('start');
+        $startParam            = $this->parameters->get('start');
 
         /** @var null|Carbon $date */
-        $date = null === $startParam ? today() : clone $startParam;
+        $date                  = null === $startParam ? today() : clone $startParam;
 
         $nextExpectedMatchDiff = $this->getNextExpectedMatchDiff($nextExpectedMatch, $payDates);
         $this->converter->summarize();
@@ -248,10 +251,10 @@ class BillTransformer extends AbstractTransformer
         // 2023-07-18 the cloned $searchDate is used to grab the correct transactions.
 
         /** @var null|Carbon $startParam */
-        $startParam = $this->parameters->get('start');
+        $startParam   = $this->parameters->get('start');
 
         /** @var null|Carbon $start */
-        $start = null === $startParam ? today() : clone $startParam;
+        $start        = null === $startParam ? today() : clone $startParam;
         $start->subDay();
 
         $lastPaidDate = $this->lastPaidDate($dates, $start);
@@ -304,7 +307,7 @@ class BillTransformer extends AbstractTransformer
         $currentStart = clone $this->parameters->get('start');
         // 2023-06-23 subDay to fix 7655
         $currentStart->subDay();
-        $loop = 0;
+        $loop         = 0;
         while ($currentStart <= $this->parameters->get('end')) {
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
             // If nextExpectedMatch is after end, we continue:
@@ -314,13 +317,13 @@ class BillTransformer extends AbstractTransformer
             // add to set
             $set->push(clone $nextExpectedMatch);
             $nextExpectedMatch->addDay();
-            $currentStart = clone $nextExpectedMatch;
+            $currentStart      = clone $nextExpectedMatch;
             ++$loop;
             if ($loop > 4) {
                 break;
             }
         }
-        $simple = $set->map(
+        $simple       = $set->map(
             static function (Carbon $date) {
                 return $date->toAtomString();
             }
@@ -358,7 +361,7 @@ class BillTransformer extends AbstractTransformer
         if (null === $current) {
             return trans('firefly.not_expected_period');
         }
-        $carbon = new Carbon($current);
+        $carbon  = new Carbon($current);
 
         return $carbon->diffForHumans(today(config('app.timezone')), CarbonInterface::DIFF_RELATIVE_TO_NOW);
     }

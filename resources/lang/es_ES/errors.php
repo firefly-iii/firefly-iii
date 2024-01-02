@@ -62,16 +62,16 @@ return [
  *
  */
 
-    'collect_info'        => 'Por favor, recopile más información en el directorio <code>storage/logs</code> donde encontrará los archivos de registro. Si está ejecutando Docker, use <code>registros docker -f [container]</code>.',
-    'collect_info_more'   => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
-    'github_help'         => 'Obtener ayuda en GitHub',
-    'github_instructions' => 'Es bienvenido a abrir un nuevo issue <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">en GitHub</a></strong>.',
-    'use_search'          => '¡Use la búsqueda!',
-    'include_info'        => 'Incluya la información <a href=":link">de esta página de depuración</a>.',
-    'tell_more'           => 'Cuéntenos más que "Dice: Ups"',
-    'include_logs'        => 'Incluye registros de errores (ver arriba).',
-    'what_did_you_do'     => 'Cuéntenos lo que estaba haciendo.',
-    'offline_header'      => 'Estás desconectado',
-    'offline_unreachable' => 'Firefly III es inaccesible. Tu dispositivo está desconectado o el servidor no está funcionando.',
-    'offline_github'      => 'Si estás seguro de que tu dispositivo y el servidor están conectados, por favor abre un ticket en <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
+    'collect_info'            => 'Por favor, recopile más información en el directorio <code>storage/logs</code> donde encontrará los archivos de registro. Si está ejecutando Docker, use <code>registros docker -f [container]</code>.',
+    'collect_info_more'       => 'Puede leer más acerca de la recolección de información de errores en <a href="https://docs.firefly-iii.org/how-to/general/debug/">la FAQ</a>.',
+    'github_help'             => 'Obtener ayuda en GitHub',
+    'github_instructions'     => 'Es bienvenido a abrir un nuevo issue <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">en GitHub</a></strong>.',
+    'use_search'              => '¡Use la búsqueda!',
+    'include_info'            => 'Incluya la información <a href=":link">de esta página de depuración</a>.',
+    'tell_more'               => 'Cuéntenos más que "Dice: Ups"',
+    'include_logs'            => 'Incluye registros de errores (ver arriba).',
+    'what_did_you_do'         => 'Cuéntenos lo que estaba haciendo.',
+    'offline_header'          => 'Estás desconectado',
+    'offline_unreachable'     => 'Firefly III es inaccesible. Tu dispositivo está desconectado o el servidor no está funcionando.',
+    'offline_github'          => 'Si estás seguro de que tu dispositivo y el servidor están conectados, por favor abre un ticket en <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.',
 ];

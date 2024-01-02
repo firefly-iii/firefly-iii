@@ -47,7 +47,7 @@ class DeleteTransaction implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
-        $count = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        $count  = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
 
         // destroy entire group.
         if (1 === $count) {

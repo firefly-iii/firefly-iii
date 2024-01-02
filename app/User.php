@@ -422,9 +422,9 @@ class User extends Authenticatable
         if (method_exists($this, $method)) {
             return $this->{$method}($notification); // @phpstan-ignore-line
         }
-        $email = $this->email;
+        $email  = $this->email;
         // see if user has alternative email address:
-        $pref = app('preferences')->getForUser($this, 'remote_guard_alt_email');
+        $pref   = app('preferences')->getForUser($this, 'remote_guard_alt_email');
         if (null !== $pref) {
             $email = $pref->data;
         }
@@ -462,11 +462,11 @@ class User extends Authenticatable
     public function routeNotificationForSlack(Notification $notification): string
     {
         // this check does not validate if the user is owner, Should be done by notification itself.
-        $res = app('fireflyconfig')->get('slack_webhook_url', '')->data;
+        $res  = app('fireflyconfig')->get('slack_webhook_url', '')->data;
         if (is_array($res)) {
             $res = '';
         }
-        $res = (string)$res;
+        $res  = (string)$res;
         if ($notification instanceof TestNotification) {
             return $res;
         }
@@ -594,14 +594,14 @@ class User extends Authenticatable
         app('log')->debug(sprintf('in hasAnyRoleInGroup(%s)', implode(', ', $roles)));
 
         /** @var Collection $dbRoles */
-        $dbRoles = UserRole::whereIn('title', $roles)->get();
+        $dbRoles          = UserRole::whereIn('title', $roles)->get();
         if (0 === $dbRoles->count()) {
             app('log')->error(sprintf('Could not find role(s): %s. Probably migration mishap.', implode(', ', $roles)));
 
             return false;
         }
-        $dbRolesIds    = $dbRoles->pluck('id')->toArray();
-        $dbRolesTitles = $dbRoles->pluck('title')->toArray();
+        $dbRolesIds       = $dbRoles->pluck('id')->toArray();
+        $dbRolesTitles    = $dbRoles->pluck('title')->toArray();
 
         /** @var Collection $groupMemberships */
         $groupMemberships = $this->groupMemberships()

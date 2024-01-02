@@ -288,7 +288,6 @@ export default {
       if (e) {
         e.preventDefault();
       }
-      console.log('here we are');
       let journalId = parseInt(prompt('Enter a transaction ID'));
       if (journalId !== null && journalId > 0 && journalId <= 16777216) {
         console.log('OK 1');

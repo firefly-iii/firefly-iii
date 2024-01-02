@@ -34,7 +34,7 @@ class PiggyBankObserver
     public function created(PiggyBank $piggyBank): void
     {
         app('log')->debug('Observe "created" of a piggy bank.');
-        $repetition = new PiggyBankRepetition();
+        $repetition                = new PiggyBankRepetition();
         $repetition->piggyBank()->associate($piggyBank);
         $repetition->startdate     = $piggyBank->startdate;
         $repetition->targetdate    = $piggyBank->targetdate;

@@ -74,7 +74,7 @@ class CategoryController extends Controller
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $accountId          = $account->id;
+            $accountId = $account->id;
             $report[$accountId] ??= [
                 'name'       => $account->name,
                 'id'         => $account->id,
@@ -90,8 +90,8 @@ class CategoryController extends Controller
             /** @var array $category */
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
-                    $sourceAccountId                                     = $journal['source_account_id'];
-                    $report[$sourceAccountId]['currencies'][$currencyId] ??= [
+                    $sourceAccountId                                                                             = $journal['source_account_id'];
+                    $report[$sourceAccountId]['currencies'][$currencyId]                                         ??= [
                         'currency_id'             => $currency['currency_id'],
                         'currency_symbol'         => $currency['currency_symbol'],
                         'currency_name'           => $currency['currency_name'],
@@ -167,7 +167,7 @@ class CategoryController extends Controller
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $accountId          = $account->id;
+            $accountId = $account->id;
             $report[$accountId] ??= [
                 'name'       => $account->name,
                 'id'         => $account->id,
@@ -178,7 +178,7 @@ class CategoryController extends Controller
 
         // loop expenses.
         foreach ($spent as $currency) {
-            $currencyId        = $currency['currency_id'];
+            $currencyId = $currency['currency_id'];
             $sums[$currencyId] ??= [
                 'currency_id'             => $currency['currency_id'],
                 'currency_symbol'         => $currency['currency_symbol'],
@@ -191,7 +191,7 @@ class CategoryController extends Controller
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
                     $sourceAccountId                                              = $journal['source_account_id'];
-                    $report[$sourceAccountId]['currencies'][$currencyId]          ??= [
+                    $report[$sourceAccountId]['currencies'][$currencyId] ??= [
                         'currency_id'             => $currency['currency_id'],
                         'currency_symbol'         => $currency['currency_symbol'],
                         'currency_name'           => $currency['currency_name'],
@@ -216,7 +216,7 @@ class CategoryController extends Controller
 
         // loop income.
         foreach ($earned as $currency) {
-            $currencyId        = $currency['currency_id'];
+            $currencyId = $currency['currency_id'];
             $sums[$currencyId] ??= [
                 'currency_id'             => $currency['currency_id'],
                 'currency_symbol'         => $currency['currency_symbol'],
@@ -229,7 +229,7 @@ class CategoryController extends Controller
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
                     $destinationAccountId                                               = $journal['destination_account_id'];
-                    $report[$destinationAccountId]['currencies'][$currencyId]           ??= [
+                    $report[$destinationAccountId]['currencies'][$currencyId] ??= [
                         'currency_id'             => $currency['currency_id'],
                         'currency_symbol'         => $currency['currency_symbol'],
                         'currency_name'           => $currency['currency_name'],
@@ -262,14 +262,14 @@ class CategoryController extends Controller
      */
     public function avgExpenses(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
-        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
-        $result = [];
+        $spent   = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
+        $result  = [];
         foreach ($spent as $currency) {
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
-                    $destinationId = $journal['destination_account_id'];
-                    $key           = sprintf('%d-%d', $destinationId, $currency['currency_id']);
-                    $result[$key]  ??= [
+                    $destinationId             = $journal['destination_account_id'];
+                    $key                       = sprintf('%d-%d', $destinationId, $currency['currency_id']);
+                    $result[$key] ??= [
                         'transactions'             => 0,
                         'sum'                      => '0',
                         'avg'                      => '0',
@@ -312,13 +312,13 @@ class CategoryController extends Controller
      */
     public function avgIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
-        $spent  = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
-        $result = [];
+        $spent   = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
+        $result  = [];
         foreach ($spent as $currency) {
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
-                    $sourceId     = $journal['source_account_id'];
-                    $key          = sprintf('%d-%d', $sourceId, $currency['currency_id']);
+                    $sourceId                  = $journal['source_account_id'];
+                    $key                       = sprintf('%d-%d', $sourceId, $currency['currency_id']);
                     $result[$key] ??= [
                         'transactions'            => 0,
                         'sum'                     => '0',
@@ -369,7 +369,7 @@ class CategoryController extends Controller
 
         /** @var Category $category */
         foreach ($categories as $category) {
-            $categoryId          = $category->id;
+            $categoryId = $category->id;
             $report[$categoryId] ??= [
                 'name'       => $category->name,
                 'id'         => $category->id,
@@ -377,7 +377,7 @@ class CategoryController extends Controller
             ];
         }
         foreach ($spent as $currency) {
-            $currencyId        = $currency['currency_id'];
+            $currencyId = $currency['currency_id'];
             $sums[$currencyId] ??= [
                 'currency_id'             => $currency['currency_id'],
                 'currency_symbol'         => $currency['currency_symbol'],
@@ -394,7 +394,7 @@ class CategoryController extends Controller
 
                 foreach ($category['transaction_journals'] as $journal) {
                     // add currency info to report array:
-                    $report[$categoryId]['currencies'][$currencyId]          ??= [
+                    $report[$categoryId]['currencies'][$currencyId] ??= [
                         'spent'                   => '0',
                         'earned'                  => '0',
                         'sum'                     => '0',
@@ -412,14 +412,14 @@ class CategoryController extends Controller
                         $journal['amount']
                     );
 
-                    $sums[$currencyId]['spent_sum'] = bcadd($sums[$currencyId]['spent_sum'], $journal['amount']);
-                    $sums[$currencyId]['total_sum'] = bcadd($sums[$currencyId]['total_sum'], $journal['amount']);
+                    $sums[$currencyId]['spent_sum']                          = bcadd($sums[$currencyId]['spent_sum'], $journal['amount']);
+                    $sums[$currencyId]['total_sum']                          = bcadd($sums[$currencyId]['total_sum'], $journal['amount']);
                 }
             }
         }
 
         foreach ($earned as $currency) {
-            $currencyId        = $currency['currency_id'];
+            $currencyId = $currency['currency_id'];
             $sums[$currencyId] ??= [
                 'currency_id'             => $currency['currency_id'],
                 'currency_symbol'         => $currency['currency_symbol'],
@@ -436,7 +436,7 @@ class CategoryController extends Controller
 
                 foreach ($category['transaction_journals'] as $journal) {
                     // add currency info to report array:
-                    $report[$categoryId]['currencies'][$currencyId]           ??= [
+                    $report[$categoryId]['currencies'][$currencyId] ??= [
                         'spent'                   => '0',
                         'earned'                  => '0',
                         'sum'                     => '0',
@@ -454,8 +454,8 @@ class CategoryController extends Controller
                         $journal['amount']
                     );
 
-                    $sums[$currencyId]['earned_sum'] = bcadd($sums[$currencyId]['earned_sum'], $journal['amount']);
-                    $sums[$currencyId]['total_sum']  = bcadd($sums[$currencyId]['total_sum'], $journal['amount']);
+                    $sums[$currencyId]['earned_sum']                          = bcadd($sums[$currencyId]['earned_sum'], $journal['amount']);
+                    $sums[$currencyId]['total_sum']                           = bcadd($sums[$currencyId]['total_sum'], $journal['amount']);
                 }
             }
         }
@@ -472,7 +472,7 @@ class CategoryController extends Controller
      */
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
-        $cache = new CacheProperties();
+        $cache   = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('category-period-expenses-report');
@@ -483,7 +483,7 @@ class CategoryController extends Controller
 
         // depending on the carbon format (a reliable way to determine the general date difference)
         // change the "listOfPeriods" call so the entire period gets included correctly.
-        $format = app('navigation')->preferredCarbonFormat($start, $end);
+        $format  = app('navigation')->preferredCarbonFormat($start, $end);
 
         if ('Y' === $format) {
             $start->startOfYear();
@@ -499,7 +499,7 @@ class CategoryController extends Controller
         foreach ([$with, $without] as $set) {
             foreach ($set as $currencyId => $currencyRow) {
                 foreach ($currencyRow['categories'] as $categoryId => $categoryRow) {
-                    $key        = sprintf('%d-%d', $currencyId, $categoryId);
+                    $key = sprintf('%d-%d', $currencyId, $categoryId);
                     $data[$key] ??= [
                         'id'                      => $categoryRow['id'],
                         'title'                   => sprintf('%s (%s)', $categoryRow['name'], $currencyRow['currency_name']),
@@ -523,7 +523,7 @@ class CategoryController extends Controller
 
         $cache->store($data);
 
-        $report = $data;
+        $report  = $data;
 
         try {
             $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
@@ -546,7 +546,7 @@ class CategoryController extends Controller
      */
     public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        $cache = new CacheProperties();
+        $cache   = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('category-period-income-report');
@@ -557,7 +557,7 @@ class CategoryController extends Controller
 
         // depending on the carbon format (a reliable way to determine the general date difference)
         // change the "listOfPeriods" call so the entire period gets included correctly.
-        $format = app('navigation')->preferredCarbonFormat($start, $end);
+        $format  = app('navigation')->preferredCarbonFormat($start, $end);
 
         if ('Y' === $format) {
             $start->startOfYear();
@@ -573,7 +573,7 @@ class CategoryController extends Controller
         foreach ([$with, $without] as $set) {
             foreach ($set as $currencyId => $currencyRow) {
                 foreach ($currencyRow['categories'] as $categoryId => $categoryRow) {
-                    $key        = sprintf('%d-%d', $currencyId, $categoryId);
+                    $key = sprintf('%d-%d', $currencyId, $categoryId);
                     $data[$key] ??= [
                         'id'                      => $categoryRow['id'],
                         'title'                   => sprintf('%s (%s)', $categoryRow['name'], $currencyRow['currency_name']),
@@ -595,7 +595,7 @@ class CategoryController extends Controller
             }
         }
 
-        $report = $data;
+        $report  = $data;
 
         try {
             $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
@@ -619,7 +619,7 @@ class CategoryController extends Controller
     public function operations(Collection $accounts, Carbon $start, Carbon $end): string
     {
         // chart properties for cache:
-        $cache = new CacheProperties();
+        $cache     = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('category-report');
@@ -634,7 +634,7 @@ class CategoryController extends Controller
         $generator->setStart($start);
         $generator->setEnd($end);
         $generator->operations();
-        $report = $generator->getReport();
+        $report    = $generator->getReport();
 
         try {
             $result = view('reports.partials.categories', compact('report'))->render();
@@ -656,8 +656,8 @@ class CategoryController extends Controller
      */
     public function topExpenses(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
-        $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
-        $result = [];
+        $spent   = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
+        $result  = [];
         foreach ($spent as $currency) {
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
@@ -704,8 +704,8 @@ class CategoryController extends Controller
      */
     public function topIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
     {
-        $spent  = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
-        $result = [];
+        $spent   = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
+        $result  = [];
         foreach ($spent as $currency) {
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {

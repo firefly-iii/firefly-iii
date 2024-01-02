@@ -25,9 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Models\Recurrence;
-use FireflyIII\Models\RecurrenceTransaction;
-use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
 
 /**
@@ -39,9 +36,9 @@ class MigrateRecurrenceType extends Command
 
     public const string CONFIG_NAME = '550_migrate_recurrence_type';
 
-    protected $description = 'Migrate transaction type of recurring transaction.';
+    protected $description          = 'Migrate transaction type of recurring transaction.';
 
-    protected $signature = 'firefly-iii:migrate-recurrence-type {--F|force : Force the execution of this command.}';
+    protected $signature            = 'firefly-iii:migrate-recurrence-type {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -53,8 +50,7 @@ class MigrateRecurrenceType extends Command
 
             return 0;
         }
-
-        $this->migrateTypes();
+        $this->friendlyWarning('This command has been disabled.');
         $this->markAsExecuted();
 
         return 0;
@@ -65,38 +61,6 @@ class MigrateRecurrenceType extends Command
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
 
         return (bool)$configVar?->data;
-    }
-
-    private function migrateTypes(): void
-    {
-        $set = Recurrence::get();
-
-        /** @var Recurrence $recurrence */
-        foreach ($set as $recurrence) {
-            if (TransactionType::INVALID !== $recurrence->transactionType->type) {
-                $this->migrateRecurrence($recurrence);
-            }
-        }
-    }
-
-    private function migrateRecurrence(Recurrence $recurrence): void
-    {
-        $originalType                    = $recurrence->transaction_type_id;
-        $newType                         = $this->getInvalidType();
-        $recurrence->transaction_type_id = $newType->id;
-        $recurrence->save();
-
-        /** @var RecurrenceTransaction $transaction */
-        foreach ($recurrence->recurrenceTransactions as $transaction) {
-            $transaction->transaction_type_id = $originalType;
-            $transaction->save();
-        }
-        $this->friendlyInfo(sprintf('Updated recurrence #%d to new transaction type model.', $recurrence->id));
-    }
-
-    private function getInvalidType(): TransactionType
-    {
-        return TransactionType::whereType(TransactionType::INVALID)->firstOrCreate(['type' => TransactionType::INVALID]);
     }
 
     private function markAsExecuted(): void

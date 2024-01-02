@@ -72,14 +72,13 @@ class AccountController extends Controller
      */
     public function accounts(AutocompleteRequest $request): JsonResponse
     {
-        $data  = $request->getData();
-        $types = $data['types'];
-        $query = $data['query'];
-        $date  = $data['date'] ?? today(config('app.timezone'));
+        $data            = $request->getData();
+        $types           = $data['types'];
+        $query           = $data['query'];
+        $date            = $data['date'] ?? today(config('app.timezone'));
+        $return          = [];
+        $result          = $this->repository->searchAccount((string) $query, $types, $this->parameters->get('limit'));
 
-        $return = [];
-
-        $result = $this->repository->searchAccount((string) $query, $types, $this->parameters->get('limit'));
         // TODO this code is duplicated in the V2 Autocomplete controller, which means this code is due to be deprecated.
         $defaultCurrency = app('amount')->getDefaultCurrency();
 
@@ -97,7 +96,7 @@ class AccountController extends Controller
                 );
             }
 
-            $return[] = [
+            $return[]        = [
                 'id'                      => (string) $account->id,
                 'name'                    => $account->name,
                 'name_with_balance'       => $nameWithBalance,

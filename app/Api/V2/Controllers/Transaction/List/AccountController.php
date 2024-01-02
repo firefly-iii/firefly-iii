@@ -47,9 +47,9 @@ class AccountController extends Controller
     public function list(ListRequest $request, Account $account): JsonResponse
     {
         // collect transactions:
-        $page     = $request->getPage();
-        $page     = max($page, 1);
-        $pageSize = $this->parameters->get('limit');
+        $page      = $request->getPage();
+        $page      = max($page, 1);
+        $pageSize  = $this->parameters->get('limit');
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -60,8 +60,8 @@ class AccountController extends Controller
             ->setTypes($request->getTransactionTypes())
         ;
 
-        $start = $request->getStartDate();
-        $end   = $request->getEndDate();
+        $start     = $request->getStartDate();
+        $end       = $request->getEndDate();
         if (null !== $start) {
             app('log')->debug(sprintf('Set start date to %s', $start->toIso8601String()));
             $collector->setStart($start);

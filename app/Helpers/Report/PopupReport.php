@@ -70,7 +70,7 @@ class PopupReport implements PopupReportInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector
             ->setAccounts(new Collection([$account]))
             ->setTypes([TransactionType::WITHDRAWAL])
@@ -102,7 +102,7 @@ class PopupReport implements PopupReportInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setAccounts($attributes['accounts'])
             ->withAccountInformation()
             ->withBudgetInformation()
@@ -139,7 +139,7 @@ class PopupReport implements PopupReportInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
 
         $collector->setAccounts($attributes['accounts'])
             ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::DEPOSIT])
@@ -169,8 +169,8 @@ class PopupReport implements PopupReportInterface
     public function byExpenses(Account $account, array $attributes): array
     {
         // filter by currency, if set.
-        $currencyId = $attributes['currencyId'] ?? null;
-        $currency   = null;
+        $currencyId        = $attributes['currencyId'] ?? null;
+        $currency          = null;
         if (null !== $currencyId) {
             /** @var CurrencyRepositoryInterface $repos */
             $repos    = app(CurrencyRepositoryInterface::class);
@@ -178,14 +178,14 @@ class PopupReport implements PopupReportInterface
         }
 
         /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
+        $repository        = app(JournalRepositoryInterface::class);
         $repository->setUser($account->user);
 
         $accountRepository = app(AccountRepositoryInterface::class);
         $accountRepository->setUser($account->user);
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector         = app(GroupCollectorInterface::class);
 
         // set report accounts + the request accounts:
         // $set = $attributes['accounts'] ?? new Collection;
@@ -216,7 +216,7 @@ class PopupReport implements PopupReportInterface
         $repository->setUser($account->user);
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector
             ->setSourceAccounts(new Collection([$account]))
             ->setDestinationAccounts($attributes['accounts'])

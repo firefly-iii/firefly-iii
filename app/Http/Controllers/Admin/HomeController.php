@@ -70,7 +70,7 @@ class HomeController extends Controller
         foreach (config('firefly.admin_notifications') as $item) {
             $notifications[$item] = app('fireflyconfig')->get(sprintf('notification_%s', $item), true)->data;
         }
-        $slackUrl = app('fireflyconfig')->get('slack_webhook_url', '')->data;
+        $slackUrl      = app('fireflyconfig')->get('slack_webhook_url', '')->data;
 
         return view('admin.index', compact('title', 'mainTitleIcon', 'email', 'notifications', 'slackUrl'));
     }

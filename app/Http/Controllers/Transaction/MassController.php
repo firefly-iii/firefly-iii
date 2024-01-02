@@ -121,22 +121,22 @@ class MassController extends Controller
      */
     public function edit(array $journals): IlluminateView
     {
-        $subTitle = (string)trans('firefly.mass_edit_journals');
+        $subTitle            = (string)trans('firefly.mass_edit_journals');
 
         /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
+        $accountRepository   = app(AccountRepositoryInterface::class);
 
         // valid withdrawal sources:
-        $array             = array_keys(config(sprintf('firefly.source_dests.%s', TransactionType::WITHDRAWAL)));
-        $withdrawalSources = $accountRepository->getAccountsByType($array);
+        $array               = array_keys(config(sprintf('firefly.source_dests.%s', TransactionType::WITHDRAWAL)));
+        $withdrawalSources   = $accountRepository->getAccountsByType($array);
 
         // valid deposit destinations:
         $array               = config(sprintf('firefly.source_dests.%s.%s', TransactionType::DEPOSIT, AccountType::REVENUE));
         $depositDestinations = $accountRepository->getAccountsByType($array);
 
         /** @var BudgetRepositoryInterface $budgetRepository */
-        $budgetRepository = app(BudgetRepositoryInterface::class);
-        $budgets          = $budgetRepository->getBudgets();
+        $budgetRepository    = app(BudgetRepositoryInterface::class);
+        $budgets             = $budgetRepository->getBudgets();
 
         // reverse amounts
         foreach ($journals as $index => $journal) {
@@ -164,7 +164,7 @@ class MassController extends Controller
             // TODO this is a weird error, should be caught.
             throw new FireflyException('This is not an array.');
         }
-        $count = 0;
+        $count      = 0;
 
         /** @var string $journalId */
         foreach ($journalIds as $journalId) {
@@ -198,7 +198,7 @@ class MassController extends Controller
         // for each field, call the update service.
         $service->setTransactionJournal($journal);
 
-        $data = [
+        $data    = [
             'date'             => $this->getDateFromRequest($request, $journal->id, 'date'),
             'description'      => $this->getStringFromRequest($request, $journal->id, 'description'),
             'source_id'        => $this->getIntFromRequest($request, $journal->id, 'source_id'),

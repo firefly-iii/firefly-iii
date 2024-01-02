@@ -41,7 +41,7 @@ class CronController extends Controller
      */
     public function cron(CronRequest $request): JsonResponse
     {
-        $config = $request->getAll();
+        $config                           = $request->getAll();
 
         app('log')->debug(sprintf('Now in %s', __METHOD__));
         app('log')->debug(sprintf('Date is %s', $config['date']->toIsoString()));
@@ -51,7 +51,7 @@ class CronController extends Controller
         if (true === config('cer.download_enabled')) {
             $return['exchange_rates'] = $this->exchangeRatesCronJob($config['force'], $config['date']);
         }
-        $return['bill_warnings'] = $this->billWarningCronJob($config['force'], $config['date']);
+        $return['bill_warnings']          = $this->billWarningCronJob($config['force'], $config['date']);
 
         return response()->json($return);
     }

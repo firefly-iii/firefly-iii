@@ -37,7 +37,7 @@ class DeleteZeroAmount extends Command
 
     protected $description = 'Delete transactions with zero amount.';
 
-    protected $signature = 'firefly-iii:delete-zero-amount';
+    protected $signature   = 'firefly-iii:delete-zero-amount';
 
     /**
      * Execute the console command.

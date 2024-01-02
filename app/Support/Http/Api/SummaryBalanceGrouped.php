@@ -25,10 +25,11 @@ namespace FireflyIII\Support\Http\Api;
 
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 class SummaryBalanceGrouped
 {
-    private const string SUM = 'sum';
+    private const string SUM             = 'sum';
     private TransactionCurrency $default;
     private array               $amounts = [];
     private array               $keys;
@@ -44,7 +45,8 @@ class SummaryBalanceGrouped
 
     public function groupTransactions(string $key, array $journals): void
     {
-        \Log::debug(sprintf('Now in groupTransactions with key "%s" and %d journal(s)', $key, count($journals)));
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Now in groupTransactions with key "%s" and %d journal(s)', $key, count($journals)));
         $converter    = new ExchangeRateConverter();
         $this->keys[] = $key;
         $multiplier   = 'income' === $key ? '-1' : '1';
@@ -52,11 +54,11 @@ class SummaryBalanceGrouped
         /** @var array $journal */
         foreach ($journals as $journal) {
             // transaction info:
-            $currencyId                    = (int)$journal['currency_id'];
-            $amount                        = bcmul($journal['amount'], $multiplier);
-            $currency                      = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
-            $this->currencies[$currencyId] = $currency;
-            $nativeAmount                  = $converter->convert($currency, $this->default, $journal['date'], $amount);
+            $currencyId                            = (int)$journal['currency_id'];
+            $amount                                = bcmul($journal['amount'], $multiplier);
+            $currency                              = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
+            $this->currencies[$currencyId]         = $currency;
+            $nativeAmount                          = $converter->convert($currency, $this->default, $journal['date'], $amount);
             if ((int)$journal['foreign_currency_id'] === $this->default->id) {
                 // use foreign amount instead
                 $nativeAmount = $journal['foreign_amount'];
@@ -79,8 +81,8 @@ class SummaryBalanceGrouped
 
     public function groupData(): array
     {
-        \Log::debug('Now going to group data.');
-        $return = [];
+        Log::debug('Now going to group data.');
+        $return      = [];
         foreach ($this->keys as $key) {
             $title    = match ($key) {
                 'sum'     => 'balance',
@@ -88,9 +90,10 @@ class SummaryBalanceGrouped
                 'income'  => 'earned',
                 default   => 'something'
             };
+
             $return[] = [
                 'key'                     => sprintf('%s-in-native', $title),
-                'value'                   => $this->amounts[$key]['native'],
+                'value'                   => $this->amounts[$key]['native'] ?? '0',
                 'currency_id'             => (string)$this->default->id,
                 'currency_code'           => $this->default->code,
                 'currency_symbol'         => $this->default->symbol,
@@ -98,7 +101,7 @@ class SummaryBalanceGrouped
             ];
         }
         // loop 3: format amounts:
-        $currencyIds = array_keys($this->amounts[self::SUM]);
+        $currencyIds = array_keys($this->amounts[self::SUM] ?? []);
         foreach ($currencyIds as $currencyId) {
             if ('native' === $currencyId) {
                 // skip native entries.

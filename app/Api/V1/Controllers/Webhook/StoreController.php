@@ -28,7 +28,9 @@ use FireflyIII\Api\V1\Requests\Models\Webhook\CreateRequest;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
 use FireflyIII\Transformers\WebhookTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class StoreController
@@ -57,15 +59,23 @@ class StoreController extends Controller
      */
     public function store(CreateRequest $request): JsonResponse
     {
-        $data    = $request->getData();
-        $webhook = $this->repository->store($data);
-        $manager = $this->getManager();
+        $data        = $request->getData();
+        if(false === config('firefly.allow_webhooks')) {
+            Log::channel('audit')->info('User tries to store new webhook, but webhooks are DISABLED.', $data);
+
+            throw new NotFoundHttpException('Webhooks are not enabled.');
+        }
+
+        $webhook     = $this->repository->store($data);
+        $manager     = $this->getManager();
+
+        Log::channel('audit')->info('User stores new webhook', $data);
 
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($webhook, $transformer, 'webhooks');
+        $resource    = new Item($webhook, $transformer, 'webhooks');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

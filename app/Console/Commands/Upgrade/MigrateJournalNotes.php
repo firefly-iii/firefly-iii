@@ -37,9 +37,9 @@ class MigrateJournalNotes extends Command
 
     public const string CONFIG_NAME = '480_migrate_notes';
 
-    protected $description = 'Migrate notes for transaction journals.';
+    protected $description          = 'Migrate notes for transaction journals.';
 
-    protected $signature = 'firefly-iii:migrate-notes {--F|force : Force the execution of this command.}';
+    protected $signature            = 'firefly-iii:migrate-notes {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -59,8 +59,8 @@ class MigrateJournalNotes extends Command
 
         /** @var TransactionJournalMeta $meta */
         foreach ($set as $meta) {
-            $journal = $meta->transactionJournal;
-            $note    = $journal->notes()->first();
+            $journal    = $meta->transactionJournal;
+            $note       = $journal->notes()->first();
             if (null === $note) {
                 $note = new Note();
                 $note->noteable()->associate($journal);
@@ -81,7 +81,7 @@ class MigrateJournalNotes extends Command
             $this->friendlyInfo(sprintf('Migrated %d note(s).', $count));
         }
 
-        $end = round(microtime(true) - $start, 2);
+        $end   = round(microtime(true) - $start, 2);
         $this->friendlyInfo(sprintf('Migrated notes in %s seconds.', $end));
         $this->markAsExecuted();
 

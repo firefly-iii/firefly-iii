@@ -45,7 +45,7 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $fields = [
+        $fields   = [
             'title'           => ['title', 'convertString'],
             'description'     => ['description', 'stringWithNewlines'],
             'rule_group_id'   => ['rule_group_id', 'convertInteger'],
@@ -74,11 +74,11 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $validTriggers = $this->getTriggers();
-        $validActions  = array_keys(config('firefly.rule-actions'));
+        $validTriggers   = $this->getTriggers();
+        $validActions    = array_keys(config('firefly.rule-actions'));
 
         /** @var Rule $rule */
-        $rule = $this->route()->parameter('rule');
+        $rule            = $this->route()->parameter('rule');
 
         // some triggers and actions require text:
         $contextTriggers = implode(',', $this->getTriggersWithContext());

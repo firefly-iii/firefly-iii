@@ -120,8 +120,8 @@ class OAuthKeys
 
             return false;
         }
-        $private = storage_path('oauth-private.key');
-        $public  = storage_path('oauth-public.key');
+        $private    = storage_path('oauth-private.key');
+        $public     = storage_path('oauth-public.key');
         file_put_contents($private, $privateContent);
         file_put_contents($public, $publicContent);
 

@@ -157,7 +157,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector      = app(GroupCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
             ->setTypes([TransactionType::WITHDRAWAL])
             ->withAccountInformation()

@@ -28,6 +28,7 @@ use FireflyIII\Api\V2\Controllers\Controller;
 use FireflyIII\Api\V2\Request\Generic\DateRequest;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Transformers\V2\BudgetTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -48,6 +49,20 @@ class ShowController extends Controller
                 return $next($request);
             }
         );
+    }
+
+    /**
+     * Show a budget.
+     */
+    public function show(Budget $budget): JsonResponse
+    {
+        $transformer = new BudgetTransformer();
+        $transformer->setParameters($this->parameters);
+
+        return response()
+            ->api($this->jsonApiObject('budgets', $budget, $transformer))
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 
     /**

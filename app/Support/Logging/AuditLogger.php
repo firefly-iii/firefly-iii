@@ -42,7 +42,7 @@ class AuditLogger
 
         /** @var AbstractProcessingHandler $handler */
         foreach ($logger->getHandlers() as $handler) {
-            $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n");
+            $formatter = new LineFormatter("[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n", 'Y-m-d H:i:s', false, true);
             $handler->setFormatter($formatter);
             $handler->pushProcessor($processor);
         }

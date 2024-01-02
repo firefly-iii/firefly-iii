@@ -68,16 +68,16 @@ class TransactionJournalMeta extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-        ];
+                        = [
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'deleted_at' => 'datetime',
+                        ];
 
     protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
 
     /** @var string The table to store the data in */
-    protected $table = 'journal_meta';
+    protected $table    = 'journal_meta';
 
     /**
      * @param mixed $value

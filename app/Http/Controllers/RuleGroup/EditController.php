@@ -67,7 +67,7 @@ class EditController extends Controller
      */
     public function edit(Request $request, RuleGroup $ruleGroup)
     {
-        $subTitle = (string)trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
+        $subTitle    = (string)trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
         $hasOldInput = null !== $request->old('_token');
         $preFilled   = [
@@ -119,7 +119,7 @@ class EditController extends Controller
      */
     public function update(RuleGroupFormRequest $request, RuleGroup $ruleGroup)
     {
-        $data = [
+        $data     = [
             'title'       => $request->convertString('title'),
             'description' => $request->stringWithNewlines('description'),
             'active'      => 1 === (int)$request->input('active'),

@@ -38,9 +38,9 @@ class MigrateTagLocations extends Command
 
     public const string CONFIG_NAME = '500_migrate_tag_locations';
 
-    protected $description = 'Migrate tag locations.';
+    protected $description          = 'Migrate tag locations.';
 
-    protected $signature = 'firefly-iii:migrate-tag-locations {--F|force : Force the execution of this command.}';
+    protected $signature            = 'firefly-iii:migrate-tag-locations {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -94,9 +94,9 @@ class MigrateTagLocations extends Command
         $location->locatable()->associate($tag);
         $location->save();
 
-        $tag->longitude = null;
-        $tag->latitude  = null;
-        $tag->zoomLevel = null;
+        $tag->longitude       = null;
+        $tag->latitude        = null;
+        $tag->zoomLevel       = null;
         $tag->save();
     }
 

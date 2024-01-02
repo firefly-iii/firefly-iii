@@ -82,21 +82,21 @@ class StoreRequest extends FormRequest
     private function validateExistingLink(Validator $validator): void
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user         = auth()->user();
 
         /** @var LinkTypeRepositoryInterface $repository */
-        $repository = app(LinkTypeRepositoryInterface::class);
+        $repository   = app(LinkTypeRepositoryInterface::class);
         $repository->setUser($user);
 
         /** @var JournalRepositoryInterface $journalRepos */
         $journalRepos = app(JournalRepositoryInterface::class);
         $journalRepos->setUser($user);
 
-        $data      = $validator->getData();
-        $inwardId  = (int)($data['inward_id'] ?? 0);
-        $outwardId = (int)($data['outward_id'] ?? 0);
-        $inward    = $journalRepos->find($inwardId);
-        $outward   = $journalRepos->find($outwardId);
+        $data         = $validator->getData();
+        $inwardId     = (int)($data['inward_id'] ?? 0);
+        $outwardId    = (int)($data['outward_id'] ?? 0);
+        $inward       = $journalRepos->find($inwardId);
+        $outward      = $journalRepos->find($outwardId);
 
         if (null === $inward) {
             $validator->errors()->add('inward_id', 'Invalid inward ID.');

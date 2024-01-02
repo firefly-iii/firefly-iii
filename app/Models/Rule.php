@@ -94,16 +94,16 @@ class Rule extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
-            'created_at'      => 'datetime',
-            'updated_at'      => 'datetime',
-            'deleted_at'      => 'datetime',
-            'active'          => 'boolean',
-            'order'           => 'int',
-            'stop_processing' => 'boolean',
-            'id'              => 'int',
-            'strict'          => 'boolean',
-        ];
+                        = [
+                            'created_at'      => 'datetime',
+                            'updated_at'      => 'datetime',
+                            'deleted_at'      => 'datetime',
+                            'active'          => 'boolean',
+                            'order'           => 'int',
+                            'stop_processing' => 'boolean',
+                            'id'              => 'int',
+                            'strict'          => 'boolean',
+                        ];
 
     protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id', 'strict'];
 
@@ -118,10 +118,10 @@ class Rule extends Model
             $ruleId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user   = auth()->user();
 
             /** @var null|Rule $rule */
-            $rule = $user->rules()->find($ruleId);
+            $rule   = $user->rules()->find($ruleId);
             if (null !== $rule) {
                 return $rule;
             }

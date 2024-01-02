@@ -77,7 +77,7 @@ class BudgetLimitTransformer extends AbstractTransformer
             $currencySymbol        = $currency->symbol;
             $currencyDecimalPlaces = $currency->decimal_places;
         }
-        $amount = number_format((float)$amount, $currencyDecimalPlaces, '.', '');
+        $amount                = number_format((float)$amount, $currencyDecimalPlaces, '.', '');
 
         return [
             'id'                      => (string)$budgetLimit->id,

@@ -77,10 +77,10 @@ class ShowController extends Controller
      */
     public function show(Recurrence $recurrence)
     {
-        $repos = app(AttachmentRepositoryInterface::class);
+        $repos                 = app(AttachmentRepositoryInterface::class);
 
         /** @var RecurrenceTransformer $transformer */
-        $transformer = app(RecurrenceTransformer::class);
+        $transformer           = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag());
 
         $array                 = $transformer->transform($recurrence);
@@ -113,7 +113,7 @@ class ShowController extends Controller
             $array['attachments'][] = $item;
         }
 
-        $subTitle = (string)trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
+        $subTitle              = (string)trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
         return view('recurring.show', compact('recurrence', 'subTitle', 'array', 'groups', 'today'));
     }

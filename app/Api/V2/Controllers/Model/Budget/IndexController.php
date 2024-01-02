@@ -55,9 +55,9 @@ class IndexController extends Controller
      */
     public function index(): JsonResponse
     {
-        $pageSize   = $this->parameters->get('limit');
-        $collection = $this->repository->getActiveBudgets();
-        $total      = $collection->count();
+        $pageSize    = $this->parameters->get('limit');
+        $collection  = $this->repository->getActiveBudgets();
+        $total       = $collection->count();
         $collection->slice($pageSize * $this->parameters->get('page'), $pageSize);
 
         $paginator   = new LengthAwarePaginator($collection, $total, $pageSize, $this->parameters->get('page'));

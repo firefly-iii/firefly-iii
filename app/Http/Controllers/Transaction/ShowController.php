@@ -80,25 +80,25 @@ class ShowController extends Controller
     public function show(TransactionGroup $transactionGroup)
     {
         /** @var null|TransactionJournal $first */
-        $first  = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
-        $splits = $transactionGroup->transactionJournals()->count();
+        $first           = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
+        $splits          = $transactionGroup->transactionJournals()->count();
 
         if (null === $first) {
             throw new FireflyException('This transaction is broken :(.');
         }
 
-        $type     = (string)trans(sprintf('firefly.%s', $first->transactionType->type));
-        $title    = 1 === $splits ? $first->description : $transactionGroup->title;
-        $subTitle = sprintf('%s: "%s"', $type, $title);
+        $type            = (string)trans(sprintf('firefly.%s', $first->transactionType->type));
+        $title           = 1 === $splits ? $first->description : $transactionGroup->title;
+        $subTitle        = sprintf('%s: "%s"', $type, $title);
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer     = app(TransactionGroupTransformer::class);
         $transformer->setParameters(new ParameterBag());
-        $groupArray = $transformer->transformObject($transactionGroup);
+        $groupArray      = $transformer->transformObject($transactionGroup);
 
         // do some calculations:
-        $amounts  = $this->getAmounts($groupArray);
-        $accounts = $this->getAccounts($groupArray);
+        $amounts         = $this->getAmounts($groupArray);
+        $accounts        = $this->getAccounts($groupArray);
 
         foreach (array_keys($groupArray['transactions']) as $index) {
             $groupArray['transactions'][$index]['tags'] = $this->repository->getTagObjects(
@@ -113,9 +113,9 @@ class ShowController extends Controller
             $logEntries[$journal->id] = $this->aleRepository->getForObject($journal);
         }
 
-        $events      = $this->repository->getPiggyEvents($transactionGroup);
-        $attachments = $this->repository->getAttachments($transactionGroup);
-        $links       = $this->repository->getLinks($transactionGroup);
+        $events          = $this->repository->getPiggyEvents($transactionGroup);
+        $attachments     = $this->repository->getAttachments($transactionGroup);
+        $links           = $this->repository->getLinks($transactionGroup);
 
         return view(
             'transactions.show',
@@ -141,7 +141,7 @@ class ShowController extends Controller
     {
         $amounts = [];
         foreach ($group['transactions'] as $transaction) {
-            $symbol = $transaction['currency_symbol'];
+            $symbol                     = $transaction['currency_symbol'];
             if (!array_key_exists($symbol, $amounts)) {
                 $amounts[$symbol] = [
                     'amount'         => '0',
@@ -156,7 +156,7 @@ class ShowController extends Controller
                     $transaction['foreign_amount']
                 )) {
                 // same for foreign currency:
-                $foreignSymbol = $transaction['foreign_currency_symbol'];
+                $foreignSymbol                     = $transaction['foreign_currency_symbol'];
                 if (!array_key_exists($foreignSymbol, $amounts)) {
                     $amounts[$foreignSymbol] = [
                         'amount'         => '0',
@@ -176,7 +176,7 @@ class ShowController extends Controller
 
     private function getAccounts(array $group): array
     {
-        $accounts = [
+        $accounts                = [
             'source'      => [],
             'destination' => [],
         ];

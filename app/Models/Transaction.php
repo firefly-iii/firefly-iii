@@ -98,28 +98,28 @@ class Transaction extends Model
     use SoftDeletes;
 
     protected $casts
-        = [
-            'created_at'          => 'datetime',
-            'updated_at'          => 'datetime',
-            'deleted_at'          => 'datetime',
-            'identifier'          => 'int',
-            'encrypted'           => 'boolean', // model does not have these fields though
-            'bill_name_encrypted' => 'boolean',
-            'reconciled'          => 'boolean',
-        ];
+                      = [
+                          'created_at'          => 'datetime',
+                          'updated_at'          => 'datetime',
+                          'deleted_at'          => 'datetime',
+                          'identifier'          => 'int',
+                          'encrypted'           => 'boolean', // model does not have these fields though
+                          'bill_name_encrypted' => 'boolean',
+                          'reconciled'          => 'boolean',
+                      ];
 
     protected $fillable
-        = [
-            'account_id',
-            'transaction_journal_id',
-            'description',
-            'amount',
-            'identifier',
-            'transaction_currency_id',
-            'foreign_currency_id',
-            'foreign_amount',
-            'reconciled',
-        ];
+                      = [
+                          'account_id',
+                          'transaction_journal_id',
+                          'description',
+                          'amount',
+                          'identifier',
+                          'transaction_currency_id',
+                          'foreign_currency_id',
+                          'foreign_amount',
+                          'reconciled',
+                      ];
 
     protected $hidden = ['encrypted'];
 

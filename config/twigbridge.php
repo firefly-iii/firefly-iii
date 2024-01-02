@@ -54,7 +54,7 @@ use TwigBridge\Extension\Loader\Globals;
 
 // Configuration options for Twig.
 return [
-    'twig' => [
+    'twig'       => [
         'extension'    => 'twig',
         'environment'  => [
             'debug'            => env('APP_DEBUG', false),

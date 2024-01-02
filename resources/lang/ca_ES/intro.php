@@ -35,34 +35,34 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Benvingut a la pàgina d\'inici de Firefly III. Si us plau, pren-te el teu temps per seguir aquesta guia per fer-te una idea de com funciona Firefly III.',
-    'index_accounts-chart'                  => 'Aquesta gràfica mostra el saldo actual dels teus comptes. Pots seleccionar els comptes que es mostren des de les preferències.',
-    'index_box_out_holder'                  => 'Aquesta caixeta i les que es troben a continuació, et donaran una vista general de la teva situació financera.',
-    'index_help'                            => 'Si mai necessites ajuda amb una pàgina o formulari, prem aquest botó.',
-    'index_outro'                           => 'La majoria de pàgines de Firefly III començaran amb una petita introducció com aquesta. Si us plau, posa\'t en contacte amb mi si tens preguntes o comentaris. Gaudeix!',
-    'index_sidebar-toggle'                  => 'Per crear noves transaccions, comptes o altres coses, fes servir el menú sota aquesta icona.',
-    'index_cash_account'                    => 'Aquests són els comptes creats fins ara. Pots fer servir el compte d\'efectiu per fer el seguiment de les despeses d\'efectiu, però, evidentment, no és obligatori.',
+    'index_intro'                                             => 'Benvingut a la pàgina d\'inici de Firefly III. Si us plau, pren-te el teu temps per seguir aquesta guia per fer-te una idea de com funciona Firefly III.',
+    'index_accounts-chart'                                    => 'Aquesta gràfica mostra el saldo actual dels teus comptes. Pots seleccionar els comptes que es mostren des de les preferències.',
+    'index_box_out_holder'                                    => 'Aquesta caixeta i les que es troben a continuació, et donaran una vista general de la teva situació financera.',
+    'index_help'                                              => 'Si mai necessites ajuda amb una pàgina o formulari, prem aquest botó.',
+    'index_outro'                                             => 'La majoria de pàgines de Firefly III començaran amb una petita introducció com aquesta. Si us plau, posa\'t en contacte amb mi si tens preguntes o comentaris. Gaudeix!',
+    'index_sidebar-toggle'                                    => 'Per crear noves transaccions, comptes o altres coses, fes servir el menú sota aquesta icona.',
+    'index_cash_account'                                      => 'Aquests són els comptes creats fins ara. Pots fer servir el compte d\'efectiu per fer el seguiment de les despeses d\'efectiu, però, evidentment, no és obligatori.',
 
     // transactions
-    'transactions_create_basic_info'        => 'Introdueix la informació bàsica de la transacció. Origen, destí, data i descripció.',
-    'transactions_create_amount_info'       => 'Introdueix la quantitat de la transacció. Si és necessari, els camps s\'actualitzaran automàticament per la informació en quantitat estrangera.',
-    'transactions_create_optional_info'     => 'Tots aquests camps són opcionals. Afegir metadades aquí farà que les transaccions estiguin organitzades millor.',
-    'transactions_create_split'             => 'Si vols dividir una transacció, afegeix més divisions amb aquest botó',
+    'transactions_create_basic_info'                          => 'Introdueix la informació bàsica de la transacció. Origen, destí, data i descripció.',
+    'transactions_create_amount_info'                         => 'Introdueix la quantitat de la transacció. Si és necessari, els camps s\'actualitzaran automàticament per la informació en quantitat estrangera.',
+    'transactions_create_optional_info'                       => 'Tots aquests camps són opcionals. Afegir metadades aquí farà que les transaccions estiguin organitzades millor.',
+    'transactions_create_split'                               => 'Si vols dividir una transacció, afegeix més divisions amb aquest botó',
 
     // create account:
-    'accounts_create_iban'                  => 'Indica un IBAN vàlid pel teu compte. Això pot facilitar la importació de dades en un futur.',
-    'accounts_create_asset_opening_balance' => 'Els comptes d\'actius poden tenir un "saldo d\'obertura", indicant l\'inici de l\'historial del compte a Firefly III.',
-    'accounts_create_asset_currency'        => 'Firefly III admet diverses monedes. Els comptes d\'actius tenen una moneda principal, la qual has d\'indicar aquí.',
-    'accounts_create_asset_virtual'         => 'A vegades et podria ser d\'ajuda donar al teu compte un saldo virtual: una quantitat addicional que s\'afegeix o resta sempre del saldo real.',
+    'accounts_create_iban'                                    => 'Indica un IBAN vàlid pel teu compte. Això pot facilitar la importació de dades en un futur.',
+    'accounts_create_asset_opening_balance'                   => 'Els comptes d\'actius poden tenir un "saldo d\'obertura", indicant l\'inici de l\'historial del compte a Firefly III.',
+    'accounts_create_asset_currency'                          => 'Firefly III admet diverses monedes. Els comptes d\'actius tenen una moneda principal, la qual has d\'indicar aquí.',
+    'accounts_create_asset_virtual'                           => 'A vegades et podria ser d\'ajuda donar al teu compte un saldo virtual: una quantitat addicional que s\'afegeix o resta sempre del saldo real.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Els pressupostos s\'usen per gestionar les teves finances i són una de les funcions principals de Firefly III.',
-    'budgets_index_set_budget'              => 'Configura el pressupost total per cada període, de tal manera que Firefly III et pugui indicar si has pressupostat tots els diners disponibles.',
-    'budgets_index_see_expenses_bar'        => 'Gastar diners anirà omplint a poc a poc aquesta barra.',
-    'budgets_index_navigate_periods'        => 'Navega a través dels períodes per configurar fàcilment els pressupostos amb antelació.',
-    'budgets_index_new_budget'              => 'Crea nous pressupostos tal com et sigui convenient.',
-    'budgets_index_list_of_budgets'         => 'Fes servir aquesta taula per establir les quantitats per cada pressupost i veure com t\'està anant.',
-    'budgets_index_outro'                   => 'Per aprendre més coses sobre pressupostar, dóna un cop d\'ull a la icona d\'ajuda de la cantonada superior dreta.',
+    'budgets_index_intro'                                     => 'Els pressupostos s\'usen per gestionar les teves finances i són una de les funcions principals de Firefly III.',
+    'budgets_index_set_budget'                                => 'Configura el pressupost total per cada període, de tal manera que Firefly III et pugui indicar si has pressupostat tots els diners disponibles.',
+    'budgets_index_see_expenses_bar'                          => 'Gastar diners anirà omplint a poc a poc aquesta barra.',
+    'budgets_index_navigate_periods'                          => 'Navega a través dels períodes per configurar fàcilment els pressupostos amb antelació.',
+    'budgets_index_new_budget'                                => 'Crea nous pressupostos tal com et sigui convenient.',
+    'budgets_index_list_of_budgets'                           => 'Fes servir aquesta taula per establir les quantitats per cada pressupost i veure com t\'està anant.',
+    'budgets_index_outro'                                     => 'Per aprendre més coses sobre pressupostar, dóna un cop d\'ull a la icona d\'ajuda de la cantonada superior dreta.',
 
     /*
  * PLEASE DO NOT EDIT THIS FILE DIRECTLY.
@@ -76,24 +76,24 @@ return [
  */
 
     // reports (index)
-    'reports_index_intro'                   => 'Fes servir aquests informes per obtenir detalls de les teves finances.',
-    'reports_index_inputReportType'         => 'Escull un tipus d\'informe. Dóna un cop d\'ull a les pàgines d\'ajuda per veure el que mostra cada informe.',
-    'reports_index_inputAccountsSelect'     => 'Pots excloure o incloure comptes d\'actius com et vagi millor.',
-    'reports_index_inputDateRange'          => 'L\'interval de dades seleccionat depèn de tu: d\'un dia a 10 anys.',
-    'reports_index_extra-options-box'       => 'Depenent de l\'informe que hagis seleccionat, pots seleccionar filtres i opcions addicionals. Mira aquesta capsa quan canviïs el tipus d\'informe.',
+    'reports_index_intro'                                     => 'Fes servir aquests informes per obtenir detalls de les teves finances.',
+    'reports_index_inputReportType'                           => 'Escull un tipus d\'informe. Dóna un cop d\'ull a les pàgines d\'ajuda per veure el que mostra cada informe.',
+    'reports_index_inputAccountsSelect'                       => 'Pots excloure o incloure comptes d\'actius com et vagi millor.',
+    'reports_index_inputDateRange'                            => 'L\'interval de dades seleccionat depèn de tu: d\'un dia a 10 anys.',
+    'reports_index_extra-options-box'                         => 'Depenent de l\'informe que hagis seleccionat, pots seleccionar filtres i opcions addicionals. Mira aquesta capsa quan canviïs el tipus d\'informe.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'Aquest informe et donarà una vista general ràpida i exhaustiva de les teves finances. Si vols veure alguna cosa més, si us plau, no dubtis en contactar amb mi!',
-    'reports_report_audit_intro'            => 'Aquest informe et donarà informació detallada dels teus comptes d\'actius.',
-    'reports_report_audit_optionsBox'       => 'Fes servir aquestes caselles per mostrar o ocultar les columnes que t\'interessin.',
+    'reports_report_default_intro'                            => 'Aquest informe et donarà una vista general ràpida i exhaustiva de les teves finances. Si vols veure alguna cosa més, si us plau, no dubtis en contactar amb mi!',
+    'reports_report_audit_intro'                              => 'Aquest informe et donarà informació detallada dels teus comptes d\'actius.',
+    'reports_report_audit_optionsBox'                         => 'Fes servir aquestes caselles per mostrar o ocultar les columnes que t\'interessin.',
 
-    'reports_report_category_intro'                  => 'Aquest informe et donarà detalls d\'una o múltiples categories.',
-    'reports_report_category_pieCharts'              => 'Aquestes gràfiques et donaran detalls de les despeses i ingressos per categoria o per compte.',
-    'reports_report_category_incomeAndExpensesChart' => 'Aquesta gràfica mostra les despeses i ingressos per categoria.',
+    'reports_report_category_intro'                           => 'Aquest informe et donarà detalls d\'una o múltiples categories.',
+    'reports_report_category_pieCharts'                       => 'Aquestes gràfiques et donaran detalls de les despeses i ingressos per categoria o per compte.',
+    'reports_report_category_incomeAndExpensesChart'          => 'Aquesta gràfica mostra les despeses i ingressos per categoria.',
 
-    'reports_report_tag_intro'                  => 'Aquest informe et donarà detalls d\'una o més etiquetes.',
-    'reports_report_tag_pieCharts'              => 'Aquestes gràfiques et donaran detalls de les despeses i ingressos per etiqueta, compte, categoria o pressupost.',
-    'reports_report_tag_incomeAndExpensesChart' => 'Aquesta gràfica mostra les teves despeses i ingressos per etiqueta.',
+    'reports_report_tag_intro'                                => 'Aquest informe et donarà detalls d\'una o més etiquetes.',
+    'reports_report_tag_pieCharts'                            => 'Aquestes gràfiques et donaran detalls de les despeses i ingressos per etiqueta, compte, categoria o pressupost.',
+    'reports_report_tag_incomeAndExpensesChart'               => 'Aquesta gràfica mostra les teves despeses i ingressos per etiqueta.',
 
     'reports_report_budget_intro'                             => 'Aquest informe et donarà detalls d\'un o més pressupostos.',
     'reports_report_budget_pieCharts'                         => 'Aquestes gràfiques et donaran detalls de les despeses per pressupost o per compte.',

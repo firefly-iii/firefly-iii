@@ -78,15 +78,15 @@ return [
     // 'half_year'               => '%B %Y',
     'half_year_js'             => '\QQ YYYY',
 
-    'quarter_fns'   => "'Q'Q, yyyy",
-    'half_year_fns' => "'H{half}', yyyy",
-    'dow_1'         => 'Senin',
-    'dow_2'         => 'Selasa',
-    'dow_3'         => 'Rabu',
-    'dow_4'         => 'Kamis',
-    'dow_5'         => 'Jumat',
-    'dow_6'         => 'Sabtu',
-    'dow_7'         => 'Minggu',
+    'quarter_fns'              => "'Q'Q, yyyy",
+    'half_year_fns'            => "'H{half}', yyyy",
+    'dow_1'                    => 'Senin',
+    'dow_2'                    => 'Selasa',
+    'dow_3'                    => 'Rabu',
+    'dow_4'                    => 'Kamis',
+    'dow_5'                    => 'Jumat',
+    'dow_6'                    => 'Sabtu',
+    'dow_7'                    => 'Minggu',
 ];
 
 /*

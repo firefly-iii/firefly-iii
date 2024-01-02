@@ -293,7 +293,7 @@ class General extends AbstractExtension
             'activeRoutePartialObjectType',
             static function ($context): string {
                 [, $route, $objectType] = func_get_args();
-                $activeObjectType = $context['objectType'] ?? false;
+                $activeObjectType       = $context['objectType'] ?? false;
 
                 if ($objectType === $activeObjectType
                     && false !== stripos(

@@ -40,9 +40,9 @@ trait ValidatesBulkTransactionQuery
         ) {
             // find both accounts, must be same type.
             // already validated: belongs to this user.
-            $repository = app(AccountRepositoryInterface::class);
-            $source     = $repository->find((int)$json['where']['account_id']);
-            $dest       = $repository->find((int)$json['update']['account_id']);
+            $repository     = app(AccountRepositoryInterface::class);
+            $source         = $repository->find((int)$json['where']['account_id']);
+            $dest           = $repository->find((int)$json['update']['account_id']);
             if (null === $source) {
                 $validator->errors()->add('query', sprintf((string)trans('validation.invalid_query_data'), 'where', 'account_id'));
 

@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Requests\Models\Recurrence;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\GetRecurrenceData;
@@ -53,7 +54,7 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         // this is the way:
-        $fields       = [
+        $fields                 = [
             'title'             => ['title', 'convertString'],
             'description'       => ['description', 'convertString'],
             'first_date'        => ['first_date', 'convertDateTime'],
@@ -63,9 +64,9 @@ class UpdateRequest extends FormRequest
             'active'            => ['active', 'boolean'],
             'notes'             => ['notes', 'convertString'],
         ];
-        $reps         = $this->getRepetitionData();
-        $transactions = $this->getTransactionData();
-        $return       = [
+        $reps                   = $this->getRepetitionData();
+        $transactions           = $this->getTransactionData();
+        $return                 = [
             'recurrence' => $this->getAllData($fields),
         ];
         if (null !== $reps) {
@@ -85,22 +86,22 @@ class UpdateRequest extends FormRequest
         $recurrence = $this->route()->parameter('recurrence');
 
         return [
-            'title'             => sprintf('between:1,255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
-            'description'       => 'between:1,65000',
-            'first_date'        => 'date',
-            'apply_rules'       => [new IsBoolean()],
-            'active'            => [new IsBoolean()],
-            'repeat_until'      => 'nullable|date',
-            'nr_of_repetitions' => 'nullable|numeric|between:1,31',
+            'title'                                => sprintf('between:1,255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
+            'description'                          => 'between:1,65000',
+            'first_date'                           => 'date',
+            'apply_rules'                          => [new IsBoolean()],
+            'active'                               => [new IsBoolean()],
+            'repeat_until'                         => 'nullable|date',
+            'nr_of_repetitions'                    => 'nullable|numeric|between:1,31',
 
-            'repetitions.*.type'    => 'in:daily,weekly,ndom,monthly,yearly',
-            'repetitions.*.moment'  => 'between:0,10',
-            'repetitions.*.skip'    => 'nullable|numeric|between:0,31',
-            'repetitions.*.weekend' => 'nullable|numeric|min:1|max:4',
+            'repetitions.*.type'                   => 'in:daily,weekly,ndom,monthly,yearly',
+            'repetitions.*.moment'                 => 'between:0,10',
+            'repetitions.*.skip'                   => 'nullable|numeric|between:0,31',
+            'repetitions.*.weekend'                => 'nullable|numeric|min:1|max:4',
 
             'transactions.*.description'           => 'between:1,255',
-            'transactions.*.amount'                => 'numeric|gt:0',
-            'transactions.*.foreign_amount'        => 'nullable|numeric|gt:0',
+            'transactions.*.amount'                => [new IsValidPositiveAmount()],
+            'transactions.*.foreign_amount'        => ['nullable', new IsValidPositiveAmount()],
             'transactions.*.currency_id'           => 'nullable|numeric|exists:transaction_currencies,id',
             'transactions.*.currency_code'         => 'nullable|min:3|max:51|exists:transaction_currencies,code',
             'transactions.*.foreign_currency_id'   => 'nullable|numeric|exists:transaction_currencies,id',
@@ -117,7 +118,7 @@ class UpdateRequest extends FormRequest
             'transactions.*.category_name'         => 'between:1,255|nullable',
             'transactions.*.piggy_bank_id'         => ['nullable', 'numeric', 'mustExist:piggy_banks,id', new BelongsUser()],
             'transactions.*.piggy_bank_name'       => ['between:1,255', 'nullable', new BelongsUser()],
-            'transactions.*.tags'                  => 'nullable|between:1,64000',
+            'transactions.*.tags'                  => 'nullable|between:1,255',
         ];
     }
 
@@ -147,7 +148,7 @@ class UpdateRequest extends FormRequest
      */
     private function getRepetitionData(): ?array
     {
-        $return = [];
+        $return      = [];
 
         // repetition data:
         /** @var null|array $repetitions */
@@ -158,21 +159,21 @@ class UpdateRequest extends FormRequest
 
         /** @var array $repetition */
         foreach ($repetitions as $repetition) {
-            $current = [];
+            $current  = [];
             if (array_key_exists('type', $repetition)) {
                 $current['type'] = $repetition['type'];
             }
 
             if (array_key_exists('moment', $repetition)) {
-                $current['moment'] = (string)$repetition['moment'];
+                $current['moment'] = (string) $repetition['moment'];
             }
 
             if (array_key_exists('skip', $repetition)) {
-                $current['skip'] = (int)$repetition['skip'];
+                $current['skip'] = (int) $repetition['skip'];
             }
 
             if (array_key_exists('weekend', $repetition)) {
-                $current['weekend'] = (int)$repetition['weekend'];
+                $current['weekend'] = (int) $repetition['weekend'];
             }
             $return[] = $current;
         }
@@ -189,7 +190,7 @@ class UpdateRequest extends FormRequest
      */
     private function getTransactionData(): array
     {
-        $return = [];
+        $return       = [];
 
         // transaction data:
         /** @var null|array $transactions */

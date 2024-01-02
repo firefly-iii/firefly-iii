@@ -98,7 +98,7 @@ class RecurrenceFactory
         }
         $repeatUntilString = $repeatUntil?->format('Y-m-d');
 
-        $recurrence = new Recurrence(
+        $recurrence        = new Recurrence(
             [
                 'user_id'             => $this->user->id,
                 'user_group_id'       => $this->user->user_group_id,

@@ -41,8 +41,8 @@ class TransferCurrenciesCorrections extends Command
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '480_transfer_currencies';
-    protected $description = 'Updates transfer currency information.';
-    protected $signature   = 'firefly-iii:transfer-currencies {--F|force : Force the execution of this command.}';
+    protected $description          = 'Updates transfer currency information.';
+    protected $signature            = 'firefly-iii:transfer-currencies {--F|force : Force the execution of this command.}';
     private array                         $accountCurrencies;
     private AccountRepositoryInterface    $accountRepos;
     private JournalCLIRepositoryInterface $cliRepos;
@@ -219,14 +219,14 @@ class TransferCurrenciesCorrections extends Command
 
     private function getCurrency(Account $account): ?TransactionCurrency
     {
-        $accountId = $account->id;
+        $accountId                           = $account->id;
         if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
             return null;
         }
         if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId];
         }
-        $currency = $this->accountRepos->getAccountCurrency($account);
+        $currency                            = $this->accountRepos->getAccountCurrency($account);
         if (null === $currency) {
             $this->accountCurrencies[$accountId] = 0;
 
@@ -321,7 +321,7 @@ class TransferCurrenciesCorrections extends Command
             && null === $this->sourceTransaction->foreign_amount
             && (int)$this->sourceTransaction->transaction_currency_id !== $this->sourceCurrency->id
         ) {
-            $message = sprintf(
+            $message                                          = sprintf(
                 'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
                 $this->sourceTransaction->id,
                 $this->sourceTransaction->transaction_currency_id,
@@ -367,7 +367,7 @@ class TransferCurrenciesCorrections extends Command
             && null === $this->destinationTransaction->foreign_amount
             && (int)$this->destinationTransaction->transaction_currency_id !== $this->destinationCurrency->id
         ) {
-            $message = sprintf(
+            $message                                               = sprintf(
                 'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
                 $this->destinationTransaction->id,
                 $this->destinationTransaction->transaction_currency_id,
@@ -390,8 +390,8 @@ class TransferCurrenciesCorrections extends Command
     {
         if ($this->destinationCurrency->id === $this->sourceCurrency->id) {
             // update both transactions to match:
-            $this->sourceTransaction->foreign_amount      = null;
-            $this->sourceTransaction->foreign_currency_id = null;
+            $this->sourceTransaction->foreign_amount           = null;
+            $this->sourceTransaction->foreign_currency_id      = null;
 
             $this->destinationTransaction->foreign_amount      = null;
             $this->destinationTransaction->foreign_currency_id = null;

@@ -59,8 +59,8 @@ class TwoFactorController extends Controller
     public function submitMFA(Request $request)
     {
         /** @var array $mfaHistory */
-        $mfaHistory = app('preferences')->get('mfa_history', [])->data;
-        $mfaCode    = (string)$request->get('one_time_password');
+        $mfaHistory    = app('preferences')->get('mfa_history', [])->data;
+        $mfaCode       = (string)$request->get('one_time_password');
 
         // is in history? then refuse to use it.
         if ($this->inMFAHistory($mfaCode, $mfaHistory)) {
@@ -171,7 +171,7 @@ class TwoFactorController extends Controller
      */
     private function removeFromBackupCodes(string $mfaCode): void
     {
-        $list = app('preferences')->get('mfa_recovery', [])->data;
+        $list    = app('preferences')->get('mfa_recovery', [])->data;
         if (!is_array($list)) {
             $list = [];
         }

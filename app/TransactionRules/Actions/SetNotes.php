@@ -45,7 +45,7 @@ class SetNotes implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
-        $dbNote = Note::where('noteable_id', $journal['transaction_journal_id'])
+        $dbNote       = Note::where('noteable_id', $journal['transaction_journal_id'])
             ->where('noteable_type', TransactionJournal::class)->first()
         ;
         if (null === $dbNote) {
@@ -68,7 +68,7 @@ class SetNotes implements ActionInterface
         );
 
         /** @var TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $oldNotes, $this->action->action_value));
 

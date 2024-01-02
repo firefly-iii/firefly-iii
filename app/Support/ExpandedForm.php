@@ -42,7 +42,7 @@ class ExpandedForm
      */
     public function amountNoCurrency(string $name, $value = null, array $options = null): string
     {
-        $options         ??= [];
+        $options ??= [];
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);
@@ -73,8 +73,8 @@ class ExpandedForm
      */
     public function checkbox(string $name, int $value = null, $checked = null, array $options = null): string
     {
-        $options            ??= [];
-        $value              ??= 1;
+        $options ??= [];
+        $value   ??= 1;
         $options['checked'] = true === $checked;
 
         if (app('session')->has('preFilled')) {
@@ -82,10 +82,10 @@ class ExpandedForm
             $options['checked'] = $preFilled[$name] ?? $options['checked'];
         }
 
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        $value   = $this->fillFieldValue($name, $value);
+        $label              = $this->label($name, $options);
+        $options            = $this->expandOptionArray($name, $label, $options);
+        $classes            = $this->getHolderClasses($name);
+        $value              = $this->fillFieldValue($name, $value);
 
         unset($options['placeholder'], $options['autocomplete'], $options['class']);
 
@@ -156,10 +156,10 @@ class ExpandedForm
     public function integer(string $name, $value = null, array $options = null): string
     {
         $options         ??= [];
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
         $options['step'] ??= '1';
 
         try {
@@ -208,9 +208,9 @@ class ExpandedForm
         /** @var \Eloquent $entry */
         foreach ($set as $entry) {
             // All Eloquent models have an ID
-            $entryId = $entry->id; // @phpstan-ignore-line
-            $current = $entry->toArray();
-            $title   = null;
+            $entryId              = $entry->id; // @phpstan-ignore-line
+            $current              = $entry->toArray();
+            $title                = null;
             foreach ($fields as $field) {
                 if (array_key_exists($field, $current) && null === $title) {
                     $title = $current[$field];

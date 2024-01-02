@@ -79,21 +79,21 @@ class IndexController extends Controller
     {
         $this->cleanupObjectGroups();
         $this->piggyRepos->resetOrder();
-        $collection = $this->piggyRepos->getPiggyBanks();
-        $accounts   = [];
+        $collection         = $this->piggyRepos->getPiggyBanks();
+        $accounts           = [];
 
         /** @var Carbon $end */
-        $end = session('end', today(config('app.timezone'))->endOfMonth());
+        $end                = session('end', today(config('app.timezone'))->endOfMonth());
 
         // transform piggies using the transformer:
-        $parameters = new ParameterBag();
+        $parameters         = new ParameterBag();
         $parameters->set('end', $end);
 
         // make piggy bank groups:
-        $piggyBanks = [];
+        $piggyBanks         = [];
 
         /** @var PiggyBankTransformer $transformer */
-        $transformer = app(PiggyBankTransformer::class);
+        $transformer        = app(PiggyBankTransformer::class);
         $transformer->setParameters(new ParameterBag());
 
         /** @var AccountTransformer $accountTransformer */
@@ -102,8 +102,8 @@ class IndexController extends Controller
 
         /** @var PiggyBank $piggy */
         foreach ($collection as $piggy) {
-            $array      = $transformer->transform($piggy);
-            $groupOrder = (int)$array['object_group_order'];
+            $array                                    = $transformer->transform($piggy);
+            $groupOrder                               = (int)$array['object_group_order'];
             // make group array if necessary:
             $piggyBanks[$groupOrder] ??= [
                 'object_group_id'    => $array['object_group_id'] ?? 0,
@@ -111,12 +111,12 @@ class IndexController extends Controller
                 'piggy_banks'        => [],
             ];
 
-            $account              = $accountTransformer->transform($piggy->account);
-            $accountId            = (int)$account['id'];
-            $array['attachments'] = $this->piggyRepos->getAttachments($piggy);
+            $account                                  = $accountTransformer->transform($piggy->account);
+            $accountId                                = (int)$account['id'];
+            $array['attachments']                     = $this->piggyRepos->getAttachments($piggy);
             if (!array_key_exists($accountId, $accounts)) {
                 // create new:
-                $accounts[$accountId] = $account;
+                $accounts[$accountId]            = $account;
 
                 // add some interesting details:
                 $accounts[$accountId]['left']    = $accounts[$accountId]['current_balance'];
@@ -134,7 +134,7 @@ class IndexController extends Controller
             $piggyBanks[$groupOrder]['piggy_banks'][] = $array;
         }
         // do a bunch of summaries.
-        $piggyBanks = $this->makeSums($piggyBanks);
+        $piggyBanks         = $this->makeSums($piggyBanks);
 
         ksort($piggyBanks);
 
@@ -165,7 +165,7 @@ class IndexController extends Controller
         foreach ($piggyBanks as $groupOrder => $group) {
             $groupId = $group['object_group_id'];
             foreach ($group['piggy_banks'] as $piggy) {
-                $currencyId                  = $piggy['currency_id'];
+                $currencyId                                    = $piggy['currency_id'];
                 $sums[$groupId][$currencyId] ??= [
                     'target'                  => '0',
                     'saved'                   => '0',

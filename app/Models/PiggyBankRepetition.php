@@ -63,12 +63,12 @@ class PiggyBankRepetition extends Model
     use ReturnsIntegerIdTrait;
 
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'startdate'  => 'date',
-            'targetdate' => 'date',
-        ];
+                        = [
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'startdate'  => 'date',
+                            'targetdate' => 'date',
+                        ];
 
     protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
 

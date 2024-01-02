@@ -33,6 +33,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -76,14 +77,14 @@ class EditController extends Controller
         $subTitleIcon = 'fa-pencil';
         $note         = $piggyBank->notes()->first();
         // Flash some data to fill the form.
-        $targetDate = $piggyBank->targetdate?->format('Y-m-d');
-        $startDate  = $piggyBank->startdate?->format('Y-m-d');
-        $currency   = $this->accountRepository->getAccountCurrency($piggyBank->account);
+        $targetDate   = $piggyBank->targetdate?->format('Y-m-d');
+        $startDate    = $piggyBank->startdate?->format('Y-m-d');
+        $currency     = $this->accountRepository->getAccountCurrency($piggyBank->account);
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrency();
         }
 
-        $preFilled = [
+        $preFilled    = [
             'name'         => $piggyBank->name,
             'account_id'   => $piggyBank->account_id,
             'targetamount' => app('steam')->bcround($piggyBank->targetamount, $currency->decimal_places),
@@ -121,18 +122,19 @@ class EditController extends Controller
 
         // store new attachment(s):
         /** @var null|array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files     = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($piggyBank, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
+            Log::channel('audit')->info(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
             session()->flash('info', (string)trans('firefly.no_att_demo_user'));
         }
 
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
-        $redirect = redirect($this->getPreviousUrl('piggy-banks.edit.url'));
+        $redirect  = redirect($this->getPreviousUrl('piggy-banks.edit.url'));
 
         if (1 === (int)$request->get('return_to_edit')) {
             session()->put('piggy-banks.edit.fromUpdate', true);

@@ -56,7 +56,7 @@ class ListController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user = auth()->user();
+                $user             = auth()->user();
 
                 $this->repository = app(TagRepositoryInterface::class);
                 $this->repository->setUser($user);
@@ -74,22 +74,22 @@ class ListController extends Controller
      */
     public function attachments(Tag $tag): JsonResponse
     {
-        $manager    = $this->getManager();
-        $pageSize   = $this->parameters->get('limit');
-        $collection = $this->repository->getAttachments($tag);
+        $manager     = $this->getManager();
+        $pageSize    = $this->parameters->get('limit');
+        $collection  = $this->repository->getAttachments($tag);
 
         $count       = $collection->count();
         $attachments = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.tags.attachments', [$tag->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($attachments, $transformer, 'attachments');
+        $resource    = new FractalCollection($attachments, $transformer, 'attachments');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -105,19 +105,19 @@ class ListController extends Controller
      */
     public function transactions(Request $request, Tag $tag): JsonResponse
     {
-        $pageSize = $this->parameters->get('limit');
-        $type     = $request->get('type') ?? 'default';
+        $pageSize     = $this->parameters->get('limit');
+        $type         = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
-        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = $this->getManager();
+        $types        = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager      = $this->getManager();
 
         /** @var User $admin */
-        $admin = auth()->user();
+        $admin        = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // filter on tag.
@@ -138,15 +138,15 @@ class ListController extends Controller
         if (null !== $this->parameters->get('end')) {
             $collector->setEnd($this->parameters->get('end'));
         }
-        $paginator = $collector->getPaginatedGroups();
+        $paginator    = $collector->getPaginatedGroups();
         $paginator->setPath(route('api.v1.tags.transactions', [$tag->id]).$this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer  = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

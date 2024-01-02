@@ -43,16 +43,16 @@ class Date implements BinderInterface
         /** @var FiscalHelperInterface $fiscalHelper */
         $fiscalHelper = app(FiscalHelperInterface::class);
 
-        $magicWords = [
-            'currentMonthStart' => today(config('app.timezone'))->startOfMonth(),
-            'currentMonthEnd'   => today(config('app.timezone'))->endOfMonth(),
-            'currentYearStart'  => today(config('app.timezone'))->startOfYear(),
-            'currentYearEnd'    => today(config('app.timezone'))->endOfYear(),
+        $magicWords   = [
+            'currentMonthStart'       => today(config('app.timezone'))->startOfMonth(),
+            'currentMonthEnd'         => today(config('app.timezone'))->endOfMonth(),
+            'currentYearStart'        => today(config('app.timezone'))->startOfYear(),
+            'currentYearEnd'          => today(config('app.timezone'))->endOfYear(),
 
-            'previousMonthStart' => today(config('app.timezone'))->startOfMonth()->subDay()->startOfMonth(),
-            'previousMonthEnd'   => today(config('app.timezone'))->startOfMonth()->subDay()->endOfMonth(),
-            'previousYearStart'  => today(config('app.timezone'))->startOfYear()->subDay()->startOfYear(),
-            'previousYearEnd'    => today(config('app.timezone'))->startOfYear()->subDay()->endOfYear(),
+            'previousMonthStart'      => today(config('app.timezone'))->startOfMonth()->subDay()->startOfMonth(),
+            'previousMonthEnd'        => today(config('app.timezone'))->startOfMonth()->subDay()->endOfMonth(),
+            'previousYearStart'       => today(config('app.timezone'))->startOfYear()->subDay()->startOfYear(),
+            'previousYearEnd'         => today(config('app.timezone'))->startOfYear()->subDay()->endOfYear(),
 
             'currentFiscalYearStart'  => $fiscalHelper->startOfFiscalYear(today(config('app.timezone'))),
             'currentFiscalYearEnd'    => $fiscalHelper->endOfFiscalYear(today(config('app.timezone'))),

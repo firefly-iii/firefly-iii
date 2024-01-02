@@ -165,7 +165,7 @@ class TransactionGroupTwig extends AbstractExtension
             $colored = false;
         }
 
-        $result = app('amount')->formatFlat($array['currency_symbol'], (int)$array['currency_decimal_places'], $amount, $colored);
+        $result     = app('amount')->formatFlat($array['currency_symbol'], (int)$array['currency_decimal_places'], $amount, $colored);
         if (TransactionType::TRANSFER === $type) {
             $result = sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -198,9 +198,9 @@ class TransactionGroupTwig extends AbstractExtension
      */
     private function foreignJournalArrayAmount(array $array): string
     {
-        $type    = $array['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
-        $amount  = $array['foreign_amount'] ?? '0';
-        $colored = true;
+        $type       = $array['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
+        $amount     = $array['foreign_amount'] ?? '0';
+        $colored    = true;
 
         $sourceType = $array['source_account_type'] ?? 'invalid';
         $amount     = $this->signAmount($amount, $type, $sourceType);
@@ -208,7 +208,7 @@ class TransactionGroupTwig extends AbstractExtension
         if (TransactionType::TRANSFER === $type) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($array['foreign_currency_symbol'], (int)$array['foreign_currency_decimal_places'], $amount, $colored);
+        $result     = app('amount')->formatFlat($array['foreign_currency_symbol'], (int)$array['foreign_currency_decimal_places'], $amount, $colored);
         if (TransactionType::TRANSFER === $type) {
             $result = sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -228,12 +228,12 @@ class TransactionGroupTwig extends AbstractExtension
         $colored    = true;
         $sourceType = $first->account()->first()->accountType()->first()->type;
 
-        $amount = $this->signAmount($amount, $type, $sourceType);
+        $amount     = $this->signAmount($amount, $type, $sourceType);
 
         if (TransactionType::TRANSFER === $type) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        $result     = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
         if (TransactionType::TRANSFER === $type) {
             $result = sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -254,7 +254,7 @@ class TransactionGroupTwig extends AbstractExtension
      */
     private function foreignJournalObjectAmount(TransactionJournal $journal): string
     {
-        $type = $journal->transactionType->type;
+        $type       = $journal->transactionType->type;
 
         /** @var Transaction $first */
         $first      = $journal->transactions()->where('amount', '<', 0)->first();
@@ -263,12 +263,12 @@ class TransactionGroupTwig extends AbstractExtension
         $colored    = true;
         $sourceType = $first->account()->first()->accountType()->first()->type;
 
-        $amount = $this->signAmount($amount, $type, $sourceType);
+        $amount     = $this->signAmount($amount, $type, $sourceType);
 
         if (TransactionType::TRANSFER === $type) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        $result     = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
         if (TransactionType::TRANSFER === $type) {
             $result = sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }

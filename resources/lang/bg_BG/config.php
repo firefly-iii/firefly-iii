@@ -78,15 +78,15 @@ return [
     // 'half_year'               => '%B %Y',
     'half_year_js'             => '\QQ YYYY',
 
-    'quarter_fns'   => "'Q'Q, yyyy",
-    'half_year_fns' => "'H{half}', yyyy",
-    'dow_1'         => 'Понеделник',
-    'dow_2'         => 'Вторник',
-    'dow_3'         => 'Сряда',
-    'dow_4'         => 'Четвъртък',
-    'dow_5'         => 'Петък',
-    'dow_6'         => 'Събота',
-    'dow_7'         => 'Неделя',
+    'quarter_fns'              => "'Q'Q, yyyy",
+    'half_year_fns'            => "'H{half}', yyyy",
+    'dow_1'                    => 'Понеделник',
+    'dow_2'                    => 'Вторник',
+    'dow_3'                    => 'Сряда',
+    'dow_4'                    => 'Четвъртък',
+    'dow_5'                    => 'Петък',
+    'dow_6'                    => 'Събота',
+    'dow_7'                    => 'Неделя',
 ];
 
 /*

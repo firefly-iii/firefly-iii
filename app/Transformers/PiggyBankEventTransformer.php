@@ -53,14 +53,14 @@ class PiggyBankEventTransformer extends AbstractTransformer
     public function transform(PiggyBankEvent $event): array
     {
         // get account linked to piggy bank
-        $account = $event->piggyBank->account;
+        $account   = $event->piggyBank->account;
 
         // set up repositories.
         $this->repository->setUser($account->user);
         $this->piggyRepos->setUser($account->user);
 
         // get associated currency or fall back to the default:
-        $currency = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
+        $currency  = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrencyByUserGroup($account->user->userGroup);
 
         // get associated journal and transaction, if any:
         $journalId = $event->transaction_journal_id;

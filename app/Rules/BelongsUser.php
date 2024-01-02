@@ -48,7 +48,7 @@ class BelongsUser implements ValidationRule
         }
         app('log')->debug(sprintf('Going to validate %s', $attribute));
 
-        $result = match ($attribute) {
+        $result    = match ($attribute) {
             'piggy_bank_id'               => $this->validatePiggyBankId((int)$value),
             'piggy_bank_name'             => $this->validatePiggyBankName($value),
             'bill_id'                     => $this->validateBillId((int)$value),
@@ -78,7 +78,7 @@ class BelongsUser implements ValidationRule
         if (PiggyBank::class !== $class) {
             $objects = $class::where('user_id', '=', auth()->user()->id)->get();
         }
-        $count = 0;
+        $count   = 0;
         foreach ($objects as $object) {
             $objectValue = trim((string)$object->{$field}); // @phpstan-ignore-line
             app('log')->debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));

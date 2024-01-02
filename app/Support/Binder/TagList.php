@@ -27,6 +27,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -46,7 +47,7 @@ class TagList implements BinderInterface
                     ->get()
                 ;
             }
-            $list = array_unique(array_map('\strtolower', explode(',', $value)));
+            $list       = array_unique(array_map('\strtolower', explode(',', $value)));
             app('log')->debug('List of tags is', $list);
 
             if (0 === count($list)) { // @phpstan-ignore-line
@@ -58,14 +59,18 @@ class TagList implements BinderInterface
             /** @var TagRepositoryInterface $repository */
             $repository = app(TagRepositoryInterface::class);
             $repository->setUser(auth()->user());
-            $allTags = $repository->get();
+            $allTags    = $repository->get();
 
             $collection = $allTags->filter(
                 static function (Tag $tag) use ($list) {
                     if (in_array(strtolower($tag->tag), $list, true)) {
+                        Log::debug(sprintf('TagList: (string) found tag #%d ("%s") in list.', $tag->id, $tag->tag));
+
                         return true;
                     }
                     if (in_array((string)$tag->id, $list, true)) {
+                        Log::debug(sprintf('TagList: (id) found tag #%d ("%s") in list.', $tag->id, $tag->tag));
+
                         return true;
                     }
 

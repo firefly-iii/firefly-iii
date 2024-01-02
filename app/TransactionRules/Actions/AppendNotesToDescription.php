@@ -60,10 +60,10 @@ class AppendNotesToDescription implements ActionInterface
 
             return false;
         }
-        $note = $object->notes()->first();
+        $note   = $object->notes()->first();
         if (null === $note) {
             app('log')->debug('Journal has no notes.');
-            $note = new Note();
+            $note       = new Note();
             $note->noteable()->associate($object);
             $note->text = '';
         }

@@ -119,7 +119,7 @@ class ProfileController extends Controller
         }
 
         // generate recovery codes if not in session:
-        $recoveryCodes = '';
+        $recoveryCodes    = '';
 
         if (null === $codesPreference) {
             // generate codes + store + flash:
@@ -136,9 +136,9 @@ class ProfileController extends Controller
             $recoveryCodes = [];
         }
 
-        $codes = implode("\r\n", $recoveryCodes);
+        $codes            = implode("\r\n", $recoveryCodes);
 
-        $image = \Google2FA::getQRCodeInline($domain, auth()->user()->email, (string)$secret);
+        $image            = \Google2FA::getQRCodeInline($domain, auth()->user()->email, (string)$secret);
 
         return view('profile.code', compact('image', 'secret', 'codes'));
     }
@@ -209,7 +209,7 @@ class ProfileController extends Controller
         $repository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
-        $user = auth()->user();
+        $user       = auth()->user();
 
         app('preferences')->delete('temp-mfa-secret');
         app('preferences')->delete('temp-mfa-codes');
@@ -276,7 +276,7 @@ class ProfileController extends Controller
             $repository->createPersonalAccessClient(null, config('app.name').' Personal Access Client', 'http://localhost');
         }
 
-        $accessToken = app('preferences')->get('access_token');
+        $accessToken    = app('preferences')->get('access_token');
         if (null === $accessToken) {
             $token       = $user->generateAccessToken();
             $accessToken = app('preferences')->set('access_token', $token);
@@ -407,7 +407,7 @@ class ProfileController extends Controller
         $new     = $request->get('new_password');
 
         /** @var User $user */
-        $user = auth()->user();
+        $user    = auth()->user();
 
         try {
             $this->validatePassword($user, $current, $new);
@@ -459,7 +459,7 @@ class ProfileController extends Controller
         }
 
         /** @var User $user */
-        $user = auth()->user();
+        $user       = auth()->user();
 
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
@@ -480,7 +480,7 @@ class ProfileController extends Controller
         app('preferences')->mark();
 
         // also save the code so replay attack is prevented.
-        $mfaCode = $request->get('code');
+        $mfaCode    = $request->get('code');
         $this->addToMFAHistory($mfaCode);
 
         // save backup codes in preferences:
@@ -592,8 +592,8 @@ class ProfileController extends Controller
         }
 
         // find preference with this token value.
-        $set  = app('preferences')->findByName('email_change_undo_token');
-        $user = null;
+        $set   = app('preferences')->findByName('email_change_undo_token');
+        $user  = null;
 
         /** @var Preference $preference */
         foreach ($set as $preference) {
@@ -606,7 +606,7 @@ class ProfileController extends Controller
         }
 
         // found user.which email address to return to?
-        $set = app('preferences')->beginsWith($user, 'previous_email_');
+        $set   = app('preferences')->beginsWith($user, 'previous_email_');
 
         /** @var string $match */
         $match = null;

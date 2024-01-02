@@ -57,7 +57,14 @@ return $config->setRules([
                              'statement_indentation'         => true,
                              'type_declaration_spaces'       => false,
                              'cast_spaces'                   => false,
-                             'binary_operator_spaces'        => false,
+                             'binary_operator_spaces'        => [
+                                 'default' => 'at_least_single_space',
+                                 'operators' => [
+                                     '=>' => 'align_single_space_by_scope',
+                                     '='  => 'align_single_space_minimal_by_scope',
+                                     '??='  => 'align_single_space_minimal_by_scope',
+                                 ],
+                             ],
                              'void_return'                   => true,
                          ])
               ->setFinder($finder);

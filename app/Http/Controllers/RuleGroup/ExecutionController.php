@@ -69,11 +69,11 @@ class ExecutionController extends Controller
     {
         // Get parameters specified by the user
         /** @var User $user */
-        $user      = auth()->user();
-        $accounts  = implode(',', $request->get('accounts'));
-        $startDate = new Carbon($request->get('start'));
-        $endDate   = new Carbon($request->get('end'));
-        $rules     = $this->ruleGroupRepository->getActiveRules($ruleGroup);
+        $user          = auth()->user();
+        $accounts      = implode(',', $request->get('accounts'));
+        $startDate     = new Carbon($request->get('start'));
+        $endDate       = new Carbon($request->get('end'));
+        $rules         = $this->ruleGroupRepository->getActiveRules($ruleGroup);
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);

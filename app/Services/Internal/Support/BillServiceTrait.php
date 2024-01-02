@@ -61,7 +61,7 @@ trait BillServiceTrait
 
             return true;
         }
-        $dbNote = $bill->notes()->first();
+        $dbNote       = $bill->notes()->first();
         if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($bill);

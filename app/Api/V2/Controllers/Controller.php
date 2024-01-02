@@ -69,11 +69,11 @@ class Controller extends BaseController
 
     final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
     {
-        $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost().'/api/v2';
+        $manager  = new Manager();
+        $baseUrl  = request()->getSchemeAndHttpHost().'/api/v2';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $objects = $paginator->getCollection();
+        $objects  = $paginator->getCollection();
 
         // the transformer, at this point, needs to collect information that ALL items in the collection
         // require, like meta-data and stuff like that, and save it for later.
@@ -93,8 +93,8 @@ class Controller extends BaseController
     final protected function jsonApiObject(string $key, array|Model $object, AbstractTransformer $transformer): array
     {
         // create some objects:
-        $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost().'/api/v2';
+        $manager  = new Manager();
+        $baseUrl  = request()->getSchemeAndHttpHost().'/api/v2';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $transformer->collectMetaData(new Collection([$object]));
@@ -112,7 +112,7 @@ class Controller extends BaseController
      */
     private function getParameters(): ParameterBag
     {
-        $bag = new ParameterBag();
+        $bag      = new ParameterBag();
         $bag->set('limit', 50);
 
         try {

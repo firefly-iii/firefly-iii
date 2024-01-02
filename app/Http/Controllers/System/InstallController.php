@@ -67,7 +67,7 @@ class InstallController extends Controller
             'firefly-iii:verify-security-alerts' => [],
         ];
 
-        $this->lastError = '';
+        $this->lastError       = '';
     }
 
     /**
@@ -99,10 +99,10 @@ class InstallController extends Controller
         ];
 
         app('log')->debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
-        $indexes = array_values(array_keys($this->upgradeCommands));
+        $indexes      = array_values(array_keys($this->upgradeCommands));
         if (array_key_exists($requestIndex, $indexes)) {
-            $command    = $indexes[$requestIndex];
-            $parameters = $this->upgradeCommands[$command];
+            $command                    = $indexes[$requestIndex];
+            $parameters                 = $this->upgradeCommands[$command];
             app('log')->debug(sprintf('Will now execute command "%s" with parameters', $command), $parameters);
 
             try {
@@ -134,7 +134,7 @@ class InstallController extends Controller
      */
     public function keys(): void
     {
-        $key = RSA::createKey(4096);
+        $key                      = RSA::createKey(4096);
 
         [$publicKey, $privateKey] = [
             Passport::keyPath('oauth-public.key'),
