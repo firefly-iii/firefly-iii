@@ -47,6 +47,11 @@ trait ValidatesAmountsTrait
         return -1 === bccomp($value, '0') || 0 === bccomp($value, '0');
     }
 
+    final protected function zeroOrMore(string $value): bool
+    {
+        return 1 === bccomp($value, '0') || 0 === bccomp($value, '0');
+    }
+
     final protected function moreThanLots(string $value): bool
     {
         return 1 === bccomp($value, self::BIG_AMOUNT) || 0 === bccomp($value, self::BIG_AMOUNT);

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.4 - 2024-01-03
+
+### Fixed
+
+- [Issue 8328](https://github.com/firefly-iii/firefly-iii/issues/8328) Asking for non-zero foreign amount despite not being used
+
 ## 6.1.3 - 2024-01-03
 
 ### Fixed
