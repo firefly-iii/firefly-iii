@@ -80,7 +80,7 @@ return [
     'reports_index_intro'                                     => '從這些報表洞察您的詳細財務狀況。',
     'reports_index_inputReportType'                           => '挑一種報表。查看說明頁面瞭解各報表展示的內容。',
     'reports_index_inputAccountsSelect'                       => '您可以根據需要排除或包括資產帳戶。',
-    'reports_index_inputDateRange'                            => '所選日期範圍完全由您決定：從1天到10年不等。',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => '根據您選擇的報表，您可以在此處選擇額外的篩選標準和選項。更改報表類型時，請查看此區塊。',
 
     // reports (reports)

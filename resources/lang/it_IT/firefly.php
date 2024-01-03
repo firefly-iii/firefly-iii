@@ -695,7 +695,7 @@ return [
     'search_modifier_attachment_name_is'                  => 'Il nome di qualsiasi allegato è ":value"',
     'search_modifier_attachment_name_contains'            => 'Il nome di qualsiasi allegato contiene ":value"',
     'search_modifier_attachment_name_starts'              => 'Il nome di qualsiasi allegato inizia con ":value"',
-    'search_modifier_attachment_name_ends'                => 'Any attachment\'s name ends with ":value"',
+    'search_modifier_attachment_name_ends'                => 'Il nome di qualsiasi allegato finisce con ":value"',
     'search_modifier_attachment_notes_are'                => 'Any attachment\'s notes are ":value"',
     'search_modifier_attachment_notes_contains'           => 'Any attachment\'s notes contain ":value"',
     'search_modifier_attachment_notes_starts'             => 'Le note di qualsiasi allegato iniziano con ":value"',

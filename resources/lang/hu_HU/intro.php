@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Ezek a jelentések részletes betekintést biztosítanak a pénzügyekbe.',
     'reports_index_inputReportType'                           => 'Jelentéstípus kiválasztása. A súgóoldalakon megtalálható, hogy az egyes jelentések mit mutatnak meg.',
     'reports_index_inputAccountsSelect'                       => 'Szükség szerint lehet kizárni vagy hozzáadni eszközfiókokat.',
-    'reports_index_inputDateRange'                            => 'Tetszőleges dátumtartományt lehet választani, egy naptól 10 évig.',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => 'A kiválasztott jelentéstől függően további szűrők és beállítások választhatóak. Ezek ebben a dobozban fognak megjelenni.',
 
     // reports (reports)

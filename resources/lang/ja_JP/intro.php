@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'あなたの財務状況の詳細を見るにはこれらのレポートを使用してください。',
     'reports_index_inputReportType'                           => 'レポートの種類を選択してください。それぞれのレポートが何を表示するかを見るにはヘルプページを確認してください。',
     'reports_index_inputAccountsSelect'                       => '経費勘定の除外や追加は自由に行えます。',
-    'reports_index_inputDateRange'                            => '選択した日付の範囲は、1日から10年まで自由に設定できます。',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => 'あなたが選んだレポートに応じて、追加のフィルターやオプションを選択できます。',
 
     // reports (reports)

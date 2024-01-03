@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Verwenden Sie diese Reports, um detaillierte Einblicke in Ihre Finanzen zu erhalten.',
     'reports_index_inputReportType'                           => 'Wählen Sie einen Berichtstyp aus. Sehen Sie sich die Hilfeseiten an, um zu sehen, was jeder Bericht Ihnen zeigt.',
     'reports_index_inputAccountsSelect'                       => 'Sie können Bestandskonten ausschließen oder einbeziehen, wie Sie es für richtig halten.',
-    'reports_index_inputDateRange'                            => 'Der gewählte Datumsbereich liegt ganz bei Ihnen: von einem Tag bis 10 Jahre.',
+    'reports_index_inputDateRange'                            => 'Der gewählte Datumsbereich liegt ganz bei Ihnen: von einem Tag bis zu 10 Jahren oder mehr.',
     'reports_index_extra-options-box'                         => 'Abhängig von dem ausgewählten Bericht können Sie hier zusätzliche Filter und Optionen auswählen. Sehen Sie sich dieses Feld an, wenn Sie Berichtstypen ändern.',
 
     // reports (reports)

@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Gebruik deze rapporten om gedetailleerde inzicht in je financiën te krijgen.',
     'reports_index_inputReportType'                           => 'Kies een rapporttype. Bekijk de helppagina\'s om te zien wat elk rapport laat zien.',
     'reports_index_inputAccountsSelect'                       => 'Je kunt naar keuze betaalrekeningen meenemen (of niet).',
-    'reports_index_inputDateRange'                            => 'Kies zelf een datumbereik: van een dag tot tien jaar.',
+    'reports_index_inputDateRange'                            => 'Kies zelf een datumbereik: van een dag tot meer dan tien jaar.',
     'reports_index_extra-options-box'                         => 'Sommige rapporten bieden extra filters en opties. Kies een rapporttype en kijk of hier iets verandert.',
 
     // reports (reports)

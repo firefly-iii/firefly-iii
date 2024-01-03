@@ -54,6 +54,7 @@ export function parseFromEntries(entries, transactionType) {
             current.budget_id = entry.budget_id;
             current.category_name = entry.category_name;
             current.piggy_bank_id = entry.piggy_bank_id;
+            current.bill_id = entry.bill_id;
 
             // location
             if (entry.hasLocation) {

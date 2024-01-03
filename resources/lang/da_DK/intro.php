@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Brug disse rapporter til at få detaljeret indsigt i dine finanser.',
     'reports_index_inputReportType'                           => 'Vælg en rapporttype. Tjek hjælpesiderne for at se, hvad hver rapport viser.',
     'reports_index_inputAccountsSelect'                       => 'Du kan udelukke eller inkludere aktiver som du finder passende.',
-    'reports_index_inputDateRange'                            => 'Det valgte datointerval er helt op til dig: fra en dag til 10 år.',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => 'Afhængigt af den rapport du har valgt, kan du vælge ekstra filtre og indstillinger her. Se dette felt når du ændrer rapporttyper.',
 
     // reports (reports)

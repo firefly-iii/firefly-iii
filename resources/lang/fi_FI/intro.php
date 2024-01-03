@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Näiden raporttien avulla saat yksityiskohtaista tietoa taloudestasi.',
     'reports_index_inputReportType'                           => 'Valitse raporttityyppi. Katso ohjesivuilta, mitä kukin raportti näyttää sinulle.',
     'reports_index_inputAccountsSelect'                       => 'Voit sisällyttää tai olla näyttämättä tilejä mielesi mukaan.',
-    'reports_index_inputDateRange'                            => 'Valittu ajanjakso on täysin sinun hallinnassasi: yhdestä päivästä 10 vuoteen.',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => 'Valitsemastasi raportista riippuen voit valita täältä lisäsuodattimia ja -vaihtoehtoja. Katso tätä ruutua, kun muutat raporttityyppejä.',
 
     // reports (reports)

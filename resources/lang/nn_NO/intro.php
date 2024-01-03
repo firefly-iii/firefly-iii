@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Bruk desse rapportane for å få detaljert innsikt i din økonomi.',
     'reports_index_inputReportType'                           => 'Vel ein rapporttype. Sjekk ut hjelpesidene for å sjå kva kvar rapport visar deg.',
     'reports_index_inputAccountsSelect'                       => 'Du kan ekskludere eller inkludere aktivakontoar etter eget ønske.',
-    'reports_index_inputDateRange'                            => 'Den valde datoperioden er heilt opp til deg: frå ein dag, og opptil 10 år.',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => 'Avhengig av kva rapport du har valt, kan du velga ekstra filter og alternativ her. Følg med på denne boksen når du endrer rapporttypar.',
 
     // reports (reports)

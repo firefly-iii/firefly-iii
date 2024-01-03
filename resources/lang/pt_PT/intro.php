@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Use estes relatórios para obter sínteses detalhadas sobre as suas finanças.',
     'reports_index_inputReportType'                           => 'Escolha um tipo de relatório. Confira as páginas de ajuda para ter a certeza do que cada relatório mostra.',
     'reports_index_inputAccountsSelect'                       => 'Pode incluir ou excluir contas de ativos conforme as suas necessidades.',
-    'reports_index_inputDateRange'                            => 'O intervalo temporal a definir é totalmente consigo: desde 1 dia até 10 anos.',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => 'Dependendo do relatório que selecionou, pode selecionar filtros e opções extra aqui. Repare nesta caixa quando mudar os tipos de relatório.',
 
     // reports (reports)

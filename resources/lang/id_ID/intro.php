@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Gunakan laporan ini untuk mendapatkan wawasan terperinci dalam keuangan anda.',
     'reports_index_inputReportType'                           => 'Pilih sebuah jenis laporan. Periksa bantuan halaman untuk melihat apa yang ditunjukkan pada laporan anda.',
     'reports_index_inputAccountsSelect'                       => 'Anda dapat mengecualikan atau menyertakan akun aset sesuai keinginan anda.',
-    'reports_index_inputDateRange'                            => 'Rentang tanggal yang dipilih sepenuhnya terserah anda: dari satu hari sampai 10 tahun.',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => 'Bergantung pada laporan yang anda pilih, anda dapat memilih filter dan opsi tambahan di sini. Lihat kotak ini saat anda mengubah jenis laporan.',
 
     // reports (reports)
