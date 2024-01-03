@@ -61,7 +61,7 @@ return [
     'reports_index_intro'                                     => 'Use these reports to get detailed insights in your finances.',
     'reports_index_inputReportType'                           => 'Pick a report type. Check out the help pages to see what each report shows you.',
     'reports_index_inputAccountsSelect'                       => 'You can exclude or include asset accounts as you see fit.',
-    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years.',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => 'Depending on the report you have selected, you can select extra filters and options here. Watch this box when you change report types.',
 
     // reports (reports)
