@@ -51,7 +51,7 @@ class EditController extends Controller
         // translations:
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.transactions'));
+                app('view')->share('title', (string) trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 $this->repository = app(JournalRepositoryInterface::class);
@@ -78,7 +78,9 @@ class EditController extends Controller
         $accountToTypes       = config('firefly.account_to_transaction');
         $expectedSourceTypes  = config('firefly.expected_source_types');
         $allowedSourceDests   = config('firefly.source_dests');
-
+        $title                = $transactionGroup->transactionJournals()->count() > 1 ? $transactionGroup->title : $transactionGroup->transactionJournals()->first()->description;
+        $subTitle             = (string) trans('firefly.edit_transaction_title', ['description' => $title]);
+        $subTitleIcon         = 'fa-plus';
         $defaultCurrency      = app('amount')->getDefaultCurrency();
         $cash                 = $repository->getCashAccount();
         $previousUrl          = $this->rememberPreviousUrl('transactions.edit.url');
@@ -92,6 +94,8 @@ class EditController extends Controller
                 'cash',
                 'allowedSourceDests',
                 'expectedSourceTypes',
+                'subTitle',
+                'subTitleIcon',
                 'transactionGroup',
                 'allowedOpposingTypes',
                 'accountToTypes',

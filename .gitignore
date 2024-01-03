@@ -1,6 +1,7 @@
 /node_modules
 /storage/*.key
 /vendor
+public/hot
 npm-debug.log
 yarn-error.log
 .env

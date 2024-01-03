@@ -44,6 +44,7 @@ import 'leaflet/dist/leaflet.css';
 // TODO fix two maps, perhaps disconnect from entries entirely.
 // TODO group title
 // TODO map location from preferences
+// TODO field preferences
 
 let i18n;
 
@@ -204,7 +205,7 @@ let transactions = function () {
         showWaitMessage: false,
 
         // four buttons
-        returnHereButton: true,
+        returnHereButton: false,
         resetButton: false,
         resetButtonEnabled: false,
         rulesButton: true,
@@ -850,28 +851,29 @@ let transactions = function () {
                     }
                 });
                 const count = this.entries.length - 1;
-                //let map = L.map('location_map_' + count).setView([this.latitude, this.longitude], this.zoomLevel);
+                let map = L.map('location_map_' + count).setView([this.latitude, this.longitude], this.zoomLevel);
 
-                // L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                //     maxZoom: 19,
-                //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap '+count+'</a>'
-                // }).addTo(map);
-                // map.on('click', this.addPointToMap);
-                // map.on('zoomend', this.saveZoomOfMap);
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap '+count+'</a>'
+                }).addTo(map);
+                map.on('click', this.addPointToMap);
+                map.on('zoomend', this.saveZoomOfMap);
+                this.entries[count].map
 
-                const id = 'location_map_' + count;
-                const map = () => {
-                    const el = document.getElementById(id),
-                        map = L.map(id).setView([this.latitude, this.longitude], this.zoomLevel)
-                    L.tileLayer(
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                        {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap '+count+'</a>'}
-                    ).addTo(map)
-                    map.on('click', this.addPointToMap);
-                    map.on('zoomend', this.saveZoomOfMap);
-                    return map
-                }
-                this.entries[count].map = map();
+                // const id = 'location_map_' + count;
+                // const map = () => {
+                //     const el = document.getElementById(id),
+                //         map = L.map(id).setView([this.latitude, this.longitude], this.zoomLevel)
+                //     L.tileLayer(
+                //         'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                //         {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap '+count+'</a>'}
+                //     ).addTo(map)
+                //     map.on('click', this.addPointToMap);
+                //     map.on('zoomend', this.saveZoomOfMap);
+                //     return map
+                // }
+                // this.entries[count].map = map();
 
             }, 250);
 
