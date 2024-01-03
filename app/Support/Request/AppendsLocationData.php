@@ -78,12 +78,12 @@ trait AppendsLocationData
         $data['latitude']        = null;
         $data['zoom_level']      = null;
 
-        $longitudeKey            = $this->getLocationKey($prefix, 'longitude');
-        $latitudeKey             = $this->getLocationKey($prefix, 'latitude');
-        $zoomLevelKey            = $this->getLocationKey($prefix, 'zoom_level');
-        $isValidPOST             = $this->isValidPost($prefix);
-        $isValidPUT              = $this->isValidPUT($prefix);
-        $isValidEmptyPUT         = $this->isValidEmptyPUT($prefix);
+        $longitudeKey    = $this->getLocationKey($prefix, 'longitude');
+        $latitudeKey     = $this->getLocationKey($prefix, 'latitude');
+        $zoomLevelKey    = $this->getLocationKey($prefix, 'zoom_level');
+        $isValidPOST     = $this->isValidPost($prefix);
+        $isValidPUT      = $this->isValidPUT($prefix);
+        $isValidEmptyPUT = $this->isValidEmptyPUT($prefix);
 
         // for a POST (store), all fields must be present and not NULL.
         if ($isValidPOST) {
@@ -117,6 +117,40 @@ trait AppendsLocationData
         );
 
         return $data;
+    }
+
+    /**
+     * @param array $information
+     * @param array $return
+     *
+     * @return array
+     */
+    public function addFromromTransactionStore(array $information, array $return): array
+    {
+        $return['store_location'] = false;
+        if (true === $information['store_location']) {
+            $long = array_key_exists('longitude', $information) ? $information['longitude'] : null;
+            $lat  = array_key_exists('latitude', $information) ? $information['latitude'] : null;
+            if (null !== $long && null !== $lat && $this->validLongitude($long) && $this->validLatitude($lat)) {
+                $return['store_location'] = true;
+                $return['longitude']      = $information['longitude'];
+                $return['latitude']       = $information['latitude'];
+                $return['zoom_level']     = $information['zoom_level'];
+            }
+        }
+        return $return;
+    }
+
+    private function validLongitude(string $longitude): bool
+    {
+        $number = (float) $longitude;
+        return $number >= -180 && $number <= 180;
+    }
+
+    private function validLatitude(string $latitude): bool
+    {
+        $number = (float) $latitude;
+        return $number >= -90 && $number <= 90;
     }
 
     private function getLocationKey(?string $prefix, string $key): string
@@ -213,9 +247,9 @@ trait AppendsLocationData
         $zoomLevelKey = $this->getLocationKey($prefix, 'zoom_level');
 
         return (
-            null === $this->get($longitudeKey)
-            && null === $this->get($latitudeKey)
-            && null === $this->get($zoomLevelKey))
+                   null === $this->get($longitudeKey)
+                   && null === $this->get($latitudeKey)
+                   && null === $this->get($zoomLevelKey))
                && (
                    'PUT' === $this->method()
                    || ('POST' === $this->method() && $this->routeIs('*.update'))

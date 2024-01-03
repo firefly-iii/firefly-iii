@@ -343,6 +343,7 @@
                                                 <select
                                                     class="form-select ac-tags"
                                                     :id="'tags_' + index"
+                                                    x-model="transaction.tags"
                                                     :name="'tags['+index+'][]'"
                                                     multiple>
                                                     <option value="">Type a tag...</option>
@@ -406,12 +407,19 @@
                                                 <i class="fa-solid fa-link"></i>
                                             </label>
                                             <div class="col-sm-10">
-                                                <input type="search"
+                                                <input type="text"
                                                        class="form-control"
                                                        :id="'external_url_' + index"
                                                        x-model="transaction.external_url"
                                                        :data-index="index"
-                                                       placeholder="{{ __('firefly.external_url')  }}">
+                                                       :class="{'is-invalid': transaction.errors.external_url.length > 0, 'form-control': true}"
+                                                       placeholder="{{ __('firefly.external_url')  }}" />
+                                                <template x-if="transaction.errors.external_url.length > 0">
+                                                    <div class="invalid-feedback"
+                                                         x-text="transaction.errors.external_url[0]">
+
+                                                    </div>
+                                                </template>
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -420,7 +428,7 @@
                                                 <i class="fa-solid fa-earth-europe"></i>
                                             </label>
                                             <div class="col-sm-10">
-                                                <div id="mappie" style="height:300px;" :data-index="index"></div>
+                                                <div :id="'location_map_' + index" style="height:300px;" :data-index="index"></div>
                                                 <span class="muted small">
                                                     <template x-if="!transaction.hasLocation">
                                                         <span>Tap the map to add a location</span>

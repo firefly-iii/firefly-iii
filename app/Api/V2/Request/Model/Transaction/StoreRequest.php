@@ -28,6 +28,7 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Rules\BelongsUserGroup;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
+use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -74,7 +75,6 @@ class StoreRequest extends FormRequest
             'fire_webhooks'           => $this->boolean('fire_webhooks', true),
             'transactions'            => $this->getTransactionData(),
         ];
-        // TODO include location and ability to process it.
     }
 
     /**
@@ -107,8 +107,8 @@ class StoreRequest extends FormRequest
             'transactions.*.foreign_currency_code' => 'min:3|max:51|exists:transaction_currencies,code|nullable',
 
             // amount
-            'transactions.*.amount'                => 'required|numeric|gt:0|max:1000000000',
-            'transactions.*.foreign_amount'        => 'numeric|gt:0|max:1000000000',
+            'transactions.*.amount'                  => ['required', new IsValidPositiveAmount()],
+            'transactions.*.foreign_amount'          => ['nullable', new IsValidPositiveAmount()],
 
             // description
             'transactions.*.description'           => 'nullable|between:1,1000',
@@ -140,7 +140,8 @@ class StoreRequest extends FormRequest
             // other interesting fields
             'transactions.*.reconciled'            => [new IsBoolean()],
             'transactions.*.notes'                 => 'min:1|max:50000|nullable',
-            'transactions.*.tags'                  => 'between:0,255',
+            'transactions.*.tags'                  => 'between:0,1024',
+            'transactions.*.tags*'                  => 'between:0,1024',
 
             // meta info fields
             'transactions.*.internal_reference'    => 'min:1|max:255|nullable',
@@ -166,6 +167,9 @@ class StoreRequest extends FormRequest
             'transactions.*.due_date'              => 'date|nullable',
             'transactions.*.payment_date'          => 'date|nullable',
             'transactions.*.invoice_date'          => 'date|nullable',
+
+            // TODO include location and ability to process it.
+
         ];
     }
 
@@ -222,7 +226,7 @@ class StoreRequest extends FormRequest
          */
         foreach ($this->get('transactions') as $transaction) {
             $object   = new NullArrayObject($transaction);
-            $return[] = [
+            $result= [
                 'type'                  => $this->clearString($object['type']),
                 'date'                  => $this->dateFromValue($object['date']),
                 'order'                 => $this->integerFromValue((string)$object['order']),
@@ -300,6 +304,8 @@ class StoreRequest extends FormRequest
                 'payment_date'          => $this->dateFromValue($object['payment_date']),
                 'invoice_date'          => $this->dateFromValue($object['invoice_date']),
             ];
+            $result = $this->addFromromTransactionStore($transaction, $result);
+            $return[] = $result;
         }
 
         return $return;

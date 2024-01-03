@@ -40,6 +40,10 @@ import L from "leaflet";
 
 import 'leaflet/dist/leaflet.css';
 
+// TODO upload attachments to other file
+// TODO fix two maps, perhaps disconnect from entries entirely.
+// TODO group title
+// TODO map location from preferences
 
 let i18n;
 
@@ -186,7 +190,7 @@ let transactions = function () {
         budgets: [],
         piggyBanks: {},
         subscriptions: [],
-        dateFields: ['interest_date','book_date','process_date','due_date','payment_date','invoice_date'],
+        dateFields: ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'],
 
         foreignAmountEnabled: true,
         filters: {
@@ -754,19 +758,41 @@ let transactions = function () {
             let fieldName;
 
             // todo add 'was-validated' to form.
-
+            console.log('Now processing errors.');
             for (const key in data.errors) {
                 if (data.errors.hasOwnProperty(key)) {
                     if (key === 'group_title') {
+                        console.log('Handling group title error.');
                         // todo handle group errors.
                         //this.group_title_errors = errors.errors[key];
                     }
                     if (key !== 'group_title') {
+                        console.log('Handling errors for ' + key);
                         // lol, the dumbest way to explode "transactions.0.something" ever.
                         transactionIndex = parseInt(key.split('.')[1]);
                         fieldName = key.split('.')[2];
+                        console.log('Transaction index: ' + transactionIndex);
+                        console.log('Field name: ' + fieldName);
+                        console.log('Errors');
+                        console.log(data.errors[key]);
                         // set error in this object thing.
                         switch (fieldName) {
+                            case 'currency_code':
+                            case 'foreign_currency_code':
+                            case 'category_name':
+                            case 'piggy_bank_id':
+                            case 'notes':
+                            case 'internal_reference':
+                            case 'external_url':
+                            case 'latitude':
+                            case 'longitude':
+                            case 'zoom_level':
+                            case 'interest_date':
+                            case 'book_date':
+                            case 'process_date':
+                            case 'due_date':
+                            case 'payment_date':
+                            case 'invoice_date':
                             case 'amount':
                             case 'date':
                             case 'budget_id':
@@ -778,6 +804,10 @@ let transactions = function () {
                             case 'source_name':
                             case 'source_id':
                                 this.entries[transactionIndex].errors.source_account = this.entries[transactionIndex].errors.source_account.concat(data.errors[key]);
+                                break;
+                            case 'type':
+                                // put the error in the description:
+                                this.entries[transactionIndex].errors.description = this.entries[transactionIndex].errors.source_account.concat(data.errors[key]);
                                 break;
                             case 'destination_name':
                             case 'destination_id':
@@ -810,6 +840,7 @@ let transactions = function () {
                     server: urls.tag,
                     liveServer: true,
                     clearEnd: true,
+                    allowNew: true,
                     notFoundMessage: '(nothing found)',
                     noCache: true,
                     fetchOptions: {
@@ -819,14 +850,28 @@ let transactions = function () {
                     }
                 });
                 const count = this.entries.length - 1;
-                this.entries[count].map = L.map('mappie').setView([this.latitude, this.longitude], this.zoomLevel);
+                //let map = L.map('location_map_' + count).setView([this.latitude, this.longitude], this.zoomLevel);
 
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                }).addTo(this.entries[count].map);
-                this.entries[count].map.on('click', this.addPointToMap);
-                this.entries[count].map.on('zoomend', this.saveZoomOfMap);
+                // L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                //     maxZoom: 19,
+                //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap '+count+'</a>'
+                // }).addTo(map);
+                // map.on('click', this.addPointToMap);
+                // map.on('zoomend', this.saveZoomOfMap);
+
+                const id = 'location_map_' + count;
+                const map = () => {
+                    const el = document.getElementById(id),
+                        map = L.map(id).setView([this.latitude, this.longitude], this.zoomLevel)
+                    L.tileLayer(
+                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap '+count+'</a>'}
+                    ).addTo(map)
+                    map.on('click', this.addPointToMap);
+                    map.on('zoomend', this.saveZoomOfMap);
+                    return map
+                }
+                this.entries[count].map = map();
 
             }, 250);
 
@@ -878,13 +923,6 @@ let transactions = function () {
                 document.querySelector('#form')._x_dataStack[0].$data.entries[index].longitude = e.latlng.lng;
                 document.querySelector('#form')._x_dataStack[0].$data.entries[index].zoomLevel = map.getZoom();
             }
-            //this.entries[index].hasLocation = true;
-            // map.on('click', function (e) {
-            //     if (false === this.hasLocation) {
-            //         let marker = new L.marker(e.latlng).addTo(map);
-            //         this.hasLocation = true;
-            //     }
-            // });
         }
     }
 }

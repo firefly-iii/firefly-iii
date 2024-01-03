@@ -76,11 +76,43 @@ export function createEmptySplit() {
         invoice_date: '',
 
         errors: {
-            'amount': [],
-            'foreign_amount': [],
-            'budget_id': [],
-            'category_name': [],
-            'piggy_bank_id': [],
+            description: [],
+
+            // amount information:
+            amount: [],
+            currency_code: [],
+            foreign_amount: [],
+            foreign_currency_code: [],
+
+            // source and destination
+            source_account: [],
+            destination_account: [],
+
+            // meta data information:
+            budget_id: [],
+            category_name: [],
+            piggy_bank_id: [],
+            bill_id: [],
+            tags: [],
+            notes: [],
+
+            // other meta fields:
+            internal_reference: [],
+            external_url: [],
+
+            // map
+            latitude: [],
+            longitude: [],
+            zoom_level: [],
+
+            // date and time
+            date: [],
+            interest_date: [],
+            book_date: [],
+            process_date: [],
+            due_date: [],
+            payment_date: [],
+            invoice_date: [],
         },
     };
 }

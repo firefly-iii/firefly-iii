@@ -26,6 +26,7 @@ namespace FireflyIII\Transformers\V2;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Location;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -47,18 +48,18 @@ class TransactionGroupTransformer extends AbstractTransformer
     private TransactionCurrency   $default;
     private array                 $meta;
     private array                 $notes;
+    private array                 $locations;
     private array                 $tags;
 
     public function collectMetaData(Collection $objects): void
     {
-        // start with currencies:
-        $currencies       = [];
-        $journals         = [];
+        $currencies = [];
+        $journals   = [];
 
         /** @var array $object */
         foreach ($objects as $object) {
             foreach ($object['sums'] as $sum) {
-                $id = (int) $sum['currency_id'];
+                $id              = (int) $sum['currency_id'];
                 $currencies[$id] ??= TransactionCurrency::find($sum['currency_id']);
             }
 
@@ -72,7 +73,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $this->default    = app('amount')->getDefaultCurrency();
 
         // grab meta for all journals:
-        $meta             = TransactionJournalMeta::whereIn('transaction_journal_id', array_keys($journals))->get();
+        $meta = TransactionJournalMeta::whereIn('transaction_journal_id', array_keys($journals))->get();
 
         /** @var TransactionJournalMeta $entry */
         foreach ($meta as $entry) {
@@ -81,7 +82,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         // grab all notes for all journals:
-        $notes            = Note::whereNoteableType(TransactionJournal::class)->whereIn('noteable_id', array_keys($journals))->get();
+        $notes = Note::whereNoteableType(TransactionJournal::class)->whereIn('noteable_id', array_keys($journals))->get();
 
         /** @var Note $note */
         foreach ($notes as $note) {
@@ -89,12 +90,20 @@ class TransactionGroupTransformer extends AbstractTransformer
             $this->notes[$id] = $note;
         }
 
+        // grab all locations for all journals:
+        $locations = Location::whereLocatableType(TransactionJournal::class)->whereIn('locatable_id', array_keys($journals))->get();
+
+        /** @var Location $location */
+        foreach ($locations as $location) {
+            $id                   = $location->locatable_id;
+            $this->locations[$id] = $location;
+        }
+
         // grab all tags for all journals:
-        $tags             = DB::table('tag_transaction_journal')
-            ->leftJoin('tags', 'tags.id', 'tag_transaction_journal.tag_id')
-            ->whereIn('tag_transaction_journal.transaction_journal_id', array_keys($journals))
-            ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag'])
-        ;
+        $tags = DB::table('tag_transaction_journal')
+                  ->leftJoin('tags', 'tags.id', 'tag_transaction_journal.tag_id')
+                  ->whereIn('tag_transaction_journal.transaction_journal_id', array_keys($journals))
+                  ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag']);
 
         /** @var \stdClass $tag */
         foreach ($tags as $tag) {
@@ -104,7 +113,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         // create converter
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
-        $this->converter  = new ExchangeRateConverter();
+        $this->converter = new ExchangeRateConverter();
     }
 
     public function transform(array $group): array
@@ -147,10 +156,10 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     private function transformTransaction(array $transaction): array
     {
-        $transaction         = new NullArrayObject($transaction);
-        $type                = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
-        $journalId           = (int) $transaction['transaction_journal_id'];
-        $meta                = new NullArrayObject($this->meta[$journalId] ?? []);
+        $transaction = new NullArrayObject($transaction);
+        $type        = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
+        $journalId   = (int) $transaction['transaction_journal_id'];
+        $meta        = new NullArrayObject($this->meta[$journalId] ?? []);
 
         /**
          * Convert and use amount:
@@ -166,6 +175,17 @@ class TransactionGroupTransformer extends AbstractTransformer
             $nativeForeignAmount = $this->converter->convert($this->default, $this->currencies[$foreignCurrencyId], $transaction['date'], $foreignAmount);
         }
         $this->converter->summarize();
+
+        $longitude = null;
+        $latitude  = null;
+        $zoomLevel = null;
+        if (array_key_exists($journalId, $this->locations)) {
+            /** @var Location $location */
+            $location  = $this->locations[$journalId];
+            $latitude  = (string) $location->latitude;
+            $longitude = (string) $location->longitude;
+            $zoomLevel = $location->zoom_level;
+        }
 
         return [
             'user'                            => (string) $transaction['user_id'],
@@ -241,9 +261,9 @@ class TransactionGroupTransformer extends AbstractTransformer
             'invoice_date'                    => $this->date($meta['invoice_date']),
 
             // location data
-            //            'longitude'     => $longitude,
-            //            'latitude'      => $latitude,
-            //            'zoom_level'    => $zoomLevel,
+            'longitude'                       => $longitude,
+            'latitude'                        => $latitude,
+            'zoom_level'                      => $zoomLevel,
             //
             //            'has_attachments' => $this->hasAttachments((int) $row['transaction_journal_id']),
         ];

@@ -93,12 +93,14 @@ class Location extends Model
         return $rules;
     }
 
-    /**
-     * Get all the accounts.
-     */
     public function accounts(): MorphMany
     {
-        return $this->morphMany(Account::class, 'noteable');
+        return $this->morphMany(Account::class, 'locatable');
+    }
+
+    public function transactionJournals(): MorphMany
+    {
+        return $this->morphMany(TransactionJournal::class, 'locatable');
     }
 
     /**
