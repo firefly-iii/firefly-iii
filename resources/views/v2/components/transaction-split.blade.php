@@ -109,7 +109,7 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col text-end">
-                            <button class="btn btn-success" :disabled="submitting" @click="submitTransaction()">Submit</button>
+                            <button class="btn btn-success" :disabled="formStates.isSubmitting" @click="submitTransaction()">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -117,11 +117,11 @@
         </div>
         <div class="col-12">
             <template x-if="0 !== index">
-                <button :disabled="submitting" class="btn btn-danger" @click="removeSplit(index)">
+                <button :disabled="formStates.isSubmitting" class="btn btn-danger" @click="removeSplit(index)">
                     Remove this split
                 </button>
             </template>
-            <button class="btn btn-info" :disabled="submitting">Add another split</button>
+            <button class="btn btn-info" :disabled="formStates.isSubmitting">Add another split</button>
         </div>
     </div>
 </div>

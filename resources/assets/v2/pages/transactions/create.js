@@ -20,16 +20,13 @@
 
 import '../../boot/bootstrap.js';
 import dates from '../../pages/shared/dates.js';
-import {createEmptySplit} from "./shared/create-empty-split.js";
+import {createEmptySplit, defaultErrorSet} from "./shared/create-empty-split.js";
 import {parseFromEntries} from "./shared/parse-from-entries.js";
 import formatMoney from "../../util/format-money.js";
-import Autocomplete from "bootstrap5-autocomplete";
 import Post from "../../api/v2/model/transaction/post.js";
-import AttachmentPost from "../../api/v1/attachments/post.js";
 import {getVariable} from "../../store/get-variable.js";
 import {I18n} from "i18n-js";
 import {loadTranslations} from "../../support/load-translations.js";
-import Tags from "bootstrap5-tags";
 import {loadCurrencies} from "./shared/load-currencies.js";
 import {loadBudgets} from "./shared/load-budgets.js";
 import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
@@ -38,6 +35,17 @@ import {loadSubscriptions} from "./shared/load-subscriptions.js";
 import L from "leaflet";
 
 import 'leaflet/dist/leaflet.css';
+import {addAutocomplete} from "./shared/add-autocomplete.js";
+import {
+    changeCategory,
+    changeDescription,
+    changeDestinationAccount,
+    changeSourceAccount,
+    selectDestinationAccount,
+    selectSourceAccount
+} from "./shared/autocomplete-functions.js";
+import {processAttachments} from "./shared/process-attachments.js";
+import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
 
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
@@ -53,121 +61,6 @@ const urls = {
     category: '/api/v2/autocomplete/categories',
     tag: '/api/v2/autocomplete/tags',
 };
-
-let uploadAttachments = function (id, transactions) {
-    console.log('Now in uploadAttachments');
-    // reverse list of transactions?
-    transactions = transactions.reverse();
-    // array of all files to be uploaded:
-    let toBeUploaded = [];
-    let count = 0;
-    // array with all file data.
-    let fileData = [];
-
-    // all attachments
-    let attachments = document.querySelectorAll('input[name="attachments[]"]');
-    console.log(attachments);
-    // loop over all attachments, and add references to this array:
-    for (const key in attachments) {
-        if (attachments.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-            console.log('Now at attachment #' + key);
-            for (const fileKey in attachments[key].files) {
-                if (attachments[key].files.hasOwnProperty(fileKey) && /^0$|^[1-9]\d*$/.test(fileKey) && fileKey <= 4294967294) {
-                    // include journal thing.
-                    console.log('Will upload #' + fileKey + ' from attachment #' + key + ' to transaction #' + transactions[key].transaction_journal_id);
-                    toBeUploaded.push({
-                        journal: transactions[key].transaction_journal_id, file: attachments[key].files[fileKey]
-                    });
-                    count++;
-                }
-            }
-        }
-    }
-    console.log('Found ' + count + ' attachments.');
-
-    // loop all uploads.
-    for (const key in toBeUploaded) {
-        if (toBeUploaded.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-            console.log('Create file reader for file #' + key);
-            // create file reader thing that will read all of these uploads
-            (function (f, key) {
-                let fileReader = new FileReader();
-                fileReader.onloadend = function (evt) {
-                    if (evt.target.readyState === FileReader.DONE) { // DONE == 2
-                        console.log('Done reading file  #' + key);
-                        fileData.push({
-                            name: toBeUploaded[key].file.name,
-                            journal: toBeUploaded[key].journal,
-                            content: new Blob([evt.target.result])
-                        });
-                        if (fileData.length === count) {
-                            console.log('Done reading file #' + key);
-                            uploadFiles(fileData, id);
-                        }
-                    }
-                };
-                fileReader.readAsArrayBuffer(f.file);
-            })(toBeUploaded[key], key,);
-        }
-    }
-    return count;
-}
-let uploadFiles = function (fileData, id) {
-    let count = fileData.length;
-    let uploads = 0;
-    console.log('Will now upload ' + count + ' file(s) to journal with id #' + id);
-
-    for (const key in fileData) {
-        if (fileData.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-            console.log('Creating attachment #' + key);
-
-            let poster = new AttachmentPost();
-            poster.post(fileData[key].name, 'TransactionJournal', fileData[key].journal).then(response => {
-                let attachmentId = parseInt(response.data.data.id);
-                console.log('Created attachment #' + attachmentId + ' for key #' + key);
-                console.log('Uploading attachment #' + key);
-                poster.upload(attachmentId, fileData[key].content).then(attachmentResponse => {
-                    // console.log('Uploaded attachment #' + key);
-                    uploads++;
-                    if (uploads === count) {
-                        // finally we can redirect the user onwards.
-                        console.log('FINAL UPLOAD, redirect user to new transaction or reset form or whatever.');
-                        const event = new CustomEvent('upload-success', {some: 'details'});
-                        document.dispatchEvent(event);
-                        return;
-                    }
-                    console.log('Upload complete!');
-                    // return true here.
-                }).catch(error => {
-                    console.error('Could not upload');
-                    console.error(error);
-                    // console.log('Uploaded attachment #' + key);
-                    uploads++;
-                    if (uploads === count) {
-                        // finally we can redirect the user onwards.
-                        console.log('FINAL UPLOAD, redirect user to new transaction or reset form or whatever.');
-                        //this.redirectUser(groupId, transactionData);
-                    }
-                    // console.log('Upload complete!');
-                    // return false;
-                    // return false here
-                });
-            }).catch(error => {
-                console.error('Could not create upload.');
-                console.error(error);
-                uploads++;
-                if (uploads === count) {
-                    // finally we can redirect the user onwards.
-                    // console.log('FINAL UPLOAD');
-                    console.log('FINAL UPLOAD, redirect user to new transaction or reset form or whatever.');
-                    // this.redirectUser(groupId, transactionData);
-                }
-                // console.log('Upload complete!');
-                //return false;
-            });
-        }
-    }
-}
 
 let transactions = function () {
     return {
@@ -190,7 +83,8 @@ let transactions = function () {
 
         // form behaviour during transaction
         formBehaviour: {
-            formType: 'create', foreignCurrencyEnabled: true,
+            formType: 'create',
+            foreignCurrencyEnabled: true,
         },
 
         // form data (except transactions) is stored in formData
@@ -207,6 +101,8 @@ let transactions = function () {
         // properties for the entire transaction group
         groupProperties: {
             transactionType: 'unknown',
+            title: null,
+            id: null,
             totalAmount: 0,
         },
 
@@ -223,8 +119,8 @@ let transactions = function () {
                 url: '',
             },
             wait: {
-                show: false,text: '',
-                url: '',
+                show: false,
+                text: '',
 
             }
         },
@@ -259,12 +155,11 @@ let transactions = function () {
             console.log('changedDescription');
         },
         changedDestinationAccount(event) {
-            console.log('changedDestinationAccount')
+            this.detectTransactionType();
         },
         changedSourceAccount(event) {
-            console.log('changedSourceAccount')
+            this.detectTransactionType();
         },
-
 
         detectTransactionType() {
             const sourceType = this.entries[0].source_account.type ?? 'unknown';
@@ -274,6 +169,7 @@ let transactions = function () {
                 console.warn('Cannot infer transaction type from two unknown accounts.');
                 return;
             }
+
             // transfer: both are the same and in strict set of account types
             if (sourceType === destType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(sourceType)) {
                 this.groupProperties.transactionType = 'transfer';
@@ -320,41 +216,34 @@ let transactions = function () {
             }
             console.warn('Unknown account combination between "' + sourceType + '" and "' + destType + '".');
         },
-
-        selectSourceAccount(item, ac) {
-            const index = parseInt(ac._searchInput.attributes['data-index'].value);
-            document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account = {
-                id: item.id,
-                name: item.name,
-                alpine_name: item.name,
-                type: item.type,
-                currency_code: item.currency_code,
-            };
-            console.log('Changed source account into a known ' + item.type.toLowerCase());
-            document.querySelector('#form')._x_dataStack[0].detectTransactionType();
+        formattedTotalAmount() {
+            if(this.entries.length === 0) {
+                return formatMoney(this.groupProperties.totalAmount, 'EUR');
+            }
+            return formatMoney(this.groupProperties.totalAmount, this.entries[0].currency_code ?? 'EUR');
         },
+
         filterForeignCurrencies(code) {
-            console.log('filterForeignCurrencies("' + code + '")');
             let list = [];
             let currency;
-            for (let i in this.enabledCurrencies) {
-                if (this.enabledCurrencies.hasOwnProperty(i)) {
-                    let current = this.enabledCurrencies[i];
+            for (let i in this.formData.enabledCurrencies) {
+                if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
+                    let current = this.formData.enabledCurrencies[i];
                     if (current.code === code) {
                         currency = current;
                     }
                 }
             }
             list.push(currency);
-            this.foreignCurrencies = list;
+            this.formData.foreignCurrencies = list;
             // is he source account currency anyway:
             if (1 === list.length && list[0].code === this.entries[0].source_account.currency_code) {
                 console.log('Foreign currency is same as source currency. Disable foreign amount.');
-                this.foreignAmountEnabled = false;
+                this.formBehaviour.foreignCurrencyEnabled = false;
             }
             if (1 === list.length && list[0].code !== this.entries[0].source_account.currency_code) {
                 console.log('Foreign currency is NOT same as source currency. Enable foreign amount.');
-                this.foreignAmountEnabled = true;
+                this.formBehaviour.foreignCurrencyEnabled = true;
             }
 
             // this also forces the currency_code on ALL entries.
@@ -365,19 +254,19 @@ let transactions = function () {
             }
         },
         filterNativeCurrencies(code) {
-            console.log('filterNativeCurrencies("' + code + '")');
             let list = [];
             let currency;
-            for (let i in this.enabledCurrencies) {
-                if (this.enabledCurrencies.hasOwnProperty(i)) {
-                    let current = this.enabledCurrencies[i];
+            for (let i in this.formData.enabledCurrencies) {
+                if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
+                    let current = this.formData.enabledCurrencies[i];
                     if (current.code === code) {
                         currency = current;
                     }
                 }
             }
             list.push(currency);
-            this.nativeCurrencies = list;
+            this.formData.nativeCurrencies = list;
+
             // this also forces the currency_code on ALL entries.
             for (let i in this.entries) {
                 if (this.entries.hasOwnProperty(i)) {
@@ -388,164 +277,71 @@ let transactions = function () {
         changedAmount(e) {
             const index = parseInt(e.target.dataset.index);
             this.entries[index].amount = parseFloat(e.target.value);
-            this.totalAmount = 0;
+            this.groupProperties.totalAmount = 0;
             for (let i in this.entries) {
                 if (this.entries.hasOwnProperty(i)) {
-                    this.totalAmount = this.totalAmount + parseFloat(this.entries[i].amount);
+                    this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
                 }
             }
-            console.log('Changed amount to ' + this.totalAmount);
-        },
-        selectDestAccount(item, ac) {
-            const index = parseInt(ac._searchInput.attributes['data-index'].value);
-            document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account = {
-                id: item.id,
-                name: item.name,
-                alpine_name: item.name,
-                type: item.type,
-                currency_code: item.currency_code,
-            };
-            console.log('Changed destination account into a known ' + item.type.toLowerCase());
-            document.querySelector('#form')._x_dataStack[0].detectTransactionType();
-        },
-        changeSourceAccount(item, ac) {
-            console.log('changeSourceAccount');
-            if (typeof item === 'undefined') {
-                const index = parseInt(ac._searchInput.attributes['data-index'].value);
-                let source = document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account;
-                if (source.name === ac._searchInput.value) {
-                    console.warn('Ignore hallucinated source account name change to "' + ac._searchInput.value + '"');
-                    document.querySelector('#form')._x_dataStack[0].detectTransactionType();
-                    return;
-                }
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account = {
-                    name: ac._searchInput.value, alpine_name: ac._searchInput.value,
-                };
-
-                console.log('Changed source account into a unknown account called "' + ac._searchInput.value + '"');
-                document.querySelector('#form')._x_dataStack[0].detectTransactionType();
-            }
-        },
-        changeDestAccount(item, ac) {
-            let destination = document.querySelector('#form')._x_dataStack[0].$data.entries[0].destination_account;
-            if (typeof item === 'undefined') {
-                const index = parseInt(ac._searchInput.attributes['data-index'].value);
-                let destination = document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account;
-
-                if (destination.name === ac._searchInput.value) {
-                    console.warn('Ignore hallucinated destination account name change to "' + ac._searchInput.value + '"');
-                    document.querySelector('#form')._x_dataStack[0].detectTransactionType();
-                    return;
-                }
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account = {
-                    name: ac._searchInput.value, alpine_name: ac._searchInput.value,
-                };
-                console.log('Changed destination account into a unknown account called "' + ac._searchInput.value + '"');
-                document.querySelector('#form')._x_dataStack[0].detectTransactionType();
-            }
-        },
-        changeCategory(item, ac) {
-            const index = parseInt(ac._searchInput.attributes['data-index'].value);
-            if (typeof item !== 'undefined' && item.name) {
-                //this.entries[0].category_name = object.name;
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].category_name = item.name;
-                return;
-            }
-            document.querySelector('#form')._x_dataStack[0].$data.entries[index].category_name = ac._searchInput.value;
         },
 
-        changeDescription(item, ac) {
-            const index = parseInt(ac._searchInput.attributes['data-index'].value);
-            if (typeof item !== 'undefined' && item.description) {
-                //this.entries[0].category_name = object.name;
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].description = item.description;
-                return;
-            }
-            document.querySelector('#form')._x_dataStack[0].$data.entries[index].description = ac._searchInput.value;
-        },
 
         addedSplit() {
-            console.log('addedSplit');
-            // TODO improve code location
-            Autocomplete.init("input.ac-source", {
-                server: urls.account,
-                serverParams: {
-                    types: this.filters.source,
-                },
-                fetchOptions: {
-                    headers: {
-                        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-                    }
-                },
-                hiddenInput: true,
-                preventBrowserAutocomplete: true,
-                highlightTyped: true,
-                liveServer: true,
-                onChange: this.changeSourceAccount,
-                onSelectItem: this.selectSourceAccount,
-                onRenderItem: function (item, b, c) {
-                    return item.name_with_balance + '<br><small class="text-muted">' + i18n.t('firefly.account_type_' + item.type) + '</small>';
-                }
+            // addedSplit, is called from the HTML
+            // for source account
+            const renderAccount = function (item, b, c) {
+                return item.name_with_balance + '<br><small class="text-muted">' + i18n.t('firefly.account_type_' + item.type) + '</small>';
+            };
+            console.log(this.filters);
+            addAutocomplete({
+                selector: 'input.ac-source',
+                serverUrl: urls.account,
+                filters: this.filters.source,
+                onRenderItem: renderAccount,
+                onChange: changeSourceAccount,
+                onSelectItem: selectSourceAccount
             });
-
-            Autocomplete.init("input.ac-category", {
-                server: urls.category,
-                fetchOptions: {
-                    headers: {
-                        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-                    }
-                },
-                valueField: "id",
-                labelField: "name",
-                highlightTyped: true,
-                onSelectItem: this.changeCategory,
-                onChange: this.changeCategory,
+            addAutocomplete({
+                selector: 'input.ac-dest',
+                serverUrl: urls.account,
+                filters: this.filters.destination,
+                onRenderItem: renderAccount,
+                onChange: changeDestinationAccount,
+                onSelectItem: selectDestinationAccount
             });
-
-            Autocomplete.init("input.ac-dest", {
-                server: urls.account,
-                serverParams: {
-                    types: this.filters.destination,
-                },
-                fetchOptions: {
-                    headers: {
-                        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-                    }
-                },
-                hiddenInput: true,
-                preventBrowserAutocomplete: true,
-                liveServer: true,
-                highlightTyped: true,
-                onSelectItem: this.selectDestAccount,
-                onChange: this.changeDestAccount,
-                onRenderItem: function (item, b, c) {
-                    return item.name_with_balance + '<br><small class="text-muted">' + i18n.t('firefly.account_type_' + item.type) + '</small>';
-                }
+            addAutocomplete({
+                selector: 'input.ac-category',
+                serverUrl: urls.category,
+                valueField: 'id',
+                labelField: 'name',
+                onChange: changeCategory,
+                onSelectItem: changeCategory
             });
-            this.filters.destination = [];
-            Autocomplete.init('input.ac-description', {
-                server: urls.description,
-                fetchOptions: {
-                    headers: {
-                        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-                    }
-                },
-                valueField: "id",
-                labelField: "description",
-                highlightTyped: true,
-                onSelectItem: this.changeDescription,
-                onChange: this.changeDescription,
+            addAutocomplete({
+                selector: 'input.ac-description',
+                serverUrl: urls.description,
+                valueField: 'id',
+                labelField: 'description',
+                onChange: changeDescription,
+                onSelectItem: changeDescription,
             });
-
 
         },
         processUpload(event) {
-            console.log('I am ALSO event listener for upload-success!');
-            console.log(event);
-            this.showBarOrRedirect();
+            this.showMessageOrRedirectUser();
+        },
+        processUploadError(event) {
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+            this.notifications.error.show = true;
+            this.formStates.isSubmitting = false;
+            this.notifications.error.text = i18n.t('firefly.errors_upload');
+            console.error(event);
         },
 
         init() {
+            // get translations
+            // TODO loading translations could be better, but do this later.
             Promise.all([getVariable('language', 'en_US')]).then((values) => {
                 i18n = new I18n();
                 const locale = values[0].replace('-', '_');
@@ -578,8 +374,12 @@ let transactions = function () {
 
             document.addEventListener('upload-success', (event) => {
                 this.processUpload(event);
+                document.querySelectorAll("input[type=file]").value = "";
             });
 
+            document.addEventListener('upload-error', (event) => {
+                this.processUploadError(event);
+            });
 
             // source can never be expense account
             this.filters.source = ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'];
@@ -587,21 +387,35 @@ let transactions = function () {
             this.filters.destination = ['Expense account', 'Loan', 'Debt', 'Mortgage', 'Asset account'];
         },
         submitTransaction() {
-            // reset all views:
-            this.submitting = true;
-            this.showSuccessMessage = false;
-            this.showErrorMessage = false;
-            this.showWaitmessage = false;
+            // reset all messages:
+            this.notifications.error.show = false;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+
+            // reset all errors in the entries array:
+            for (let i in this.entries) {
+                if (this.entries.hasOwnProperty(i)) {
+                    this.entries[i].errors = defaultErrorSet();
+                }
+            }
+
+            // form is now submitting:
+            this.formStates.isSubmitting = true;
+
+            // final check on transaction type.
             this.detectTransactionType();
 
             // parse transaction:
             let transactions = parseFromEntries(this.entries, this.groupProperties.transactionType);
             let submission = {
-                // todo process all options
-                group_title: null, fire_webhooks: false, apply_rules: false, transactions: transactions
+                group_title: this.groupProperties.title,
+                fire_webhooks: this.formStates.webhooksButton,
+                apply_rules: this.formStates.rulesButton,
+                transactions: transactions
             };
-            if (transactions.length > 1) {
-                // todo improve me
+
+            // catch for group title:
+            if (null === this.groupProperties.title && transactions.length > 1) {
                 submission.group_title = transactions[0].description;
             }
 
@@ -609,20 +423,25 @@ let transactions = function () {
             let poster = new Post();
             console.log(submission);
             poster.post(submission).then((response) => {
-                // submission was a success.
-                this.newGroupId = parseInt(response.data.data.id);
-                this.newGroupTitle = submission.group_title ?? submission.transactions[0].description
-                const attachmentCount = uploadAttachments(this.newGroupId, response.data.data.attributes.transactions);
+                const group = response.data.data;
+                // submission was a success!
+                this.groupProperties.id = parseInt(group.id);
+                this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description
 
-                // upload transactions? then just show the wait message and do nothing else.
+                // process attachments, if any:
+                const attachmentCount = processAttachments(this.groupProperties.id, group.attributes.transactions);
+
                 if (attachmentCount > 0) {
-                    this.showWaitMessage = true;
+                    // if count is more than zero, system is processing transactions in the background.
+                    this.notifications.wait.show = true;
+                    this.notifications.wait.text = i18n.t('firefly.wait_attachments');
                     return;
                 }
 
                 // if not, respond to user options:
-                this.showBarOrRedirect();
+                this.showMessageOrRedirectUser();
             }).catch((error) => {
+
                 this.submitting = false;
                 console.log(error);
                 // todo put errors in form
@@ -633,153 +452,83 @@ let transactions = function () {
 
             });
         },
-        showBarOrRedirect() {
-            this.showWaitMessage = false;
-            this.submitting = false;
-            if (this.returnHereButton) {
-                // todo create success banner
-                this.showSuccessMessage = true;
-                this.successMessageLink = 'transactions/show/' + this.newGroupId;
-                this.successMessageText = i18n.t('firefly.stored_journal_js', {description: this.newGroupTitle});
-                // todo clear out form if necessary
-                if (this.resetButton) {
+        showMessageOrRedirectUser() {
+            // disable all messages:
+            this.notifications.error.show = false;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+
+            if (this.formStates.returnHereButton) {
+
+                this.notifications.success.show = true;
+                this.notifications.success.url = 'transactions/show/' + this.groupProperties.id;
+                this.notifications.success.text = i18n.t('firefly.stored_journal_js', {description: this.groupProperties.title});
+
+                if (this.formStates.resetButton) {
                     this.entries = [];
                     this.addSplit();
-                    this.totalAmount = 0;
+                    this.groupProperties.totalAmount = 0;
                 }
+                return;
             }
-
-            if (!this.returnHereButton) {
-                window.location = 'transactions/show/' + this.newGroupId + '?transaction_group_id=' + this.newGroupId + '&message=created';
-            }
+            window.location = 'transactions/show/' + this.groupProperties.id + '?transaction_group_id=' + this.groupProperties.id + '&message=created';
         },
         parseErrors(data) {
-            this.setDefaultErrors();
-            this.showErrorMessage = true;
-            this.showSuccessMessage = false;
-            // todo create error banner.
-            this.errorMessageText = i18n.t('firefly.errors_submission') + ' ' + data.message;
-            let transactionIndex;
-            let fieldName;
+            // disable all messages:
+            this.notifications.error.show = true;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+            this.formStates.isSubmitting = false;
+            this.notifications.error.text = i18n.t('firefly.errors_submission', {errorMessage: data.message});
 
-            // todo add 'was-validated' to form.
-            console.log('Now processing errors.');
-            for (const key in data.errors) {
-                if (data.errors.hasOwnProperty(key)) {
-                    if (key === 'group_title') {
-                        console.log('Handling group title error.');
-                        // todo handle group errors.
-                        //this.group_title_errors = errors.errors[key];
-                    }
-                    if (key !== 'group_title') {
-                        console.log('Handling errors for ' + key);
-                        // lol, the dumbest way to explode "transactions.0.something" ever.
-                        transactionIndex = parseInt(key.split('.')[1]);
-                        fieldName = key.split('.')[2];
-                        console.log('Transaction index: ' + transactionIndex);
-                        console.log('Field name: ' + fieldName);
-                        console.log('Errors');
-                        console.log(data.errors[key]);
-                        // set error in this object thing.
-                        switch (fieldName) {
-                            case 'currency_code':
-                            case 'foreign_currency_code':
-                            case 'category_name':
-                            case 'piggy_bank_id':
-                            case 'notes':
-                            case 'internal_reference':
-                            case 'external_url':
-                            case 'latitude':
-                            case 'longitude':
-                            case 'zoom_level':
-                            case 'interest_date':
-                            case 'book_date':
-                            case 'process_date':
-                            case 'due_date':
-                            case 'payment_date':
-                            case 'invoice_date':
-                            case 'amount':
-                            case 'date':
-                            case 'budget_id':
-                            case 'bill_id':
-                            case 'description':
-                            case 'tags':
-                                this.entries[transactionIndex].errors[fieldName] = data.errors[key];
-                                break;
-                            case 'source_name':
-                            case 'source_id':
-                                this.entries[transactionIndex].errors.source_account = this.entries[transactionIndex].errors.source_account.concat(data.errors[key]);
-                                break;
-                            case 'type':
-                                // put the error in the description:
-                                this.entries[transactionIndex].errors.description = this.entries[transactionIndex].errors.source_account.concat(data.errors[key]);
-                                break;
-                            case 'destination_name':
-                            case 'destination_id':
-                                this.entries[transactionIndex].errors.destination_account = this.entries[transactionIndex].errors.destination_account.concat(data.errors[key]);
-                                break;
-                            case 'foreign_amount':
-                            case 'foreign_currency_id':
-                                this.entries[transactionIndex].errors.foreign_amount = this.entries[transactionIndex].errors.foreign_amount.concat(data.errors[key]);
-                                break;
-                        }
-                    }
-                    // unique some things
-                    if (typeof this.entries[transactionIndex] !== 'undefined') {
-                        this.entries[transactionIndex].errors.source_account = Array.from(new Set(this.entries[transactionIndex].errors.source_account));
-                        this.entries[transactionIndex].errors.destination_account = Array.from(new Set(this.entries[transactionIndex].errors.destination_account));
-                    }
-                }
+            if(data.hasOwnProperty('errors')) {
+                this.entries = spliceErrorsIntoTransactions(i18n, data.errors, this.entries);
             }
-            console.log(this.entries[0].errors);
-        },
-        setDefaultErrors() {
-
         },
         addSplit() {
             this.entries.push(createEmptySplit());
-            setTimeout(() => {
-                // render tags:
-                Tags.init('select.ac-tags', {
-                    allowClear: true,
-                    server: urls.tag,
-                    liveServer: true,
-                    clearEnd: true,
-                    allowNew: true,
-                    notFoundMessage: '(nothing found)',
-                    noCache: true,
-                    fetchOptions: {
-                        headers: {
-                            'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-                        }
-                    }
-                });
-                const count = this.entries.length - 1;
-                let map = L.map('location_map_' + count).setView([this.latitude, this.longitude], this.zoomLevel);
+            // setTimeout(() => {
+            //     // render tags:
+            //     Tags.init('select.ac-tags', {
+            //         allowClear: true,
+            //         server: urls.tag,
+            //         liveServer: true,
+            //         clearEnd: true,
+            //         allowNew: true,
+            //         notFoundMessage: '(nothing found)',
+            //         noCache: true,
+            //         fetchOptions: {
+            //             headers: {
+            //                 'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+            //             }
+            //         }
+            //     });
+            //     const count = this.entries.length - 1;
+            //     let map = L.map('location_map_' + count).setView([this.latitude, this.longitude], this.zoomLevel);
+            //
+            //     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            //         maxZoom: 19,
+            //         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap ' + count + '</a>'
+            //     }).addTo(map);
+            //     map.on('click', this.addPointToMap);
+            //     map.on('zoomend', this.saveZoomOfMap);
+            //     this.entries[count].map
 
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap ' + count + '</a>'
-                }).addTo(map);
-                map.on('click', this.addPointToMap);
-                map.on('zoomend', this.saveZoomOfMap);
-                this.entries[count].map
+            // const id = 'location_map_' + count;
+            // const map = () => {
+            //     const el = document.getElementById(id),
+            //         map = L.map(id).setView([this.latitude, this.longitude], this.zoomLevel)
+            //     L.tileLayer(
+            //         'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            //         {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap '+count+'</a>'}
+            //     ).addTo(map)
+            //     map.on('click', this.addPointToMap);
+            //     map.on('zoomend', this.saveZoomOfMap);
+            //     return map
+            // }
+            // this.entries[count].map = map();
 
-                // const id = 'location_map_' + count;
-                // const map = () => {
-                //     const el = document.getElementById(id),
-                //         map = L.map(id).setView([this.latitude, this.longitude], this.zoomLevel)
-                //     L.tileLayer(
-                //         'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                //         {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap '+count+'</a>'}
-                //     ).addTo(map)
-                //     map.on('click', this.addPointToMap);
-                //     map.on('zoomend', this.saveZoomOfMap);
-                //     return map
-                // }
-                // this.entries[count].map = map();
-
-            }, 250);
+            // }, 250);
 
         },
         removeSplit(index) {
@@ -787,9 +536,6 @@ let transactions = function () {
             // fall back to index 0
             const triggerFirstTabEl = document.querySelector('#split-0-tab')
             triggerFirstTabEl.click();
-        },
-        formattedTotalAmount() {
-            return formatMoney(this.totalAmount, 'EUR');
         },
         clearLocation(e) {
             e.preventDefault();
@@ -843,15 +589,6 @@ function loadPage() {
     });
     Alpine.start();
 }
-
-document.addEventListener('upload-success', (event) => {
-    console.log('I am event listener for upload-success');
-    console.log(event);
-    //Alpine.
-});
-
-
-// <button x-data @click="$dispatch('custom-event', 'Hello World!')">
 
 // wait for load until bootstrapped event is received.
 document.addEventListener('firefly-iii-bootstrapped', () => {

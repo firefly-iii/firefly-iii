@@ -20,7 +20,6 @@
 
 /**
  *
- * @param entries
  */
 export function parseFromEntries(entries, transactionType) {
     let returnArray = [];
@@ -71,8 +70,6 @@ export function parseFromEntries(entries, transactionType) {
                 current.zoom_level = entry.zoomLevel;
             }
 
-
-
             // if foreign amount currency code is set:
             if (typeof entry.foreign_currency_code !== 'undefined' && '' !== entry.foreign_currency_code.toString()) {
                 current.foreign_currency_code = entry.foreign_currency_code;
@@ -93,7 +90,6 @@ export function parseFromEntries(entries, transactionType) {
                 current.destination_id = entry.destination_account.id;
             }
 
-            // TODO transaction type is hard coded:
             current.type = transactionType;
 
 

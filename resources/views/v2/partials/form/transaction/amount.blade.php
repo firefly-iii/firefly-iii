@@ -9,7 +9,7 @@
         <template x-if="!formStates.loadingCurrencies">
             <select class="form-control" :id="'currency_code_' + index" x-model="transaction.currency_code">
                 <template x-for="currency in formData.nativeCurrencies">
-                    <option :selected="currency.id == defaultCurrency.id"
+                    <option :selected="currency.id == formData.defaultCurrency.id"
                             :label="currency.name" :value="currency.code"
                             x-text="currency.name"></option>
                 </template>

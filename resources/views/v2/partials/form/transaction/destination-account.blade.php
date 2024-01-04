@@ -5,11 +5,16 @@
     </label>
     <div class="col-sm-10">
         <input type="text"
-               class="form-control ac-dest"
+               :class="{'is-invalid': transaction.errors.destination_account.length > 0, 'form-control': true, 'ac-dest': true}"
                :id="'dest_' + index"
-               @changed="changedDestinationAccount"
                x-model="transaction.destination_account.alpine_name"
                :data-index="index"
+               @changed="changedDestinationAccount"
                placeholder="{{ __('firefly.destination_account')  }}">
+        <template x-if="transaction.errors.destination_account.length > 0">
+            <div class="invalid-feedback"
+                 x-text="transaction.errors.destination_account[0]">
+            </div>
+        </template>
     </div>
 </div>

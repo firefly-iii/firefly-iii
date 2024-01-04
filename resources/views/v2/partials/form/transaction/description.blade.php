@@ -7,7 +7,13 @@
                :id="'description_' + index"
                @change="changedDescription"
                x-model="transaction.description"
+               :class="{'is-invalid': transaction.errors.description.length > 0, 'form-control': true}"
                :data-index="index"
                placeholder="{{ __('firefly.description')  }}">
+        <template x-if="transaction.errors.description.length > 0">
+            <div class="invalid-feedback"
+                 x-text="transaction.errors.description[0]">
+            </div>
+        </template>
     </div>
 </div>

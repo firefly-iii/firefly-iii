@@ -15,7 +15,7 @@
             </div>
             <div class="row">
                 <div class="col text-end">
-                    <button class="btn btn-success" :disabled="submitting" @click="submitTransaction()">Submit</button>
+                    <button class="btn btn-success" :disabled="formStates.isSubmitting" @click="submitTransaction()">Submit</button>
                 </div>
             </div>
         </div>

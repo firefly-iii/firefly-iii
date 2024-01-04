@@ -1897,6 +1897,7 @@ return [
 
     // transactions:
     'wait_attachments'                          => 'Please wait for the attachments to upload.',
+    'errors_upload'                             => 'The upload has failed. Please check your browser console for the error.',
     'amount_foreign_if'                         => 'Amount in foreign currency, if any',
     'amount_destination_account'                => 'Amount in the currency of the destination account',
     'edit_transaction_title'                    => 'Edit transaction ":description"',
@@ -2469,7 +2470,7 @@ return [
     'after_update_create_another'           => 'After updating, return here to continue editing.',
     'store_as_new'                          => 'Store as a new transaction instead of updating.',
     'reset_after'                           => 'Reset form after submission',
-    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors.',
+    'errors_submission'                     => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'              => 'Expand split',
     'transaction_collapse_split'            => 'Collapse split',
 
