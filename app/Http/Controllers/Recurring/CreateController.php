@@ -223,6 +223,7 @@ class CreateController extends Controller
     public function store(RecurrenceFormRequest $request)
     {
         $data     = $request->getAll();
+
         try {
             $recurrence = $this->recurring->store($data);
         } catch (FireflyException $e) {

@@ -347,8 +347,6 @@ class General extends AbstractExtension
 
     /**
      * TODO Remove me when v2 hits.
-     *
-     * @return TwigFunction
      */
     protected function getMetaField(): TwigFunction
     {
