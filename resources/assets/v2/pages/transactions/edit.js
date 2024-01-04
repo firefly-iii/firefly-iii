@@ -37,7 +37,15 @@ let i18n;
 
 let transactions = function () {
     return {
+        // transactions are stored in "entries":
         entries: [],
+
+
+
+
+
+
+
         init() {
             Promise.all([getVariable('language', 'en_US')]).then((values) => {
                 i18n = new I18n();

@@ -26,15 +26,14 @@ import formatMoney from "../../util/format-money.js";
 import Autocomplete from "bootstrap5-autocomplete";
 import Post from "../../api/v2/model/transaction/post.js";
 import AttachmentPost from "../../api/v1/attachments/post.js";
-
-import Get from "../../api/v2/model/currency/get.js";
-import BudgetGet from "../../api/v2/model/budget/get.js";
-import PiggyBankGet from "../../api/v2/model/piggy-bank/get.js";
-import SubscriptionGet from "../../api/v2/model/subscription/get.js";
 import {getVariable} from "../../store/get-variable.js";
 import {I18n} from "i18n-js";
 import {loadTranslations} from "../../support/load-translations.js";
 import Tags from "bootstrap5-tags";
+import {loadCurrencies} from "./shared/load-currencies.js";
+import {loadBudgets} from "./shared/load-budgets.js";
+import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
+import {loadSubscriptions} from "./shared/load-subscriptions.js";
 
 import L from "leaflet";
 
@@ -172,71 +171,113 @@ let uploadFiles = function (fileData, id) {
 
 let transactions = function () {
     return {
-        count: 0,
-        totalAmount: 0,
-        transactionType: 'unknown',
-        showSuccessMessage: false,
-        showErrorMessage: false,
-        defaultCurrency: {},
-        entries: [], // loading things
-        loadingCurrencies: true,
-        loadingBudgets: true,
-        loadingPiggyBanks: true,
-        loadingSubscriptions: true,
+        // transactions are stored in "entries":
+        entries: [],
+
+        // state of the form is stored in formState:
+        formStates: {
+            loadingCurrencies: true,
+            loadingBudgets: true,
+            loadingPiggyBanks: true,
+            loadingSubscriptions: true,
+            isSubmitting: false,
+            returnHereButton: false,
+            saveAsNewButton: false, // edit form only
+            resetButton: true,
+            rulesButton: true,
+            webhooksButton: true,
+        },
+
+        // form behaviour during transaction
+        formBehaviour: {
+            formType: 'create', foreignCurrencyEnabled: true,
+        },
+
+        // form data (except transactions) is stored in formData
+        formData: {
+            defaultCurrency: null,
+            enabledCurrencies: [],
+            nativeCurrencies: [],
+            foreignCurrencies: [],
+            budgets: [],
+            piggyBanks: [],
+            subscriptions: [],
+        },
+
+        // properties for the entire transaction group
+        groupProperties: {
+            transactionType: 'unknown',
+            totalAmount: 0,
+        },
+
+        // notifications
+        notifications: {
+            error: {
+                show: false,
+                text: '',
+                url: '',
+            },
+            success: {
+                show: false,
+                text: '',
+                url: '',
+            },
+            wait: {
+                show: false,text: '',
+                url: '',
+
+            }
+        },
+
+
+        // part of the account selection auto-complete
+        filters: {
+            source: [],
+            destination: [],
+        },
+
+        // old properties, no longer used.
+
 
         // data sets
-        enabledCurrencies: [],
-        nativeCurrencies: [],
-        foreignCurrencies: [],
-        budgets: [],
-        piggyBanks: {},
-        subscriptions: [],
-        dateFields: ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'],
-
-        foreignAmountEnabled: true,
-        filters: {
-            source: [], destination: [],
-        },
-        errorMessageText: '',
-        successMessageLink: '#',
-        successMessageText: '', // error and success messages:
-        showError: false,
-        showSuccess: false,
-        showWaitMessage: false,
-
-        // four buttons
-        returnHereButton: false,
-        resetButton: false,
-        resetButtonEnabled: false,
-        rulesButton: true,
-        webhookButton: true,
-
-        // state of the form
-        submitting: false,
 
         // used to display the success message
-        newGroupTitle: '',
-        newGroupId: 0,
+        //newGroupTitle: '',
+        //newGroupId: 0,
 
         // map things:
-        hasLocation: false,
-        latitude: 51.959659235274,
-        longitude: 5.756805887265858,
-        zoomLevel: 13,
+        //hasLocation: false,
+        //latitude: 51.959659235274,
+        //longitude: 5.756805887265858,
+        //zoomLevel: 13,
+
+        // events in the form
+        changedDateTime(event) {
+            console.log('changedDateTime');
+        },
+        changedDescription(event) {
+            console.log('changedDescription');
+        },
+        changedDestinationAccount(event) {
+            console.log('changedDestinationAccount')
+        },
+        changedSourceAccount(event) {
+            console.log('changedSourceAccount')
+        },
 
 
         detectTransactionType() {
             const sourceType = this.entries[0].source_account.type ?? 'unknown';
             const destType = this.entries[0].destination_account.type ?? 'unknown';
             if ('unknown' === sourceType && 'unknown' === destType) {
-                this.transactionType = 'unknown';
+                this.groupProperties.transactionType = 'unknown';
                 console.warn('Cannot infer transaction type from two unknown accounts.');
                 return;
             }
             // transfer: both are the same and in strict set of account types
             if (sourceType === destType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(sourceType)) {
-                this.transactionType = 'transfer';
-                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                this.groupProperties.transactionType = 'transfer';
+                console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
 
                 // this also locks the amount into the amount of the source account
                 // and the foreign amount (if different) in that of the destination account.
@@ -247,38 +288,39 @@ let transactions = function () {
             }
             // withdrawals:
             if ('Asset account' === sourceType && ['Expense account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
-                this.transactionType = 'withdrawal';
-                console.log('[a] Transaction type is detected to be "' + this.transactionType + '".');
+                this.groupProperties.transactionType = 'withdrawal';
+                console.log('[a] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 this.filterNativeCurrencies(this.entries[0].source_account.currency_code);
                 return;
             }
             if ('Asset account' === sourceType && 'unknown' === destType) {
-                this.transactionType = 'withdrawal';
-                console.log('[b] Transaction type is detected to be "' + this.transactionType + '".');
+                this.groupProperties.transactionType = 'withdrawal';
+                console.log('[b] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 console.log(this.entries[0].source_account);
                 this.filterNativeCurrencies(this.entries[0].source_account.currency_code);
                 return;
             }
             if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Expense account' === destType) {
-                this.transactionType = 'withdrawal';
-                console.log('[c] Transaction type is detected to be "' + this.transactionType + '".');
+                this.groupProperties.transactionType = 'withdrawal';
+                console.log('[c] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 this.filterNativeCurrencies(this.entries[0].source_account.currency_code);
                 return;
             }
 
             // deposits:
             if ('Revenue account' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
-                this.transactionType = 'deposit';
-                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                this.groupProperties.transactionType = 'deposit';
+                console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 return;
             }
             if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Asset account' === destType) {
-                this.transactionType = 'deposit';
-                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                this.groupProperties.transactionType = 'deposit';
+                console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 return;
             }
             console.warn('Unknown account combination between "' + sourceType + '" and "' + destType + '".');
         },
+
         selectSourceAccount(item, ac) {
             const index = parseInt(ac._searchInput.attributes['data-index'].value);
             document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account = {
@@ -365,160 +407,6 @@ let transactions = function () {
             };
             console.log('Changed destination account into a known ' + item.type.toLowerCase());
             document.querySelector('#form')._x_dataStack[0].detectTransactionType();
-        },
-        loadCurrencies() {
-            this.enabledCurrencies = [];
-            this.nativeCurrencies = [];
-            this.foreignCurrencies = [];
-
-            this.foreignCurrencies.push({
-                id: 0, name: '(no foreign currency)', code: '', default: false, symbol: '', decimal_places: 2,
-            });
-
-            console.log('Loading user currencies.');
-            let params = {
-                page: 1, limit: 1337
-            };
-            let getter = new Get();
-            getter.list({}).then((response) => {
-                for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
-                        let current = response.data.data[i];
-                        if (current.attributes.enabled) {
-                            let obj =
-
-                                {
-                                    id: current.id,
-                                    name: current.attributes.name,
-                                    code: current.attributes.code,
-                                    default: current.attributes.default,
-                                    symbol: current.attributes.symbol,
-                                    decimal_places: current.attributes.decimal_places,
-
-                                };
-                            if (obj.default) {
-                                this.defaultCurrency = obj;
-                            }
-                            this.enabledCurrencies.push(obj);
-                            this.nativeCurrencies.push(obj);
-                            this.foreignCurrencies.push(obj);
-                        }
-                    }
-                }
-                this.loadingCurrencies = false;
-            });
-        },
-        loadBudgets() {
-            this.budgets = [];
-
-            this.budgets.push({
-                id: 0, name: '(no budget)',
-            });
-
-            console.log('Loading user budgets.');
-            let params = {
-                page: 1, limit: 1337
-            };
-            let getter = new BudgetGet();
-            getter.list({}).then((response) => {
-                for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
-                        let current = response.data.data[i];
-                        let obj = {
-                            id: current.id, name: current.attributes.name,
-                        };
-                        this.budgets.push(obj);
-                    }
-                }
-                this.loadingBudgets = false;
-                console.log(this.budgets);
-            });
-        },
-        loadPiggyBanks() {
-            this.piggyBanks = {};
-            let tempObject = {
-                '0': {
-                    id: 0, name: '(no group)', order: 0, piggyBanks: [{
-                        id: 0, name: '(no piggy bank)', order: 0,
-                    }]
-                }
-            };
-            console.log('Loading user piggy banks.');
-            let params = {
-                page: 1, limit: 1337
-            };
-            let getter = new PiggyBankGet();
-            getter.list({}).then((response) => {
-                for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
-                        let current = response.data.data[i];
-                        let objectGroupId = current.attributes.object_group_id ?? '0';
-                        let objectGroupTitle = current.attributes.object_group_title ?? '(no group)';
-                        let piggyBank = {
-                            id: current.id, name: current.attributes.name, order: current.attributes.order,
-                        };
-                        if (!tempObject.hasOwnProperty(objectGroupId)) {
-                            tempObject[objectGroupId] = {
-                                id: objectGroupId,
-                                name: objectGroupTitle,
-                                order: current.attributes.object_group_order ?? 0,
-                                piggyBanks: []
-                            };
-                        }
-                        tempObject[objectGroupId].piggyBanks.push(piggyBank);
-                        tempObject[objectGroupId].piggyBanks.sort((a, b) => a.order - b.order);
-                    }
-                }
-                //tempObject.sort((a,b) => a.order - b.order);
-                this.loadingPiggyBanks = false;
-                this.piggyBanks = Object.keys(tempObject).sort().reduce((obj, key) => {
-                    obj[key] = tempObject[key];
-                    return obj;
-                }, {});
-            });
-        },
-        loadSubscriptions() {
-            this.subscriptions = {};
-            let tempObject = {
-                '0': {
-                    id: 0, name: '(no group)', order: 0, subscriptions: [{
-                        id: 0, name: '(no subscription)', order: 0,
-                    }]
-                }
-            };
-            console.log('Loading user suscriptions.');
-            let params = {
-                page: 1, limit: 1337
-            };
-            let getter = new SubscriptionGet();
-            getter.list({}).then((response) => {
-                for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
-                        let current = response.data.data[i];
-                        let objectGroupId = current.attributes.object_group_id ?? '0';
-                        let objectGroupTitle = current.attributes.object_group_title ?? '(no group)';
-                        let piggyBank = {
-                            id: current.id, name: current.attributes.name, order: current.attributes.order,
-                        };
-                        if (!tempObject.hasOwnProperty(objectGroupId)) {
-                            tempObject[objectGroupId] = {
-                                id: objectGroupId,
-                                name: objectGroupTitle,
-                                order: current.attributes.object_group_order ?? 0,
-                                subscriptions: []
-                            };
-                        }
-                        tempObject[objectGroupId].subscriptions.push(piggyBank);
-                        tempObject[objectGroupId].subscriptions.sort((a, b) => a.order - b.order);
-                    }
-                }
-                //tempObject.sort((a,b) => a.order - b.order);
-                this.loadingSubscriptions = false;
-                this.subscriptions = Object.keys(tempObject).sort().reduce((obj, key) => {
-                    obj[key] = tempObject[key];
-                    return obj;
-                }, {});
-            });
         },
         changeSourceAccount(item, ac) {
             console.log('changeSourceAccount');
@@ -665,12 +553,28 @@ let transactions = function () {
                 loadTranslations(i18n, locale).then(() => {
                     this.addSplit();
                 });
-
             });
-            this.loadCurrencies();
-            this.loadBudgets();
-            this.loadPiggyBanks();
-            this.loadSubscriptions();
+            // load currencies and save in form data.
+            loadCurrencies().then(data => {
+                this.formStates.loadingCurrencies = false;
+                this.formData.defaultCurrency = data.defaultCurrency;
+                this.formData.enabledCurrencies = data.enabledCurrencies;
+                this.formData.nativeCurrencies = data.nativeCurrencies;
+                this.formData.foreignCurrencies = data.foreignCurrencies;
+            });
+
+            loadBudgets().then(data => {
+                this.formData.budgets = data;
+                this.formStates.loadingBudgets = false;
+            });
+            loadPiggyBanks().then(data => {
+                this.formData.piggyBanks = data;
+                this.formStates.loadingPiggyBanks = false;
+            });
+            loadSubscriptions().then(data => {
+                this.formData.subscriptions = data;
+                this.formStates.loadingSubscriptions = false;
+            });
 
             document.addEventListener('upload-success', (event) => {
                 this.processUpload(event);
@@ -691,7 +595,7 @@ let transactions = function () {
             this.detectTransactionType();
 
             // parse transaction:
-            let transactions = parseFromEntries(this.entries, this.transactionType);
+            let transactions = parseFromEntries(this.entries, this.groupProperties.transactionType);
             let submission = {
                 // todo process all options
                 group_title: null, fire_webhooks: false, apply_rules: false, transactions: transactions
@@ -855,7 +759,7 @@ let transactions = function () {
 
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
-                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap '+count+'</a>'
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap ' + count + '</a>'
                 }).addTo(map);
                 map.on('click', this.addPointToMap);
                 map.on('zoomend', this.saveZoomOfMap);

@@ -1,7 +1,8 @@
+@if(true === $optionalFields['external_url'])
 <div class="row mb-3">
     <label :for="'external_url_' + index"
            class="col-sm-1 col-form-label d-none d-sm-block">
-        <i class="fa-solid fa-link"></i>
+        <em title="{{ __('firefly.external_url') }}" class="fa-solid fa-link"></em>
     </label>
     <div class="col-sm-10">
         <input type="text"
@@ -19,3 +20,4 @@
         </template>
     </div>
 </div>
+@endif

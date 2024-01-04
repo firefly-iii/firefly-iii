@@ -1,7 +1,8 @@
+@if(true === $optionalFields['internal_reference'])
 <div class="row mb-3">
     <label :for="'internal_reference_' + index"
            class="col-sm-1 col-form-label d-none d-sm-block">
-        <i class="fa-solid fa-anchor"></i>
+        <em title="{{ __('firefly.internal_reference') }}" class="fa-solid fa-anchor"></em>
     </label>
     <div class="col-sm-10">
         <input type="search"
@@ -12,3 +13,4 @@
                placeholder="{{ __('firefly.internal_reference')  }}">
     </div>
 </div>
+@endif

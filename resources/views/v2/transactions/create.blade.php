@@ -10,7 +10,7 @@
             <x-transaction-tab-list></x-transaction-tab-list>
             <div class="tab-content" id="splitTabsContent">
                 <template x-for="transaction,index in entries">
-                    <x-transaction-split></x-transaction-split>
+                    <x-transaction-split :optionalFields="$optionalFields" :optionalDateFields="$optionalDateFields"></x-transaction-split>
                 </template>
             </div>
             <div class="row">
