@@ -33,5 +33,10 @@
 {% endif %}
 {% endfor %}
 
+{% if ('' != post  %}
+{{ trans('email.error_post') }}
+
+{{ post }}
+{% endif %}
 
 {% include 'emails.footer-text' %}

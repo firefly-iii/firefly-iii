@@ -52,5 +52,13 @@
 {% endif %}
 {% endfor %}
 </p>
+{% if ('' != post  %}
+<p style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:13px;">
+    {{ trans('email.error_post') }}
+</p>
+<p style="font-family: monospace;font-size:11px;color:#aaa">
+    {{ post }}
+</p>
+{% endif %}
 
 {% include 'emails.footer-html' %}
