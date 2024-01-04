@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'S temi poročili dobite podroben vpogled v vaše finance.',
     'reports_index_inputReportType'                           => 'Izberite vrsto poročila. Oglejte si strani za pomoč, če želite videti, kaj vam vsako poročilo prikazuje.',
     'reports_index_inputAccountsSelect'                       => 'Račune sredstev lahko izključite ali vključite, kot se vam to zdi primerno.',
-    'reports_index_inputDateRange'                            => 'Izbrani datumski razpon je v celoti prepuščen vam: od enega dneva do 10 let ali več.',
+    'reports_index_inputDateRange'                            => 'Izbrani datumski razpon je v celoti prepuščen vam: od enega dneva do 10 let ali še več.',
     'reports_index_extra-options-box'                         => 'Glede na izbrano poročilo lahko tukaj izberete dodatne filtre in možnosti. Opazujte polje, ko spreminjate vrste poročil.',
 
     // reports (reports)

@@ -1304,6 +1304,7 @@ return [
     'sums_apply_to_range'                                 => 'Totes les sumes s\'apliquen al rang seleccionat',
     'mapbox_api_key'                                      => 'Per fer servir el mapa, aconsegueix una clau API de <a href="https://www.mapbox.com/">Mapbox</a>. Obre el fitxer <code>.env</code> i introdueix-hi el codi després de <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Botó dret o premi de forma prolongada per definir la ubicació de l\'objecte.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Netejar ubicació',
     'delete_all_selected_tags'                            => 'Eliminar totes les etiquetes seleccionades',
     'select_tags_to_delete'                               => 'No t\'oblidis de seleccionar alguna etiqueta.',
@@ -1949,6 +1950,11 @@ return [
  */
 
     // transactions:
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Desfés la reconciliació',
     'update_withdrawal'                                   => 'Actualitzar retirada',
     'update_deposit'                                      => 'Actualitzar ingrés',
@@ -2545,7 +2551,7 @@ return [
     'after_update_create_another'                         => 'Després d\'actualitzar, torna ací per a seguir editant.',
     'store_as_new'                                        => 'Desa com a una nova transacció, en comptes d\'actualitzar.',
     'reset_after'                                         => 'Reiniciar el formulari després d\'enviar',
-    'errors_submission'                                   => 'Ha hagut un error amb el teu enviament. Per favor, revisa els errors.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Expandeix la divisió',
     'transaction_collapse_split'                          => 'Contrau la divisió',
 

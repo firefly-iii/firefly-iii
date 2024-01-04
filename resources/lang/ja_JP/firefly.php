@@ -1304,6 +1304,7 @@ return [
     'sums_apply_to_range'                                 => '選択した範囲にすべての合計が適用されます',
     'mapbox_api_key'                                      => '地図を使うには <a href="https://www.mapbox.com/">Mapbox</a> のAPIキーを取得してください。<code>.env</code>ファイルを開き、<code>MAPBOX_API_KEY=</code>のうしろにAPIキーを入力してください。',
     'press_object_location'                               => '対象の位置を設定するには、右クリックまたは長押しします。',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => '場所をクリア',
     'delete_all_selected_tags'                            => '選択したすべてのタグを削除',
     'select_tags_to_delete'                               => '忘れずにタグを選択してください。',
@@ -1949,6 +1950,11 @@ return [
  */
 
     // transactions:
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => '照合を取り消す',
     'update_withdrawal'                                   => '出金を更新',
     'update_deposit'                                      => '入金を更新',
@@ -2545,7 +2551,7 @@ return [
     'after_update_create_another'                         => '保存後に戻って編集を続ける。',
     'store_as_new'                                        => '更新せず新しい取引として保存する。',
     'reset_after'                                         => '送信後にフォームをリセット',
-    'errors_submission'                                   => '送信内容に問題がありました。エラーを確認してください。',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => '分割を展開',
     'transaction_collapse_split'                          => '分割をたたむ',
 

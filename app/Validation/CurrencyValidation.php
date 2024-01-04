@@ -53,11 +53,8 @@ trait CurrencyValidation
             if (!array_key_exists('foreign_amount', $transaction)) {
                 continue;
             }
-            $foreignAmount = '';
-            if (array_key_exists('foreign_amount', $transaction)) {
-                $foreignAmount = (string) $transaction['foreign_amount'];
-            }
-            if('' === $foreignAmount) {
+            $foreignAmount = (string) $transaction['foreign_amount'];
+            if ('' === $foreignAmount) {
                 continue;
             }
             // if foreign amount is present, then the currency must be as well.
@@ -65,15 +62,8 @@ trait CurrencyValidation
                 $validator->errors()->add('transactions.'.$index.'.foreign_amount', (string) trans('validation.require_currency_info'));
             }
             // if the currency is present, then the amount must be present as well.
-            if ((array_key_exists('foreign_currency_id', $transaction) || array_key_exists('foreign_currency_code', $transaction))
-                && !array_key_exists(
-                    'foreign_amount',
-                    $transaction
-                )) {
-                $validator->errors()->add(
-                    'transactions.'.$index.'.foreign_amount',
-                    (string) trans('validation.require_currency_amount')
-                );
+            if (array_key_exists('foreign_currency_id', $transaction) || array_key_exists('foreign_currency_code', $transaction)) {
+                $validator->errors()->add('transactions.'.$index.'.foreign_amount', (string) trans('validation.require_currency_amount'));
             }
         }
     }

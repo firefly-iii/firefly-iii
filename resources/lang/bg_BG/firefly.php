@@ -1304,6 +1304,7 @@ return [
     'sums_apply_to_range'                                 => 'Всички суми се отнасят към избрания диапазон',
     'mapbox_api_key'                                      => 'За да използвате карта, вземете API ключ от <a href="https://www.mapbox.com/"> Mapbox </a>. Отворете вашия <code>.env </code> файл и въведете този код след <code> MAPBOX_API_KEY = </code>.',
     'press_object_location'                               => 'Щракнете с десния бутон или натиснете дълго, за да зададете местоположението на обекта.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Изчисти местоположението',
     'delete_all_selected_tags'                            => 'Изтрий всички избрани етикети',
     'select_tags_to_delete'                               => 'Не забравяйте да изберете някои етикети.',
@@ -1949,6 +1950,11 @@ return [
  */
 
     // transactions:
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => 'Обнови тегленето',
     'update_deposit'                                      => 'Обнови депозита',
@@ -2545,7 +2551,7 @@ return [
     'after_update_create_another'                         => 'След обновяването се върнете тук, за да продължите с редакцията.',
     'store_as_new'                                        => 'Съхранете като нова транзакция, вместо да я актуализирате.',
     'reset_after'                                         => 'Изчистване на формуляра след изпращане',
-    'errors_submission'                                   => 'Имаше нещо нередно с вашите данни. Моля, проверете грешките.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Разшири раздел',
     'transaction_collapse_split'                          => 'Свий раздел',
 

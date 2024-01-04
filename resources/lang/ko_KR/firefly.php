@@ -1304,6 +1304,7 @@ return [
     'sums_apply_to_range'                                 => '모든 합계는 선택한 범위에 적용됩니다',
     'mapbox_api_key'                                      => '지도를 사용하려면 <a href="https://www.mapbox.com/">Mapbox</a>에서 API 키를 받습니다. <code>.env</code> 파일을 열고 <code>MAPBOX_API_KEY=</code> 뒤에 이 코드를 입력합니다.',
     'press_object_location'                               => '마우스 오른쪽 버튼을 클릭이나 롱 클릭으로 개체의 위치를 설정합니다.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => '위치 지우기',
     'delete_all_selected_tags'                            => '선택된 모든 태그를 삭제',
     'select_tags_to_delete'                               => '태그를 선택하는 것을 잊지 마세요.',
@@ -1949,6 +1950,11 @@ return [
  */
 
     // transactions:
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => '출금 업데이트',
     'update_deposit'                                      => '입금 업데이트',
@@ -2545,7 +2551,7 @@ return [
     'after_update_create_another'                         => '업데이트 후 여기로 돌아와서 수정을 계속합니다.',
     'store_as_new'                                        => '업데이트하는 대신 새 거래로 저장합니다.',
     'reset_after'                                         => '제출 후 양식 재설정',
-    'errors_submission'                                   => '제출한 내용에 문제가 있습니다. 오류를 확인해 주세요.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => '분할 확장',
     'transaction_collapse_split'                          => '분할 축소',
 

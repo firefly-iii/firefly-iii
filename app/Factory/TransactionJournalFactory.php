@@ -50,6 +50,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Class TransactionJournalFactory
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TransactionJournalFactory
 {

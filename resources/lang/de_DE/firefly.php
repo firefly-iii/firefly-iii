@@ -1304,6 +1304,7 @@ return [
     'sums_apply_to_range'                                 => 'Alle Summen beziehen sich auf den ausgewählten Bereich.',
     'mapbox_api_key'                                      => 'Um Karten zu verwenden, besorgen Sie sich einen API-Schlüssel von <a href="https://www.mapbox.com/">Mapbox</a>. Öffnen Sie Ihre Datei <code>.env</code> und geben Sie diesen Schlüssel nach <code>MAPBOX_API_KEY=</code> ein.',
     'press_object_location'                               => 'Rechtsklick oder Anklicken und gedrückt halten, um die Position des Objekts festzulegen.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Ort leeren',
     'delete_all_selected_tags'                            => 'Alle markierten Stichwörter löschen',
     'select_tags_to_delete'                               => 'Nicht vergessen, einige Schlagwörter auszuwählen.',
@@ -1949,6 +1950,11 @@ return [
  */
 
     // transactions:
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Kontenabgleich widerrufen',
     'update_withdrawal'                                   => 'Ausgaben aktualisieren',
     'update_deposit'                                      => 'Einnahmen aktualisieren',
@@ -2545,7 +2551,7 @@ return [
     'after_update_create_another'                         => 'Nach dem Aktualisieren hierher zurückkehren, um weiter zu bearbeiten.',
     'store_as_new'                                        => 'Als neue Buchung speichern statt zu aktualisieren.',
     'reset_after'                                         => 'Formular nach der Übermittlung zurücksetzen',
-    'errors_submission'                                   => 'Ihre Übermittlung ist fehlgeschlagen. Bitte überprüfen Sie die Fehler.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Aufteilung erweitern',
     'transaction_collapse_split'                          => 'Aufteilung reduzieren',
 

@@ -128,7 +128,7 @@ class Handler extends ExceptionHandler
             $errorCode = 500;
             $errorCode = $e instanceof MethodNotAllowedHttpException ? 405 : $errorCode;
 
-            $isDebug = (bool) config('app.debug', false);
+            $isDebug   = (bool) config('app.debug', false);
             if ($isDebug) {
                 app('log')->debug(sprintf('Return JSON %s with debug.', get_class($e)));
 
@@ -191,7 +191,7 @@ class Handler extends ExceptionHandler
 
             return;
         }
-        $userData = [
+        $userData    = [
             'id'    => 0,
             'email' => 'unknown@example.com',
         ];
@@ -200,9 +200,9 @@ class Handler extends ExceptionHandler
             $userData['email'] = auth()->user()->email;
         }
 
-        $headers = request()->headers->all();
+        $headers     = request()->headers->all();
 
-        $data = [
+        $data        = [
             'class'        => get_class($e),
             'errorMessage' => $e->getMessage(),
             'time'         => date('r'),
@@ -220,8 +220,8 @@ class Handler extends ExceptionHandler
         ];
 
         // create job that will mail.
-        $ipAddress = request()->ip() ?? '0.0.0.0';
-        $job       = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
+        $ipAddress   = request()->ip() ?? '0.0.0.0';
+        $job         = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
         dispatch($job);
 
         parent::report($e);
@@ -232,7 +232,7 @@ class Handler extends ExceptionHandler
      *
      * @param Request $request
      */
-    protected function invalid($request, LaravelValidationException $exception): \Illuminate\Http\Response | JsonResponse | RedirectResponse
+    protected function invalid($request, LaravelValidationException $exception): \Illuminate\Http\Response|JsonResponse|RedirectResponse
     {
         // protect against open redirect when submitting invalid forms.
         $previous = app('steam')->getSafePreviousUrl();
@@ -240,17 +240,18 @@ class Handler extends ExceptionHandler
 
         return redirect($redirect ?? $previous)
             ->withInput(Arr::except($request->input(), $this->dontFlash))
-            ->withErrors($exception->errors(), $request->input('_error_bag', $exception->errorBag));
+            ->withErrors($exception->errors(), $request->input('_error_bag', $exception->errorBag))
+        ;
     }
 
     private function shouldntReportLocal(\Throwable $e): bool
     {
         return null !== Arr::first(
-                $this->dontReport,
-                static function ($type) use ($e) {
-                    return $e instanceof $type;
-                }
-            );
+            $this->dontReport,
+            static function ($type) use ($e) {
+                return $e instanceof $type;
+            }
+        );
     }
 
     /**

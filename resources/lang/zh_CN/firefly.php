@@ -1304,6 +1304,7 @@ return [
     'sums_apply_to_range'                                 => '所有总和均应用至所选范围',
     'mapbox_api_key'                                      => '若要使用地图，请从 <a href="https://www.mapbox.com/">Mapbox</a> 获取 API 密钥。打开 <code>.env</code> 文件并在 <code>MAPBOX_API_KEY=</code> 后输入密钥。',
     'press_object_location'                               => '右键单击或长按设置对象的位置。',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => '清除位置',
     'delete_all_selected_tags'                            => '删除所有选中的标签',
     'select_tags_to_delete'                               => '别忘了选择一些标签。',
@@ -1950,6 +1951,11 @@ return [
  */
 
     // transactions:
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => '撤销对账',
     'update_withdrawal'                                   => '更新支出',
     'update_deposit'                                      => '更新收入',
@@ -2546,7 +2552,7 @@ return [
     'after_update_create_another'                         => '更新后，返回此页面继续编辑。',
     'store_as_new'                                        => '保存为新交易而不是更新此交易。',
     'reset_after'                                         => '提交后重置表单',
-    'errors_submission'                                   => '您提交的内容有误，请检查错误信息。',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => '展开拆分',
     'transaction_collapse_split'                          => '折叠拆分',
 

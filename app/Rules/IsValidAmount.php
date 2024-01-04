@@ -25,6 +25,7 @@ class IsValidAmount implements ValidationRule
             $message = sprintf('IsValidAmount: "%s" cannot be empty.', $value);
             Log::debug($message);
             Log::channel('audit')->info($message);
+
             return;
         }
 
@@ -34,6 +35,7 @@ class IsValidAmount implements ValidationRule
             $message = sprintf('IsValidAmount: "%s" is not a number.', $value);
             Log::debug($message);
             Log::channel('audit')->info($message);
+
             return;
         }
 
@@ -43,16 +45,18 @@ class IsValidAmount implements ValidationRule
             $message = sprintf('IsValidAmount: "%s" cannot be in the scientific notation.', $value);
             Log::debug($message);
             Log::channel('audit')->info($message);
+
             return;
         }
 
         // must be more than minus a lots:
         if($this->lessThanLots($value)) {
-            $amount = bcmul('-1', self::BIG_AMOUNT);
+            $amount  = bcmul('-1', self::BIG_AMOUNT);
             $fail('validation.gte.numeric')->translate(['value' => $amount]);
             $message = sprintf('IsValidAmount: "%s" must be more than %s.', $value, $amount);
             Log::debug($message);
             Log::channel('audit')->info($message);
+
             return;
         }
 

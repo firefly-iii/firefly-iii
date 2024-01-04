@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Maliyetlerinizde ayrıntılı bilgi edinmek için bu raporları kullanın.',
     'reports_index_inputReportType'                           => 'Bir rapor türü seçin. Her bir raporun neyi gösterdiğini görmek için yardım sayfalarına göz atın.',
     'reports_index_inputAccountsSelect'                       => 'Varlık hesaplarını uygun gördüğünüz gibi hariç tutabilir veya ekleyebilirsiniz.',
-    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
+    'reports_index_inputDateRange'                            => '',
     'reports_index_extra-options-box'                         => 'Seçtiğiniz rapora bağlı olarak, burada ekstra filtre ve seçenekleri belirleyebilirsiniz. Rapor türlerini değiştirirken bu kutuya dikkat edin.',
 
     // reports (reports)

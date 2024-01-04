@@ -118,17 +118,18 @@ class CreateController extends Controller
         $parts                = parse_url($previousUrl);
         $search               = sprintf('?%s', $parts['query'] ?? '');
         $previousUrl          = str_replace($search, '', $previousUrl);
+        if(!is_array($optionalFields)) {
+            $optionalFields = [];
+        }
         // not really a fan of this, but meh.
         $optionalDateFields   = [
-            'interest_date' => $optionalFields['interest_date'],
-            'book_date'     => $optionalFields['book_date'],
-            'process_date'  => $optionalFields['process_date'],
-            'due_date'      => $optionalFields['due_date'],
-            'payment_date'  => $optionalFields['payment_date'],
-            'invoice_date'  => $optionalFields['invoice_date'],
+            'interest_date' => $optionalFields['interest_date'] ?? false,
+            'book_date'     => $optionalFields['book_date'] ?? false,
+            'process_date'  => $optionalFields['process_date'] ?? false,
+            'due_date'      => $optionalFields['due_date'] ?? false,
+            'payment_date'  => $optionalFields['payment_date'] ?? false,
+            'invoice_date'  => $optionalFields['invoice_date'] ?? false,
         ];
-        //        var_dump($optionalFields);
-        //        exit;
         $optionalFields['external_url'] ??= false;
         $optionalFields['location']     ??= false;
         session()->put('preFilled', $preFilled);

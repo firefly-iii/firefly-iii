@@ -1304,6 +1304,7 @@ return [
     'sums_apply_to_range'                                 => 'Minden összeg alkalmazása a kiválasztott tartományra',
     'mapbox_api_key'                                      => 'A térkép használatához be kell szerezni egy API kulcsot a <a href="https://www.mapbox.com/">Mapbox</a> oldalról. A kódot a <code>.env</code> fájlba, a <code>MAPBOX_API_KEY = </code> után kell beírni.',
     'press_object_location'                               => 'Jobb kattintással vagy az egérgomb hosszan nyomva tartásával lehet beállítani az objektum helyét.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Hely törlése',
     'delete_all_selected_tags'                            => 'Minden kiválasztott címke törlése',
     'select_tags_to_delete'                               => 'Ki kell választani néhány címkét.',
@@ -1949,6 +1950,11 @@ return [
  */
 
     // transactions:
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => 'Költség frissítése',
     'update_deposit'                                      => 'Bevétel szerkesztése',
@@ -2545,7 +2551,7 @@ return [
     'after_update_create_another'                         => 'A frissítés után térjen vissza ide a szerkesztés folytatásához.',
     'store_as_new'                                        => 'Tárolás új tranzakcióként frissítés helyett.',
     'reset_after'                                         => 'Űrlap törlése a beküldés után',
-    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Expand split',
     'transaction_collapse_split'                          => 'Collapse split',
 

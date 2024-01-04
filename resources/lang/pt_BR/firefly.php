@@ -1304,6 +1304,7 @@ return [
     'sums_apply_to_range'                                 => 'Todas as somas aplicam-se ao intervalo selecionado',
     'mapbox_api_key'                                      => 'Para usar o mapa, obtenha uma chave API do <a href="https://www.mapbox.com/">Mapbox</a>. Abra seu arquivo <code>.env</code> e insira este código <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Clique com o botão direito ou pressione longamente para definir a localização do objeto.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Limpar localização',
     'delete_all_selected_tags'                            => 'Excluir todas as tags selecionadas',
     'select_tags_to_delete'                               => 'Não se esqueça de selecionar algumas tags.',
@@ -1949,6 +1950,11 @@ return [
  */
 
     // transactions:
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Desfazer reconciliação',
     'update_withdrawal'                                   => 'Atualizar saída',
     'update_deposit'                                      => 'Atualizar entrada',
@@ -2545,7 +2551,7 @@ return [
     'after_update_create_another'                         => 'Depois de atualizar, retorne aqui para continuar editando.',
     'store_as_new'                                        => 'Armazene como uma nova transação em vez de atualizar.',
     'reset_after'                                         => 'Limpar o formulário após o envio',
-    'errors_submission'                                   => 'Há algo de errado com o seu envio. Por favor, verifique os erros abaixo.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Exibir divisão',
     'transaction_collapse_split'                          => 'Esconder divisão',
 

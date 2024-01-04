@@ -24,6 +24,7 @@ class IsValidPositiveAmount implements ValidationRule
             $message = sprintf('IsValidPositiveAmount: "%s" cannot be empty.', $value);
             Log::debug($message);
             Log::channel('audit')->info($message);
+
             return;
         }
 
@@ -33,6 +34,7 @@ class IsValidPositiveAmount implements ValidationRule
             $message = sprintf('IsValidPositiveAmount: "%s" is not a number.', $value);
             Log::debug($message);
             Log::channel('audit')->info($message);
+
             return;
         }
         // must not be scientific notation:
@@ -41,6 +43,7 @@ class IsValidPositiveAmount implements ValidationRule
             $message = sprintf('IsValidPositiveAmount: "%s" cannot be in the scientific notation.', $value);
             Log::debug($message);
             Log::channel('audit')->info($message);
+
             return;
         }
         // must be more than zero:
@@ -49,6 +52,7 @@ class IsValidPositiveAmount implements ValidationRule
             $message = sprintf('IsValidPositiveAmount: "%s" must be more than zero.', $value);
             Log::debug($message);
             Log::channel('audit')->info($message);
+
             return;
         }
         // must be less than 100 million and 1709:

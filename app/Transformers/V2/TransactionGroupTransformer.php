@@ -46,10 +46,10 @@ class TransactionGroupTransformer extends AbstractTransformer
     private ExchangeRateConverter $converter;
     private array                 $currencies = [];
     private TransactionCurrency   $default;
-    private array                 $meta = [];
-    private array                 $notes = [];
-    private array                 $locations = [];
-    private array                 $tags = [];
+    private array                 $meta       = [];
+    private array                 $notes      = [];
+    private array                 $locations  = [];
+    private array                 $tags       = [];
 
     public function collectMetaData(Collection $objects): void
     {

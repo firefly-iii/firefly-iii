@@ -1304,6 +1304,7 @@ return [
     'sums_apply_to_range'                                 => 'Alle sommen gelden voor het geselecteerde bereik',
     'mapbox_api_key'                                      => 'Om de kaart te gebruiken regel je een API-key bij <a href="https://www.mapbox.com/">Mapbox</a>. Open je <code>.env</code>-bestand en zet deze achter <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Klik met de rechtermuisknop of druk lang om de locatie van het object in te stellen.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Wis locatie',
     'delete_all_selected_tags'                            => 'Alle geselecteerde tags verwijderen',
     'select_tags_to_delete'                               => 'Vergeet niet om tags te selecteren.',
@@ -1949,6 +1950,11 @@ return [
  */
 
     // transactions:
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Ongedaan maken van afstemming',
     'update_withdrawal'                                   => 'Wijzig uitgave',
     'update_deposit'                                      => 'Wijzig inkomsten',
@@ -2545,7 +2551,7 @@ return [
     'after_update_create_another'                         => 'Na het opslaan terug om door te gaan met wijzigen.',
     'store_as_new'                                        => 'Opslaan als nieuwe transactie ipv de huidige bij te werken.',
     'reset_after'                                         => 'Reset formulier na opslaan',
-    'errors_submission'                                   => 'Er ging iets mis. Check de errors.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Split uitklappen',
     'transaction_collapse_split'                          => 'Split inklappen',
 

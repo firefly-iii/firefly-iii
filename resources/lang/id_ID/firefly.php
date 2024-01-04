@@ -1304,6 +1304,7 @@ return [
     'sums_apply_to_range'                                 => 'Semua jumlah berlaku untuk rentang yang dipilih',
     'mapbox_api_key'                                      => 'To use map, get an API key from <a href="https://www.mapbox.com/">Mapbox</a>. Open your <code>.env</code> file and enter this code after <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Right click or long press to set the object\'s location.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Lokasi yang jelas',
     'delete_all_selected_tags'                            => 'Delete all selected tags',
     'select_tags_to_delete'                               => 'Don\'t forget to select some tags.',
@@ -1949,6 +1950,11 @@ return [
  */
 
     // transactions:
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => 'Perbarui penarikan',
     'update_deposit'                                      => 'Perbarui setoran',
@@ -2545,7 +2551,7 @@ return [
     'after_update_create_another'                         => 'After updating, return here to continue editing.',
     'store_as_new'                                        => 'Store as a new transaction instead of updating.',
     'reset_after'                                         => 'Reset form after submission',
-    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Kembangkan pemisahan',
     'transaction_collapse_split'                          => 'Kempiskan pemisahan',
 
