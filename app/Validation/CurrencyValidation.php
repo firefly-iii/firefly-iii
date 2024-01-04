@@ -50,19 +50,19 @@ trait CurrencyValidation
             if (!is_array($transaction)) {
                 continue;
             }
+            if (!array_key_exists('foreign_amount', $transaction)) {
+                continue;
+            }
+            $foreignAmount = '';
+            if (array_key_exists('foreign_amount', $transaction)) {
+                $foreignAmount = (string) $transaction['foreign_amount'];
+            }
+            if('' === $foreignAmount) {
+                continue;
+            }
             // if foreign amount is present, then the currency must be as well.
-            if (array_key_exists('foreign_amount', $transaction)
-                && !(array_key_exists('foreign_currency_id', $transaction)
-                     || array_key_exists(
-                         'foreign_currency_code',
-                         $transaction
-                     ))
-                && 0 !== bccomp('0', $transaction['foreign_amount'])
-            ) {
-                $validator->errors()->add(
-                    'transactions.'.$index.'.foreign_amount',
-                    (string)trans('validation.require_currency_info')
-                );
+            if (!(array_key_exists('foreign_currency_id', $transaction) || array_key_exists('foreign_currency_code', $transaction)) && 0 !== bccomp('0', $transaction['foreign_amount'])) {
+                $validator->errors()->add('transactions.' . $index . '.foreign_amount', (string) trans('validation.require_currency_info'));
             }
             // if the currency is present, then the amount must be present as well.
             if ((array_key_exists('foreign_currency_id', $transaction) || array_key_exists('foreign_currency_code', $transaction))
@@ -71,8 +71,8 @@ trait CurrencyValidation
                     $transaction
                 )) {
                 $validator->errors()->add(
-                    'transactions.'.$index.'.foreign_amount',
-                    (string)trans('validation.require_currency_amount')
+                    'transactions.' . $index . '.foreign_amount',
+                    (string) trans('validation.require_currency_amount')
                 );
             }
         }
