@@ -160,10 +160,10 @@ class RecurrenceFormRequest extends FormRequest
         $rules      = [
             // mandatory info for recurrence.
             'title'                   => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
-            'first_date'              => sprintf('required|date|before:%s|after:%s',$before->format('Y-m-d'),$today->format('Y-m-d')),
+            'first_date'              => sprintf('required|date|before:%s|after:%s', $before->format('Y-m-d'), $today->format('Y-m-d')),
             'repetition_type'         => ['required', new ValidRecurrenceRepetitionValue(), new ValidRecurrenceRepetitionType(), 'between:1,20'],
             'skip'                    => 'required|numeric|integer|gte:0|lte:31',
-            'notes'                   => 'between:1,65536|nullable',
+            'notes'                   => 'min:1|max:32768|nullable',
             // optional for recurrence:
             'recurring_description'   => 'between:0,65000',
             'active'                  => 'numeric|between:0,1',

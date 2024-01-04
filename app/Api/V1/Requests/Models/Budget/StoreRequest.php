@@ -72,7 +72,7 @@ class StoreRequest extends FormRequest
             'active'             => [new IsBoolean()],
             'currency_id'        => 'exists:transaction_currencies,id',
             'currency_code'      => 'exists:transaction_currencies,code',
-            'notes'              => 'nullable|between:1,65536',
+            'notes'              => 'nullable|min:1|max:32768',
             // auto budget info
             'auto_budget_type'   => 'in:reset,rollover,adjusted,none',
             'auto_budget_amount' => ['required_if:auto_budget_type,reset', 'required_if:auto_budget_type,rollover', 'required_if:auto_budget_type,adjusted', new IsValidPositiveAmount()],

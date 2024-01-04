@@ -76,7 +76,7 @@ class BudgetFormUpdateRequest extends FormRequest
             'auto_budget_currency_id' => 'exists:transaction_currencies,id',
             'auto_budget_amount'      => ['required_if:auto_budget_type,1', 'required_if:auto_budget_type,2|numeric', new IsValidPositiveAmount()],
             'auto_budget_period'      => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
-            'notes'                   => 'between:1,65536|nullable',
+            'notes'                   => 'min:1|max:32768|nullable',
         ];
     }
 

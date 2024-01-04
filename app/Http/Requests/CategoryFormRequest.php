@@ -64,7 +64,7 @@ class CategoryFormRequest extends FormRequest
         // fixed
         return [
             'name'  => $nameRule,
-            'notes' => 'between:1,65536|nullable',
+            'notes' => 'min:1|max:32768|nullable',
         ];
     }
 }

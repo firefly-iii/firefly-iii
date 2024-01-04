@@ -83,7 +83,7 @@ class StoreRequest extends FormRequest
             'repeat_freq'    => 'in:weekly,monthly,quarterly,half-year,yearly|required',
             'skip'           => 'between:0,31',
             'active'         => [new IsBoolean()],
-            'notes'          => 'between:1,65536',
+            'notes'          => 'min:1|max:32768',
         ];
     }
 

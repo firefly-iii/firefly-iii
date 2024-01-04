@@ -116,7 +116,7 @@ class AccountFormRequest extends FormRequest
             'amount_currency_id_virtual_balance' => 'exists:transaction_currencies,id',
             'what'                               => 'in:'.$types,
             'interest_period'                    => 'in:daily,monthly,yearly',
-            'notes'                              => 'between:1,65536|nullable',
+            'notes'                              => 'min:1|max:32768|nullable',
         ];
         $rules          = Location::requestRules($rules);
 

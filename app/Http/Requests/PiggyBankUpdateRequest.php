@@ -69,7 +69,7 @@ class PiggyBankUpdateRequest extends FormRequest
             'targetdate'   => 'date|nullable',
             'order'        => 'integer|max:65536|min:1',
             'object_group' => 'min:0|max:255',
-            'notes'        => 'between:1,65536|nullable',
+            'notes'        => 'min:1|max:32768|nullable',
         ];
     }
 }

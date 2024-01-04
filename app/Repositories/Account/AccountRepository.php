@@ -72,7 +72,8 @@ class AccountRepository implements AccountRepositoryInterface
         /** @var Account $account */
         foreach ($accounts as $account) {
             $byName = $this->user->accounts()->where('name', $account->name)
-                                 ->where('id', '!=', $account->id)->first();
+                ->where('id', '!=', $account->id)->first()
+            ;
             if (null !== $byName) {
                 $result->push($account);
                 $result->push($byName);
@@ -81,7 +82,8 @@ class AccountRepository implements AccountRepositoryInterface
             }
             if (null !== $account->iban) {
                 $byIban = $this->user->accounts()->where('iban', $account->iban)
-                                     ->where('id', '!=', $account->id)->first();
+                    ->where('id', '!=', $account->id)->first()
+                ;
                 if (null !== $byIban) {
                     $result->push($account);
                     $result->push($byIban);
@@ -107,7 +109,8 @@ class AccountRepository implements AccountRepositoryInterface
                     $q1->where('account_meta.name', '=', 'account_number');
                     $q1->where('account_meta.data', '=', $json);
                 }
-            );
+            )
+        ;
 
         if (0 !== count($types)) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -133,7 +136,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function findByName(string $name, array $types): ?Account
     {
-        $query = $this->user->accounts();
+        $query   = $this->user->accounts();
 
         if (0 !== count($types)) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
@@ -200,7 +203,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function getAttachments(Account $account): Collection
     {
-        $set = $account->attachments()->get();
+        $set  = $account->attachments()->get();
 
         /** @var \Storage $disk */
         $disk = \Storage::disk('upload');
@@ -222,7 +225,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function getCashAccount(): Account
     {
         /** @var AccountType $type */
-        $type = AccountType::where('type', AccountType::CASH)->first();
+        $type    = AccountType::where('type', AccountType::CASH)->first();
 
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -231,7 +234,7 @@ class AccountRepository implements AccountRepositoryInterface
         return $factory->findOrCreate('Cash account', $type->type);
     }
 
-    public function setUser(null | Authenticatable | User $user): void
+    public function setUser(null|Authenticatable|User $user): void
     {
         if ($user instanceof User) {
             $this->user = $user;
@@ -241,9 +244,10 @@ class AccountRepository implements AccountRepositoryInterface
     public function getCreditTransactionGroup(Account $account): ?TransactionGroup
     {
         $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                     ->where('transactions.account_id', $account->id)
-                                     ->transactionTypes([TransactionType::LIABILITY_CREDIT])
-                                     ->first(['transaction_journals.*']);
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionType::LIABILITY_CREDIT])
+            ->first(['transaction_journals.*'])
+        ;
 
         return $journal?->transactionGroup;
     }
@@ -287,10 +291,11 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getOpeningBalanceAmount(Account $account): ?string
     {
-        $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                     ->where('transactions.account_id', $account->id)
-                                     ->transactionTypes([TransactionType::OPENING_BALANCE, TransactionType::LIABILITY_CREDIT])
-                                     ->first(['transaction_journals.*']);
+        $journal     = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionType::OPENING_BALANCE, TransactionType::LIABILITY_CREDIT])
+            ->first(['transaction_journals.*'])
+        ;
         if (null === $journal) {
             return null;
         }
@@ -308,9 +313,10 @@ class AccountRepository implements AccountRepositoryInterface
     public function getOpeningBalanceDate(Account $account): ?string
     {
         return TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                 ->where('transactions.account_id', $account->id)
-                                 ->transactionTypes([TransactionType::OPENING_BALANCE, TransactionType::LIABILITY_CREDIT])
-                                 ->first(['transaction_journals.*'])?->date->format('Y-m-d H:i:s');
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionType::OPENING_BALANCE, TransactionType::LIABILITY_CREDIT])
+            ->first(['transaction_journals.*'])?->date->format('Y-m-d H:i:s')
+        ;
     }
 
     public function getOpeningBalanceGroup(Account $account): ?TransactionGroup
@@ -320,19 +326,13 @@ class AccountRepository implements AccountRepositoryInterface
         return $journal?->transactionGroup;
     }
 
-    /**
-     *
-     *
-     * @param Account $account
-     *
-     * @return TransactionJournal|null
-     */
     public function getOpeningBalance(Account $account): ?TransactionJournal
     {
         return TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                 ->where('transactions.account_id', $account->id)
-                                 ->transactionTypes([TransactionType::OPENING_BALANCE])
-                                 ->first(['transaction_journals.*']);
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionType::OPENING_BALANCE])
+            ->first(['transaction_journals.*'])
+        ;
     }
 
     public function getPiggyBanks(Account $account): Collection
@@ -352,18 +352,19 @@ class AccountRepository implements AccountRepositoryInterface
         $name     = trans('firefly.reconciliation_account_name', ['name' => $account->name, 'currency' => $currency->code]);
 
         /** @var AccountType $type */
-        $type = AccountType::where('type', AccountType::RECONCILIATION)->first();
+        $type     = AccountType::where('type', AccountType::RECONCILIATION)->first();
 
         /** @var null|Account $current */
-        $current = $this->user->accounts()->where('account_type_id', $type->id)
-                              ->where('name', $name)
-                              ->first();
+        $current  = $this->user->accounts()->where('account_type_id', $type->id)
+            ->where('name', $name)
+            ->first()
+        ;
 
         if (null !== $current) {
             return $current;
         }
 
-        $data = [
+        $data     = [
             'account_type_id'   => null,
             'account_type_name' => AccountType::RECONCILIATION,
             'active'            => true,
@@ -373,7 +374,7 @@ class AccountRepository implements AccountRepositoryInterface
         ];
 
         /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
+        $factory  = app(AccountFactory::class);
         $factory->setUser($account->user);
 
         return $factory->create($data);
@@ -381,8 +382,8 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
-        $type = $account->accountType->type;
-        $list = config('firefly.valid_currency_account_types');
+        $type       = $account->accountType->type;
+        $list       = config('firefly.valid_currency_account_types');
 
         // return null if not in this list.
         if (!in_array($type, $list, true)) {
@@ -446,7 +447,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function maxOrder(string $type): int
     {
-        $sets = [
+        $sets     = [
             AccountType::ASSET    => [AccountType::DEFAULT, AccountType::ASSET],
             AccountType::EXPENSE  => [AccountType::EXPENSE, AccountType::BENEFICIARY],
             AccountType::REVENUE  => [AccountType::REVENUE],
@@ -462,7 +463,7 @@ class AccountRepository implements AccountRepositoryInterface
         }
         $specials = [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION];
 
-        $order = (int) $this->getAccountsByType($specials)->max('order');
+        $order    = (int) $this->getAccountsByType($specials)->max('order');
         app('log')->debug(sprintf('Return max order of "%s" set (specials!): %d', $type, $order));
 
         return $order;
@@ -511,12 +512,13 @@ class AccountRepository implements AccountRepositoryInterface
     {
         /** @var null|TransactionJournal $first */
         $first = $account->transactions()
-                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                         ->orderBy('transaction_journals.date', 'ASC')
-                         ->orderBy('transaction_journals.order', 'DESC')
-                         ->where('transaction_journals.user_id', $this->user->id)
-                         ->orderBy('transaction_journals.id', 'ASC')
-                         ->first(['transaction_journals.id']);
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->orderBy('transaction_journals.date', 'ASC')
+            ->orderBy('transaction_journals.order', 'DESC')
+            ->where('transaction_journals.user_id', $this->user->id)
+            ->orderBy('transaction_journals.id', 'ASC')
+            ->first(['transaction_journals.id'])
+        ;
         if (null !== $first) {
             return TransactionJournal::find($first->id);
         }
@@ -555,11 +557,12 @@ class AccountRepository implements AccountRepositoryInterface
     public function searchAccount(string $query, array $types, int $limit): Collection
     {
         $dbQuery = $this->user->accounts()
-                              ->where('active', true)
-                              ->orderBy('accounts.order', 'ASC')
-                              ->orderBy('accounts.account_type_id', 'ASC')
-                              ->orderBy('accounts.name', 'ASC')
-                              ->with(['accountType']);
+            ->where('active', true)
+            ->orderBy('accounts.order', 'ASC')
+            ->orderBy('accounts.account_type_id', 'ASC')
+            ->orderBy('accounts.name', 'ASC')
+            ->with(['accountType'])
+        ;
         if ('' !== $query) {
             // split query on spaces just in case:
             $parts = explode(' ', $query);
@@ -579,12 +582,13 @@ class AccountRepository implements AccountRepositoryInterface
     public function searchAccountNr(string $query, array $types, int $limit): Collection
     {
         $dbQuery = $this->user->accounts()->distinct()
-                              ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
-                              ->where('accounts.active', true)
-                              ->orderBy('accounts.order', 'ASC')
-                              ->orderBy('accounts.account_type_id', 'ASC')
-                              ->orderBy('accounts.name', 'ASC')
-                              ->with(['accountType', 'accountMeta']);
+            ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
+            ->where('accounts.active', true)
+            ->orderBy('accounts.order', 'ASC')
+            ->orderBy('accounts.account_type_id', 'ASC')
+            ->orderBy('accounts.name', 'ASC')
+            ->with(['accountType', 'accountMeta'])
+        ;
         if ('' !== $query) {
             // split query on spaces just in case:
             $parts = explode(' ', $query);
