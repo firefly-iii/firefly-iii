@@ -40,10 +40,10 @@ class IsValidZeroOrMoreAmount implements ValidationRule
 
             return;
         }
-        // must be more than zero:
+        // must be zero or more
         if(!$this->zeroOrMore($value)) {
             $fail('validation.more_than_zero_correct')->translate();
-            Log::info(sprintf('IsValidZeroOrMoreAmount: "%s" must be more than zero.', $value));
+            Log::info(sprintf('IsValidZeroOrMoreAmount: "%s" must be zero or more.', $value));
 
             return;
         }
