@@ -199,9 +199,12 @@ class AccountTransformer extends AbstractTransformer
     }
 
     /**
-     * @return array
-     *
      * TODO refactor call to get~OpeningBalanceAmount / Date because it is a lot of queries
+     * 
+     * @param Account $account
+     * @param string  $accountType
+     *
+     * @return array
      */
     private function getOpeningBalance(Account $account, string $accountType): array
     {

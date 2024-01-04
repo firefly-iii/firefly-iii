@@ -216,10 +216,9 @@ class Preferences
     }
 
     /**
-     * @param null $default
+     * TODO remove me.
      *
-     * @return null|preference
-     *                         TODO remove me
+     * @param null $default
      *
      * @throws FireflyException
      */

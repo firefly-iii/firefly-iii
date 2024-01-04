@@ -53,13 +53,13 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     public function collectMetaData(Collection $objects): void
     {
-        $currencies = [];
-        $journals   = [];
+        $currencies       = [];
+        $journals         = [];
 
         /** @var array $object */
         foreach ($objects as $object) {
             foreach ($object['sums'] as $sum) {
-                $id              = (int) $sum['currency_id'];
+                $id = (int) $sum['currency_id'];
                 $currencies[$id] ??= TransactionCurrency::find($sum['currency_id']);
             }
 
@@ -73,7 +73,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $this->default    = app('amount')->getDefaultCurrency();
 
         // grab meta for all journals:
-        $meta = TransactionJournalMeta::whereIn('transaction_journal_id', array_keys($journals))->get();
+        $meta             = TransactionJournalMeta::whereIn('transaction_journal_id', array_keys($journals))->get();
 
         /** @var TransactionJournalMeta $entry */
         foreach ($meta as $entry) {
@@ -82,7 +82,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         // grab all notes for all journals:
-        $notes = Note::whereNoteableType(TransactionJournal::class)->whereIn('noteable_id', array_keys($journals))->get();
+        $notes            = Note::whereNoteableType(TransactionJournal::class)->whereIn('noteable_id', array_keys($journals))->get();
 
         /** @var Note $note */
         foreach ($notes as $note) {
@@ -91,7 +91,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         // grab all locations for all journals:
-        $locations = Location::whereLocatableType(TransactionJournal::class)->whereIn('locatable_id', array_keys($journals))->get();
+        $locations        = Location::whereLocatableType(TransactionJournal::class)->whereIn('locatable_id', array_keys($journals))->get();
 
         /** @var Location $location */
         foreach ($locations as $location) {
@@ -100,10 +100,11 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         // grab all tags for all journals:
-        $tags = DB::table('tag_transaction_journal')
-                  ->leftJoin('tags', 'tags.id', 'tag_transaction_journal.tag_id')
-                  ->whereIn('tag_transaction_journal.transaction_journal_id', array_keys($journals))
-                  ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag']);
+        $tags             = DB::table('tag_transaction_journal')
+            ->leftJoin('tags', 'tags.id', 'tag_transaction_journal.tag_id')
+            ->whereIn('tag_transaction_journal.transaction_journal_id', array_keys($journals))
+            ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag'])
+        ;
 
         /** @var \stdClass $tag */
         foreach ($tags as $tag) {
@@ -113,7 +114,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
         // create converter
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
-        $this->converter = new ExchangeRateConverter();
+        $this->converter  = new ExchangeRateConverter();
     }
 
     public function transform(array $group): array
@@ -156,10 +157,10 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     private function transformTransaction(array $transaction): array
     {
-        $transaction = new NullArrayObject($transaction);
-        $type        = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
-        $journalId   = (int) $transaction['transaction_journal_id'];
-        $meta        = new NullArrayObject($this->meta[$journalId] ?? []);
+        $transaction         = new NullArrayObject($transaction);
+        $type                = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
+        $journalId           = (int) $transaction['transaction_journal_id'];
+        $meta                = new NullArrayObject($this->meta[$journalId] ?? []);
 
         /**
          * Convert and use amount:
@@ -176,9 +177,9 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
         $this->converter->summarize();
 
-        $longitude = null;
-        $latitude  = null;
-        $zoomLevel = null;
+        $longitude           = null;
+        $latitude            = null;
+        $zoomLevel           = null;
         if (array_key_exists($journalId, $this->locations)) {
             /** @var Location $location */
             $location  = $this->locations[$journalId];

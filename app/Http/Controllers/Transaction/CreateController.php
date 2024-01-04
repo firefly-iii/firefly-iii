@@ -74,8 +74,8 @@ class CreateController extends Controller
 
                 app('preferences')->mark();
 
-                $title = $newGroup->title ?? $newGroup->transactionJournals->first()->description;
-                $link  = route('transactions.show', [$newGroup->id]);
+                $title    = $newGroup->title ?? $newGroup->transactionJournals->first()->description;
+                $link     = route('transactions.show', [$newGroup->id]);
                 session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
                 session()->flash('success_url', $link);
 
@@ -101,8 +101,8 @@ class CreateController extends Controller
     {
         app('preferences')->mark();
 
-        $sourceId      = (int) request()->get('source');
-        $destinationId = (int) request()->get('destination');
+        $sourceId             = (int) request()->get('source');
+        $destinationId        = (int) request()->get('destination');
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository    = app(AccountRepositoryInterface::class);
@@ -119,7 +119,7 @@ class CreateController extends Controller
         $search               = sprintf('?%s', $parts['query'] ?? '');
         $previousUrl          = str_replace($search, '', $previousUrl);
         // not really a fan of this, but meh.
-        $optionalDateFields = [
+        $optionalDateFields   = [
             'interest_date' => $optionalFields['interest_date'],
             'book_date'     => $optionalFields['book_date'],
             'process_date'  => $optionalFields['process_date'],
@@ -127,10 +127,10 @@ class CreateController extends Controller
             'payment_date'  => $optionalFields['payment_date'],
             'invoice_date'  => $optionalFields['invoice_date'],
         ];
-//        var_dump($optionalFields);
-//        exit;
-        $optionalFields['external_url'] = $optionalFields['external_url'] ?? false;
-        $optionalFields['location'] = $optionalFields['location'] ?? false;
+        //        var_dump($optionalFields);
+        //        exit;
+        $optionalFields['external_url'] ??= false;
+        $optionalFields['location']     ??= false;
         session()->put('preFilled', $preFilled);
 
         return view(
