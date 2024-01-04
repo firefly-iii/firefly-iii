@@ -28,6 +28,7 @@ use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Rules\IsValidPositiveAmount;
+use FireflyIII\Rules\IsValidZeroOrMoreAmount;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -94,7 +95,7 @@ class StoreRequest extends FormRequest
 
             // amount
             'transactions.*.amount'                  => ['required', new IsValidPositiveAmount()],
-            'transactions.*.foreign_amount'          => ['nullable', new IsValidPositiveAmount()],
+            'transactions.*.foreign_amount'          => ['nullable', new IsValidZeroOrMoreAmount()],
 
             // description
             'transactions.*.description'             => 'nullable|between:1,1000',
