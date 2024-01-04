@@ -23,7 +23,7 @@ class IsValidAmount implements ValidationRule
         if($this->emptyString($value)) {
             $fail('validation.filled')->translate();
             $message = sprintf('IsValidAmount: "%s" cannot be empty.', $value);
-            Log::info($message);
+            Log::debug($message);
             Log::channel('audit')->info($message);
             return;
         }
@@ -32,7 +32,7 @@ class IsValidAmount implements ValidationRule
         if(!$this->isValidNumber($value)) {
             $fail('validation.numeric')->translate();
             $message = sprintf('IsValidAmount: "%s" is not a number.', $value);
-            Log::info($message);
+            Log::debug($message);
             Log::channel('audit')->info($message);
             return;
         }
@@ -41,7 +41,7 @@ class IsValidAmount implements ValidationRule
         if($this->scientificNumber($value)) {
             $fail('validation.scientific_notation')->translate();
             $message = sprintf('IsValidAmount: "%s" cannot be in the scientific notation.', $value);
-            Log::info($message);
+            Log::debug($message);
             Log::channel('audit')->info($message);
             return;
         }
@@ -51,7 +51,7 @@ class IsValidAmount implements ValidationRule
             $amount = bcmul('-1', self::BIG_AMOUNT);
             $fail('validation.gte.numeric')->translate(['value' => $amount]);
             $message = sprintf('IsValidAmount: "%s" must be more than %s.', $value, $amount);
-            Log::info($message);
+            Log::debug($message);
             Log::channel('audit')->info($message);
             return;
         }
@@ -60,9 +60,9 @@ class IsValidAmount implements ValidationRule
         if($this->moreThanLots($value)) {
             $fail('validation.lte.numeric')->translate(['value' => self::BIG_AMOUNT]);
             $message = sprintf('IsValidAmount: "%s" must be more than %s.', $value, self::BIG_AMOUNT);
-            Log::info($message);
+            Log::debug($message);
             Log::channel('audit')->info($message);
         }
-        Log::info(sprintf('IsValidAmount: "%s" is a valid positive amount.', $value));
+        Log::debug(sprintf('IsValidAmount: "%s" is a valid positive amount.', $value));
     }
 }
