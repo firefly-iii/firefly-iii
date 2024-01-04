@@ -156,10 +156,11 @@ class RecurrenceFormRequest extends FormRequest
     {
         $today      = today(config('app.timezone'));
         $tomorrow   = today(config('app.timezone'))->addDay();
+        $before     = today(config('app.timezone'))->addYears(25);
         $rules      = [
             // mandatory info for recurrence.
             'title'                   => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
-            'first_date'              => 'required|date|after:'.$today->format('Y-m-d'),
+            'first_date'              => sprintf('required|date|before:%s|after:%s',$before->format('Y-m-d'),$today->format('Y-m-d')),
             'repetition_type'         => ['required', new ValidRecurrenceRepetitionValue(), new ValidRecurrenceRepetitionType(), 'between:1,20'],
             'skip'                    => 'required|numeric|integer|gte:0|lte:31',
             'notes'                   => 'between:1,65536|nullable',
