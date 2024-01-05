@@ -75,7 +75,7 @@ class UpdateRequest extends FormRequest
         $bill = $this->route()->parameter('bill');
 
         return [
-            'name'           => sprintf('between:1,255|uniqueObjectForUser:bills,name,%d', $bill->id),
+            'name'           => sprintf('min:1|max:255|uniqueObjectForUser:bills,name,%d', $bill->id),
             'amount_min'     => ['nullable', new IsValidPositiveAmount()],
             'amount_max'     => ['nullable', new IsValidPositiveAmount()],
             'currency_id'    => 'numeric|exists:transaction_currencies,id',
@@ -84,7 +84,7 @@ class UpdateRequest extends FormRequest
             'end_date'       => 'date|after:date',
             'extension_date' => 'date|after:date',
             'repeat_freq'    => 'in:weekly,monthly,quarterly,half-year,yearly',
-            'skip'           => 'between:0,31',
+            'skip'           => 'min:0|max:31|numeric',
             'active'         => [new IsBoolean()],
             'notes'          => 'min:1|max:32768',
         ];

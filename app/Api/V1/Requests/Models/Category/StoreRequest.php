@@ -52,7 +52,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|between:1,100|uniqueObjectForUser:categories,name',
+            'name' => 'required|min:1|max:100|uniqueObjectForUser:categories,name',
         ];
     }
 }

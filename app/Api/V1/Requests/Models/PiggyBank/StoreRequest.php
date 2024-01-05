@@ -64,11 +64,11 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'               => 'required|between:1,255|uniquePiggyBankForUser',
+            'name'               => 'required|min:1|max:255|uniquePiggyBankForUser',
             'current_amount'     => ['nullable', new IsValidPositiveAmount()],
             'account_id'         => 'required|numeric|belongsToUser:accounts,id',
             'object_group_id'    => 'numeric|belongsToUser:object_groups,id',
-            'object_group_title' => 'between:1,255',
+            'object_group_title' => ['min:1', 'max:255'],
             'target_amount'      => ['required', new IsValidPositiveAmount()],
             'start_date'         => 'date|nullable',
             'target_date'        => 'date|nullable|after:start_date',

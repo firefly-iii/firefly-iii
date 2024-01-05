@@ -65,7 +65,7 @@ class UpdateRequest extends FormRequest
             return ['value' => ['required', new IsBoolean()]];
         }
         if ('configuration.permission_update_check' === $name) {
-            return ['value' => 'required|numeric|between:-1,1'];
+            return ['value' => 'required|numeric|min:-1|max:1'];
         }
         if ('configuration.last_update_check' === $name) {
             return ['value' => 'required|numeric|min:464272080'];

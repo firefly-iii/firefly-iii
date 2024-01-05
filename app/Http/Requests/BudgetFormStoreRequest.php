@@ -61,8 +61,8 @@ class BudgetFormStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'                    => 'required|between:1,100|uniqueObjectForUser:budgets,name',
-            'active'                  => 'numeric|between:0,1',
+            'name'                    => 'required|min:1|max:255|uniqueObjectForUser:budgets,name',
+            'active'                  => 'numeric|min:0|max:1',
             'auto_budget_type'        => 'numeric|integer|gte:0|lte:3',
             'auto_budget_currency_id' => 'exists:transaction_currencies,id',
             'auto_budget_amount'      => ['required_if:auto_budget_type,1', 'required_if:auto_budget_type,2', new IsValidPositiveAmount()],

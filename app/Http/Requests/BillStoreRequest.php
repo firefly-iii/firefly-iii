@@ -64,7 +64,7 @@ class BillStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'                    => 'required|between:1,255|uniqueObjectForUser:bills,name',
+            'name'                    => 'required|min:1|max:255|uniqueObjectForUser:bills,name',
             'amount_min'              => ['required', new IsValidPositiveAmount()],
             'amount_max'              => ['required', new IsValidPositiveAmount()],
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',

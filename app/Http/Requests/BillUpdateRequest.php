@@ -68,7 +68,7 @@ class BillUpdateRequest extends FormRequest
         $bill = $this->route()->parameter('bill');
 
         return [
-            'name'                    => sprintf('required|between:1,255|uniqueObjectForUser:bills,name,%d', $bill->id),
+            'name'                    => sprintf('required|min:1|max:255|uniqueObjectForUser:bills,name,%d', $bill->id),
             'amount_min'              => ['required', new IsValidPositiveAmount()],
             'amount_max'              => ['required', new IsValidPositiveAmount()],
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',

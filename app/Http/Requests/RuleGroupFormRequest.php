@@ -59,18 +59,18 @@ class RuleGroupFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
+        $titleRule = 'required|min:1|max:255|uniqueObjectForUser:rule_groups,title';
 
         /** @var null|RuleGroup $ruleGroup */
         $ruleGroup = $this->route()->parameter('ruleGroup');
 
         if (null !== $ruleGroup) {
-            $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,'.$ruleGroup->id;
+            $titleRule = 'required|min:1|max:255|uniqueObjectForUser:rule_groups,title,'.$ruleGroup->id;
         }
 
         return [
             'title'       => $titleRule,
-            'description' => 'between:1,5000|nullable',
+            'description' => 'min:1|max:32768|nullable',
             'active'      => [new IsBoolean()],
         ];
     }

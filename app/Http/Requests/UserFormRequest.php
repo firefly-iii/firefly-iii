@@ -58,9 +58,9 @@ class UserFormRequest extends FormRequest
             'id'           => 'required|exists:users,id',
             'email'        => 'email|required',
             'password'     => 'confirmed|secure_password',
-            'blocked_code' => 'between:0,30|nullable',
-            'blocked'      => 'between:0,1|numeric',
-            'is_owner'     => 'between:0,1|numeric',
+            'blocked_code' => 'min:0|max:32|nullable',
+            'blocked'      => 'min:0|max:1|numeric',
+            'is_owner'     => 'min:0|max:1|numeric',
         ];
     }
 }

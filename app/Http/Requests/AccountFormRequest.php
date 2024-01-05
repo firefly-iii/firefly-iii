@@ -108,7 +108,7 @@ class AccountFormRequest extends FormRequest
             'BIC'                                => 'bic|nullable',
             'virtual_balance'                    => ['nullable', new IsValidAmount()],
             'currency_id'                        => 'exists:transaction_currencies,id',
-            'account_number'                     => 'between:1,255|uniqueAccountNumberForUser|nullable',
+            'account_number'                     => 'min:1|max:255|uniqueAccountNumberForUser|nullable',
             'account_role'                       => 'in:'.$accountRoles,
             'active'                             => 'boolean',
             'cc_type'                            => 'in:'.$ccPaymentTypes,

@@ -86,20 +86,20 @@ class UpdateRequest extends FormRequest
         $recurrence = $this->route()->parameter('recurrence');
 
         return [
-            'title'                                => sprintf('between:1,255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
-            'description'                          => 'between:1,65000',
+            'title'                                => sprintf('min:1|max:255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
+            'description'                          => 'min:1|max:32768',
             'first_date'                           => 'date',
             'apply_rules'                          => [new IsBoolean()],
             'active'                               => [new IsBoolean()],
             'repeat_until'                         => 'nullable|date',
-            'nr_of_repetitions'                    => 'nullable|numeric|between:1,31',
+            'nr_of_repetitions'                    => 'nullable|numeric|min:1|max:31',
 
             'repetitions.*.type'                   => 'in:daily,weekly,ndom,monthly,yearly',
-            'repetitions.*.moment'                 => 'between:0,10',
-            'repetitions.*.skip'                   => 'nullable|numeric|between:0,31',
+            'repetitions.*.moment'                 => 'min:0|max:10|numeric',
+            'repetitions.*.skip'                   => 'nullable|numeric|min:0|max:31',
             'repetitions.*.weekend'                => 'nullable|numeric|min:1|max:4',
 
-            'transactions.*.description'           => 'between:1,255',
+            'transactions.*.description'           => ['min:1', 'max:255'],
             'transactions.*.amount'                => [new IsValidPositiveAmount()],
             'transactions.*.foreign_amount'        => ['nullable', new IsValidPositiveAmount()],
             'transactions.*.currency_id'           => 'nullable|numeric|exists:transaction_currencies,id',
@@ -107,18 +107,18 @@ class UpdateRequest extends FormRequest
             'transactions.*.foreign_currency_id'   => 'nullable|numeric|exists:transaction_currencies,id',
             'transactions.*.foreign_currency_code' => 'nullable|min:3|max:51|exists:transaction_currencies,code',
             'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser()],
-            'transactions.*.source_name'           => 'between:1,255|nullable',
+            'transactions.*.source_name'           => 'min:1|max:255|nullable',
             'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser()],
-            'transactions.*.destination_name'      => 'between:1,255|nullable',
+            'transactions.*.destination_name'      => 'min:1|max:255|nullable',
 
             // new and updated fields:
             'transactions.*.budget_id'             => ['nullable', 'mustExist:budgets,id', new BelongsUser()],
-            'transactions.*.budget_name'           => ['between:1,255', 'nullable', new BelongsUser()],
+            'transactions.*.budget_name'           => ['min:1', 'max:255', 'nullable', new BelongsUser()],
             'transactions.*.category_id'           => ['nullable', 'mustExist:categories,id', new BelongsUser()],
-            'transactions.*.category_name'         => 'between:1,255|nullable',
+            'transactions.*.category_name'         => 'min:1|max:255|nullable',
             'transactions.*.piggy_bank_id'         => ['nullable', 'numeric', 'mustExist:piggy_banks,id', new BelongsUser()],
-            'transactions.*.piggy_bank_name'       => ['between:1,255', 'nullable', new BelongsUser()],
-            'transactions.*.tags'                  => 'nullable|between:1,255',
+            'transactions.*.piggy_bank_name'       => ['min:1', 'max:255', 'nullable', new BelongsUser()],
+            'transactions.*.tags'                  => 'nullable|min:1|max:255',
         ];
     }
 

@@ -85,7 +85,7 @@ class UpdateRequest extends FormRequest
         $webhook        = $this->route()->parameter('webhook');
 
         return [
-            'title'    => sprintf('between:1,512|uniqueObjectForUser:webhooks,title,%d', $webhook->id),
+            'title'    => sprintf('min:1|max:255|uniqueObjectForUser:webhooks,title,%d', $webhook->id),
             'active'   => [new IsBoolean()],
             'trigger'  => sprintf('in:%s', $triggers),
             'response' => sprintf('in:%s', $responses),

@@ -49,7 +49,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'unique:user_groups,title|required|min:2|max:255',
+            'title' => 'unique:user_groups,title|required|min:1|max:255',
         ];
     }
 }

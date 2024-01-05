@@ -81,7 +81,7 @@ class UpdateRequest extends FormRequest
         $budget = $this->route()->parameter('budget');
 
         return [
-            'name'                      => sprintf('between:1,100|uniqueObjectForUser:budgets,name,%d', $budget->id),
+            'name'                      => sprintf('min:1|max:100|uniqueObjectForUser:budgets,name,%d', $budget->id),
             'active'                    => [new IsBoolean()],
             'notes'                     => 'nullable|min:1|max:32768',
             'auto_budget_type'          => 'in:reset,rollover,adjusted,none',

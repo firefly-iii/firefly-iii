@@ -52,13 +52,13 @@ class CategoryFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name';
+        $nameRule = 'required|min:1|max:255|uniqueObjectForUser:categories,name';
 
         /** @var null|Category $category */
         $category = $this->route()->parameter('category');
 
         if (null !== $category) {
-            $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,'.$category->id;
+            $nameRule = 'required|min:1|max:255|uniqueObjectForUser:categories,name,'.$category->id;
         }
 
         // fixed

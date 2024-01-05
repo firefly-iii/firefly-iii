@@ -58,7 +58,7 @@ class UpdateRequest extends FormRequest
         $category = $this->route()->parameter('category');
 
         return [
-            'name' => sprintf('between:1,100|uniqueObjectForUser:categories,name,%d', $category->id),
+            'name' => sprintf('min:1|max:100|uniqueObjectForUser:categories,name,%d', $category->id),
         ];
     }
 }

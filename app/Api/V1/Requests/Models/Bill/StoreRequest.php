@@ -72,7 +72,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'           => 'between:1,255|uniqueObjectForUser:bills,name',
+            'name'           => 'min:1|max:255|uniqueObjectForUser:bills,name',
             'amount_min'     => ['required', new IsValidPositiveAmount()],
             'amount_max'     => ['required', new IsValidPositiveAmount()],
             'currency_id'    => 'numeric|exists:transaction_currencies,id',
@@ -81,7 +81,7 @@ class StoreRequest extends FormRequest
             'end_date'       => 'date|after:date',
             'extension_date' => 'date|after:date',
             'repeat_freq'    => 'in:weekly,monthly,quarterly,half-year,yearly|required',
-            'skip'           => 'between:0,31',
+            'skip'           => 'min:0|max:31|numeric',
             'active'         => [new IsBoolean()],
             'notes'          => 'min:1|max:32768',
         ];

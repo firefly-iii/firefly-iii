@@ -62,7 +62,7 @@ class PiggyBankUpdateRequest extends FormRequest
         $piggy = $this->route()->parameter('piggyBank');
 
         return [
-            'name'         => sprintf('required|between:1,255|uniquePiggyBankForUser:%d', $piggy->id),
+            'name'         => sprintf('required|min:1|max:255|uniquePiggyBankForUser:%d', $piggy->id),
             'account_id'   => 'required|belongsToUser:accounts',
             'targetamount' => ['nullable', new IsValidPositiveAmount()],
             'startdate'    => 'date',

@@ -85,10 +85,10 @@ class UpdateRequest extends FormRequest
         $contextActions  = implode(',', config('firefly.context-rule-actions'));
 
         return [
-            'title'                      => sprintf('between:1,100|uniqueObjectForUser:rules,title,%d', $rule->id),
-            'description'                => 'between:1,5000|nullable',
+            'title'                      => sprintf('min:1|max:100|uniqueObjectForUser:rules,title,%d', $rule->id),
+            'description'                => 'min:1|max:32768|nullable',
             'rule_group_id'              => 'belongsToUser:rule_groups',
-            'rule_group_title'           => 'nullable|between:1,255|belongsToUser:rule_groups,title',
+            'rule_group_title'           => 'nullable|min:1|max:255|belongsToUser:rule_groups,title',
             'trigger'                    => 'in:store-journal,update-journal',
             'triggers.*.type'            => 'required|in:'.implode(',', $validTriggers),
             'triggers.*.value'           => 'required_if:actions.*.type,'.$contextTriggers.'|min:1|ruleTriggerValue|max:1024',
@@ -101,7 +101,7 @@ class UpdateRequest extends FormRequest
             'strict'                     => [new IsBoolean()],
             'stop_processing'            => [new IsBoolean()],
             'active'                     => [new IsBoolean()],
-            'order'                      => 'numeric|between:1,1337',
+            'order'                      => 'numeric|min:1|max:2048',
         ];
     }
 

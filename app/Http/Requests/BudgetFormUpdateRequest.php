@@ -60,18 +60,18 @@ class BudgetFormUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name';
+        $nameRule = 'required|min:1|max:255|uniqueObjectForUser:budgets,name';
 
         /** @var null|Budget $budget */
         $budget   = $this->route()->parameter('budget');
 
         if (null !== $budget) {
-            $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name,'.$budget->id;
+            $nameRule = 'required|min:1|max:255|uniqueObjectForUser:budgets,name,'.$budget->id;
         }
 
         return [
             'name'                    => $nameRule,
-            'active'                  => 'numeric|between:0,1',
+            'active'                  => 'numeric|min:0|max:1',
             'auto_budget_type'        => 'numeric|integer|gte:0|lte:31',
             'auto_budget_currency_id' => 'exists:transaction_currencies,id',
             'auto_budget_amount'      => ['required_if:auto_budget_type,1', 'required_if:auto_budget_type,2|numeric', new IsValidPositiveAmount()],

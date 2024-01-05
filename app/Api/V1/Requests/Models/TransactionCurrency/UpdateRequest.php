@@ -64,10 +64,10 @@ class UpdateRequest extends FormRequest
         $currency = $this->route()->parameter('currency_code');
 
         return [
-            'name'           => sprintf('between:1,255|unique:transaction_currencies,name,%d', $currency->id),
-            'code'           => sprintf('between:3,51|unique:transaction_currencies,code,%d', $currency->id),
-            'symbol'         => sprintf('between:1,51|unique:transaction_currencies,symbol,%d', $currency->id),
-            'decimal_places' => 'between:0,20|numeric|min:0|max:12',
+            'name'           => sprintf('min:1|max:255|unique:transaction_currencies,name,%d', $currency->id),
+            'code'           => sprintf('min:3|max:32|unique:transaction_currencies,code,%d', $currency->id),
+            'symbol'         => sprintf('min:1|max:32|unique:transaction_currencies,symbol,%d', $currency->id),
+            'decimal_places' => 'numeric|min:0|max:12',
             'enabled'        => [new IsBoolean()],
             'default'        => [new IsBoolean()],
         ];
