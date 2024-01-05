@@ -33,8 +33,8 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class UniqueAccountNumber implements ValidationRule
 {
-    private ?Account $account;
-    private ?string  $expectedType;
+    private ?Account     $account;
+    private ?string       $expectedType;
 
     /**
      * Create a new rule instance.
