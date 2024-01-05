@@ -32,8 +32,6 @@ import {loadBudgets} from "./shared/load-budgets.js";
 import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
 import {loadSubscriptions} from "./shared/load-subscriptions.js";
 
-import L from "leaflet";
-
 import 'leaflet/dist/leaflet.css';
 import {addAutocomplete} from "./shared/add-autocomplete.js";
 import {
@@ -85,8 +83,7 @@ let transactions = function () {
 
         // form behaviour during transaction
         formBehaviour: {
-            formType: 'create',
-            foreignCurrencyEnabled: true,
+            formType: 'create', foreignCurrencyEnabled: true,
         },
 
         // form data (except transactions) is stored in formData
@@ -102,27 +99,17 @@ let transactions = function () {
 
         // properties for the entire transaction group
         groupProperties: {
-            transactionType: 'unknown',
-            title: null,
-            id: null,
-            totalAmount: 0,
+            transactionType: 'unknown', title: null, id: null, totalAmount: 0,
         },
 
         // notifications
         notifications: {
             error: {
-                show: false,
-                text: '',
-                url: '',
-            },
-            success: {
-                show: false,
-                text: '',
-                url: '',
-            },
-            wait: {
-                show: false,
-                text: '',
+                show: false, text: '', url: '',
+            }, success: {
+                show: false, text: '', url: '',
+            }, wait: {
+                show: false, text: '',
 
             }
         },
@@ -130,35 +117,22 @@ let transactions = function () {
 
         // part of the account selection auto-complete
         filters: {
-            source: [],
-            destination: [],
+            source: [], destination: [],
         },
-
-        // old properties, no longer used.
-
-
-        // data sets
-
-        // used to display the success message
-        //newGroupTitle: '',
-        //newGroupId: 0,
-
-        // map things:
-        //hasLocation: false,
-        //latitude: 51.959659235274,
-        //longitude: 5.756805887265858,
-        //zoomLevel: 13,
 
         // events in the form
         changedDateTime(event) {
-            console.log('changedDateTime');
+            console.warn('changedDateTime, event is not used');
         },
+
         changedDescription(event) {
-            console.log('changedDescription');
+            console.warn('changedDescription, event is not used');
         },
+
         changedDestinationAccount(event) {
             this.detectTransactionType();
         },
+
         changedSourceAccount(event) {
             this.detectTransactionType();
         },
@@ -218,8 +192,9 @@ let transactions = function () {
             }
             console.warn('Unknown account combination between "' + sourceType + '" and "' + destType + '".');
         },
+
         formattedTotalAmount() {
-            if(this.entries.length === 0) {
+            if (this.entries.length === 0) {
                 return formatMoney(this.groupProperties.totalAmount, 'EUR');
             }
             return formatMoney(this.groupProperties.totalAmount, this.entries[0].currency_code ?? 'EUR');
@@ -255,6 +230,7 @@ let transactions = function () {
                 }
             }
         },
+
         filterNativeCurrencies(code) {
             let list = [];
             let currency;
@@ -276,6 +252,7 @@ let transactions = function () {
                 }
             }
         },
+
         changedAmount(e) {
             const index = parseInt(e.target.dataset.index);
             this.entries[index].amount = parseFloat(e.target.value);
@@ -286,7 +263,6 @@ let transactions = function () {
                 }
             }
         },
-
 
         addedSplit() {
             // addedSplit, is called from the HTML
@@ -329,9 +305,11 @@ let transactions = function () {
             });
 
         },
+
         processUpload(event) {
             this.showMessageOrRedirectUser();
         },
+
         processUploadError(event) {
             this.notifications.success.show = false;
             this.notifications.wait.show = false;
@@ -382,12 +360,30 @@ let transactions = function () {
             document.addEventListener('upload-error', (event) => {
                 this.processUploadError(event);
             });
+            document.addEventListener('location-move', (event) => {
+                this.entries[event.detail.index].latitude = event.detail.latitude;
+                this.entries[event.detail.index].longitude = event.detail.longitude;
+            });
+
+            document.addEventListener('location-set', (event) => {
+                this.entries[event.detail.index].hasLocation = true;
+                this.entries[event.detail.index].latitude = event.detail.latitude;
+                this.entries[event.detail.index].longitude = event.detail.longitude;
+                this.entries[event.detail.index].zoomLevel = event.detail.zoomLevel;
+            });
+
+            document.addEventListener('location-zoom', (event) => {
+                this.entries[event.detail.index].hasLocation = true;
+                this.entries[event.detail.index].zoomLevel = event.detail.zoomLevel;
+            });
+
 
             // source can never be expense account
             this.filters.source = ['Asset account', 'Loan', 'Debt', 'Mortgage', 'Revenue account'];
             // destination can never be revenue account
             this.filters.destination = ['Expense account', 'Loan', 'Debt', 'Mortgage', 'Asset account'];
         },
+
         submitTransaction() {
             // reset all messages:
             this.notifications.error.show = false;
@@ -454,6 +450,7 @@ let transactions = function () {
 
             });
         },
+
         showMessageOrRedirectUser() {
             // disable all messages:
             this.notifications.error.show = false;
@@ -475,6 +472,7 @@ let transactions = function () {
             }
             window.location = 'transactions/show/' + this.groupProperties.id + '?transaction_group_id=' + this.groupProperties.id + '&message=created';
         },
+
         parseErrors(data) {
             // disable all messages:
             this.notifications.error.show = true;
@@ -483,10 +481,11 @@ let transactions = function () {
             this.formStates.isSubmitting = false;
             this.notifications.error.text = i18n.t('firefly.errors_submission', {errorMessage: data.message});
 
-            if(data.hasOwnProperty('errors')) {
+            if (data.hasOwnProperty('errors')) {
                 this.entries = spliceErrorsIntoTransactions(i18n, data.errors, this.entries);
             }
         },
+
         addSplit() {
             this.entries.push(createEmptySplit());
 
@@ -506,87 +505,39 @@ let transactions = function () {
                         }
                     }
                 });
-                console.log('in set timeout.');
                 const count = this.entries.length - 1;
-                if(document.querySelector('#location_map_' + count)) {
-                    addLocation(count);
-                }
-            });
-
-
-            //     const count = this.entries.length - 1;
-            //     let map = L.map('location_map_' + count).setView([this.latitude, this.longitude], this.zoomLevel);
-            //
-            //     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            //         maxZoom: 19,
-            //         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap ' + count + '</a>'
-            //     }).addTo(map);
-            //     map.on('click', this.addPointToMap);
-            //     map.on('zoomend', this.saveZoomOfMap);
-            //     this.entries[count].map
-
-            // const id = 'location_map_' + count;
-            // const map = () => {
-            //     const el = document.getElementById(id),
-            //         map = L.map(id).setView([this.latitude, this.longitude], this.zoomLevel)
-            //     L.tileLayer(
-            //         'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            //         {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap '+count+'</a>'}
-            //     ).addTo(map)
-            //     map.on('click', this.addPointToMap);
-            //     map.on('zoomend', this.saveZoomOfMap);
-            //     return map
-            // }
-            // this.entries[count].map = map();
-
-            // }, 250);
-
+                // if(document.querySelector('#location_map_' + count)) { }
+                addLocation(count);
+            }, 150);
         },
+
         removeSplit(index) {
             this.entries.splice(index, 1);
             // fall back to index 0
             const triggerFirstTabEl = document.querySelector('#split-0-tab')
             triggerFirstTabEl.click();
         },
+
         clearLocation(e) {
             e.preventDefault();
+            // remove location from entry, fire event, do nothing else (the map is somebody else's problem).
+
             const target = e.currentTarget;
             const index = parseInt(target.attributes['data-index'].value);
             this.entries[index].hasLocation = false;
-            this.entries[index].marker.remove();
+            this.entries[index].latitude = null;
+            this.entries[index].longitude = null;
+            this.entries[index].zoomLevel = null;
+
+            const removeEvent = new CustomEvent('location-remove', {
+                detail: {
+                    index: index
+                }
+            });
+            document.dispatchEvent(removeEvent);
+
             return false;
         },
-        saveZoomOfMap(e) {
-            let index = parseInt(e.sourceTarget._container.attributes['data-index'].value);
-            let map = document.querySelector('#form')._x_dataStack[0].$data.entries[index].map;
-            document.querySelector('#form')._x_dataStack[0].$data.entries[index].zoomLevel = map.getZoom();
-            console.log('New zoom level: ' + map.getZoom());
-        },
-        addPointToMap(e) {
-            let index = parseInt(e.originalEvent.currentTarget.attributes['data-index'].value);
-            let map = document.querySelector('#form')._x_dataStack[0].$data.entries[index].map;
-            let hasLocation = document.querySelector('#form')._x_dataStack[0].$data.entries[index].hasLocation;
-            console.log('Has location: ' + hasLocation);
-            if (false === hasLocation) {
-                console.log('False!');
-                const marker = new L.marker(e.latlng, {draggable: true});
-                marker.on('dragend', function (event) {
-                    var marker = event.target;
-
-                    var position = marker.getLatLng();
-                    marker.setLatLng(new L.LatLng(position.lat, position.lng), {draggable: 'true'});
-                    document.querySelector('#form')._x_dataStack[0].$data.entries[index].latitude = position.lat;
-                    document.querySelector('#form')._x_dataStack[0].$data.entries[index].longitude = position.lng;
-                });
-
-                marker.addTo(map);
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].hasLocation = true;
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].marker = marker;
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].latitude = e.latlng.lat;
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].longitude = e.latlng.lng;
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].zoomLevel = map.getZoom();
-            }
-        }
     }
 }
 

@@ -1,19 +1,19 @@
 {
-  "_get-748a816c.js": {
-    "file": "assets/get-748a816c.js",
+  "_get-35a1642f.js": {
+    "file": "assets/get-35a1642f.js",
     "imports": [
-      "_load-translations-23553922.js"
+      "_load-translations-9dfbf635.js"
     ],
-    "integrity": "sha384-Q/jXZc5hCLcwX4RjNVIgz80TzISFu81Li1iE5ZNuARydr2CNLRxyl+RFkOj46dPc"
+    "integrity": "sha384-BEa5VVZeih2xh4PjZUO97mCQa3xQaqfJcN7vbBdx7E7UXOQu8naa5/GTkpqhuIWb"
   },
-  "_load-translations-23553922.js": {
-    "file": "assets/load-translations-23553922.js",
+  "_load-translations-9dfbf635.js": {
+    "file": "assets/load-translations-9dfbf635.js",
     "imports": [
-      "_vendor-e194ad60.js"
+      "_vendor-97200597.js"
     ],
-    "integrity": "sha384-pNfWxxe1sV2bLDoKsEg3oGRBm8+DLQ9lmeL4oFpBJBRNUWOUEfAXp0iYoZMT2hPh"
+    "integrity": "sha384-1Co07smilqsxPLnUynKQLLj4Wk+b19/DP6FWySWLQQaY27nZ1RtDoaCPUu4pY8Q/"
   },
-  "_vendor-e194ad60.js": {
+  "_vendor-97200597.js": {
     "assets": [
       "assets/layers-1dbbe9d0.png",
       "assets/layers-2x-066daca8.png",
@@ -22,8 +22,8 @@
     "css": [
       "assets/vendor-49001d3f.css"
     ],
-    "file": "assets/vendor-e194ad60.js",
-    "integrity": "sha384-pBeK5qr0qG0MDsIfi2/X7NE5V+YUERUHOGDEL5JCGFtw8l+EiRe7D2uuMKV4/cxm"
+    "file": "assets/vendor-97200597.js",
+    "integrity": "sha384-p3/nuBVJT3mcAGf7EsH1MjtWO1bxn5euKI3XKEt5TjLKZ9q1uq82P2OAEASLhlCk"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
     "file": "assets/fa-brands-400-5656d596.ttf",
@@ -71,36 +71,36 @@
     "integrity": "sha384-wg83fCOXjBtqzFAWhTL9Sd9vmLUNhfEEzfmNUX9zwv2igKlz/YQbdapF4ObdxF+R"
   },
   "resources/assets/v2/pages/dashboard/dashboard.js": {
-    "file": "assets/dashboard-a55f7472.js",
+    "file": "assets/dashboard-4afa5a98.js",
     "imports": [
-      "_load-translations-23553922.js",
-      "_get-748a816c.js",
-      "_vendor-e194ad60.js"
+      "_load-translations-9dfbf635.js",
+      "_get-35a1642f.js",
+      "_vendor-97200597.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/dashboard/dashboard.js",
-    "integrity": "sha384-4VlBovrF9JYeq8ywA4F+J+x+Rs9OIUKgZNtQuZz+F9XADHlvdaegrAx+MLmFc4zX"
+    "integrity": "sha384-jTx6wOomQpWwYjVUUeE6u/LGq0/zFbYp0pgKXNkzhicFT48r7KCI+G9+9/4hL0Ps"
   },
   "resources/assets/v2/pages/transactions/create.js": {
-    "file": "assets/create-77b1cf47.js",
+    "file": "assets/create-409a9a86.js",
     "imports": [
-      "_load-translations-23553922.js",
-      "_vendor-e194ad60.js",
-      "_get-748a816c.js"
+      "_load-translations-9dfbf635.js",
+      "_vendor-97200597.js",
+      "_get-35a1642f.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/create.js",
-    "integrity": "sha384-sUxpvAj5i3XiHoRluzCByokIDbqnDMb4gjxDxArjYodV3ymR2O9atDpCZtEBJshw"
+    "integrity": "sha384-hv2wsCs+Sl8+Uee2ivc9mBt9HCp5VuTuBBLOFrdde+Z63VMAcTnNDv2eUGYynBvI"
   },
   "resources/assets/v2/pages/transactions/edit.js": {
-    "file": "assets/edit-83707812.js",
+    "file": "assets/edit-81edf6b9.js",
     "imports": [
-      "_load-translations-23553922.js",
-      "_vendor-e194ad60.js"
+      "_load-translations-9dfbf635.js",
+      "_vendor-97200597.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/edit.js",
-    "integrity": "sha384-UkvRogZBJfe4zy9IAmFghhsyJfzcml29moISocvNyF1ujn+Op54PwrMYf5plap6Y"
+    "integrity": "sha384-0S1UAURUA6sHltypKX30GvPla6lpIJdspvfdmXYu6mGO+D4XgdPhW7TI6BvD6aCs"
   },
   "resources/assets/v2/sass/app.scss": {
     "file": "assets/app-fb7b26ec.css",

@@ -18,40 +18,82 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import L from "leaflet";
+
 let maps = [];
+let markers = [];
+
+// listen to event to remove marker:
+
+// location-remove
+
+document.addEventListener('location-remove', (event) => {
+    markers[event.detail.index].remove();
+});
+
+
+function addPointToMap(e) {
+    // index is always 0.
+    // let index = parseInt(e.originalEvent.currentTarget.attributes['data-index'].value);
+    let index = 0;
+    let hasLocation = document.querySelector('#form')._x_dataStack[0].$data.entries[index].hasLocation;
+
+    if (false === hasLocation) {
+        markers[index] = new L.marker(e.latlng, {draggable: true});
+        markers[index].on('dragend', dragEnd);
+        markers[index].addTo(maps[index]);
+
+        const setEvent = new CustomEvent('location-set', {detail: {
+                latitude: e.latlng.lat,
+                longitude: e.latlng.lng,
+                index: index,
+                zoomLevel: maps[index].getZoom()
+            }});
+        document.dispatchEvent(setEvent);
+    }
+}
+
+function saveZoomOfMap(e) {
+    //let index = parseInt(e.sourceTarget._container.attributes['data-index'].value);
+    let index = 0;
+    const zoomEvent = new CustomEvent('location-zoom', {detail: {
+            index: index,
+            zoomLevel: maps[index].getZoom()
+        }});
+    document.dispatchEvent(zoomEvent);
+}
+
+function dragEnd(event) {
+    let marker = event.target;
+    let position = marker.getLatLng();
+    marker.setLatLng(new L.LatLng(position.lat, position.lng), {draggable: 'true'});
+    const moveEvent = new CustomEvent('location-move', {
+        detail: {
+            latitude: position.lat,
+            longitude: position.lng,
+            index: 0
+        }
+    });
+    document.dispatchEvent(moveEvent);
+}
 
 export function addLocation(index) {
-    console.log('add location to index ' + index);
-    if(typeof maps[index] === 'undefined') {
-        console.log('no map yet at index ' + index + ' (location_map_' + index + ')');
-        let holder = document.getElementById('location_map_' + index);
-        //console.log(holder.dataset.longitude);
-        // holder.dataset('latitude');
-        // console.log(holder.dataset('latitude'));
-            maps[index] = L.map(holder).setView([holder.dataset.latitude, holder.dataset.longitude], holder.dataset.zoomLevel);
+    if (index > 0) {
+        console.warn('Corwardly refuse to add a map on split #' + (index + 1));
+        return;
+    }
+    if (typeof maps[index] === 'undefined') {
+        // map holder is always the same:
 
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(maps[index]);
-        //     map.on('click', this.addPointToMap);
-        //     map.on('zoomend', this.saveZoomOfMap);
-        //     this.entries[count].map
+        //let holder = document.getElementById('location_map_' + index);
+        let holder = document.getElementById('location_map');
+        maps[index] = L.map(holder).setView([holder.dataset.latitude, holder.dataset.longitude], holder.dataset.zoomLevel);
 
-        // const id = 'location_map_' + count;
-        // const map = () => {
-        //     const el = document.getElementById(id),
-        //         map = L.map(id).setView([this.latitude, this.longitude], this.zoomLevel)
-        //     L.tileLayer(
-        //         'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-        //         {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap '+count+'</a>'}
-        //     ).addTo(map)
-        //     map.on('click', this.addPointToMap);
-        //     map.on('zoomend', this.saveZoomOfMap);
-        //     return map
-        // }
-        // this.entries[count].map = map();
-
-        // }, 250);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(maps[index]);
+        maps[index].on('click', addPointToMap);
+        maps[index].on('zoomend', saveZoomOfMap);
     }
 }
