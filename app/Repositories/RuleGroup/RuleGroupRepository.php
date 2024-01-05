@@ -153,7 +153,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
     public function destroyAll(): void
     {
-        Log::channel('audit')->info('Delete all rule groups through destroyAll');   $groups = $this->get();
+        Log::channel('audit')->info('Delete all rule groups through destroyAll');
+        $groups = $this->get();
 
         /** @var RuleGroup $group */
         foreach ($groups as $group) {
