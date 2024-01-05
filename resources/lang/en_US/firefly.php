@@ -2267,6 +2267,7 @@ return [
     'average'                                             => 'Average',
     'balanceFor'                                          => 'Balance for :name',
     'no_tags'                                             => '(no tags)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',

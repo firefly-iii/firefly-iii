@@ -46,6 +46,8 @@ import {
 } from "./shared/autocomplete-functions.js";
 import {processAttachments} from "./shared/process-attachments.js";
 import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
+import Tags from "bootstrap5-tags";
+import {addLocation} from "./shared/manage-locations.js";
 
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
@@ -487,22 +489,31 @@ let transactions = function () {
         },
         addSplit() {
             this.entries.push(createEmptySplit());
-            // setTimeout(() => {
-            //     // render tags:
-            //     Tags.init('select.ac-tags', {
-            //         allowClear: true,
-            //         server: urls.tag,
-            //         liveServer: true,
-            //         clearEnd: true,
-            //         allowNew: true,
-            //         notFoundMessage: '(nothing found)',
-            //         noCache: true,
-            //         fetchOptions: {
-            //             headers: {
-            //                 'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-            //             }
-            //         }
-            //     });
+
+            setTimeout(() => {
+                // render tags:
+                Tags.init('select.ac-tags', {
+                    allowClear: true,
+                    server: urls.tag,
+                    liveServer: true,
+                    clearEnd: true,
+                    allowNew: true,
+                    notFoundMessage: i18n.t('firefly.nothing_found'),
+                    noCache: true,
+                    fetchOptions: {
+                        headers: {
+                            'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+                        }
+                    }
+                });
+                console.log('in set timeout.');
+                const count = this.entries.length - 1;
+                if(document.querySelector('#location_map_' + count)) {
+                    addLocation(count);
+                }
+            });
+
+
             //     const count = this.entries.length - 1;
             //     let map = L.map('location_map_' + count).setView([this.latitude, this.longitude], this.zoomLevel);
             //
