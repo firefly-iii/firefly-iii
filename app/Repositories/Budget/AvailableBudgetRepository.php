@@ -30,6 +30,7 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AvailableBudgetRepository
@@ -79,6 +80,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
      */
     public function destroyAll(): void
     {
+        Log::channel('audit')->info('Delete all available budgets through destroyAll');
         $this->user->availableBudgets()->delete();
     }
 

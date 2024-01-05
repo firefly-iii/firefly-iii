@@ -280,12 +280,12 @@ class RecurrenceFormRequest extends FormRequest
         if ('deposit' === $type) {
             $throwError    = false;
             $sourceId      = (int) $data['deposit_source_id'];
-            $destinationId = (int) $data['destination_id'];
+            $destinationId = (int) ($data['destination_id'] ?? 0);
         }
         if ('transfer' === $type) {
             $throwError    = false;
             $sourceId      = (int) $data['source_id'];
-            $destinationId = (int) $data['destination_id'];
+            $destinationId = (int) ($data['destination_id'] ?? 0);
         }
         if (true === $throwError) {
             throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->convertString('transaction_type')));

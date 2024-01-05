@@ -42,6 +42,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BillRepository.
@@ -105,6 +106,7 @@ class BillRepository implements BillRepositoryInterface
 
     public function destroyAll(): void
     {
+        Log::channel('audit')->info('Delete all bills through destroyAll');
         $this->user->bills()->delete();
     }
 

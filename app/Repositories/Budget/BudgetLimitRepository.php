@@ -33,6 +33,7 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BudgetLimitRepository
@@ -108,6 +109,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
+            Log::channel('audit')->info(sprintf('Delete all budget limits of budget #%d ("%s") through destroyAll', $budget->id, $budget->name));
             $budget->budgetlimits()->delete();
         }
     }

@@ -36,6 +36,7 @@ use FireflyIII\Services\Internal\Update\CategoryUpdateService;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CategoryRepository.
@@ -88,6 +89,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             RuleAction::where('action_type', 'set_category')->where('action_value', $category->name)->delete();
             $category->delete();
         }
+        Log::channel('audit')->info('Delete all categories through destroyAll');
     }
 
     /**

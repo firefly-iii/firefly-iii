@@ -31,6 +31,7 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RuleGroupRepository.
@@ -152,7 +153,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
     public function destroyAll(): void
     {
-        $groups = $this->get();
+        Log::channel('audit')->info('Delete all rule groups through destroyAll');   $groups = $this->get();
 
         /** @var RuleGroup $group */
         foreach ($groups as $group) {
