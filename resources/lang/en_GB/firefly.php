@@ -1299,6 +1299,7 @@ return [
     'no_location_set'                                     => 'No location set.',
     'meta_data'                                           => 'Meta data',
     'location'                                            => 'Location',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Without date',
     'result'                                              => 'Result',
     'sums_apply_to_range'                                 => 'All sums apply to the selected range',
@@ -1950,6 +1951,7 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
     'wait_attachments'                                    => 'Please wait for the attachments to upload.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
@@ -2339,6 +2341,7 @@ return [
     'average'                                             => 'Average',
     'balanceFor'                                          => 'Balance for :name',
     'no_tags'                                             => '(no tags)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',

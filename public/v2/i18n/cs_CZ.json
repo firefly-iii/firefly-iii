@@ -7,7 +7,7 @@
             "spent": "Utraceno",
             "left": "Zb\u00fdv\u00e1",
             "paid": "Zaplaceno",
-            "errors_submission": "There was something wrong with your submission. Please check out the errors.",
+            "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
             "unpaid": "Nezaplaceno",
             "default_group_title_name_plain": "ungrouped",
             "subscriptions_in_group": "Subscriptions in group \"%{title}\"",

@@ -6,7 +6,7 @@
         "flash_success": "\uc131\uacf5!",
         "close": "\ub2eb\uae30",
         "split_transaction_title": "\ubd84\ud560 \uac70\ub798\uc5d0 \ub300\ud55c \uc124\uba85",
-        "errors_submission": "\uc81c\ucd9c\ud55c \ub0b4\uc6a9\uc5d0 \ubb38\uc81c\uac00 \uc788\uc2b5\ub2c8\ub2e4. \uc624\ub958\ub97c \ud655\uc778\ud574 \uc8fc\uc138\uc694.",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "split": "\ub098\ub204\uae30",
         "single_split": "\ub098\ub204\uae30",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">\uac70\ub798 #{ID} (\"{title}\")<\/a>\uac00 \uc800\uc7a5\ub418\uc5c8\uc2b5\ub2c8\ub2e4.",

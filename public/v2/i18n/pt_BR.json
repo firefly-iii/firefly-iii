@@ -7,7 +7,7 @@
             "spent": "Gasto",
             "left": "Restante",
             "paid": "Pago",
-            "errors_submission": "H\u00e1 algo de errado com o seu envio. Por favor, verifique os erros abaixo.",
+            "errors_submission": "Alguma coisa deu errado com seu envio. Por favor, verifique os erros abaixo: %{errorMessage}",
             "unpaid": "N\u00e3o pago",
             "default_group_title_name_plain": "sem grupo",
             "subscriptions_in_group": "Assinaturas no grupo \"%{title}\"",

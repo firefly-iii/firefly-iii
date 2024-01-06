@@ -1299,6 +1299,7 @@ return [
     'no_location_set'                                     => 'Zonder plaats',
     'meta_data'                                           => 'Metagegevens',
     'location'                                            => 'Plaats',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Zonder datum',
     'result'                                              => 'Resultaat',
     'sums_apply_to_range'                                 => 'Alle sommen gelden voor het geselecteerde bereik',
@@ -1950,6 +1951,7 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
     'wait_attachments'                                    => 'Please wait for the attachments to upload.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
@@ -2339,6 +2341,7 @@ return [
     'average'                                             => 'Gemiddeld',
     'balanceFor'                                          => 'Saldo op :name',
     'no_tags'                                             => '(geen tags)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Gebeurtenisgeschiedenis',

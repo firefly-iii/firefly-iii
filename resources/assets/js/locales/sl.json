@@ -6,7 +6,7 @@
         "flash_success": "Uspelo je!",
         "close": "Zapri",
         "split_transaction_title": "Opis razdeljene transakcije",
-        "errors_submission": "Nekaj je bilo narobe z va\u0161o predlo\u017eitvijo. Preverite napake.",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "split": "Razdeli",
         "single_split": "Razdeli",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transakcija \u0161t. #{ID} (\"{title}\")<\/a> je bila shranjena.",

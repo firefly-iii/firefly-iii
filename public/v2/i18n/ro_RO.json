@@ -7,7 +7,7 @@
             "spent": "Cheltuit",
             "left": "R\u0103mas",
             "paid": "Pl\u0103tit",
-            "errors_submission": "A fost ceva \u00een neregul\u0103 cu depunerea ta. Te rug\u0103m s\u0103 verifici erorile.",
+            "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
             "unpaid": "Nepl\u0103tit",
             "default_group_title_name_plain": "ungrouped",
             "subscriptions_in_group": "Subscriptions in group \"%{title}\"",

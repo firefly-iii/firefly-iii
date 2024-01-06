@@ -1299,12 +1299,13 @@ return [
     'no_location_set'                                     => 'Nessuna posizione impostata.',
     'meta_data'                                           => 'Meta dati',
     'location'                                            => 'Posizione',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Senza data',
     'result'                                              => 'Risultato',
     'sums_apply_to_range'                                 => 'Tutte le somme si applicano all\'intervallo selezionato',
     'mapbox_api_key'                                      => 'Per utilizzare la mappa, ottieni una chiave API da <a href="https://www.mapbox.com/">Mapbox</a>. Apri il tuo file <code>.env</code> e inserisci questo codice dopo <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Clicca con il tasto destro o premi a lungo per impostare la posizione dell\'oggetto.',
-    'click_tap_location'                                  => 'Click or tap the map to add a location',
+    'click_tap_location'                                  => 'Fare clic o toccare la mappa per aggiungere una posizione',
     'clear_location'                                      => 'Rimuovi dalla posizione',
     'delete_all_selected_tags'                            => 'Elimina tutte le etichette selezionate',
     'select_tags_to_delete'                               => 'Non dimenticare di selezionare qualche etichetta.',
@@ -1950,11 +1951,12 @@ return [
  */
 
     // transactions:
-    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
-    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
-    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
-    'amount_destination_account'                          => 'Amount in the currency of the destination account',
-    'edit_transaction_title'                              => 'Edit transaction ":description"',
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Attendere che gli allegati vengano caricati.',
+    'errors_upload'                                       => 'Caricamento fallito. Controlla la console del tuo browser per l\'errore.',
+    'amount_foreign_if'                                   => 'Importo in valuta estera, nel caso',
+    'amount_destination_account'                          => 'Importo nella valuta del conto di destinazione',
+    'edit_transaction_title'                              => 'Modifica transazione ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => 'Aggiorna prelievo',
     'update_deposit'                                      => 'Aggiorna entrata',
@@ -2339,6 +2341,7 @@ return [
     'average'                                             => 'Media',
     'balanceFor'                                          => 'Saldo per :name',
     'no_tags'                                             => '(nessuna etichetta)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',
@@ -2551,7 +2554,7 @@ return [
     'after_update_create_another'                         => 'Dopo l\'aggiornamento, torna qui per continuare la modifica.',
     'store_as_new'                                        => 'Salva come nuova transazione invece di aggiornarla.',
     'reset_after'                                         => 'Resetta il modulo dopo l\'invio',
-    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission'                                   => 'Errore durante l\'invio. Controlla gli errori segnalati qui sotto: %{errorMessage}',
     'transaction_expand_split'                            => 'Espandi suddivisione',
     'transaction_collapse_split'                          => 'Comprimi suddivisione',
 

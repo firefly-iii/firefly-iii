@@ -6,7 +6,7 @@
         "flash_success": "\u00c8xit!",
         "close": "Tancar",
         "split_transaction_title": "Descripci\u00f3 de la transacci\u00f3 dividida",
-        "errors_submission": "Ha hagut un error amb el teu enviament. Per favor, revisa els errors.",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "split": "Dividir",
         "single_split": "Divisi\u00f3",
         "transaction_stored_link": "La <a href=\"transactions\/show\/{ID}\">Transacci\u00f3 #{ID} (\"{title}\")<\/a> s'ha desat.",

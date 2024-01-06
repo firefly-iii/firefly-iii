@@ -54,19 +54,20 @@ class TransactionGroupTransformer extends AbstractTransformer
     private ExchangeRateConverter $converter;
 
     //    private array                 $currencies        = [];
-//    private array                 $transactionTypes  = [];
-//    private array                 $meta              = [];
-//    private array                 $notes             = [];
-//    private array                 $locations         = [];
-//    private array                 $tags              = [];
-//    private array                 $amounts           = [];
-//    private array                 $foreignAmounts    = [];
-//    private array                 $journalCurrencies = [];
-//    private array                 $foreignCurrencies = [];
+    //    private array                 $transactionTypes  = [];
+    //    private array                 $meta              = [];
+    //    private array                 $notes             = [];
+    //    private array                 $locations         = [];
+    //    private array                 $tags              = [];
+    //    private array                 $amounts           = [];
+    //    private array                 $foreignAmounts    = [];
+    //    private array                 $journalCurrencies = [];
+    //    private array                 $foreignCurrencies = [];
 
     public function collectMetaData(Collection $objects): void
     {
         $collectForObjects = false;
+
         /** @var array $object */
         foreach ($objects as $object) {
             if (is_array($object)) {
@@ -78,8 +79,8 @@ class TransactionGroupTransformer extends AbstractTransformer
             }
         }
 
-        $this->default   = app('amount')->getDefaultCurrency();
-        $this->converter = new ExchangeRateConverter();
+        $this->default     = app('amount')->getDefaultCurrency();
+        $this->converter   = new ExchangeRateConverter();
 
         $this->collectAllMetaData();
         $this->collectAllNotes();
@@ -87,16 +88,15 @@ class TransactionGroupTransformer extends AbstractTransformer
         $this->collectAllTags();
         if ($collectForObjects) {
             $this->collectAllCurrencies();
-//            $this->collectAllAmounts();
-//            $this->collectTransactionTypes();
-//            $this->collectAccounts();
+            //            $this->collectAllAmounts();
+            //            $this->collectTransactionTypes();
+            //            $this->collectAccounts();
             // source accounts
             // destination accounts
-
         }
     }
 
-    public function transform(array | TransactionGroup $group): array
+    public function transform(array|TransactionGroup $group): array
     {
         if (is_array($group)) {
             $first = reset($group['transactions']);
@@ -117,6 +117,7 @@ class TransactionGroupTransformer extends AbstractTransformer
                 ],
             ];
         }
+
         return [
             'id'           => (string) $group->id,
             'created_at'   => $group->created_at->toAtomString(),
@@ -137,18 +138,22 @@ class TransactionGroupTransformer extends AbstractTransformer
     private function transformJournals(TransactionGroup $group): array
     {
         $return = [];
+
         /** @var TransactionJournal $journal */
         foreach ($group->transactionJournals as $journal) {
             $return[] = $this->transformJournal($journal);
         }
+
         return $return;
     }
 
     private function transformJournal(TransactionJournal $journal): array
     {
-        $id = $journal->id;
-        /** @var TransactionCurrency|null $foreignCurrency */
-        $foreignCurrency = null;
+        $id                  = $journal->id;
+
+        /** @var null|TransactionCurrency $foreignCurrency */
+        $foreignCurrency     = null;
+
         /** @var TransactionCurrency $currency */
         $currency            = $this->currencies[$this->journals[$id]['currency_id']];
         $nativeForeignAmount = null;
@@ -162,11 +167,11 @@ class TransactionGroupTransformer extends AbstractTransformer
             $nativeForeignAmount = $this->converter->convert($this->default, $foreignCurrency, $journal->date, $foreignAmount);
         }
 
-        $nativeAmount = $this->converter->convert($this->default, $currency, $journal->date, $amount);
+        $nativeAmount        = $this->converter->convert($this->default, $currency, $journal->date, $amount);
 
-        $longitude = null;
-        $latitude  = null;
-        $zoomLevel = null;
+        $longitude           = null;
+        $latitude            = null;
+        $zoomLevel           = null;
         if (array_key_exists('location', $this->journals[$id])) {
             $latitude  = (string) $this->journals[$id]['location']['latitude'];
             $longitude = (string) $this->journals[$id]['location']['longitude'];
@@ -204,53 +209,53 @@ class TransactionGroupTransformer extends AbstractTransformer
             'foreign_currency_symbol'         => $foreignCurrency?->symbol,
             'foreign_currency_decimal_places' => $foreignCurrency?->decimal_places,
 
-            'description' => $journal->description,
-            'source_id'   => (string) $this->journals[$id]['source_account_id'],
-            'source_name' => $this->journals[$id]['source_account_name'],
-            'source_iban' => $this->journals[$id]['source_account_iban'],
-            'source_type' => $this->journals[$id]['source_account_type'],
+            'description'                     => $journal->description,
+            'source_id'                       => (string) $this->journals[$id]['source_account_id'],
+            'source_name'                     => $this->journals[$id]['source_account_name'],
+            'source_iban'                     => $this->journals[$id]['source_account_iban'],
+            'source_type'                     => $this->journals[$id]['source_account_type'],
 
-            'destination_id'   => (string) $this->journals[$id]['destination_account_id'],
-            'destination_name' => $this->journals[$id]['destination_account_name'],
-            'destination_iban' => $this->journals[$id]['destination_account_iban'],
-            'destination_type' => $this->journals[$id]['destination_account_type'],
+            'destination_id'                  => (string) $this->journals[$id]['destination_account_id'],
+            'destination_name'                => $this->journals[$id]['destination_account_name'],
+            'destination_iban'                => $this->journals[$id]['destination_account_iban'],
+            'destination_type'                => $this->journals[$id]['destination_account_type'],
 
-            'budget_id'          => $this->journals[$id]['budget_id'],
-            'budget_name'        => $this->journals[$id]['budget_name'],
-            'category_id'        => $this->journals[$id]['category_id'],
-            'category_name'      => $this->journals[$id]['category_name'],
-            'bill_id'            => $this->journals[$id]['bill_id'],
-            'bill_name'          => $this->journals[$id]['bill_name'],
-            'reconciled'         => $this->journals[$id]['reconciled'],
-            'notes'              => $this->journals[$id]['notes'] ?? null,
-            'tags'               => $this->journals[$id]['tags'] ?? [],
-            'internal_reference' => $meta['internal_reference'],
-            'external_id'        => $meta['external_id'],
-            'original_source'    => $meta['original_source'],
-            'recurrence_id'      => $meta['recurrence_id'],
-            'recurrence_total'   => $meta['recurrence_total'],
-            'recurrence_count'   => $meta['recurrence_count'],
-            'external_url'       => $meta['external_url'],
-            'import_hash_v2'     => $meta['import_hash_v2'],
-            'sepa_cc'            => $meta['sepa_cc'],
-            'sepa_ct_op'         => $meta['sepa_ct_op'],
-            'sepa_ct_id'         => $meta['sepa_ct_id'],
-            'sepa_db'            => $meta['sepa_db'],
-            'sepa_country'       => $meta['sepa_country'],
-            'sepa_ep'            => $meta['sepa_ep'],
-            'sepa_ci'            => $meta['sepa_ci'],
-            'sepa_batch_id'      => $meta['sepa_batch_id'],
-            'interest_date'      => $this->date($meta['interest_date']),
-            'book_date'          => $this->date($meta['book_date']),
-            'process_date'       => $this->date($meta['process_date']),
-            'due_date'           => $this->date($meta['due_date']),
-            'payment_date'       => $this->date($meta['payment_date']),
-            'invoice_date'       => $this->date($meta['invoice_date']),
+            'budget_id'                       => $this->journals[$id]['budget_id'],
+            'budget_name'                     => $this->journals[$id]['budget_name'],
+            'category_id'                     => $this->journals[$id]['category_id'],
+            'category_name'                   => $this->journals[$id]['category_name'],
+            'bill_id'                         => $this->journals[$id]['bill_id'],
+            'bill_name'                       => $this->journals[$id]['bill_name'],
+            'reconciled'                      => $this->journals[$id]['reconciled'],
+            'notes'                           => $this->journals[$id]['notes'] ?? null,
+            'tags'                            => $this->journals[$id]['tags'] ?? [],
+            'internal_reference'              => $meta['internal_reference'],
+            'external_id'                     => $meta['external_id'],
+            'original_source'                 => $meta['original_source'],
+            'recurrence_id'                   => $meta['recurrence_id'],
+            'recurrence_total'                => $meta['recurrence_total'],
+            'recurrence_count'                => $meta['recurrence_count'],
+            'external_url'                    => $meta['external_url'],
+            'import_hash_v2'                  => $meta['import_hash_v2'],
+            'sepa_cc'                         => $meta['sepa_cc'],
+            'sepa_ct_op'                      => $meta['sepa_ct_op'],
+            'sepa_ct_id'                      => $meta['sepa_ct_id'],
+            'sepa_db'                         => $meta['sepa_db'],
+            'sepa_country'                    => $meta['sepa_country'],
+            'sepa_ep'                         => $meta['sepa_ep'],
+            'sepa_ci'                         => $meta['sepa_ci'],
+            'sepa_batch_id'                   => $meta['sepa_batch_id'],
+            'interest_date'                   => $this->date($meta['interest_date']),
+            'book_date'                       => $this->date($meta['book_date']),
+            'process_date'                    => $this->date($meta['process_date']),
+            'due_date'                        => $this->date($meta['due_date']),
+            'payment_date'                    => $this->date($meta['payment_date']),
+            'invoice_date'                    => $this->date($meta['invoice_date']),
 
             // location data
-            'longitude'          => $longitude,
-            'latitude'           => $latitude,
-            'zoom_level'         => $zoomLevel,
+            'longitude'                       => $longitude,
+            'latitude'                        => $latitude,
+            'zoom_level'                      => $zoomLevel,
             //
             //            'has_attachments' => $this->hasAttachments((int) $row['transaction_journal_id']),
         ];
@@ -275,10 +280,10 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     private function transformTransaction(array $transaction): array
     {
-        $transaction = new NullArrayObject($transaction);
-        $type        = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
-        $journalId   = (int) $transaction['transaction_journal_id'];
-        $meta        = new NullArrayObject($this->meta[$journalId] ?? []);
+        $transaction         = new NullArrayObject($transaction);
+        $type                = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
+        $journalId           = (int) $transaction['transaction_journal_id'];
+        $meta                = new NullArrayObject($this->meta[$journalId] ?? []);
 
         /**
          * Convert and use amount:
@@ -295,9 +300,9 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
         $this->converter->summarize();
 
-        $longitude = null;
-        $latitude  = null;
-        $zoomLevel = null;
+        $longitude           = null;
+        $latitude            = null;
+        $zoomLevel           = null;
         if (array_key_exists('location', $this->journals[$journalId])) {
             $latitude  = (string) $this->journals[$journalId]['location']['latitude'];
             $longitude = (string) $this->journals[$journalId]['location']['longitude'];
@@ -469,7 +474,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         /** @var TransactionJournalMeta $entry */
         foreach ($meta as $entry) {
             $id                                        = $entry->transaction_journal_id;
-            $this->journals[$id]['meta']               ??= [];
+            $this->journals[$id]['meta'] ??= [];
             $this->journals[$id]['meta'][$entry->name] = $entry->data;
         }
     }
@@ -486,13 +491,11 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
     }
 
-    /**
-     * @return void
-     */
     private function collectAllLocations(): void
     {
         // grab all locations for all journals:
         $locations = Location::whereLocatableType(TransactionJournal::class)->whereIn('locatable_id', array_keys($this->journals))->get();
+
         /** @var Location $location */
         foreach ($locations as $location) {
             $id                              = $location->locatable_id;
@@ -508,9 +511,10 @@ class TransactionGroupTransformer extends AbstractTransformer
     {
         // grab all tags for all journals:
         $tags = DB::table('tag_transaction_journal')
-                  ->leftJoin('tags', 'tags.id', 'tag_transaction_journal.tag_id')
-                  ->whereIn('tag_transaction_journal.transaction_journal_id', array_keys($this->journals))
-                  ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag']);
+            ->leftJoin('tags', 'tags.id', 'tag_transaction_journal.tag_id')
+            ->whereIn('tag_transaction_journal.transaction_journal_id', array_keys($this->journals))
+            ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag'])
+        ;
 
         /** @var \stdClass $tag */
         foreach ($tags as $tag) {
@@ -546,16 +550,16 @@ class TransactionGroupTransformer extends AbstractTransformer
             $this->journals[$id]['bill_name']           = null;
 
             // collect budget:
-            /** @var Budget|null $budget */
-            $budget = $journal->budgets()->first();
+            /** @var null|Budget $budget */
+            $budget                                     = $journal->budgets()->first();
             if (null !== $budget) {
                 $this->journals[$id]['budget_id']   = (string) $budget->id;
                 $this->journals[$id]['budget_name'] = $budget->name;
             }
 
             // collect category:
-            /** @var Category|null $category */
-            $category = $journal->categories()->first();
+            /** @var null|Category $category */
+            $category                                   = $journal->categories()->first();
             if (null !== $category) {
                 $this->journals[$id]['category_id']   = (string) $category->id;
                 $this->journals[$id]['category_name'] = $category->name;
@@ -568,38 +572,38 @@ class TransactionGroupTransformer extends AbstractTransformer
                 $this->journals[$id]['bill_name'] = $bill->name;
             }
 
-
             /** @var Transaction $transaction */
             foreach ($journal->transactions as $transaction) {
                 if (-1 === bccomp($transaction->amount, '0')) {
                     // only collect source account info
-                    $account                                       = $transaction->account;
+                    $account                                    = $transaction->account;
                     $this->accountTypes[$account->account_type_id] ??= $account->accountType->type;
-                    $this->journals[$id]['source_account_name']    = $account->name;
-                    $this->journals[$id]['source_account_iban']    = $account->iban;
-                    $this->journals[$id]['source_account_type']    = $this->accountTypes[$account->account_type_id];
-                    $this->journals[$id]['source_account_id']      = $transaction->account_id;
-                    $this->journals[$id]['reconciled']             = $transaction->reconciled;
+                    $this->journals[$id]['source_account_name'] = $account->name;
+                    $this->journals[$id]['source_account_iban'] = $account->iban;
+                    $this->journals[$id]['source_account_type'] = $this->accountTypes[$account->account_type_id];
+                    $this->journals[$id]['source_account_id']   = $transaction->account_id;
+                    $this->journals[$id]['reconciled']          = $transaction->reconciled;
+
                     continue;
                 }
 
                 // add account
                 $account                                         = $transaction->account;
-                $this->accountTypes[$account->account_type_id]   ??= $account->accountType->type;
+                $this->accountTypes[$account->account_type_id] ??= $account->accountType->type;
                 $this->journals[$id]['destination_account_name'] = $account->name;
                 $this->journals[$id]['destination_account_iban'] = $account->iban;
                 $this->journals[$id]['destination_account_type'] = $this->accountTypes[$account->account_type_id];
                 $this->journals[$id]['destination_account_id']   = $transaction->account_id;
 
                 // find and set currency
-                $currencyId                         = $transaction->transaction_currency_id;
-                $this->currencies[$currencyId]      ??= $transaction->transactionCurrency;
-                $this->journals[$id]['currency_id'] = $currencyId;
-                $this->journals[$id]['amount']      = $transaction->amount;
+                $currencyId                                      = $transaction->transaction_currency_id;
+                $this->currencies[$currencyId]                 ??= $transaction->transactionCurrency;
+                $this->journals[$id]['currency_id']              = $currencyId;
+                $this->journals[$id]['amount']                   = $transaction->amount;
                 // find and set foreign currency
                 if (null !== $transaction->foreign_currency_id) {
                     $foreignCurrencyId                          = $transaction->foreign_currency_id;
-                    $this->currencies[$foreignCurrencyId]       ??= $transaction->foreignCurrency;
+                    $this->currencies[$foreignCurrencyId] ??= $transaction->foreignCurrency;
                     $this->journals[$id]['foreign_currency_id'] = $foreignCurrencyId;
                     $this->journals[$id]['foreign_amount']      = $transaction->foreign_amount;
                 }

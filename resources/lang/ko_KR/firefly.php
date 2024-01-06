@@ -1299,6 +1299,7 @@ return [
     'no_location_set'                                     => '설정된 위치가 없습니다.',
     'meta_data'                                           => '메타데이터',
     'location'                                            => '위치',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => '날짜 없음',
     'result'                                              => '결과',
     'sums_apply_to_range'                                 => '모든 합계는 선택한 범위에 적용됩니다',
@@ -1950,6 +1951,7 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
     'wait_attachments'                                    => 'Please wait for the attachments to upload.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
@@ -2339,6 +2341,7 @@ return [
     'average'                                             => '평균',
     'balanceFor'                                          => ':name 잔고',
     'no_tags'                                             => '(태그 없음)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => '이벤트 기록',

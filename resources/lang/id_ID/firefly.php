@@ -1299,6 +1299,7 @@ return [
     'no_location_set'                                     => 'Tidak ada lokasi yang ditetapkan',
     'meta_data'                                           => 'Data meta',
     'location'                                            => 'Lokasi',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Tanpa tanggal',
     'result'                                              => 'Hasil',
     'sums_apply_to_range'                                 => 'Semua jumlah berlaku untuk rentang yang dipilih',
@@ -1950,6 +1951,7 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
     'wait_attachments'                                    => 'Please wait for the attachments to upload.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
@@ -2339,6 +2341,7 @@ return [
     'average'                                             => 'Rata-rata',
     'balanceFor'                                          => 'Saldo untuk :name',
     'no_tags'                                             => '(no tags)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',

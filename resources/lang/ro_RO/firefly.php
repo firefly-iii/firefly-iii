@@ -1299,6 +1299,7 @@ return [
     'no_location_set'                                     => 'Nu a fost setată nicio locație.',
     'meta_data'                                           => 'Date meta',
     'location'                                            => 'Locație',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Fără data',
     'result'                                              => 'Rezultat',
     'sums_apply_to_range'                                 => 'Toate sumele se aplică gamei selectate',
@@ -1950,6 +1951,7 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
     'wait_attachments'                                    => 'Please wait for the attachments to upload.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
@@ -2339,6 +2341,7 @@ return [
     'average'                                             => 'In medie',
     'balanceFor'                                          => 'Balanta pentru :name',
     'no_tags'                                             => '(fără etichete)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',

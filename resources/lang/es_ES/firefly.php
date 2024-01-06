@@ -1299,12 +1299,13 @@ return [
     'no_location_set'                                     => 'Ubicación no establecida.',
     'meta_data'                                           => 'Meta Datos',
     'location'                                            => 'Ubicación',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Sin fecha',
     'result'                                              => 'Resultado',
     'sums_apply_to_range'                                 => 'Todas las sumas aplican al rango seleccionado',
     'mapbox_api_key'                                      => 'Para usar el mapa, obtenga una clave API de <a href="https://www.mapbox.com/">Mapbox</a>Abra su<code>.env</code> y introduzca este código después de <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Haga clic o pulse de forma prolongada para definir la ubicación del objeto.',
-    'click_tap_location'                                  => 'Click or tap the map to add a location',
+    'click_tap_location'                                  => 'Haga clic o toque el mapa para agregar una ubicación',
     'clear_location'                                      => 'Eliminar ubicación',
     'delete_all_selected_tags'                            => 'Eliminar todas las etiquetas seleccionadas',
     'select_tags_to_delete'                               => 'No olvide seleccionar algunas etiquetas.',
@@ -1950,11 +1951,12 @@ return [
  */
 
     // transactions:
-    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
-    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Por favor, espere a que se carguen los archivos adjuntos.',
+    'errors_upload'                                       => 'La carga ha fallado. Por favor, comprueba el error en la consola de tu navegador.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
     'amount_destination_account'                          => 'Amount in the currency of the destination account',
-    'edit_transaction_title'                              => 'Edit transaction ":description"',
+    'edit_transaction_title'                              => 'Editar transacción ":description"',
     'unreconcile'                                         => 'Deshacer reconciliación',
     'update_withdrawal'                                   => 'Actualización de gasto',
     'update_deposit'                                      => 'Actualizar ingreso',
@@ -2339,6 +2341,7 @@ return [
     'average'                                             => 'Promedio',
     'balanceFor'                                          => 'Saldo por :name',
     'no_tags'                                             => '(sin etiquetas)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Historial de eventos',
@@ -2551,7 +2554,7 @@ return [
     'after_update_create_another'                         => 'Después de actualizar, vuelve aquí para continuar editando.',
     'store_as_new'                                        => 'Almacenar como una nueva transacción en lugar de actualizar.',
     'reset_after'                                         => 'Restablecer formulario después del envío',
-    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission'                                   => 'Hubo un error en tu envío. Por favor, revisa los siguientes errores: %{errorMessage}',
     'transaction_expand_split'                            => 'Expandir división',
     'transaction_collapse_split'                          => 'Colapsar división',
 

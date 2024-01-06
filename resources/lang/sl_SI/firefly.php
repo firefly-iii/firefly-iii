@@ -1299,6 +1299,7 @@ return [
     'no_location_set'                                     => 'Lokacija ni nastavljena.',
     'meta_data'                                           => 'Meta podatki',
     'location'                                            => 'Lokacija',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Brez datuma',
     'result'                                              => 'Rezultati',
     'sums_apply_to_range'                                 => 'Vsi zneski veljajo za izbran interval',
@@ -1950,6 +1951,7 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
     'wait_attachments'                                    => 'Please wait for the attachments to upload.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
@@ -2339,6 +2341,7 @@ return [
     'average'                                             => 'Povprečno',
     'balanceFor'                                          => 'Stanje za :name',
     'no_tags'                                             => '(ni oznak)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Zgodovina dogodkov',

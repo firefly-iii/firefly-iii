@@ -1299,12 +1299,13 @@ return [
     'no_location_set'                                     => 'Aucun emplacement défini.',
     'meta_data'                                           => 'Métadonnées',
     'location'                                            => 'Emplacement',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Sans date',
     'result'                                              => 'Résultat',
     'sums_apply_to_range'                                 => 'Toutes les sommes s\'appliquent à l\'ensemble sélectionné',
     'mapbox_api_key'                                      => 'Pour utiliser la carte, obtenez une clé d\'API auprès de <a href="https://www.mapbox.com/">Mapbox</a>. Ouvrez votre fichier <code>.env</code> et saisissez le code après <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Faites un clic droit ou appuyez longuement pour définir l\'emplacement de l\'objet.',
-    'click_tap_location'                                  => 'Click or tap the map to add a location',
+    'click_tap_location'                                  => 'Cliquez ou appuyez sur la carte pour ajouter un emplacement',
     'clear_location'                                      => 'Effacer la localisation',
     'delete_all_selected_tags'                            => 'Supprimer tous les tags sélectionnés',
     'select_tags_to_delete'                               => 'N\'oubliez pas de sélectionner des tags.',
@@ -1950,11 +1951,12 @@ return [
  */
 
     // transactions:
-    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
-    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
-    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
-    'amount_destination_account'                          => 'Amount in the currency of the destination account',
-    'edit_transaction_title'                              => 'Edit transaction ":description"',
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Veuillez patienter pendant le chargement des pièces jointes.',
+    'errors_upload'                                       => 'L\'envoi a échoué. Veuillez consulter l\'erreur dans votre console de navigateur.',
+    'amount_foreign_if'                                   => 'Montant en devise étrangère, le cas échéant',
+    'amount_destination_account'                          => 'Montant dans la devise du compte de destination',
+    'edit_transaction_title'                              => 'Modifier l\'opération ":description"',
     'unreconcile'                                         => 'Annuler le rapprochement',
     'update_withdrawal'                                   => 'Mettre à jour une dépense',
     'update_deposit'                                      => 'Mettre à jour un dépôt',
@@ -2339,6 +2341,7 @@ return [
     'average'                                             => 'Moyenne',
     'balanceFor'                                          => 'Solde pour :name',
     'no_tags'                                             => '(pas de mot-clé)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Historique des événements',
@@ -2551,7 +2554,7 @@ return [
     'after_update_create_another'                         => 'Après la mise à jour, revenir ici pour continuer l\'édition.',
     'store_as_new'                                        => 'Enregistrer comme une nouvelle opération au lieu de mettre à jour.',
     'reset_after'                                         => 'Réinitialiser le formulaire après soumission',
-    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission'                                   => 'Certaines informations ne sont pas correctes dans votre formulaire. Veuillez vérifier les erreurs ci-dessous : %{errorMessage}',
     'transaction_expand_split'                            => 'Développer la ventilation',
     'transaction_collapse_split'                          => 'Réduire la ventilation',
 

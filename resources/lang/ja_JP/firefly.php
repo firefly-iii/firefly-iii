@@ -1299,6 +1299,7 @@ return [
     'no_location_set'                                     => '場所が設定されていません。',
     'meta_data'                                           => 'メタデータ',
     'location'                                            => '場所',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => '日付なし',
     'result'                                              => '結果',
     'sums_apply_to_range'                                 => '選択した範囲にすべての合計が適用されます',
@@ -1950,6 +1951,7 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
     'wait_attachments'                                    => 'Please wait for the attachments to upload.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
@@ -2339,6 +2341,7 @@ return [
     'average'                                             => '平均',
     'balanceFor'                                          => ':name の残高',
     'no_tags'                                             => '(タグなし)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'イベント履歴',

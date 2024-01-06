@@ -7,7 +7,7 @@
             "spent": "Utraten\u00e9",
             "left": "Zost\u00e1va",
             "paid": "Uhraden\u00e9",
-            "errors_submission": "Pri odosielan\u00ed sa nie\u010do nepodarilo. Skontrolujte pros\u00edm chyby.",
+            "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
             "unpaid": "Neuhraden\u00e9",
             "default_group_title_name_plain": "ungrouped",
             "subscriptions_in_group": "Subscriptions in group \"%{title}\"",

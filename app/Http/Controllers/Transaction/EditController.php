@@ -73,20 +73,20 @@ class EditController extends Controller
         }
 
         /** @var AccountRepositoryInterface $repository */
-        $repository           = app(AccountRepositoryInterface::class);
-        $allowedOpposingTypes = config('firefly.allowed_opposing_types');
-        $accountToTypes       = config('firefly.account_to_transaction');
-        $expectedSourceTypes  = config('firefly.expected_source_types');
-        $allowedSourceDests   = config('firefly.source_dests');
-        $title                = $transactionGroup->transactionJournals()->count() > 1 ? $transactionGroup->title : $transactionGroup->transactionJournals()->first()->description;
-        $subTitle             = (string) trans('firefly.edit_transaction_title', ['description' => $title]);
-        $subTitleIcon         = 'fa-plus';
-        $defaultCurrency      = app('amount')->getDefaultCurrency();
-        $cash                 = $repository->getCashAccount();
-        $previousUrl          = $this->rememberPreviousUrl('transactions.edit.url');
-        $parts                = parse_url($previousUrl);
-        $search               = sprintf('?%s', $parts['query'] ?? '');
-        $previousUrl          = str_replace($search, '', $previousUrl);
+        $repository                 = app(AccountRepositoryInterface::class);
+        $allowedOpposingTypes       = config('firefly.allowed_opposing_types');
+        $accountToTypes             = config('firefly.account_to_transaction');
+        $expectedSourceTypes        = config('firefly.expected_source_types');
+        $allowedSourceDests         = config('firefly.source_dests');
+        $title                      = $transactionGroup->transactionJournals()->count() > 1 ? $transactionGroup->title : $transactionGroup->transactionJournals()->first()->description;
+        $subTitle                   = (string) trans('firefly.edit_transaction_title', ['description' => $title]);
+        $subTitleIcon               = 'fa-plus';
+        $defaultCurrency            = app('amount')->getDefaultCurrency();
+        $cash                       = $repository->getCashAccount();
+        $previousUrl                = $this->rememberPreviousUrl('transactions.edit.url');
+        $parts                      = parse_url($previousUrl);
+        $search                     = sprintf('?%s', $parts['query'] ?? '');
+        $previousUrl                = str_replace($search, '', $previousUrl);
 
         // settings necessary for v2
         $optionalFields             = app('preferences')->get('transaction_journal_optional_fields', [])->data;

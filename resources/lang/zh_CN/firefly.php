@@ -1299,6 +1299,7 @@ return [
     'no_location_set'                                     => '没有设定位置。',
     'meta_data'                                           => '后设资料',
     'location'                                            => '位置',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => '不含日期',
     'result'                                              => '结果',
     'sums_apply_to_range'                                 => '所有总和均应用至所选范围',
@@ -1951,6 +1952,7 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
     'wait_attachments'                                    => 'Please wait for the attachments to upload.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
@@ -2340,6 +2342,7 @@ return [
     'average'                                             => '平均',
     'balanceFor'                                          => ':name 的余额',
     'no_tags'                                             => '(无标签)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => '事件历史',

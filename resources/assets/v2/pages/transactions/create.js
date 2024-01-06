@@ -46,10 +46,6 @@ import {processAttachments} from "./shared/process-attachments.js";
 import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
 import Tags from "bootstrap5-tags";
 import {addLocation} from "./shared/manage-locations.js";
-
-
-
-
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
 // TODO group title

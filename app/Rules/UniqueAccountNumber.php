@@ -42,7 +42,8 @@ class UniqueAccountNumber implements ValidationRule
     public function __construct(?Account $account, ?string $expectedType)
     {
         app('log')
-            ->debug('Constructed UniqueAccountNumber');
+            ->debug('Constructed UniqueAccountNumber')
+        ;
         $this->account      = $account;
         $this->expectedType = $expectedType;
         // a very basic fix to make sure we get the correct account type:
@@ -126,11 +127,12 @@ class UniqueAccountNumber implements ValidationRule
     private function countHits(string $type, string $accountNumber): int
     {
         $query = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
-                            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                            ->where('accounts.user_id', auth()->user()->id)
-                            ->where('account_types.type', $type)
-                            ->where('account_meta.name', '=', 'account_number')
-                            ->where('account_meta.data', json_encode($accountNumber));
+            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->where('accounts.user_id', auth()->user()->id)
+            ->where('account_types.type', $type)
+            ->where('account_meta.name', '=', 'account_number')
+            ->where('account_meta.data', json_encode($accountNumber))
+        ;
 
         if (null !== $this->account) {
             $query->where('accounts.id', '!=', $this->account->id);

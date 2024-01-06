@@ -40,5 +40,4 @@ class ShowController extends Controller
 
         return response()->api($this->jsonApiObject('transactions', $transactionGroup, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }

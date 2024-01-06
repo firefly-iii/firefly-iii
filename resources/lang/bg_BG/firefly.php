@@ -1299,6 +1299,7 @@ return [
     'no_location_set'                                     => 'Не е зададено местоположение.',
     'meta_data'                                           => 'Мета данни',
     'location'                                            => 'Местоположение',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Без дата',
     'result'                                              => 'Резултат',
     'sums_apply_to_range'                                 => 'Всички суми се отнасят към избрания диапазон',
@@ -1950,6 +1951,7 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
     'wait_attachments'                                    => 'Please wait for the attachments to upload.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
@@ -2339,6 +2341,7 @@ return [
     'average'                                             => 'Средно',
     'balanceFor'                                          => 'Салдо за :name',
     'no_tags'                                             => '(без етикети)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',
