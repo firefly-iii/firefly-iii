@@ -33,6 +33,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CreditRecalculateService
@@ -104,7 +105,7 @@ class CreditRecalculateService
         $destination = $this->getDestinationAccount($journal);
 
         // destination or source must be liability.
-        $valid       = config('firefly.valid_liabilities');
+        $valid = config('firefly.valid_liabilities');
         if (in_array($destination->accountType->type, $valid, true)) {
             $this->work[] = $destination;
         }
@@ -127,7 +128,7 @@ class CreditRecalculateService
     private function getAccountByDirection(TransactionJournal $journal, string $direction): Account
     {
         /** @var null|Transaction $transaction */
-        $transaction  = $journal->transactions()->where('amount', $direction, '0')->first();
+        $transaction = $journal->transactions()->where('amount', $direction, '0')->first();
         if (null === $transaction) {
             throw new FireflyException(sprintf('Cannot find "%s"-transaction of journal #%d', $direction, $journal->id));
         }
@@ -179,12 +180,12 @@ class CreditRecalculateService
                 $this->validateOpeningBalance($account, $openingBalance);
             }
         }
-        $startOfDebt    = $this->repository->getOpeningBalanceAmount($account) ?? '0';
-        $leftOfDebt     = app('steam')->positive($startOfDebt);
+        $startOfDebt = $this->repository->getOpeningBalanceAmount($account) ?? '0';
+        $leftOfDebt  = app('steam')->positive($startOfDebt);
         app('log')->debug(sprintf('Start of debt is "%s", so initial left of debt is "%s"', app('steam')->bcround($startOfDebt, 2), app('steam')->bcround($leftOfDebt, 2)));
 
         /** @var AccountMetaFactory $factory */
-        $factory        = app(AccountMetaFactory::class);
+        $factory = app(AccountMetaFactory::class);
 
         // amount is positive or negative, doesn't matter.
         $factory->crud($account, 'start_of_debt', $startOfDebt);
@@ -192,12 +193,11 @@ class CreditRecalculateService
         app('log')->debug(sprintf('Debt direction is "%s"', $direction));
 
         // now loop all transactions (except opening balance and credit thing)
-        $transactions   = $account->transactions()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->orderBy('transaction_journals.date', 'ASC')
-            ->get(['transactions.*'])
-        ;
-        $total          = $transactions->count();
+        $transactions = $account->transactions()
+                                ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                ->orderBy('transaction_journals.date', 'ASC')
+                                ->get(['transactions.*']);
+        $total        = $transactions->count();
         app('log')->debug(sprintf('Found %d transaction(s) to process.', $total));
 
         /** @var Transaction $transaction */
@@ -218,7 +218,7 @@ class CreditRecalculateService
         $source = $openingBalance->transactions()->where('amount', '<', 0)->first();
 
         /** @var Transaction $dest */
-        $dest   = $openingBalance->transactions()->where('amount', '>', 0)->first();
+        $dest = $openingBalance->transactions()->where('amount', '>', 0)->first();
         if ($source->account_id !== $account->id) {
             app('log')->info(sprintf('Liability #%d has a reversed opening balance. Will fix this now.', $account->id));
             app('log')->debug(sprintf('Source amount "%s" is now "%s"', $source->amount, app('steam')->positive($source->amount)));
@@ -267,12 +267,13 @@ class CreditRecalculateService
 
             return $leftOfDebt;
         }
+        Log::debug(sprintf('Liability direction is "%s"', $direction));
 
         // amount to use depends on the currency:
-        $usedAmount      = $this->getAmountToUse($transaction, $accountCurrency, $foreignCurrency);
-        $isSameAccount   = $account->id === $transaction->account_id;
-        $isDebit         = 'debit' === $direction;
-        $isCredit        = 'credit' === $direction;
+        $usedAmount    = $this->getAmountToUse($transaction, $accountCurrency, $foreignCurrency);
+        $isSameAccount = $account->id === $transaction->account_id;
+        $isDebit       = 'debit' === $direction;
+        $isCredit      = 'credit' === $direction;
 
         if ($isSameAccount && $isCredit && $this->isWithdrawalIn($usedAmount, $type)) { // case 1
             $usedAmount = app('steam')->positive($usedAmount);
@@ -330,6 +331,20 @@ class CreditRecalculateService
             $usedAmount = app('steam')->positive($usedAmount);
             $result     = bcadd($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 8 (withdrawal away from liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
+
+            return $result;
+        }
+
+        if ($isSameAccount && $isDebit && $this->isTransferIn($usedAmount, $type)) { // case 9
+            $usedAmount = app('steam')->positive($usedAmount);
+            $result     = bcadd($leftOfDebt, $usedAmount);
+            app('log')->debug(sprintf('Case 9 (transfer into debit liability, means you owe more): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
+            return $result;
+        }
+        if ($isSameAccount && $isDebit && $this->isTransferOut($usedAmount, $type)) { // case 10
+            $usedAmount = app('steam')->positive($usedAmount);
+            $result     = bcsub($leftOfDebt, $usedAmount);
+            app('log')->debug(sprintf('Case 5 (transfer out of debit liability, means you owe less): %s - %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
 
             return $result;
         }
@@ -400,7 +415,7 @@ class CreditRecalculateService
      * because the person is paying us back.
      *
      * case 7
-     * if it's a credit ("I am owed") this increases the amount due.
+     * if it's a debit ("I owe") this increases the amount due.
      * because we are borrowing more money.
      */
     private function isDepositOut(string $amount, string $transactionType): bool
@@ -423,9 +438,25 @@ class CreditRecalculateService
      * case 5: transfer into loan (from other loan).
      * if it's a credit ("I am owed") this increases the amount due,
      * because the person has to pay more back.
+     *
+     * case 8: transfer into loan (from other loan).
+     * if it's a debit ("I owe") this decreases the amount due.
+     * because the person has to pay more back.
      */
     private function isTransferIn(string $amount, string $transactionType): bool
     {
         return TransactionType::TRANSFER === $transactionType && 1 === bccomp($amount, '0');
+    }
+
+    /**
+     * it's a transfer out of loan (from other loan)
+     *
+     * case 9
+     * if it's a debit ("I owe") this decreases the amount due.
+     * because we remove money from the amount left to owe
+     */
+    private function isTransferOut(string $amount, string $transactionType): bool
+    {
+        return TransactionType::DEPOSIT === $transactionType && -1 === bccomp($amount, '0');
     }
 }
