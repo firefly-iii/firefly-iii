@@ -5721,16 +5721,16 @@
         },
         {
             "name": "spatie/ignition",
-            "version": "1.11.3",
+            "version": "1.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/ignition.git",
-                "reference": "3d886de644ff7a5b42e4d27c1e1f67c8b5f00044"
+                "reference": "5b6f801c605a593106b623e45ca41496a6e7d56d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/ignition/zipball/3d886de644ff7a5b42e4d27c1e1f67c8b5f00044",
-                "reference": "3d886de644ff7a5b42e4d27c1e1f67c8b5f00044",
+                "url": "https://api.github.com/repos/spatie/ignition/zipball/5b6f801c605a593106b623e45ca41496a6e7d56d",
+                "reference": "5b6f801c605a593106b623e45ca41496a6e7d56d",
                 "shasum": ""
             },
             "require": {
@@ -5800,20 +5800,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-10-18T14:09:40+00:00"
+            "time": "2024-01-03T15:49:39+00:00"
         },
         {
             "name": "spatie/laravel-html",
-            "version": "3.3.0",
+            "version": "3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-html.git",
-                "reference": "00faf80c459ca2a4cd9c6fe9c0e1a16b89216c2e"
+                "reference": "20bd3185ae085b2eced952bc5191cb8eb922250e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-html/zipball/00faf80c459ca2a4cd9c6fe9c0e1a16b89216c2e",
-                "reference": "00faf80c459ca2a4cd9c6fe9c0e1a16b89216c2e",
+                "url": "https://api.github.com/repos/spatie/laravel-html/zipball/20bd3185ae085b2eced952bc5191cb8eb922250e",
+                "reference": "20bd3185ae085b2eced952bc5191cb8eb922250e",
                 "shasum": ""
             },
             "require": {
@@ -5870,7 +5870,7 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-html/tree/3.3.0"
+                "source": "https://github.com/spatie/laravel-html/tree/3.4.0"
             },
             "funding": [
                 {
@@ -5878,39 +5878,39 @@
                     "type": "custom"
                 }
             ],
-            "time": "2023-10-24T06:34:29+00:00"
+            "time": "2024-01-05T16:35:10+00:00"
         },
         {
             "name": "spatie/laravel-ignition",
-            "version": "2.3.3",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-ignition.git",
-                "reference": "66499cd3c858642ded56dafb8fa0352057ca20dd"
+                "reference": "b9395ba48d3f30d42092cf6ceff75ed7256cd604"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-ignition/zipball/66499cd3c858642ded56dafb8fa0352057ca20dd",
-                "reference": "66499cd3c858642ded56dafb8fa0352057ca20dd",
+                "url": "https://api.github.com/repos/spatie/laravel-ignition/zipball/b9395ba48d3f30d42092cf6ceff75ed7256cd604",
+                "reference": "b9395ba48d3f30d42092cf6ceff75ed7256cd604",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "illuminate/support": "^10.0",
+                "illuminate/support": "^10.0|^11.0",
                 "php": "^8.1",
                 "spatie/flare-client-php": "^1.3.5",
                 "spatie/ignition": "^1.9",
-                "symfony/console": "^6.2.3",
-                "symfony/var-dumper": "^6.2.3"
+                "symfony/console": "^6.2.3|^7.0",
+                "symfony/var-dumper": "^6.2.3|^7.0"
             },
             "require-dev": {
-                "livewire/livewire": "^2.11",
+                "livewire/livewire": "^2.11|^3.3.5",
                 "mockery/mockery": "^1.5.1",
-                "openai-php/client": "^0.3.4",
-                "orchestra/testbench": "^8.0",
-                "pestphp/pest": "^1.22.3",
+                "openai-php/client": "^0.8.1",
+                "orchestra/testbench": "^8.0|^9.0",
+                "pestphp/pest": "^2.30",
                 "phpstan/extension-installer": "^1.2",
                 "phpstan/phpstan-deprecation-rules": "^1.1.1",
                 "phpstan/phpstan-phpunit": "^1.3.3",
@@ -5970,7 +5970,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-12-21T09:43:05+00:00"
+            "time": "2024-01-04T14:51:24+00:00"
         },
         {
             "name": "spatie/period",
@@ -10146,16 +10146,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.24.5",
+            "version": "1.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "fedf211ff14ec8381c9bf5714e33a7a552dd1acc"
+                "reference": "bd84b629c8de41aa2ae82c067c955e06f1b00240"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/fedf211ff14ec8381c9bf5714e33a7a552dd1acc",
-                "reference": "fedf211ff14ec8381c9bf5714e33a7a552dd1acc",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/bd84b629c8de41aa2ae82c067c955e06f1b00240",
+                "reference": "bd84b629c8de41aa2ae82c067c955e06f1b00240",
                 "shasum": ""
             },
             "require": {
@@ -10187,22 +10187,22 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.24.5"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.25.0"
             },
-            "time": "2023-12-16T09:33:33+00:00"
+            "time": "2024-01-04T17:06:16+00:00"
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.50",
+            "version": "1.10.54",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "06a98513ac72c03e8366b5a0cb00750b487032e4"
+                "reference": "3e25f279dada0adc14ffd7bad09af2e2fc3523bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/06a98513ac72c03e8366b5a0cb00750b487032e4",
-                "reference": "06a98513ac72c03e8366b5a0cb00750b487032e4",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/3e25f279dada0adc14ffd7bad09af2e2fc3523bb",
+                "reference": "3e25f279dada0adc14ffd7bad09af2e2fc3523bb",
                 "shasum": ""
             },
             "require": {
@@ -10251,7 +10251,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-12-13T10:59:42+00:00"
+            "time": "2024-01-05T15:50:47+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
