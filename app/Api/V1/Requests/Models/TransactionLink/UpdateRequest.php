@@ -63,7 +63,7 @@ class UpdateRequest extends FormRequest
             'link_type_name' => 'exists:link_types,name',
             'inward_id'      => 'belongsToUser:transaction_journals,id|different:outward_id',
             'outward_id'     => 'belongsToUser:transaction_journals,id|different:inward_id',
-            'notes'          => 'between:0,65000',
+            'notes'          => 'min:1|max:32768|nullable',
         ];
     }
 

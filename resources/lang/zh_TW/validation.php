@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'Array is missing "where"-clause',
     'missing_update'                  => 'Array is missing "update"-clause',
     'invalid_where_key'               => 'JSON contains an invalid key for the "where"-clause',
@@ -44,6 +46,7 @@ return [
     'iban'                            => '這不是有效的 IBAN。',
     'zero_or_more'                    => '此數值不能為負數。',
     'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero_correct'          => 'The value must be zero or more.',
     'no_asset_account'                => 'This is not an asset account.',
     'date_or_time'                    => '此數值須為有效的日期或時間值 (ISO 8601)。',
     'source_equals_destination'       => '來源帳戶與目標帳戶相同。',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'The amount is required.',
     'auto_budget_amount_positive'     => 'The amount must be more than zero.',
+
     'auto_budget_period_mandatory'    => 'The auto budget period is a mandatory field.',
 
     // no access to administration:

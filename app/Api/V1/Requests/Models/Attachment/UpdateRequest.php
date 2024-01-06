@@ -68,9 +68,9 @@ class UpdateRequest extends FormRequest
         $model  = $this->convertString('attachable_type');
 
         return [
-            'filename'        => 'between:1,255',
-            'title'           => 'between:1,255',
-            'notes'           => 'between:1,65000',
+            'filename'        => ['min:1', 'max:255'],
+            'title'           => ['min:1', 'max:255'],
+            'notes'           => 'min:1|max:32768',
             'attachable_type' => sprintf('in:%s', $models),
             'attachable_id'   => ['numeric', new IsValidAttachmentModel($model)],
         ];

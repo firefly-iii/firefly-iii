@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TagRepository.
@@ -64,6 +65,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function destroyAll(): void
     {
+        Log::channel('audit')->info('Delete all tags through destroyAll');
         $tags = $this->get();
 
         /** @var Tag $tag */

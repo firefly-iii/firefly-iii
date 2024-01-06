@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => '이 보고서를 사용하여 재정에 대한 자세한 인사이트를 얻으세요.',
     'reports_index_inputReportType'                           => '보고서 유형을 선택합니다. 도움말 페이지에서 각 보고서에 표시되는 내용을 확인하세요.',
     'reports_index_inputAccountsSelect'                       => '원하는 대로 자산 계정을 제외하거나 포함할 수 있습니다.',
-    'reports_index_inputDateRange'                            => '선택한 날짜 범위는 하루에서 10년까지 전적으로 사용자에게 달려 있습니다.',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => '선택한 보고서에 따라 여기에서 추가 필터 및 옵션을 선택할 수 있습니다. 보고서 유형을 변경할 때 이 상자를 확인하세요.',
 
     // reports (reports)

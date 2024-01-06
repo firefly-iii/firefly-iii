@@ -45,7 +45,7 @@ return [
     'month_and_day_js'         => 'MMMM Do, YYYY',
 
     // 'month_and_date_day'      => '%A %B %e, %Y',
-    'month_and_date_day_js'    => 'dddd MMMM Do, YYYY',
+    'month_and_date_day_js'    => '',
 
     // 'month_and_day_no_year'   => '%B %e',
     'month_and_day_no_year_js' => 'MMMM Do',

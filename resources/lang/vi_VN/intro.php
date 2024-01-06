@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Sử dụng các báo cáo này để có được thông tin chi tiết về tài chính của bạn.',
     'reports_index_inputReportType'                           => 'Chọn một loại báo cáo. Kiểm tra các trang trợ giúp để xem mỗi báo cáo hiển thị cho bạn.',
     'reports_index_inputAccountsSelect'                       => 'Bạn có thể loại trừ hoặc bao gồm các tài khoản khi bạn thấy phù hợp.',
-    'reports_index_inputDateRange'                            => 'Phạm vi ngày đã chọn hoàn toàn tùy thuộc vào bạn: từ một ngày đến 10 năm.',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => 'Tùy thuộc vào báo cáo bạn đã chọn, bạn có thể chọn các bộ lọc và tùy chọn bổ sung tại đây. Xem hộp này khi bạn thay đổi loại báo cáo.',
 
     // reports (reports)

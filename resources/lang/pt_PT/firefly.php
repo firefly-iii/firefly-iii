@@ -1299,11 +1299,13 @@ return [
     'no_location_set'                                     => 'Sem localização definida.',
     'meta_data'                                           => 'Meta dados',
     'location'                                            => 'Localização',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Sem data',
     'result'                                              => 'Resultado',
     'sums_apply_to_range'                                 => 'Todas as somas aplicam-se ao intervalo selecionado',
     'mapbox_api_key'                                      => 'Para usar o mapa, arranje uma chave de API do <a href="https://www.mapbox.com/">Mapbox</a>. Abra o seu ficheiro <code>.env</code> e adicione essa chave a seguir a <code> MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Clique com o botão direito ou pressione longamente para definir o local do objeto.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Limpar localização',
     'delete_all_selected_tags'                            => 'Excluir todas as etiquetas selecionadas',
     'select_tags_to_delete'                               => 'Não se esqueça de selecionar algumas etiquetas.',
@@ -1949,6 +1951,12 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => 'Atualizar levantamento',
     'update_deposit'                                      => 'Atualizar depósito',
@@ -2333,6 +2341,7 @@ return [
     'average'                                             => 'Média',
     'balanceFor'                                          => 'Saldo para :name',
     'no_tags'                                             => '(sem etiquetas)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Histórico de eventos',
@@ -2545,7 +2554,7 @@ return [
     'after_update_create_another'                         => 'Após atualizar, regresse aqui para continuar a editar.',
     'store_as_new'                                        => 'Guarde como nova transação em vez de atualizar.',
     'reset_after'                                         => 'Reiniciar o formulário após o envio',
-    'errors_submission'                                   => 'Aconteceu algo errado com a sua submissão. Por favor, verifique os erros.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Expandir divisão',
     'transaction_collapse_split'                          => 'Ocultar divisão',
 

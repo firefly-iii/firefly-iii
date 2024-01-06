@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'Array mangler “Where”-sektion',
     'missing_update'                  => 'Array mangler “update”-sektion',
     'invalid_where_key'               => 'JSON indeholder en ugyldig nøgle til "where"-sektionen',
@@ -44,6 +46,7 @@ return [
     'iban'                            => 'Dette er ikke et gyldig IBAN.',
     'zero_or_more'                    => 'Denne værdi kan ikke være negativ.',
     'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero_correct'          => 'The value must be zero or more.',
     'no_asset_account'                => 'This is not an asset account.',
     'date_or_time'                    => 'Værdien skal være en gyldig dato eller tids værdi (ISO 8601).',
     'source_equals_destination'       => 'Kildekontoen er den samme som modtagerkontoen.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'Beløb påkrævet.',
     'auto_budget_amount_positive'     => 'Beløbet skal være større end 0.',
+
     'auto_budget_period_mandatory'    => 'Perioden for autobudget skal udfyldes.',
 
     // no access to administration:

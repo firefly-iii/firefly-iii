@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => '배열에 "where"절이 없습니다',
     'missing_update'                  => '배열에 "update"절이 없습니다',
     'invalid_where_key'               => 'JSON의 "where" 절에 유효하지 않은 키가 포함되어 있습니다',
@@ -44,6 +46,7 @@ return [
     'iban'                            => '유효한 IBAN이 아닙니다.',
     'zero_or_more'                    => '값은 음수가 될 수 없습니다.',
     'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero_correct'          => 'The value must be zero or more.',
     'no_asset_account'                => 'This is not an asset account.',
     'date_or_time'                    => '유효한 날짜 또는 시간 값(ISO 8601) 이어야 합니다.',
     'source_equals_destination'       => '소스 계정이 대상 계정과 같습니다.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => '금액을 입력하세요.',
     'auto_budget_amount_positive'     => '금액은 0보다 커야 합니다.',
+
     'auto_budget_period_mandatory'    => '자동 예산 기간은 필수 항목입니다.',
 
     // no access to administration:

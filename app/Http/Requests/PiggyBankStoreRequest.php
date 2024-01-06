@@ -58,14 +58,14 @@ class PiggyBankStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'         => 'required|between:1,255|uniquePiggyBankForUser',
+            'name'         => 'required|min:1|max:255|uniquePiggyBankForUser',
             'account_id'   => 'required|belongsToUser:accounts',
             'targetamount' => ['nullable', new IsValidPositiveAmount()],
             'startdate'    => 'date',
             'targetdate'   => 'date|nullable',
             'order'        => 'integer|min:1',
             'object_group' => 'min:0|max:255',
-            'notes'        => 'between:1,65536|nullable',
+            'notes'        => 'min:1|max:32768|nullable',
         ];
     }
 }

@@ -1299,11 +1299,13 @@ return [
     'no_location_set'                                     => 'Lokacija ni nastavljena.',
     'meta_data'                                           => 'Meta podatki',
     'location'                                            => 'Lokacija',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Brez datuma',
     'result'                                              => 'Rezultati',
     'sums_apply_to_range'                                 => 'Vsi zneski veljajo za izbran interval',
     'mapbox_api_key'                                      => 'Če želite uporabiti zemljevid, pridobite API ključ iz <a href="https://www.mapbox.com/"> Mapbox-a</a>. Odprite datoteko <code>.env</code> in vanjo vnesite kodo za <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Z desnim klikom ali dolgim pritiskom nastavite lokacijo objekta.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Počisti lokacijo',
     'delete_all_selected_tags'                            => 'Izbriši vse izbrane oznake',
     'select_tags_to_delete'                               => 'Ne pozabite izbrati oznak.',
@@ -1949,6 +1951,12 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Razveljavi uskladitev',
     'update_withdrawal'                                   => 'Posodobi dvig',
     'update_deposit'                                      => 'Posodobi polog',
@@ -2333,6 +2341,7 @@ return [
     'average'                                             => 'Povprečno',
     'balanceFor'                                          => 'Stanje za :name',
     'no_tags'                                             => '(ni oznak)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Zgodovina dogodkov',
@@ -2545,7 +2554,7 @@ return [
     'after_update_create_another'                         => 'Po posodobitvi se vrnite sem za nadaljevanje urejanja.',
     'store_as_new'                                        => 'Shranite kot novo transakcijo namesto posodabljanja.',
     'reset_after'                                         => 'Po predložitvi ponastavite obrazec',
-    'errors_submission'                                   => 'Nekaj je bilo narobe z vašo predložitvijo. Preverite napake.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Razširi razdelitev',
     'transaction_collapse_split'                          => 'Skrči razdelitev',
 

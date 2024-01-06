@@ -156,28 +156,29 @@ class RecurrenceFormRequest extends FormRequest
     {
         $today      = today(config('app.timezone'));
         $tomorrow   = today(config('app.timezone'))->addDay();
+        $before     = today(config('app.timezone'))->addYears(25);
         $rules      = [
             // mandatory info for recurrence.
-            'title'                   => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
-            'first_date'              => 'required|date|after:'.$today->format('Y-m-d'),
-            'repetition_type'         => ['required', new ValidRecurrenceRepetitionValue(), new ValidRecurrenceRepetitionType(), 'between:1,20'],
+            'title'                   => 'required|min:1|max:255|uniqueObjectForUser:recurrences,title',
+            'first_date'              => sprintf('required|date|before:%s|after:%s', $before->format('Y-m-d'), $today->format('Y-m-d')),
+            'repetition_type'         => ['required', new ValidRecurrenceRepetitionValue(), new ValidRecurrenceRepetitionType(), 'min:1', 'max:32'],
             'skip'                    => 'required|numeric|integer|gte:0|lte:31',
-            'notes'                   => 'between:1,65536|nullable',
+            'notes'                   => 'min:1|max:32768|nullable',
             // optional for recurrence:
-            'recurring_description'   => 'between:0,65000',
-            'active'                  => 'numeric|between:0,1',
-            'apply_rules'             => 'numeric|between:0,1',
+            'recurring_description'   => 'min:0|max:32768',
+            'active'                  => 'numeric|min:0|max:1',
+            'apply_rules'             => 'numeric|min:0|max:1',
 
             // mandatory for transaction:
-            'transaction_description' => 'required|between:1,255',
+            'transaction_description' => 'required|min:1|max:255',
             'transaction_type'        => 'required|in:withdrawal,deposit,transfer',
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
             'amount'                  => ['required', new IsValidPositiveAmount()],
             // mandatory account info:
             'source_id'               => 'numeric|belongsToUser:accounts,id|nullable',
-            'source_name'             => 'between:1,255|nullable',
+            'source_name'             => 'min:1|max:255|nullable',
             'destination_id'          => 'numeric|belongsToUser:accounts,id|nullable',
-            'destination_name'        => 'between:1,255|nullable',
+            'destination_name'        => 'min:1|max:255|nullable',
 
             // foreign amount data:
             'foreign_amount'          => ['nullable', new IsValidPositiveAmount()],
@@ -185,8 +186,8 @@ class RecurrenceFormRequest extends FormRequest
             // optional fields:
             'budget_id'               => 'mustExist:budgets,id|belongsToUser:budgets,id|nullable',
             'bill_id'                 => 'mustExist:bills,id|belongsToUser:bills,id|nullable',
-            'category'                => 'between:1,255|nullable',
-            'tags'                    => 'between:1,255|nullable',
+            'category'                => 'min:1|max:255|nullable',
+            'tags'                    => 'min:1|max:255|nullable',
         ];
         if ($this->convertInteger('foreign_currency_id') > 0) {
             $rules['foreign_currency_id'] = 'exists:transaction_currencies,id';
@@ -194,7 +195,7 @@ class RecurrenceFormRequest extends FormRequest
 
         // if ends after X repetitions, set another rule
         if ('times' === $this->convertString('repetition_end')) {
-            $rules['repetitions'] = 'required|numeric|between:0,254';
+            $rules['repetitions'] = 'required|numeric|min:0|max:255';
         }
         // if foreign amount, currency must be  different.
         if (null !== $this->convertFloat('foreign_amount')) { // intentional float, used because it defaults to null.
@@ -210,10 +211,10 @@ class RecurrenceFormRequest extends FormRequest
         $type       = strtolower($this->convertString('transaction_type'));
         if (strtolower(TransactionType::WITHDRAWAL) === $type) {
             $rules['source_id']        = 'required|exists:accounts,id|belongsToUser:accounts';
-            $rules['destination_name'] = 'between:1,255|nullable';
+            $rules['destination_name'] = 'min:1|max:255|nullable';
         }
         if (strtolower(TransactionType::DEPOSIT) === $type) {
-            $rules['source_name']    = 'between:1,255|nullable';
+            $rules['source_name']    = 'min:1|max:255|nullable';
             $rules['destination_id'] = 'required|exists:accounts,id|belongsToUser:accounts';
         }
         if (strtolower(TransactionType::TRANSFER) === $type) {
@@ -227,7 +228,7 @@ class RecurrenceFormRequest extends FormRequest
         $recurrence = $this->route()->parameter('recurrence');
         if ($recurrence instanceof Recurrence) {
             $rules['id']         = 'required|numeric|exists:recurrences,id';
-            $rules['title']      = 'required|between:1,255|uniqueObjectForUser:recurrences,title,'.$recurrence->id;
+            $rules['title']      = 'required|min:1|max:255|uniqueObjectForUser:recurrences,title,'.$recurrence->id;
             $rules['first_date'] = 'required|date';
         }
 
@@ -279,12 +280,12 @@ class RecurrenceFormRequest extends FormRequest
         if ('deposit' === $type) {
             $throwError    = false;
             $sourceId      = (int) $data['deposit_source_id'];
-            $destinationId = (int) $data['destination_id'];
+            $destinationId = (int) ($data['destination_id'] ?? 0);
         }
         if ('transfer' === $type) {
             $throwError    = false;
             $sourceId      = (int) $data['source_id'];
-            $destinationId = (int) $data['destination_id'];
+            $destinationId = (int) ($data['destination_id'] ?? 0);
         }
         if (true === $throwError) {
             throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->convertString('transaction_type')));

@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'В массиве отсутствует связка "where" ("где")',
     'missing_update'                  => 'В массиве отсутствует связка "update" ("обновить")',
     'invalid_where_key'               => 'JSON содержит недопустимый ключ для связки "where" ("где")',
@@ -43,7 +45,8 @@ return [
     'invalid_query_currency'          => 'Ваш запрос содержит счета с разными валютами, что недопустимо.',
     'iban'                            => 'Это некорректный IBAN.',
     'zero_or_more'                    => 'Это значение не может быть отрицательным.',
-    'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero'                  => 'Значение должно быть больше нуля.',
+    'more_than_zero_correct'          => 'Значение должно быть ноль или больше.',
     'no_asset_account'                => 'Это не счет активов.',
     'date_or_time'                    => 'Значение должно быть корректной датой или временем (ISO 8601).',
     'source_equals_destination'       => 'Счёт источник и счёт назначения совпадают.',
@@ -143,7 +146,7 @@ return [
     'min.array'                       => 'Значение :attribute должно содержать не меньше :min элементов.',
     'not_in'                          => 'Выбранный :attribute не верный.',
     'numeric'                         => ':attribute должен быть числом.',
-    'scientific_notation'             => 'The :attribute cannot use the scientific notation.',
+    'scientific_notation'             => ':attribute не может использовать научную обозначение.',
     'numeric_native'                  => 'Сумма должна быть числом.',
     'numeric_destination'             => 'Сумма назначения должна быть числом.',
     'numeric_source'                  => 'Исходная сумма должна быть числом.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'Нужно указать сумму.',
     'auto_budget_amount_positive'     => 'Сумма должна быть больше 0.',
+
     'auto_budget_period_mandatory'    => 'Период авто-бюджета - это обязательно поле.',
 
     // no access to administration:

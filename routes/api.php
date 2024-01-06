@@ -156,6 +156,7 @@ Route::group(
     ],
     static function (): void {
         Route::post('', ['uses' => 'StoreController@post', 'as' => 'store']);
+        Route::get('{userGroupTransaction}', ['uses' => 'ShowController@show', 'as' => 'show']);
     }
 );
 

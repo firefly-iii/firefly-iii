@@ -51,7 +51,7 @@ class EditController extends Controller
         // translations:
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.transactions'));
+                app('view')->share('title', (string) trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 $this->repository = app(JournalRepositoryInterface::class);
@@ -73,18 +73,43 @@ class EditController extends Controller
         }
 
         /** @var AccountRepositoryInterface $repository */
-        $repository           = app(AccountRepositoryInterface::class);
-        $allowedOpposingTypes = config('firefly.allowed_opposing_types');
-        $accountToTypes       = config('firefly.account_to_transaction');
-        $expectedSourceTypes  = config('firefly.expected_source_types');
-        $allowedSourceDests   = config('firefly.source_dests');
+        $repository                 = app(AccountRepositoryInterface::class);
+        $allowedOpposingTypes       = config('firefly.allowed_opposing_types');
+        $accountToTypes             = config('firefly.account_to_transaction');
+        $expectedSourceTypes        = config('firefly.expected_source_types');
+        $allowedSourceDests         = config('firefly.source_dests');
+        $title                      = $transactionGroup->transactionJournals()->count() > 1 ? $transactionGroup->title : $transactionGroup->transactionJournals()->first()->description;
+        $subTitle                   = (string) trans('firefly.edit_transaction_title', ['description' => $title]);
+        $subTitleIcon               = 'fa-plus';
+        $defaultCurrency            = app('amount')->getDefaultCurrency();
+        $cash                       = $repository->getCashAccount();
+        $previousUrl                = $this->rememberPreviousUrl('transactions.edit.url');
+        $parts                      = parse_url($previousUrl);
+        $search                     = sprintf('?%s', $parts['query'] ?? '');
+        $previousUrl                = str_replace($search, '', $previousUrl);
 
-        $defaultCurrency      = app('amount')->getDefaultCurrency();
-        $cash                 = $repository->getCashAccount();
-        $previousUrl          = $this->rememberPreviousUrl('transactions.edit.url');
-        $parts                = parse_url($previousUrl);
-        $search               = sprintf('?%s', $parts['query'] ?? '');
-        $previousUrl          = str_replace($search, '', $previousUrl);
+        // settings necessary for v2
+        $optionalFields             = app('preferences')->get('transaction_journal_optional_fields', [])->data;
+        if (!is_array($optionalFields)) {
+            $optionalFields = [];
+        }
+        // not really a fan of this, but meh.
+        $optionalDateFields         = [
+            'interest_date' => $optionalFields['interest_date'] ?? false,
+            'book_date'     => $optionalFields['book_date'] ?? false,
+            'process_date'  => $optionalFields['process_date'] ?? false,
+            'due_date'      => $optionalFields['due_date'] ?? false,
+            'payment_date'  => $optionalFields['payment_date'] ?? false,
+            'invoice_date'  => $optionalFields['invoice_date'] ?? false,
+        ];
+        $optionalFields['external_url'] ??= false;
+        $optionalFields['location']     ??= false;
+        $optionalFields['location'] = $optionalFields['location'] && true === config('firefly.enable_external_map');
+
+        // map info:
+        $longitude                  = config('firefly.default_location.longitude');
+        $latitude                   = config('firefly.default_location.latitude');
+        $zoomLevel                  = config('firefly.default_location.zoom_level');
 
         return view(
             'transactions.edit',
@@ -92,6 +117,13 @@ class EditController extends Controller
                 'cash',
                 'allowedSourceDests',
                 'expectedSourceTypes',
+                'optionalDateFields',
+                'longitude',
+                'latitude',
+                'zoomLevel',
+                'optionalFields',
+                'subTitle',
+                'subTitleIcon',
                 'transactionGroup',
                 'allowedOpposingTypes',
                 'accountToTypes',

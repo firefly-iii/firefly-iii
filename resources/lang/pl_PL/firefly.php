@@ -1299,11 +1299,13 @@ return [
     'no_location_set'                                     => 'Nie ustawiono lokalizacji.',
     'meta_data'                                           => 'Metadane',
     'location'                                            => 'Lokalizacja',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Bez daty',
     'result'                                              => 'Wynik',
     'sums_apply_to_range'                                 => 'Wszystkie sumy mają zastosowanie do wybranego zakresu',
     'mapbox_api_key'                                      => 'Aby użyć mapy, pobierz klucz API z <a href="https://www.mapbox.com/">Mapbox</a>. Otwórz plik <code>.env</code> i wprowadź ten kod po <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Kliknij prawym przyciskiem myszy lub naciśnij i przytrzymaj aby ustawić lokalizację obiektu.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Wyczyść lokalizację',
     'delete_all_selected_tags'                            => 'Usuń wszystkie zaznaczone tagi',
     'select_tags_to_delete'                               => 'Nie zapomnij wybrać tagów.',
@@ -1949,6 +1951,12 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Cofnij uzgodnienie',
     'update_withdrawal'                                   => 'Modyfikuj wypłatę',
     'update_deposit'                                      => 'Modyfikuj wpłatę',
@@ -2333,6 +2341,7 @@ return [
     'average'                                             => 'Średno',
     'balanceFor'                                          => 'Saldo dla :name',
     'no_tags'                                             => '(brak tagów)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Historia zdarzeń',
@@ -2545,7 +2554,7 @@ return [
     'after_update_create_another'                         => 'Po aktualizacji wróć tutaj, aby kontynuować edycję.',
     'store_as_new'                                        => 'Zapisz jako nową zamiast aktualizować.',
     'reset_after'                                         => 'Wyczyść formularz po zapisaniu',
-    'errors_submission'                                   => 'Coś poszło nie tak w czasie zapisu. Proszę sprawdź błędy.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Rozwiń podział',
     'transaction_collapse_split'                          => 'Zwiń podział',
 

@@ -6,7 +6,7 @@
         "flash_success": "Sucesso!",
         "close": "Fechar",
         "split_transaction_title": "Descri\u00e7\u00e3o da transa\u00e7\u00e3o dividida",
-        "errors_submission": "Aconteceu algo errado com a sua submiss\u00e3o. Por favor, verifique os erros.",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "split": "Dividir",
         "single_split": "Divis\u00e3o",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">A transa\u00e7\u00e3o #{ID} (\"{title}\")<\/a> foi guardada.",

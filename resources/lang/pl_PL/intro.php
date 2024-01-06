@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Skorzystaj z tych raportów, aby uzyskać szczegółowe informacje o swoich finansach.',
     'reports_index_inputReportType'                           => 'Wybierz typ raportu. Sprawdź stronę pomocy, aby zobaczyć, co pokazuje każdy raport.',
     'reports_index_inputAccountsSelect'                       => 'Możesz wykluczyć lub uwzględnić konta zasobów według własnego uznania.',
-    'reports_index_inputDateRange'                            => 'Wybrany zakres dat zależy wyłącznie od ciebie: od jednego dnia do 10 lat.',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => 'W zależności od wybranego raportu możesz wybrać dodatkowe filtry i opcje tutaj. Obserwuj to pole, gdy zmieniasz typy raportów.',
 
     // reports (reports)

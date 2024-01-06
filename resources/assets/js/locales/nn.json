@@ -6,7 +6,7 @@
         "flash_success": "Suksess!",
         "close": "Lukk",
         "split_transaction_title": "Beskrivinga av den splitta transaksjonen",
-        "errors_submission": "Noko gjekk gale med innleveringa. Ver venleg \u00e5 sjekk feila.",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "split": "Del opp",
         "single_split": "Del opp",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaksjon #{ID} (\"{title}\")<\/a> har vorte lagra.",

@@ -64,8 +64,8 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'       => 'required|between:1,100|uniqueObjectForUser:rule_groups,title',
-            'description' => 'between:1,5000|nullable',
+            'title'       => 'required|min:1|max:100|uniqueObjectForUser:rule_groups,title',
+            'description' => 'min:1|max:32768|nullable',
             'active'      => [new IsBoolean()],
         ];
     }

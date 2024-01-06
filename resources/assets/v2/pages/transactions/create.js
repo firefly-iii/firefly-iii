@@ -20,218 +20,130 @@
 
 import '../../boot/bootstrap.js';
 import dates from '../../pages/shared/dates.js';
-import {createEmptySplit} from "./shared/create-empty-split.js";
+import {createEmptySplit, defaultErrorSet} from "./shared/create-empty-split.js";
 import {parseFromEntries} from "./shared/parse-from-entries.js";
 import formatMoney from "../../util/format-money.js";
-import Autocomplete from "bootstrap5-autocomplete";
 import Post from "../../api/v2/model/transaction/post.js";
-import AttachmentPost from "../../api/v1/attachments/post.js";
-
-import Get from "../../api/v2/model/currency/get.js";
-import BudgetGet from "../../api/v2/model/budget/get.js";
-import PiggyBankGet from "../../api/v2/model/piggy-bank/get.js";
-import SubscriptionGet from "../../api/v2/model/subscription/get.js";
 import {getVariable} from "../../store/get-variable.js";
 import {I18n} from "i18n-js";
 import {loadTranslations} from "../../support/load-translations.js";
-import Tags from "bootstrap5-tags";
-
-import L from "leaflet";
+import {loadCurrencies} from "./shared/load-currencies.js";
+import {loadBudgets} from "./shared/load-budgets.js";
+import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
+import {loadSubscriptions} from "./shared/load-subscriptions.js";
 
 import 'leaflet/dist/leaflet.css';
-
+import {addAutocomplete, getUrls} from "./shared/add-autocomplete.js";
+import {
+    changeCategory,
+    changeDescription,
+    changeDestinationAccount,
+    changeSourceAccount,
+    selectDestinationAccount,
+    selectSourceAccount
+} from "./shared/autocomplete-functions.js";
+import {processAttachments} from "./shared/process-attachments.js";
+import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
+import Tags from "bootstrap5-tags";
+import {addLocation} from "./shared/manage-locations.js";
+// TODO upload attachments to other file
+// TODO fix two maps, perhaps disconnect from entries entirely.
+// TODO group title
+// TODO map location from preferences
+// TODO field preferences
 
 let i18n;
 
-const urls = {
-    description: '/api/v2/autocomplete/transaction-descriptions',
-    account: '/api/v2/autocomplete/accounts',
-    category: '/api/v2/autocomplete/categories',
-    tag: '/api/v2/autocomplete/tags',
-};
-
-let uploadAttachments = function (id, transactions) {
-    console.log('Now in uploadAttachments');
-    // reverse list of transactions?
-    transactions = transactions.reverse();
-    // array of all files to be uploaded:
-    let toBeUploaded = [];
-    let count = 0;
-    // array with all file data.
-    let fileData = [];
-
-    // all attachments
-    let attachments = document.querySelectorAll('input[name="attachments[]"]');
-    console.log(attachments);
-    // loop over all attachments, and add references to this array:
-    for (const key in attachments) {
-        if (attachments.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-            console.log('Now at attachment #' + key);
-            for (const fileKey in attachments[key].files) {
-                if (attachments[key].files.hasOwnProperty(fileKey) && /^0$|^[1-9]\d*$/.test(fileKey) && fileKey <= 4294967294) {
-                    // include journal thing.
-                    console.log('Will upload #' + fileKey + ' from attachment #' + key + ' to transaction #' + transactions[key].transaction_journal_id);
-                    toBeUploaded.push({
-                        journal: transactions[key].transaction_journal_id, file: attachments[key].files[fileKey]
-                    });
-                    count++;
-                }
-            }
-        }
-    }
-    console.log('Found ' + count + ' attachments.');
-
-    // loop all uploads.
-    for (const key in toBeUploaded) {
-        if (toBeUploaded.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-            console.log('Create file reader for file #' + key);
-            // create file reader thing that will read all of these uploads
-            (function (f, key) {
-                let fileReader = new FileReader();
-                fileReader.onloadend = function (evt) {
-                    if (evt.target.readyState === FileReader.DONE) { // DONE == 2
-                        console.log('Done reading file  #' + key);
-                        fileData.push({
-                            name: toBeUploaded[key].file.name,
-                            journal: toBeUploaded[key].journal,
-                            content: new Blob([evt.target.result])
-                        });
-                        if (fileData.length === count) {
-                            console.log('Done reading file #' + key);
-                            uploadFiles(fileData, id);
-                        }
-                    }
-                };
-                fileReader.readAsArrayBuffer(f.file);
-            })(toBeUploaded[key], key,);
-        }
-    }
-    return count;
-}
-let uploadFiles = function (fileData, id) {
-    let count = fileData.length;
-    let uploads = 0;
-    console.log('Will now upload ' + count + ' file(s) to journal with id #' + id);
-
-    for (const key in fileData) {
-        if (fileData.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-            console.log('Creating attachment #' + key);
-
-            let poster = new AttachmentPost();
-            poster.post(fileData[key].name, 'TransactionJournal', fileData[key].journal).then(response => {
-                let attachmentId = parseInt(response.data.data.id);
-                console.log('Created attachment #' + attachmentId + ' for key #' + key);
-                console.log('Uploading attachment #' + key);
-                poster.upload(attachmentId, fileData[key].content).then(attachmentResponse => {
-                    // console.log('Uploaded attachment #' + key);
-                    uploads++;
-                    if (uploads === count) {
-                        // finally we can redirect the user onwards.
-                        console.log('FINAL UPLOAD, redirect user to new transaction or reset form or whatever.');
-                        const event = new CustomEvent('upload-success', {some: 'details'});
-                        document.dispatchEvent(event);
-                        return;
-                    }
-                    console.log('Upload complete!');
-                    // return true here.
-                }).catch(error => {
-                    console.error('Could not upload');
-                    console.error(error);
-                    // console.log('Uploaded attachment #' + key);
-                    uploads++;
-                    if (uploads === count) {
-                        // finally we can redirect the user onwards.
-                        console.log('FINAL UPLOAD, redirect user to new transaction or reset form or whatever.');
-                        //this.redirectUser(groupId, transactionData);
-                    }
-                    // console.log('Upload complete!');
-                    // return false;
-                    // return false here
-                });
-            }).catch(error => {
-                console.error('Could not create upload.');
-                console.error(error);
-                uploads++;
-                if (uploads === count) {
-                    // finally we can redirect the user onwards.
-                    // console.log('FINAL UPLOAD');
-                    console.log('FINAL UPLOAD, redirect user to new transaction or reset form or whatever.');
-                    // this.redirectUser(groupId, transactionData);
-                }
-                // console.log('Upload complete!');
-                //return false;
-            });
-        }
-    }
-}
+const urls = getUrls();
 
 let transactions = function () {
     return {
-        count: 0,
-        totalAmount: 0,
-        transactionType: 'unknown',
-        showSuccessMessage: false,
-        showErrorMessage: false,
-        defaultCurrency: {},
-        entries: [], // loading things
-        loadingCurrencies: true,
-        loadingBudgets: true,
-        loadingPiggyBanks: true,
-        loadingSubscriptions: true,
+        // transactions are stored in "entries":
+        entries: [],
 
-        // data sets
-        enabledCurrencies: [],
-        nativeCurrencies: [],
-        foreignCurrencies: [],
-        budgets: [],
-        piggyBanks: {},
-        subscriptions: [],
-        dateFields: ['interest_date','book_date','process_date','due_date','payment_date','invoice_date'],
+        // state of the form is stored in formState:
+        formStates: {
+            loadingCurrencies: true,
+            loadingBudgets: true,
+            loadingPiggyBanks: true,
+            loadingSubscriptions: true,
+            isSubmitting: false,
+            returnHereButton: false,
+            saveAsNewButton: false, // edit form only
+            resetButton: true,
+            rulesButton: true,
+            webhooksButton: true,
+        },
 
-        foreignAmountEnabled: true,
+        // form behaviour during transaction
+        formBehaviour: {
+            formType: 'create', foreignCurrencyEnabled: true,
+        },
+
+        // form data (except transactions) is stored in formData
+        formData: {
+            defaultCurrency: null,
+            enabledCurrencies: [],
+            nativeCurrencies: [],
+            foreignCurrencies: [],
+            budgets: [],
+            piggyBanks: [],
+            subscriptions: [],
+        },
+
+        // properties for the entire transaction group
+        groupProperties: {
+            transactionType: 'unknown', title: null, id: null, totalAmount: 0,
+        },
+
+        // notifications
+        notifications: {
+            error: {
+                show: false, text: '', url: '',
+            }, success: {
+                show: false, text: '', url: '',
+            }, wait: {
+                show: false, text: '',
+
+            }
+        },
+
+
+        // part of the account selection auto-complete
         filters: {
             source: [], destination: [],
         },
-        errorMessageText: '',
-        successMessageLink: '#',
-        successMessageText: '', // error and success messages:
-        showError: false,
-        showSuccess: false,
-        showWaitMessage: false,
 
-        // four buttons
-        returnHereButton: true,
-        resetButton: false,
-        resetButtonEnabled: false,
-        rulesButton: true,
-        webhookButton: true,
+        // events in the form
+        changedDateTime(event) {
+            console.warn('changedDateTime, event is not used');
+        },
 
-        // state of the form
-        submitting: false,
+        changedDescription(event) {
+            console.warn('changedDescription, event is not used');
+        },
 
-        // used to display the success message
-        newGroupTitle: '',
-        newGroupId: 0,
+        changedDestinationAccount(event) {
+            this.detectTransactionType();
+        },
 
-        // map things:
-        hasLocation: false,
-        latitude: 51.959659235274,
-        longitude: 5.756805887265858,
-        zoomLevel: 13,
-
+        changedSourceAccount(event) {
+            this.detectTransactionType();
+        },
 
         detectTransactionType() {
             const sourceType = this.entries[0].source_account.type ?? 'unknown';
             const destType = this.entries[0].destination_account.type ?? 'unknown';
             if ('unknown' === sourceType && 'unknown' === destType) {
-                this.transactionType = 'unknown';
+                this.groupProperties.transactionType = 'unknown';
                 console.warn('Cannot infer transaction type from two unknown accounts.');
                 return;
             }
+
             // transfer: both are the same and in strict set of account types
             if (sourceType === destType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(sourceType)) {
-                this.transactionType = 'transfer';
-                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                this.groupProperties.transactionType = 'transfer';
+                console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
 
                 // this also locks the amount into the amount of the source account
                 // and the foreign amount (if different) in that of the destination account.
@@ -242,72 +154,67 @@ let transactions = function () {
             }
             // withdrawals:
             if ('Asset account' === sourceType && ['Expense account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
-                this.transactionType = 'withdrawal';
-                console.log('[a] Transaction type is detected to be "' + this.transactionType + '".');
+                this.groupProperties.transactionType = 'withdrawal';
+                console.log('[a] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 this.filterNativeCurrencies(this.entries[0].source_account.currency_code);
                 return;
             }
             if ('Asset account' === sourceType && 'unknown' === destType) {
-                this.transactionType = 'withdrawal';
-                console.log('[b] Transaction type is detected to be "' + this.transactionType + '".');
+                this.groupProperties.transactionType = 'withdrawal';
+                console.log('[b] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 console.log(this.entries[0].source_account);
                 this.filterNativeCurrencies(this.entries[0].source_account.currency_code);
                 return;
             }
             if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Expense account' === destType) {
-                this.transactionType = 'withdrawal';
-                console.log('[c] Transaction type is detected to be "' + this.transactionType + '".');
+                this.groupProperties.transactionType = 'withdrawal';
+                console.log('[c] Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 this.filterNativeCurrencies(this.entries[0].source_account.currency_code);
                 return;
             }
 
             // deposits:
             if ('Revenue account' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
-                this.transactionType = 'deposit';
-                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                this.groupProperties.transactionType = 'deposit';
+                console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 return;
             }
             if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Asset account' === destType) {
-                this.transactionType = 'deposit';
-                console.log('Transaction type is detected to be "' + this.transactionType + '".');
+                this.groupProperties.transactionType = 'deposit';
+                console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 return;
             }
             console.warn('Unknown account combination between "' + sourceType + '" and "' + destType + '".');
         },
-        selectSourceAccount(item, ac) {
-            const index = parseInt(ac._searchInput.attributes['data-index'].value);
-            document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account = {
-                id: item.id,
-                name: item.name,
-                alpine_name: item.name,
-                type: item.type,
-                currency_code: item.currency_code,
-            };
-            console.log('Changed source account into a known ' + item.type.toLowerCase());
-            document.querySelector('#form')._x_dataStack[0].detectTransactionType();
+
+        formattedTotalAmount() {
+            if (this.entries.length === 0) {
+                return formatMoney(this.groupProperties.totalAmount, 'EUR');
+            }
+            return formatMoney(this.groupProperties.totalAmount, this.entries[0].currency_code ?? 'EUR');
         },
+
         filterForeignCurrencies(code) {
-            console.log('filterForeignCurrencies("' + code + '")');
             let list = [];
             let currency;
-            for (let i in this.enabledCurrencies) {
-                if (this.enabledCurrencies.hasOwnProperty(i)) {
-                    let current = this.enabledCurrencies[i];
+            for (let i in this.formData.enabledCurrencies) {
+                if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
+                    let current = this.formData.enabledCurrencies[i];
                     if (current.code === code) {
                         currency = current;
                     }
                 }
             }
             list.push(currency);
-            this.foreignCurrencies = list;
+            this.formData.foreignCurrencies = list;
             // is he source account currency anyway:
             if (1 === list.length && list[0].code === this.entries[0].source_account.currency_code) {
                 console.log('Foreign currency is same as source currency. Disable foreign amount.');
-                this.foreignAmountEnabled = false;
+                this.formBehaviour.foreignCurrencyEnabled = false;
             }
             if (1 === list.length && list[0].code !== this.entries[0].source_account.currency_code) {
                 console.log('Foreign currency is NOT same as source currency. Enable foreign amount.');
-                this.foreignAmountEnabled = true;
+                this.formBehaviour.foreignCurrencyEnabled = true;
             }
 
             // this also forces the currency_code on ALL entries.
@@ -317,20 +224,21 @@ let transactions = function () {
                 }
             }
         },
+
         filterNativeCurrencies(code) {
-            console.log('filterNativeCurrencies("' + code + '")');
             let list = [];
             let currency;
-            for (let i in this.enabledCurrencies) {
-                if (this.enabledCurrencies.hasOwnProperty(i)) {
-                    let current = this.enabledCurrencies[i];
+            for (let i in this.formData.enabledCurrencies) {
+                if (this.formData.enabledCurrencies.hasOwnProperty(i)) {
+                    let current = this.formData.enabledCurrencies[i];
                     if (current.code === code) {
                         currency = current;
                     }
                 }
             }
             list.push(currency);
-            this.nativeCurrencies = list;
+            this.formData.nativeCurrencies = list;
+
             // this also forces the currency_code on ALL entries.
             for (let i in this.entries) {
                 if (this.entries.hasOwnProperty(i)) {
@@ -338,321 +246,39 @@ let transactions = function () {
                 }
             }
         },
+
         changedAmount(e) {
             const index = parseInt(e.target.dataset.index);
             this.entries[index].amount = parseFloat(e.target.value);
-            this.totalAmount = 0;
+            this.groupProperties.totalAmount = 0;
             for (let i in this.entries) {
                 if (this.entries.hasOwnProperty(i)) {
-                    this.totalAmount = this.totalAmount + parseFloat(this.entries[i].amount);
+                    this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
                 }
             }
-            console.log('Changed amount to ' + this.totalAmount);
-        },
-        selectDestAccount(item, ac) {
-            const index = parseInt(ac._searchInput.attributes['data-index'].value);
-            document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account = {
-                id: item.id,
-                name: item.name,
-                alpine_name: item.name,
-                type: item.type,
-                currency_code: item.currency_code,
-            };
-            console.log('Changed destination account into a known ' + item.type.toLowerCase());
-            document.querySelector('#form')._x_dataStack[0].detectTransactionType();
-        },
-        loadCurrencies() {
-            this.enabledCurrencies = [];
-            this.nativeCurrencies = [];
-            this.foreignCurrencies = [];
-
-            this.foreignCurrencies.push({
-                id: 0, name: '(no foreign currency)', code: '', default: false, symbol: '', decimal_places: 2,
-            });
-
-            console.log('Loading user currencies.');
-            let params = {
-                page: 1, limit: 1337
-            };
-            let getter = new Get();
-            getter.list({}).then((response) => {
-                for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
-                        let current = response.data.data[i];
-                        if (current.attributes.enabled) {
-                            let obj =
-
-                                {
-                                    id: current.id,
-                                    name: current.attributes.name,
-                                    code: current.attributes.code,
-                                    default: current.attributes.default,
-                                    symbol: current.attributes.symbol,
-                                    decimal_places: current.attributes.decimal_places,
-
-                                };
-                            if (obj.default) {
-                                this.defaultCurrency = obj;
-                            }
-                            this.enabledCurrencies.push(obj);
-                            this.nativeCurrencies.push(obj);
-                            this.foreignCurrencies.push(obj);
-                        }
-                    }
-                }
-                this.loadingCurrencies = false;
-            });
-        },
-        loadBudgets() {
-            this.budgets = [];
-
-            this.budgets.push({
-                id: 0, name: '(no budget)',
-            });
-
-            console.log('Loading user budgets.');
-            let params = {
-                page: 1, limit: 1337
-            };
-            let getter = new BudgetGet();
-            getter.list({}).then((response) => {
-                for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
-                        let current = response.data.data[i];
-                        let obj = {
-                            id: current.id, name: current.attributes.name,
-                        };
-                        this.budgets.push(obj);
-                    }
-                }
-                this.loadingBudgets = false;
-                console.log(this.budgets);
-            });
-        },
-        loadPiggyBanks() {
-            this.piggyBanks = {};
-            let tempObject = {
-                '0': {
-                    id: 0, name: '(no group)', order: 0, piggyBanks: [{
-                        id: 0, name: '(no piggy bank)', order: 0,
-                    }]
-                }
-            };
-            console.log('Loading user piggy banks.');
-            let params = {
-                page: 1, limit: 1337
-            };
-            let getter = new PiggyBankGet();
-            getter.list({}).then((response) => {
-                for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
-                        let current = response.data.data[i];
-                        let objectGroupId = current.attributes.object_group_id ?? '0';
-                        let objectGroupTitle = current.attributes.object_group_title ?? '(no group)';
-                        let piggyBank = {
-                            id: current.id, name: current.attributes.name, order: current.attributes.order,
-                        };
-                        if (!tempObject.hasOwnProperty(objectGroupId)) {
-                            tempObject[objectGroupId] = {
-                                id: objectGroupId,
-                                name: objectGroupTitle,
-                                order: current.attributes.object_group_order ?? 0,
-                                piggyBanks: []
-                            };
-                        }
-                        tempObject[objectGroupId].piggyBanks.push(piggyBank);
-                        tempObject[objectGroupId].piggyBanks.sort((a, b) => a.order - b.order);
-                    }
-                }
-                //tempObject.sort((a,b) => a.order - b.order);
-                this.loadingPiggyBanks = false;
-                this.piggyBanks = Object.keys(tempObject).sort().reduce((obj, key) => {
-                    obj[key] = tempObject[key];
-                    return obj;
-                }, {});
-            });
-        },
-        loadSubscriptions() {
-            this.subscriptions = {};
-            let tempObject = {
-                '0': {
-                    id: 0, name: '(no group)', order: 0, subscriptions: [{
-                        id: 0, name: '(no subscription)', order: 0,
-                    }]
-                }
-            };
-            console.log('Loading user suscriptions.');
-            let params = {
-                page: 1, limit: 1337
-            };
-            let getter = new SubscriptionGet();
-            getter.list({}).then((response) => {
-                for (let i in response.data.data) {
-                    if (response.data.data.hasOwnProperty(i)) {
-                        let current = response.data.data[i];
-                        let objectGroupId = current.attributes.object_group_id ?? '0';
-                        let objectGroupTitle = current.attributes.object_group_title ?? '(no group)';
-                        let piggyBank = {
-                            id: current.id, name: current.attributes.name, order: current.attributes.order,
-                        };
-                        if (!tempObject.hasOwnProperty(objectGroupId)) {
-                            tempObject[objectGroupId] = {
-                                id: objectGroupId,
-                                name: objectGroupTitle,
-                                order: current.attributes.object_group_order ?? 0,
-                                subscriptions: []
-                            };
-                        }
-                        tempObject[objectGroupId].subscriptions.push(piggyBank);
-                        tempObject[objectGroupId].subscriptions.sort((a, b) => a.order - b.order);
-                    }
-                }
-                //tempObject.sort((a,b) => a.order - b.order);
-                this.loadingSubscriptions = false;
-                this.subscriptions = Object.keys(tempObject).sort().reduce((obj, key) => {
-                    obj[key] = tempObject[key];
-                    return obj;
-                }, {});
-            });
-        },
-        changeSourceAccount(item, ac) {
-            console.log('changeSourceAccount');
-            if (typeof item === 'undefined') {
-                const index = parseInt(ac._searchInput.attributes['data-index'].value);
-                let source = document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account;
-                if (source.name === ac._searchInput.value) {
-                    console.warn('Ignore hallucinated source account name change to "' + ac._searchInput.value + '"');
-                    document.querySelector('#form')._x_dataStack[0].detectTransactionType();
-                    return;
-                }
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].source_account = {
-                    name: ac._searchInput.value, alpine_name: ac._searchInput.value,
-                };
-
-                console.log('Changed source account into a unknown account called "' + ac._searchInput.value + '"');
-                document.querySelector('#form')._x_dataStack[0].detectTransactionType();
-            }
-        },
-        changeDestAccount(item, ac) {
-            let destination = document.querySelector('#form')._x_dataStack[0].$data.entries[0].destination_account;
-            if (typeof item === 'undefined') {
-                const index = parseInt(ac._searchInput.attributes['data-index'].value);
-                let destination = document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account;
-
-                if (destination.name === ac._searchInput.value) {
-                    console.warn('Ignore hallucinated destination account name change to "' + ac._searchInput.value + '"');
-                    document.querySelector('#form')._x_dataStack[0].detectTransactionType();
-                    return;
-                }
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].destination_account = {
-                    name: ac._searchInput.value, alpine_name: ac._searchInput.value,
-                };
-                console.log('Changed destination account into a unknown account called "' + ac._searchInput.value + '"');
-                document.querySelector('#form')._x_dataStack[0].detectTransactionType();
-            }
-        },
-        changeCategory(item, ac) {
-            const index = parseInt(ac._searchInput.attributes['data-index'].value);
-            if (typeof item !== 'undefined' && item.name) {
-                //this.entries[0].category_name = object.name;
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].category_name = item.name;
-                return;
-            }
-            document.querySelector('#form')._x_dataStack[0].$data.entries[index].category_name = ac._searchInput.value;
-        },
-
-        changeDescription(item, ac) {
-            const index = parseInt(ac._searchInput.attributes['data-index'].value);
-            if (typeof item !== 'undefined' && item.description) {
-                //this.entries[0].category_name = object.name;
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].description = item.description;
-                return;
-            }
-            document.querySelector('#form')._x_dataStack[0].$data.entries[index].description = ac._searchInput.value;
         },
 
         addedSplit() {
-            console.log('addedSplit');
-            // TODO improve code location
-            Autocomplete.init("input.ac-source", {
-                server: urls.account,
-                serverParams: {
-                    types: this.filters.source,
-                },
-                fetchOptions: {
-                    headers: {
-                        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-                    }
-                },
-                hiddenInput: true,
-                preventBrowserAutocomplete: true,
-                highlightTyped: true,
-                liveServer: true,
-                onChange: this.changeSourceAccount,
-                onSelectItem: this.selectSourceAccount,
-                onRenderItem: function (item, b, c) {
-                    return item.name_with_balance + '<br><small class="text-muted">' + i18n.t('firefly.account_type_' + item.type) + '</small>';
-                }
-            });
-
-            Autocomplete.init("input.ac-category", {
-                server: urls.category,
-                fetchOptions: {
-                    headers: {
-                        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-                    }
-                },
-                valueField: "id",
-                labelField: "name",
-                highlightTyped: true,
-                onSelectItem: this.changeCategory,
-                onChange: this.changeCategory,
-            });
-
-            Autocomplete.init("input.ac-dest", {
-                server: urls.account,
-                serverParams: {
-                    types: this.filters.destination,
-                },
-                fetchOptions: {
-                    headers: {
-                        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-                    }
-                },
-                hiddenInput: true,
-                preventBrowserAutocomplete: true,
-                liveServer: true,
-                highlightTyped: true,
-                onSelectItem: this.selectDestAccount,
-                onChange: this.changeDestAccount,
-                onRenderItem: function (item, b, c) {
-                    return item.name_with_balance + '<br><small class="text-muted">' + i18n.t('firefly.account_type_' + item.type) + '</small>';
-                }
-            });
-            this.filters.destination = [];
-            Autocomplete.init('input.ac-description', {
-                server: urls.description,
-                fetchOptions: {
-                    headers: {
-                        'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-                    }
-                },
-                valueField: "id",
-                labelField: "description",
-                highlightTyped: true,
-                onSelectItem: this.changeDescription,
-                onChange: this.changeDescription,
-            });
 
 
         },
+
         processUpload(event) {
-            console.log('I am ALSO event listener for upload-success!');
-            console.log(event);
-            this.showBarOrRedirect();
+            this.showMessageOrRedirectUser();
+        },
+
+        processUploadError(event) {
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+            this.notifications.error.show = true;
+            this.formStates.isSubmitting = false;
+            this.notifications.error.text = i18n.t('firefly.errors_upload');
+            console.error(event);
         },
 
         init() {
+            // get translations
+            // TODO loading translations could be better, but do this later.
             Promise.all([getVariable('language', 'en_US')]).then((values) => {
                 i18n = new I18n();
                 const locale = values[0].replace('-', '_');
@@ -660,15 +286,52 @@ let transactions = function () {
                 loadTranslations(i18n, locale).then(() => {
                     this.addSplit();
                 });
-
             });
-            this.loadCurrencies();
-            this.loadBudgets();
-            this.loadPiggyBanks();
-            this.loadSubscriptions();
+            // load currencies and save in form data.
+            loadCurrencies().then(data => {
+                this.formStates.loadingCurrencies = false;
+                this.formData.defaultCurrency = data.defaultCurrency;
+                this.formData.enabledCurrencies = data.enabledCurrencies;
+                this.formData.nativeCurrencies = data.nativeCurrencies;
+                this.formData.foreignCurrencies = data.foreignCurrencies;
+            });
+
+            loadBudgets().then(data => {
+                this.formData.budgets = data;
+                this.formStates.loadingBudgets = false;
+            });
+            loadPiggyBanks().then(data => {
+                this.formData.piggyBanks = data;
+                this.formStates.loadingPiggyBanks = false;
+            });
+            loadSubscriptions().then(data => {
+                this.formData.subscriptions = data;
+                this.formStates.loadingSubscriptions = false;
+            });
 
             document.addEventListener('upload-success', (event) => {
                 this.processUpload(event);
+                document.querySelectorAll("input[type=file]").value = "";
+            });
+
+            document.addEventListener('upload-error', (event) => {
+                this.processUploadError(event);
+            });
+            document.addEventListener('location-move', (event) => {
+                this.entries[event.detail.index].latitude = event.detail.latitude;
+                this.entries[event.detail.index].longitude = event.detail.longitude;
+            });
+
+            document.addEventListener('location-set', (event) => {
+                this.entries[event.detail.index].hasLocation = true;
+                this.entries[event.detail.index].latitude = event.detail.latitude;
+                this.entries[event.detail.index].longitude = event.detail.longitude;
+                this.entries[event.detail.index].zoomLevel = event.detail.zoomLevel;
+            });
+
+            document.addEventListener('location-zoom', (event) => {
+                this.entries[event.detail.index].hasLocation = true;
+                this.entries[event.detail.index].zoomLevel = event.detail.zoomLevel;
             });
 
 
@@ -677,22 +340,37 @@ let transactions = function () {
             // destination can never be revenue account
             this.filters.destination = ['Expense account', 'Loan', 'Debt', 'Mortgage', 'Asset account'];
         },
+
         submitTransaction() {
-            // reset all views:
-            this.submitting = true;
-            this.showSuccessMessage = false;
-            this.showErrorMessage = false;
-            this.showWaitmessage = false;
+            // reset all messages:
+            this.notifications.error.show = false;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+
+            // reset all errors in the entries array:
+            for (let i in this.entries) {
+                if (this.entries.hasOwnProperty(i)) {
+                    this.entries[i].errors = defaultErrorSet();
+                }
+            }
+
+            // form is now submitting:
+            this.formStates.isSubmitting = true;
+
+            // final check on transaction type.
             this.detectTransactionType();
 
             // parse transaction:
-            let transactions = parseFromEntries(this.entries, this.transactionType);
+            let transactions = parseFromEntries(this.entries, this.groupProperties.transactionType);
             let submission = {
-                // todo process all options
-                group_title: null, fire_webhooks: false, apply_rules: false, transactions: transactions
+                group_title: this.groupProperties.title,
+                fire_webhooks: this.formStates.webhooksButton,
+                apply_rules: this.formStates.rulesButton,
+                transactions: transactions
             };
-            if (transactions.length > 1) {
-                // todo improve me
+
+            // catch for group title:
+            if (null === this.groupProperties.title && transactions.length > 1) {
                 submission.group_title = transactions[0].description;
             }
 
@@ -700,20 +378,25 @@ let transactions = function () {
             let poster = new Post();
             console.log(submission);
             poster.post(submission).then((response) => {
-                // submission was a success.
-                this.newGroupId = parseInt(response.data.data.id);
-                this.newGroupTitle = submission.group_title ?? submission.transactions[0].description
-                const attachmentCount = uploadAttachments(this.newGroupId, response.data.data.attributes.transactions);
+                const group = response.data.data;
+                // submission was a success!
+                this.groupProperties.id = parseInt(group.id);
+                this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description
 
-                // upload transactions? then just show the wait message and do nothing else.
+                // process attachments, if any:
+                const attachmentCount = processAttachments(this.groupProperties.id, group.attributes.transactions);
+
                 if (attachmentCount > 0) {
-                    this.showWaitMessage = true;
+                    // if count is more than zero, system is processing transactions in the background.
+                    this.notifications.wait.show = true;
+                    this.notifications.wait.text = i18n.t('firefly.wait_attachments');
                     return;
                 }
 
                 // if not, respond to user options:
-                this.showBarOrRedirect();
+                this.showMessageOrRedirectUser();
             }).catch((error) => {
+
                 this.submitting = false;
                 console.log(error);
                 // todo put errors in form
@@ -724,85 +407,45 @@ let transactions = function () {
 
             });
         },
-        showBarOrRedirect() {
-            this.showWaitMessage = false;
-            this.submitting = false;
-            if (this.returnHereButton) {
-                // todo create success banner
-                this.showSuccessMessage = true;
-                this.successMessageLink = 'transactions/show/' + this.newGroupId;
-                this.successMessageText = i18n.t('firefly.stored_journal_js', {description: this.newGroupTitle});
-                // todo clear out form if necessary
-                if (this.resetButton) {
+
+        showMessageOrRedirectUser() {
+            // disable all messages:
+            this.notifications.error.show = false;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+
+            if (this.formStates.returnHereButton) {
+
+                this.notifications.success.show = true;
+                this.notifications.success.url = 'transactions/show/' + this.groupProperties.id;
+                this.notifications.success.text = i18n.t('firefly.stored_journal_js', {description: this.groupProperties.title});
+
+                if (this.formStates.resetButton) {
                     this.entries = [];
                     this.addSplit();
-                    this.totalAmount = 0;
+                    this.groupProperties.totalAmount = 0;
                 }
+                return;
             }
-
-            if (!this.returnHereButton) {
-                window.location = 'transactions/show/' + this.newGroupId + '?transaction_group_id=' + this.newGroupId + '&message=created';
-            }
+            window.location = 'transactions/show/' + this.groupProperties.id + '?transaction_group_id=' + this.groupProperties.id + '&message=created';
         },
+
         parseErrors(data) {
-            this.setDefaultErrors();
-            this.showErrorMessage = true;
-            this.showSuccessMessage = false;
-            // todo create error banner.
-            this.errorMessageText = i18n.t('firefly.errors_submission') + ' ' + data.message;
-            let transactionIndex;
-            let fieldName;
+            // disable all messages:
+            this.notifications.error.show = true;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+            this.formStates.isSubmitting = false;
+            this.notifications.error.text = i18n.t('firefly.errors_submission', {errorMessage: data.message});
 
-            // todo add 'was-validated' to form.
-
-            for (const key in data.errors) {
-                if (data.errors.hasOwnProperty(key)) {
-                    if (key === 'group_title') {
-                        // todo handle group errors.
-                        //this.group_title_errors = errors.errors[key];
-                    }
-                    if (key !== 'group_title') {
-                        // lol, the dumbest way to explode "transactions.0.something" ever.
-                        transactionIndex = parseInt(key.split('.')[1]);
-                        fieldName = key.split('.')[2];
-                        // set error in this object thing.
-                        switch (fieldName) {
-                            case 'amount':
-                            case 'date':
-                            case 'budget_id':
-                            case 'bill_id':
-                            case 'description':
-                            case 'tags':
-                                this.entries[transactionIndex].errors[fieldName] = data.errors[key];
-                                break;
-                            case 'source_name':
-                            case 'source_id':
-                                this.entries[transactionIndex].errors.source_account = this.entries[transactionIndex].errors.source_account.concat(data.errors[key]);
-                                break;
-                            case 'destination_name':
-                            case 'destination_id':
-                                this.entries[transactionIndex].errors.destination_account = this.entries[transactionIndex].errors.destination_account.concat(data.errors[key]);
-                                break;
-                            case 'foreign_amount':
-                            case 'foreign_currency_id':
-                                this.entries[transactionIndex].errors.foreign_amount = this.entries[transactionIndex].errors.foreign_amount.concat(data.errors[key]);
-                                break;
-                        }
-                    }
-                    // unique some things
-                    if (typeof this.entries[transactionIndex] !== 'undefined') {
-                        this.entries[transactionIndex].errors.source_account = Array.from(new Set(this.entries[transactionIndex].errors.source_account));
-                        this.entries[transactionIndex].errors.destination_account = Array.from(new Set(this.entries[transactionIndex].errors.destination_account));
-                    }
-                }
+            if (data.hasOwnProperty('errors')) {
+                this.entries = spliceErrorsIntoTransactions(i18n, data.errors, this.entries);
             }
-            console.log(this.entries[0].errors);
         },
-        setDefaultErrors() {
 
-        },
         addSplit() {
             this.entries.push(createEmptySplit());
+
             setTimeout(() => {
                 // render tags:
                 Tags.init('select.ac-tags', {
@@ -810,7 +453,8 @@ let transactions = function () {
                     server: urls.tag,
                     liveServer: true,
                     clearEnd: true,
-                    notFoundMessage: '(nothing found)',
+                    allowNew: true,
+                    notFoundMessage: i18n.t('firefly.nothing_found'),
                     noCache: true,
                     fetchOptions: {
                         headers: {
@@ -819,73 +463,78 @@ let transactions = function () {
                     }
                 });
                 const count = this.entries.length - 1;
-                this.entries[count].map = L.map('mappie').setView([this.latitude, this.longitude], this.zoomLevel);
+                // if(document.querySelector('#location_map_' + count)) { }
+                addLocation(count);
 
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                }).addTo(this.entries[count].map);
-                this.entries[count].map.on('click', this.addPointToMap);
-                this.entries[count].map.on('zoomend', this.saveZoomOfMap);
+                // addedSplit, is called from the HTML
+                // for source account
+                const renderAccount = function (item, b, c) {
+                    return item.name_with_balance + '<br><small class="text-muted">' + i18n.t('firefly.account_type_' + item.type) + '</small>';
+                };
+                addAutocomplete({
+                    selector: 'input.ac-source',
+                    serverUrl: urls.account,
+                    // filters: this.filters.source,
+                    // onRenderItem: renderAccount,
+                    onChange: changeSourceAccount,
+                    onSelectItem: selectSourceAccount,
+                    hiddenValue: this.items[count].source_account.alpine_name,
+                });
+                addAutocomplete({
+                    selector: 'input.ac-dest',
+                    serverUrl: urls.account,
+                    filters: this.filters.destination,
+                    onRenderItem: renderAccount,
+                    onChange: changeDestinationAccount,
+                    onSelectItem: selectDestinationAccount
+                });
+                addAutocomplete({
+                    selector: 'input.ac-category',
+                    serverUrl: urls.category,
+                    valueField: 'id',
+                    labelField: 'name',
+                    onChange: changeCategory,
+                    onSelectItem: changeCategory
+                });
+                addAutocomplete({
+                    selector: 'input.ac-description',
+                    serverUrl: urls.description,
+                    valueField: 'id',
+                    labelField: 'description',
+                    onChange: changeDescription,
+                    onSelectItem: changeDescription,
+                });
 
-            }, 250);
-
+            }, 150);
         },
+
         removeSplit(index) {
             this.entries.splice(index, 1);
             // fall back to index 0
             const triggerFirstTabEl = document.querySelector('#split-0-tab')
             triggerFirstTabEl.click();
         },
-        formattedTotalAmount() {
-            return formatMoney(this.totalAmount, 'EUR');
-        },
+
         clearLocation(e) {
             e.preventDefault();
+            // remove location from entry, fire event, do nothing else (the map is somebody else's problem).
+
             const target = e.currentTarget;
             const index = parseInt(target.attributes['data-index'].value);
             this.entries[index].hasLocation = false;
-            this.entries[index].marker.remove();
+            this.entries[index].latitude = null;
+            this.entries[index].longitude = null;
+            this.entries[index].zoomLevel = null;
+
+            const removeEvent = new CustomEvent('location-remove', {
+                detail: {
+                    index: index
+                }
+            });
+            document.dispatchEvent(removeEvent);
+
             return false;
         },
-        saveZoomOfMap(e) {
-            let index = parseInt(e.sourceTarget._container.attributes['data-index'].value);
-            let map = document.querySelector('#form')._x_dataStack[0].$data.entries[index].map;
-            document.querySelector('#form')._x_dataStack[0].$data.entries[index].zoomLevel = map.getZoom();
-            console.log('New zoom level: ' + map.getZoom());
-        },
-        addPointToMap(e) {
-            let index = parseInt(e.originalEvent.currentTarget.attributes['data-index'].value);
-            let map = document.querySelector('#form')._x_dataStack[0].$data.entries[index].map;
-            let hasLocation = document.querySelector('#form')._x_dataStack[0].$data.entries[index].hasLocation;
-            console.log('Has location: ' + hasLocation);
-            if (false === hasLocation) {
-                console.log('False!');
-                const marker = new L.marker(e.latlng, {draggable: true});
-                marker.on('dragend', function (event) {
-                    var marker = event.target;
-
-                    var position = marker.getLatLng();
-                    marker.setLatLng(new L.LatLng(position.lat, position.lng), {draggable: 'true'});
-                    document.querySelector('#form')._x_dataStack[0].$data.entries[index].latitude = position.lat;
-                    document.querySelector('#form')._x_dataStack[0].$data.entries[index].longitude = position.lng;
-                });
-
-                marker.addTo(map);
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].hasLocation = true;
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].marker = marker;
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].latitude = e.latlng.lat;
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].longitude = e.latlng.lng;
-                document.querySelector('#form')._x_dataStack[0].$data.entries[index].zoomLevel = map.getZoom();
-            }
-            //this.entries[index].hasLocation = true;
-            // map.on('click', function (e) {
-            //     if (false === this.hasLocation) {
-            //         let marker = new L.marker(e.latlng).addTo(map);
-            //         this.hasLocation = true;
-            //     }
-            // });
-        }
     }
 }
 
@@ -899,15 +548,6 @@ function loadPage() {
     });
     Alpine.start();
 }
-
-document.addEventListener('upload-success', (event) => {
-    console.log('I am event listener for upload-success');
-    console.log(event);
-    //Alpine.
-});
-
-
-// <button x-data @click="$dispatch('custom-event', 'Hello World!')">
 
 // wait for load until bootstrapped event is received.
 document.addEventListener('firefly-iii-bootstrapped', () => {

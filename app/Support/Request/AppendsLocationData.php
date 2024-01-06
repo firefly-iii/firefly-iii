@@ -65,6 +65,23 @@ trait AppendsLocationData
      */
     abstract public function boolean($key = null, $default = false);
 
+    public function addFromromTransactionStore(array $information, array $return): array
+    {
+        $return['store_location'] = false;
+        if (true === $information['store_location']) {
+            $long = array_key_exists('longitude', $information) ? $information['longitude'] : null;
+            $lat  = array_key_exists('latitude', $information) ? $information['latitude'] : null;
+            if (null !== $long && null !== $lat && $this->validLongitude($long) && $this->validLatitude($lat)) {
+                $return['store_location'] = true;
+                $return['longitude']      = $information['longitude'];
+                $return['latitude']       = $information['latitude'];
+                $return['zoom_level']     = $information['zoom_level'];
+            }
+        }
+
+        return $return;
+    }
+
     /**
      * Read the submitted Request data and add new or updated Location data to the array.
      */
@@ -117,6 +134,20 @@ trait AppendsLocationData
         );
 
         return $data;
+    }
+
+    private function validLongitude(string $longitude): bool
+    {
+        $number = (float) $longitude;
+
+        return $number >= -180 && $number <= 180;
+    }
+
+    private function validLatitude(string $latitude): bool
+    {
+        $number = (float) $latitude;
+
+        return $number >= -90 && $number <= 90;
     }
 
     private function getLocationKey(?string $prefix, string $key): string

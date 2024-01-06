@@ -31,4 +31,7 @@ export default class Get {
     list(params) {
         return api.get('/api/v2/transactions', {params: params});
     }
+    show(id, params){
+        return api.get('/api/v2/transactions/' + id, {params: params});
+    }
 }

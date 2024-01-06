@@ -68,7 +68,7 @@ class BillUpdateRequest extends FormRequest
         $bill = $this->route()->parameter('bill');
 
         return [
-            'name'                    => sprintf('required|between:1,255|uniqueObjectForUser:bills,name,%d', $bill->id),
+            'name'                    => sprintf('required|min:1|max:255|uniqueObjectForUser:bills,name,%d', $bill->id),
             'amount_min'              => ['required', new IsValidPositiveAmount()],
             'amount_max'              => ['required', new IsValidPositiveAmount()],
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
@@ -78,7 +78,7 @@ class BillUpdateRequest extends FormRequest
             'repeat_freq'             => sprintf('required|in:%s', implode(',', config('firefly.bill_periods'))),
             'skip'                    => 'required|integer|gte:0|lte:31',
             'active'                  => 'boolean',
-            'notes'                   => 'between:1,65536|nullable',
+            'notes'                   => 'min:1|max:32768|nullable',
         ];
     }
 }

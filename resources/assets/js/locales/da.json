@@ -6,7 +6,7 @@
         "flash_success": "Succes!",
         "close": "Luk",
         "split_transaction_title": "Description of the split transaction",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors.",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "split": "Opdel",
         "single_split": "Opdel",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",

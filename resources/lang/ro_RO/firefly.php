@@ -1299,11 +1299,13 @@ return [
     'no_location_set'                                     => 'Nu a fost setată nicio locație.',
     'meta_data'                                           => 'Date meta',
     'location'                                            => 'Locație',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Fără data',
     'result'                                              => 'Rezultat',
     'sums_apply_to_range'                                 => 'Toate sumele se aplică gamei selectate',
     'mapbox_api_key'                                      => 'Pentru a utiliza harta, obțineți o cheie API din <a href="https://www.mapbox.com/"> Mapbox </a>. Deschideți fișierul <code> .env </ code> și introduceți acest cod după <code> MAPBOX_API_KEY = </ code>.',
     'press_object_location'                               => 'Faceți clic dreapta sau apăsați lung pentru a seta locația obiectului.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Ștergeți locația',
     'delete_all_selected_tags'                            => 'Şterge toate etichetele selectate',
     'select_tags_to_delete'                               => 'Nu uitați să selectați unele etichete.',
@@ -1949,6 +1951,12 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => 'Actualizați retragere',
     'update_deposit'                                      => 'Actualizați depozit',
@@ -2333,6 +2341,7 @@ return [
     'average'                                             => 'In medie',
     'balanceFor'                                          => 'Balanta pentru :name',
     'no_tags'                                             => '(fără etichete)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',
@@ -2545,7 +2554,7 @@ return [
     'after_update_create_another'                         => 'După actualizare, reveniți aici pentru a continua editarea.',
     'store_as_new'                                        => 'Stocați ca o tranzacție nouă în loc să actualizați.',
     'reset_after'                                         => 'Resetați formularul după trimitere',
-    'errors_submission'                                   => 'A fost ceva în neregulă cu depunerea ta. Te rugăm să verifici erorile.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Expand split',
     'transaction_collapse_split'                          => 'Collapse split',
 

@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'S pomocou týchto prehľadov získate podrobné informácie o svojich financiách.',
     'reports_index_inputReportType'                           => 'Vyberte typ prehľadu. Pozrite sa na stránky pomocníka a zistite, čo vám každý prehľad ukáže.',
     'reports_index_inputAccountsSelect'                       => 'Môžete zahŕňať, alebo vynechávať majetkové účty, ako potrebujete.',
-    'reports_index_inputDateRange'                            => 'Vybrané časové obdobie je plne na vás: od jedného dňa po 10 rokov.',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => 'Podľa toho, aký výkaz ste vybrali, je tu možné vybrať ďalšie filtre a voľby. Pri zmene typu výkazu sledujte túto oblasť.',
 
     // reports (reports)

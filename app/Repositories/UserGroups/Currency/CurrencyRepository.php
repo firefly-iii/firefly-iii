@@ -273,10 +273,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         return TransactionCurrency::where('code', $currencyCode)->first();
     }
 
-    /**
-     * @param TransactionCurrency $currency
-     *                                      Enables a currency
-     */
     public function enable(TransactionCurrency $currency): void
     {
         $this->userGroup->currencies()->syncWithoutDetaching([$currency->id]);

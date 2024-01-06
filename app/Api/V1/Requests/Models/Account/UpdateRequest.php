@@ -91,7 +91,7 @@ class UpdateRequest extends FormRequest
             'type'                 => sprintf('in:%s', $types),
             'iban'                 => ['iban', 'nullable', new UniqueIban($account, $this->convertString('type'))],
             'bic'                  => 'bic|nullable',
-            'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber($account, $this->convertString('type'))],
+            'account_number'       => ['min:1', 'max:255', 'nullable', new UniqueAccountNumber($account, $this->convertString('type'))],
             'opening_balance'      => 'numeric|required_with:opening_balance_date|nullable',
             'opening_balance_date' => 'date|required_with:opening_balance|nullable',
             'virtual_balance'      => 'numeric|nullable',
@@ -105,7 +105,7 @@ class UpdateRequest extends FormRequest
             'monthly_payment_date' => 'date|nullable|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
             'liability_type'       => 'required_if:type,liability|in:loan,debt,mortgage',
             'liability_direction'  => 'required_if:type,liability|in:credit,debit',
-            'interest'             => 'required_if:type,liability|between:0,100|numeric',
+            'interest'             => 'required_if:type,liability|min:0|max:100|numeric',
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
             'notes'                => 'min:0|max:65536',
         ];

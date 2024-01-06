@@ -1299,11 +1299,13 @@ return [
     'no_location_set'                                     => 'Kein Ort gesetzt.',
     'meta_data'                                           => 'Metadaten',
     'location'                                            => 'Standort',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Ohne Datum',
     'result'                                              => 'Ergebnis',
     'sums_apply_to_range'                                 => 'Alle Summen beziehen sich auf den ausgewählten Bereich.',
     'mapbox_api_key'                                      => 'Um Karten zu verwenden, besorgen Sie sich einen API-Schlüssel von <a href="https://www.mapbox.com/">Mapbox</a>. Öffnen Sie Ihre Datei <code>.env</code> und geben Sie diesen Schlüssel nach <code>MAPBOX_API_KEY=</code> ein.',
     'press_object_location'                               => 'Rechtsklick oder Anklicken und gedrückt halten, um die Position des Objekts festzulegen.',
+    'click_tap_location'                                  => 'Klicken/Tippen Sie auf die Karte, um einen Standort hinzuzufügen',
     'clear_location'                                      => 'Ort leeren',
     'delete_all_selected_tags'                            => 'Alle markierten Stichwörter löschen',
     'select_tags_to_delete'                               => 'Nicht vergessen, einige Schlagwörter auszuwählen.',
@@ -1949,6 +1951,12 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Bitte warten Sie, bis die Anhänge hochgeladen sind.',
+    'errors_upload'                                       => 'Das Hochladen ist fehlgeschlagen. Bitte überprüfen Sie Ihre Browserkonsole auf den Fehler.',
+    'amount_foreign_if'                                   => 'Betrag in Fremdwährung, falls vorhanden',
+    'amount_destination_account'                          => 'Betrag in der Währung des Zielkontos',
+    'edit_transaction_title'                              => 'Buchung „:description” bearbeiten',
     'unreconcile'                                         => 'Kontenabgleich widerrufen',
     'update_withdrawal'                                   => 'Ausgaben aktualisieren',
     'update_deposit'                                      => 'Einnahmen aktualisieren',
@@ -2333,6 +2341,7 @@ return [
     'average'                                             => 'Durchschnitt',
     'balanceFor'                                          => 'Kontostand für „:name”',
     'no_tags'                                             => '(keine Schlagwörter)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Ereignisverlauf',
@@ -2545,7 +2554,7 @@ return [
     'after_update_create_another'                         => 'Nach dem Aktualisieren hierher zurückkehren, um weiter zu bearbeiten.',
     'store_as_new'                                        => 'Als neue Buchung speichern statt zu aktualisieren.',
     'reset_after'                                         => 'Formular nach der Übermittlung zurücksetzen',
-    'errors_submission'                                   => 'Ihre Übermittlung ist fehlgeschlagen. Bitte überprüfen Sie die Fehler.',
+    'errors_submission'                                   => 'Problem bei der Übermittlung. Bitte überprüfen Sie die nachfolgenden Fehler: %{errorMessage}',
     'transaction_expand_split'                            => 'Aufteilung erweitern',
     'transaction_collapse_split'                          => 'Aufteilung reduzieren',
 

@@ -44,6 +44,7 @@ export default defineConfig({
                 'resources/assets/v2/sass/app.scss',
                 'resources/assets/v2/pages/dashboard/dashboard.js',
                 'resources/assets/v2/pages/transactions/create.js',
+                'resources/assets/v2/pages/transactions/edit.js',
             ],
             refresh: true,
         }),

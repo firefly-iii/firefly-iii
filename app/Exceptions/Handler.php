@@ -216,6 +216,7 @@ class Handler extends ExceptionHandler
             'json'         => request()->acceptsJson(),
             'method'       => request()->method(),
             'headers'      => $headers,
+            'post'         => 'POST' === request()->method() ? json_encode(request()->all()) : '',
         ];
 
         // create job that will mail.

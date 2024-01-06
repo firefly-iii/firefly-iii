@@ -36,6 +36,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class PiggyBankRepository.
@@ -48,6 +49,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     public function destroyAll(): void
     {
+        Log::channel('audit')->info('Delete all piggy banks through destroyAll');
         $this->user->piggyBanks()->delete();
     }
 

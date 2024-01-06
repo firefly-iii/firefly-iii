@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Використовуйте ці звіти, щоб отримати докладне розуміння ваших фінансів.',
     'reports_index_inputReportType'                           => 'Виберіть тип звіту. Перевірте довідку, щоб зрозуміти, що відображає кожен звіт.',
     'reports_index_inputAccountsSelect'                       => 'Ви можете виключити або включити активи, як вважаєте за потрібне.',
-    'reports_index_inputDateRange'                            => 'Обраний діапазон дат може бути будь який: від одного дня до 10 років.',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => 'Залежно від обраного звіту, можна вибрати додаткові фільтри та параметри. Зверніть увагу на це поле коли потрібно змінити тип звіту.',
 
     // reports (reports)

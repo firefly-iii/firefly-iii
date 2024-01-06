@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Fes servir aquests informes per obtenir detalls de les teves finances.',
     'reports_index_inputReportType'                           => 'Escull un tipus d\'informe. Dóna un cop d\'ull a les pàgines d\'ajuda per veure el que mostra cada informe.',
     'reports_index_inputAccountsSelect'                       => 'Pots excloure o incloure comptes d\'actius com et vagi millor.',
-    'reports_index_inputDateRange'                            => 'L\'interval de dades seleccionat depèn de tu: d\'un dia a 10 anys.',
+    'reports_index_inputDateRange'                            => 'El rang de dates seleccionat el determines tú: des d\'un dia fins a 10 anys o més.',
     'reports_index_extra-options-box'                         => 'Depenent de l\'informe que hagis seleccionat, pots seleccionar filtres i opcions addicionals. Mira aquesta capsa quan canviïs el tipus d\'informe.',
 
     // reports (reports)

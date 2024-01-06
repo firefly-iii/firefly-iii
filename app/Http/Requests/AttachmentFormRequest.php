@@ -53,8 +53,8 @@ class AttachmentFormRequest extends FormRequest
     {
         // fixed
         return [
-            'title' => 'between:1,255|nullable',
-            'notes' => 'between:1,65536|nullable',
+            'title' => 'min:1|max:255|nullable',
+            'notes' => 'min:1|max:32768|nullable',
         ];
     }
 }

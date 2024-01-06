@@ -77,11 +77,7 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param DateRequest $request
-     *
      * TODO see autocomplete/accountcontroller
-     *
-     * @throws FireflyException
      */
     public function dashboard(DateRequest $request): JsonResponse
     {

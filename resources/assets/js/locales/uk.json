@@ -6,7 +6,7 @@
         "flash_success": "\u0423\u0441\u043f\u0456\u0448\u043d\u043e!",
         "close": "\u0417\u0430\u043a\u0440\u0438\u0442\u0438",
         "split_transaction_title": "Description of the split transaction",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors.",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "split": "\u0420\u043e\u0437\u0434\u0456\u043b\u0438\u0442\u0438",
         "single_split": "\u0420\u043e\u0437\u0434\u0456\u043b\u0438\u0442\u0438",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transaction #{ID} (\"{title}\")<\/a> has been stored.",

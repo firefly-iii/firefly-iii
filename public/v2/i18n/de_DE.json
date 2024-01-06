@@ -7,7 +7,7 @@
             "spent": "Ausgegeben",
             "left": "\u00dcbrig",
             "paid": "Bezahlt",
-            "errors_submission": "Ihre \u00dcbermittlung ist fehlgeschlagen. Bitte \u00fcberpr\u00fcfen Sie die Fehler.",
+            "errors_submission": "Problem bei der \u00dcbermittlung. Bitte \u00fcberpr\u00fcfen Sie die nachfolgenden Fehler: %{errorMessage}",
             "unpaid": "Unbezahlt",
             "default_group_title_name_plain": "ungruppiert",
             "subscriptions_in_group": "Abonnements in Gruppe \"%{title}\"",

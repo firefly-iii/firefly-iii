@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'Mảng bị thiếu mệnh đề "where"',
     'missing_update'                  => 'Mảng bị thiếu mệnh đề "update"',
     'invalid_where_key'               => 'JSON chứa một khóa không hợp lệ cho điều khoản "where"',
@@ -44,6 +46,7 @@ return [
     'iban'                            => 'Đây không phải là một IBAN hợp lệ.',
     'zero_or_more'                    => 'Giá trị không thể âm.',
     'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero_correct'          => 'The value must be zero or more.',
     'no_asset_account'                => 'This is not an asset account.',
     'date_or_time'                    => 'Giá trị phải là giá trị ngày hoặc thời gian hợp lệ (ISO 8601).',
     'source_equals_destination'       => 'Tài khoản nguồn bằng với tài khoản đích.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'Tổng số tiền được yêu cầu.',
     'auto_budget_amount_positive'     => 'Số lượng phải lớn hơn 0.',
+
     'auto_budget_period_mandatory'    => 'Ngân sách tự động là một trường bắt buộc.',
 
     // no access to administration:

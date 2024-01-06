@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'A l\'array li falta la clàusula "where"',
     'missing_update'                  => 'A l\'array li falta la clàusula "update"',
     'invalid_where_key'               => 'El JSON conté una clau invàlida per la clàusula "where"',
@@ -43,7 +45,8 @@ return [
     'invalid_query_currency'          => 'La consulta conté comptes amb diferents preferències de moneda, cosa que no és permesa.',
     'iban'                            => 'Aquest IBAN no és vàlid.',
     'zero_or_more'                    => 'El valor no pot ser negatiu.',
-    'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero'                  => 'El valor ha de ser superior a zero.',
+    'more_than_zero_correct'          => 'El valor ha de ser zero o més.',
     'no_asset_account'                => 'Aquest no és un compte d\'actius.',
     'date_or_time'                    => 'El valor ha de ser una data o hora vàlida (ISO 8601).',
     'source_equals_destination'       => 'El compte d\'origen és el mateix que el compte de destí.',
@@ -143,7 +146,7 @@ return [
     'min.array'                       => 'El camp :attribute ha de tenir com a mínim :min elements.',
     'not_in'                          => 'El camp :attribute seleccionat no és vàlid.',
     'numeric'                         => 'El camp :attribute ha de ser un número.',
-    'scientific_notation'             => 'The :attribute cannot use the scientific notation.',
+    'scientific_notation'             => 'El :attribute no pot fer servir notació científica.',
     'numeric_native'                  => 'La quantitat nativa ha de ser un número.',
     'numeric_destination'             => 'La quantitat de destí ha de ser un número.',
     'numeric_source'                  => 'La quantitat d\'origen ha de ser un número.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'Es requereix la quantitat.',
     'auto_budget_amount_positive'     => 'La quantitat ha de ser superior a zero.',
+
     'auto_budget_period_mandatory'    => 'El període de pressupost automàtic és un camp obligatori.',
 
     // no access to administration:

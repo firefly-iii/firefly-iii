@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'Tablica nie zawiera klauzuli "where"',
     'missing_update'                  => 'Tablica nie zawiera klauzuli "update"',
     'invalid_where_key'               => 'JSON zawiera nieprawidłowy klucz dla klauzuli "where"',
@@ -44,6 +46,7 @@ return [
     'iban'                            => 'To nie jest prawidłowy IBAN.',
     'zero_or_more'                    => 'Wartość nie może być ujemna.',
     'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero_correct'          => 'The value must be zero or more.',
     'no_asset_account'                => 'To nie jest konto aktywów.',
     'date_or_time'                    => 'Wartość musi być prawidłową datą lub czasem (ISO 8601).',
     'source_equals_destination'       => 'Konto źródłowe jest równe kontu docelowemu.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'Kwota jest wymagana.',
     'auto_budget_amount_positive'     => 'Kwota musi być większa niż zero.',
+
     'auto_budget_period_mandatory'    => 'Okres automatycznego budżetu to pole obowiązkowe.',
 
     // no access to administration:

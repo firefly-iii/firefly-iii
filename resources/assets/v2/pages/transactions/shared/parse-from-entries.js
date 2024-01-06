@@ -20,7 +20,6 @@
 
 /**
  *
- * @param entries
  */
 export function parseFromEntries(entries, transactionType) {
     let returnArray = [];
@@ -54,9 +53,18 @@ export function parseFromEntries(entries, transactionType) {
             current.budget_id = entry.budget_id;
             current.category_name = entry.category_name;
             current.piggy_bank_id = entry.piggy_bank_id;
+            current.bill_id = entry.bill_id;
+            current.tags = entry.tags;
+            current.notes = entry.notes;
+
+            // more meta
+            current.internal_reference = entry.internal_reference;
+            current.external_url = entry.external_url;
 
             // location
+            current.store_location = false;
             if (entry.hasLocation) {
+                current.store_location = true;
                 current.longitude = entry.longitude.toString();
                 current.latitude = entry.latitude.toString();
                 current.zoom_level = entry.zoomLevel;
@@ -82,7 +90,6 @@ export function parseFromEntries(entries, transactionType) {
                 current.destination_id = entry.destination_account.id;
             }
 
-            // TODO transaction type is hard coded:
             current.type = transactionType;
 
 

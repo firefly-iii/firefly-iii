@@ -1300,11 +1300,13 @@ return [
     'no_location_set'                                     => 'Konum ayarlanamadı.',
     'meta_data'                                           => 'Meta veri',
     'location'                                            => 'Konum',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Tarihsiz',
     'result'                                              => 'Sonuç',
     'sums_apply_to_range'                                 => 'Tüm toplamlar seçili aralıkta geçerlidir',
     'mapbox_api_key'                                      => 'Map\'i kullanmak için şu adresten bir API anahtarı alın: <a href="https://www.mapbox.com/">Mapbox</a>. Seninkini aç <code>.env</code> dosyalayın ve sonra bu kodu girin <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Nesnenin konumunu ayarlamak için sağ tıklayın veya uzun basın.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Konumu temizle',
     'delete_all_selected_tags'                            => 'Seçili tüm etiketleri sil',
     'select_tags_to_delete'                               => 'Bazı etiketler seçmeyi unutmayın.',
@@ -1950,6 +1952,12 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => 'Geri çekmeyi güncelle',
     'update_deposit'                                      => 'Depozitoyu güncelle',
@@ -2334,6 +2342,7 @@ return [
     'average'                                             => 'Ortalama',
     'balanceFor'                                          => ':name için bakiye',
     'no_tags'                                             => '(no tags)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',
@@ -2546,7 +2555,7 @@ return [
     'after_update_create_another'                         => 'After updating, return here to continue editing.',
     'store_as_new'                                        => 'Store as a new transaction instead of updating.',
     'reset_after'                                         => 'Reset form after submission',
-    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Expand split',
     'transaction_collapse_split'                          => 'Collapse split',
 

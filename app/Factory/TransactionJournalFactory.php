@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Location;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -49,6 +50,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class TransactionJournalFactory
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TransactionJournalFactory
 {
@@ -318,8 +321,21 @@ class TransactionJournalFactory
         $this->storePiggyEvent($journal, $row);
         $this->storeTags($journal, $row['tags']);
         $this->storeMetaFields($journal, $row);
+        $this->storeLocation($journal, $row);
 
         return $journal;
+    }
+
+    private function storeLocation(TransactionJournal $journal, NullArrayObject $data): void
+    {
+        if (true === $data['store_location']) {
+            $location             = new Location();
+            $location->longitude  = $data['longitude'];
+            $location->latitude   = $data['latitude'];
+            $location->zoom_level = $data['zoom_level'];
+            $location->locatable()->associate($journal);
+            $location->save();
+        }
     }
 
     private function hashArray(NullArrayObject $row): string
@@ -360,16 +376,13 @@ class TransactionJournalFactory
             ->where('transaction_journals.user_id', $this->user->id)
             ->where('data', json_encode($hash, JSON_THROW_ON_ERROR))
             ->with(['transactionJournal', 'transactionJournal.transactionGroup'])
-            ->first()
+            ->first(['journal_meta.*'])
         ;
         if (null !== $result) {
             app('log')->warning(sprintf('Found a duplicate in errorIfDuplicate because hash %s is not unique!', $hash));
             $journal = $result->transactionJournal()->withTrashed()->first();
             $group   = $journal?->transactionGroup()->withTrashed()->first();
-            $groupId = $group?->id;
-            if (null === $group) {
-                $groupId = 0;
-            }
+            $groupId = (int) $group?->id;
 
             throw new DuplicateTransactionException(sprintf('Duplicate of transaction #%d.', $groupId));
         }

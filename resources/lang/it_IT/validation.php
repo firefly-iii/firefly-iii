@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III non può determinare il tipo di transazione in base a questo account sorgente.',
+    'bad_type_destination'            => 'Firefly III non può determinare il tipo di transazione in base a questo account di destinazione.',
     'missing_where'                   => 'Clausola "where" assente nell\'array',
     'missing_update'                  => 'Clausola "update" assente nell\'array',
     'invalid_where_key'               => 'Il JSON contiene una chiave non valida per la clausola "where"',
@@ -43,7 +45,8 @@ return [
     'invalid_query_currency'          => 'La tua interrogazione contiene conti con valute diverse, che non è consentito.',
     'iban'                            => 'Questo non è un IBAN valido.',
     'zero_or_more'                    => 'Il valore non può essere negativo.',
-    'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero'                  => 'Il valore deve essere superiore a zero.',
+    'more_than_zero_correct'          => 'Il valore deve essere zero o superiore.',
     'no_asset_account'                => 'This is not an asset account.',
     'date_or_time'                    => 'Il valore deve essere un valore valido per una data o per un orario (ISO 8601).',
     'source_equals_destination'       => 'Il conto di origine è uguale al conto di destinazione.',
@@ -143,7 +146,7 @@ return [
     'min.array'                       => ':attribute deve avere almeno :min voci.',
     'not_in'                          => ':attribute selezionato è invalido.',
     'numeric'                         => ':attribute deve essere un numero.',
-    'scientific_notation'             => 'The :attribute cannot use the scientific notation.',
+    'scientific_notation'             => 'L\' :attribute non può utilizzare la notazione scientifica.',
     'numeric_native'                  => 'L\'importo nativo deve essere un numero.',
     'numeric_destination'             => 'L\'importo di destinazione deve essere un numero.',
     'numeric_source'                  => 'L\'importo di origine deve essere un numero.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'L\'importo è obbligatorio.',
     'auto_budget_amount_positive'     => 'L\'importo deve essere maggiore di zero.',
+
     'auto_budget_period_mandatory'    => 'Il periodo per il budget automatico è un campo obbligatorio.',
 
     // no access to administration:

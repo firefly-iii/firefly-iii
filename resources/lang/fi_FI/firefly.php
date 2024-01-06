@@ -1299,11 +1299,13 @@ return [
     'no_location_set'                                     => 'Sijaintia ei ole asetettu.',
     'meta_data'                                           => 'Metatieto',
     'location'                                            => 'Sijainti',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Ilman päiväystä',
     'result'                                              => 'Tulos',
     'sums_apply_to_range'                                 => 'Kaikki summat sisältyvät valittuun jaksoon',
     'mapbox_api_key'                                      => 'Käyttääksesi karttaa, hanki API-avain <a href="https://www.mapbox.com/">Mapboxilta</a>. Avaa <code>.env</code> tiedostosi ja lisää koodi <code>MAPBOX_API_KEY=</code> perään.',
     'press_object_location'                               => 'Oikealla hiiren napilla (tai pitkä painallus) voit asettaa paikkatiedon.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Tyhjennä sijainti',
     'delete_all_selected_tags'                            => 'Poista kaikki valitut tägit',
     'select_tags_to_delete'                               => 'Älä unohda valita tägejä.',
@@ -1949,6 +1951,12 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => 'Päivitä nosto',
     'update_deposit'                                      => 'Päivitä talletus',
@@ -2333,6 +2341,7 @@ return [
     'average'                                             => 'Keskiarvo',
     'balanceFor'                                          => 'Tilin :name saldo',
     'no_tags'                                             => '(ei tägejä)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',
@@ -2545,7 +2554,7 @@ return [
     'after_update_create_another'                         => 'Päivityksen jälkeen, palaa takaisin jatkamaan muokkausta.',
     'store_as_new'                                        => 'Tallenna uutena tapahtumana päivityksen sijaan.',
     'reset_after'                                         => 'Tyhjennä lomake lähetyksen jälkeen',
-    'errors_submission'                                   => 'Lomakkeen tiedoissa oli jotain vikaa. Ole hyvä ja tarkista virheet.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Laajenna jako',
     'transaction_collapse_split'                          => 'Yhdistä jako',
 

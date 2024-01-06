@@ -63,7 +63,7 @@ class StoreRequest extends FormRequest
             'link_type_name' => 'exists:link_types,name|required_without:link_type_id',
             'inward_id'      => 'required|belongsToUser:transaction_journals,id|different:outward_id',
             'outward_id'     => 'required|belongsToUser:transaction_journals,id|different:inward_id',
-            'notes'          => 'between:0,65000',
+            'notes'          => 'min:1|max:32768|nullable',
         ];
     }
 

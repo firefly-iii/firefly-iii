@@ -1299,11 +1299,13 @@ return [
     'no_location_set'                                     => 'Ingen plats inställd.',
     'meta_data'                                           => 'Metadata',
     'location'                                            => 'Plats',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Utan datum',
     'result'                                              => 'Resultat',
     'sums_apply_to_range'                                 => 'Alla summor gäller för valt intervall',
     'mapbox_api_key'                                      => 'För att använda karta, hämta en API nyckel från <a href="https://www.mapbox.com/">Mapbox</a>. Öppna din <code>.env</code> fil och ange koden efter <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Högerklicka eller långtryck för att ställa in objektets plats.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Rena plats',
     'delete_all_selected_tags'                            => 'Ta bort alla markerade etiketter',
     'select_tags_to_delete'                               => 'Glöm inte att välja några etiketter.',
@@ -1949,6 +1951,12 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => 'Uppdatera uttag',
     'update_deposit'                                      => 'Uppdatera insättning',
@@ -2334,6 +2342,7 @@ return [
     'average'                                             => 'Medel',
     'balanceFor'                                          => 'Saldo för :name',
     'no_tags'                                             => '(inga etiketter)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',
@@ -2546,7 +2555,7 @@ return [
     'after_update_create_another'                         => 'Efter uppdaterat, återkom hit för att fortsätta redigera.',
     'store_as_new'                                        => 'Spara en ny transaktion istället för att uppdatera.',
     'reset_after'                                         => 'Återställ formulär efter inskickat',
-    'errors_submission'                                   => 'Något fel uppstod med inskickningen. Vänligen kontrollera felen nedan.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Expandera delningen',
     'transaction_collapse_split'                          => 'Minimera delning',
 

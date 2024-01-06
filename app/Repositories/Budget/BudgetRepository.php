@@ -45,6 +45,7 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BudgetRepository.
@@ -329,6 +330,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             RuleAction::where('action_type', 'set_budget')->where('action_value', (string) $budget->id)->delete();
             $budget->delete();
         }
+        Log::channel('audit')->info('Delete all budgets through destroyAll');
     }
 
     public function getBudgets(): Collection

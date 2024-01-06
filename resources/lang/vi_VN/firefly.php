@@ -1299,11 +1299,13 @@ return [
     'no_location_set'                                     => 'Không có vị trí được đặt.',
     'meta_data'                                           => 'Meta data',
     'location'                                            => 'Vị trí',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Không có ngày',
     'result'                                              => 'Kết quả',
     'sums_apply_to_range'                                 => 'Tất cả các khoản tiền áp dụng cho phạm vi đã chọn',
     'mapbox_api_key'                                      => 'Để sử dụng bản đồ, hãy lấy khóa API từ <a href="https://www.mapbox.com/">Mapbox</a>. Open your <code>.env</code> tập tin và nhập mã này sau <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Nhấp chuột phải hoặc nhấn lâu để đặt vị trí của đối tượng.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Xóa vị trí',
     'delete_all_selected_tags'                            => 'Xóa tất cả các nhãn đã chọn',
     'select_tags_to_delete'                               => 'Đừng quên chọn một số nhãn.',
@@ -1949,6 +1951,12 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => 'Cập nhật rút tiền',
     'update_deposit'                                      => 'Cập nhật tiền gửi',
@@ -2333,6 +2341,7 @@ return [
     'average'                                             => 'Trung bình',
     'balanceFor'                                          => 'Số dư cho: tên',
     'no_tags'                                             => '(không có nhãn)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',
@@ -2545,7 +2554,7 @@ return [
     'after_update_create_another'                         => 'Sau khi cập nhật, quay lại đây để tiếp tục chỉnh sửa.',
     'store_as_new'                                        => 'Lưu trữ như một giao dịch mới thay vì cập nhật.',
     'reset_after'                                         => 'Đặt lại mẫu sau khi gửi',
-    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Expand split',
     'transaction_collapse_split'                          => 'Collapse split',
 

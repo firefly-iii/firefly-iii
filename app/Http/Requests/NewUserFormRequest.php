@@ -43,7 +43,7 @@ class NewUserFormRequest extends FormRequest
     {
         // fixed
         return [
-            'bank_name'                            => 'required|between:1,200',
+            'bank_name'                            => 'required|min:1|max:255',
             'bank_balance'                         => ['required', new IsValidAmount()],
             'savings_balance'                      => ['nullable', new IsValidAmount()],
             'credit_card_limit'                    => ['nullable', new IsValidAmount()],

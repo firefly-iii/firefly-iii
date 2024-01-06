@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'Taulukosta puuttuu "where"-komento',
     'missing_update'                  => 'Taulukosta puuttuu "update"-komento',
     'invalid_where_key'               => 'JSON sisältää virheellisen avaimen "where"-komentoa varten',
@@ -44,6 +46,7 @@ return [
     'iban'                            => 'IBAN ei ole oikeassa muodossa.',
     'zero_or_more'                    => 'Arvo ei voi olla negatiivinen.',
     'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero_correct'          => 'The value must be zero or more.',
     'no_asset_account'                => 'This is not an asset account.',
     'date_or_time'                    => 'Arvon täytyy olla päivämäärä tai aika-arvo (ISO 8601).',
     'source_equals_destination'       => 'Lähdetili on sama kuin kohdetili - ja sehän ei käy.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'Summa on pakollinen.',
     'auto_budget_amount_positive'     => 'Summan on oltava enemmän nollaa suurempi.',
+
     'auto_budget_period_mandatory'    => 'Automaattisen budjetin jakso on pakollinen kenttä.',
 
     // no access to administration:

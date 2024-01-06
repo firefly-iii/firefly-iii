@@ -172,6 +172,7 @@ class EditController extends Controller
         $this->recurring->update($recurrence, $data);
 
         $request->session()->flash('success', (string)trans('firefly.updated_recurrence', ['title' => $recurrence->title]));
+        Log::channel('audit')->info(sprintf('Updated recurrence #%d.', $recurrence->id), $data);
 
         // store new attachment(s):
         /** @var null|array $files */

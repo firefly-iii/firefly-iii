@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Utilizza questi resoconti per ottenere informazioni dettagliate sulle tue finanze.',
     'reports_index_inputReportType'                           => 'Scegli un tipo di resoconto. Consulta le pagine della guida per vedere cosa ti mostra ciascuna resoconto.',
     'reports_index_inputAccountsSelect'                       => 'Puoi escludere o includere i conti attività come ritieni opportuno.',
-    'reports_index_inputDateRange'                            => 'L\'intervallo di date selezionato dipende interamente da te: da un giorno a 10 anni.',
+    'reports_index_inputDateRange'                            => 'L\'intervallo di date selezionato dipende interamente da te: da un giorno a 10 anni o più.',
     'reports_index_extra-options-box'                         => 'A seconda del resoconto che hai selezionato, puoi selezionare filtri e opzioni aggiuntive qui. Guarda questa casella quando cambi i tipi di resoconto.',
 
     // reports (reports)

@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => '配列に"where"節がありません',
     'missing_update'                  => '配列に"update"節がありません',
     'invalid_where_key'               => 'JSON の"where"節に無効なキーが含まれています',
@@ -44,6 +46,7 @@ return [
     'iban'                            => '無効なIBANです。',
     'zero_or_more'                    => '数値はマイナスにできません。',
     'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero_correct'          => 'The value must be zero or more.',
     'no_asset_account'                => 'これは資産口座ではありません。',
     'date_or_time'                    => '数値はISO 8601 準拠の有効な日付や時刻である必要があります。',
     'source_equals_destination'       => '引き出し口座と預け入れ口座が同じです。',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => '金額は必須です。',
     'auto_budget_amount_positive'     => '金額はゼロ以上でなければなりません。',
+
     'auto_budget_period_mandatory'    => '自動予算期間は必須項目です。',
 
     // no access to administration:

@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'Matriki manjka člen "kjer"',
     'missing_update'                  => 'Matriki manjka člen "posodobi"',
     'invalid_where_key'               => 'JSON vsebuje neveljaven ključ za člen "kjer"',
@@ -43,7 +45,8 @@ return [
     'invalid_query_currency'          => 'Vaša poizvedba vsebuje račune, ki imajo različne nastavitve valute, kar ni dovoljeno.',
     'iban'                            => 'To ni veljaven IBAN.',
     'zero_or_more'                    => 'Vrednost ne more biti negativna.',
-    'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero'                  => 'Znesek mora biti večji od nič.',
+    'more_than_zero_correct'          => 'Vrednost mora biti nič ali več.',
     'no_asset_account'                => 'To ni račun sredstev.',
     'date_or_time'                    => 'Vrednost mora biti veljavna vrednost datuma ali časa (ISO 8601).',
     'source_equals_destination'       => 'Izvorni račun je enak ciljnemu računu.',
@@ -143,7 +146,7 @@ return [
     'min.array'                       => ':attribute mora imeti najmanj :min elementov.',
     'not_in'                          => 'Izbran :attribute ni veljaven.',
     'numeric'                         => ':attribute mora biti število.',
-    'scientific_notation'             => 'The :attribute cannot use the scientific notation.',
+    'scientific_notation'             => ':attribute ne more uporabljati znanstvene notacije.',
     'numeric_native'                  => 'Domači znesek mora biti število.',
     'numeric_destination'             => 'Ciljni znesek mora biti številka.',
     'numeric_source'                  => 'Izvorni znesek mora biti številka.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'Znesek je zahtevani podatek.',
     'auto_budget_amount_positive'     => 'Znesek mora biti večji od nič.',
+
     'auto_budget_period_mandatory'    => 'Obdobje samodejnega proračuna je obvezno polje.',
 
     // no access to administration:

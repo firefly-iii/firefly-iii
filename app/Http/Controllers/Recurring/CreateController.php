@@ -231,6 +231,7 @@ class CreateController extends Controller
 
             return redirect(route('recurring.create'))->withInput();
         }
+        Log::channel('audit')->info('Stored new recurrence.', $data);
 
         $request->session()->flash('success', (string)trans('firefly.stored_new_recurrence', ['title' => $recurrence->title]));
         app('preferences')->mark();

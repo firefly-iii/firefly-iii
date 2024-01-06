@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'Array mist "where"-clausule',
     'missing_update'                  => 'Array mist "update"-clausule',
     'invalid_where_key'               => 'JSON bevat een ongeldige key in de "where"-clausule',
@@ -43,7 +45,8 @@ return [
     'invalid_query_currency'          => 'Je query bevat account met verschillende valuta-instellingen, wat niet is toegestaan.',
     'iban'                            => 'Dit is niet een geldige IBAN.',
     'zero_or_more'                    => 'De waarde mag niet negatief zijn.',
-    'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero'                  => 'Het bedrag moet meer zijn dan nul.',
+    'more_than_zero_correct'          => 'De waarde moet nul of meer zijn.',
     'no_asset_account'                => 'Dit is geen betaalrekening.',
     'date_or_time'                    => 'De waarde moet een geldige datum of tijdwaarde zijn (ISO 8601).',
     'source_equals_destination'       => 'De bronrekening is gelijk aan de doelrekening.',
@@ -143,7 +146,7 @@ return [
     'min.array'                       => ':attribute moet minimaal :min items bevatten.',
     'not_in'                          => 'Het formaat van :attribute is ongeldig.',
     'numeric'                         => ':attribute moet een nummer zijn.',
-    'scientific_notation'             => 'The :attribute cannot use the scientific notation.',
+    'scientific_notation'             => 'In veld :attribute kan je de wetenschappelijke notatie niet gebruiken.',
     'numeric_native'                  => 'Het originele bedrag moet een getal zijn.',
     'numeric_destination'             => 'Het doelbedrag moet een getal zijn.',
     'numeric_source'                  => 'Het bronbedrag moet een getal zijn.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'Bedrag is vereist.',
     'auto_budget_amount_positive'     => 'Het bedrag moet meer zijn dan nul.',
+
     'auto_budget_period_mandatory'    => 'De auto-budgetperiode is verplicht.',
 
     // no access to administration:

@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'A Firefly III nem tudja eldönteni a tranzakció típusát a forrásszámla alapján.',
+    'bad_type_destination'            => 'A Firefly III nem tudja eldönteni a tranzakció típusát a célszámla alapján.',
     'missing_where'                   => 'Array is missing "where"-clause',
     'missing_update'                  => 'Array is missing "update"-clause',
     'invalid_where_key'               => 'JSON contains an invalid key for the "where"-clause',
@@ -44,6 +46,7 @@ return [
     'iban'                            => 'Ez nem egy érvényes IBAN számlaszám.',
     'zero_or_more'                    => 'Az érték nem lehet negatív.',
     'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero_correct'          => 'Az érték nulla vagy nagyobb lehet.',
     'no_asset_account'                => 'Ez nem egy eszközszámla.',
     'date_or_time'                    => 'Az értéknek érvényes dátum vagy időformátumúnak kell lennie (ISO 8601).',
     'source_equals_destination'       => 'A forrásszámla egyenlő a célszámlával.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'Az összeg kötelező.',
     'auto_budget_amount_positive'     => 'Az értéknek nagyobbnak kell lennie nullánál.',
+
     'auto_budget_period_mandatory'    => 'Az auto költségvetési periódus kötelező mező.',
 
     // no access to administration:

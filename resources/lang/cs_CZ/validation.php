@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'Array is missing "where"-clause',
     'missing_update'                  => 'Array is missing "update"-clause',
     'invalid_where_key'               => 'JSON contains an invalid key for the "where"-clause',
@@ -44,6 +46,7 @@ return [
     'iban'                            => 'Toto není platný IBAN.',
     'zero_or_more'                    => 'Hodnota nemůže být záporná.',
     'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero_correct'          => 'The value must be zero or more.',
     'no_asset_account'                => 'This is not an asset account.',
     'date_or_time'                    => 'Je třeba, aby hodnota byla platné datum nebo čas (ve formátu dle normy ISO 8601).',
     'source_equals_destination'       => 'Zdrojový účet je zároveň i cílový.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'Částka je povinná.',
     'auto_budget_amount_positive'     => 'Částka musí být vyšší než nula.',
+
     'auto_budget_period_mandatory'    => 'Období automatického rozpočtu je povinné.',
 
     // no access to administration:

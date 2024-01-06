@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'Από τον πίνακα λείπει η ρήτρα "where"',
     'missing_update'                  => 'Από τον πίνακα λείπει η ρήτρα "update"',
     'invalid_where_key'               => 'Το JSON περιέχει ένα μη έγκυρο κλειδί για την ρήτρα "where"',
@@ -43,7 +45,8 @@ return [
     'invalid_query_currency'          => 'Το ερώτημά σας περιέχει λογαριασμούς που έχουν διαφορετικές ρυθμίσεις νομίσματος, το οποίο δεν επιτρέπεται.',
     'iban'                            => 'Αυτό δεν είναι έγκυρο IBAN.',
     'zero_or_more'                    => 'Αυτή η τιμή δεν μπορεί να είναι αρνητική.',
-    'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero'                  => 'Η τιμή πρέπει να είναι μεγαλύτερη από το μηδέν.',
+    'more_than_zero_correct'          => 'The value must be zero or more.',
     'no_asset_account'                => 'This is not an asset account.',
     'date_or_time'                    => 'Αυτή η τιμή πρέπει να είναι έγκυρη ημερομηνία ή τιμή ώρας (ISO 8601).',
     'source_equals_destination'       => 'Ο λογαριασμός προέλευσης ισούται με το λογαριασμό προορισμού.',
@@ -64,7 +67,7 @@ return [
     'belongs_user'                    => 'This value is linked to an object that does not seem to exist.',
     'belongs_user_or_user_group'      => 'This value is linked to an object that does not seem to exist in your current financial administration.',
     'at_least_one_transaction'        => 'Απαιτείται τουλάχιστο μία συναλλαγή.',
-    'recurring_transaction_id'        => 'Need at least one transaction.',
+    'recurring_transaction_id'        => 'Απαιτείται τουλάχιστον μία συναλλαγή.',
     'need_id_to_match'                => 'You need to submit this entry with an ID for the API to be able to match it.',
     'too_many_unmatched'              => 'Too many submitted transactions cannot be matched to their respective database entries. Make sure existing entries have a valid ID.',
     'id_does_not_match'               => 'Submitted ID #:id does not match expected ID. Make sure it matches or omit the field.',
@@ -143,7 +146,7 @@ return [
     'min.array'                       => 'Το :attribute πρέπει να είναι τουλάχιστον :min αντικείμενα.',
     'not_in'                          => 'Το επιλεγμένο :attribute δεν είναι έγκυρο.',
     'numeric'                         => 'Το :attribute πρέπει να είναι αριθμός.',
-    'scientific_notation'             => 'The :attribute cannot use the scientific notation.',
+    'scientific_notation'             => 'Στο :attribute δεν μπορεί να χρησιμοποιηθεί η επιστημονική σημειογραφία.',
     'numeric_native'                  => 'Το εγχώριο ποσό πρέπει να είναι αριθμός.',
     'numeric_destination'             => 'Το ποσό προορισμού πρέπει να είναι αριθμός.',
     'numeric_source'                  => 'Το ποσό προέλευσης πρέπει να είναι αριθμός.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'Πρέπει να συμπληρωθεί το ποσό.',
     'auto_budget_amount_positive'     => 'Το ποσό πρέπει να είναι μεγαλύτερο από το μηδέν.',
+
     'auto_budget_period_mandatory'    => 'Η περίοδος αυτόματου προϋπολογισμού είναι υποχρεωτικό πεδίο.',
 
     // no access to administration:

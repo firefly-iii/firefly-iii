@@ -53,7 +53,7 @@ class UpdateRequest extends FormRequest
         $userGroup = $this->route()->parameter('userGroup');
 
         return [
-            'title' => sprintf('required|min:2|max:255|unique:user_groups,title,%d', $userGroup->id),
+            'title' => sprintf('required|min:1|max:255|unique:user_groups,title,%d', $userGroup->id),
         ];
     }
 }

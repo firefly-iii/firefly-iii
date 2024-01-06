@@ -25,6 +25,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'Array is missing "where"-clause',
     'missing_update'                  => 'Array is missing "update"-clause',
     'invalid_where_key'               => 'JSON contains an invalid key for the "where"-clause',
@@ -35,7 +37,7 @@ return [
     'iban'                            => 'This is not a valid IBAN.',
     'zero_or_more'                    => 'The value cannot be negative.',
     'more_than_zero'                  => 'The value must be more than zero.',
-    'more_than_zero_correct'                  => 'The value must be zero or more.',
+    'more_than_zero_correct'          => 'The value must be zero or more.',
     'no_asset_account'                => 'This is not an asset account.',
     'date_or_time'                    => 'The value must be a valid date or time value (ISO 8601).',
     'source_equals_destination'       => 'The source account equals the destination account.',

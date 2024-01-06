@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => '使用这些报表可以详细地了解您的财务状况。',
     'reports_index_inputReportType'                           => '选择报表类型，查看帮助页面以了解每个报表向您显示的内容。',
     'reports_index_inputAccountsSelect'                       => '您可以根据需要排除或包括资产账户。',
-    'reports_index_inputDateRange'                            => '所选日期范围完全由您决定：从1天到10年不等。',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => '根据您选择的报表，您可以在此处选择额外的筛选标准和选项。更改报表类型时，请留意此区块。',
 
     // reports (reports)

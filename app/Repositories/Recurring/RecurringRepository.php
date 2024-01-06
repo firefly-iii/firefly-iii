@@ -47,6 +47,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RecurringRepository
@@ -116,6 +117,7 @@ class RecurringRepository implements RecurringRepositoryInterface
 
     public function destroyAll(): void
     {
+        Log::channel('audit')->info('Delete all recurring transactions through destroyAll');
         $this->user->recurrences()->delete();
     }
 

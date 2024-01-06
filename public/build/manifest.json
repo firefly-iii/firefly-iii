@@ -1,12 +1,27 @@
 {
-  "_get-10f2a251.js": {
-    "file": "assets/get-10f2a251.js",
+  "_autocomplete-functions-31caaca5.js": {
+    "file": "assets/autocomplete-functions-31caaca5.js",
     "imports": [
-      "_vendor-5ec3da0f.js"
+      "_vendor-4332182f.js",
+      "_get-c53daca3.js"
     ],
-    "integrity": "sha384-MAAJQjXJHsrlavEslgFwonZh+vjugzEJlPMmXXbM2rqqqkYujuSdVcp9tE3aZ1Ro"
+    "integrity": "sha384-XSqMYy1ZuJi4MrbVS3qq8lNtYeDESCrJRNtodU3HQlN+B94B6pSwan9xj81fwEZD"
   },
-  "_vendor-5ec3da0f.js": {
+  "_get-c2292133.js": {
+    "file": "assets/get-c2292133.js",
+    "imports": [
+      "_get-c53daca3.js"
+    ],
+    "integrity": "sha384-kCxtb7s0EQQXgZ6TI+31ryYT23opPhgsNrwBl0T6Ld7y1W5vVxW8IFrLmQA8GY8I"
+  },
+  "_get-c53daca3.js": {
+    "file": "assets/get-c53daca3.js",
+    "imports": [
+      "_vendor-4332182f.js"
+    ],
+    "integrity": "sha384-+ZXBtVym7E3s32aGQsrUbEzOEVeoJvFIUWszqynPgtsTp1n4RS25ZVsSMLofTmbS"
+  },
+  "_vendor-4332182f.js": {
     "assets": [
       "assets/layers-1dbbe9d0.png",
       "assets/layers-2x-066daca8.png",
@@ -15,8 +30,8 @@
     "css": [
       "assets/vendor-49001d3f.css"
     ],
-    "file": "assets/vendor-5ec3da0f.js",
-    "integrity": "sha384-ZVKGWd0fOujjIvJKxFA8SzgFIJQPEt1zpM+hgtL6o6S6gBRDTNEz2FlssKfAjVJ/"
+    "file": "assets/vendor-4332182f.js",
+    "integrity": "sha384-1G3LBT5kdVnTa5qV4iO6YynbY9sZ9UWTAvBbj2fpl2ukttB/5UZoWMvAKTuYC+w5"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
     "file": "assets/fa-brands-400-5656d596.ttf",
@@ -64,24 +79,38 @@
     "integrity": "sha384-wg83fCOXjBtqzFAWhTL9Sd9vmLUNhfEEzfmNUX9zwv2igKlz/YQbdapF4ObdxF+R"
   },
   "resources/assets/v2/pages/dashboard/dashboard.js": {
-    "file": "assets/dashboard-f6763ad9.js",
+    "file": "assets/dashboard-e693d6f4.js",
     "imports": [
-      "_get-10f2a251.js",
-      "_vendor-5ec3da0f.js"
+      "_get-c53daca3.js",
+      "_vendor-4332182f.js",
+      "_get-c2292133.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/dashboard/dashboard.js",
-    "integrity": "sha384-PVEKYVS77Q0irHN7cZ9dMZ64ef7eFhIiUwoDHwwsDfNfP9bORXYxrEO2Z2ldVCQN"
+    "integrity": "sha384-1wJD5hnD/2V8OfSEhqyxDhQXDjay4Pn0ivGYFrieirkRil1dAR1NHaMoZlx7zaKd"
   },
   "resources/assets/v2/pages/transactions/create.js": {
-    "file": "assets/create-5a2ad8a8.js",
+    "file": "assets/create-d5d549ca.js",
     "imports": [
-      "_get-10f2a251.js",
-      "_vendor-5ec3da0f.js"
+      "_get-c53daca3.js",
+      "_autocomplete-functions-31caaca5.js",
+      "_vendor-4332182f.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/create.js",
-    "integrity": "sha384-rdu17Qy38YXrooK3NkVmEaFRuqzmsz4c2znLVKvAD0Yzpd2dXTBd4oXEYnA629b5"
+    "integrity": "sha384-wA/Z8Z+hNOuOA5ZTX8ShykEkdtfxX6dBZFLmmYmanfuUYEeY427OaNi956vrN6cy"
+  },
+  "resources/assets/v2/pages/transactions/edit.js": {
+    "file": "assets/edit-6247ff45.js",
+    "imports": [
+      "_get-c53daca3.js",
+      "_vendor-4332182f.js",
+      "_get-c2292133.js",
+      "_autocomplete-functions-31caaca5.js"
+    ],
+    "isEntry": true,
+    "src": "resources/assets/v2/pages/transactions/edit.js",
+    "integrity": "sha384-hJTbJsS4rExaV2BGHmiZ/J/nm8RicxSfwzr7TDUe/nwtYOm8gWtmNxrDrsmyzAqS"
   },
   "resources/assets/v2/sass/app.scss": {
     "file": "assets/app-fb7b26ec.css",

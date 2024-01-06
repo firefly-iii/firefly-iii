@@ -97,8 +97,8 @@ class RuleFormRequest extends FormRequest
 
         // initial set of rules:
         $rules           = [
-            'title'            => 'required|between:1,100|uniqueObjectForUser:rules,title',
-            'description'      => 'between:1,5000|nullable',
+            'title'            => 'required|min:1|max:255|uniqueObjectForUser:rules,title',
+            'description'      => 'min:1|max:32768|nullable',
             'stop_processing'  => 'boolean',
             'rule_group_id'    => 'required|belongsToUser:rule_groups',
             'trigger'          => 'required|in:store-journal,update-journal',
@@ -113,7 +113,7 @@ class RuleFormRequest extends FormRequest
         $rule            = $this->route()->parameter('rule');
 
         if (null !== $rule) {
-            $rules['title'] = 'required|between:1,100|uniqueObjectForUser:rules,title,'.$rule->id;
+            $rules['title'] = 'required|min:1|max:255|uniqueObjectForUser:rules,title,'.$rule->id;
         }
 
         return $rules;

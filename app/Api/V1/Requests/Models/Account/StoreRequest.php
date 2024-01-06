@@ -101,7 +101,7 @@ class StoreRequest extends FormRequest
             'type'                 => 'required|max:1024|min:1|'.sprintf('in:%s', $types),
             'iban'                 => ['iban', 'nullable', new UniqueIban(null, $type)],
             'bic'                  => 'bic|nullable',
-            'account_number'       => ['between:1,255', 'nullable', new UniqueAccountNumber(null, $type)],
+            'account_number'       => ['min:1', 'max:255', 'nullable', new UniqueAccountNumber(null, $type)],
             'opening_balance'      => 'numeric|required_with:opening_balance_date|nullable',
             'opening_balance_date' => 'date|required_with:opening_balance|nullable',
             'virtual_balance'      => 'numeric|nullable',
@@ -117,7 +117,7 @@ class StoreRequest extends FormRequest
             'liability_amount'     => ['required_with:liability_start_date', new IsValidPositiveAmount()],
             'liability_start_date' => 'required_with:liability_amount|date',
             'liability_direction'  => 'nullable|required_if:type,liability|required_if:type,liabilities|in:credit,debit',
-            'interest'             => 'between:0,100|numeric',
+            'interest'             => 'min:0|max:100|numeric',
             'interest_period'      => sprintf('nullable|in:%s', implode(',', config('firefly.interest_periods'))),
             'notes'                => 'min:0|max:65536',
         ];

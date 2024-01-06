@@ -76,10 +76,10 @@ class StoreRequest extends FormRequest
         $contextActions  = implode(',', config('firefly.context-rule-actions'));
 
         return [
-            'title'                      => 'required|between:1,100|uniqueObjectForUser:rules,title',
-            'description'                => 'between:1,5000|nullable',
+            'title'                      => 'required|min:1|max:100|uniqueObjectForUser:rules,title',
+            'description'                => 'min:1|max:32768|nullable',
             'rule_group_id'              => 'belongsToUser:rule_groups|required_without:rule_group_title',
-            'rule_group_title'           => 'nullable|between:1,255|required_without:rule_group_id|belongsToUser:rule_groups,title',
+            'rule_group_title'           => 'nullable|min:1|max:255|required_without:rule_group_id|belongsToUser:rule_groups,title',
             'trigger'                    => 'required|in:store-journal,update-journal',
             'triggers.*.type'            => 'required|in:'.implode(',', $validTriggers),
             'triggers.*.value'           => 'required_if:actions.*.type,'.$contextTriggers.'|min:1|ruleTriggerValue|max:1024',

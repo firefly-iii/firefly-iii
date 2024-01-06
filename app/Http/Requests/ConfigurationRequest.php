@@ -51,8 +51,8 @@ class ConfigurationRequest extends FormRequest
     {
         // fixed
         return [
-            'single_user_mode' => 'between:0,1|numeric',
-            'is_demo_site'     => 'between:0,1|numeric',
+            'single_user_mode' => 'min:0|max:1|numeric',
+            'is_demo_site'     => 'min:0|max:1|numeric',
         ];
     }
 }

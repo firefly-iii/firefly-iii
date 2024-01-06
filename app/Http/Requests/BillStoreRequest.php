@@ -64,12 +64,12 @@ class BillStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'                    => 'required|between:1,255|uniqueObjectForUser:bills,name',
+            'name'                    => 'required|min:1|max:255|uniqueObjectForUser:bills,name',
             'amount_min'              => ['required', new IsValidPositiveAmount()],
             'amount_max'              => ['required', new IsValidPositiveAmount()],
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
             'date'                    => 'required|date',
-            'notes'                   => 'between:1,65536|nullable',
+            'notes'                   => 'min:1|max:32768|nullable',
             'bill_end_date'           => 'nullable|date',
             'extension_date'          => 'nullable|date',
             'repeat_freq'             => sprintf('required|in:%s', implode(',', config('firefly.bill_periods'))),

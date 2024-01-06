@@ -1263,11 +1263,13 @@ return [
     'no_location_set'                                     => 'No location set.',
     'meta_data'                                           => 'Meta data',
     'location'                                            => 'Location',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Without date',
     'result'                                              => 'Result',
     'sums_apply_to_range'                                 => 'All sums apply to the selected range',
     'mapbox_api_key'                                      => 'To use map, get an API key from <a href="https://www.mapbox.com/">Mapbox</a>. Open your <code>.env</code> file and enter this code after <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Right click or long press to set the object\'s location.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Clear location',
     'delete_all_selected_tags'                            => 'Delete all selected tags',
     'select_tags_to_delete'                               => 'Don\'t forget to select some tags.',
@@ -1895,6 +1897,12 @@ return [
     // Ignore this comment
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => 'Update withdrawal',
     'update_deposit'                                      => 'Update deposit',
@@ -2261,6 +2269,7 @@ return [
     'average'                                             => 'Average',
     'balanceFor'                                          => 'Balance for :name',
     'no_tags'                                             => '(no tags)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',
@@ -2464,7 +2473,7 @@ return [
     'after_update_create_another'                         => 'After updating, return here to continue editing.',
     'store_as_new'                                        => 'Store as a new transaction instead of updating.',
     'reset_after'                                         => 'Reset form after submission',
-    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Expand split',
     'transaction_collapse_split'                          => 'Collapse split',
 

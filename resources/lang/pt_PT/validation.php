@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'A matriz tem em falta a cláusula-"onde"',
     'missing_update'                  => 'A matriz tem em falta a cláusula-"atualizar"',
     'invalid_where_key'               => 'JSON contém uma chave inválida para a cláusula "onde"',
@@ -44,6 +46,7 @@ return [
     'iban'                            => 'Este IBAN não é valido.',
     'zero_or_more'                    => 'O valor não pode ser negativo.',
     'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero_correct'          => 'The value must be zero or more.',
     'no_asset_account'                => 'This is not an asset account.',
     'date_or_time'                    => 'O valor deve ser uma data ou hora válida (ISO 8601).',
     'source_equals_destination'       => 'A conta de origem é igual à conta de destino.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'O montante é obrigatório.',
     'auto_budget_amount_positive'     => 'O montante deve ser maior que zero.',
+
     'auto_budget_period_mandatory'    => 'O período de orçamento automático é um campo obrigatório.',
 
     // no access to administration:

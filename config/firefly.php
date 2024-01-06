@@ -63,6 +63,7 @@ use FireflyIII\Support\Binder\TagList;
 use FireflyIII\Support\Binder\TagOrId;
 use FireflyIII\Support\Binder\UserGroupAccount;
 use FireflyIII\Support\Binder\UserGroupBill;
+use FireflyIII\Support\Binder\UserGroupTransaction;
 use FireflyIII\TransactionRules\Actions\AddTag;
 use FireflyIII\TransactionRules\Actions\AppendDescription;
 use FireflyIII\TransactionRules\Actions\AppendDescriptionToNotes;
@@ -114,7 +115,7 @@ return [
         'handle_debts' => true,
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.1.4',
+    'version'                      => '6.1.5',
     'api_version'                  => '2.0.12',
     'db_version'                   => 22,
 
@@ -433,60 +434,61 @@ return [
 
     'bindables'                    => [
         // models
-        'account'          => Account::class,
-        'attachment'       => Attachment::class,
-        'availableBudget'  => AvailableBudget::class,
-        'bill'             => Bill::class,
-        'budget'           => Budget::class,
-        'budgetLimit'      => BudgetLimit::class,
-        'category'         => Category::class,
-        'linkType'         => LinkType::class,
-        'transactionType'  => TransactionTypeModel::class,
-        'journalLink'      => TransactionJournalLink::class,
-        'currency'         => TransactionCurrency::class,
-        'objectGroup'      => ObjectGroup::class,
-        'piggyBank'        => PiggyBank::class,
-        'preference'       => Preference::class,
-        'tj'               => TransactionJournal::class,
-        'tag'              => Tag::class,
-        'recurrence'       => Recurrence::class,
-        'rule'             => Rule::class,
-        'ruleGroup'        => RuleGroup::class,
-        'transactionGroup' => TransactionGroup::class,
-        'user'             => User::class,
-        'webhook'          => Webhook::class,
-        'webhookMessage'   => WebhookMessage::class,
-        'webhookAttempt'   => WebhookAttempt::class,
-        'invitedUser'      => InvitedUser::class,
+        'account'              => Account::class,
+        'attachment'           => Attachment::class,
+        'availableBudget'      => AvailableBudget::class,
+        'bill'                 => Bill::class,
+        'budget'               => Budget::class,
+        'budgetLimit'          => BudgetLimit::class,
+        'category'             => Category::class,
+        'linkType'             => LinkType::class,
+        'transactionType'      => TransactionTypeModel::class,
+        'journalLink'          => TransactionJournalLink::class,
+        'currency'             => TransactionCurrency::class,
+        'objectGroup'          => ObjectGroup::class,
+        'piggyBank'            => PiggyBank::class,
+        'preference'           => Preference::class,
+        'tj'                   => TransactionJournal::class,
+        'tag'                  => Tag::class,
+        'recurrence'           => Recurrence::class,
+        'rule'                 => Rule::class,
+        'ruleGroup'            => RuleGroup::class,
+        'transactionGroup'     => TransactionGroup::class,
+        'user'                 => User::class,
+        'webhook'              => Webhook::class,
+        'webhookMessage'       => WebhookMessage::class,
+        'webhookAttempt'       => WebhookAttempt::class,
+        'invitedUser'          => InvitedUser::class,
 
         // strings
-        'currency_code'    => CurrencyCode::class,
+        'currency_code'        => CurrencyCode::class,
 
         // dates
-        'start_date'       => Date::class,
-        'end_date'         => Date::class,
-        'date'             => Date::class,
+        'start_date'           => Date::class,
+        'end_date'             => Date::class,
+        'date'                 => Date::class,
 
         // lists
-        'accountList'      => AccountList::class,
-        'doubleList'       => AccountList::class,
-        'budgetList'       => BudgetList::class,
-        'journalList'      => JournalList::class,
-        'categoryList'     => CategoryList::class,
-        'tagList'          => TagList::class,
+        'accountList'          => AccountList::class,
+        'doubleList'           => AccountList::class,
+        'budgetList'           => BudgetList::class,
+        'journalList'          => JournalList::class,
+        'categoryList'         => CategoryList::class,
+        'tagList'              => TagList::class,
 
         // others
-        'fromCurrencyCode' => CurrencyCode::class,
-        'toCurrencyCode'   => CurrencyCode::class,
-        'cliToken'         => CLIToken::class,
-        'tagOrId'          => TagOrId::class,
-        'dynamicConfigKey' => DynamicConfigKey::class,
-        'eitherConfigKey'  => EitherConfigKey::class,
+        'fromCurrencyCode'     => CurrencyCode::class,
+        'toCurrencyCode'       => CurrencyCode::class,
+        'cliToken'             => CLIToken::class,
+        'tagOrId'              => TagOrId::class,
+        'dynamicConfigKey'     => DynamicConfigKey::class,
+        'eitherConfigKey'      => EitherConfigKey::class,
 
         // V2 API endpoints:
-        'userGroupAccount' => UserGroupAccount::class,
-        'userGroupBill'    => UserGroupBill::class,
-        'userGroup'        => UserGroup::class,
+        'userGroupAccount'     => UserGroupAccount::class,
+        'userGroupTransaction' => UserGroupTransaction::class,
+        'userGroupBill'        => UserGroupBill::class,
+        'userGroup'            => UserGroup::class,
     ],
     'rule-actions'                 => [
         'set_category'            => SetCategory::class,

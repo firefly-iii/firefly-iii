@@ -99,7 +99,7 @@ class UpdateRequest extends FormRequest
 
         return [
             // basic fields for group:
-            'group_title'                            => 'between:1,1000|nullable',
+            'group_title'                            => 'min:1|max:1000|nullable',
             'apply_rules'                            => [new IsBoolean()],
 
             // transaction rules (in array for splits):
@@ -121,29 +121,29 @@ class UpdateRequest extends FormRequest
             'transactions.*.foreign_amount'          => ['nullable', new IsValidZeroOrMoreAmount()],
 
             // description
-            'transactions.*.description'             => 'nullable|between:1,1000',
+            'transactions.*.description'             => 'nullable|min:1|max:1000',
 
             // source of transaction
             'transactions.*.source_id'               => ['numeric', 'nullable', new BelongsUser()],
-            'transactions.*.source_name'             => 'between:1,255|nullable',
+            'transactions.*.source_name'             => 'min:1|max:255|nullable',
 
             // destination of transaction
             'transactions.*.destination_id'          => ['numeric', 'nullable', new BelongsUser()],
-            'transactions.*.destination_name'        => 'between:1,255|nullable',
+            'transactions.*.destination_name'        => 'min:1|max:255|nullable',
 
             // budget, category, bill and piggy
             'transactions.*.budget_id'               => ['mustExist:budgets,id', new BelongsUser(), 'nullable'],
-            'transactions.*.budget_name'             => ['between:1,255', 'nullable', new BelongsUser()],
+            'transactions.*.budget_name'             => ['min:1', 'max:255', 'nullable', new BelongsUser()],
             'transactions.*.category_id'             => ['mustExist:categories,id', new BelongsUser(), 'nullable'],
-            'transactions.*.category_name'           => 'between:1,255|nullable',
+            'transactions.*.category_name'           => 'min:1|max:255|nullable',
             'transactions.*.bill_id'                 => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser()],
-            'transactions.*.bill_name'               => ['between:1,255', 'nullable', new BelongsUser()],
+            'transactions.*.bill_name'               => ['min:1', 'max:255', 'nullable', new BelongsUser()],
 
             // other interesting fields
             'transactions.*.reconciled'              => [new IsBoolean()],
-            'transactions.*.notes'                   => 'min:1|max:50000|nullable',
-            'transactions.*.tags'                    => 'between:0,255|nullable',
-            'transactions.*.tags.*'                  => 'between:0,255',
+            'transactions.*.notes'                   => 'min:1|max:32768|nullable',
+            'transactions.*.tags'                    => 'min:0|max:255|nullable',
+            'transactions.*.tags.*'                  => 'min:0|max:255',
 
             // meta info fields
             'transactions.*.internal_reference'      => 'min:1|max:255|nullable',

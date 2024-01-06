@@ -864,7 +864,7 @@ export default {
                 // set first date.
                 let today = new Date();
                 this.transactions[0].date = today.getFullYear() + '-' + ("0" + (today.getMonth() + 1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2)
-                + 'T00:00';
+                + 'T'+ ("0" + today.getHours()).slice(-2) +':' + ("0" + today.getMinutes()).slice(-2);
                 //console.log(this.transactions[0].date);
 
                 // call for extra clear thing:

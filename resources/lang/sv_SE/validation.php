@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'Array saknar "var"-klausul',
     'missing_update'                  => 'Array saknar "updaterings"-klausul',
     'invalid_where_key'               => 'JSON innehåller en ogiltig nyckel för "var"-klausulen',
@@ -44,6 +46,7 @@ return [
     'iban'                            => 'Detta är inte ett giltigt IBAN.',
     'zero_or_more'                    => 'Värdet får inte vara negativt.',
     'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero_correct'          => 'The value must be zero or more.',
     'no_asset_account'                => 'This is not an asset account.',
     'date_or_time'                    => 'Värdet måste vara ett giltigt datum eller tid (ISO 8601).',
     'source_equals_destination'       => 'Källkontot motsvarar mottagarkontot.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'Beloppet är obligatoriskt.',
     'auto_budget_amount_positive'     => 'Beloppet måste vara mer än noll.',
+
     'auto_budget_period_mandatory'    => 'Den automatiska budgetperioden är ett obligatoriskt fält.',
 
     // no access to administration:

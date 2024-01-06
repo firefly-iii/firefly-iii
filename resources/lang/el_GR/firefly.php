@@ -1299,11 +1299,13 @@ return [
     'no_location_set'                                     => 'Δεν ορίστηκε τοποθεσία.',
     'meta_data'                                           => 'Μετα-δεδομένα',
     'location'                                            => 'Τοποθεσία',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Χωρίς ημερομηνία',
     'result'                                              => 'Αποτέλεσμα',
     'sums_apply_to_range'                                 => 'Όλα τα σύνολα αφορούν το συγκεκριμένο εύρος',
     'mapbox_api_key'                                      => 'Για τη χρήση χάρτη, λάβετε ένα κλειδί API από <a href="https://www.mapbox.com/">Mapbox</a>. Ανοίξτε το <code>.env</code> αρχείο σας και εισάγετε αυτόν τον κωδικό στο <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Κάντε δεξί κλικ ή πιέστε παρατεταμένα για να ορίσετε την τοποθεσία του αντικειμένου.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Εκκαθάριση τοποθεσίας',
     'delete_all_selected_tags'                            => 'Διαγραφή όλων των επιλεγμένων ετικετών',
     'select_tags_to_delete'                               => 'Μην ξεχάσετε να επιλέξετε ορισμένες ετικέτες.',
@@ -1949,6 +1951,12 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => 'Ενημέρωση ανάληψης',
     'update_deposit'                                      => 'Ενημέρωση κατάθεσης',
@@ -2333,6 +2341,7 @@ return [
     'average'                                             => 'Μέσος όρος',
     'balanceFor'                                          => 'Υπόλοιπο για :name',
     'no_tags'                                             => '(χωρίς ετικέτες)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',
@@ -2545,7 +2554,7 @@ return [
     'after_update_create_another'                         => 'Μετά την ενημέρωση, επιστρέψτε εδώ για να συνεχίσετε την επεξεργασία.',
     'store_as_new'                                        => 'Αποθήκευση ως νέα συναλλαγή αντί για ενημέρωση.',
     'reset_after'                                         => 'Επαναφορά φόρμας μετά την υποβολή',
-    'errors_submission'                                   => 'Υπήρξε κάποιο λάθος με την υποβολή σας. Παρακαλώ ελέγξτε τα σφάλματα.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Ανάπτυξη διαχωρισμού',
     'transaction_collapse_split'                          => 'Σύμπτυξη διαχωρισμού',
 

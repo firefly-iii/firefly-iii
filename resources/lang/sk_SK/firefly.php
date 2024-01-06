@@ -1299,11 +1299,13 @@ return [
     'no_location_set'                                     => 'Žiadna poloha.',
     'meta_data'                                           => 'Metadata',
     'location'                                            => 'Poloha',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Bez dátumu',
     'result'                                              => 'Výsledok',
     'sums_apply_to_range'                                 => 'Všetky súčty sa vzťahujú na vybraný rozsah',
     'mapbox_api_key'                                      => 'Pre použitie mapy získajte API kľúč z <a href="https://www.mapbox.com/">Mapboxu</a>. Otvorte súbor <code>.env</code> a tento kľúč vložte za <code>MAPBOX_API_KEY=</code>.',
     'press_object_location'                               => 'Pre nastavenie pozície objektu kliknite pravým tlačítkom alebo kliknite a podržte.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Odstrániť pozíciu',
     'delete_all_selected_tags'                            => 'Odstrániť všetky vybraté štítky',
     'select_tags_to_delete'                               => 'Nezabudnite vybrať nejaké štítky.',
@@ -1949,6 +1951,12 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => 'Upraviť výber',
     'update_deposit'                                      => 'Upraviť vklad',
@@ -2333,6 +2341,7 @@ return [
     'average'                                             => 'Priemer',
     'balanceFor'                                          => 'Zostatok pre :name',
     'no_tags'                                             => '(žiadne štítky)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',
@@ -2545,7 +2554,7 @@ return [
     'after_update_create_another'                         => 'Po aktualizácii sa vrátiť späť a pokračovať v úpravách.',
     'store_as_new'                                        => 'Namiesto aktualizácie uložiť ako novú transakciu.',
     'reset_after'                                         => 'Po odoslaní vynulovať formulár',
-    'errors_submission'                                   => 'Pri odosielaní sa niečo nepodarilo. Skontrolujte prosím chyby.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Expand split',
     'transaction_collapse_split'                          => 'Collapse split',
 

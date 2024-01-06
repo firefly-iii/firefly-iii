@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Използвайте тези отчети, за да получите подробна информация за вашите финанси.',
     'reports_index_inputReportType'                           => 'Изберете тип отчет. Разгледайте страниците за помощ, за да видите какво ви показва всеки отчет.',
     'reports_index_inputAccountsSelect'                       => 'Можете да изключите или включите сметки за активи, както сметнете за добре.',
-    'reports_index_inputDateRange'                            => 'Избраният диапазон от дати зависи изцяло от вас: от един ден до 10 години.',
+    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
     'reports_index_extra-options-box'                         => 'В зависимост от отчета който сте избрали, можете да изберете допълнителни филтри и опции тук. Гледайте това поле, когато променяте типовете отчети.',
 
     // reports (reports)

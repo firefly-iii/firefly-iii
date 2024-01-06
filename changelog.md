@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.5 - 2024-01-07
+
+### Added
+
+- More audit logs
+- Sanity check in date ranges
+- More uniform length and size validations
+
+### Changed
+
+- Slightly changed text, thanks @maureenferreira!
+
+### Fixed
+
+- [Issue 8328](https://github.com/firefly-iii/firefly-iii/issues/8328) Some extra fixes for non-zero foreign amounts
+- Updated links in `.env.example`, thanks @lemuelroberto!
+
 ## 6.1.4 - 2024-01-03
 
 ### Fixed

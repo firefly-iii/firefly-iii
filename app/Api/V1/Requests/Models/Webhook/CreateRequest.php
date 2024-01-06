@@ -72,7 +72,7 @@ class CreateRequest extends FormRequest
         $validProtocols = config('firefly.valid_url_protocols');
 
         return [
-            'title'    => 'required|between:1,512|uniqueObjectForUser:webhooks,title',
+            'title'    => 'required|min:1|max:255|uniqueObjectForUser:webhooks,title',
             'active'   => [new IsBoolean()],
             'trigger'  => sprintf('required|in:%s', $triggers),
             'response' => sprintf('required|in:%s', $responses),

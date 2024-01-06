@@ -462,7 +462,7 @@ trait TimeCollection
      */
     public function setBefore(Carbon $date): GroupCollectorInterface
     {
-        $beforeStr = $date->format('Y-m-d 00:00:00');
+        $beforeStr = $date->format('Y-m-d 23:59:59');
         $this->query->where('transaction_journals.date', '<=', $beforeStr);
 
         return $this;

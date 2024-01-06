@@ -34,6 +34,8 @@
 declare(strict_types=1);
 
 return [
+    'bad_type_source'                 => 'Firefly III no puede determinar el tipo de transacción basado en esta cuenta de origen.',
+    'bad_type_destination'            => 'Firefly III no puede determinar el tipo de transacción basado en esta cuenta de destino.',
     'missing_where'                   => 'El array esperaba la cláusula "where"',
     'missing_update'                  => 'El array esperaba la cláusula "update"',
     'invalid_where_key'               => 'El JSON contiene una clave no válida para la cláusula "where"',
@@ -43,7 +45,8 @@ return [
     'invalid_query_currency'          => 'Su consulta contiene cuentas que tienen diferentes ajustes de divisa, lo que no está permitido.',
     'iban'                            => 'Este no es un IBAN válido.',
     'zero_or_more'                    => 'El valor no puede ser negativo.',
-    'more_than_zero'                  => 'The value must be more than zero.',
+    'more_than_zero'                  => 'El valor debe ser mayor que cero.',
+    'more_than_zero_correct'          => 'El valor debe ser cero o más.',
     'no_asset_account'                => 'Esta no es una cuenta de activos.',
     'date_or_time'                    => 'El valor debe ser una fecha u hora válido (ISO 8601).',
     'source_equals_destination'       => 'La cuenta origen es igual que la cuenta destino.',
@@ -143,7 +146,7 @@ return [
     'min.array'                       => 'El campo :attribute debe tener al menos :min elementos.',
     'not_in'                          => 'El campo :attribute seleccionado es incorrecto.',
     'numeric'                         => 'El campo :attribute debe ser un número.',
-    'scientific_notation'             => 'The :attribute cannot use the scientific notation.',
+    'scientific_notation'             => 'El :attribute no puede usar la notación científica.',
     'numeric_native'                  => 'La cantidad nativa debe ser un número.',
     'numeric_destination'             => 'La cantidad destino debe ser un número.',
     'numeric_source'                  => 'La cantidad origen debe ser un número.',
@@ -290,6 +293,7 @@ return [
 
     'amount_required_for_auto_budget' => 'Se requiere la cantidad.',
     'auto_budget_amount_positive'     => 'La cantidad debe ser mayor a cero.',
+
     'auto_budget_period_mandatory'    => 'El período del autopresupuesto es un campo obligatorio.',
 
     // no access to administration:

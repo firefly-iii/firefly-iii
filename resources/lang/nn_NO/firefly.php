@@ -1299,11 +1299,13 @@ return [
     'no_location_set'                                     => 'Ingen plassering spesifisert.',
     'meta_data'                                           => 'Metadata',
     'location'                                            => 'Sted',
+    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
     'without_date'                                        => 'Uten dato',
     'result'                                              => 'Resultat',
     'sums_apply_to_range'                                 => 'Alle beløp gjelder for det valde området',
     'mapbox_api_key'                                      => 'For å bruka kart, få ein API-nøkkel frå <a href="https://www.mapbox.com/">Mapbox</a>. Åpne <code>.env</code> filen og angi denne koden etter <code>MAPBOX_API_KEY =</code>.',
     'press_object_location'                               => 'Høyreklikk eller trykk lenge for å angi objektets plassering.',
+    'click_tap_location'                                  => 'Click or tap the map to add a location',
     'clear_location'                                      => 'Tøm lokasjon',
     'delete_all_selected_tags'                            => 'Slett alle valde nøkkelord',
     'select_tags_to_delete'                               => 'Ikke gløym å velja nokre nøkkelord.',
@@ -1949,6 +1951,12 @@ return [
  */
 
     // transactions:
+    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
+    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
+    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'edit_transaction_title'                              => 'Edit transaction ":description"',
     'unreconcile'                                         => 'Undo reconciliation',
     'update_withdrawal'                                   => 'Oppdater uttak',
     'update_deposit'                                      => 'Oppdater innskot',
@@ -2333,6 +2341,7 @@ return [
     'average'                                             => 'Gjennomsnitt',
     'balanceFor'                                          => 'Saldo for :name',
     'no_tags'                                             => '(ingen nøkkelord)',
+    'nothing_found'                                       => '(nothing found)',
 
     // piggy banks:
     'event_history'                                       => 'Hendelseshistorikk',
@@ -2545,7 +2554,7 @@ return [
     'after_update_create_another'                         => 'Gå tilbake hit etter oppdatering, for å fortsetja å redigera.',
     'store_as_new'                                        => 'Lagra som ein ny transaksjon istedenfor å oppdatera.',
     'reset_after'                                         => 'Nullstill skjema etter innsending',
-    'errors_submission'                                   => 'Noko gjekk gale med innleveringa. Ver venleg å sjekk feila.',
+    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
     'transaction_expand_split'                            => 'Utvid splitt',
     'transaction_collapse_split'                          => 'Kollaps deling',
 
