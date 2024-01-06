@@ -68,7 +68,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     {
         $collectForObjects = false;
 
-        /** @var array $object */
+        /** @var array|TransactionGroup $object */
         foreach ($objects as $object) {
             if (is_array($object)) {
                 $this->collectForArray($object);
@@ -147,6 +147,11 @@ class TransactionGroupTransformer extends AbstractTransformer
         return $return;
     }
 
+    /**
+     * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     private function transformJournal(TransactionJournal $journal): array
     {
         $id                  = $journal->id;
