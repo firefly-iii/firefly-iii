@@ -1,6 +1,7 @@
+<?php
 /*
- * get.js
- * Copyright (c) 2023 james@firefly-iii.org
+ * ShowController.php
+ * Copyright (c) 2024 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,20 +19,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
 
-import {api} from "../../../../boot/axios";
+namespace FireflyIII\Api\V2\Controllers\Model\Transaction;
 
-export default class Get {
+use FireflyIII\Api\V2\Controllers\Controller;
+use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Transformers\V2\TransactionGroupTransformer;
+use Illuminate\Http\JsonResponse;
 
+class ShowController extends Controller
+{
     /**
-     *
-     * @param params
-     * @returns {Promise<AxiosResponse<any>>}
+     * TODO this endpoint is not yet reachable.
      */
-    list(params) {
-        return api.get('/api/v2/transactions', {params: params});
+    public function show(TransactionGroup $transactionGroup): JsonResponse
+    {
+        $transformer = new TransactionGroupTransformer();
+        $transformer->setParameters($this->parameters);
+
+        return response()->api($this->jsonApiObject('transactions', $transactionGroup, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }
-    show(id, params){
-        return api.get('/api/v2/transactions/' + id, {params: params});
-    }
+
 }

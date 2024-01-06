@@ -63,6 +63,7 @@ use FireflyIII\Support\Binder\TagList;
 use FireflyIII\Support\Binder\TagOrId;
 use FireflyIII\Support\Binder\UserGroupAccount;
 use FireflyIII\Support\Binder\UserGroupBill;
+use FireflyIII\Support\Binder\UserGroupTransaction;
 use FireflyIII\TransactionRules\Actions\AddTag;
 use FireflyIII\TransactionRules\Actions\AppendDescription;
 use FireflyIII\TransactionRules\Actions\AppendDescriptionToNotes;
@@ -114,7 +115,7 @@ return [
         'handle_debts' => true,
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.1.4',
+    'version'                      => '6.1.5',
     'api_version'                  => '2.0.12',
     'db_version'                   => 22,
 
@@ -431,64 +432,65 @@ return [
         'transfers'  => 'fa-exchange',
     ],
 
-    'bindables'                    => [
+    'bindables'            => [
         // models
-        'account'          => Account::class,
-        'attachment'       => Attachment::class,
-        'availableBudget'  => AvailableBudget::class,
-        'bill'             => Bill::class,
-        'budget'           => Budget::class,
-        'budgetLimit'      => BudgetLimit::class,
-        'category'         => Category::class,
-        'linkType'         => LinkType::class,
-        'transactionType'  => TransactionTypeModel::class,
-        'journalLink'      => TransactionJournalLink::class,
-        'currency'         => TransactionCurrency::class,
-        'objectGroup'      => ObjectGroup::class,
-        'piggyBank'        => PiggyBank::class,
-        'preference'       => Preference::class,
-        'tj'               => TransactionJournal::class,
-        'tag'              => Tag::class,
-        'recurrence'       => Recurrence::class,
-        'rule'             => Rule::class,
-        'ruleGroup'        => RuleGroup::class,
-        'transactionGroup' => TransactionGroup::class,
-        'user'             => User::class,
-        'webhook'          => Webhook::class,
-        'webhookMessage'   => WebhookMessage::class,
-        'webhookAttempt'   => WebhookAttempt::class,
-        'invitedUser'      => InvitedUser::class,
+        'account'              => Account::class,
+        'attachment'           => Attachment::class,
+        'availableBudget'      => AvailableBudget::class,
+        'bill'                 => Bill::class,
+        'budget'               => Budget::class,
+        'budgetLimit'          => BudgetLimit::class,
+        'category'             => Category::class,
+        'linkType'             => LinkType::class,
+        'transactionType'      => TransactionTypeModel::class,
+        'journalLink'          => TransactionJournalLink::class,
+        'currency'             => TransactionCurrency::class,
+        'objectGroup'          => ObjectGroup::class,
+        'piggyBank'            => PiggyBank::class,
+        'preference'           => Preference::class,
+        'tj'                   => TransactionJournal::class,
+        'tag'                  => Tag::class,
+        'recurrence'           => Recurrence::class,
+        'rule'                 => Rule::class,
+        'ruleGroup'            => RuleGroup::class,
+        'transactionGroup'     => TransactionGroup::class,
+        'user'                 => User::class,
+        'webhook'              => Webhook::class,
+        'webhookMessage'       => WebhookMessage::class,
+        'webhookAttempt'       => WebhookAttempt::class,
+        'invitedUser'          => InvitedUser::class,
 
         // strings
-        'currency_code'    => CurrencyCode::class,
+        'currency_code'        => CurrencyCode::class,
 
         // dates
-        'start_date'       => Date::class,
-        'end_date'         => Date::class,
-        'date'             => Date::class,
+        'start_date'           => Date::class,
+        'end_date'             => Date::class,
+        'date'                 => Date::class,
 
         // lists
-        'accountList'      => AccountList::class,
-        'doubleList'       => AccountList::class,
-        'budgetList'       => BudgetList::class,
-        'journalList'      => JournalList::class,
-        'categoryList'     => CategoryList::class,
-        'tagList'          => TagList::class,
+        'accountList'          => AccountList::class,
+        'doubleList'           => AccountList::class,
+        'budgetList'           => BudgetList::class,
+        'journalList'          => JournalList::class,
+        'categoryList'         => CategoryList::class,
+        'tagList'              => TagList::class,
 
         // others
-        'fromCurrencyCode' => CurrencyCode::class,
-        'toCurrencyCode'   => CurrencyCode::class,
-        'cliToken'         => CLIToken::class,
-        'tagOrId'          => TagOrId::class,
-        'dynamicConfigKey' => DynamicConfigKey::class,
-        'eitherConfigKey'  => EitherConfigKey::class,
+        'fromCurrencyCode'     => CurrencyCode::class,
+        'toCurrencyCode'       => CurrencyCode::class,
+        'cliToken'             => CLIToken::class,
+        'tagOrId'              => TagOrId::class,
+        'dynamicConfigKey'     => DynamicConfigKey::class,
+        'eitherConfigKey'      => EitherConfigKey::class,
 
         // V2 API endpoints:
-        'userGroupAccount' => UserGroupAccount::class,
-        'userGroupBill'    => UserGroupBill::class,
-        'userGroup'        => UserGroup::class,
+        'userGroupAccount'     => UserGroupAccount::class,
+        'userGroupTransaction' => UserGroupTransaction::class,
+        'userGroupBill'        => UserGroupBill::class,
+        'userGroup'            => UserGroup::class,
     ],
-    'rule-actions'                 => [
+    'rule-actions'         => [
         'set_category'            => SetCategory::class,
         'clear_category'          => ClearCategory::class,
         'set_budget'              => SetBudget::class,
@@ -519,7 +521,7 @@ return [
         'set_source_to_cash'      => SetSourceToCashAccount::class,
         'set_destination_to_cash' => SetDestinationToCashAccount::class,
     ],
-    'context-rule-actions'         => [
+    'context-rule-actions' => [
         'set_category',
         'set_budget',
         'add_tag',
@@ -538,13 +540,13 @@ return [
         'convert_transfer',
     ],
 
-    'test-triggers'                => [
+    'test-triggers'             => [
         'limit' => 10,
         'range' => 200,
     ],
 
     // expected source types for each transaction type, in order of preference.
-    'expected_source_types'        => [
+    'expected_source_types'     => [
         'source'      => [
             TransactionTypeModel::WITHDRAWAL       => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             TransactionTypeEnum::DEPOSIT->value    => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::REVENUE, AccountType::CASH],
@@ -589,7 +591,7 @@ return [
             TransactionTypeModel::LIABILITY_CREDIT => [AccountType::LIABILITY_CREDIT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
         ],
     ],
-    'allowed_opposing_types'       => [
+    'allowed_opposing_types'    => [
         'source'      => [
             AccountType::ASSET            => [
                 AccountType::ASSET,
@@ -679,7 +681,7 @@ return [
         ],
     ],
     // depending on the account type, return the allowed transaction types:
-    'allowed_transaction_types'    => [
+    'allowed_transaction_types' => [
         'source'      => [
             AccountType::ASSET            => [
                 TransactionTypeModel::WITHDRAWAL,
@@ -748,7 +750,7 @@ return [
     ],
 
     // having the source + dest will tell you the transaction type.
-    'account_to_transaction'       => [
+    'account_to_transaction'    => [
         AccountType::ASSET            => [
             AccountType::ASSET           => TransactionTypeModel::TRANSFER,
             AccountType::CASH            => TransactionTypeModel::WITHDRAWAL,
@@ -813,7 +815,7 @@ return [
     ],
 
     // allowed source -> destination accounts.
-    'source_dests'                 => [
+    'source_dests'              => [
         TransactionTypeModel::WITHDRAWAL       => [
             AccountType::ASSET    => [AccountType::EXPENSE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CASH],
             AccountType::LOAN     => [AccountType::EXPENSE, AccountType::CASH],
@@ -852,7 +854,7 @@ return [
         ],
     ],
     // if you add fields to this array, don't forget to update the export routine (ExportDataGenerator).
-    'journal_meta_fields'          => [
+    'journal_meta_fields'       => [
         // sepa
         'sepa_cc',
         'sepa_ct_op',
@@ -886,28 +888,28 @@ return [
         'recurrence_count',
         'recurrence_date',
     ],
-    'webhooks'                     => [
+    'webhooks'                  => [
         'max_attempts' => env('WEBHOOK_MAX_ATTEMPTS', 3),
     ],
-    'can_have_virtual_amounts'     => [AccountType::ASSET],
-    'can_have_opening_balance'     => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-    'dynamic_creation_allowed'     => [
+    'can_have_virtual_amounts'  => [AccountType::ASSET],
+    'can_have_opening_balance'  => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+    'dynamic_creation_allowed'  => [
         AccountType::EXPENSE,
         AccountType::REVENUE,
         AccountType::INITIAL_BALANCE,
         AccountType::RECONCILIATION,
         AccountType::LIABILITY_CREDIT,
     ],
-    'valid_asset_fields'           => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
-    'valid_cc_fields'              => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
-    'valid_account_fields'         => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],
+    'valid_asset_fields'        => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
+    'valid_cc_fields'           => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
+    'valid_account_fields'      => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],
 
     // dynamic date ranges are as follows:
-    'dynamic_date_ranges'          => ['last7', 'last30', 'last90', 'last365', 'MTD', 'QTD', 'YTD'],
+    'dynamic_date_ranges'       => ['last7', 'last30', 'last90', 'last365', 'MTD', 'QTD', 'YTD'],
 
     // only used in v1
-    'allowed_sort_parameters'      => ['order', 'name', 'iban'],
+    'allowed_sort_parameters'   => ['order', 'name', 'iban'],
 
     // preselected account lists possibilities:
-    'preselected_accounts'         => ['all', 'assets', 'liabilities'],
+    'preselected_accounts'      => ['all', 'assets', 'liabilities'],
 ];

@@ -17,6 +17,7 @@
                                 x-for="subscription in group.subscriptions">
                                 <option :label="subscription.name"
                                         :value="subscription.id"
+                                        :selected="subscription.id == transaction.bill_id"
                                         x-text="subscription.name"></option>
                             </template>
                         </optgroup>

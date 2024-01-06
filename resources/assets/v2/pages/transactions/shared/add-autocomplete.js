@@ -20,6 +20,14 @@
 
 import Autocomplete from "bootstrap5-autocomplete";
 
+export function getUrls() {
+    return {
+        description: '/api/v2/autocomplete/transaction-descriptions',
+        account: '/api/v2/autocomplete/accounts',
+        category: '/api/v2/autocomplete/categories',
+        tag: '/api/v2/autocomplete/tags',
+    }
+}
 
 export function addAutocomplete(options) {
     const params = {
@@ -31,19 +39,14 @@ export function addAutocomplete(options) {
             }
         },
         hiddenInput: true,
-        preventBrowserAutocomplete: true,
+        // preventBrowserAutocomplete: true,
         highlightTyped: true,
         liveServer: true,
-        // onChange: this.changeSourceAccount,
-        // onSelectItem: this.selectSourceAccount
-        //     onSelectItem: this.changeCategory,
-        //     onChange: this.changeCategory,
     };
     if (typeof options.filters !== 'undefined' && options.filters.length > 0) {
         params.serverParams.types = options.filters;
     }
     if (typeof options.onRenderItem !== 'undefined' && null !== options.onRenderItem) {
-        console.log('add on render item');
         params.onRenderItem = options.onRenderItem;
     }
     if (options.valueField) {
@@ -57,6 +60,9 @@ export function addAutocomplete(options) {
     }
     if (options.onChange) {
         params.onChange = options.onChange;
+    }
+    if(options.hiddenValue) {
+        params.hiddenValue = options.hiddenValue;
     }
 
     Autocomplete.init(options.selector, params);

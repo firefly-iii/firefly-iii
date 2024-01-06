@@ -14,7 +14,7 @@
                         x-model="transaction.budget_id"
                 >
                     <template x-for="budget in formData.budgets">
-                        <option :label="budget.name" :value="budget.id"
+                        <option :label="budget.name" :value="budget.id" :selected="budget.id == transaction.budget_id"
                                 x-text="budget.name"></option>
                     </template>
                 </select>

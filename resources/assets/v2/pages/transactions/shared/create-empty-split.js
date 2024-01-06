@@ -101,11 +101,9 @@ export function createEmptySplit() {
 
         // map
         hasLocation: false,
-        map: null,
         latitude: null,
         longitude: null,
         zoomLevel: null,
-        marker: null,
 
 
         // date and time

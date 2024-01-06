@@ -33,7 +33,7 @@ import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
 import {loadSubscriptions} from "./shared/load-subscriptions.js";
 
 import 'leaflet/dist/leaflet.css';
-import {addAutocomplete} from "./shared/add-autocomplete.js";
+import {addAutocomplete, getUrls} from "./shared/add-autocomplete.js";
 import {
     changeCategory,
     changeDescription,
@@ -47,6 +47,9 @@ import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transact
 import Tags from "bootstrap5-tags";
 import {addLocation} from "./shared/manage-locations.js";
 
+
+
+
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
 // TODO group title
@@ -55,12 +58,7 @@ import {addLocation} from "./shared/manage-locations.js";
 
 let i18n;
 
-const urls = {
-    description: '/api/v2/autocomplete/transaction-descriptions',
-    account: '/api/v2/autocomplete/accounts',
-    category: '/api/v2/autocomplete/categories',
-    tag: '/api/v2/autocomplete/tags',
-};
+const urls = getUrls();
 
 let transactions = function () {
     return {
@@ -265,44 +263,7 @@ let transactions = function () {
         },
 
         addedSplit() {
-            // addedSplit, is called from the HTML
-            // for source account
-            const renderAccount = function (item, b, c) {
-                return item.name_with_balance + '<br><small class="text-muted">' + i18n.t('firefly.account_type_' + item.type) + '</small>';
-            };
-            console.log(this.filters);
-            addAutocomplete({
-                selector: 'input.ac-source',
-                serverUrl: urls.account,
-                filters: this.filters.source,
-                onRenderItem: renderAccount,
-                onChange: changeSourceAccount,
-                onSelectItem: selectSourceAccount
-            });
-            addAutocomplete({
-                selector: 'input.ac-dest',
-                serverUrl: urls.account,
-                filters: this.filters.destination,
-                onRenderItem: renderAccount,
-                onChange: changeDestinationAccount,
-                onSelectItem: selectDestinationAccount
-            });
-            addAutocomplete({
-                selector: 'input.ac-category',
-                serverUrl: urls.category,
-                valueField: 'id',
-                labelField: 'name',
-                onChange: changeCategory,
-                onSelectItem: changeCategory
-            });
-            addAutocomplete({
-                selector: 'input.ac-description',
-                serverUrl: urls.description,
-                valueField: 'id',
-                labelField: 'description',
-                onChange: changeDescription,
-                onSelectItem: changeDescription,
-            });
+
 
         },
 
@@ -508,6 +469,46 @@ let transactions = function () {
                 const count = this.entries.length - 1;
                 // if(document.querySelector('#location_map_' + count)) { }
                 addLocation(count);
+
+                // addedSplit, is called from the HTML
+                // for source account
+                const renderAccount = function (item, b, c) {
+                    return item.name_with_balance + '<br><small class="text-muted">' + i18n.t('firefly.account_type_' + item.type) + '</small>';
+                };
+                addAutocomplete({
+                    selector: 'input.ac-source',
+                    serverUrl: urls.account,
+                    // filters: this.filters.source,
+                    // onRenderItem: renderAccount,
+                    onChange: changeSourceAccount,
+                    onSelectItem: selectSourceAccount,
+                    hiddenValue: this.items[count].source_account.alpine_name,
+                });
+                addAutocomplete({
+                    selector: 'input.ac-dest',
+                    serverUrl: urls.account,
+                    filters: this.filters.destination,
+                    onRenderItem: renderAccount,
+                    onChange: changeDestinationAccount,
+                    onSelectItem: selectDestinationAccount
+                });
+                addAutocomplete({
+                    selector: 'input.ac-category',
+                    serverUrl: urls.category,
+                    valueField: 'id',
+                    labelField: 'name',
+                    onChange: changeCategory,
+                    onSelectItem: changeCategory
+                });
+                addAutocomplete({
+                    selector: 'input.ac-description',
+                    serverUrl: urls.description,
+                    valueField: 'id',
+                    labelField: 'description',
+                    onChange: changeDescription,
+                    onSelectItem: changeDescription,
+                });
+
             }, 150);
         },
 

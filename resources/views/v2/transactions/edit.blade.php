@@ -9,11 +9,18 @@
             <x-messages></x-messages>
             <x-transaction-tab-list></x-transaction-tab-list>
             <div class="tab-content" id="splitTabsContent">
-
+                <template x-for="transaction,index in entries">
+                    <x-transaction-split
+                        :zoomLevel="$zoomLevel"
+                        :latitude="$latitude"
+                        :longitude="$longitude"
+                        :optionalFields="$optionalFields"
+                        :optionalDateFields="$optionalDateFields"></x-transaction-split>
+                </template>
             </div>
             <div class="row">
                 <div class="col text-end">
-                    <button class="btn btn-success" :disabled="submitting" @click="submitTransaction()">Update</button>
+                    <button class="btn btn-success" :disabled="formStates.isSubmitting" @click="submitTransaction()">Update</button>
                 </div>
             </div>
         </div>

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * AccountList.php
- * Copyright (c) 2019 james@firefly-iii.org
+ * UserGroupTransaction.php
+ * Copyright (c) 2024 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -23,30 +23,26 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
-use FireflyIII\Models\Account;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\User;
 use Illuminate\Routing\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Class UserGroupAccount.
+ * Class UserGroupTransaction.
  */
-class UserGroupAccount implements BinderInterface
+class UserGroupTransaction implements BinderInterface
 {
-    /**
-     * @throws NotFoundHttpException
-     */
-    public static function routeBinder(string $value, Route $route): Account
+    public static function routeBinder(string $value, Route $route): TransactionGroup
     {
         if (auth()->check()) {
             /** @var User $user */
-            $user     = auth()->user();
-            $account = Account::where('id', (int)$value)
-                ->where('user_group_id', $user->user_group_id)
-                ->first()
-            ;
-            if (null !== $account) {
-                return $account;
+            $user  = auth()->user();
+            $group = TransactionGroup::where('id', (int) $value)
+                                     ->where('user_group_id', $user->user_group_id)
+                                     ->first();
+            if (null !== $group) {
+                return $group;
             }
         }
 

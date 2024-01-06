@@ -26,9 +26,13 @@ namespace FireflyIII\Transformers\V2;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
@@ -36,105 +40,219 @@ use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionGroupTransformer
  */
 class TransactionGroupTransformer extends AbstractTransformer
 {
-    private ExchangeRateConverter $converter;
-    private array                 $currencies = [];
+    private array                 $accountTypes = []; // account types collection.
+    private array                 $journals     = []; // collection of all journals and some important meta-data.
+    private array                 $objects      = [];
+    private array                 $currencies   = []; // collection of all currencies for this transformer.
     private TransactionCurrency   $default;
-    private array                 $meta       = [];
-    private array                 $notes      = [];
-    private array                 $locations  = [];
-    private array                 $tags       = [];
+    private ExchangeRateConverter $converter;
+
+    //    private array                 $currencies        = [];
+//    private array                 $transactionTypes  = [];
+//    private array                 $meta              = [];
+//    private array                 $notes             = [];
+//    private array                 $locations         = [];
+//    private array                 $tags              = [];
+//    private array                 $amounts           = [];
+//    private array                 $foreignAmounts    = [];
+//    private array                 $journalCurrencies = [];
+//    private array                 $foreignCurrencies = [];
 
     public function collectMetaData(Collection $objects): void
     {
-        $currencies       = [];
-        $journals         = [];
-
+        $collectForObjects = false;
         /** @var array $object */
         foreach ($objects as $object) {
-            foreach ($object['sums'] as $sum) {
-                $id = (int) $sum['currency_id'];
-                $currencies[$id] ??= TransactionCurrency::find($sum['currency_id']);
+            if (is_array($object)) {
+                $this->collectForArray($object);
             }
-
-            /** @var array $transaction */
-            foreach ($object['transactions'] as $transaction) {
-                $id            = (int) $transaction['transaction_journal_id'];
-                $journals[$id] = [];
+            if ($object instanceof TransactionGroup) {
+                $this->collectForObject($object);
+                $collectForObjects = true;
             }
         }
-        $this->currencies = $currencies;
-        $this->default    = app('amount')->getDefaultCurrency();
 
-        // grab meta for all journals:
-        $meta             = TransactionJournalMeta::whereIn('transaction_journal_id', array_keys($journals))->get();
+        $this->default   = app('amount')->getDefaultCurrency();
+        $this->converter = new ExchangeRateConverter();
 
-        /** @var TransactionJournalMeta $entry */
-        foreach ($meta as $entry) {
-            $id                            = $entry->transaction_journal_id;
-            $this->meta[$id][$entry->name] = $entry->data;
+        $this->collectAllMetaData();
+        $this->collectAllNotes();
+        $this->collectAllLocations();
+        $this->collectAllTags();
+        if ($collectForObjects) {
+            $this->collectAllCurrencies();
+//            $this->collectAllAmounts();
+//            $this->collectTransactionTypes();
+//            $this->collectAccounts();
+            // source accounts
+            // destination accounts
+
         }
-
-        // grab all notes for all journals:
-        $notes            = Note::whereNoteableType(TransactionJournal::class)->whereIn('noteable_id', array_keys($journals))->get();
-
-        /** @var Note $note */
-        foreach ($notes as $note) {
-            $id               = $note->noteable_id;
-            $this->notes[$id] = $note;
-        }
-
-        // grab all locations for all journals:
-        $locations        = Location::whereLocatableType(TransactionJournal::class)->whereIn('locatable_id', array_keys($journals))->get();
-
-        /** @var Location $location */
-        foreach ($locations as $location) {
-            $id                   = $location->locatable_id;
-            $this->locations[$id] = $location;
-        }
-
-        // grab all tags for all journals:
-        $tags             = DB::table('tag_transaction_journal')
-            ->leftJoin('tags', 'tags.id', 'tag_transaction_journal.tag_id')
-            ->whereIn('tag_transaction_journal.transaction_journal_id', array_keys($journals))
-            ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag'])
-        ;
-
-        /** @var \stdClass $tag */
-        foreach ($tags as $tag) {
-            $id                = (int) $tag->transaction_journal_id;
-            $this->tags[$id][] = $tag->tag;
-        }
-
-        // create converter
-        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
-        $this->converter  = new ExchangeRateConverter();
     }
 
-    public function transform(array $group): array
+    public function transform(array | TransactionGroup $group): array
     {
-        $first = reset($group['transactions']);
+        if (is_array($group)) {
+            $first = reset($group['transactions']);
 
+            return [
+                'id'           => (string) $group['id'],
+                'created_at'   => $group['created_at']->toAtomString(),
+                'updated_at'   => $group['updated_at']->toAtomString(),
+                'user'         => (string) $first['user_id'],
+                'user_group'   => (string) $first['user_group_id'],
+                'group_title'  => $group['title'] ?? null,
+                'transactions' => $this->transformTransactions($group['transactions'] ?? []),
+                'links'        => [
+                    [
+                        'rel' => 'self',
+                        'uri' => sprintf('/transactions/%d', $group['id']),
+                    ],
+                ],
+            ];
+        }
         return [
-            'id'           => (string) $group['id'],
-            'created_at'   => $first['created_at']->toAtomString(),
-            'updated_at'   => $first['updated_at']->toAtomString(),
-            'user'         => (string) $first['user_id'],
-            'user_group'   => (string) $first['user_group_id'],
-            'group_title'  => $group['title'] ?? null,
-            'transactions' => $this->transformTransactions($group['transactions'] ?? []),
+            'id'           => (string) $group->id,
+            'created_at'   => $group->created_at->toAtomString(),
+            'updated_at'   => $group->created_at->toAtomString(),
+            'user'         => (string) $group->user_id,
+            'user_group'   => (string) $group->user_group_id,
+            'group_title'  => $group->title ?? null,
+            'transactions' => $this->transformJournals($group),
             'links'        => [
                 [
                     'rel' => 'self',
-                    'uri' => sprintf('/transactions/%d', $group['id']),
+                    'uri' => sprintf('/transactions/%d', $group->id),
                 ],
             ],
+        ];
+    }
+
+    private function transformJournals(TransactionGroup $group): array
+    {
+        $return = [];
+        /** @var TransactionJournal $journal */
+        foreach ($group->transactionJournals as $journal) {
+            $return[] = $this->transformJournal($journal);
+        }
+        return $return;
+    }
+
+    private function transformJournal(TransactionJournal $journal): array
+    {
+        $id = $journal->id;
+        /** @var TransactionCurrency|null $foreignCurrency */
+        $foreignCurrency = null;
+        /** @var TransactionCurrency $currency */
+        $currency            = $this->currencies[$this->journals[$id]['currency_id']];
+        $nativeForeignAmount = null;
+        $amount              = $this->journals[$journal->id]['amount'];
+        $foreignAmount       = $this->journals[$journal->id]['foreign_amount'];
+        $meta                = new NullArrayObject($this->meta[$id] ?? []);
+
+        // has foreign amount?
+        if (null !== $foreignAmount) {
+            $foreignCurrency     = $this->currencies[$this->journals[$id]['foreign_currency_id']];
+            $nativeForeignAmount = $this->converter->convert($this->default, $foreignCurrency, $journal->date, $foreignAmount);
+        }
+
+        $nativeAmount = $this->converter->convert($this->default, $currency, $journal->date, $amount);
+
+        $longitude = null;
+        $latitude  = null;
+        $zoomLevel = null;
+        if (array_key_exists('location', $this->journals[$id])) {
+            $latitude  = (string) $this->journals[$id]['location']['latitude'];
+            $longitude = (string) $this->journals[$id]['location']['longitude'];
+            $zoomLevel = $this->journals[$id]['location']['zoom_level'];
+        }
+
+        return [
+            'user'                            => (string) $journal->user_id,
+            'user_group'                      => (string) $journal->user_group_id,
+            'transaction_journal_id'          => (string) $journal->id,
+            'type'                            => $this->journals[$journal->id]['type'],
+            'date'                            => $journal->date->toAtomString(),
+            'order'                           => $journal->order,
+            'amount'                          => $amount,
+            'native_amount'                   => $nativeAmount,
+            'foreign_amount'                  => $foreignAmount,
+            'native_foreign_amount'           => $nativeForeignAmount,
+            'currency_id'                     => (string) $currency->id,
+            'currency_code'                   => $currency->code,
+            'currency_name'                   => $currency->name,
+            'currency_symbol'                 => $currency->symbol,
+            'currency_decimal_places'         => $currency->decimal_places,
+
+            // converted to native currency
+            'native_currency_id'              => (string) $this->default->id,
+            'native_currency_code'            => $this->default->code,
+            'native_currency_name'            => $this->default->name,
+            'native_currency_symbol'          => $this->default->symbol,
+            'native_currency_decimal_places'  => $this->default->decimal_places,
+
+            // foreign currency amount:
+            'foreign_currency_id'             => $foreignCurrency?->id,
+            'foreign_currency_code'           => $foreignCurrency?->code,
+            'foreign_currency_name'           => $foreignCurrency?->name,
+            'foreign_currency_symbol'         => $foreignCurrency?->symbol,
+            'foreign_currency_decimal_places' => $foreignCurrency?->decimal_places,
+
+            'description' => $journal->description,
+            'source_id'   => (string) $this->journals[$id]['source_account_id'],
+            'source_name' => $this->journals[$id]['source_account_name'],
+            'source_iban' => $this->journals[$id]['source_account_iban'],
+            'source_type' => $this->journals[$id]['source_account_type'],
+
+            'destination_id'   => (string) $this->journals[$id]['destination_account_id'],
+            'destination_name' => $this->journals[$id]['destination_account_name'],
+            'destination_iban' => $this->journals[$id]['destination_account_iban'],
+            'destination_type' => $this->journals[$id]['destination_account_type'],
+
+            'budget_id'          => $this->journals[$id]['budget_id'],
+            'budget_name'        => $this->journals[$id]['budget_name'],
+            'category_id'        => $this->journals[$id]['category_id'],
+            'category_name'      => $this->journals[$id]['category_name'],
+            'bill_id'            => $this->journals[$id]['bill_id'],
+            'bill_name'          => $this->journals[$id]['bill_name'],
+            'reconciled'         => $this->journals[$id]['reconciled'],
+            'notes'              => $this->journals[$id]['notes'] ?? null,
+            'tags'               => $this->journals[$id]['tags'] ?? [],
+            'internal_reference' => $meta['internal_reference'],
+            'external_id'        => $meta['external_id'],
+            'original_source'    => $meta['original_source'],
+            'recurrence_id'      => $meta['recurrence_id'],
+            'recurrence_total'   => $meta['recurrence_total'],
+            'recurrence_count'   => $meta['recurrence_count'],
+            'external_url'       => $meta['external_url'],
+            'import_hash_v2'     => $meta['import_hash_v2'],
+            'sepa_cc'            => $meta['sepa_cc'],
+            'sepa_ct_op'         => $meta['sepa_ct_op'],
+            'sepa_ct_id'         => $meta['sepa_ct_id'],
+            'sepa_db'            => $meta['sepa_db'],
+            'sepa_country'       => $meta['sepa_country'],
+            'sepa_ep'            => $meta['sepa_ep'],
+            'sepa_ci'            => $meta['sepa_ci'],
+            'sepa_batch_id'      => $meta['sepa_batch_id'],
+            'interest_date'      => $this->date($meta['interest_date']),
+            'book_date'          => $this->date($meta['book_date']),
+            'process_date'       => $this->date($meta['process_date']),
+            'due_date'           => $this->date($meta['due_date']),
+            'payment_date'       => $this->date($meta['payment_date']),
+            'invoice_date'       => $this->date($meta['invoice_date']),
+
+            // location data
+            'longitude'          => $longitude,
+            'latitude'           => $latitude,
+            'zoom_level'         => $zoomLevel,
+            //
+            //            'has_attachments' => $this->hasAttachments((int) $row['transaction_journal_id']),
         ];
     }
 
@@ -157,10 +275,10 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     private function transformTransaction(array $transaction): array
     {
-        $transaction         = new NullArrayObject($transaction);
-        $type                = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
-        $journalId           = (int) $transaction['transaction_journal_id'];
-        $meta                = new NullArrayObject($this->meta[$journalId] ?? []);
+        $transaction = new NullArrayObject($transaction);
+        $type        = $this->stringFromArray($transaction, 'transaction_type_type', TransactionType::WITHDRAWAL);
+        $journalId   = (int) $transaction['transaction_journal_id'];
+        $meta        = new NullArrayObject($this->meta[$journalId] ?? []);
 
         /**
          * Convert and use amount:
@@ -177,15 +295,13 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
         $this->converter->summarize();
 
-        $longitude           = null;
-        $latitude            = null;
-        $zoomLevel           = null;
-        if (array_key_exists($journalId, $this->locations)) {
-            /** @var Location $location */
-            $location  = $this->locations[$journalId];
-            $latitude  = (string) $location->latitude;
-            $longitude = (string) $location->longitude;
-            $zoomLevel = $location->zoom_level;
+        $longitude = null;
+        $latitude  = null;
+        $zoomLevel = null;
+        if (array_key_exists('location', $this->journals[$journalId])) {
+            $latitude  = (string) $this->journals[$journalId]['location']['latitude'];
+            $longitude = (string) $this->journals[$journalId]['location']['longitude'];
+            $zoomLevel = $this->journals[$journalId]['location']['zoom_level'];
         }
 
         return [
@@ -332,5 +448,164 @@ class TransactionGroupTransformer extends AbstractTransformer
         }
 
         return $res;
+    }
+
+    private function collectForArray(array $object): void
+    {
+        foreach ($object['sums'] as $sum) {
+            $this->currencies[(int) $sum['currency_id']] ??= TransactionCurrency::find($sum['currency_id']);
+        }
+
+        /** @var array $transaction */
+        foreach ($object['transactions'] as $transaction) {
+            $this->journals[(int) $transaction['transaction_journal_id']] = [];
+        }
+    }
+
+    private function collectAllMetaData(): void
+    {
+        $meta = TransactionJournalMeta::whereIn('transaction_journal_id', array_keys($this->journals))->get();
+
+        /** @var TransactionJournalMeta $entry */
+        foreach ($meta as $entry) {
+            $id                                        = $entry->transaction_journal_id;
+            $this->journals[$id]['meta']               ??= [];
+            $this->journals[$id]['meta'][$entry->name] = $entry->data;
+        }
+    }
+
+    private function collectAllNotes(): void
+    {
+        // grab all notes for all journals:
+        $notes = Note::whereNoteableType(TransactionJournal::class)->whereIn('noteable_id', array_keys($this->journals))->get();
+
+        /** @var Note $note */
+        foreach ($notes as $note) {
+            $id                           = $note->noteable_id;
+            $this->journals[$id]['notes'] = $note->text;
+        }
+    }
+
+    /**
+     * @return void
+     */
+    private function collectAllLocations(): void
+    {
+        // grab all locations for all journals:
+        $locations = Location::whereLocatableType(TransactionJournal::class)->whereIn('locatable_id', array_keys($this->journals))->get();
+        /** @var Location $location */
+        foreach ($locations as $location) {
+            $id                              = $location->locatable_id;
+            $this->journals[$id]['location'] = [
+                'latitude'   => $location->latitude,
+                'longitude'  => $location->longitude,
+                'zoom_level' => $location->zoom_level,
+            ];
+        }
+    }
+
+    private function collectAllTags(): void
+    {
+        // grab all tags for all journals:
+        $tags = DB::table('tag_transaction_journal')
+                  ->leftJoin('tags', 'tags.id', 'tag_transaction_journal.tag_id')
+                  ->whereIn('tag_transaction_journal.transaction_journal_id', array_keys($this->journals))
+                  ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag']);
+
+        /** @var \stdClass $tag */
+        foreach ($tags as $tag) {
+            $id                            = (int) $tag->transaction_journal_id;
+            $this->journals[$id]['tags'][] = $tag->tag;
+        }
+    }
+
+    private function collectForObject(TransactionGroup $object): void
+    {
+        foreach ($object->transactionJournals as $journal) {
+            $this->journals[$journal->id] = [];
+            $this->objects[]              = $journal;
+        }
+    }
+
+    private function collectAllCurrencies(): void
+    {
+        /** @var TransactionJournal $journal */
+        foreach ($this->objects as $journal) {
+            $id                                         = $journal->id;
+            $this->journals[$id]['reconciled']          = false;
+            $this->journals[$id]['foreign_amount']      = null;
+            $this->journals[$id]['foreign_currency_id'] = null;
+            $this->journals[$id]['amount']              = null;
+            $this->journals[$id]['currency_id']         = null;
+            $this->journals[$id]['type']                = $journal->transactionType->type;
+            $this->journals[$id]['budget_id']           = null;
+            $this->journals[$id]['budget_name']         = null;
+            $this->journals[$id]['category_id']         = null;
+            $this->journals[$id]['category_name']       = null;
+            $this->journals[$id]['bill_id']             = null;
+            $this->journals[$id]['bill_name']           = null;
+
+            // collect budget:
+            /** @var Budget|null $budget */
+            $budget = $journal->budgets()->first();
+            if (null !== $budget) {
+                $this->journals[$id]['budget_id']   = (string) $budget->id;
+                $this->journals[$id]['budget_name'] = $budget->name;
+            }
+
+            // collect category:
+            /** @var Category|null $category */
+            $category = $journal->categories()->first();
+            if (null !== $category) {
+                $this->journals[$id]['category_id']   = (string) $category->id;
+                $this->journals[$id]['category_name'] = $category->name;
+            }
+
+            // collect bill:
+            if (null !== $journal->bill_id) {
+                $bill                             = $journal->bill;
+                $this->journals[$id]['bill_id']   = (string) $bill->id;
+                $this->journals[$id]['bill_name'] = $bill->name;
+            }
+
+
+            /** @var Transaction $transaction */
+            foreach ($journal->transactions as $transaction) {
+                if (-1 === bccomp($transaction->amount, '0')) {
+                    // only collect source account info
+                    $account                                       = $transaction->account;
+                    $this->accountTypes[$account->account_type_id] ??= $account->accountType->type;
+                    $this->journals[$id]['source_account_name']    = $account->name;
+                    $this->journals[$id]['source_account_iban']    = $account->iban;
+                    $this->journals[$id]['source_account_type']    = $this->accountTypes[$account->account_type_id];
+                    $this->journals[$id]['source_account_id']      = $transaction->account_id;
+                    $this->journals[$id]['reconciled']             = $transaction->reconciled;
+                    continue;
+                }
+
+                // add account
+                $account                                         = $transaction->account;
+                $this->accountTypes[$account->account_type_id]   ??= $account->accountType->type;
+                $this->journals[$id]['destination_account_name'] = $account->name;
+                $this->journals[$id]['destination_account_iban'] = $account->iban;
+                $this->journals[$id]['destination_account_type'] = $this->accountTypes[$account->account_type_id];
+                $this->journals[$id]['destination_account_id']   = $transaction->account_id;
+
+                // find and set currency
+                $currencyId                         = $transaction->transaction_currency_id;
+                $this->currencies[$currencyId]      ??= $transaction->transactionCurrency;
+                $this->journals[$id]['currency_id'] = $currencyId;
+                $this->journals[$id]['amount']      = $transaction->amount;
+                // find and set foreign currency
+                if (null !== $transaction->foreign_currency_id) {
+                    $foreignCurrencyId                          = $transaction->foreign_currency_id;
+                    $this->currencies[$foreignCurrencyId]       ??= $transaction->foreignCurrency;
+                    $this->journals[$id]['foreign_currency_id'] = $foreignCurrencyId;
+                    $this->journals[$id]['foreign_amount']      = $transaction->foreign_amount;
+                }
+
+                // find and set destination account info.
+            }
+        }
     }
 }
