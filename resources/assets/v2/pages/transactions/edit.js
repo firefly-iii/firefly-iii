@@ -57,7 +57,6 @@ let transactions = function () {
         // transactions are stored in "entries":
         entries: [],
 
-
         // state of the form is stored in formState:
         formStates: {
             loadingCurrencies: true,
@@ -74,7 +73,8 @@ let transactions = function () {
 
         // form behaviour during transaction
         formBehaviour: {
-            formType: 'create', foreignCurrencyEnabled: true,
+            formType: 'edit',
+            foreignCurrencyEnabled: true,
         },
 
         // form data (except transactions) is stored in formData
@@ -180,9 +180,14 @@ let transactions = function () {
             }
             return formatMoney(this.groupProperties.totalAmount, this.entries[0].currency_code ?? 'EUR');
         },
-
+        getTags(index) {
+            console.log('at get tags ' + index);
+            console.log(this.entries[index].tags);
+            return this.entries[index].tags ?? [];
+        },
 
         getTransactionGroup() {
+            this.entries = [];
             const page = window.location.href.split('/');
             const groupId = parseInt(page[page.length - 1]);
             const getter = new Get();
@@ -192,33 +197,38 @@ let transactions = function () {
                 this.groupProperties.transactionType = data.attributes.transactions[0].type;
                 this.groupProperties.title = data.attributes.title ?? data.attributes.transactions[0].description;
                 this.entries = parseDownloadedSplits(data.attributes.transactions);
-                //console.log(this.entries);
 
                 // remove waiting thing.
                 this.notifications.wait.show = false;
             }).then(() => {
-
+                this.groupProperties.totalAmount = 0;
+                for (let i in this.entries) {
+                    if (this.entries.hasOwnProperty(i)) {
+                        this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
+                        this.filters.source.push(this.entries[i].source_account.type);
+                        this.filters.destination.push(this.entries[i].source_account.type);
+                    }
+                }
+                console.log(this.filters);
                 setTimeout(() => {
                     // render tags:
                     Tags.init('select.ac-tags', {
                         allowClear: true,
-                        // server: urls.tag,
-                        // liveServer: true,
-                        // clearEnd: true,
-                        selected: [{label:'Bla bla',value:1,selected:true}],
-                        //allowNew: true,
-                        //notFoundMessage: i18n.t('firefly.nothing_found'),
-                        // noCache: true,
-                        // fetchOptions: {
-                        //     headers: {
-                        //         'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-                        //     }
-                        // }
+                        server: urls.tag,
+                        liveServer: true,
+                        clearEnd: true,
+                        allowNew: true,
+                        notFoundMessage: i18n.t('firefly.nothing_found'),
+                        noCache: true,
+                        fetchOptions: {
+                            headers: {
+                                'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+                            }
+                        }
                     });
-                }, 250);
+                }, 150);
             });
         },
-
 
         init() {
             // download translations and get the transaction group.
@@ -282,6 +292,17 @@ let transactions = function () {
                 this.entries[event.detail.index].zoomLevel = event.detail.zoomLevel;
             });
         },
+
+        changedAmount(e) {
+            const index = parseInt(e.target.dataset.index);
+            this.entries[index].amount = parseFloat(e.target.value);
+            this.groupProperties.totalAmount = 0;
+            for (let i in this.entries) {
+                if (this.entries.hasOwnProperty(i)) {
+                    this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
+                }
+            }
+        }
     }
 }
 

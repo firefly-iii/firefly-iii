@@ -132,6 +132,7 @@ return [
         'has_any_tag'                     => ['alias' => false, 'needs_context' => false],
         'any_notes'                       => ['alias' => false, 'needs_context' => false],
         'has_any_notes'                   => ['alias' => true, 'alias_for' => 'any_notes', 'needs_context' => false],
+        'has_notes'                       => ['alias' => true, 'alias_for' => 'any_notes', 'needs_context' => false],
         'any_external_url'                => ['alias' => false, 'needs_context' => false],
         'has_any_external_url'            => ['alias' => true, 'alias_for' => 'any_external_url', 'needs_context' => false],
         'has_no_attachments'              => ['alias' => false, 'needs_context' => false],

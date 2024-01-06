@@ -101,7 +101,7 @@
     "integrity": "sha384-wA/Z8Z+hNOuOA5ZTX8ShykEkdtfxX6dBZFLmmYmanfuUYEeY427OaNi956vrN6cy"
   },
   "resources/assets/v2/pages/transactions/edit.js": {
-    "file": "assets/edit-6247ff45.js",
+    "file": "assets/edit-9f80420b.js",
     "imports": [
       "_get-c53daca3.js",
       "_vendor-4332182f.js",
@@ -110,7 +110,7 @@
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/edit.js",
-    "integrity": "sha384-hJTbJsS4rExaV2BGHmiZ/J/nm8RicxSfwzr7TDUe/nwtYOm8gWtmNxrDrsmyzAqS"
+    "integrity": "sha384-aDpFfamLQtUwfrOIPa3rZYGluWoOFUl+/HT5HVFqxc2Qa78DCqiUGsw20xsnPH71"
   },
   "resources/assets/v2/sass/app.scss": {
     "file": "assets/app-fb7b26ec.css",

@@ -66,12 +66,14 @@ export function parseDownloadedSplits(downloads) {
             current.destination_account = {
                 id: download.destination_id,
                 name: download.destination_name,
+                type: download.destination_type,
                 alpine_name: download.destination_name,
             };
 
             current.source_account = {
                 id: download.source_id,
                 name: download.source_name,
+                type: download.source_type,
                 alpine_name: download.source_name,
             };
 
@@ -87,10 +89,11 @@ export function parseDownloadedSplits(downloads) {
             // longitude: null
             // piggy_bank_id: null
             // zoomLevel: null
-            console.log('download:');
-            console.log(download);
-            console.log('current:');
-            console.log(current);
+            // console.log('download:');
+            // console.log(download);
+            // console.log('current:');
+            // console.log(current);
+            console.log(current.tags);
             returnArray.push(current);
         }
     }

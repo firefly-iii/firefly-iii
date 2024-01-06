@@ -10,9 +10,6 @@
             :name="'tags['+index+'][]'"
             multiple>
             <option value="">{{ __('firefly.select_tag') }}</option>
-            <template x-for="tag in transaction.tags" :key="tag">
-                <option :value="tag" x-text="tag" selected="selected"></option>
-            </template>
         </select>
 
     </div>

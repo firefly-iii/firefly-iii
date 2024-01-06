@@ -106,7 +106,7 @@ class EditController extends Controller
         $optionalFields['location']     ??= false;
         $optionalFields['location'] = $optionalFields['location'] && true === config('firefly.enable_external_map');
 
-        // map info:
+        // map info voor v2:
         $longitude                  = config('firefly.default_location.longitude');
         $latitude                   = config('firefly.default_location.latitude');
         $zoomLevel                  = config('firefly.default_location.zoom_level');
