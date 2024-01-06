@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.6 - 2024-01-07
+
+### Fixed
+
+- Type validation error
+
 ## 6.1.5 - 2024-01-07
 
 ### Added

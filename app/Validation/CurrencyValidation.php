@@ -74,7 +74,7 @@ trait CurrencyValidation
                 continue;
             }
 
-            $compare       = bccomp('0', $transaction['foreign_amount']);
+            $compare       = bccomp('0', $foreignAmount);
             if (-1 === $compare) {
                 Log::debug('validateForeignCurrencyInformation: array contains foreign amount info.');
                 if (!array_key_exists('foreign_currency_id', $transaction) && !array_key_exists('foreign_currency_code', $transaction)) {
