@@ -22,7 +22,6 @@ import Get from "../../api/v2/model/transaction/get.js";
 import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import {Chart} from 'chart.js';
 import {Flow, SankeyController} from 'chartjs-chart-sankey';
-import {loadTranslations} from "../../support/load-translations.js";
 import {getCacheKey} from "../../support/get-cache-key.js";
 import {format} from "date-fns";
 import i18next from "i18next";

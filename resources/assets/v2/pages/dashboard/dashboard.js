@@ -45,9 +45,6 @@ import {
     Tooltip
 } from "chart.js";
 import 'chartjs-adapter-date-fns';
-import {loadTranslations} from "../../support/load-translations.js";
-import {getVariable} from "../../store/get-variable.js";
-import i18next from "i18next";
 
 // register things
 Chart.register({
@@ -81,26 +78,20 @@ const comps = {
 //let i18n;
 
 function loadPage(comps) {
-    Promise.all([getVariable('language', 'en_US')]).then((values) => {
-        loadTranslations(values[0]).then(() => {
-            Object.keys(comps).forEach(comp => {
-                let data = comps[comp]();
-                Alpine.data(comp, () => data);
-            });
-            Alpine.start();
-        });
+    Object.keys(comps).forEach(comp => {
+        let data = comps[comp]();
+        Alpine.data(comp, () => data);
     });
-
-
+    Alpine.start();
 }
 
 // wait for load until bootstrapped event is received.
 document.addEventListener('firefly-iii-bootstrapped', () => {
-    //console.log('Loaded through event listener.');
+    console.log('Loaded through event listener.');
     loadPage(comps);
 });
 // or is bootstrapped before event is triggered.
 if (window.bootstrapped) {
-    //console.log('Loaded through window variable.');
+    console.log('Loaded through window variable.');
     loadPage(comps);
 }

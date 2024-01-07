@@ -1,0 +1,42 @@
+{
+    "config": {
+        "html_language": "sl",
+        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
+    },
+    "firefly": {
+        "spent": "Porabljeno",
+        "left": "Preostalo",
+        "paid": "Pla\u010dano",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "unpaid": "Nepla\u010dano",
+        "default_group_title_name_plain": "nezdru\u017eeno",
+        "subscriptions_in_group": "Naro\u010dnine v skupini \"%{title}\"",
+        "subscr_expected_x_times": "Pri\u010dakujte, da boste v tem obdobju pla\u010dali %{amount} %{times}-krat",
+        "overspent": "Preve\u010d porabljeno",
+        "money_flowing_in": "Na",
+        "money_flowing_out": "Iz",
+        "category": "Kategorija",
+        "unknown_category_plain": "Brez kategorije",
+        "all_money": "Ves va\u0161 denar",
+        "unknown_source_plain": "Neznan izvorni ra\u010dun",
+        "unknown_dest_plain": "Neznan ciljni ra\u010dun",
+        "unknown_any_plain": "Neznan ra\u010dun",
+        "unknown_budget_plain": "Ni prora\u010duna",
+        "stored_journal_js": "Nova transakcija \"%{description}\" je uspe\u0161no ustvarjena",
+        "wait_loading_transaction": "Please wait for the form to load",
+        "nothing_found": "(nothing found)",
+        "wait_loading_data": "Please wait for your information to load...",
+        "Transfer": "Prenos",
+        "Withdrawal": "Dvig",
+        "Deposit": "Polog",
+        "expense_account": "Ra\u010dun stro\u0161kov",
+        "revenue_account": "Ra\u010dun prihodkov",
+        "budget": "Prora\u010dun",
+        "account_type_Asset account": "Ra\u010dun sredstev",
+        "account_type_Expense account": "Ra\u010dun stro\u0161kov",
+        "account_type_Revenue account": "Ra\u010dun prihodkov",
+        "account_type_Debt": "Dolg",
+        "account_type_Loan": "Posojilo",
+        "account_type_Mortgage": "Hipoteka"
+    }
+}

@@ -20,8 +20,6 @@
 
 import '../../boot/bootstrap.js';
 import dates from '../../pages/shared/dates.js';
-import {getVariable} from "../../store/get-variable.js";
-import {loadTranslations} from "../../support/load-translations.js";
 import formatMoney from "../../util/format-money.js";
 import Get from "../../api/v2/model/transaction/get.js";
 import {parseDownloadedSplits} from "./shared/parse-downloaded-splits.js";

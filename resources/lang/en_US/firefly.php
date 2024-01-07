@@ -1898,6 +1898,7 @@ return [
 
     // transactions:
     'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_loading_data'                                   => 'Please wait for your information to load...',
     'wait_attachments'                                    => 'Please wait for the attachments to upload.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',

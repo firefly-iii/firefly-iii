@@ -83,21 +83,8 @@ export function parseDownloadedSplits(downloads) {
                 current.longitude = download.longitude;
                 current.zoomLevel = download.zoom_level;
             }
-
-            // hasLocation: false
-            // latitude: null
-            // longitude: null
-            // piggy_bank_id: null
-            // zoomLevel: null
-            // console.log('download:');
-            // console.log(download);
-            // console.log('current:');
-            // console.log(current);
-            console.log(current.tags);
             returnArray.push(current);
         }
     }
-
-
     return returnArray;
 }

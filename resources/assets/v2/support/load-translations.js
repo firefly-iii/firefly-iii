@@ -28,21 +28,19 @@ import LocalStorageBackend from "i18next-localstorage-backend";
 
 
 let loaded = false;
-let count = 0;
 
 function loadTranslations(locale) {
-    if (false === loaded && 0 === count) {
-        console.log('Loading translations: ' + count);
+    if (false === loaded) {
         const replacedLocale = locale.replace('-', '_');
         loaded = true;
-        count++;
-
+        console.log(import.meta.env.MODE);
+        const expireTime = import.meta.env.MODE === 'development' ? 1 : 7 * 24 * 60 * 60 * 1000;
         return i18next
             .use(ChainedBackend)
             .init({
                 fallbackLng: "en_US",
                 lng: replacedLocale,
-                debug: true,
+                debug: import.meta.env.MODE === 'development',
                 // ... your i18next config
                 backend: {
                     backends: [
@@ -50,7 +48,7 @@ function loadTranslations(locale) {
                         HttpBackend
                     ],
                     backendOptions: [{
-                        expirationTime: 7 * 24 * 60 * 60 * 1000 // 7 days
+                        expirationTime: expireTime
                     }, {
                         //         const response = await fetch(`./v2/i18n/${locale}.json`);
                         loadPath: './v2/i18n/{{lng}}.json'
@@ -58,8 +56,7 @@ function loadTranslations(locale) {
                 }
             });
     }
-    count++;
-    console.warn('Loading translations skipped because count is:' + count);
+    console.warn('Loading translations skipped.');
     return Promise.resolve();
 }
 

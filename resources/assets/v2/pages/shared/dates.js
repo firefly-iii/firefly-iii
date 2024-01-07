@@ -45,7 +45,6 @@ export default () => ({
     language: 'en_US',
 
     init() {
-        console.log(`Loading page component "DATES" with language "${i18next.t('key')}".`);
         this.range = {
             start: new Date(window.store.get('start')),
             end: new Date(window.store.get('end'))

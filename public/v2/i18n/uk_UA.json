@@ -1,0 +1,42 @@
+{
+    "config": {
+        "html_language": "uk",
+        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
+    },
+    "firefly": {
+        "spent": "Spent",
+        "left": "Left",
+        "paid": "Paid",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "unpaid": "Unpaid",
+        "default_group_title_name_plain": "ungrouped",
+        "subscriptions_in_group": "Subscriptions in group \"%{title}\"",
+        "subscr_expected_x_times": "Expect to pay %{amount} %{times} times this period",
+        "overspent": "Overspent",
+        "money_flowing_in": "In",
+        "money_flowing_out": "Out",
+        "category": "Category",
+        "unknown_category_plain": "No category",
+        "all_money": "\u0423\u0441\u0456 \u0432\u0430\u0448\u0456 \u0433\u0440\u043e\u0448\u0456",
+        "unknown_source_plain": "Unknown source account",
+        "unknown_dest_plain": "Unknown destination account",
+        "unknown_any_plain": "Unknown account",
+        "unknown_budget_plain": "No budget",
+        "stored_journal_js": "Successfully created new transaction \"%{description}\"",
+        "wait_loading_transaction": "Please wait for the form to load",
+        "nothing_found": "(nothing found)",
+        "wait_loading_data": "Please wait for your information to load...",
+        "Transfer": "\u041f\u0435\u0440\u0435\u043a\u0430\u0437",
+        "Withdrawal": "\u0412\u0438\u0442\u0440\u0430\u0442\u0430",
+        "Deposit": "Deposit",
+        "expense_account": "Expense account",
+        "revenue_account": "Revenue account",
+        "budget": "Budget",
+        "account_type_Asset account": "Asset account",
+        "account_type_Expense account": "Expense account",
+        "account_type_Revenue account": "Revenue account",
+        "account_type_Debt": "\u0414\u0435\u0431\u0456\u0442",
+        "account_type_Loan": "\u041f\u043e\u0437\u0438\u043a\u0430",
+        "account_type_Mortgage": "\u0406\u043f\u043e\u0442\u0435\u043a\u0430"
+    }
+}
