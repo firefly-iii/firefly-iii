@@ -27,26 +27,27 @@ import categories from './categories.js';
 import sankey from './sankey.js';
 import subscriptions from './subscriptions.js';
 import piggies from './piggies.js';
-
-
 import {
+    ArcElement,
+    BarController,
+    BarElement,
+    CategoryScale,
     Chart,
+    Colors,
+    Filler,
+    Legend,
+    LinearScale,
     LineController,
     LineElement,
     PieController,
-    BarController,
-    BarElement,
-    TimeScale,
-    ArcElement,
-    LinearScale,
-    Legend,
-    Filler,
-    Colors,
-    CategoryScale,
     PointElement,
+    TimeScale,
     Tooltip
 } from "chart.js";
 import 'chartjs-adapter-date-fns';
+import {loadTranslations} from "../../support/load-translations.js";
+import {getVariable} from "../../store/get-variable.js";
+import i18next from "i18next";
 
 // register things
 Chart.register({
@@ -77,13 +78,20 @@ const comps = {
     piggies
 };
 
+//let i18n;
+
 function loadPage(comps) {
-    Object.keys(comps).forEach(comp => {
-        console.log(`Loading page component "${comp}"`);
-        let data = comps[comp]();
-        Alpine.data(comp, () => data);
+    Promise.all([getVariable('language', 'en_US')]).then((values) => {
+        loadTranslations(values[0]).then(() => {
+            Object.keys(comps).forEach(comp => {
+                let data = comps[comp]();
+                Alpine.data(comp, () => data);
+            });
+            Alpine.start();
+        });
     });
-    Alpine.start();
+
+
 }
 
 // wait for load until bootstrapped event is received.

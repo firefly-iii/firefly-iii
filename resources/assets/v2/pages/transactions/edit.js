@@ -21,7 +21,6 @@
 import '../../boot/bootstrap.js';
 import dates from '../../pages/shared/dates.js';
 import {getVariable} from "../../store/get-variable.js";
-import {I18n} from "i18n-js";
 import {loadTranslations} from "../../support/load-translations.js";
 import formatMoney from "../../util/format-money.js";
 import Get from "../../api/v2/model/transaction/get.js";
@@ -40,6 +39,7 @@ import {loadBudgets} from "./shared/load-budgets.js";
 import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
 import {loadSubscriptions} from "./shared/load-subscriptions.js";
 import Tags from "bootstrap5-tags";
+import i18next from "i18next";
 
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
@@ -49,7 +49,6 @@ import Tags from "bootstrap5-tags";
 // TODO filters
 // TODO parse amount
 
-let i18n;
 const urls = getUrls();
 
 let transactions = function () {
@@ -116,7 +115,7 @@ let transactions = function () {
                 // addedSplit, is called from the HTML
                 // for source account
                 const renderAccount = function (item, b, c) {
-                    return item.name_with_balance + '<br><small class="text-muted">' + i18n.t('firefly.account_type_' + item.type) + '</small>';
+                    return item.name_with_balance + '<br><small class="text-muted">' + i18next.t('firefly.account_type_' + item.type) + '</small>';
                 };
                 addAutocomplete({
                     selector: 'input.ac-source',
@@ -218,7 +217,7 @@ let transactions = function () {
                         liveServer: true,
                         clearEnd: true,
                         allowNew: true,
-                        notFoundMessage: i18n.t('firefly.nothing_found'),
+                        notFoundMessage: i18next.t('firefly.nothing_found'),
                         noCache: true,
                         fetchOptions: {
                             headers: {
@@ -232,17 +231,9 @@ let transactions = function () {
 
         init() {
             // download translations and get the transaction group.
-            Promise.all([getVariable('language', 'en_US')]).then((values) => {
-                i18n = new I18n();
-                const locale = values[0].replace('-', '_');
-                i18n.locale = locale;
-                loadTranslations(i18n, locale).then(() => {
-                    //this.addSplit();
-                    this.notifications.wait.show = true;
-                    this.notifications.wait.text = i18n.t('firefly.wait_loading_transaction');
-                    this.getTransactionGroup();
-                });
-            });
+            this.notifications.wait.show = true;
+            this.notifications.wait.text = i18next.t('firefly.wait_loading_transaction');
+            this.getTransactionGroup();
 
             // load meta data.
             loadCurrencies().then(data => {

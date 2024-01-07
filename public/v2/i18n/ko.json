@@ -1,0 +1,35 @@
+{
+    "config": {
+        "html_language": "ko"
+    },
+    "firefly": {
+        "spent": "\uc9c0\ucd9c",
+        "left": "\ub0a8\uc74c",
+        "paid": "\uc9c0\ubd88\ub428",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "unpaid": "\ubbf8\uc9c0\ubd88",
+        "default_group_title_name_plain": "\uadf8\ub8f9 \ud574\uc81c\ub428",
+        "subscriptions_in_group": "Subscriptions in group \"%{title}\"",
+        "subscr_expected_x_times": "Expect to pay %{amount} %{times} times this period",
+        "overspent": "\ucd08\uacfc \uc9c0\ucd9c",
+        "money_flowing_in": "\ub4e4\uc5b4\uc634",
+        "money_flowing_out": "\ub098\uac10",
+        "category": "\uce74\ud14c\uace0\ub9ac",
+        "unknown_category_plain": "\uce74\ud14c\uace0\ub9ac \uc5c6\uc74c",
+        "all_money": "\ubaa8\ub4e0 \ub3c8",
+        "unknown_source_plain": "\uc54c \uc218 \uc5c6\ub294 \uc18c\uc2a4 \uacc4\uc815",
+        "unknown_dest_plain": "\uc54c \uc218 \uc5c6\ub294 \ub300\uc0c1 \uacc4\uc815",
+        "unknown_any_plain": "\uc54c \uc218 \uc5c6\ub294 \uacc4\uc815",
+        "unknown_budget_plain": "\uc608\uc0b0 \uc5c6\uc74c",
+        "stored_journal_js": "Successfully created new transaction \"%{description}\"",
+        "expense_account": "\uc9c0\ucd9c \uacc4\uc815",
+        "revenue_account": "\uc218\uc775 \uacc4\uc815",
+        "budget": "\uc608\uc0b0",
+        "account_type_Asset account": "Asset account",
+        "account_type_Expense account": "Expense account",
+        "account_type_Revenue account": "Revenue account",
+        "account_type_Debt": "\ub300\ucd9c",
+        "account_type_Loan": "\ube5a",
+        "account_type_Mortgage": "\ubaa8\uae30\uc9c0"
+    }
+}

@@ -23,14 +23,13 @@ import {getDefaultChartSettings} from "../../support/default-chart-settings.js";
 import {Chart} from 'chart.js';
 import {Flow, SankeyController} from 'chartjs-chart-sankey';
 import {loadTranslations} from "../../support/load-translations.js";
-import {I18n} from "i18n-js";
 import {getCacheKey} from "../../support/get-cache-key.js";
 import {format} from "date-fns";
+import i18next from "i18next";
 
 Chart.register({SankeyController, Flow});
 
 const SANKEY_CACHE_KEY = 'dashboard-sankey-data';
-let i18n;
 let currencies = [];
 let afterPromises = false;
 let chart = null;
@@ -350,31 +349,26 @@ export default () => ({
     init() {
         // console.log('sankey init');
         transactions = [];
-        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en_US')]).then((values) => {
+        Promise.all([getVariable('autoConversion', false)]).then((values) => {
             this.autoConversion = values[0];
             autoConversion = values[0];
-            i18n = new I18n();
-            const locale = values[1].replace('-', '_');
-            i18n.locale = locale;
-            loadTranslations(i18n, locale).then(() => {
                 // some translations:
-                translations.all_money = i18n.t('firefly.all_money');
-                translations.category = i18n.t('firefly.category');
-                translations.in = i18n.t('firefly.money_flowing_in');
-                translations.out = i18n.t('firefly.money_flowing_out');
-                translations.unknown_category = i18n.t('firefly.unknown_category_plain');
-                translations.unknown_source = i18n.t('firefly.unknown_source_plain');
-                translations.unknown_dest = i18n.t('firefly.unknown_dest_plain');
-                translations.unknown_account = i18n.t('firefly.unknown_any_plain');
-                translations.unknown_budget = i18n.t('firefly.unknown_budget_plain');
-                translations.expense_account = i18n.t('firefly.expense_account');
-                translations.revenue_account = i18n.t('firefly.revenue_account');
-                translations.budget = i18n.t('firefly.budget');
+                translations.all_money = i18next.t('firefly.all_money');
+                translations.category = i18next.t('firefly.category');
+                translations.in = i18next.t('firefly.money_flowing_in');
+                translations.out = i18next.t('firefly.money_flowing_out');
+                translations.unknown_category = i18next.t('firefly.unknown_category_plain');
+                translations.unknown_source = i18next.t('firefly.unknown_source_plain');
+                translations.unknown_dest = i18next.t('firefly.unknown_dest_plain');
+                translations.unknown_account = i18next.t('firefly.unknown_any_plain');
+                translations.unknown_budget = i18next.t('firefly.unknown_budget_plain');
+                translations.expense_account = i18next.t('firefly.expense_account');
+                translations.revenue_account = i18next.t('firefly.revenue_account');
+                translations.budget = i18next.t('firefly.budget');
 
                 // console.log('sankey after promises');
                 afterPromises = true;
                 this.loadChart();
-            });
 
         });
         window.store.observe('end', () => {

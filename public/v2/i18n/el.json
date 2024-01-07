@@ -1,0 +1,35 @@
+{
+    "config": {
+        "html_language": "el"
+    },
+    "firefly": {
+        "spent": "\u0394\u03b1\u03c0\u03b1\u03bd\u03ae\u03b8\u03b7\u03ba\u03b1\u03bd",
+        "left": "\u0391\u03c0\u03bf\u03bc\u03ad\u03bd\u03bf\u03c5\u03bd",
+        "paid": "\u03a0\u03bb\u03b7\u03c1\u03c9\u03bc\u03ad\u03bd\u03bf",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "unpaid": "\u0391\u03c0\u03bb\u03ae\u03c1\u03c9\u03c4\u03bf",
+        "default_group_title_name_plain": "ungrouped",
+        "subscriptions_in_group": "Subscriptions in group \"%{title}\"",
+        "subscr_expected_x_times": "Expect to pay %{amount} %{times} times this period",
+        "overspent": "\u03a5\u03c0\u03ad\u03c1\u03b2\u03b1\u03c3\u03b7 \u03c0\u03c1\u03bf\u03cb\u03c0\u03bf\u03bb\u03bf\u03b3\u03b9\u03c3\u03bc\u03ce\u03bd",
+        "money_flowing_in": "\u0395\u03b9\u03c3\u03c1\u03bf\u03ad\u03c2",
+        "money_flowing_out": "\u0395\u03ba\u03c1\u03bf\u03ad\u03c2",
+        "category": "\u039a\u03b1\u03c4\u03b7\u03b3\u03bf\u03c1\u03af\u03b1",
+        "unknown_category_plain": "No category",
+        "all_money": "All your money",
+        "unknown_source_plain": "Unknown source account",
+        "unknown_dest_plain": "Unknown destination account",
+        "unknown_any_plain": "Unknown account",
+        "unknown_budget_plain": "No budget",
+        "stored_journal_js": "\u0394\u03b7\u03bc\u03b9\u03bf\u03c5\u03c1\u03b3\u03ae\u03b8\u03b7\u03ba\u03b5 \u03b5\u03c0\u03b9\u03c4\u03c5\u03c7\u03ce\u03c2 \u03b7 \u03bd\u03ad\u03b1 \u03c3\u03c5\u03bd\u03b1\u03bb\u03bb\u03b1\u03b3\u03ae \u00ab%{description}\u00bb",
+        "expense_account": "Expense account",
+        "revenue_account": "Revenue account",
+        "budget": "\u03a0\u03c1\u03bf\u03cb\u03c0\u03bf\u03bb\u03bf\u03b3\u03b9\u03c3\u03bc\u03cc\u03c2",
+        "account_type_Asset account": "Asset account",
+        "account_type_Expense account": "Expense account",
+        "account_type_Revenue account": "Revenue account",
+        "account_type_Debt": "\u03a7\u03c1\u03ad\u03bf\u03c2",
+        "account_type_Loan": "\u0394\u03ac\u03bd\u03b5\u03b9\u03bf",
+        "account_type_Mortgage": "\u03a5\u03c0\u03bf\u03b8\u03ae\u03ba\u03b7"
+    }
+}
