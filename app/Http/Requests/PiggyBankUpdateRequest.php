@@ -67,7 +67,7 @@ class PiggyBankUpdateRequest extends FormRequest
             'targetamount' => ['nullable', new IsValidPositiveAmount()],
             'startdate'    => 'date',
             'targetdate'   => 'date|nullable',
-            'order'        => 'integer|max:65536|min:1',
+            'order'        => 'integer|max:32768|min:1',
             'object_group' => 'min:0|max:255',
             'notes'        => 'min:1|max:32768|nullable',
         ];

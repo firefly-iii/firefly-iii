@@ -107,7 +107,7 @@ class UpdateRequest extends FormRequest
             'liability_direction'  => 'required_if:type,liability|in:credit,debit',
             'interest'             => 'required_if:type,liability|min:0|max:100|numeric',
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
-            'notes'                => 'min:0|max:65536',
+            'notes'                => 'min:0|max:32768',
         ];
 
         return Location::requestRules($rules);
