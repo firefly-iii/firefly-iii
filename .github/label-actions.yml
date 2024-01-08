@@ -50,6 +50,7 @@ needs-moar-debug:
       3. Operating system and browser 
 
       Thank you for your contributions.
+    unlabel: needs-moar-debug
 
 
 needs-moar-logs:
@@ -64,3 +65,21 @@ needs-moar-logs:
       Please share the relevant log lines in your issue, either inline or as an attachment. If you feel the logs contain sensitive information, you may also send them to [james@firefly-iii.org](mailto:james@firefly-iii.org). Without these logs, it may not be possible to properly investigate this issue.
 
       Thank you for your contributions.
+    unlabel: needs-moar-logs
+
+v2-layout-issue:
+  issues:
+    comment: |
+      Hi there! This is an automatic reply. `Share and enjoy`
+
+      It seems your issue is about the new v2-layout that is currently in development for Firefly III.
+
+      These issues are collected in [a GitHub discussion](https://github.com/firefly-iii/firefly-iii/issues/8361).
+
+      Please note that the v2 layout is still very much in development.
+
+      Thank you for your contributions.
+    close: true
+    close-reason: duplicate
+    lock: true
+    unlabel: v2-layout-issue
