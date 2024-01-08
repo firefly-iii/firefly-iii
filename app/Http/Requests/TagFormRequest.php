@@ -71,7 +71,7 @@ class TagFormRequest extends FormRequest
         $rules   = [
             'tag'         => $tagRule,
             'id'          => $idRule,
-            'description' => 'max:65536|min:1|nullable',
+            'description' => 'max:32768|min:1|nullable',
             'date'        => 'date|nullable',
         ];
 

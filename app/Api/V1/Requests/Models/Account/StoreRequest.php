@@ -119,7 +119,7 @@ class StoreRequest extends FormRequest
             'liability_direction'  => 'nullable|required_if:type,liability|required_if:type,liabilities|in:credit,debit',
             'interest'             => 'min:0|max:100|numeric',
             'interest_period'      => sprintf('nullable|in:%s', implode(',', config('firefly.interest_periods'))),
-            'notes'                => 'min:0|max:65536',
+            'notes'                => 'min:0|max:32768',
         ];
 
         return Location::requestRules($rules);
