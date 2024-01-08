@@ -90,7 +90,9 @@
                                     </th>
                                     <td>
                                         <template x-for="entry in entries">
-                                            <a :href="'./accounts/show/' + entry.source_account.id" :title="entry.source_account.name" x-text="entry.source_account.name"></a>
+                                            <a :href="'./accounts/show/' + entry.source_account.id"
+                                               :title="entry.source_account.name"
+                                               x-text="entry.source_account.name"></a>
                                         </template>
                                     </td>
                                 </tr>
@@ -101,7 +103,9 @@
                                     </th>
                                     <td>
                                         <template x-for="entry in entries">
-                                            <a :href="'./accounts/show/' + entry.destination_account.id" :title="entry.destination_account.name" x-text="entry.destination_account.name"></a>
+                                            <a :href="'./accounts/show/' + entry.destination_account.id"
+                                               :title="entry.destination_account.name"
+                                               x-text="entry.destination_account.name"></a>
                                         </template>
                                     </td>
                                 </tr>
@@ -117,89 +121,161 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <h3 class="card-title">Description (X from X)</h3>
+                <template x-for="(entry, index) in entries">
+                    <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <span x-text="entry.description"></span>
+                                    <template x-if="entries.length > 1">
+                                    <span class="badge bg-secondary">
+                                        <span x-text="index + 1"></span> / <span x-text="entries.length"></span>
+                                    </span>
+                                    </template>
+                                </h3>
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table table-x table-hover">
+                                    <tbody>
+                                    <tr>
+                                        <td colspan="2" class="text-center">
+                                            <a :href="'./accounts/show/' + entry.source_account.id"
+                                               :title="entry.source_account.name"
+                                               x-text="entry.source_account.name"></a>
+                                            &rarr;
+                                            <template x-if="'Withdrawal' === groupProperties.transactionType">
+                                                <span class="text-danger"
+                                                      x-text="formatMoney(entry.amount*-1, entry.currency_code)"></span>
+                                            </template>
+
+                                            <template x-if="'Deposit' === groupProperties.transactionType">
+                                                <span class="text-success"
+                                                      x-text="formatMoney(entry.amount, entry.currency_code)"></span>
+                                            </template>
+
+                                            <template x-if="'Transfer' === groupProperties.transactionType">
+                                                <span class="text-info"
+                                                      x-text="formatMoney(entry.amount, entry.currency_code)"></span>
+                                            </template>
+                                            <template
+                                                x-if="null !== entry.foreign_currency_code && 'Withdrawal' === groupProperties.transactionType">
+                                                <span class="text-muted"
+                                                      x-text="formatMoney(entry.foreign_amount*-1, entry.foreign_currency_code)"></span>
+                                            </template>
+                                            <template
+                                                x-if="null !== entry.foreign_currency_code && 'Withdrawal' !== groupProperties.transactionType">
+                                                <span class="text-muted"
+                                                      x-text="formatMoney(entry.foreign_amount, entry.foreign_currency_code)"></span>
+                                            </template>
+
+                                            <template
+                                                x-if="'Transfer' !== groupProperties.transactionType && 'Deposit' !== groupProperties.transactionType && 'Withdrawal' !== groupProperties.transactionType">
+                                                <span>TODO PARSE MISSING AMOUNT</span>
+                                            </template>
+                                            &rarr;
+                                            <a :href="'./accounts/show/' + entry.destination_account.id"
+                                               :title="entry.destination_account.name"
+                                               x-text="entry.destination_account.name"></a>
+                                        </td>
+                                    </tr>
+                                    <template x-if="null !== entry.category_name">
+                                        <tr>
+                                            <th style="width:10%;">
+                                                <em title="{{ __('firefly.category') }}"
+                                                    class="fa-solid fa-bookmark"></em>
+                                            </th>
+                                            <td><a :href="'./categories/show/' + entry.category_id"
+                                                   :title="entry.category_name" x-text="entry.category_name"></a></td>
+                                        </tr>
+                                    </template>
+                                    <template x-if="null !== entry.budget_name">
+                                        <tr>
+                                            <th><em title="{{ __('firefly.budget') }}"
+                                                    class="fa-solid fa-chart-pie"></em></th>
+                                            <td>
+                                                <a :href="'./budgets/show/' + entry.budget_id"
+                                                   :title="entry.budget_name" x-text="entry.budget_name"></a></td>
+                                        </tr>
+                                    </template>
+                                    <template x-if="null !== entry.bill_name">
+                                        <tr>
+                                            <td><em title="{{ __('firefly.subscription') }}"
+                                                    class="fa-solid fa-calendar"></em></td>
+                                            <td>
+                                                <a :href="'./bills/show/' + entry.bill_id" :title="entry.bill_name"
+                                                   x-text="entry.bill_name"></a></td>
+                                        </tr>
+                                    </template>
+                                    <template x-for="date in dateFields">
+                                        <template x-if="null !== entry[date]">
+                                            <tr>
+                                                <th><span x-text="date"></span></th>
+                                                <td><span x-text="entry[date]"></span></td>
+                                            </tr>
+                                        </template>
+                                    </template>
+                                    <template x-for="meta in metaFields">
+                                        <template x-if="null !== entry[meta] and '' !== entry[meta]">
+                                            <tr>
+                                                <th><span x-text="meta"></span></th>
+                                                <td><span x-text="entry[meta]"></span></td>
+                                            </tr>
+                                        </template>
+                                    </template>
+                                    <tr>
+                                        <th>recurring things</th>
+                                        <td>meta</td>
+                                    </tr>
+                                    <template x-if="entry.tags.length > 0">
+                                        <tr>
+                                            <th><em title="{{ __('firefly.tags') }}" class="fa-solid fa-tag"></em></th>
+                                            <td>
+                                                <template x-for="tag in entry.tags">
+                                                    <a class="badge text-bg-info" :href="'./tags/show/' + tag"
+                                                       :title="tag" x-text="tag"></a>
+                                                </template>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <template x-if="'' !== entry.notes && null !== entry.notes">
+                                        <tr>
+                                            <td colspan="2" x-text="entry.notes"></td>
+                                        </tr>
+                                    </template>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="card-body p-0">
-                            <table class="table table-x table-hover">
-                                <tbody>
-                                <tr>
-                                    <td colspan="2">
-                                        center
-                                        From A to B (summary)
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>category icon</th>
-                                    <td>category</td>
-                                </tr>
-                                <tr>
-                                    <th>budget icon</th>
-                                    <td>budget</td>
-                                </tr>
-                                <tr>
-                                    <th>subscription icon</th>
-                                    <td>subscription</td>
-                                </tr>
-                                <tr>
-                                    <th>dates (x6) icon</th>
-                                    <td>subscription</td>
-                                </tr>
-                                <tr>
-                                    <th>meta fields</th>
-                                    <td>meta</td>
-                                </tr>
-                                <tr>
-                                    <th>recurring things</th>
-                                    <td>meta</td>
-                                </tr>
-                                <tr>
-                                    <th>tags</th>
-                                    <td>meta</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">notes</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h3 class="card-title">Transaction links</h3>
+                            </div>
+                            <div class="card-body p-0">
+                            </div>
+                        </div>
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h3 class="card-title">Piggy bank events.</h3>
+                            </div>
+                            <div class="card-body p-0">
+                            </div>
+                        </div>
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h3 class="card-title">Attachments</h3>
+                            </div>
+                            <div class="card-body p-0">
+                            </div>
+                        </div>
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h3 class="card-title">Audit log entries</h3>
+                            </div>
+                            <div class="card-body p-0">
+                            </div>
                         </div>
                     </div>
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <h3 class="card-title">Transaction links</h3>
-                        </div>
-                        <div class="card-body p-0">
-                        </div>
-                    </div>
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <h3 class="card-title">Piggy bank events.</h3>
-                        </div>
-                        <div class="card-body p-0">
-                        </div>
-                    </div>
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <h3 class="card-title">Attachments</h3>
-                        </div>
-                        <div class="card-body p-0">
-                        </div>
-                    </div>
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <h3 class="card-title">Audit log entries</h3>
-                        </div>
-                        <div class="card-body p-0">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col">
-                    <h3>{{ __('firefly.audit_log_entries') }}</h3>
-                </div>
+                </template>
             </div>
         </div>
     </div>

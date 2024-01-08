@@ -44,9 +44,10 @@ let show = function () {
             transactionType: '',
             transactionTypeTranslated: '',
             title: '',
-            totalAmount: 0,
             date: new Date,
         },
+        dateFields: ["book_date", "due_date", "interest_date", "invoice_date", "payment_date", "process_date"],
+        metaFields: ['external_id','internal_reference','sepa_batch_id','sepa_ct_id','sepa_ct_op','sepa_db','sepa_country','sepa_cc','sepa_ep','sepa_ci','external_url'],
 
         // parse amounts per currency
         amounts: {},
@@ -72,7 +73,6 @@ let show = function () {
                 this.groupProperties.transactionType = data.attributes.transactions[0].type;
                 this.groupProperties.transactionTypeTranslated = i18next.t('firefly.' + data.attributes.transactions[0].type);
                 this.groupProperties.title = data.attributes.title ?? data.attributes.transactions[0].description;
-                this.groupProperties.totalAmount = 0;
                 this.entries = parseDownloadedSplits(data.attributes.transactions);
                 // remove waiting thing.
                 this.notifications.wait.show = false;
@@ -90,8 +90,6 @@ let show = function () {
                             this.amounts[foreignCurrencyCode] = 0;
                             this.amounts[foreignCurrencyCode] += parseFloat(this.entries[i].foreign_amount);
                         }
-
-                        this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
                         if(0 === parseInt(i)) {
                             this.groupProperties.date = this.entries[i].date;
                         }

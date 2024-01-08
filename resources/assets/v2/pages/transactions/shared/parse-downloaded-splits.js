@@ -32,9 +32,13 @@ export function parseDownloadedSplits(downloads) {
 
             // meta data
             current.bill_id = download.bill_id;
+            current.bill_name = download.bill_name;
             current.budget_id = download.budget_id;
+            current.budget_name = download.budget_name;
             current.category_name = download.category_name;
+            current.category_id = download.category_id;
             current.piggy_bank_id = download.piggy_bank_id;
+            current.piggy_bank_name = download.piggy_bank_name;
 
             // meta dates
             current.book_date = download.book_date;
