@@ -35,3 +35,32 @@ triage:
       This issue has been marked as being in triage. The root cause is not known yet, or the issue needs more investigation. You can help by sharing debug information (from `/debug`) if you also have this issue or when you haven't already done so.
 
       Thank you for your contributions.
+
+needs-moar-debug:
+  issues:
+    comment: |
+      Hi there! This is an automatic reply. `Share and enjoy`
+
+      To learn more about this issue, please share the output of the `/debug` page of your Firefly III installation.
+
+      If this page is no available due to the issue you have, please make sure you share at least:
+
+      1. Firefly III version
+      2. Docker, self-hosted, or hosted by a third party?
+      3. Operating system and browser 
+
+      Thank you for your contributions.
+
+
+needs-moar-logs:
+  issues:
+    comment: |
+      Hi there! This is an automatic reply. `Share and enjoy`
+
+      To learn more about this issue, please share the relevant log files from your Firefly III or data importer installation.
+
+      The relevant instructions can be found in the documentation: [How to debug Firefly III?](https://docs.firefly-iii.org/how-to/general/debug/) Once debug mode is activated per these instructions, you can repeat your action and find the logs, depending on your method of installation. All is explained on the page.
+
+      Please share the relevant log lines in your issue, either inline or as an attachment. If you feel the logs contain sensitive information, you may also send them to [james@firefly-iii.org](mailto:james@firefly-iii.org). Without these logs, it may not be possible to properly investigate this issue.
+
+      Thank you for your contributions.
