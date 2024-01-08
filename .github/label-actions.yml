@@ -80,6 +80,6 @@ v2-layout-issue:
 
       Thank you for your contributions.
     close: true
-    close-reason: duplicate
+    close-reason: completed
     lock: true
     unlabel: v2-layout-issue
