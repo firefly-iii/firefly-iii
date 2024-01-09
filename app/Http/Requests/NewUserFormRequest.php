@@ -27,6 +27,8 @@ use FireflyIII\Rules\IsValidAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class NewUserFormRequest.
@@ -51,5 +53,12 @@ class NewUserFormRequest extends FormRequest
             'amount_currency_id_savings_balance'   => 'exists:transaction_currencies,id',
             'amount_currency_id_credit_card_limit' => 'exists:transaction_currencies,id',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

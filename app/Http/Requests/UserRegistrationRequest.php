@@ -25,6 +25,8 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Support\Request\ChecksLogin;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class UserRegistrationRequest.
@@ -52,5 +54,12 @@ class UserRegistrationRequest extends FormRequest
             'email'    => 'email|required',
             'password' => 'confirmed|secure_password',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

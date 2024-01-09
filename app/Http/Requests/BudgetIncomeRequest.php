@@ -26,6 +26,8 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class BudgetIncomeRequest.
@@ -45,5 +47,12 @@ class BudgetIncomeRequest extends FormRequest
             'start'  => 'required|date|before:end',
             'end'    => 'required|date|after:start',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

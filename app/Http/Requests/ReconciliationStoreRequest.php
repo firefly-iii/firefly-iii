@@ -28,6 +28,8 @@ use FireflyIII\Rules\ValidJournals;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class ReconciliationStoreRequest
@@ -74,5 +76,12 @@ class ReconciliationStoreRequest extends FormRequest
             'journals'     => [new ValidJournals()],
             'reconcile'    => 'required|in:create,nothing',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }
