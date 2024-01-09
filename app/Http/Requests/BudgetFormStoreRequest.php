@@ -84,7 +84,7 @@ class BudgetFormStoreRequest extends FormRequest
         );
 
         if($validator->fails()) {
-            Log::channel('audit')->error('Validation errors for budget', $validator->errors()->toArray());
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
         }
     }
 }
