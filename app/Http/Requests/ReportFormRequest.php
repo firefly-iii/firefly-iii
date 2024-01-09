@@ -217,7 +217,7 @@ class ReportFormRequest extends FormRequest
             app('log')->debug('Set is:', $set);
         }
         if (!is_array($set)) {
-            app('log')->error(sprintf('Set is not an array! "%s"', $set));
+            app('log')->debug(sprintf('Set is not an array! "%s"', $set));
 
             return $collection;
         }
