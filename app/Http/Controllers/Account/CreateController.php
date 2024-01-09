@@ -161,7 +161,7 @@ class CreateController extends Controller
             $this->attachments->saveAttachmentsForModel($account, $files);
         }
         if (null !== $files && auth()->user()->hasRole('demo')) {
-            Log::channel('audit')->info(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
+            Log::channel('audit')->warning(sprintf('The demo user is trying to upload attachments in %s.', __METHOD__));
             session()->flash('info', (string) trans('firefly.no_att_demo_user'));
         }
 

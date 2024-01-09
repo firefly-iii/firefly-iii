@@ -76,15 +76,15 @@ class BudgetFormStoreRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        if($validator->fails()) {
-            Log::channel('audit')->error('Validation errors for budget', $validator->errors()->toArray());
-        }
-
         $validator->after(
             function (Validator $validator): void {
                 // validate all account info
                 $this->validateAutoBudgetAmount($validator);
             }
         );
+
+        if($validator->fails()) {
+            Log::channel('audit')->error('Validation errors for budget', $validator->errors()->toArray());
+        }
     }
 }

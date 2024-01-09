@@ -71,7 +71,7 @@ class AttemptController extends Controller
             throw new FireflyException('200040: Webhook and webhook message are no match');
         }
         if(false === config('firefly.allow_webhooks')) {
-            Log::channel('audit')->info(sprintf('User lists webhook attempts of webhook #%d and message #%d, but webhooks are DISABLED.', $webhook->id, $message->id));
+            Log::channel('audit')->warning(sprintf('User lists webhook attempts of webhook #%d and message #%d, but webhooks are DISABLED.', $webhook->id, $message->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
@@ -115,7 +115,7 @@ class AttemptController extends Controller
         }
 
         if(false === config('firefly.allow_webhooks')) {
-            Log::channel('audit')->info(sprintf('User views single webhook attempt #%d of webhook #%d and message #%d, but webhooks are DISABLED', $attempt->id, $webhook->id, $message->id));
+            Log::channel('audit')->warning(sprintf('User views single webhook attempt #%d of webhook #%d and message #%d, but webhooks are DISABLED', $attempt->id, $webhook->id, $message->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }

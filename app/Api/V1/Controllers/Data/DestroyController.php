@@ -183,7 +183,7 @@ class DestroyController extends Controller
             }
             if (false === $this->unused) {
                 app('log')->info(sprintf('Deleting account #%d "%s"', $account->id, $account->name));
-                Log::channel('audit')->info(sprintf('Deleted account #%d "%s"', $account->id, $account->name));
+                Log::channel('audit')->warning(sprintf('Deleted account #%d "%s"', $account->id, $account->name));
                 $service->destroy($account, null);
             }
         }

@@ -72,7 +72,7 @@ class EditController extends Controller
         $user             = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
-            Log::channel('audit')->info(sprintf('Tried to edit currency %s but is not owner.', $currency->code));
+            Log::channel('audit')->warning(sprintf('Tried to edit currency %s but is not owner.', $currency->code));
 
             return redirect(route('currencies.index'));
         }
@@ -120,7 +120,7 @@ class EditController extends Controller
 
         if (!$this->userRepository->hasRole($user, 'owner')) {
             $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
-            Log::channel('audit')->info('Tried to update (POST) currency without admin rights.', $data);
+            Log::channel('audit')->warning('Tried to update (POST) currency without admin rights.', $data);
 
             return redirect(route('currencies.index'));
         }

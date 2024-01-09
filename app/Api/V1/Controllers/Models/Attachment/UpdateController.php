@@ -70,7 +70,7 @@ class UpdateController extends Controller
     public function update(UpdateRequest $request, Attachment $attachment): JsonResponse
     {
         if(true === auth()->user()->hasRole('demo')) {
-            Log::channel('audit')->info(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
+            Log::channel('audit')->warning(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
 
             throw new NotFoundHttpException();
         }

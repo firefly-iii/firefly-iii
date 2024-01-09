@@ -88,7 +88,7 @@ class LoginController extends Controller
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
         if ($this->hasTooManyLoginAttempts($request)) {
-            Log::channel('audit')->info(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
+            Log::channel('audit')->warning(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
             app('log')->error(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
             $this->fireLockoutEvent($request);
 
@@ -114,7 +114,7 @@ class LoginController extends Controller
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
-        Log::channel('audit')->info(sprintf('Login failed. Attempt for user "%s" failed.', $request->get($this->username())));
+        Log::channel('audit')->warning(sprintf('Login failed. Attempt for user "%s" failed.', $request->get($this->username())));
 
         $this->sendFailedLoginResponse($request);
 

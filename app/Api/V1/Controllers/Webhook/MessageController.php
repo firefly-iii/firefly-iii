@@ -67,7 +67,7 @@ class MessageController extends Controller
     public function index(Webhook $webhook): JsonResponse
     {
         if(false === config('firefly.allow_webhooks')) {
-            Log::channel('audit')->info(sprintf('User tries to view messages of webhook #%d, but webhooks are DISABLED.', $webhook->id));
+            Log::channel('audit')->warning(sprintf('User tries to view messages of webhook #%d, but webhooks are DISABLED.', $webhook->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
@@ -107,7 +107,7 @@ class MessageController extends Controller
             throw new FireflyException('200040: Webhook and webhook message are no match');
         }
         if(false === config('firefly.allow_webhooks')) {
-            Log::channel('audit')->info(sprintf('User tries to view message #%d of webhook #%d, but webhooks are DISABLED.', $message->id, $webhook->id));
+            Log::channel('audit')->warning(sprintf('User tries to view message #%d of webhook #%d, but webhooks are DISABLED.', $message->id, $webhook->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
