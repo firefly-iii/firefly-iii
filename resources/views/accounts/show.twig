@@ -24,6 +24,9 @@
                                             class="fa fa-pencil fa-fw"></span> {{ 'edit'|_ }}</a></li>
                                 <li><a href="{{ route('accounts.delete', account.id) }}"><span
                                             class="fa fa-trash fa-fw"></span> {{ 'delete'|_ }}</a></li>
+                                <li>
+                                    <a href="{{ route('accounts.reconcile',account.id) }}"><span class="fa fa-fw fa-check"></span> {{ 'reconcile_this_account'|_ }}</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
