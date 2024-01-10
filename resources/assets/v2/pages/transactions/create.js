@@ -427,7 +427,7 @@ let transactions = function () {
             this.notifications.error.text = i18next.t('firefly.errors_submission', {errorMessage: data.message});
 
             if (data.hasOwnProperty('errors')) {
-                this.entries = spliceErrorsIntoTransactions(i18n, data.errors, this.entries);
+                this.entries = spliceErrorsIntoTransactions(data.errors, this.entries);
             }
         },
 

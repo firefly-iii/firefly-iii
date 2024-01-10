@@ -34,8 +34,8 @@
 declare(strict_types=1);
 
 return [
-    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
-    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
+    'bad_type_source'                 => 'Na podlagi tega izvornega računa Firefly III ne more določiti vrste transakcije.',
+    'bad_type_destination'            => 'Na podlagi tega ciljnega računa Firefly III ne more določiti vrste transakcije.',
     'missing_where'                   => 'Matriki manjka člen "kjer"',
     'missing_update'                  => 'Matriki manjka člen "posodobi"',
     'invalid_where_key'               => 'JSON vsebuje neveljaven ključ za člen "kjer"',

@@ -34,8 +34,8 @@
 declare(strict_types=1);
 
 return [
-    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
-    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
+    'bad_type_source'                 => 'Firefly III no pot determinar el tipus de transacció a partir d\'aquest compte font.',
+    'bad_type_destination'            => 'Firefly III no pot determinar el tipus de transacció a partir d\'aquest compte de destí.',
     'missing_where'                   => 'A l\'array li falta la clàusula "where"',
     'missing_update'                  => 'A l\'array li falta la clàusula "update"',
     'invalid_where_key'               => 'El JSON conté una clau invàlida per la clàusula "where"',

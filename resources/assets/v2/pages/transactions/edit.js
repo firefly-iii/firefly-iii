@@ -38,6 +38,11 @@ import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
 import {loadSubscriptions} from "./shared/load-subscriptions.js";
 import Tags from "bootstrap5-tags";
 import i18next from "i18next";
+import {defaultErrorSet} from "./shared/create-empty-split.js";
+import {parseFromEntries} from "./shared/parse-from-entries.js";
+import Put from "../../api/v2/model/transaction/put.js";
+import {processAttachments} from "./shared/process-attachments.js";
+import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
 
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
@@ -102,7 +107,74 @@ let transactions = function () {
             }
         },
 
+        // submit the transaction form.
+        // TODO pretty much duplicate of create.js
+        submitTransaction() {
+            // reset all messages:
+            this.notifications.error.show = false;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
 
+            // reset all errors in the entries array:
+            for (let i in this.entries) {
+                if (this.entries.hasOwnProperty(i)) {
+                    this.entries[i].errors = defaultErrorSet();
+                }
+            }
+
+            // form is now submitting:
+            this.formStates.isSubmitting = true;
+
+            // parse transaction:
+            let transactions = parseFromEntries(this.entries, this.groupProperties.transactionType);
+            let submission = {
+                group_title: this.groupProperties.title,
+                fire_webhooks: this.formStates.webhooksButton,
+                apply_rules: this.formStates.rulesButton,
+                transactions: transactions
+            };
+
+
+            // catch for group title:
+            if (null === this.groupProperties.title && transactions.length > 1) {
+                submission.group_title = transactions[0].description;
+            }
+
+            // submit the transaction. Multi-stage process thing going on here!
+            let putter = new Put();
+            console.log(submission);
+            putter.put(submission, {id: this.groupProperties.id}).then((response) => {
+                const group = response.data.data;
+                // submission was a success!
+                this.groupProperties.id = parseInt(group.id);
+                this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description
+
+                // process attachments, if any:
+                const attachmentCount = processAttachments(this.groupProperties.id, group.attributes.transactions);
+
+                if (attachmentCount > 0) {
+                    // if count is more than zero, system is processing transactions in the background.
+                    this.notifications.wait.show = true;
+                    this.notifications.wait.text = i18next.t('firefly.wait_attachments');
+                    return;
+                }
+
+                // if not, respond to user options:
+                this.showMessageOrRedirectUser();
+            }).catch((error) => {
+
+                this.submitting = false;
+                console.log(error);
+                // todo put errors in form
+                if (typeof error.response !== 'undefined') {
+                    this.parseErrors(error.response.data);
+                }
+
+
+            });
+
+
+        },
         // part of the account selection auto-complete
         filters: {
             source: [], destination: [],
@@ -291,7 +363,48 @@ let transactions = function () {
                     this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
                 }
             }
-        }
+        },
+        // TODO is a duplicate
+        showMessageOrRedirectUser() {
+            // disable all messages:
+            this.notifications.error.show = false;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+
+            if (this.formStates.returnHereButton) {
+                this.notifications.success.show = true;
+                this.notifications.success.url = 'transactions/show/' + this.groupProperties.id;
+                this.notifications.success.text = i18next.t('firefly.updated_journal_js', {description: this.groupProperties.title});
+                return;
+            }
+            window.location = 'transactions/show/' + this.groupProperties.id + '?transaction_group_id=' + this.groupProperties.id + '&message=updated';
+        },
+        // TODO is a duplicate
+        parseErrors(data) {
+            // disable all messages:
+            this.notifications.error.show = true;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+            this.formStates.isSubmitting = false;
+            this.notifications.error.text = i18next.t('firefly.errors_submission', {errorMessage: data.message});
+
+            if (data.hasOwnProperty('errors')) {
+                this.entries = spliceErrorsIntoTransactions(data.errors, this.entries);
+            }
+        },
+        // TODO is a duplicate
+        processUpload(event) {
+            this.showMessageOrRedirectUser();
+        },
+        // TODO is a duplicate
+        processUploadError(event) {
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+            this.notifications.error.show = true;
+            this.formStates.isSubmitting = false;
+            this.notifications.error.text = i18next.t('firefly.errors_upload');
+            console.error(event);
+        },
     }
 }
 

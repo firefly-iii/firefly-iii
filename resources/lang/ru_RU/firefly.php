@@ -1305,7 +1305,7 @@ return [
     'sums_apply_to_range'                                 => 'Все суммы относятся к выбранному диапазону',
     'mapbox_api_key'                                      => 'Чтобы использовать карту, получите ключ API от сервиса <a href="https://www.mapbox.com/">Mapbox</a>. Откройте файл <code>.env</code> и введите этот код в строке <code>MAPBOX_API_KEY = </code>.',
     'press_object_location'                               => 'Щёлкните правой кнопкой мыши или надолго нажмите на сенсорный экран, чтобы установить местоположение объекта.',
-    'click_tap_location'                                  => 'Click or tap the map to add a location',
+    'click_tap_location'                                  => 'Нажмите на карту, чтобы добавить местоположение',
     'clear_location'                                      => 'Очистить местоположение',
     'delete_all_selected_tags'                            => 'Удалить все выбранные метки',
     'select_tags_to_delete'                               => 'Не забудьте выбрать несколько меток.',
@@ -1952,11 +1952,12 @@ return [
 
     // transactions:
     'wait_loading_transaction'                            => 'Please wait for the form to load',
-    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
+    'wait_loading_data'                                   => 'Please wait for your information to load...',
+    'wait_attachments'                                    => 'Пожалуйста, дождитесь загрузки вложений.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
     'amount_destination_account'                          => 'Amount in the currency of the destination account',
-    'edit_transaction_title'                              => 'Edit transaction ":description"',
+    'edit_transaction_title'                              => 'Редактировать транзакцию ":description"',
     'unreconcile'                                         => 'Отменить сверку',
     'update_withdrawal'                                   => 'Обновить расход',
     'update_deposit'                                      => 'Обновить доход',

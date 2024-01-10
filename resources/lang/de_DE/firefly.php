@@ -1299,7 +1299,7 @@ return [
     'no_location_set'                                     => 'Kein Ort gesetzt.',
     'meta_data'                                           => 'Metadaten',
     'location'                                            => 'Standort',
-    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
+    'location_first_split'                                => 'Der Standort für diese Buchung kann bei der ersten Aufteilung dieser Buchung festgelegt werden.',
     'without_date'                                        => 'Ohne Datum',
     'result'                                              => 'Ergebnis',
     'sums_apply_to_range'                                 => 'Alle Summen beziehen sich auf den ausgewählten Bereich.',
@@ -1951,7 +1951,8 @@ return [
  */
 
     // transactions:
-    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_loading_transaction'                            => 'Bitte warten Sie, bis das Formular geladen wurde',
+    'wait_loading_data'                                   => 'Bitte warten Sie, bis Ihre Informationen geladen wurden …',
     'wait_attachments'                                    => 'Bitte warten Sie, bis die Anhänge hochgeladen sind.',
     'errors_upload'                                       => 'Das Hochladen ist fehlgeschlagen. Bitte überprüfen Sie Ihre Browserkonsole auf den Fehler.',
     'amount_foreign_if'                                   => 'Betrag in Fremdwährung, falls vorhanden',
@@ -2341,7 +2342,7 @@ return [
     'average'                                             => 'Durchschnitt',
     'balanceFor'                                          => 'Kontostand für „:name”',
     'no_tags'                                             => '(keine Schlagwörter)',
-    'nothing_found'                                       => '(nothing found)',
+    'nothing_found'                                       => '(nichts gefunden)',
 
     // piggy banks:
     'event_history'                                       => 'Ereignisverlauf',

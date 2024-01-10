@@ -1399,7 +1399,7 @@ return [
     'pref_notification_bill_reminder'                     => 'Herinnering over het verlopen van contracten',
     'pref_notification_new_access_token'                  => 'Melding wanneer een nieuwe API-toegangstoken wordt aangemaakt',
     'pref_notification_transaction_creation'              => 'Melding wanneer een transactie automatisch wordt aangemaakt',
-    'pref_notification_user_login'                        => 'Melding wanneer u inlogt vanaf een nieuwe locatie',
+    'pref_notification_user_login'                        => 'Melding wanneer je inlogt vanaf een nieuwe locatie',
     'pref_notification_rule_action_failures'              => 'Waarschuwen wanneer regelacties niet utgevoerd kunnen worden (alleen via Slack of Discord)',
     'pref_notifications'                                  => 'Meldingen',
     'pref_notifications_help'                             => 'Geef aan of dit meldingen zijn die je zou willen krijgen. Sommige meldingen kunnen gevoelige financiële informatie bevatten.',
@@ -1952,6 +1952,7 @@ return [
 
     // transactions:
     'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_loading_data'                                   => 'Please wait for your information to load...',
     'wait_attachments'                                    => 'Please wait for the attachments to upload.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
@@ -1977,7 +1978,7 @@ return [
     'deleted_reconciliation'                              => 'Afstemming ":description" verwijderd',
     'stored_journal'                                      => 'Nieuw transactie ":description" opgeslagen',
     'stored_journal_js'                                   => 'Nieuw transactie "%{description}" opgeslagen',
-    'stored_journal_no_descr'                             => 'Uw nieuwe transactie is succesvol aangemaakt',
+    'stored_journal_no_descr'                             => 'Je nieuwe transactie is succesvol aangemaakt',
     'updated_journal_no_descr'                            => 'De transactie is geüpdatet',
     'select_transactions'                                 => 'Selecteer transacties',
     'rule_group_select_transactions'                      => '":title" op transacties toepassen',

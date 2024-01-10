@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import i18next from "i18next";
+
 function cleanupErrors(fullName, shortName, errors) {
     let newErrors = [];
     let message = '';
@@ -28,7 +30,7 @@ function cleanupErrors(fullName, shortName, errors) {
     return newErrors;
 }
 
-export function spliceErrorsIntoTransactions(i18n, errors, transactions) {
+export function spliceErrorsIntoTransactions(errors, transactions) {
     let transactionIndex;
     let fieldName;
     let errorArray;
@@ -78,8 +80,8 @@ export function spliceErrorsIntoTransactions(i18n, errors, transactions) {
                     break;
                 case 'type':
                     // add custom error to source and destination account
-                    transactions[transactionIndex].errors.source_account = transactions[transactionIndex].errors.source_account.concat([i18n.t('validation.bad_type_source')]);
-                    transactions[transactionIndex].errors.destination_account = transactions[transactionIndex].errors.destination_account.concat([i18n.t('validation.bad_type_destination')]);
+                    transactions[transactionIndex].errors.source_account = transactions[transactionIndex].errors.source_account.concat([i18next.t('validation.bad_type_source')]);
+                    transactions[transactionIndex].errors.destination_account = transactions[transactionIndex].errors.destination_account.concat([i18next.t('validation.bad_type_destination')]);
                     break;
                 case 'destination_name':
                 case 'destination_id':

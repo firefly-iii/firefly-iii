@@ -116,7 +116,7 @@ return [
     'foreign_amount'              => 'Montante em moeda estrangeira',
     'date'                        => 'Data',
     'interest_date'               => 'Data do juros',
-    'book_date'                   => 'Data reserva',
+    'book_date'                   => 'Data de lançamento',
     'process_date'                => 'Data de processamento',
     'category'                    => 'Categoria',
     'tags'                        => 'Tags',

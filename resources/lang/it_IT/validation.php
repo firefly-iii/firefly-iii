@@ -47,7 +47,7 @@ return [
     'zero_or_more'                    => 'Il valore non può essere negativo.',
     'more_than_zero'                  => 'Il valore deve essere superiore a zero.',
     'more_than_zero_correct'          => 'Il valore deve essere zero o superiore.',
-    'no_asset_account'                => 'This is not an asset account.',
+    'no_asset_account'                => 'Questo non è un conto di risorse.',
     'date_or_time'                    => 'Il valore deve essere un valore valido per una data o per un orario (ISO 8601).',
     'source_equals_destination'       => 'Il conto di origine è uguale al conto di destinazione.',
     'unique_account_number_for_user'  => 'Sembra che questo numero di conto sia già in uso.',
