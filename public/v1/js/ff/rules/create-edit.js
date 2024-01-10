@@ -138,7 +138,7 @@ function removeTrigger(e) {
     // remove grand parent:
     target.parent().parent().remove();
 
-    // if now at zero, immediatly add one again:
+    // if now at zero, immediately add one again:
     if ($('.rule-trigger-tbody tr').length === 0) {
         addNewTrigger();
     }
@@ -159,7 +159,7 @@ function removeAction(e) {
     // remove grand parent:
     target.parent().parent().remove();
 
-    // if now at zero, immediatly add one again:
+    // if now at zero, immediately add one again:
     if ($('.rule-action-tbody tr').length === 0) {
         addNewAction();
     }

@@ -42,7 +42,7 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        // return nothing that isn't explicitely in the array:
+        // return nothing that isn't explicitly in the array:
         $fields = [
             'name'           => ['name', 'convertString'],
             'code'           => ['code', 'convertString'],
