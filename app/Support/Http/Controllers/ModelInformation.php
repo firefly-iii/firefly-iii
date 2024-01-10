@@ -41,7 +41,7 @@ trait ModelInformation
      *
      * @throws FireflyException
      */
-    protected function getActionsForBill(Bill $bill): array // get info and augument
+    protected function getActionsForBill(Bill $bill): array // get info and argument
     {
         try {
             $result = view(
@@ -108,7 +108,7 @@ trait ModelInformation
      *
      * @throws FireflyException
      */
-    protected function getTriggersForBill(Bill $bill): array // get info and augument
+    protected function getTriggersForBill(Bill $bill): array // get info and argument
     {
         // TODO duplicate code
         $operators    = config('search.operators');

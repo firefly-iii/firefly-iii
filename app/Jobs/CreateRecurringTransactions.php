@@ -325,7 +325,7 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
-     * Check if the occurences should be executed.
+     * Check if the occurrences should be executed.
      *
      * @throws DuplicateTransactionException
      * @throws FireflyException
