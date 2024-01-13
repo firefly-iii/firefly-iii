@@ -9,6 +9,7 @@ on:
 
 # permissions needed for reacting to IssueOps commands on issues and PRs
 permissions:
+  contents: read
   pull-requests: write
   issues: write
   checks: read
