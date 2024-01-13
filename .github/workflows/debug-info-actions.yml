@@ -31,4 +31,3 @@ jobs:
           NUMBER: ${{ github.event.issue.number }}
           V2_ISSUE_REPLY_BODY: ${{ secrets.V2_ISSUE_REPLY_BODY }}
           LABELS: v2-layout-issue
-      - uses: dessant/label-actions@v4
