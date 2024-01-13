@@ -1,4 +1,4 @@
-name: 'Issues - respond to hidden commands'
+name: 'Issues - Respond to hidden commands'
 
 # the workflow to execute on is comments that are newly created
 on:
@@ -19,7 +19,7 @@ jobs:
     steps:
       - run: |
           ISSUE_BODY=$(gh issue view 8380 --json body)
-          if [[ $string == *".eOxNZAmyGz6CXMyf"* ]]; then
+          if [[ $ISSUE_BODY == *".eOxNZAmyGz6CXMyf"* ]]; then
             gh issue edit "$NUMBER" --add-label "$LABELS"
           fi
         env:
