@@ -1,0 +1,29 @@
+name: 'Issues - respond to hidden commands'
+
+# the workflow to execute on is comments that are newly created
+on:
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created]
+
+# permissions needed for reacting to IssueOps commands on issues and PRs
+permissions:
+  pull-requests: write
+  issues: write
+  checks: read
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: github/command@v1.1.0
+        id: command
+        with:
+          command: ".eOxNZAmyGz6CXMyf"
+      - run: gh issue edit "$NUMBER" --add-label "$LABELS"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+          LABELS: v2-layout-issue

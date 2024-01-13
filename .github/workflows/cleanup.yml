@@ -57,6 +57,7 @@ jobs:
             const workflows = [
               'cleanup.yml',
               'closed-issues.yml',
+              'debug-info-actions.yml',
               'depsreview.yml',
               'label-actions.yml',
               'lock.yml',
