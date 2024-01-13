@@ -21,20 +21,7 @@ jobs:
       - run: |
           ISSUE_BODY=$(gh issue view $NUMBER --json body)
           if [[ $ISSUE_BODY == *".eOxNZAmyGz6CXMyf"* ]]; then
-            # comment on issue
-            read -r -d '' REPLY << EOF
-            Hi there! This is an automatic reply. `Share and enjoy`
-
-            It seems your issue is about the new v2-layout that is currently in development for Firefly III.
-
-            These issues are collected in [a GitHub discussion](https://github.com/firefly-iii/firefly-iii/issues/8361).
-
-            Please note that the v2 layout is still very much in development.
-
-            Thank you for your contributions.
-            EOF
-
-            gh issue comment "$NUMBER" --body "$REPLY"
+            gh issue comment "$NUMBER" --body "$V2_ISSUE_REPLY_BODY"
             gh issue close "$NUMBER" --reason completed
             gh issue lock "$NUMBER"
           fi
@@ -42,5 +29,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           NUMBER: ${{ github.event.issue.number }}
+          V2_ISSUE_REPLY_BODY: ${{ secrets.V2_ISSUE_REPLY_BODY }}
           LABELS: v2-layout-issue
       - uses: dessant/label-actions@v4
