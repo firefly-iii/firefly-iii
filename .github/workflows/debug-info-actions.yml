@@ -17,10 +17,6 @@ jobs:
   respond:
     runs-on: ubuntu-latest
     steps:
-      - uses: github/command@v1.1.0
-        id: command
-        with:
-          command: ".eOxNZAmyGz6CXMyf"
       - run: |
           ISSUE_BODY=$(gh issue view 8380 --json body)
           if [[ $string == *".eOxNZAmyGz6CXMyf"* ]]; then
