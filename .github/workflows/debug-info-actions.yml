@@ -27,3 +27,4 @@ jobs:
           GH_REPO: ${{ github.repository }}
           NUMBER: ${{ github.event.issue.number }}
           LABELS: v2-layout-issue
+      - uses: dessant/label-actions@v4
