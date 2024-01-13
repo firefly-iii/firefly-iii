@@ -1,13 +1,4 @@
 {
-  "_autocomplete-functions-ac0d2cb1.js": {
-    "file": "assets/autocomplete-functions-ac0d2cb1.js",
-    "imports": [
-      "_format-money-e259f5e4.js",
-      "_get-da167d5b.js",
-      "_vendor-fca45885.js"
-    ],
-    "integrity": "sha384-ylbI7yXfy5qc0QwMwNSdc4QMHKM1eXXR6R2zLxLUSccW3OCkFCc5pEm1ZpCDbdXh"
-  },
   "_create-empty-split-fb5bda92.js": {
     "file": "assets/create-empty-split-fb5bda92.js",
     "imports": [
@@ -15,26 +6,26 @@
     ],
     "integrity": "sha384-hhKUcZf3xSLJgwkzufZGpLjOUeD5gulL71KQu72SoGIUVLPU3EIBT+ICT/znc01b"
   },
-  "_format-money-e259f5e4.js": {
-    "file": "assets/format-money-e259f5e4.js",
+  "_format-money-43e05102.js": {
+    "file": "assets/format-money-43e05102.js",
     "imports": [
       "_vendor-fca45885.js"
     ],
-    "integrity": "sha384-zfi6/58+Nb5L5Ryx5WARPOstXPNq+qioNeeQB0XP4V9ZAPg4Bi9bdC3+fVmNsE/M"
+    "integrity": "sha384-/lP2o0Yj4DAtc93ChQvqF5ctDGjH6jakuIZcEQBICvDn/YtSDaPr7PzrZd4w53jV"
   },
-  "_get-3bb14de5.js": {
-    "file": "assets/get-3bb14de5.js",
+  "_get-94678769.js": {
+    "file": "assets/get-94678769.js",
     "imports": [
-      "_format-money-e259f5e4.js"
+      "_format-money-43e05102.js"
     ],
-    "integrity": "sha384-ZgD+gbjUNu1QpP5ZH5WE8+bJmZsLQOx73UT9vPxPRzBwxtGignJ2BC8h9WYdJxU3"
+    "integrity": "sha384-/nzI9V1buTN8n1p1uL9UOxOasx6+q6kTpiwDCaZZHBCVrrnFqWSCQCHAPQFcqYGB"
   },
-  "_get-da167d5b.js": {
-    "file": "assets/get-da167d5b.js",
+  "_get-a29f6df7.js": {
+    "file": "assets/get-a29f6df7.js",
     "imports": [
-      "_format-money-e259f5e4.js"
+      "_format-money-43e05102.js"
     ],
-    "integrity": "sha384-ADxhKsFImio/UdUojkpvUHQ9lKqGcHbhsvCj5TEYLNuefhUlz0RIyWX/0/cFcasS"
+    "integrity": "sha384-QRZtv6rXwaf1k9JOU1p1T42Nn2t5En83j/8rbh00dJ+1sSoNLD0maS8FkPKVRbpE"
   },
   "_parse-downloaded-splits-4afea167.js": {
     "file": "assets/parse-downloaded-splits-4afea167.js",
@@ -43,6 +34,15 @@
       "_vendor-fca45885.js"
     ],
     "integrity": "sha384-rTgD6HzwbdSD/qoN3b4vipowqanriBYLYnORI3F23R+uFbr1kyZIE1AHYA9oe2qO"
+  },
+  "_splice-errors-into-transactions-9c9b99c0.js": {
+    "file": "assets/splice-errors-into-transactions-9c9b99c0.js",
+    "imports": [
+      "_format-money-43e05102.js",
+      "_get-94678769.js",
+      "_vendor-fca45885.js"
+    ],
+    "integrity": "sha384-6QHZSbNE9w8hPmdvtcEi1wqimo8+lyJWXBaYaX7/c8qoveRKX5A2WZVhqb7bMRkV"
   },
   "_vendor-fca45885.js": {
     "assets": [
@@ -102,57 +102,68 @@
     "integrity": "sha384-wg83fCOXjBtqzFAWhTL9Sd9vmLUNhfEEzfmNUX9zwv2igKlz/YQbdapF4ObdxF+R"
   },
   "resources/assets/v2/pages/dashboard/dashboard.js": {
-    "file": "assets/dashboard-d274a3dc.js",
+    "file": "assets/dashboard-2ad8d866.js",
     "imports": [
-      "_format-money-e259f5e4.js",
+      "_format-money-43e05102.js",
       "_vendor-fca45885.js",
-      "_get-3bb14de5.js",
-      "_get-da167d5b.js"
+      "_get-a29f6df7.js",
+      "_get-94678769.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/dashboard/dashboard.js",
-    "integrity": "sha384-yhbUCvDl5ePrqXSXJu1jJ6eGLWzC137n7Ee3gHZDaO9kOKqtajG3KbILBpYlM5u9"
+    "integrity": "sha384-drEV1+zgjVGIfpdo1BovDls72a22l303XFZq/n0BE9VMTuydOYDBBgEqjM1GgwQD"
   },
   "resources/assets/v2/pages/transactions/create.js": {
-    "file": "assets/create-9af1982c.js",
+    "file": "assets/create-46b63de1.js",
     "imports": [
-      "_format-money-e259f5e4.js",
+      "_format-money-43e05102.js",
       "_create-empty-split-fb5bda92.js",
-      "_autocomplete-functions-ac0d2cb1.js",
+      "_splice-errors-into-transactions-9c9b99c0.js",
       "_vendor-fca45885.js",
-      "_get-da167d5b.js"
+      "_get-94678769.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/create.js",
-    "integrity": "sha384-f1FX2idAuYuItQyu41hCRa1AtE+65Pqky4Dwn2+u+5Vmsm2gw1uoZp2sODAfpiS5"
+    "integrity": "sha384-qacGHBXX2jXhiYdstJdUk5SBbdF1y8uj9RTdWetpmATLMNSjetRemPMk4PJoGxgZ"
   },
   "resources/assets/v2/pages/transactions/edit.js": {
-    "file": "assets/edit-4a0660ed.js",
+    "file": "assets/edit-b45ed381.js",
     "imports": [
-      "_format-money-e259f5e4.js",
-      "_get-3bb14de5.js",
+      "_format-money-43e05102.js",
+      "_get-a29f6df7.js",
       "_parse-downloaded-splits-4afea167.js",
-      "_autocomplete-functions-ac0d2cb1.js",
+      "_splice-errors-into-transactions-9c9b99c0.js",
       "_vendor-fca45885.js",
       "_create-empty-split-fb5bda92.js",
-      "_get-da167d5b.js"
+      "_get-94678769.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/edit.js",
-    "integrity": "sha384-RPpIOYVoXcKosf6gEb0H1RpeEVWHSfPfr8/wwG1X2dJQ/AA1qBCIdisog0bryCgS"
+    "integrity": "sha384-CoTAYJsk4/69IMBbgV50+i5mK+pANKXl0hLH9nqErgit1WDdBK6U4VimDsq5fvMf"
+  },
+  "resources/assets/v2/pages/transactions/index.js": {
+    "file": "assets/index-8df22335.js",
+    "imports": [
+      "_format-money-43e05102.js",
+      "_vendor-fca45885.js",
+      "_get-a29f6df7.js"
+    ],
+    "isEntry": true,
+    "src": "resources/assets/v2/pages/transactions/index.js",
+    "integrity": "sha384-UcghdFUsV8Bp01abyYn4u6sI/mWjXuY677vyQ76p1gVaMl9pVMGjdPa8Cd9Lg6M5"
   },
   "resources/assets/v2/pages/transactions/show.js": {
-    "file": "assets/show-9f0eb3b4.js",
+    "file": "assets/show-61e79d17.js",
     "imports": [
-      "_format-money-e259f5e4.js",
+      "_format-money-43e05102.js",
       "_vendor-fca45885.js",
-      "_get-3bb14de5.js",
+      "_get-a29f6df7.js",
       "_parse-downloaded-splits-4afea167.js",
       "_create-empty-split-fb5bda92.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/show.js",
-    "integrity": "sha384-MFgnhVMItZ2xoPPjfYAj+0uYCqL31JMZSdS9or8muf/YECi7R6Cz0CmJB+kPrehe"
+    "integrity": "sha384-JBLT+bepNQ1x9TTUWy1H/ekjto18Jzudb4suKq+rF1YvqeSpouHzJU2l1YeObQ7y"
   },
   "resources/assets/v2/sass/app.scss": {
     "file": "assets/app-fb7b26ec.css",

@@ -48,6 +48,7 @@ export default defineConfig({
                 'resources/assets/v2/pages/transactions/create.js',
                 'resources/assets/v2/pages/transactions/edit.js',
                 'resources/assets/v2/pages/transactions/show.js',
+                'resources/assets/v2/pages/transactions/index.js',
             ],
             refresh: true,
         }),

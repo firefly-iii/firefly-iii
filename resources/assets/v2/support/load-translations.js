@@ -24,33 +24,30 @@ import ChainedBackend from "i18next-chained-backend";
 import HttpBackend from "i18next-http-backend";
 import LocalStorageBackend from "i18next-localstorage-backend";
 
-
-
-
 let loaded = false;
 
 function loadTranslations(locale) {
     if (false === loaded) {
         const replacedLocale = locale.replace('-', '_');
         loaded = true;
-        console.log(import.meta.env.MODE);
         const expireTime = import.meta.env.MODE === 'development' ? 1 : 7 * 24 * 60 * 60 * 1000;
+        console.log('Will load language "'+replacedLocale+'"');
         return i18next
             .use(ChainedBackend)
             .init({
-                fallbackLng: "en_US",
+                load: 'languageOnly',
+                fallbackLng: "en",
                 lng: replacedLocale,
                 debug: import.meta.env.MODE === 'development',
-                // ... your i18next config
                 backend: {
                     backends: [
                         LocalStorageBackend,
                         HttpBackend
                     ],
                     backendOptions: [{
+                        load: 'languageOnly',
                         expirationTime: expireTime
                     }, {
-                        //         const response = await fetch(`./v2/i18n/${locale}.json`);
                         loadPath: './v2/i18n/{{lng}}.json'
                     }]
                 }

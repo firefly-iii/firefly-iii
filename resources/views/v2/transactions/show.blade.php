@@ -224,7 +224,7 @@
                                     </template>
                                     <tr>
                                         <th>recurring things</th>
-                                        <td>meta</td>
+                                        <td>TODO meta</td>
                                     </tr>
                                     <template x-if="entry.tags.length > 0">
                                         <tr>
@@ -248,28 +248,28 @@
                         </div>
                         <div class="card mb-3">
                             <div class="card-header">
-                                <h3 class="card-title">Transaction links</h3>
+                                <h3 class="card-title">Transaction links TODO</h3>
                             </div>
                             <div class="card-body p-0">
                             </div>
                         </div>
                         <div class="card mb-3">
                             <div class="card-header">
-                                <h3 class="card-title">Piggy bank events.</h3>
+                                <h3 class="card-title">Piggy bank events TODO</h3>
                             </div>
                             <div class="card-body p-0">
                             </div>
                         </div>
                         <div class="card mb-3">
                             <div class="card-header">
-                                <h3 class="card-title">Attachments</h3>
+                                <h3 class="card-title">Attachments TODO</h3>
                             </div>
                             <div class="card-body p-0">
                             </div>
                         </div>
                         <div class="card mb-3">
                             <div class="card-header">
-                                <h3 class="card-title">Audit log entries</h3>
+                                <h3 class="card-title">Audit log entries TODO</h3>
                             </div>
                             <div class="card-body p-0">
                             </div>
