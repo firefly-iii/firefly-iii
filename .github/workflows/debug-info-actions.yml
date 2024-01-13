@@ -14,14 +14,18 @@ permissions:
   checks: read
 
 jobs:
-  demo:
+  respond:
     runs-on: ubuntu-latest
     steps:
       - uses: github/command@v1.1.0
         id: command
         with:
           command: ".eOxNZAmyGz6CXMyf"
-      - run: gh issue edit "$NUMBER" --add-label "$LABELS"
+      - run: |
+          ISSUE_BODY=$(gh issue view 8380 --json body)
+          if [[ $string == *".eOxNZAmyGz6CXMyf"* ]]; then
+            gh issue edit "$NUMBER" --add-label "$LABELS"
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
