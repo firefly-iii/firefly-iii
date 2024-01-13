@@ -19,9 +19,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          ISSUE_BODY=$(gh issue view 8380 --json body)
+          ISSUE_BODY=$(gh issue view $NUMBER --json body)
           if [[ $ISSUE_BODY == *".eOxNZAmyGz6CXMyf"* ]]; then
-            gh issue edit "$NUMBER" --add-label "$LABELS"
+            # comment on issue
+            read -r -d '' REPLY << EOF
+            Hi there! This is an automatic reply. `Share and enjoy`
+
+            It seems your issue is about the new v2-layout that is currently in development for Firefly III.
+
+            These issues are collected in [a GitHub discussion](https://github.com/firefly-iii/firefly-iii/issues/8361).
+
+            Please note that the v2 layout is still very much in development.
+
+            Thank you for your contributions.
+            EOF
+
+            gh issue comment "$NUMBER" --body "$REPLY"
+            gh issue close "$NUMBER" --reason completed
+            gh issue lock "$NUMBER"
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
