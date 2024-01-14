@@ -1,0 +1,25 @@
+name: "Issues - Command to close duplicate issues"
+
+# the workflow to execute on is comments that are newly created
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+  checks: read
+
+jobs:
+  close_duplicates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: github/command@v1.1.0
+        id: command
+        with:
+          command: ".duplicate"
+      - name: reply
+        if: ${{ steps.command.outputs.continue == 'true' }}
+        run: |
+          gh issue comment "$NUMBER" --body "Hi there!\n\nThis is an automatic reply. `Share and enjoy`.\n\nThis issue is probably a duplicate of #${{ steps.command.outputs.params }}. Please refer to that issue for support.\n\nThank you for your contribution."
+          gh issue close "$NUMBER" --reason completed
+          gh issue lock "$NUMBER"
