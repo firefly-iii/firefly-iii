@@ -24,3 +24,7 @@ jobs:
           gh issue comment "$NUMBER" --body "Hi there!\n\nThis is an automatic reply. `Share and enjoy`.\n\nThis issue is probably a duplicate of #${{ steps.command.outputs.params }}. Please refer to that issue for support.\n\nThank you for your contribution."
           gh issue close "$NUMBER" --reason completed
           gh issue lock "$NUMBER"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
