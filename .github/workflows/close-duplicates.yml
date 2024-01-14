@@ -26,7 +26,7 @@ jobs:
 
           gh issue comment "$NUMBER" --body "Hi there!
 
-          This is an automatic reply. `Share and enjoy`.
+          This is an automatic reply. \`Share and enjoy\`.
 
           Your issue is probably a duplicate of issue <span>#</span>${{ steps.command.outputs.params }}: [$ISSUE_TITLE](https://github.com/firefly-iii/firefly-iii/issues/${{ steps.command.outputs.params }}). Please refer to issue #${{ steps.command.outputs.params }} for support.
 
