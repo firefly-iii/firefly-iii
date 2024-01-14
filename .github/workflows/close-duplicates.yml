@@ -16,6 +16,7 @@ jobs:
       - uses: github/command@v1.1.0
         id: command
         with:
+          allowed_contexts: "issue"
           command: ".duplicate"
       - name: reply
         if: ${{ steps.command.outputs.continue == 'true' }}
