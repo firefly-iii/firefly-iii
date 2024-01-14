@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Support\Facades\Blade;
 
 /**
  * Class AppServiceProvider
@@ -51,8 +52,25 @@ class AppServiceProvider extends ServiceProvider
 
             return response()
                 ->json($value)
-                ->withHeaders($headers)
-            ;
+                ->withHeaders($headers);
+        });
+
+        // blade extension
+        Blade::directive('activeXRoutePartial', function (string $route) {
+            $name  = \Route::getCurrentRoute()->getName() ?? '';
+            if (str_contains($name, $route)) {
+                return 'menu-open';
+            }
+
+            return '';
+        });
+        Blade::if('partialroute', function (string $route) {
+            $name  = \Route::getCurrentRoute()->getName() ?? '';
+            if (str_contains($name, $route)) {
+                return true;
+            }
+
+            return false;
         });
     }
 

@@ -110,12 +110,13 @@
         "therobfonz/laravel-mandrill-driver": "^5.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.9",
         "barryvdh/laravel-ide-helper": "2.*",
         "ergebnis/phpstan-rules": "^2.1",
         "fakerphp/faker": "1.*",
         "filp/whoops": "2.*",
-        "mockery/mockery": "1.*",
         "larastan/larastan": "^2",
+        "mockery/mockery": "1.*",
         "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-deprecation-rules": "^1.1",

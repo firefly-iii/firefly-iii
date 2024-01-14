@@ -49,7 +49,7 @@
                     </a>
                 </li>
                 <li class="nav-header">{{ strtoupper(__('firefly.accounting'))  }}</li>
-                <li class="nav-item">
+                <li class="nav-item @partialroute('transactions') menu-open @endpartialroute">
                     <a href="#" class="nav-link">
                         <em class="nav-icon fa-solid fa-arrow-right-arrow-left"></em>
                         <p>

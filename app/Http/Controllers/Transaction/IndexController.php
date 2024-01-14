@@ -75,45 +75,52 @@ class IndexController extends Controller
             $objectType = 'transfer';
         }
 
-        $subTitleIcon  = config('firefly.transactionIconsByType.'.$objectType);
-        $types         = config('firefly.transactionTypesByType.'.$objectType);
-        $page          = (int)$request->get('page');
-        $pageSize      = (int)app('preferences')->get('listPageSize', 50)->data;
-        if (null === $start) {
-            $start = session('start');
-            $end   = session('end');
+        // add a split for the (future) v2 release.
+        $periods  = [];
+        $groups   = [];
+        $subTitle = 'TODO page subtitle in v2';
+
+        $subTitleIcon = config('firefly.transactionIconsByType.' . $objectType);
+        $types        = config('firefly.transactionTypesByType.' . $objectType);
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+
+        if ('v2' !== (string)config('firefly.layout')) {
+            if (null === $start) {
+                $start = session('start');
+                $end   = session('end');
+            }
+            if (null === $end) {
+                // get last transaction ever?
+                $last = $this->repository->getLast();
+                $end  = null !== $last ? $last->date : session('end');
+            }
+
+            [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
+            $startStr     = $start->isoFormat($this->monthAndDayFormat);
+            $endStr       = $end->isoFormat($this->monthAndDayFormat);
+            $subTitle     = (string)trans(sprintf('firefly.title_%s_between', $objectType), ['start' => $startStr, 'end' => $endStr]);
+            $path         = route('transactions.index', [$objectType, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+            $firstJournal = $this->repository->firstNull();
+            $startPeriod  = null === $firstJournal ? new Carbon() : $firstJournal->date;
+            $endPeriod    = clone $end;
+            $periods      = $this->getTransactionPeriodOverview($objectType, $startPeriod, $endPeriod);
+
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+
+            $collector->setRange($start, $end)
+                      ->setTypes($types)
+                      ->setLimit($pageSize)
+                      ->setPage($page)
+                      ->withBudgetInformation()
+                      ->withCategoryInformation()
+                      ->withAccountInformation()
+                      ->withAttachmentInformation();
+            $groups = $collector->getPaginatedGroups();
+            $groups->setPath($path);
         }
-        if (null === $end) {
-            // get last transaction ever?
-            $last = $this->repository->getLast();
-            $end  = null !== $last ? $last->date : session('end');
-        }
 
-        [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
-        $path          = route('transactions.index', [$objectType, $start->format('Y-m-d'), $end->format('Y-m-d')]);
-        $startStr      = $start->isoFormat($this->monthAndDayFormat);
-        $endStr        = $end->isoFormat($this->monthAndDayFormat);
-        $subTitle      = (string)trans(sprintf('firefly.title_%s_between', $objectType), ['start' => $startStr, 'end' => $endStr]);
-
-        $firstJournal  = $this->repository->firstNull();
-        $startPeriod   = null === $firstJournal ? new Carbon() : $firstJournal->date;
-        $endPeriod     = clone $end;
-        $periods       = $this->getTransactionPeriodOverview($objectType, $startPeriod, $endPeriod);
-
-        /** @var GroupCollectorInterface $collector */
-        $collector     = app(GroupCollectorInterface::class);
-
-        $collector->setRange($start, $end)
-            ->setTypes($types)
-            ->setLimit($pageSize)
-            ->setPage($page)
-            ->withBudgetInformation()
-            ->withCategoryInformation()
-            ->withAccountInformation()
-            ->withAttachmentInformation()
-        ;
-        $groups        = $collector->getPaginatedGroups();
-        $groups->setPath($path);
 
         return view('transactions.index', compact('subTitle', 'objectType', 'subTitleIcon', 'groups', 'periods', 'start', 'end'));
     }
@@ -125,8 +132,8 @@ class IndexController extends Controller
      */
     public function indexAll(Request $request, string $objectType)
     {
-        $subTitleIcon = config('firefly.transactionIconsByType.'.$objectType);
-        $types        = config('firefly.transactionTypesByType.'.$objectType);
+        $subTitleIcon = config('firefly.transactionIconsByType.' . $objectType);
+        $types        = config('firefly.transactionTypesByType.' . $objectType);
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$objectType]);
@@ -134,21 +141,20 @@ class IndexController extends Controller
         $start        = null === $first ? new Carbon() : $first->date;
         $last         = $this->repository->getLast();
         $end          = null !== $last ? $last->date : today(config('app.timezone'));
-        $subTitle     = (string)trans('firefly.all_'.$objectType);
+        $subTitle     = (string)trans('firefly.all_' . $objectType);
 
         /** @var GroupCollectorInterface $collector */
-        $collector    = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
 
         $collector->setRange($start, $end)
-            ->setTypes($types)
-            ->setLimit($pageSize)
-            ->setPage($page)
-            ->withAccountInformation()
-            ->withBudgetInformation()
-            ->withCategoryInformation()
-            ->withAttachmentInformation()
-        ;
-        $groups       = $collector->getPaginatedGroups();
+                  ->setTypes($types)
+                  ->setLimit($pageSize)
+                  ->setPage($page)
+                  ->withAccountInformation()
+                  ->withBudgetInformation()
+                  ->withCategoryInformation()
+                  ->withAttachmentInformation();
+        $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
         return view('transactions.index', compact('subTitle', 'objectType', 'subTitleIcon', 'groups', 'start', 'end'));

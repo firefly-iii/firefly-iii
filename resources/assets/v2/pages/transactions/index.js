@@ -73,9 +73,11 @@ let index = function () {
             this.getTransactions(this.page);
         },
         getTransactions(page) {
+            const urlParts = window.location.href.split('/');
+            const type = urlParts[urlParts.length - 1];
             let getter = new Get();
 
-            getter.list({page: page}).then(response => {
+            getter.list({page: page, type: type}).then(response => {
                 this.parseTransactions(response.data.data)
 
                 // set meta data
