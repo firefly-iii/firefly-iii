@@ -21,7 +21,16 @@ jobs:
       - name: reply
         if: ${{ steps.command.outputs.continue == 'true' }}
         run: |
-          gh issue comment "$NUMBER" --body "Hi there!\n\nThis is an automatic reply. `Share and enjoy`.\n\nThis issue is probably a duplicate of #${{ steps.command.outputs.params }}. Please refer to that issue for support.\n\nThank you for your contribution."
+          gh issue comment "$NUMBER" --body 'Hi there!
+
+          This is an automatic reply. `Share and enjoy`.
+
+          This issue is probably a duplicate of issue #${{ steps.command.outputs.params }}. This issue probably refers to the same bug or feature request as your issue.
+
+          Please refer to that issue for support.
+
+          Thank you for your contribution.'
+
           gh issue close "$NUMBER" --reason completed
           gh issue lock "$NUMBER"
         env:
