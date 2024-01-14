@@ -1949,9 +1949,14 @@ class OperatorQuerySearch implements SearchInterface
 
         // get accounts:
         $accounts        = $this->accountRepository->searchAccount($value, $searchTypes, 1337);
-        if (0 === $accounts->count()) {
+        if (0 === $accounts->count() && false === $prohibited) {
             app('log')->debug('Found zero accounts, search for non existing account, NO results will be returned.');
             $this->collector->findNothing();
+
+            return;
+        }
+        if (0 === $accounts->count() && true === $prohibited) {
+            app('log')->debug('Found zero accounts, but the search is negated, so effectively we ignore the search parameter.');
 
             return;
         }
