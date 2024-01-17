@@ -1,50 +1,50 @@
 {
-  "_create-empty-split-fb5bda92.js": {
-    "file": "assets/create-empty-split-fb5bda92.js",
+  "_create-empty-split-b2c15454.js": {
+    "file": "assets/create-empty-split-b2c15454.js",
     "imports": [
-      "_vendor-fca45885.js"
+      "_vendor-0ba1deae.js"
     ],
-    "integrity": "sha384-hhKUcZf3xSLJgwkzufZGpLjOUeD5gulL71KQu72SoGIUVLPU3EIBT+ICT/znc01b"
+    "integrity": "sha384-LPTZ0hEPbyGHGP76xXmeyTW22lbs5CNJU8wwXx3SOeUf6jDNYVoSSEe05QdKYKQ0"
   },
-  "_format-money-43e05102.js": {
-    "file": "assets/format-money-43e05102.js",
+  "_format-money-a71f277a.js": {
+    "file": "assets/format-money-a71f277a.js",
     "imports": [
-      "_vendor-fca45885.js"
+      "_vendor-0ba1deae.js"
     ],
-    "integrity": "sha384-/lP2o0Yj4DAtc93ChQvqF5ctDGjH6jakuIZcEQBICvDn/YtSDaPr7PzrZd4w53jV"
+    "integrity": "sha384-NX1AQwixTtbRYpnSgnTwE6OzMgA0zTe/BOQp4tA+sMFZ7A/Z/8AM85Ia0343u020"
   },
-  "_get-94678769.js": {
-    "file": "assets/get-94678769.js",
+  "_get-971543fd.js": {
+    "file": "assets/get-971543fd.js",
     "imports": [
-      "_format-money-43e05102.js"
+      "_format-money-a71f277a.js"
     ],
-    "integrity": "sha384-/nzI9V1buTN8n1p1uL9UOxOasx6+q6kTpiwDCaZZHBCVrrnFqWSCQCHAPQFcqYGB"
+    "integrity": "sha384-kRyC3Ngpm92ejZXmYiYd9NWyzp47VMYlXB1QCIMNJf/5g0CM3/id1tMx1wM7sWop"
   },
-  "_get-a29f6df7.js": {
-    "file": "assets/get-a29f6df7.js",
+  "_get-c4c00bed.js": {
+    "file": "assets/get-c4c00bed.js",
     "imports": [
-      "_format-money-43e05102.js"
+      "_format-money-a71f277a.js"
     ],
-    "integrity": "sha384-QRZtv6rXwaf1k9JOU1p1T42Nn2t5En83j/8rbh00dJ+1sSoNLD0maS8FkPKVRbpE"
+    "integrity": "sha384-KLoBbucwHe+WIBcGunE9+tql5dx39uDkibZZDSq9X9m25oHNXRtVbjfI8ljmGSYe"
   },
-  "_parse-downloaded-splits-4afea167.js": {
-    "file": "assets/parse-downloaded-splits-4afea167.js",
+  "_parse-downloaded-splits-19845c1d.js": {
+    "file": "assets/parse-downloaded-splits-19845c1d.js",
     "imports": [
-      "_create-empty-split-fb5bda92.js",
-      "_vendor-fca45885.js"
+      "_create-empty-split-b2c15454.js",
+      "_vendor-0ba1deae.js"
     ],
-    "integrity": "sha384-rTgD6HzwbdSD/qoN3b4vipowqanriBYLYnORI3F23R+uFbr1kyZIE1AHYA9oe2qO"
+    "integrity": "sha384-fvvNIwjZ9BkUU+LRImRK606sDo4vJs8/Z58Vm7T46vAl66xckgxX+GVjsltwkhus"
   },
-  "_splice-errors-into-transactions-9c9b99c0.js": {
-    "file": "assets/splice-errors-into-transactions-9c9b99c0.js",
+  "_splice-errors-into-transactions-995deb6d.js": {
+    "file": "assets/splice-errors-into-transactions-995deb6d.js",
     "imports": [
-      "_format-money-43e05102.js",
-      "_get-94678769.js",
-      "_vendor-fca45885.js"
+      "_format-money-a71f277a.js",
+      "_get-c4c00bed.js",
+      "_vendor-0ba1deae.js"
     ],
-    "integrity": "sha384-6QHZSbNE9w8hPmdvtcEi1wqimo8+lyJWXBaYaX7/c8qoveRKX5A2WZVhqb7bMRkV"
+    "integrity": "sha384-xy9kpKxM6h0137K3N9ZyXSqNwsD3sk+KrMm3tWivk/WtgXy+fxjgk08YSX7Zgc+d"
   },
-  "_vendor-fca45885.js": {
+  "_vendor-0ba1deae.js": {
     "assets": [
       "assets/layers-1dbbe9d0.png",
       "assets/layers-2x-066daca8.png",
@@ -53,8 +53,8 @@
     "css": [
       "assets/vendor-49001d3f.css"
     ],
-    "file": "assets/vendor-fca45885.js",
-    "integrity": "sha384-xc7wHYzykc3pL46xJ1C3dJ/yReuYh0aAcdywRaE8sPW9QiKDkmpdip8ksd8qWp4b"
+    "file": "assets/vendor-0ba1deae.js",
+    "integrity": "sha384-9W7xmHUksAccX1L6MeAPa77/siJb7Gka71e+TA2dfgu4VV7xUgeqeyTCIShNLB4b"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
     "file": "assets/fa-brands-400-5656d596.ttf",
@@ -102,68 +102,76 @@
     "integrity": "sha384-wg83fCOXjBtqzFAWhTL9Sd9vmLUNhfEEzfmNUX9zwv2igKlz/YQbdapF4ObdxF+R"
   },
   "resources/assets/v2/pages/dashboard/dashboard.js": {
-    "file": "assets/dashboard-2ad8d866.js",
+    "file": "assets/dashboard-60d58953.js",
     "imports": [
-      "_format-money-43e05102.js",
-      "_vendor-fca45885.js",
-      "_get-a29f6df7.js",
-      "_get-94678769.js"
+      "_format-money-a71f277a.js",
+      "_vendor-0ba1deae.js",
+      "_get-971543fd.js",
+      "_get-c4c00bed.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/dashboard/dashboard.js",
-    "integrity": "sha384-drEV1+zgjVGIfpdo1BovDls72a22l303XFZq/n0BE9VMTuydOYDBBgEqjM1GgwQD"
+    "integrity": "sha384-KGiwIVYJZwLUgiraYW27lW+R5wW0LW30/Z0z6UA1SkfjjoeDXm1DTcSoUtMhltaG"
   },
   "resources/assets/v2/pages/transactions/create.js": {
-    "file": "assets/create-46b63de1.js",
+    "file": "assets/create-dd6750e8.js",
     "imports": [
-      "_format-money-43e05102.js",
-      "_create-empty-split-fb5bda92.js",
-      "_splice-errors-into-transactions-9c9b99c0.js",
-      "_vendor-fca45885.js",
-      "_get-94678769.js"
+      "_format-money-a71f277a.js",
+      "_create-empty-split-b2c15454.js",
+      "_splice-errors-into-transactions-995deb6d.js",
+      "_vendor-0ba1deae.js",
+      "_get-c4c00bed.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/create.js",
-    "integrity": "sha384-qacGHBXX2jXhiYdstJdUk5SBbdF1y8uj9RTdWetpmATLMNSjetRemPMk4PJoGxgZ"
+    "integrity": "sha384-rrUkO07lnTiSQ+5SPMwOLmnu2J+5oQmZFKfsf3ApkQG9ct3qrwBocQ9f0H5cftv2"
   },
   "resources/assets/v2/pages/transactions/edit.js": {
-    "file": "assets/edit-b45ed381.js",
+    "file": "assets/edit-74c97acb.js",
     "imports": [
-      "_format-money-43e05102.js",
-      "_get-a29f6df7.js",
-      "_parse-downloaded-splits-4afea167.js",
-      "_splice-errors-into-transactions-9c9b99c0.js",
-      "_vendor-fca45885.js",
-      "_create-empty-split-fb5bda92.js",
-      "_get-94678769.js"
+      "_format-money-a71f277a.js",
+      "_get-971543fd.js",
+      "_parse-downloaded-splits-19845c1d.js",
+      "_splice-errors-into-transactions-995deb6d.js",
+      "_vendor-0ba1deae.js",
+      "_create-empty-split-b2c15454.js",
+      "_get-c4c00bed.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/edit.js",
-    "integrity": "sha384-CoTAYJsk4/69IMBbgV50+i5mK+pANKXl0hLH9nqErgit1WDdBK6U4VimDsq5fvMf"
+    "integrity": "sha384-gU2Nw6D5i8slOZwzR1Tlpf82FvESkn7cNoT24Pk/VJzqY3JQo3Mwr0vb09swPwEZ"
   },
   "resources/assets/v2/pages/transactions/index.js": {
-    "file": "assets/index-8df22335.js",
+    "file": "assets/index-cf70f728.js",
     "imports": [
-      "_format-money-43e05102.js",
-      "_vendor-fca45885.js",
-      "_get-a29f6df7.js"
+      "_format-money-a71f277a.js",
+      "_vendor-0ba1deae.js",
+      "_get-971543fd.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/index.js",
-    "integrity": "sha384-UcghdFUsV8Bp01abyYn4u6sI/mWjXuY677vyQ76p1gVaMl9pVMGjdPa8Cd9Lg6M5"
+    "integrity": "sha384-aCoGtjOpn/zM6UGPc4bOZEGISPRJd8Vd2l/7VbFnJzjrSzMRIv5hhU1vpvw0JoTh"
+  },
+  "resources/assets/v2/pages/transactions/show.css": {
+    "file": "assets/show-8b1429e5.css",
+    "src": "resources/assets/v2/pages/transactions/show.css",
+    "integrity": "sha384-D0+ADFJ1uVTJKTOYOVIjDXI7vzboM0WuC0AjpA2jhwEXxAVGnZTzqFZPuSYWBWiL"
   },
   "resources/assets/v2/pages/transactions/show.js": {
-    "file": "assets/show-61e79d17.js",
+    "css": [
+      "assets/show-8b1429e5.css"
+    ],
+    "file": "assets/show-19f421da.js",
     "imports": [
-      "_format-money-43e05102.js",
-      "_vendor-fca45885.js",
-      "_get-a29f6df7.js",
-      "_parse-downloaded-splits-4afea167.js",
-      "_create-empty-split-fb5bda92.js"
+      "_format-money-a71f277a.js",
+      "_vendor-0ba1deae.js",
+      "_get-971543fd.js",
+      "_parse-downloaded-splits-19845c1d.js",
+      "_create-empty-split-b2c15454.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/show.js",
-    "integrity": "sha384-JBLT+bepNQ1x9TTUWy1H/ekjto18Jzudb4suKq+rF1YvqeSpouHzJU2l1YeObQ7y"
+    "integrity": "sha384-Ml/m6l4ZRqzuhW7/z2hKnrLYZKKkrswMA60W6eWSMeQkNXgzcgO4lO9YS8iYHO2O"
   },
   "resources/assets/v2/sass/app.scss": {
     "file": "assets/app-fb7b26ec.css",

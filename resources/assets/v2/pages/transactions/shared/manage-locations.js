@@ -43,12 +43,14 @@ function addPointToMap(e) {
         markers[index].on('dragend', dragEnd);
         markers[index].addTo(maps[index]);
 
-        const setEvent = new CustomEvent('location-set', {detail: {
+        const setEvent = new CustomEvent('location-set', {
+            detail: {
                 latitude: e.latlng.lat,
                 longitude: e.latlng.lng,
                 index: index,
                 zoomLevel: maps[index].getZoom()
-            }});
+            }
+        });
         document.dispatchEvent(setEvent);
     }
 }
@@ -56,10 +58,12 @@ function addPointToMap(e) {
 function saveZoomOfMap(e) {
     //let index = parseInt(e.sourceTarget._container.attributes['data-index'].value);
     let index = 0;
-    const zoomEvent = new CustomEvent('location-zoom', {detail: {
+    const zoomEvent = new CustomEvent('location-zoom', {
+        detail: {
             index: index,
             zoomLevel: maps[index].getZoom()
-        }});
+        }
+    });
     document.dispatchEvent(zoomEvent);
 }
 
@@ -87,13 +91,15 @@ export function addLocation(index) {
 
         //let holder = document.getElementById('location_map_' + index);
         let holder = document.getElementById('location_map');
-        maps[index] = L.map(holder).setView([holder.dataset.latitude, holder.dataset.longitude], holder.dataset.zoomLevel);
+        if (holder) {
+            maps[index] = L.map(holder).setView([holder.dataset.latitude, holder.dataset.longitude], holder.dataset.zoomLevel);
 
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(maps[index]);
-        maps[index].on('click', addPointToMap);
-        maps[index].on('zoomend', saveZoomOfMap);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(maps[index]);
+            maps[index].on('click', addPointToMap);
+            maps[index].on('zoomend', saveZoomOfMap);
+        }
     }
 }

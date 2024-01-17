@@ -22,7 +22,6 @@
         "chart.js": "^4.4.0",
         "chartjs-adapter-date-fns": "^3.0.0",
         "chartjs-chart-sankey": "^0.12.0",
-        "dark-editable": "github:DarKsandr/dark-editable",
         "date-fns": "^3.2.0",
         "i18next": "^23.7.16",
         "i18next-chained-backend": "^4.6.2",

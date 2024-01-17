@@ -29,6 +29,10 @@ use Illuminate\Support\Facades\Log;
 
 class BillDateCalculator
 {
+    // #8401 we start keeping track of the diff in periods, because if it can't jump over a period (happens often in February)
+    // we can force the process along.
+    private int $diffInMonths = 0;
+
     /**
      * Returns the dates a bill needs to be paid.
      *
@@ -43,12 +47,16 @@ class BillDateCalculator
         Log::debug(sprintf('Dates must be between %s and %s.', $earliest->format('Y-m-d'), $latest->format('Y-m-d')));
         Log::debug(sprintf('Bill started on %s, period is "%s", skip is %d, last paid = "%s".', $billStart->format('Y-m-d'), $period, $skip, $lastPaid?->format('Y-m-d')));
 
+        $daysUntilEOM = app('navigation')->daysUntilEndOfMonth($billStart);
+        Log::debug(sprintf('For bill start, days until end of month is %d', $daysUntilEOM));
+
         $set          = new Collection();
         $currentStart = clone $earliest;
 
         // 2023-06-23 subDay to fix 7655
         $currentStart->subDay();
         $loop         = 0;
+
         Log::debug('Start of loop');
         while ($currentStart <= $latest) {
             Log::debug(sprintf('Current start is %s', $currentStart->format('Y-m-d')));
@@ -79,8 +87,23 @@ class BillDateCalculator
                 $set->push(clone $nextExpectedMatch);
             }
 
+            // #8401
+            // a little check for when the day of the bill (ie 30th of the month) is not possible in
+            // the next expected month because that month has only 28 days (i.e. february).
+            // this applies to leap years as well.
+            if ($daysUntilEOM < 4) {
+                $nextUntilEOM = app('navigation')->daysUntilEndOfMonth($nextExpectedMatch);
+                $diffEOM      = $daysUntilEOM - $nextUntilEOM;
+                if ($diffEOM > 0) {
+                    Log::debug(sprintf('Bill start is %d days from the end of the month. nextExceptedMatch is %d days from the end of the month.', $daysUntilEOM, $nextUntilEOM));
+                    $nextExpectedMatch->subDays(1);
+                    Log::debug(sprintf('Subtract %d days from next expected match, which is now %s', $diffEOM, $nextExpectedMatch->format('Y-m-d')));
+                }
+            }
+
             // 2023-10
             // for the next loop, go to end of period, THEN add day.
+            Log::debug('Add one day to nextExpectedMatch/currentStart.');
             $nextExpectedMatch->addDay();
             $currentStart      = clone $nextExpectedMatch;
 
@@ -117,8 +140,13 @@ class BillDateCalculator
             return $billStartDate;
         }
 
-        $steps  = app('navigation')->diffInPeriods($period, $skip, $earliest, $billStartDate);
-        $result = clone $billStartDate;
+        $steps              = app('navigation')->diffInPeriods($period, $skip, $earliest, $billStartDate);
+        if ($steps === $this->diffInMonths) {
+            Log::debug(sprintf('Steps is %d, which is the same as diffInMonths (%d), so we add another 1.', $steps, $this->diffInMonths));
+            ++$steps;
+        }
+        $this->diffInMonths = $steps;
+        $result             = clone $billStartDate;
         if ($steps > 0) {
             --$steps;
             Log::debug(sprintf('Steps is %d, because addPeriod already adds 1.', $steps));

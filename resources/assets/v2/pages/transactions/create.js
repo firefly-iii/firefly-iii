@@ -349,7 +349,7 @@ let transactions = function () {
             this.detectTransactionType();
 
             // parse transaction:
-            let transactions = parseFromEntries(this.entries, this.groupProperties.transactionType);
+            let transactions = parseFromEntries(this.entries, null, this.groupProperties.transactionType);
             let submission = {
                 group_title: this.groupProperties.title,
                 fire_webhooks: this.formStates.webhooksButton,
@@ -466,7 +466,7 @@ let transactions = function () {
                     // onRenderItem: renderAccount,
                     onChange: changeSourceAccount,
                     onSelectItem: selectSourceAccount,
-                    hiddenValue: this.items[count].source_account.alpine_name,
+                    hiddenValue: this.entries[count].source_account.alpine_name
                 });
                 addAutocomplete({
                     selector: 'input.ac-dest',

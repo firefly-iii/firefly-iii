@@ -25,6 +25,8 @@ import Get from "../../api/v2/model/transaction/get.js";
 import {parseDownloadedSplits} from "./shared/parse-downloaded-splits.js";
 import {format} from "date-fns";
 import formatMoney from "../../util/format-money.js";
+import DarkEditable from "../../libraries/dark-editable/dark-editable.js";
+
 
 let show = function () {
     return {
@@ -56,6 +58,10 @@ let show = function () {
 
         pageProperties: {},
         formatMoney(amount, currencyCode) {
+            console.log('formatting', amount, currencyCode);
+            if('' === currencyCode) {
+                currencyCode = 'EUR';
+            }
             return formatMoney(amount, currencyCode);
         },
         format(date) {
@@ -95,6 +101,12 @@ let show = function () {
                         }
                     }
                 }
+
+                // at this point do the inline change fields
+                //inlineEdit('journal_description')
+                const usernameEl = document.getElementById('journal_description');
+                const popover = new DarkEditable(usernameEl, {mode: 'inline', url: '/something-else'});
+
             }).catch((error) => {
                 // todo auto generated.
                 this.notifications.error.show = true;

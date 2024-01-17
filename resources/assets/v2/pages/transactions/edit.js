@@ -58,6 +58,7 @@ let transactions = function () {
     return {
         // transactions are stored in "entries":
         entries: [],
+        originals: [],
 
         // state of the form is stored in formState:
         formStates: {
@@ -126,7 +127,7 @@ let transactions = function () {
             this.formStates.isSubmitting = true;
 
             // parse transaction:
-            let transactions = parseFromEntries(this.entries, this.groupProperties.transactionType);
+            let transactions = parseFromEntries(this.entries, this.originals, this.groupProperties.transactionType);
             let submission = {
                 group_title: this.groupProperties.title,
                 fire_webhooks: this.formStates.webhooksButton,
@@ -263,7 +264,7 @@ let transactions = function () {
             getter.show(groupId, {}).then((response) => {
                 const data = response.data.data;
                 this.groupProperties.id = parseInt(data.id);
-                this.groupProperties.transactionType = data.attributes.transactions[0].type;
+                this.groupProperties.transactionType = data.attributes.transactions[0].type.toLowerCase();
                 this.groupProperties.title = data.attributes.title ?? data.attributes.transactions[0].description;
                 this.entries = parseDownloadedSplits(data.attributes.transactions);
 

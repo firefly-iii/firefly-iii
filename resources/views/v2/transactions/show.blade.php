@@ -45,6 +45,16 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="card-footer text-end">
+                            <div class="btn-group btn-group-sm">
+                                <a class="btn btn-primary" :href="'./transactions/edit/' + groupProperties.id">
+                                    <em class="fa-solid fa-edit"></em> {{ __('firefly.edit') }}
+                                </a>
+                                <a class="btn btn-danger" :href="'./transactions/delete/' + groupProperties.id">
+                                    <em class="fa-solid fa-trash"></em> {{ __('firefly.delete') }}
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -123,10 +133,17 @@
             <div class="row">
                 <template x-for="(entry, index) in entries">
                     <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+
+
+
                         <div class="card mb-3">
                             <div class="card-header">
                                 <h3 class="card-title">
-                                    <span x-text="entry.description"></span>
+                                    <span
+                                        id="journal_description"
+                                          data-type="text"
+                                          data-pk="12"
+                                          data-title="{{ __('firefly.description') }}" x-text="entry.description"></span>
                                     <template x-if="entries.length > 1">
                                     <span class="badge bg-secondary">
                                         <span x-text="index + 1"></span> / <span x-text="entries.length"></span>
@@ -215,7 +232,7 @@
                                         </template>
                                     </template>
                                     <template x-for="meta in metaFields">
-                                        <template x-if="null !== entry[meta] and '' !== entry[meta]">
+                                        <template x-if="typeof entry[meta] !== 'undefined' && null !== entry[meta] && '' !== entry[meta]">
                                             <tr>
                                                 <th><span x-text="meta"></span></th>
                                                 <td><span x-text="entry[meta]"></span></td>
@@ -224,7 +241,7 @@
                                     </template>
                                     <tr>
                                         <th>recurring things</th>
-                                        <td>TODO meta</td>
+                                        <td>TODO recurring</td>
                                     </tr>
                                     <template x-if="entry.tags.length > 0">
                                         <tr>
