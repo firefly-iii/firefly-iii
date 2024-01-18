@@ -71,7 +71,6 @@ class EnableCurrencies extends Command
         $found           = [$defaultCurrency->id];
 
         // get all meta entries
-        /** @var Collection $meta */
         $meta            = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
             ->where('accounts.user_group_id', $userGroup->id)
             ->where('account_meta.name', 'currency_id')->groupBy('data')->get(['data'])
@@ -106,6 +105,12 @@ class EnableCurrencies extends Command
         ;
         foreach ($limits as $entry) {
             $found[] = $entry->transaction_currency_id;
+        }
+
+        // also get all currencies already enabled.
+        $alreadyEnabled  = $userGroup->currencies()->get(['transaction_currencies.id'])->pluck('id')->toArray();
+        foreach ($alreadyEnabled as $currencyId) {
+            $found[] = $currencyId;
         }
 
         $found           = array_values(array_unique($found));
