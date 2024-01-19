@@ -456,7 +456,7 @@ class RuleRepository implements RuleRepositoryInterface
 
             // empty the value in case the rule needs no context
             // TODO create a helper to automatically return these.
-            $needTrue = [
+            $needTrue       = [
                 'reconciled',
                 'has_attachments',
                 'has_any_category',

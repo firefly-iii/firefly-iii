@@ -72,7 +72,7 @@ class RuleTransformer extends AbstractTransformer
             'links'            => [
                 [
                     'rel' => 'self',
-                    'uri' => '/rules/' . $rule->id,
+                    'uri' => '/rules/'.$rule->id,
                 ],
             ],
         ];
@@ -115,7 +115,7 @@ class RuleTransformer extends AbstractTransformer
                 $triggerValue = 'true';
             }
 
-            $result[] = [
+            $result[]     = [
                 'id'              => (string)$ruleTrigger->id,
                 'created_at'      => $ruleTrigger->created_at->toAtomString(),
                 'updated_at'      => $ruleTrigger->updated_at->toAtomString(),
