@@ -72,7 +72,11 @@
     </tr>
     <tr>
         <td>Layout</td>
-        <td>{{ config('firefly.layout') }}</td>
+        <td>{{ config('firefly.layout') }}
+            {% if 'v2' == config('firefly.layout') %}
+                <!-- .eOxNZAmyGz6CXMyf -->
+            {% endif %}
+        </td>
     </tr>
     <tr>
         <td>Logging</td>
