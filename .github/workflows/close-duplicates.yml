@@ -21,18 +21,18 @@ jobs:
       - name: reply
         if: ${{ steps.command.outputs.continue == 'true' }}
         run: |
-          gh issue comment "$NUMBER" --body 'Hi there!
 
-          This is an automatic reply. `Share and enjoy`.
+          ISSUE_TITLE=$(gh issue view ${{ steps.command.outputs.params }} --json title --jq '.title')
 
-          This issue is probably a duplicate of issue #${{ steps.command.outputs.params }}. This issue probably refers to the same bug or feature request as your issue.
+          gh issue comment "$NUMBER" --body "Hi there!
 
-          Please refer to that issue for support.
+          This is an automatic reply. \`Share and enjoy\`.
 
-          Thank you for your contribution.'
+          Your issue is probably a duplicate of issue <span>#</span>${{ steps.command.outputs.params }}: [$ISSUE_TITLE](https://github.com/firefly-iii/firefly-iii/issues/${{ steps.command.outputs.params }}). Please refer to issue #${{ steps.command.outputs.params }} for support.
 
-          gh issue close "$NUMBER" --reason completed
-          gh issue lock "$NUMBER"
+          You can close this issue now. If you believe this is not in fact a duplicate, please reply and let us know. Otherwise, this issue will be automatically closed in a few days time.
+
+          Thank you for your contributions."
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
