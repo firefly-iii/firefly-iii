@@ -1299,13 +1299,13 @@ return [
     'no_location_set'                                     => 'Местоположение не указано.',
     'meta_data'                                           => 'Расширенные данные',
     'location'                                            => 'Размещение',
-    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
+    'location_first_split'                                => 'Расположение для этой транзакции может быть установлено на первой части этой транзакции.',
     'without_date'                                        => 'Без даты',
     'result'                                              => 'Результат',
     'sums_apply_to_range'                                 => 'Все суммы относятся к выбранному диапазону',
     'mapbox_api_key'                                      => 'Чтобы использовать карту, получите ключ API от сервиса <a href="https://www.mapbox.com/">Mapbox</a>. Откройте файл <code>.env</code> и введите этот код в строке <code>MAPBOX_API_KEY = </code>.',
     'press_object_location'                               => 'Щёлкните правой кнопкой мыши или надолго нажмите на сенсорный экран, чтобы установить местоположение объекта.',
-    'click_tap_location'                                  => 'Click or tap the map to add a location',
+    'click_tap_location'                                  => 'Нажмите на карту, чтобы добавить местоположение',
     'clear_location'                                      => 'Очистить местоположение',
     'delete_all_selected_tags'                            => 'Удалить все выбранные метки',
     'select_tags_to_delete'                               => 'Не забудьте выбрать несколько меток.',
@@ -1951,12 +1951,13 @@ return [
  */
 
     // transactions:
-    'wait_loading_transaction'                            => 'Please wait for the form to load',
-    'wait_attachments'                                    => 'Please wait for the attachments to upload.',
-    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
-    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
-    'amount_destination_account'                          => 'Amount in the currency of the destination account',
-    'edit_transaction_title'                              => 'Edit transaction ":description"',
+    'wait_loading_transaction'                            => 'Дождитесь загрузки формы',
+    'wait_loading_data'                                   => 'Пожалуйста, дождитесь загрузки вашей информации...',
+    'wait_attachments'                                    => 'Пожалуйста, дождитесь загрузки вложений.',
+    'errors_upload'                                       => 'Загрузка не удалась. Пожалуйста, проверьте консоль вашего браузера на наличие ошибки.',
+    'amount_foreign_if'                                   => 'Сумма в иностранной валюте, если таковая имеется',
+    'amount_destination_account'                          => 'Сумма в валюте счета назначения',
+    'edit_transaction_title'                              => 'Редактировать транзакцию ":description"',
     'unreconcile'                                         => 'Отменить сверку',
     'update_withdrawal'                                   => 'Обновить расход',
     'update_deposit'                                      => 'Обновить доход',
@@ -2341,7 +2342,7 @@ return [
     'average'                                             => 'Среднее значение',
     'balanceFor'                                          => 'Баланс для :name',
     'no_tags'                                             => '(нет меток)',
-    'nothing_found'                                       => '(nothing found)',
+    'nothing_found'                                       => '(ничего не найдено)',
 
     // piggy banks:
     'event_history'                                       => 'История событий',
@@ -2554,7 +2555,7 @@ return [
     'after_update_create_another'                         => 'После обновления вернитесь сюда, чтобы продолжить редактирование.',
     'store_as_new'                                        => 'Сохранить как новую транзакцию вместо обновления.',
     'reset_after'                                         => 'Сбросить форму после отправки',
-    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission'                                   => 'С вашей публикацией произошла ошибка. Пожалуйста, проверьте следующие ошибки: %{errorMessage}',
     'transaction_expand_split'                            => 'Expand split',
     'transaction_collapse_split'                          => 'Collapse split',
 

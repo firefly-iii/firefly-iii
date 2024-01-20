@@ -1299,7 +1299,7 @@ return [
     'no_location_set'                                     => 'Nie ustawiono lokalizacji.',
     'meta_data'                                           => 'Metadane',
     'location'                                            => 'Lokalizacja',
-    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
+    'location_first_split'                                => 'Lokalizacja dla tej transakcji może być ustawiona w pierwszym podziale tej transakcji.',
     'without_date'                                        => 'Bez daty',
     'result'                                              => 'Wynik',
     'sums_apply_to_range'                                 => 'Wszystkie sumy mają zastosowanie do wybranego zakresu',
@@ -1322,7 +1322,7 @@ return [
     'dark_mode_preference_help'                           => 'Powiedz Firefly III, kiedy użyć trybu ciemnego.',
     'pref_home_screen_accounts'                           => 'Konta na stronie domowej',
     'pref_home_screen_accounts_help'                      => 'Które konta powinny być wyświetlane na stronie głównej?',
-    'pref_view_range'                                     => 'Zakres widzenia',
+    'pref_view_range'                                     => 'Zakres widoku',
     'pref_view_range_help'                                => 'Niektóre wykresy są automatycznie grupowane w okresy. Twoje budżety będą również pogrupowane w okresy. Jaki okres wolisz?',
     'pref_1D'                                             => 'Dzień',
     'pref_1W'                                             => 'Tydzień',
@@ -1951,7 +1951,8 @@ return [
  */
 
     // transactions:
-    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_loading_transaction'                            => 'Poczekaj na załadowanie formularza',
+    'wait_loading_data'                                   => 'Please wait for your information to load...',
     'wait_attachments'                                    => 'Please wait for the attachments to upload.',
     'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
@@ -2341,7 +2342,7 @@ return [
     'average'                                             => 'Średno',
     'balanceFor'                                          => 'Saldo dla :name',
     'no_tags'                                             => '(brak tagów)',
-    'nothing_found'                                       => '(nothing found)',
+    'nothing_found'                                       => '(nic nie znaleziono)',
 
     // piggy banks:
     'event_history'                                       => 'Historia zdarzeń',

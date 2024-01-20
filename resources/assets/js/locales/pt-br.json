@@ -134,7 +134,7 @@
         "active": "Ativo",
         "interest_date": "Data do juros",
         "title": "T\u00edtulo",
-        "book_date": "Data reserva",
+        "book_date": "Data de lan\u00e7amento",
         "process_date": "Data de processamento",
         "due_date": "Data de vencimento",
         "foreign_amount": "Montante em moeda estrangeira",

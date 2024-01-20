@@ -28,6 +28,8 @@ use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class PiggyBankFormRequest.
@@ -67,9 +69,16 @@ class PiggyBankUpdateRequest extends FormRequest
             'targetamount' => ['nullable', new IsValidPositiveAmount()],
             'startdate'    => 'date',
             'targetdate'   => 'date|nullable',
-            'order'        => 'integer|max:65536|min:1',
+            'order'        => 'integer|max:32768|min:1',
             'object_group' => 'min:0|max:255',
             'notes'        => 'min:1|max:32768|nullable',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

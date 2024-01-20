@@ -29,6 +29,7 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AutoBudget\ValidatesAutoBudgetRequest;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
@@ -91,5 +92,8 @@ class BudgetFormUpdateRequest extends FormRequest
                 $this->validateAutoBudgetAmount($validator);
             }
         );
+        if($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

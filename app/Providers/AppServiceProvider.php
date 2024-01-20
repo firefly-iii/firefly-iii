@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -53,6 +54,24 @@ class AppServiceProvider extends ServiceProvider
                 ->json($value)
                 ->withHeaders($headers)
             ;
+        });
+
+        // blade extension
+        Blade::directive('activeXRoutePartial', function (string $route) {
+            $name = \Route::getCurrentRoute()->getName() ?? '';
+            if (str_contains($name, $route)) {
+                return 'menu-open';
+            }
+
+            return '';
+        });
+        Blade::if('partialroute', function (string $route) {
+            $name = \Route::getCurrentRoute()->getName() ?? '';
+            if (str_contains($name, $route)) {
+                return true;
+            }
+
+            return false;
         });
     }
 

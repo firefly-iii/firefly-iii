@@ -84,7 +84,7 @@ return [
     'amount'                  => 'Total',
     'date'                    => 'Data',
     'interest_date'           => 'Data de juros',
-    'book_date'               => 'Data reserva',
+    'book_date'               => 'Data de lançamento',
     'process_date'            => 'Data de processamento',
     'due_date'                => 'Data de vencimento',
     'payment_date'            => 'Data de pagamento',

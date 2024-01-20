@@ -78,7 +78,7 @@ class LoginController extends Controller
     public function login(Request $request): JsonResponse|RedirectResponse
     {
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get($this->username())));
-        app('log')->info('User is trying to login.');
+        app('log')->debug('User is trying to login.');
 
         $this->validateLogin($request);
         app('log')->debug('Login data is present.');
@@ -88,7 +88,7 @@ class LoginController extends Controller
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
         if ($this->hasTooManyLoginAttempts($request)) {
-            Log::channel('audit')->info(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
+            Log::channel('audit')->warning(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
             app('log')->error(sprintf('Login for user "%s" was locked out.', $request->get($this->username())));
             $this->fireLockoutEvent($request);
 
@@ -114,7 +114,7 @@ class LoginController extends Controller
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
-        Log::channel('audit')->info(sprintf('Login failed. Attempt for user "%s" failed.', $request->get($this->username())));
+        Log::channel('audit')->warning(sprintf('Login failed. Attempt for user "%s" failed.', $request->get($this->username())));
 
         $this->sendFailedLoginResponse($request);
 

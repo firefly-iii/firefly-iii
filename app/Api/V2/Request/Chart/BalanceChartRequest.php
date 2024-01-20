@@ -28,6 +28,7 @@ use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
@@ -79,5 +80,8 @@ class BalanceChartRequest extends FormRequest
                 }
             }
         );
+        if($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

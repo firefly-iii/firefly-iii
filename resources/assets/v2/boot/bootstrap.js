@@ -31,13 +31,12 @@ import observePlugin from 'store/plugins/observe';
 import Alpine from "alpinejs";
 import * as bootstrap from 'bootstrap';
 import {getFreshVariable} from "../store/get-fresh-variable.js";
-
-store.addPlugin(observePlugin);
-
-
 // import even more
 import {getVariable} from "../store/get-variable.js";
 import {getViewRange} from "../support/get-viewrange.js";
+import {loadTranslations} from "../support/load-translations.js";
+
+store.addPlugin(observePlugin);
 
 window.bootstrapped = false;
 window.store = store;
@@ -69,16 +68,13 @@ getFreshVariable('lastActivity').then((serverValue) => {
         window.__localeId__ = values[2];
         store.set('language', values[3]);
         store.set('locale', values[3]);
-
-        const event = new Event('firefly-iii-bootstrapped');
-        document.dispatchEvent(event);
-        window.bootstrapped = true;
+        loadTranslations(values[3]).then(() => {
+            const event = new Event('firefly-iii-bootstrapped');
+            document.dispatchEvent(event);
+            window.bootstrapped = true;
+        });
     });
 });
-// wait for 3 promises, because we need those later on.
-
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-
-
 window.Alpine = Alpine

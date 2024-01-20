@@ -1299,7 +1299,7 @@ return [
     'no_location_set'                                     => 'Ubicación no establecida.',
     'meta_data'                                           => 'Meta Datos',
     'location'                                            => 'Ubicación',
-    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
+    'location_first_split'                                => 'La ubicación de esta transacción puede establecerse en la primera división de esta transacción.',
     'without_date'                                        => 'Sin fecha',
     'result'                                              => 'Resultado',
     'sums_apply_to_range'                                 => 'Todas las sumas aplican al rango seleccionado',
@@ -1951,7 +1951,8 @@ return [
  */
 
     // transactions:
-    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_loading_transaction'                            => 'Por favor, espere a que se cargue el formulario',
+    'wait_loading_data'                                   => 'Por favor, espere a que su información se cargue...',
     'wait_attachments'                                    => 'Por favor, espere a que se carguen los archivos adjuntos.',
     'errors_upload'                                       => 'La carga ha fallado. Por favor, comprueba el error en la consola de tu navegador.',
     'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
@@ -2341,7 +2342,7 @@ return [
     'average'                                             => 'Promedio',
     'balanceFor'                                          => 'Saldo por :name',
     'no_tags'                                             => '(sin etiquetas)',
-    'nothing_found'                                       => '(nothing found)',
+    'nothing_found'                                       => '(no se encontró nada)',
 
     // piggy banks:
     'event_history'                                       => 'Historial de eventos',

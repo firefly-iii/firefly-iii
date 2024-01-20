@@ -1,27 +1,50 @@
 {
-  "_autocomplete-functions-31caaca5.js": {
-    "file": "assets/autocomplete-functions-31caaca5.js",
+  "_create-empty-split-c3730b85.js": {
+    "file": "assets/create-empty-split-c3730b85.js",
     "imports": [
-      "_vendor-4332182f.js",
-      "_get-c53daca3.js"
+      "_vendor-5cffaf70.js"
     ],
-    "integrity": "sha384-XSqMYy1ZuJi4MrbVS3qq8lNtYeDESCrJRNtodU3HQlN+B94B6pSwan9xj81fwEZD"
+    "integrity": "sha384-tM3C+VDvcg8Ma9ABf2p4A42lrtYJbZJ/iQMionR5fXnq6Dlsv99cN6jzdYfSXRpL"
   },
-  "_get-c2292133.js": {
-    "file": "assets/get-c2292133.js",
+  "_format-money-bcfc2969.js": {
+    "file": "assets/format-money-bcfc2969.js",
     "imports": [
-      "_get-c53daca3.js"
+      "_vendor-5cffaf70.js"
     ],
-    "integrity": "sha384-kCxtb7s0EQQXgZ6TI+31ryYT23opPhgsNrwBl0T6Ld7y1W5vVxW8IFrLmQA8GY8I"
+    "integrity": "sha384-H9iUW3m5wt1FWJOeHjQViKOS7VemiDYAxy4IgBdonhBxSWlGqWKpK9efO9VYAyUK"
   },
-  "_get-c53daca3.js": {
-    "file": "assets/get-c53daca3.js",
+  "_get-32a7112a.js": {
+    "file": "assets/get-32a7112a.js",
     "imports": [
-      "_vendor-4332182f.js"
+      "_format-money-bcfc2969.js"
     ],
-    "integrity": "sha384-+ZXBtVym7E3s32aGQsrUbEzOEVeoJvFIUWszqynPgtsTp1n4RS25ZVsSMLofTmbS"
+    "integrity": "sha384-j9tBD/bZIRAZzguS3w9Cpr1P0zj47iXc+QwFGwYBsEoKzMhIeABg+j7tOby3YaRd"
   },
-  "_vendor-4332182f.js": {
+  "_get-fa539542.js": {
+    "file": "assets/get-fa539542.js",
+    "imports": [
+      "_format-money-bcfc2969.js"
+    ],
+    "integrity": "sha384-RcC4qxcJgrERr1ZEEadEOSkDok1d0+Fje5/VzoT0LH0pAW2UZtvFCFOghjBzYEes"
+  },
+  "_parse-downloaded-splits-d8bf7632.js": {
+    "file": "assets/parse-downloaded-splits-d8bf7632.js",
+    "imports": [
+      "_create-empty-split-c3730b85.js",
+      "_vendor-5cffaf70.js"
+    ],
+    "integrity": "sha384-wNGsGr9RAQ9aZNE6OVBMivKqjZ9FqKSIo5RCR5TQMoitKAlswFJXqpy4w8INcKdD"
+  },
+  "_splice-errors-into-transactions-66181f21.js": {
+    "file": "assets/splice-errors-into-transactions-66181f21.js",
+    "imports": [
+      "_format-money-bcfc2969.js",
+      "_get-fa539542.js",
+      "_vendor-5cffaf70.js"
+    ],
+    "integrity": "sha384-kK0ycNn7A7lWnheEsYyjyCA0brb5x2kZpXuqFPMOzhjrYiTLdGkT/jNHnmjsqqGc"
+  },
+  "_vendor-5cffaf70.js": {
     "assets": [
       "assets/layers-1dbbe9d0.png",
       "assets/layers-2x-066daca8.png",
@@ -30,8 +53,8 @@
     "css": [
       "assets/vendor-49001d3f.css"
     ],
-    "file": "assets/vendor-4332182f.js",
-    "integrity": "sha384-1G3LBT5kdVnTa5qV4iO6YynbY9sZ9UWTAvBbj2fpl2ukttB/5UZoWMvAKTuYC+w5"
+    "file": "assets/vendor-5cffaf70.js",
+    "integrity": "sha384-fDhVh4Zy7b5WLcQMlIdStDS71sBfQ+0OOCsEvrBaG1oApdU+xun/0OjuLNSgZoh4"
   },
   "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.ttf": {
     "file": "assets/fa-brands-400-5656d596.ttf",
@@ -79,38 +102,76 @@
     "integrity": "sha384-wg83fCOXjBtqzFAWhTL9Sd9vmLUNhfEEzfmNUX9zwv2igKlz/YQbdapF4ObdxF+R"
   },
   "resources/assets/v2/pages/dashboard/dashboard.js": {
-    "file": "assets/dashboard-e693d6f4.js",
+    "file": "assets/dashboard-82f52d2a.js",
     "imports": [
-      "_get-c53daca3.js",
-      "_vendor-4332182f.js",
-      "_get-c2292133.js"
+      "_format-money-bcfc2969.js",
+      "_vendor-5cffaf70.js",
+      "_get-32a7112a.js",
+      "_get-fa539542.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/dashboard/dashboard.js",
-    "integrity": "sha384-1wJD5hnD/2V8OfSEhqyxDhQXDjay4Pn0ivGYFrieirkRil1dAR1NHaMoZlx7zaKd"
+    "integrity": "sha384-ivWUK8XFn+jjqMvInPScesehtS+Rr/d8YgAG8Xoiw9Gv9kLPgIXVQSo6fciIzkYU"
   },
   "resources/assets/v2/pages/transactions/create.js": {
-    "file": "assets/create-d5d549ca.js",
+    "file": "assets/create-2569100d.js",
     "imports": [
-      "_get-c53daca3.js",
-      "_autocomplete-functions-31caaca5.js",
-      "_vendor-4332182f.js"
+      "_format-money-bcfc2969.js",
+      "_create-empty-split-c3730b85.js",
+      "_splice-errors-into-transactions-66181f21.js",
+      "_vendor-5cffaf70.js",
+      "_get-fa539542.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/create.js",
-    "integrity": "sha384-wA/Z8Z+hNOuOA5ZTX8ShykEkdtfxX6dBZFLmmYmanfuUYEeY427OaNi956vrN6cy"
+    "integrity": "sha384-ClkQpKJ81+fT7zrt6rCxOCR0hBr/aDJCIMS4tmuBEl/xruP9IJSokuNX4I7mSy0Z"
   },
   "resources/assets/v2/pages/transactions/edit.js": {
-    "file": "assets/edit-6247ff45.js",
+    "file": "assets/edit-070e8524.js",
     "imports": [
-      "_get-c53daca3.js",
-      "_vendor-4332182f.js",
-      "_get-c2292133.js",
-      "_autocomplete-functions-31caaca5.js"
+      "_format-money-bcfc2969.js",
+      "_get-32a7112a.js",
+      "_parse-downloaded-splits-d8bf7632.js",
+      "_splice-errors-into-transactions-66181f21.js",
+      "_vendor-5cffaf70.js",
+      "_create-empty-split-c3730b85.js",
+      "_get-fa539542.js"
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/edit.js",
-    "integrity": "sha384-hJTbJsS4rExaV2BGHmiZ/J/nm8RicxSfwzr7TDUe/nwtYOm8gWtmNxrDrsmyzAqS"
+    "integrity": "sha384-1p26d3/cG4QvjOFq8h4wbhG5NIk9DR5lftz/vGW08h6Wn5P5BCBDiOpMQ5YKGrkG"
+  },
+  "resources/assets/v2/pages/transactions/index.js": {
+    "file": "assets/index-e87148c5.js",
+    "imports": [
+      "_format-money-bcfc2969.js",
+      "_vendor-5cffaf70.js",
+      "_get-32a7112a.js"
+    ],
+    "isEntry": true,
+    "src": "resources/assets/v2/pages/transactions/index.js",
+    "integrity": "sha384-eeBnTRXYgmfZr405R1VtnaS+SUshL2BQb0tdzhTKpubsl57Uajo2dGj21NVs7VZG"
+  },
+  "resources/assets/v2/pages/transactions/show.css": {
+    "file": "assets/show-8b1429e5.css",
+    "src": "resources/assets/v2/pages/transactions/show.css",
+    "integrity": "sha384-D0+ADFJ1uVTJKTOYOVIjDXI7vzboM0WuC0AjpA2jhwEXxAVGnZTzqFZPuSYWBWiL"
+  },
+  "resources/assets/v2/pages/transactions/show.js": {
+    "css": [
+      "assets/show-8b1429e5.css"
+    ],
+    "file": "assets/show-ddb72bf9.js",
+    "imports": [
+      "_format-money-bcfc2969.js",
+      "_vendor-5cffaf70.js",
+      "_get-32a7112a.js",
+      "_parse-downloaded-splits-d8bf7632.js",
+      "_create-empty-split-c3730b85.js"
+    ],
+    "isEntry": true,
+    "src": "resources/assets/v2/pages/transactions/show.js",
+    "integrity": "sha384-xtfPbtKPTnEqws536WTYd9sSwhclkigL6ERXaWGn/rLQo2kzD2cXBg2McCQjueMZ"
   },
   "resources/assets/v2/sass/app.scss": {
     "file": "assets/app-fb7b26ec.css",

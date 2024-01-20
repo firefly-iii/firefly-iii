@@ -33,6 +33,7 @@ import {
     subMonths
 } from "date-fns";
 import format from '../../util/format'
+import i18next from "i18next";
 
 export default () => ({
     range: {
@@ -44,8 +45,6 @@ export default () => ({
     language: 'en_US',
 
     init() {
-        // console.log('Dates init');
-
         this.range = {
             start: new Date(window.store.get('start')),
             end: new Date(window.store.get('end'))
@@ -67,23 +66,6 @@ export default () => ({
             this.range.end = new Date(newValue);
             this.buildDateRange();
         });
-
-        //this.range = this.setDatesFromViewRange(this.range.start);
-        // get values from store and use them accordingly.
-        // this.viewRange = window.BasicStore.get('viewRange');
-        // this.locale = window.BasicStore.get('locale');
-        // this.language = window.BasicStore.get('language');
-        // this.locale = 'equal' === this.locale ? this.language : this.locale;
-        // window.__localeId__ = this.language;
-        //
-        // // the range is always null but later on we will store it in BasicStore.
-        // if (null === this.range.start && null === this.range.end) {
-        //     console.log('start + end = null, calling setDatesFromViewRange()');
-        //     this.range = this.setDatesFromViewRange(new Date);
-        // }
-        // console.log('MainApp: set defaultRange');
-        // this.defaultRange = this.setDatesFromViewRange(new Date);
-        // // default range is always the current period (initialized ahead)
     },
 
 

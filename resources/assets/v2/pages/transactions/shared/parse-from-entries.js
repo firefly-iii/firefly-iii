@@ -21,15 +21,23 @@
 /**
  *
  */
-export function parseFromEntries(entries, transactionType) {
+export function parseFromEntries(entries, originals, transactionType) {
     let returnArray = [];
     for (let i in entries) {
         if (entries.hasOwnProperty(i)) {
             const entry = entries[i];
+            let compare = false;
+            let original = {};
+            if (originals !== null && originals.hasOwnProperty(i)) {
+                compare = true;
+                let original = originals[i];
+            }
             let current = {};
 
             // fields for transaction
-            current.description = entry.description;
+            if ((compare && original.description !== entry.description) || !compare) {
+                current.description = entry.description;
+            }
 
             // source and destination
             current.source_name = entry.source_account.name;

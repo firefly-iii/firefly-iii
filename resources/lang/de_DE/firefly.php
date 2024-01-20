@@ -468,10 +468,10 @@ return [
     'search_modifier_transaction_type'                    => 'Buchungstyp ist „:value”',
     'search_modifier_not_transaction_type'                => 'Buchungstyp ist nicht „:value”',
     'search_modifier_tag_is'                              => 'Schlagwort ist „:value”',
-    'search_modifier_tag_contains'                        => 'Tag contains ":value"',
-    'search_modifier_not_tag_contains'                    => 'Tag does not contain ":value"',
-    'search_modifier_tag_ends'                            => 'Tag ends with ":value"',
-    'search_modifier_tag_starts'                          => 'Tag starts with ":value"',
+    'search_modifier_tag_contains'                        => 'Schlagwort enthält ":value"',
+    'search_modifier_not_tag_contains'                    => 'Schlagwort enthält nicht ":value"',
+    'search_modifier_tag_ends'                            => 'Schlagwort endet mit ":value"',
+    'search_modifier_tag_starts'                          => 'Schlagwort beginnt mit ":value"',
     'search_modifier_not_tag_is'                          => 'Kein Schlagwort lautet ":value"',
     'search_modifier_date_on_year'                        => 'Buchung im Jahr „:value”',
     'search_modifier_not_date_on_year'                    => 'Buchung ist nicht im Jahr ":value"',
@@ -1279,8 +1279,8 @@ return [
     'rule_action_append_notes_to_descr'                   => 'Notizen an die Beschreibung anhängen',
     'rule_action_move_descr_to_notes'                     => 'Notizen durch die Beschreibung ersetzen',
     'rule_action_move_notes_to_descr'                     => 'Beschreibung durch die Notizen ersetzen',
-    'rule_action_set_destination_to_cash_choice'          => 'Set destination account to (cash)',
-    'rule_action_set_source_to_cash_choice'               => 'Set source account to (cash)',
+    'rule_action_set_destination_to_cash_choice'          => 'Zielkonto auf (Bargeld) setzen',
+    'rule_action_set_source_to_cash_choice'               => 'Quellkonto auf (Bargeld) setzen',
     'rulegroup_for_bills_title'                           => 'Regelgruppe für Rechnungen',
     'rulegroup_for_bills_description'                     => 'Eine spezielle Regelgruppe für alle Regeln, die Rechnungen betreffen.',
     'rule_for_bill_title'                                 => 'Automatisch generierte Regel für die Rechnung ":name"',
@@ -1299,7 +1299,7 @@ return [
     'no_location_set'                                     => 'Kein Ort gesetzt.',
     'meta_data'                                           => 'Metadaten',
     'location'                                            => 'Standort',
-    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
+    'location_first_split'                                => 'Der Standort für diese Buchung kann bei der ersten Aufteilung dieser Buchung festgelegt werden.',
     'without_date'                                        => 'Ohne Datum',
     'result'                                              => 'Ergebnis',
     'sums_apply_to_range'                                 => 'Alle Summen beziehen sich auf den ausgewählten Bereich.',
@@ -1951,7 +1951,8 @@ return [
  */
 
     // transactions:
-    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_loading_transaction'                            => 'Bitte warten Sie, bis das Formular geladen wurde',
+    'wait_loading_data'                                   => 'Bitte warten Sie, bis Ihre Informationen geladen wurden …',
     'wait_attachments'                                    => 'Bitte warten Sie, bis die Anhänge hochgeladen sind.',
     'errors_upload'                                       => 'Das Hochladen ist fehlgeschlagen. Bitte überprüfen Sie Ihre Browserkonsole auf den Fehler.',
     'amount_foreign_if'                                   => 'Betrag in Fremdwährung, falls vorhanden',
@@ -2341,7 +2342,7 @@ return [
     'average'                                             => 'Durchschnitt',
     'balanceFor'                                          => 'Kontostand für „:name”',
     'no_tags'                                             => '(keine Schlagwörter)',
-    'nothing_found'                                       => '(nothing found)',
+    'nothing_found'                                       => '(nichts gefunden)',
 
     // piggy banks:
     'event_history'                                       => 'Ereignisverlauf',

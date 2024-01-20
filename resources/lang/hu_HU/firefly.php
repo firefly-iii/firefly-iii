@@ -434,9 +434,9 @@ return [
     'search_modifier_source_account_nr_starts'            => 'Forrásszámla számlaszáma (IBAN) kezdete ":value"',
     'search_modifier_not_source_account_nr_starts'        => 'Forrásszámla számlaszám (IBAN) kezdete nem ":value"',
     'search_modifier_source_account_nr_ends'              => 'Forrásszámla számlaszáma (IBAN) vége ":value"',
-    'search_modifier_not_source_account_nr_ends'          => 'Source account number (IBAN) does not end on ":value"',
+    'search_modifier_not_source_account_nr_ends'          => 'Forrásszámla számlaszáma (IBAN) nem így végződik ":value"',
     'search_modifier_destination_account_is'              => 'Célszámla neve pontosan ":value"',
-    'search_modifier_not_destination_account_is'          => 'Destination account name is not ":value"',
+    'search_modifier_not_destination_account_is'          => 'Célszámla neve nem ":value"',
     'search_modifier_destination_account_contains'        => 'Célszámla neve tartalmazza ":value"',
     'search_modifier_not_destination_account_contains'    => 'Destination account name does not contain ":value"',
     'search_modifier_destination_account_starts'          => 'Célszámla nevének eleje: ":value"',
@@ -1299,7 +1299,7 @@ return [
     'no_location_set'                                     => 'Nincs hely beállítása.',
     'meta_data'                                           => 'Metaadat',
     'location'                                            => 'Hely',
-    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
+    'location_first_split'                                => 'A tranzakció helyszíne a tranzakció első bontásánál állítható be.',
     'without_date'                                        => 'Dátum nélkül',
     'result'                                              => 'Eredmény',
     'sums_apply_to_range'                                 => 'Minden összeg alkalmazása a kiválasztott tartományra',
@@ -1951,7 +1951,8 @@ return [
  */
 
     // transactions:
-    'wait_loading_transaction'                            => 'Please wait for the form to load',
+    'wait_loading_transaction'                            => 'Kérlek várj az űrlap betöltéséig',
+    'wait_loading_data'                                   => 'Kérlek várj amíg betöltjük az adatokat...',
     'wait_attachments'                                    => 'Kérlek várj a mellékletek feltöltésére.',
     'errors_upload'                                       => 'A feltöltés sikertelen. A hibáért kérlek, ellenőrizd a böngésző konzolt.',
     'amount_foreign_if'                                   => 'Összeg devizában, ha van ilyen',
@@ -2341,7 +2342,7 @@ return [
     'average'                                             => 'Átlag',
     'balanceFor'                                          => 'Egyenleg: :name',
     'no_tags'                                             => '(nincsenek címkék)',
-    'nothing_found'                                       => '(nothing found)',
+    'nothing_found'                                       => '(nincs találat)',
 
     // piggy banks:
     'event_history'                                       => 'Event history',

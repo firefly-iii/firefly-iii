@@ -25,6 +25,8 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Support\Request\ChecksLogin;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class ProfileFormRequest.
@@ -44,5 +46,12 @@ class ProfileFormRequest extends FormRequest
             'new_password'              => 'required|confirmed|secure_password|min:16',
             'new_password_confirmation' => 'required',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

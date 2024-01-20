@@ -25,6 +25,8 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Support\Request\ChecksLogin;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class ConfigurationRequest.
@@ -54,5 +56,12 @@ class ConfigurationRequest extends FormRequest
             'single_user_mode' => 'min:0|max:1|numeric',
             'is_demo_site'     => 'min:0|max:1|numeric',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

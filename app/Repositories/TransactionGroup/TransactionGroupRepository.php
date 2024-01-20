@@ -123,7 +123,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
 
     public function setUser(null|Authenticatable|User $user): void
     {
-        if ($user instanceof user) {
+        if ($user instanceof User) {
             $this->user = $user;
         }
     }

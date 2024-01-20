@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -44,7 +45,7 @@ class Steam
         $repository     = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
 
-        $currencyId     = (int) $repository->getMetaValue($account, 'currency_id');
+        $currencyId     = (int)$repository->getMetaValue($account, 'currency_id');
         $transactions   = $account->transactions()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
@@ -73,7 +74,7 @@ class Steam
 
         /** @var array $transaction */
         foreach ($transactions as $transaction) {
-            $value = (string) ($transaction[$key] ?? '0');
+            $value = (string)($transaction[$key] ?? '0');
             $value = '' === $value ? '0' : $value;
             $sum   = bcadd($sum, $value);
         }
@@ -142,14 +143,14 @@ class Steam
         /** @var Transaction $entry */
         foreach ($set as $entry) {
             // normal amount and foreign amount
-            $modified        = (string) (null === $entry->modified ? '0' : $entry->modified);
-            $foreignModified = (string) (null === $entry->modified_foreign ? '0' : $entry->modified_foreign);
+            $modified        = (string)(null === $entry->modified ? '0' : $entry->modified);
+            $foreignModified = (string)(null === $entry->modified_foreign ? '0' : $entry->modified_foreign);
             $amount          = '0';
-            if ($currencyId === (int) $entry->transaction_currency_id || 0 === $currencyId) {
+            if ($currencyId === (int)$entry->transaction_currency_id || 0 === $currencyId) {
                 // use normal amount:
                 $amount = $modified;
             }
-            if ($currencyId === (int) $entry->foreign_currency_id) {
+            if ($currencyId === (int)$entry->foreign_currency_id) {
                 // use foreign amount:
                 $amount = $foreignModified;
             }
@@ -268,13 +269,19 @@ class Steam
 
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
-            $day                     = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date'], config('app.timezone'));
+            $day                     = false;
+
+            try {
+                $day = Carbon::parse($transaction['date'], config('app.timezone'));
+            } catch (InvalidFormatException $e) {
+                Log::error(sprintf('Could not parse date "%s" in %s: %s', $transaction['date'], __METHOD__, $e->getMessage()));
+            }
             if (false === $day) {
                 $day = today(config('app.timezone'));
             }
             $format                  = $day->format('Y-m-d');
             // if the transaction is in the expected currency, change nothing.
-            if ((int) $transaction['transaction_currency_id'] === $native->id) {
+            if ((int)$transaction['transaction_currency_id'] === $native->id) {
                 // change the current balance, set it to today, continue the loop.
                 $currentBalance    = bcadd($currentBalance, $transaction['amount']);
                 $balances[$format] = $currentBalance;
@@ -283,7 +290,7 @@ class Steam
                 continue;
             }
             // if foreign currency is in the expected currency, do nothing:
-            if ((int) $transaction['foreign_currency_id'] === $native->id) {
+            if ((int)$transaction['foreign_currency_id'] === $native->id) {
                 $currentBalance    = bcadd($currentBalance, $transaction['foreign_amount']);
                 $balances[$format] = $currentBalance;
                 Log::debug(sprintf('%s: transaction in %s (foreign), new balance is %s.', $format, $native->code, $currentBalance));
@@ -291,7 +298,7 @@ class Steam
                 continue;
             }
             // otherwise, convert 'amount' to the necessary currency:
-            $currencyId              = (int) $transaction['transaction_currency_id'];
+            $currencyId              = (int)$transaction['transaction_currency_id'];
             $currency                = $currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
             $currencies[$currencyId] = $currency;
 
@@ -429,7 +436,13 @@ class Steam
         $converter  = new ExchangeRateConverter();
         foreach ($new as $set) {
             foreach ($set as $transaction) {
-                $currentDate = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date']);
+                $currentDate = false;
+
+                try {
+                    $currentDate = Carbon::parse($transaction['date'], config('app.timezone'));
+                } catch (InvalidFormatException $e) {
+                    Log::error(sprintf('Could not parse date "%s" in %s', $transaction['date'], __METHOD__));
+                }
                 if (false === $currentDate) {
                     $currentDate = today(config('app.timezone'));
                 }
@@ -443,7 +456,13 @@ class Steam
 
         foreach ($new as $set) {
             foreach ($set as $transaction) {
-                $currentDate     = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date']);
+                $currentDate     = false;
+
+                try {
+                    $currentDate = Carbon::parse($transaction['date'], config('app.timezone'));
+                } catch (InvalidFormatException $e) {
+                    Log::error(sprintf('Could not parse date "%s" in %s', $transaction['date'], __METHOD__));
+                }
                 if (false === $currentDate) {
                     $currentDate = today(config('app.timezone'));
                 }
@@ -578,7 +597,7 @@ class Steam
 
         /** @var \stdClass $entry */
         foreach ($balances as $entry) {
-            $return[(int) $entry->transaction_currency_id] = (string) $entry->sum_for_currency;
+            $return[(int)$entry->transaction_currency_id] = (string)$entry->sum_for_currency;
         }
         $cache->store($return);
 
@@ -681,7 +700,7 @@ class Steam
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
-        return (string) $hostName;
+        return (string)$hostName;
     }
 
     public function getLastActivities(array $accounts): array
@@ -716,7 +735,7 @@ class Steam
         if ('equal' === $locale) {
             $locale = $this->getLanguage();
         }
-        $locale = (string) $locale;
+        $locale = (string)$locale;
 
         // Check for Windows to replace the locale correctly.
         if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
@@ -815,20 +834,20 @@ class Steam
             return $value;
         }
 
-        $number = substr($value, 0, (int) strpos($value, 'E'));
+        $number = substr($value, 0, (int)strpos($value, 'E'));
         if (str_contains($number, '.')) {
-            $post   = strlen(substr($number, (int) strpos($number, '.') + 1));
-            $mantis = substr($value, (int) strpos($value, 'E') + 1);
+            $post   = strlen(substr($number, (int)strpos($number, '.') + 1));
+            $mantis = substr($value, (int)strpos($value, 'E') + 1);
             if ($mantis < 0) {
-                $post += abs((int) $mantis);
+                $post += abs((int)$mantis);
             }
 
             // TODO careless float could break financial math.
-            return number_format((float) $value, $post, '.', '');
+            return number_format((float)$value, $post, '.', '');
         }
 
         // TODO careless float could break financial math.
-        return number_format((float) $value, 0, '.', '');
+        return number_format((float)$value, 0, '.', '');
     }
 
     public function opposite(string $amount = null): ?string
@@ -848,24 +867,24 @@ class Steam
             // has a K in it, remove the K and multiply by 1024.
             $bytes = bcmul(rtrim($string, 'k'), '1024');
 
-            return (int) $bytes;
+            return (int)$bytes;
         }
 
         if (false !== stripos($string, 'm')) {
             // has a M in it, remove the M and multiply by 1048576.
             $bytes = bcmul(rtrim($string, 'm'), '1048576');
 
-            return (int) $bytes;
+            return (int)$bytes;
         }
 
         if (false !== stripos($string, 'g')) {
             // has a G in it, remove the G and multiply by (1024)^3.
             $bytes = bcmul(rtrim($string, 'g'), '1073741824');
 
-            return (int) $bytes;
+            return (int)$bytes;
         }
 
-        return (int) $string;
+        return (int)$string;
     }
 
     public function positive(string $amount): string

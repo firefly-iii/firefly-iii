@@ -34,8 +34,8 @@
 declare(strict_types=1);
 
 return [
-    'bad_type_source'                 => 'Firefly III ne peut pas déterminer le type d\'opération en fonction de ce compte source.',
-    'bad_type_destination'            => 'Firefly III ne peut pas déterminer le type d\'opération en fonction de ce compte de destination.',
+    'bad_type_source'                 => 'Firefly III ne peut pas déterminer le type de transaction basé sur ce compte source.',
+    'bad_type_destination'            => 'Firefly III ne peut pas déterminer le type de transaction basé sur ce compte de destination.',
     'missing_where'                   => 'La requête ne contient pas de clause "where"',
     'missing_update'                  => 'La requête ne contient pas de clause "update"',
     'invalid_where_key'               => 'Le JSON contient une clé invalide pour la clause "where"',

@@ -24,9 +24,6 @@ import {createEmptySplit, defaultErrorSet} from "./shared/create-empty-split.js"
 import {parseFromEntries} from "./shared/parse-from-entries.js";
 import formatMoney from "../../util/format-money.js";
 import Post from "../../api/v2/model/transaction/post.js";
-import {getVariable} from "../../store/get-variable.js";
-import {I18n} from "i18n-js";
-import {loadTranslations} from "../../support/load-translations.js";
 import {loadCurrencies} from "./shared/load-currencies.js";
 import {loadBudgets} from "./shared/load-budgets.js";
 import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
@@ -46,13 +43,12 @@ import {processAttachments} from "./shared/process-attachments.js";
 import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
 import Tags from "bootstrap5-tags";
 import {addLocation} from "./shared/manage-locations.js";
+import i18next from "i18next";
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
 // TODO group title
 // TODO map location from preferences
 // TODO field preferences
-
-let i18n;
 
 const urls = getUrls();
 
@@ -272,21 +268,13 @@ let transactions = function () {
             this.notifications.wait.show = false;
             this.notifications.error.show = true;
             this.formStates.isSubmitting = false;
-            this.notifications.error.text = i18n.t('firefly.errors_upload');
+            this.notifications.error.text = i18next.t('firefly.errors_upload');
             console.error(event);
         },
 
         init() {
-            // get translations
-            // TODO loading translations could be better, but do this later.
-            Promise.all([getVariable('language', 'en_US')]).then((values) => {
-                i18n = new I18n();
-                const locale = values[0].replace('-', '_');
-                i18n.locale = locale;
-                loadTranslations(i18n, locale).then(() => {
-                    this.addSplit();
-                });
-            });
+            this.addSplit();
+
             // load currencies and save in form data.
             loadCurrencies().then(data => {
                 this.formStates.loadingCurrencies = false;
@@ -361,7 +349,7 @@ let transactions = function () {
             this.detectTransactionType();
 
             // parse transaction:
-            let transactions = parseFromEntries(this.entries, this.groupProperties.transactionType);
+            let transactions = parseFromEntries(this.entries, null, this.groupProperties.transactionType);
             let submission = {
                 group_title: this.groupProperties.title,
                 fire_webhooks: this.formStates.webhooksButton,
@@ -389,7 +377,7 @@ let transactions = function () {
                 if (attachmentCount > 0) {
                     // if count is more than zero, system is processing transactions in the background.
                     this.notifications.wait.show = true;
-                    this.notifications.wait.text = i18n.t('firefly.wait_attachments');
+                    this.notifications.wait.text = i18next.t('firefly.wait_attachments');
                     return;
                 }
 
@@ -418,7 +406,7 @@ let transactions = function () {
 
                 this.notifications.success.show = true;
                 this.notifications.success.url = 'transactions/show/' + this.groupProperties.id;
-                this.notifications.success.text = i18n.t('firefly.stored_journal_js', {description: this.groupProperties.title});
+                this.notifications.success.text = i18next.t('firefly.stored_journal_js', {description: this.groupProperties.title});
 
                 if (this.formStates.resetButton) {
                     this.entries = [];
@@ -436,10 +424,10 @@ let transactions = function () {
             this.notifications.success.show = false;
             this.notifications.wait.show = false;
             this.formStates.isSubmitting = false;
-            this.notifications.error.text = i18n.t('firefly.errors_submission', {errorMessage: data.message});
+            this.notifications.error.text = i18next.t('firefly.errors_submission', {errorMessage: data.message});
 
             if (data.hasOwnProperty('errors')) {
-                this.entries = spliceErrorsIntoTransactions(i18n, data.errors, this.entries);
+                this.entries = spliceErrorsIntoTransactions(data.errors, this.entries);
             }
         },
 
@@ -454,7 +442,7 @@ let transactions = function () {
                     liveServer: true,
                     clearEnd: true,
                     allowNew: true,
-                    notFoundMessage: i18n.t('firefly.nothing_found'),
+                    notFoundMessage: i18next.t('firefly.nothing_found'),
                     noCache: true,
                     fetchOptions: {
                         headers: {
@@ -469,7 +457,7 @@ let transactions = function () {
                 // addedSplit, is called from the HTML
                 // for source account
                 const renderAccount = function (item, b, c) {
-                    return item.name_with_balance + '<br><small class="text-muted">' + i18n.t('firefly.account_type_' + item.type) + '</small>';
+                    return item.name_with_balance + '<br><small class="text-muted">' + i18next.t('firefly.account_type_' + item.type) + '</small>';
                 };
                 addAutocomplete({
                     selector: 'input.ac-source',
@@ -478,7 +466,7 @@ let transactions = function () {
                     // onRenderItem: renderAccount,
                     onChange: changeSourceAccount,
                     onSelectItem: selectSourceAccount,
-                    hiddenValue: this.items[count].source_account.alpine_name,
+                    hiddenValue: this.entries[count].source_account.alpine_name
                 });
                 addAutocomplete({
                     selector: 'input.ac-dest',

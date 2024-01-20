@@ -279,24 +279,31 @@ class SearchRuleEngine implements RuleEngineInterface
 
     private function findNonStrictRule(Rule $rule): Collection
     {
+        app('log')->debug(sprintf('findNonStrictRule(#%d)', $rule->id));
         // start a search query for individual each trigger:
         $total    = new Collection();
         $count    = 0;
         $triggers = [];
         if ($this->refreshTriggers) {
+            app('log')->debug('Will refresh triggers.');
             $triggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
         }
         if (!$this->refreshTriggers) {
+            app('log')->debug('Will not refresh triggers.');
             $triggers = $rule->ruleTriggers;
         }
+        app('log')->debug(sprintf('Will run %d trigger(s).', count($triggers)));
 
         /** @var RuleTrigger $ruleTrigger */
         foreach ($triggers as $ruleTrigger) {
+            app('log')->debug(sprintf('Now at rule trigger #%d: %s:"%s" (%s).', $ruleTrigger->id, $ruleTrigger->trigger_type, $ruleTrigger->trigger_value, var_export($ruleTrigger->stop_processing, true)));
             if (false === $ruleTrigger->active) {
+                app('log')->debug('Trigger is not active, continue.');
+
                 continue;
             }
             if ('user_action' === $ruleTrigger->trigger_type) {
-                app('log')->debug('Skip trigger type.');
+                app('log')->debug('Skip trigger type. continue.');
 
                 continue;
             }
@@ -334,7 +341,7 @@ class SearchRuleEngine implements RuleEngineInterface
             app('log')->debug(sprintf('Total collection is now %d transactions', $total->count()));
             ++$count;
             // if trigger says stop processing, do so.
-            if ($ruleTrigger->stop_processing && $collection->count() > 0) {
+            if ($ruleTrigger->stop_processing && $result->count() > 0) {
                 app('log')->debug('The trigger says to stop processing, so stop processing other triggers.');
 
                 break;

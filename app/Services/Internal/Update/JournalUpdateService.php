@@ -131,7 +131,7 @@ class JournalUpdateService
         app('log')->debug(sprintf('Now in %s', __METHOD__));
         app('log')->debug(sprintf('Now in JournalUpdateService for journal #%d.', $this->transactionJournal->id));
 
-        $this->data['reconciled'] = array_key_exists('reconciled', $this->data) ? $this->data['reconciled'] : false;
+        $this->data['reconciled'] = array_key_exists('reconciled', $this->data) ? $this->data['reconciled'] : null;
 
         // can we update account data using the new type?
         if ($this->hasValidAccounts()) {

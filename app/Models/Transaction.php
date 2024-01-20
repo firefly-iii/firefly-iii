@@ -106,6 +106,7 @@ class Transaction extends Model
                           'encrypted'           => 'boolean', // model does not have these fields though
                           'bill_name_encrypted' => 'boolean',
                           'reconciled'          => 'boolean',
+                          'date'                => 'datetime',
                       ];
 
     protected $fillable

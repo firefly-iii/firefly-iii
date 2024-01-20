@@ -26,6 +26,8 @@ namespace FireflyIII\Http\Requests;
 use Carbon\Carbon;
 use FireflyIII\Support\Request\ChecksLogin;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class SelectTransactionsRequest.
@@ -51,5 +53,12 @@ class SelectTransactionsRequest extends FormRequest
             'accounts'   => 'required',
             'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

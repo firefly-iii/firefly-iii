@@ -501,7 +501,7 @@ export default {
             button.prop("disabled", true);
 
             axios.post(uri, data).then(response => {
-                // console.log('Did a succesfull POST');
+                // console.log('Did a successful POST');
                 // this method will ultimately send the user on (or not).
                 if (0 === this.collectAttachmentData(response)) {
                     // console.log('Will now go to redirectUser()');

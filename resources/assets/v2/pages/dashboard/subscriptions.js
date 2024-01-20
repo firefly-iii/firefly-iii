@@ -20,17 +20,14 @@
 import {getVariable} from "../../store/get-variable.js";
 import Get from "../../api/v2/model/subscription/get.js";
 import {format} from "date-fns";
-import {I18n} from "i18n-js";
-import {loadTranslations} from "../../support/load-translations.js";
 import {getCacheKey} from "../../support/get-cache-key.js";
 import {Chart} from "chart.js";
 import formatMoney from "../../util/format-money.js";
-
+import i18next from "i18next";
 
 // let chart = null;
 // let chartData = null;
 let afterPromises = false;
-let i18n; // for translating items in the chart.
 let apiData = [];
 let subscriptionData = {};
 
@@ -47,7 +44,7 @@ function downloadSubscriptions(params) {
                     //console.log(current);
                     if (current.attributes.active && current.attributes.pay_dates.length > 0) {
                         let objectGroupId = null === current.attributes.object_group_id ? 0 : current.attributes.object_group_id;
-                        let objectGroupTitle = null === current.attributes.object_group_title ? i18n.t('firefly.default_group_title_name_plain') : current.attributes.object_group_title;
+                        let objectGroupTitle = null === current.attributes.object_group_title ? i18next.t('firefly.default_group_title_name_plain') : current.attributes.object_group_title;
                         let objectGroupOrder = null === current.attributes.object_group_order ? 0 : current.attributes.object_group_order;
                         if (!subscriptionData.hasOwnProperty(objectGroupId)) {
                             subscriptionData[objectGroupId] = {
@@ -84,7 +81,7 @@ function downloadSubscriptions(params) {
                         // set variables
                         bill.expected_amount = params.autoConversion ? formatMoney(bill.native_amount, bill.native_currency_code) :
                             formatMoney(bill.amount, bill.currency_code);
-                        bill.expected_times = i18n.t('firefly.subscr_expected_x_times', {
+                        bill.expected_times = i18next.t('firefly.subscr_expected_x_times', {
                             times: current.attributes.pay_dates.length,
                             amount: bill.expected_amount
                         });
@@ -198,7 +195,6 @@ export default () => ({
         // reset subscription data
         subscriptionData = {};
         this.subscriptions = [];
-        console.log('cache is invalid, must download');
         let params = {
             start: format(start, 'y-MM-dd'),
             end: format(end, 'y-MM-dd'),
@@ -206,7 +202,6 @@ export default () => ({
             page: 1
         };
         downloadSubscriptions(params).then(() => {
-            console.log('Done with download!');
             let set = Object.values(subscriptionData);
             // convert subscriptionData to usable data (especially for the charts)
             for (let i in set) {
@@ -236,11 +231,11 @@ export default () => ({
         const currencyCode = this.autoConversion ? data.native_currency_code : data.currency_code;
         const chartData = {
             labels: [
-                i18n.t('firefly.paid'),
-                i18n.t('firefly.unpaid')
+                i18next.t('firefly.paid'),
+                i18next.t('firefly.unpaid')
             ],
             datasets: [{
-                label: i18n.t('firefly.subscriptions_in_group', {title: groupTitle}),
+                label: i18next.t('firefly.subscriptions_in_group', {title: groupTitle}),
                 data: [paidAmount, unpaidAmount],
                 backgroundColor: [
                     'rgb(54, 162, 235)',
@@ -272,20 +267,13 @@ export default () => ({
     },
 
     init() {
-        console.log('subscriptions init');
-        Promise.all([getVariable('autoConversion', false), getVariable('language', 'en_US')]).then((values) => {
-            console.log('subscriptions after promises');
+        Promise.all([getVariable('autoConversion', false)]).then((values) => {
             this.autoConversion = values[0];
             afterPromises = true;
 
-            i18n = new I18n();
-            const locale = values[1].replace('-', '_');
-            i18n.locale = locale;
-            loadTranslations(i18n, locale).then(() => {
-                if (false === this.loading) {
-                    this.startSubscriptions();
-                }
-            });
+            if (false === this.loading) {
+                this.startSubscriptions();
+            }
 
 
         });
@@ -293,7 +281,6 @@ export default () => ({
             if (!afterPromises) {
                 return;
             }
-            console.log('subscriptions observe end');
             if (false === this.loading) {
                 this.startSubscriptions();
             }
@@ -302,7 +289,6 @@ export default () => ({
             if (!afterPromises) {
                 return;
             }
-            console.log('subscriptions observe autoConversion');
             this.autoConversion = newValue;
             if (false === this.loading) {
                 this.startSubscriptions();

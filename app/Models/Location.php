@@ -63,6 +63,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @method static Builder|Location whereUpdatedAt($value)
  * @method static Builder|Location whereZoomLevel($value)
  *
+ * @property Collection<int, \FireflyIII\Models\TransactionJournal> $transactionJournals
+ * @property null|int                                               $transaction_journals_count
+ *
  * @mixin Eloquent
  */
 class Location extends Model

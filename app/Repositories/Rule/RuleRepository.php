@@ -454,6 +454,35 @@ class RuleRepository implements RuleRepositoryInterface
                 $type = sprintf('-%s', $type);
             }
 
+            // empty the value in case the rule needs no context
+            // TODO create a helper to automatically return these.
+            $needTrue       = [
+                'reconciled',
+                'has_attachments',
+                'has_any_category',
+                'has_any_budget',
+                'has_any_bill',
+                'has_any_tag',
+                'any_notes',
+                'any_external_url',
+                'has_no_attachments',
+                'has_no_category',
+                'has_no_budget',
+                'has_no_bill',
+                'has_no_tag',
+                'no_notes',
+                'no_external_url',
+                'source_is_cash',
+                'destination_is_cash',
+                'account_is_cash',
+                'exists',
+                'no_external_id',
+                'any_external_id',
+            ];
+            if(in_array($type, $needTrue, true)) {
+                $value = '';
+            }
+
             $triggerValues  = [
                 'action'          => $type,
                 'value'           => $value,

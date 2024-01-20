@@ -40,7 +40,7 @@
 {% block scripts %}{% endblock %}
 {% if config('firefly.tracker_site_id') != '' and config('firefly.tracker_url') != '' %}
     <!-- This tracker tag is only here because this instance of Firefly III was purposefully configured to include it -->
-    <!-- Your own installation will NOT include it, unless you explicitely configure it to have it. -->
+    <!-- Your own installation will NOT include it, unless you explicitly configure it to have it. -->
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var _paq = window._paq || [];
         _paq.push(['trackPageView']);

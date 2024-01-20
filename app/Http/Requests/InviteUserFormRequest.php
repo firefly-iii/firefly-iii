@@ -27,6 +27,8 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class InviteUserFormRequest
@@ -44,5 +46,12 @@ class InviteUserFormRequest extends FormRequest
         return [
             'invited_user' => 'required|email|unique:invited_users,email',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        if($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 }

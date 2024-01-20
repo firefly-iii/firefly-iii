@@ -33,7 +33,7 @@ use FireflyIII\Models\TransactionJournal;
  */
 class SetNotes implements ActionInterface
 {
-    private RuleACtion $action;
+    private RuleAction $action;
 
     /**
      * TriggerInterface constructor.

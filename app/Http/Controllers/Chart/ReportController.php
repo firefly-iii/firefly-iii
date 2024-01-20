@@ -108,7 +108,7 @@ class ReportController extends Controller
                     continue;
                 }
                 $currencyId                                = $netWorthItem['currency_id'];
-                $label                                     = $current->isoFormat((string) trans('config.month_and_day_js', [], $locale));
+                $label                                     = $current->isoFormat((string)trans('config.month_and_day_js', [], $locale));
                 if (!array_key_exists($currencyId, $chartData)) {
                     $chartData[$currencyId] = [
                         'label'           => 'Net worth in '.$netWorthItem['currency_name'],
@@ -145,6 +145,7 @@ class ReportController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
+
         app('log')->debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
         $format         = app('navigation')->preferredCarbonFormat($start, $end);
         $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
@@ -164,13 +165,13 @@ class ReportController extends Controller
         /** @var array $journal */
         foreach ($journals as $journal) {
             $period                           = $journal['date']->format($format);
-            $currencyId                       = (int) $journal['currency_id'];
+            $currencyId                       = (int)$journal['currency_id'];
             $data[$currencyId]          ??= [
                 'currency_id'             => $currencyId,
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
                 'currency_name'           => $journal['currency_name'],
-                'currency_decimal_places' => (int) $journal['currency_decimal_places'],
+                'currency_decimal_places' => (int)$journal['currency_decimal_places'],
             ];
             $data[$currencyId][$period] ??= [
                 'period' => $period,
@@ -193,7 +194,7 @@ class ReportController extends Controller
         /** @var array $currency */
         foreach ($data as $currency) {
             $income       = [
-                'label'           => (string) trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
+                'label'           => (string)trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
                 'currency_id'     => $currency['currency_id'],
@@ -202,7 +203,7 @@ class ReportController extends Controller
                 'entries'         => [],
             ];
             $expense      = [
-                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency' => $currency['currency_name']]),
+                'label'           => (string)trans('firefly.box_spent_in_currency', ['currency' => $currency['currency_name']]),
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
                 'currency_id'     => $currency['currency_id'],
@@ -212,7 +213,13 @@ class ReportController extends Controller
             ];
             // loop all possible periods between $start and $end
             $currentStart = clone $start;
-            while ($currentStart <= $end) {
+            $currentEnd   = clone $end;
+
+            // #8374. Sloppy fix for yearly charts. Not really interested in a better fix with v2 layout and all.
+            if ('1Y' === $preferredRange) {
+                $currentEnd = app('navigation')->endOfPeriod($currentEnd, $preferredRange);
+            }
+            while ($currentStart <= $currentEnd) {
                 $key                        = $currentStart->format($format);
                 $title                      = $currentStart->isoFormat($titleFormat);
                 $income['entries'][$title]  = app('steam')->bcround($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);

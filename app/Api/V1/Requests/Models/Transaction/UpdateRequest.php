@@ -36,6 +36,7 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
@@ -205,6 +206,9 @@ class UpdateRequest extends FormRequest
                 $this->validateAccountInformationUpdate($validator, $transactionGroup);
             }
         );
+        if($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 
     /**

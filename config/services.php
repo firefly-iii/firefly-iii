@@ -20,6 +20,7 @@
  */
 
 declare(strict_types=1);
+use FireflyIII\User;
 
 return [
     /*
@@ -51,7 +52,7 @@ return [
     ],
 
     'stripe'    => [
-        'model'  => FireflyIII\User::class,
+        'model'  => User::class,
         'key'    => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],

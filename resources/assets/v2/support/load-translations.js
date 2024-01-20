@@ -18,16 +18,43 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+
+import i18next from "i18next";
+import ChainedBackend from "i18next-chained-backend";
+import HttpBackend from "i18next-http-backend";
+import LocalStorageBackend from "i18next-localstorage-backend";
+
 let loaded = false;
 
-async function loadTranslations(i18n, locale) {
+function loadTranslations(locale) {
     if (false === loaded) {
-        locale = locale.replace('-', '_');
-        const response = await fetch(`./v2/i18n/${locale}.json`);
-        const translations = await response.json();
-        i18n.store(translations);
+        const replacedLocale = locale.replace('-', '_');
+        loaded = true;
+        const expireTime = import.meta.env.MODE === 'development' ? 1 : 7 * 24 * 60 * 60 * 1000;
+        console.log('Will load language "'+replacedLocale+'"');
+        return i18next
+            .use(ChainedBackend)
+            .init({
+                load: 'languageOnly',
+                fallbackLng: "en",
+                lng: replacedLocale,
+                debug: import.meta.env.MODE === 'development',
+                backend: {
+                    backends: [
+                        LocalStorageBackend,
+                        HttpBackend
+                    ],
+                    backendOptions: [{
+                        load: 'languageOnly',
+                        expirationTime: expireTime
+                    }, {
+                        loadPath: './v2/i18n/{{lng}}.json'
+                    }]
+                }
+            });
     }
-    //loaded = true;
+    console.warn('Loading translations skipped.');
+    return Promise.resolve();
 }
 
 export {loadTranslations};

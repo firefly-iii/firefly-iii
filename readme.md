@@ -32,15 +32,14 @@
 
 - [About Firefly III](#about-firefly-iii)
   - [Purpose](#purpose)
-- [Need help?](#need-help)
 - [Features](#features)
 - [Who's it for?](#whos-it-for)
 - [The Firefly III eco-system](#the-firefly-iii-eco-system)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
-  - [Support the development of Firefly III](#support-the-development-of-firefly-iii)
+- [Support the development of Firefly III](#support-the-development-of-firefly-iii)
 - [License](#license)
-- [Contact](#contact)
+- [Do you need help, or do you want to get in touch?](#do-you-need-help-or-do-you-want-to-get-in-touch)
 - [Acknowledgements](#acknowledgements)
 
 <!-- /MarkdownTOC -->
@@ -68,18 +67,6 @@ Personal financial management is pretty difficult, and everybody has their own a
 By keeping track of your expenses and your income you can budget accordingly and save money. Stop living from paycheck to paycheck but give yourself the financial wiggle room you need.
 
 You can read more about the purpose of Firefly III in the [documentation](https://docs.firefly-iii.org/).
-
-<!-- HELP TEXT -->
-## Need help?
-
-If you need support using Firefly III or the associated tools, come find us!
-
-- [GitHub Discussions for questions and support](https://github.com/firefly-iii/firefly-iii/discussions/)
-- [Gitter.im for a good chat and a quick answer](https://gitter.im/firefly-iii/firefly-iii)
-- [GitHub Issues for bugs and issues](https://github.com/firefly-iii/firefly-iii/issues)
-- <a rel="me" href="https://fosstodon.org/@ff3">Follow me around for news and updates on Mastodon</a>
-
-<!-- END OF HELP TEXT -->
 
 ## Features
 
@@ -153,24 +140,33 @@ There is also a [security policy](https://github.com/firefly-iii/firefly-iii/sec
 
 [![CII Best Practices][bp-badge]][bp-url]
 
-### Support the development of Firefly III
+<!-- SPONSOR TEXT -->
 
-If you like Firefly III and if it helps you save lots of money, why not send me a dime for every dollar saved! :tada:
+## Support the development of Firefly III
 
-OK that was a joke. If you feel Firefly III made your life better, consider contributing as a sponsor. Please check out my [Patreon](https://www.patreon.com/jc5) and [GitHub Sponsors](https://github.com/sponsors/JC5) page for more information. Thank you for considering donating to Firefly III!
+If you like Firefly III and if it helps you save lots of money, why not send me a dime for every dollar saved! 🥳
+
+OK that was a joke. If you feel Firefly III made your life better, please consider contributing as a sponsor. Please check out my [Patreon](https://www.patreon.com/jc5) and [GitHub Sponsors](https://github.com/sponsors/JC5) page for more information. You can also [buy me a ☕️ coffee at ko-fi.com](https://ko-fi.com/Q5Q5R4SH1). Thank you for your consideration.
+
+<!-- END OF SPONSOR TEXT -->
 
 ## License
 
 This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/main/LICENSE) under the [GNU Affero General Public License v3](https://www.gnu.org/licenses/agpl-3.0.html).
 
-## Contact
+<!-- HELP TEXT -->
 
-You can contact me at [james@firefly-iii.org](mailto:james@firefly-iii.org), you may open an issue or contact me through the support channels:
+## Do you need help, or do you want to get in touch?
 
-- [GitHub Discussions for questions and support](https://github.com/firefly-iii/firefly-iii/discussions/)
-- [Gitter.im for a good chat and a quick answer](https://gitter.im/firefly-iii/firefly-iii)
-- [GitHub Issues for bugs and issues](https://github.com/firefly-iii/firefly-iii/issues)
-- [Follow me around for news and updates on Mastodon](https://fosstodon.org/@ff3)
+Do you want to contact me? You can email me at [james@firefly-iii.org](mailto:james@firefly-iii.org) or get in touch through one of the following support channels:
+
+- [GitHub Discussions](https://github.com/firefly-iii/firefly-iii/discussions/) for questions and support
+- [Gitter.im](https://gitter.im/firefly-iii/firefly-iii) for a good chat and a quick answer
+- [GitHub Issues](https://github.com/firefly-iii/firefly-iii/issues) for bugs and issues
+- <a rel="me" href="https://fosstodon.org/@ff3">Mastodon</a> for news and updates
+
+<!-- END OF HELP TEXT -->
+
 
 ## Acknowledgements
 

@@ -302,6 +302,13 @@ class Navigation
         return $currentEnd;
     }
 
+    public function daysUntilEndOfMonth(Carbon $date): int
+    {
+        $endOfMonth = $date->copy()->endOfMonth();
+
+        return $date->diffInDays($endOfMonth);
+    }
+
     public function diffInPeriods(string $period, int $skip, Carbon $beginning, Carbon $end): int
     {
         Log::debug(sprintf(

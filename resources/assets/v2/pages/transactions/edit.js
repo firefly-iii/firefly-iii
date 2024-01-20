@@ -20,9 +20,6 @@
 
 import '../../boot/bootstrap.js';
 import dates from '../../pages/shared/dates.js';
-import {getVariable} from "../../store/get-variable.js";
-import {I18n} from "i18n-js";
-import {loadTranslations} from "../../support/load-translations.js";
 import formatMoney from "../../util/format-money.js";
 import Get from "../../api/v2/model/transaction/get.js";
 import {parseDownloadedSplits} from "./shared/parse-downloaded-splits.js";
@@ -40,6 +37,12 @@ import {loadBudgets} from "./shared/load-budgets.js";
 import {loadPiggyBanks} from "./shared/load-piggy-banks.js";
 import {loadSubscriptions} from "./shared/load-subscriptions.js";
 import Tags from "bootstrap5-tags";
+import i18next from "i18next";
+import {defaultErrorSet} from "./shared/create-empty-split.js";
+import {parseFromEntries} from "./shared/parse-from-entries.js";
+import Put from "../../api/v2/model/transaction/put.js";
+import {processAttachments} from "./shared/process-attachments.js";
+import {spliceErrorsIntoTransactions} from "./shared/splice-errors-into-transactions.js";
 
 // TODO upload attachments to other file
 // TODO fix two maps, perhaps disconnect from entries entirely.
@@ -49,14 +52,13 @@ import Tags from "bootstrap5-tags";
 // TODO filters
 // TODO parse amount
 
-let i18n;
 const urls = getUrls();
 
 let transactions = function () {
     return {
         // transactions are stored in "entries":
         entries: [],
-
+        originals: [],
 
         // state of the form is stored in formState:
         formStates: {
@@ -74,7 +76,8 @@ let transactions = function () {
 
         // form behaviour during transaction
         formBehaviour: {
-            formType: 'create', foreignCurrencyEnabled: true,
+            formType: 'edit',
+            foreignCurrencyEnabled: true,
         },
 
         // form data (except transactions) is stored in formData
@@ -90,7 +93,10 @@ let transactions = function () {
 
         // properties for the entire transaction group
         groupProperties: {
-            transactionType: 'unknown', title: null, id: null, totalAmount: 0,
+            transactionType: 'unknown',
+            title: null,
+            editTitle: null,
+            id: null, totalAmount: 0,
         },
 
         // notifications
@@ -105,7 +111,74 @@ let transactions = function () {
             }
         },
 
+        // submit the transaction form.
+        // TODO pretty much duplicate of create.js
+        submitTransaction() {
+            // reset all messages:
+            this.notifications.error.show = false;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
 
+            // reset all errors in the entries array:
+            for (let i in this.entries) {
+                if (this.entries.hasOwnProperty(i)) {
+                    this.entries[i].errors = defaultErrorSet();
+                }
+            }
+
+            // form is now submitting:
+            this.formStates.isSubmitting = true;
+
+            // parse transaction:
+            let transactions = parseFromEntries(this.entries, this.originals, this.groupProperties.transactionType);
+            let submission = {
+                group_title: this.groupProperties.editTitle,
+                fire_webhooks: this.formStates.webhooksButton,
+                apply_rules: this.formStates.rulesButton,
+                transactions: transactions
+            };
+
+
+            // catch for group title:
+            if (null === this.groupProperties.title && transactions.length > 1) {
+                submission.group_title = transactions[0].description;
+            }
+
+            // submit the transaction. Multi-stage process thing going on here!
+            let putter = new Put();
+            console.log(submission);
+            putter.put(submission, {id: this.groupProperties.id}).then((response) => {
+                const group = response.data.data;
+                // submission was a success!
+                this.groupProperties.id = parseInt(group.id);
+                this.groupProperties.title = group.attributes.group_title ?? group.attributes.transactions[0].description
+
+                // process attachments, if any:
+                const attachmentCount = processAttachments(this.groupProperties.id, group.attributes.transactions);
+
+                if (attachmentCount > 0) {
+                    // if count is more than zero, system is processing transactions in the background.
+                    this.notifications.wait.show = true;
+                    this.notifications.wait.text = i18next.t('firefly.wait_attachments');
+                    return;
+                }
+
+                // if not, respond to user options:
+                this.showMessageOrRedirectUser();
+            }).catch((error) => {
+
+                this.submitting = false;
+                console.log(error);
+                // todo put errors in form
+                if (typeof error.response !== 'undefined') {
+                    this.parseErrors(error.response.data);
+                }
+
+
+            });
+
+
+        },
         // part of the account selection auto-complete
         filters: {
             source: [], destination: [],
@@ -116,7 +189,7 @@ let transactions = function () {
                 // addedSplit, is called from the HTML
                 // for source account
                 const renderAccount = function (item, b, c) {
-                    return item.name_with_balance + '<br><small class="text-muted">' + i18n.t('firefly.account_type_' + item.type) + '</small>';
+                    return item.name_with_balance + '<br><small class="text-muted">' + i18next.t('firefly.account_type_' + item.type) + '</small>';
                 };
                 addAutocomplete({
                     selector: 'input.ac-source',
@@ -126,8 +199,6 @@ let transactions = function () {
                     onChange: changeSourceAccount,
                     onSelectItem: selectSourceAccount
                 });
-                console.log('ok');
-                console.log(this.entries[0].source_account.alpine_name);
                 addAutocomplete({
                     selector: 'input.ac-dest',
                     serverUrl: urls.account,
@@ -180,59 +251,62 @@ let transactions = function () {
             }
             return formatMoney(this.groupProperties.totalAmount, this.entries[0].currency_code ?? 'EUR');
         },
-
+        getTags(index) {
+            console.log('at get tags ' + index);
+            console.log(this.entries[index].tags);
+            return this.entries[index].tags ?? [];
+        },
 
         getTransactionGroup() {
+            this.entries = [];
             const page = window.location.href.split('/');
             const groupId = parseInt(page[page.length - 1]);
             const getter = new Get();
             getter.show(groupId, {}).then((response) => {
                 const data = response.data.data;
                 this.groupProperties.id = parseInt(data.id);
-                this.groupProperties.transactionType = data.attributes.transactions[0].type;
+                this.groupProperties.transactionType = data.attributes.transactions[0].type.toLowerCase();
                 this.groupProperties.title = data.attributes.title ?? data.attributes.transactions[0].description;
                 this.entries = parseDownloadedSplits(data.attributes.transactions);
-                //console.log(this.entries);
 
                 // remove waiting thing.
                 this.notifications.wait.show = false;
             }).then(() => {
-
+                this.groupProperties.totalAmount = 0;
+                for (let i in this.entries) {
+                    if (this.entries.hasOwnProperty(i)) {
+                        this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
+                        // TODO this does not include all possible types.
+                        this.filters.source.push(this.entries[i].source_account.type);
+                        this.filters.destination.push(this.entries[i].destination_account.type);
+                    }
+                }
+                console.log(this.filters);
                 setTimeout(() => {
                     // render tags:
                     Tags.init('select.ac-tags', {
                         allowClear: true,
-                        // server: urls.tag,
-                        // liveServer: true,
-                        // clearEnd: true,
-                        selected: [{label:'Bla bla',value:1,selected:true}],
-                        //allowNew: true,
-                        //notFoundMessage: i18n.t('firefly.nothing_found'),
-                        // noCache: true,
-                        // fetchOptions: {
-                        //     headers: {
-                        //         'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-                        //     }
-                        // }
+                        server: urls.tag,
+                        liveServer: true,
+                        clearEnd: true,
+                        allowNew: true,
+                        notFoundMessage: i18next.t('firefly.nothing_found'),
+                        noCache: true,
+                        fetchOptions: {
+                            headers: {
+                                'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+                            }
+                        }
                     });
-                }, 250);
+                }, 150);
             });
         },
 
-
         init() {
             // download translations and get the transaction group.
-            Promise.all([getVariable('language', 'en_US')]).then((values) => {
-                i18n = new I18n();
-                const locale = values[0].replace('-', '_');
-                i18n.locale = locale;
-                loadTranslations(i18n, locale).then(() => {
-                    //this.addSplit();
-                    this.notifications.wait.show = true;
-                    this.notifications.wait.text = i18n.t('firefly.wait_loading_transaction');
-                    this.getTransactionGroup();
-                });
-            });
+            this.notifications.wait.show = true;
+            this.notifications.wait.text = i18next.t('firefly.wait_loading_transaction');
+            this.getTransactionGroup();
 
             // load meta data.
             loadCurrencies().then(data => {
@@ -281,6 +355,58 @@ let transactions = function () {
                 this.entries[event.detail.index].hasLocation = true;
                 this.entries[event.detail.index].zoomLevel = event.detail.zoomLevel;
             });
+        },
+
+        changedAmount(e) {
+            const index = parseInt(e.target.dataset.index);
+            this.entries[index].amount = parseFloat(e.target.value);
+            this.groupProperties.totalAmount = 0;
+            for (let i in this.entries) {
+                if (this.entries.hasOwnProperty(i)) {
+                    this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
+                }
+            }
+        },
+        // TODO is a duplicate
+        showMessageOrRedirectUser() {
+            // disable all messages:
+            this.notifications.error.show = false;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+
+            if (this.formStates.returnHereButton) {
+                this.notifications.success.show = true;
+                this.notifications.success.url = 'transactions/show/' + this.groupProperties.id;
+                this.notifications.success.text = i18next.t('firefly.updated_journal_js', {description: this.groupProperties.title});
+                return;
+            }
+            window.location = 'transactions/show/' + this.groupProperties.id + '?transaction_group_id=' + this.groupProperties.id + '&message=updated';
+        },
+        // TODO is a duplicate
+        parseErrors(data) {
+            // disable all messages:
+            this.notifications.error.show = true;
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+            this.formStates.isSubmitting = false;
+            this.notifications.error.text = i18next.t('firefly.errors_submission', {errorMessage: data.message});
+
+            if (data.hasOwnProperty('errors')) {
+                this.entries = spliceErrorsIntoTransactions(data.errors, this.entries);
+            }
+        },
+        // TODO is a duplicate
+        processUpload(event) {
+            this.showMessageOrRedirectUser();
+        },
+        // TODO is a duplicate
+        processUploadError(event) {
+            this.notifications.success.show = false;
+            this.notifications.wait.show = false;
+            this.notifications.error.show = true;
+            this.formStates.isSubmitting = false;
+            this.notifications.error.text = i18next.t('firefly.errors_upload');
+            console.error(event);
         },
     }
 }

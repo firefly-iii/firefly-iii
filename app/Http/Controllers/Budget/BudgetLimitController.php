@@ -202,7 +202,9 @@ class BudgetLimitController extends Controller
         if ('' === $amount) {
             $amount = '0';
         }
-
+        if ((int)$amount > 268435456) { // 268 million, intentional integer
+            $amount = '268435456';
+        }
         // sanity check on amount:
         if (0 === bccomp($amount, '0')) {
             $budgetId = $budgetLimit->budget_id;
@@ -217,9 +219,7 @@ class BudgetLimitController extends Controller
 
             return response()->json($array);
         }
-        if ((int)$amount > 268435456) { // 268 million, intentional integer
-            $amount = '268435456';
-        }
+
         if (-1 === bccomp($amount, '0')) {
             $amount = bcmul($amount, '-1');
         }

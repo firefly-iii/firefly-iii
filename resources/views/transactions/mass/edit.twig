@@ -92,7 +92,7 @@
                                     <td>
                                         {# DATE #}
                                         <input class="form-control input-sm" autocomplete="off"
-                                               name="date[{{ journal.transaction_journal_id }}]" type="date" value="{{ journal.date|slice(0,10) }}">
+                                               name="date[{{ journal.transaction_journal_id }}]" type="datetime-local" value="{{ journal.date }}">
                                     </td>
                                     <!-- {{ journal.transaction_type_type }} -->
                                     <!-- Source: {{ journal.source_account_name }} ({{ journal.source_account_id }}) -->

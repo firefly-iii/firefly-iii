@@ -109,12 +109,18 @@ class RuleTransformer extends AbstractTransformer
             if ('user_action' === $ruleTrigger->trigger_type) {
                 continue;
             }
-            $result[] = [
+            $triggerValue = (string)$ruleTrigger->trigger_value;
+            $needsContext = config(sprintf('search.operators.%s.needs_context', $ruleTrigger->trigger_type), true);
+            if (false === $needsContext) {
+                $triggerValue = 'true';
+            }
+
+            $result[]     = [
                 'id'              => (string)$ruleTrigger->id,
                 'created_at'      => $ruleTrigger->created_at->toAtomString(),
                 'updated_at'      => $ruleTrigger->updated_at->toAtomString(),
                 'type'            => $ruleTrigger->trigger_type,
-                'value'           => $ruleTrigger->trigger_value,
+                'value'           => $triggerValue,
                 'order'           => $ruleTrigger->order,
                 'active'          => $ruleTrigger->active,
                 'stop_processing' => $ruleTrigger->stop_processing,

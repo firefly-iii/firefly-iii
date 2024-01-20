@@ -34,6 +34,7 @@ use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\RecurrenceValidation;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 /**
@@ -141,6 +142,9 @@ class UpdateRequest extends FormRequest
                 $this->valUpdateAccountInfo($validator);
             }
         );
+        if($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
+        }
     }
 
     /**

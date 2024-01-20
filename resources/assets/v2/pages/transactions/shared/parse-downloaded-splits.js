@@ -32,9 +32,13 @@ export function parseDownloadedSplits(downloads) {
 
             // meta data
             current.bill_id = download.bill_id;
+            current.bill_name = download.bill_name;
             current.budget_id = download.budget_id;
+            current.budget_name = download.budget_name;
             current.category_name = download.category_name;
+            current.category_id = download.category_id;
             current.piggy_bank_id = download.piggy_bank_id;
+            current.piggy_bank_name = download.piggy_bank_name;
 
             // meta dates
             current.book_date = download.book_date;
@@ -66,12 +70,14 @@ export function parseDownloadedSplits(downloads) {
             current.destination_account = {
                 id: download.destination_id,
                 name: download.destination_name,
+                type: download.destination_type,
                 alpine_name: download.destination_name,
             };
 
             current.source_account = {
                 id: download.source_id,
                 name: download.source_name,
+                type: download.source_type,
                 alpine_name: download.source_name,
             };
 
@@ -81,20 +87,8 @@ export function parseDownloadedSplits(downloads) {
                 current.longitude = download.longitude;
                 current.zoomLevel = download.zoom_level;
             }
-
-            // hasLocation: false
-            // latitude: null
-            // longitude: null
-            // piggy_bank_id: null
-            // zoomLevel: null
-            console.log('download:');
-            console.log(download);
-            console.log('current:');
-            console.log(current);
             returnArray.push(current);
         }
     }
-
-
     return returnArray;
 }
