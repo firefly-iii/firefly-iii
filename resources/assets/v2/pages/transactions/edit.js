@@ -93,7 +93,10 @@ let transactions = function () {
 
         // properties for the entire transaction group
         groupProperties: {
-            transactionType: 'unknown', title: null, id: null, totalAmount: 0,
+            transactionType: 'unknown',
+            title: null,
+            editTitle: null,
+            id: null, totalAmount: 0,
         },
 
         // notifications
@@ -129,7 +132,7 @@ let transactions = function () {
             // parse transaction:
             let transactions = parseFromEntries(this.entries, this.originals, this.groupProperties.transactionType);
             let submission = {
-                group_title: this.groupProperties.title,
+                group_title: this.groupProperties.editTitle,
                 fire_webhooks: this.formStates.webhooksButton,
                 apply_rules: this.formStates.rulesButton,
                 transactions: transactions

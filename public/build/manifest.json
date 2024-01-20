@@ -127,7 +127,7 @@
     "integrity": "sha384-rrUkO07lnTiSQ+5SPMwOLmnu2J+5oQmZFKfsf3ApkQG9ct3qrwBocQ9f0H5cftv2"
   },
   "resources/assets/v2/pages/transactions/edit.js": {
-    "file": "assets/edit-74c97acb.js",
+    "file": "assets/edit-955087f5.js",
     "imports": [
       "_format-money-a71f277a.js",
       "_get-971543fd.js",
@@ -139,7 +139,7 @@
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/edit.js",
-    "integrity": "sha384-gU2Nw6D5i8slOZwzR1Tlpf82FvESkn7cNoT24Pk/VJzqY3JQo3Mwr0vb09swPwEZ"
+    "integrity": "sha384-X1LvGXQKDOfvCyLgWW7zmgFB3R4cIBFfQyHnB/tQZppov8BmZzrv7diR5Bymy8pw"
   },
   "resources/assets/v2/pages/transactions/index.js": {
     "file": "assets/index-cf70f728.js",
