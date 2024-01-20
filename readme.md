@@ -2,7 +2,6 @@
 [![License][license-shield]][license-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Donate][donate-shield]][donate-url]
-[![huntr][hack-shield]][hack-url]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -189,7 +188,5 @@ The Firefly III logo is made by the excellent Cherie Woo.
 [sc-smells-shield]: https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=code_smells
 [sc-vuln-shield]: https://sonarcloud.io/api/project_badges/measure?project=firefly-iii_firefly-iii&metric=vulnerabilities
 [sc-project-url]: https://sonarcloud.io/dashboard?id=firefly-iii_firefly-iii
-[hack-shield]: https://cdn.huntr.dev/huntr_security_badge_mono.svg
-[hack-url]: https://huntr.dev/bounties/disclose
 [bp-badge]: https://bestpractices.coreinfrastructure.org/projects/6335/badge
 [bp-url]: https://bestpractices.coreinfrastructure.org/projects/6335 
