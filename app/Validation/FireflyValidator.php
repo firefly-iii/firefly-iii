@@ -342,21 +342,7 @@ class FireflyValidator extends Validator
         // these triggers need just the word "true":
         // TODO create a helper to automatically return these.
         $needTrue    = [
-            'reconciled',
-            'has_attachments',
-            'has_any_category',
-            'has_any_budget',
-            'has_any_bill',
-            'has_any_tag',
-            'any_notes',
-            'any_external_url',
-            'has_no_attachments',
-            'has_no_category',
-            'has_no_budget',
-            'has_no_bill',
-            'has_no_tag',
-            'no_notes',
-            'no_external_url',
+            'reconciled', 'has_attachments', 'has_any_category', 'has_any_budget', 'has_any_bill', 'has_any_tag', 'any_notes', 'any_external_url', 'has_no_attachments', 'has_no_category', 'has_no_budget', 'has_no_bill', 'has_no_tag', 'no_notes', 'no_external_url',
             'source_is_cash',
             'destination_is_cash',
             'account_is_cash',

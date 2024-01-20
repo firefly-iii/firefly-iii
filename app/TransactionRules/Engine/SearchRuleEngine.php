@@ -299,6 +299,7 @@ class SearchRuleEngine implements RuleEngineInterface
             app('log')->debug(sprintf('Now at rule trigger #%d: %s:"%s" (%s).', $ruleTrigger->id, $ruleTrigger->trigger_type, $ruleTrigger->trigger_value, var_export($ruleTrigger->stop_processing, true)));
             if (false === $ruleTrigger->active) {
                 app('log')->debug('Trigger is not active, continue.');
+
                 continue;
             }
             if ('user_action' === $ruleTrigger->trigger_type) {
