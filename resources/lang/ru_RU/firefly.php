@@ -1299,7 +1299,7 @@ return [
     'no_location_set'                                     => 'Местоположение не указано.',
     'meta_data'                                           => 'Расширенные данные',
     'location'                                            => 'Размещение',
-    'location_first_split'                                => 'The location for this transaction can be set on the first split of this transaction.',
+    'location_first_split'                                => 'Расположение для этой транзакции может быть установлено на первой части этой транзакции.',
     'without_date'                                        => 'Без даты',
     'result'                                              => 'Результат',
     'sums_apply_to_range'                                 => 'Все суммы относятся к выбранному диапазону',
@@ -1951,12 +1951,12 @@ return [
  */
 
     // transactions:
-    'wait_loading_transaction'                            => 'Please wait for the form to load',
-    'wait_loading_data'                                   => 'Please wait for your information to load...',
+    'wait_loading_transaction'                            => 'Дождитесь загрузки формы',
+    'wait_loading_data'                                   => 'Пожалуйста, дождитесь загрузки вашей информации...',
     'wait_attachments'                                    => 'Пожалуйста, дождитесь загрузки вложений.',
-    'errors_upload'                                       => 'The upload has failed. Please check your browser console for the error.',
-    'amount_foreign_if'                                   => 'Amount in foreign currency, if any',
-    'amount_destination_account'                          => 'Amount in the currency of the destination account',
+    'errors_upload'                                       => 'Загрузка не удалась. Пожалуйста, проверьте консоль вашего браузера на наличие ошибки.',
+    'amount_foreign_if'                                   => 'Сумма в иностранной валюте, если таковая имеется',
+    'amount_destination_account'                          => 'Сумма в валюте счета назначения',
     'edit_transaction_title'                              => 'Редактировать транзакцию ":description"',
     'unreconcile'                                         => 'Отменить сверку',
     'update_withdrawal'                                   => 'Обновить расход',
@@ -2342,7 +2342,7 @@ return [
     'average'                                             => 'Среднее значение',
     'balanceFor'                                          => 'Баланс для :name',
     'no_tags'                                             => '(нет меток)',
-    'nothing_found'                                       => '(nothing found)',
+    'nothing_found'                                       => '(ничего не найдено)',
 
     // piggy banks:
     'event_history'                                       => 'История событий',
@@ -2555,7 +2555,7 @@ return [
     'after_update_create_another'                         => 'После обновления вернитесь сюда, чтобы продолжить редактирование.',
     'store_as_new'                                        => 'Сохранить как новую транзакцию вместо обновления.',
     'reset_after'                                         => 'Сбросить форму после отправки',
-    'errors_submission'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission'                                   => 'С вашей публикацией произошла ошибка. Пожалуйста, проверьте следующие ошибки: %{errorMessage}',
     'transaction_expand_split'                            => 'Expand split',
     'transaction_collapse_split'                          => 'Collapse split',
 

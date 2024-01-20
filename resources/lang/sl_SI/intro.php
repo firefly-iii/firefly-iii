@@ -102,8 +102,8 @@ return [
     // create transaction
     'transactions_create_switch_box'                          => 'Uporabite te gumbe za hitri prekop med tipi transakcij, ki jih želite shraniti.',
     'transactions_create_ffInput_category'                    => 'V to polje lahko prosto pišete. Predhodno ustvarjene kategorije bodo samodejno predlagane.',
-    'transactions_create_withdrawal_ffInput_budget'           => 'Povežite svoj dvig s proračunom za boljši finančni nadzor.',
-    'transactions_create_withdrawal_currency_dropdown_amount' => 'Uporabite ta spustni meni, ko je vaš dvig v drugi valuti.',
+    'transactions_create_withdrawal_ffInput_budget'           => 'Povežite svoj odliv s proračunom za boljši finančni nadzor.',
+    'transactions_create_withdrawal_currency_dropdown_amount' => 'Uporabite ta spustni meni, ko je vaš odliv v drugi valuti.',
     'transactions_create_deposit_currency_dropdown_amount'    => 'Uporabite ta spustni meni, ko je vaš depozit v drugi valuti.',
     'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Izberite hranilnik in to nakazilo povežite s svojimi prihranki.',
 

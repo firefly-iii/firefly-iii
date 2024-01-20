@@ -243,8 +243,8 @@ return [
     'withdrawal_dest_need_data'       => '[a] Za nadaljevanje potrebujete veljaven ID ciljnega računa in/ali veljavno ime ciljnega računa.',
     'withdrawal_dest_bad_data'        => 'Pri iskanju ID-ja ":id" ali imena ":name" ni bilo mogoče najti veljavnega ciljnega računa.',
 
-    'withdrawal_dest_iban_exists'     => 'Ta IBAN ciljnega računa že uporablja račun sredstev ali obveznosti in ga ni mogoče uporabiti kot cilj dviga.',
-    'deposit_src_iban_exists'         => 'Ta izvorni račun IBAN že uporablja račun sredstev ali obveznosti in ga ni mogoče uporabiti kot vir depozita.',
+    'withdrawal_dest_iban_exists'     => 'Ta IBAN ciljnega računa že uporablja račun sredstev ali obveznosti in ga ni mogoče uporabiti kot cilj odliva.',
+    'deposit_src_iban_exists'         => 'Ta izvorni račun IBAN že uporablja račun sredstev ali obveznosti in ga ni mogoče uporabiti kot vir priliva.',
 
     'reconciliation_source_bad_data'  => 'Pri iskanju ID-ja ":id" ali imena ":name" ni bilo mogoče najti veljavnega računa za usklajevanje.',
 

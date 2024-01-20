@@ -47,7 +47,7 @@ needs-moar-debug:
 
       1. Firefly III version
       2. Docker, self-hosted, or hosted by a third party?
-      3. Operating system and browser 
+      3. Operating system and browser
 
       Thank you for your contributions.
     unlabel: needs-moar-debug
@@ -81,5 +81,5 @@ v2-layout-issue:
       Thank you for your contributions.
     close: true
     close-reason: completed
-    lock: true
+    lock: false
     unlabel: v2-layout-issue

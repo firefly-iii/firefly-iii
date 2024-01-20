@@ -34,8 +34,8 @@
 declare(strict_types=1);
 
 return [
-    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
-    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
+    'bad_type_source'                 => 'Firefly III не может определить тип транзакции на основе этого исходного счета.',
+    'bad_type_destination'            => 'Firefly III не может определить тип транзакции на основе этого счета.',
     'missing_where'                   => 'В массиве отсутствует связка "where" ("где")',
     'missing_update'                  => 'В массиве отсутствует связка "update" ("обновить")',
     'invalid_where_key'               => 'JSON содержит недопустимый ключ для связки "where" ("где")',

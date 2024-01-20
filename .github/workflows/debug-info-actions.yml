@@ -23,7 +23,6 @@ jobs:
           if [[ $ISSUE_BODY == *".eOxNZAmyGz6CXMyf"* ]]; then
             gh issue comment "$NUMBER" --body "$V2_ISSUE_REPLY_BODY"
             gh issue close "$NUMBER" --reason completed
-            gh issue lock "$NUMBER"
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

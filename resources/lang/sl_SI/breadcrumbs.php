@@ -61,7 +61,7 @@ return [
     'search_result'          => 'Rezultati iskanja za ":query"',
     'withdrawal_list'        => 'Stroški',
     'Withdrawal_list'        => 'Stroški',
-    'deposit_list'           => 'Prihodki, dohodki in depoziti',
+    'deposit_list'           => 'Prihodki, dohodki in prilivi',
     'transfer_list'          => 'Prenosi',
     'transfers_list'         => 'Prenosi',
 
@@ -77,8 +77,8 @@ return [
  */
 
     'reconciliation_list'    => 'Poravnave',
-    'create_withdrawal'      => 'Ustvari nov dvig',
-    'create_deposit'         => 'Ustvari nov depozit',
+    'create_withdrawal'      => 'Ustvari nov odliv',
+    'create_deposit'         => 'Ustvari nov priliv',
     'create_transfer'        => 'Ustvari nov prenos',
     'create_new_transaction' => 'Ustvari novo transakcijo',
     'edit_journal'           => 'Uredi transakcijo ":description"',

@@ -44,7 +44,7 @@ Računi obveznosti so vaši dolgovi in krediti, kot na primer dolg na kreditni k
     'reports-index-start'    => 'Firefly III podpira mnogo različnih poročil. Preberi več s klikom na ikono <i class="fa fa-question-circle"></i> v zgornjem desnem kotu.',
     'reports-index-examples' => 'Poglej si še ostale primere: <a href=":one"> mesečni finančni pregled</a>, <a href=":two">letni finančni pregled</a> in <a href=":three">pregled proračuna</a>.',
     'currencies-index'       => 'Firefly III podpira več valut. Čeprav je privzet Evro, je možno nastaviti USD in ostale valute. Nekaj valut je že vključenih, po želji pa lahko dodate svoje. Sprememba privzete valute ne bo spremenila valute na obstoječih transakcijah, Firefly III pa podpira uporabo več valut istočasno.',
-    'transactions-index'     => 'Ti stroški, prihodki in prenosi niso pretirano domiselni. Ustvarjeni so bili samodejno.',
+    'transactions-index'     => 'Ti stroški, prilivi in prenosi niso pretirano domiselni. Ustvarjeni so bili samodejno.',
     'piggy-banks-index'      => 'Obstajajo trije hranilniki. Uporabite gumba plus in minus da vplivate na količino denarja v vsakem. Kliknite na ime hranilnika za več informacij.',
     'profile-index'          => 'Demo spletno mesto se ponastavi vsake štiri ure. Dostop lahko izgubiš v vsakem trenutku. Ta proces je samodejen in ne gre za "bug".',
 ];
