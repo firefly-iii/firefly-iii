@@ -13,7 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - [Issue 8352](https://github.com/firefly-iii/firefly-iii/issues/8352) (Modifying the direction of a transfer between liabilities yields no effect) reported by @Ezwen
-- [Issue 8370](https://github.com/firefly-iii/firefly-iii/pull/8370) (Fix various typos) reported by @luzpaz
+- [PR 8370](https://github.com/firefly-iii/firefly-iii/pull/8370) (Fix various typos) reported by @luzpaz
 - [Issue 8377](https://github.com/firefly-iii/firefly-iii/issues/8377) (Query on multiple tags returns duplicates) reported by @chevdor
 - [Issue 8374](https://github.com/firefly-iii/firefly-iii/issues/8374) (Error Graph Income vs. expenses Reports page) reported by @nicolopozzato
 - [Issue 8390](https://github.com/firefly-iii/firefly-iii/issues/8390) (Rule with destination_account_is 'not' is never returning a result.) reported by @EricVanCaenenberghe
