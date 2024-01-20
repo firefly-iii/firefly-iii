@@ -196,8 +196,6 @@ let transactions = function () {
                     onChange: changeSourceAccount,
                     onSelectItem: selectSourceAccount
                 });
-                console.log('ok');
-                console.log(this.entries[0].source_account.alpine_name);
                 addAutocomplete({
                     selector: 'input.ac-dest',
                     serverUrl: urls.account,
@@ -275,8 +273,9 @@ let transactions = function () {
                 for (let i in this.entries) {
                     if (this.entries.hasOwnProperty(i)) {
                         this.groupProperties.totalAmount = this.groupProperties.totalAmount + parseFloat(this.entries[i].amount);
+                        // TODO this does not include all possible types.
                         this.filters.source.push(this.entries[i].source_account.type);
-                        this.filters.destination.push(this.entries[i].source_account.type);
+                        this.filters.destination.push(this.entries[i].destination_account.type);
                     }
                 }
                 console.log(this.filters);
