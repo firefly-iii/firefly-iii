@@ -269,7 +269,13 @@ class Steam
 
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
-            $day                     = Carbon::createFromFormat('Y-m-d H:i:s', $transaction['date'], config('app.timezone'));
+            $day                     = false;
+
+            try {
+                $day = Carbon::parse($transaction['date'], config('app.timezone'));
+            } catch (InvalidFormatException $e) {
+                Log::error(sprintf('Could not parse date "%s" in %s: %s', $transaction['date'], __METHOD__, $e->getMessage()));
+            }
             if (false === $day) {
                 $day = today(config('app.timezone'));
             }
@@ -434,7 +440,7 @@ class Steam
 
                 try {
                     $currentDate = Carbon::parse($transaction['date'], config('app.timezone'));
-                } catch(InvalidFormatException $e) {
+                } catch (InvalidFormatException $e) {
                     Log::error(sprintf('Could not parse date "%s" in %s', $transaction['date'], __METHOD__));
                 }
                 if (false === $currentDate) {
@@ -454,7 +460,7 @@ class Steam
 
                 try {
                     $currentDate = Carbon::parse($transaction['date'], config('app.timezone'));
-                } catch(InvalidFormatException $e) {
+                } catch (InvalidFormatException $e) {
                     Log::error(sprintf('Could not parse date "%s" in %s', $transaction['date'], __METHOD__));
                 }
                 if (false === $currentDate) {
