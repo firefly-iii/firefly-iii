@@ -23,6 +23,3 @@ jobs:
 
             Thank you for your contributions.
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: OSDKDev/lock-issues@v1.1
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
