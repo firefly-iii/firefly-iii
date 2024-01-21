@@ -60,7 +60,7 @@ class IsValidAmount implements ValidationRule
             return;
         }
 
-        // must be less than 100 million and 1709:
+        // must be less than a large number
         if($this->moreThanLots($value)) {
             $fail('validation.lte.numeric')->translate(['value' => self::BIG_AMOUNT]);
             $message = sprintf('IsValidAmount: "%s" must be more than %s.', $value, self::BIG_AMOUNT);

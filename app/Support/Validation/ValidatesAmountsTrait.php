@@ -25,7 +25,8 @@ namespace FireflyIII\Support\Validation;
 
 trait ValidatesAmountsTrait
 {
-    protected const string BIG_AMOUNT = '10000170900';
+    // 19-09-2020: my wedding day lol
+    protected const string BIG_AMOUNT = '10019092020';
 
     final protected function emptyString(string $value): bool
     {
