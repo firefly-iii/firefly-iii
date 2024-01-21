@@ -316,14 +316,14 @@ class CreditRecalculateService
         }
         if ($isSameAccount && $isDebit && $this->isWithdrawalIn($usedAmount, $type)) { // case 6
             $usedAmount = app('steam')->positive($usedAmount);
-            $result     = bcsub($leftOfDebt, $usedAmount);
+            $result     = bcadd($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 6 (withdrawal into debit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
 
             return $result;
         }
         if ($isSameAccount && $isDebit && $this->isDepositOut($usedAmount, $type)) { // case 7
             $usedAmount = app('steam')->positive($usedAmount);
-            $result     = bcadd($leftOfDebt, $usedAmount);
+            $result     = bcsub($leftOfDebt, $usedAmount);
             app('log')->debug(sprintf('Case 7 (deposit away from liability): %s - %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
 
             return $result;
