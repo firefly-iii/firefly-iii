@@ -267,7 +267,7 @@ let transactions = function () {
                 this.groupProperties.id = parseInt(data.id);
                 this.groupProperties.transactionType = data.attributes.transactions[0].type.toLowerCase();
                 this.groupProperties.title = data.attributes.title ?? data.attributes.transactions[0].description;
-                this.entries = parseDownloadedSplits(data.attributes.transactions);
+                this.entries = parseDownloadedSplits(data.attributes.transactions, parseInt(data.id));
 
                 // remove waiting thing.
                 this.notifications.wait.show = false;

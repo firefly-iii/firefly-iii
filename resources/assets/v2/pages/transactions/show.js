@@ -26,6 +26,7 @@ import {parseDownloadedSplits} from "./shared/parse-downloaded-splits.js";
 import {format} from "date-fns";
 import formatMoney from "../../util/format-money.js";
 import DarkEditable from "../../libraries/dark-editable/dark-editable.js";
+import {inlineJournalDescription} from "../../support/inline-edit.js";
 
 
 let show = function () {
@@ -79,7 +80,7 @@ let show = function () {
                 this.groupProperties.transactionType = data.attributes.transactions[0].type;
                 this.groupProperties.transactionTypeTranslated = i18next.t('firefly.' + data.attributes.transactions[0].type);
                 this.groupProperties.title = data.attributes.title ?? data.attributes.transactions[0].description;
-                this.entries = parseDownloadedSplits(data.attributes.transactions);
+                this.entries = parseDownloadedSplits(data.attributes.transactions, parseInt(data.id));
                 // remove waiting thing.
                 this.notifications.wait.show = false;
             }).then(() => {
@@ -104,8 +105,13 @@ let show = function () {
 
                 // at this point do the inline change fields
                 //inlineEdit('journal_description')
-                const usernameEl = document.getElementById('journal_description');
-                const popover = new DarkEditable(usernameEl, {mode: 'inline', url: '/something-else'});
+                const descriptions = document.querySelectorAll('.journal_description');
+                for(const i in descriptions) {
+                    if(descriptions.hasOwnProperty(i)) {
+                        const current=  descriptions[i];
+                        inlineJournalDescription(current);
+                    }
+                }
 
             }).catch((error) => {
                 // todo auto generated.

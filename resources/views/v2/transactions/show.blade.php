@@ -140,10 +140,13 @@
                             <div class="card-header">
                                 <h3 class="card-title">
                                     <span
-                                        id="journal_description"
+                                        class="journal_description"
                                           data-type="text"
-                                          data-pk="12"
-                                          data-title="{{ __('firefly.description') }}" x-text="entry.description"></span>
+                                          data-pk="0"
+                                        :data-id="entry.transaction_journal_id"
+                                        :data-group="entry.transaction_group_id"
+                                          data-title="{{ __('firefly.description') }}"
+                                        x-text="entry.description"></span>
                                     <template x-if="entries.length > 1">
                                     <span class="badge bg-secondary">
                                         <span x-text="index + 1"></span> / <span x-text="entries.length"></span>

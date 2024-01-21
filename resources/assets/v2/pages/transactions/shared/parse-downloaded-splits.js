@@ -22,7 +22,7 @@ import {createEmptySplit} from "./create-empty-split.js";
 import {format} from "date-fns";
 import formatMoney from "../../../util/format-money.js";
 
-export function parseDownloadedSplits(downloads) {
+export function parseDownloadedSplits(downloads, groupId) {
     let returnArray = [];
     for (let i in downloads) {
         if (downloads.hasOwnProperty(i)) {
@@ -31,6 +31,8 @@ export function parseDownloadedSplits(downloads) {
             let current = createEmptySplit();
 
             // meta data
+            current.transaction_journal_id = download.transaction_journal_id;
+            current.transaction_group_id = groupId;
             current.bill_id = download.bill_id;
             current.bill_name = download.bill_name;
             current.budget_id = download.budget_id;

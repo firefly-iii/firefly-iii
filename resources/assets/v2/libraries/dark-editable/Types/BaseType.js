@@ -182,14 +182,45 @@ export default class BaseType {
 
     ajax(new_value) {
         let url = this.context.url;
-        const form = new FormData;
-        form.append("pk", this.context.pk);
-        form.append("name", this.context.name);
-        form.append("value", new_value);
-        const option = {};
+        //const form = new FormData;
+        let message;
+        let submit = false;
+
+        console.log(this.context);
+        // replace form with custom sets. Not sure yet of the format, this will have to grow in time.
+        if ('journal_description' === this.context.options.formType) {
+            submit = true;
+            message = {
+                transactions: [
+                    {
+                        transaction_journal_id: this.context.options.journalId,
+                        description: new_value,
+                    }
+                ]
+            };
+        }
+
+        if(false === submit) {
+            console.error('Cannot deal with form type "'+this.context.formType+'"');
+        }
+
+        // form.append("pk", this.context.pk);
+        // form.append("name", this.context.name);
+        // form.append("value", new_value);
+
+        const option = {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+            }
+        };
         option.method = this.context.ajaxOptions.method;
-        if (option.method === "POST") {
-            option.body = form;
+
+        if(this.context.options.method) {
+            option.method = this.context.options.method;
+        }
+        if ('POST' === option.method || 'PUT' === this.context.options.method) {
+            option.body = JSON.stringify(message);
         } else {
             url += "?" + new URLSearchParams(form).toString();
         }
