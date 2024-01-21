@@ -459,6 +459,6 @@ class CreditRecalculateService
      */
     private function isTransferOut(string $amount, string $transactionType): bool
     {
-        return TransactionType::DEPOSIT === $transactionType && -1 === bccomp($amount, '0');
+        return TransactionType::TRANSFER === $transactionType && -1 === bccomp($amount, '0');
     }
 }
