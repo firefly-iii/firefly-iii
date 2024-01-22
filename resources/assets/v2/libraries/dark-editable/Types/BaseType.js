@@ -205,6 +205,7 @@ export default class BaseType {
         }
 
         // form.append("pk", this.context.pk);
+
         // form.append("name", this.context.name);
         // form.append("value", new_value);
 

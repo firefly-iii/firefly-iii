@@ -47,7 +47,33 @@
                 <div class="col-xl-10 col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Info</h3>
+                            <div class="row">
+                                <div class="col">
+                                    <h3 class="card-title">Transactions</h3>
+                                </div>
+                                <div class="col text-end">
+                                    <div class="btn-group">
+                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Options
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#">
+                                                    <em class="text-danger fa-regular fa-circle-xmark"></em>
+                                                    Category</a></li>
+                                            <li><a class="dropdown-item" href="#">
+                                                    <em class="text-success fa-regular fa-circle-check"></em>
+                                                    Budget</a></li>
+                                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item" href="#">Separated link</a></li>
+
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+
                         </div>
                         <div class="card-body p-0">
                             <table class="table table-hover table-striped">
