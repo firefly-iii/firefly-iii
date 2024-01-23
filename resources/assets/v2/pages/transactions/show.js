@@ -25,7 +25,6 @@ import Get from "../../api/v2/model/transaction/get.js";
 import {parseDownloadedSplits} from "./shared/parse-downloaded-splits.js";
 import {format} from "date-fns";
 import formatMoney from "../../util/format-money.js";
-import DarkEditable from "../../libraries/dark-editable/dark-editable.js";
 import {inlineJournalDescription} from "../../support/inline-edit.js";
 
 
@@ -50,7 +49,7 @@ let show = function () {
             date: new Date,
         },
         dateFields: ["book_date", "due_date", "interest_date", "invoice_date", "payment_date", "process_date"],
-        metaFields: ['external_id','internal_reference','sepa_batch_id','sepa_ct_id','sepa_ct_op','sepa_db','sepa_country','sepa_cc','sepa_ep','sepa_ci','external_url'],
+        metaFields: ['external_id', 'internal_reference', 'sepa_batch_id', 'sepa_ct_id', 'sepa_ct_op', 'sepa_db', 'sepa_country', 'sepa_cc', 'sepa_ep', 'sepa_ci', 'external_url'],
 
         // parse amounts per currency
         amounts: {},
@@ -60,7 +59,7 @@ let show = function () {
         pageProperties: {},
         formatMoney(amount, currencyCode) {
             console.log('formatting', amount, currencyCode);
-            if('' === currencyCode) {
+            if ('' === currencyCode) {
                 currencyCode = 'EUR';
             }
             return formatMoney(amount, currencyCode);
@@ -97,18 +96,30 @@ let show = function () {
                             this.amounts[foreignCurrencyCode] = 0;
                             this.amounts[foreignCurrencyCode] += parseFloat(this.entries[i].foreign_amount);
                         }
-                        if(0 === parseInt(i)) {
+                        if (0 === parseInt(i)) {
                             this.groupProperties.date = this.entries[i].date;
                         }
                     }
                 }
 
                 // at this point do the inline change fields
-                //inlineEdit('journal_description')
                 const descriptions = document.querySelectorAll('.journal_description');
-                for(const i in descriptions) {
-                    if(descriptions.hasOwnProperty(i)) {
-                        const current=  descriptions[i];
+                for (const i in descriptions) {
+                    if (descriptions.hasOwnProperty(i)) {
+                        const current = descriptions[i];
+                        // this is all manual work for now.
+                        current.addEventListener('save', function (e) {
+                            const journalId = parseInt(e.currentTarget.dataset.id);
+                            const groupId = parseInt(e.currentTarget.dataset.group);
+                            const length = parseInt(e.currentTarget.dataset.length); // TODO not happy with this.
+                            const newDescription = e.currentTarget.textContent;
+                            console.log(length);
+                            if (1 === length) {
+                                // update "group" transaction title because it's equal to this journal's description.
+                                document.querySelector('.group_title[data-group="' + groupId + '"]').textContent = newDescription;
+                                document.querySelector('.group_title_title[data-group="' + groupId + '"]').textContent = newDescription;
+                            }
+                        })
                         inlineJournalDescription(current);
                     }
                 }

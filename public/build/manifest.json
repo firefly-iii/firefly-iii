@@ -161,7 +161,7 @@
     "css": [
       "assets/show-8b1429e5.css"
     ],
-    "file": "assets/show-fafa65e9.js",
+    "file": "assets/show-a7701e0f.js",
     "imports": [
       "_format-money-bcfc2969.js",
       "_vendor-5cffaf70.js",
@@ -171,7 +171,7 @@
     ],
     "isEntry": true,
     "src": "resources/assets/v2/pages/transactions/show.js",
-    "integrity": "sha384-9Vjq9YDNZYx+fA5fCF9NYnLmQeWTDSe7XGaGqVcGjWPxnj+kKrTVKSB16+V7yKZa"
+    "integrity": "sha384-LjiN/inhix9rgHRGunls24YAjjfltDbPVqNVCe6llpK9n06X4WjY6slGC/gv7pKw"
   },
   "resources/assets/v2/sass/app.scss": {
     "file": "assets/app-fb7b26ec.css",

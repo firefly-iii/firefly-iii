@@ -36,7 +36,7 @@
                                             <span>TODO missing ICON</span>
                                         </template>
                                     </th>
-                                    <td><span x-text="groupProperties.title"></span></td>
+                                    <td><span class="group_title" :data-group="groupProperties.id" x-text="groupProperties.title"></span></td>
                                 </tr>
                                 <tr>
                                     <th><em class="fa-solid fa-calendar-alt" title="{{ __('list.date') }}"/></th>
@@ -143,6 +143,7 @@
                                         class="journal_description"
                                           data-type="text"
                                           data-pk="0"
+                                        :data-length="entries.length"
                                         :data-id="entry.transaction_journal_id"
                                         :data-group="entry.transaction_group_id"
                                           data-title="{{ __('firefly.description') }}"
