@@ -62,7 +62,7 @@
                             {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}{% if loop.index != group.sums|length %},{% endif %}
                         {% elseif group.transaction_type == 'Transfer' %}
                             <span class="text-info money-transfer">
-                            {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}{% if loop.index != group.sums|length %},{% endif %}X
+                            {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}{% if loop.index != group.sums|length %},{% endif %}
                             </span>
                         {% else %}
                             {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}{% if loop.index != group.sums|length %},{% endif %}
