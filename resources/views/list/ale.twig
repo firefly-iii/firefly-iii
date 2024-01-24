@@ -95,11 +95,6 @@
                     &rarr;
                     <code>{{ logEntry.after }}</code>
                 {% endif %}
-				{% if 'delete_transaction' == logEntry.action %}
-                    <code><s>{{ logEntry.before }}</s></code>
-                    &rarr;
-                    <code>{{ logEntry.after }}</code>
-                {% endif %}
                 {% if 'update_description' == logEntry.action %}
                     <code><s>{{ logEntry.before }}</s></code>
                     &rarr;
