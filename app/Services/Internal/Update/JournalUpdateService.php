@@ -368,6 +368,28 @@ class JournalUpdateService
             return;
         }
 
+		// if the source account or destination account changed, fire an event
+		$sourceAccount 				= $this->getOriginalSourceAccount();
+		$destinationAccount 		= $this->getOriginalDestinationAccount();
+		if ($sourceAccount->id !== $source->id) {
+			event(new TriggeredAuditLog(
+				$this->transactionJournal->user,
+				$this->transactionJournal,
+				'update_source',
+				$sourceAccount->name,
+				$source->name
+			));
+		}
+		if ($destinationAccount->id !== $destination->id) {
+			event(new TriggeredAuditLog(
+				$this->transactionJournal->user,
+				$this->transactionJournal,
+				'update_destination',
+				$destinationAccount->name,
+				$destination->name
+			));
+		}
+
         $origSourceTransaction = $this->getSourceTransaction();
         $origSourceTransaction->account()->associate($source);
         $origSourceTransaction->save();
@@ -437,6 +459,17 @@ class JournalUpdateService
             $typeFactory = app(TransactionTypeFactory::class);
             $result      = $typeFactory->find($this->data['type']);
             if (null !== $result) {
+				// if the transaction type changed, fire an event
+				$newType = $this->transactionJournal->transactionType;
+				if ($result->type !== $newType->type) {
+					event(new TriggeredAuditLog(
+						$this->transactionJournal->user,
+						$this->transactionJournal,
+						'update_transaction_type',
+						trans('firefly.ale_transaction_'.str_replace(' ', '_', strtolower($newType->type))),
+						trans('firefly.ale_transaction_'.str_replace(' ', '_', strtolower($result->type)))
+					));
+				}
                 app('log')->debug('Changed transaction type!');
                 $this->transactionJournal->transaction_type_id = $result->id;
                 $this->transactionJournal->save();
@@ -656,9 +689,23 @@ class JournalUpdateService
             return;
         }
         $origSourceTransaction         = $this->getSourceTransaction();
+		$destTransaction               = $this->getDestinationTransaction();
+		// if the amount changed, fire an event
+		$currencyId 				   = $origSourceTransaction->transaction_currency_id;
+		$currency					   = $this->currencyRepository->findCurrency($currencyId, null);
+		$newAmount 					   = app('steam')->bcround($amount, $currency->decimal_places);
+		$oldAmount 					   = app('steam')->bcround(app('steam')->positive($destTransaction->amount), $currency->decimal_places);
+		if (0 !== bccomp($oldAmount, $newAmount, $currency->decimal_places)) {
+			event(new TriggeredAuditLog(
+				$this->transactionJournal->user,
+				$this->transactionJournal,
+				'update_amount',
+				$oldAmount,
+				$newAmount
+			));
+		}
         $origSourceTransaction->amount = app('steam')->negative($amount);
         $origSourceTransaction->save();
-        $destTransaction               = $this->getDestinationTransaction();
         $destTransaction->amount       = app('steam')->positive($amount);
         $destTransaction->save();
         // refresh transactions.

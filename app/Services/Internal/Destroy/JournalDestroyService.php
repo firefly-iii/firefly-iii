@@ -28,6 +28,8 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionJournalMeta;
+use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 
 /**
  * Class JournalDestroyService
@@ -37,6 +39,24 @@ class JournalDestroyService
     public function destroy(TransactionJournal $journal): void
     {
         app('log')->debug(sprintf('Now in %s', __METHOD__));
+		// fire the event if destroy an transaction
+		$currencyRepository     	= app(CurrencyRepositoryInterface::class);
+		$destinationTransaction 	= $journal->transactions()->where('amount', '>', 0)->first();
+		$sourceTransaction 			= $journal->transactions()->where('amount', '<', 0)->first();
+		$date						= $journal->date;
+		$currencyId 				= $destinationTransaction->transaction_currency_id;
+		$currency					= $currencyRepository->findCurrency($currencyId, null);
+		$amount						= app('steam')->bcround($destinationTransaction->amount, $currency->decimal_places);
+		// source account -> destination account
+		$sourceAccount 				= $sourceTransaction->account()->first()->name;
+		$destinationAccount         = $destinationTransaction->account()->first()->name.'('.$journal->description.') '.$currency->symbol.$amount;
+		event(new TriggeredAuditLog(
+			$journal->user,
+			$journal,
+			'delete_transaction',
+			$sourceAccount,
+			$destinationAccount
+		));
 
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {

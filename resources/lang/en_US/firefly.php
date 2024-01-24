@@ -2667,6 +2667,18 @@ return [
     'ale_action_add_to_piggy'                                => 'Piggy bank',
     'ale_action_remove_from_piggy'                           => 'Piggy bank',
     'ale_action_add_tag'                                     => 'Added tag',
+	'ale_action_update_amount'							     => 'Updated transaction amount',
+	'ale_action_update_source'							     => 'Updated source account',
+	'ale_action_update_destination'						     => 'Updated destination account',
+	'ale_action_update_transaction_type'				     => 'Updated transaction type',
+	'ale_action_delete_transaction_type'				     => 'Removed transaction',
+	'ale_transaction_deposit'							     => 'Deposit',
+	'ale_transaction_invalid'							     => 'Invalid',
+	'ale_transaction_liability_credit'					     => 'Liability credit',
+	'ale_transaction_opening_balance'					     => 'Opening balance',
+	'ale_transaction_reconciliation'					     => 'Reconciliation',
+	'ale_transaction_transfer'							     => 'Transfer',
+	'ale_transaction_withdrawal'						     => 'Withdrawal',
 
     // dashboard
     'enable_auto_convert'                                    => 'Enable currency conversion',
