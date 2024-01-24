@@ -6,7 +6,7 @@
         "flash_success": "Gelukt!",
         "close": "Sluiten",
         "split_transaction_title": "Beschrijving van de gesplitste transactie",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
         "split": "Splitsen",
         "single_split": "Split",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transactie #{ID} (\"{title}\")<\/a> is opgeslagen.",

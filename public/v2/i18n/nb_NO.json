@@ -7,7 +7,7 @@
         "spent": "Brukt",
         "left": "Gjenv\u00e6rende",
         "paid": "Betalt",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "unpaid": "Ikke betalt",
         "default_group_title_name_plain": "ikke gruppert",
         "subscriptions_in_group": "Abonnementer i gruppe \"%{title}\"",

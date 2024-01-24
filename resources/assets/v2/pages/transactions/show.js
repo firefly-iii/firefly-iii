@@ -107,7 +107,8 @@ let show = function () {
                 for (const i in descriptions) {
                     if (descriptions.hasOwnProperty(i)) {
                         const current = descriptions[i];
-                        // this is all manual work for now.
+                        // this is all manual work for now, and should be better
+                        // TODO make better
                         current.addEventListener('save', function (e) {
                             const journalId = parseInt(e.currentTarget.dataset.id);
                             const groupId = parseInt(e.currentTarget.dataset.group);

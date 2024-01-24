@@ -7,7 +7,7 @@
         "spent": "Harcanan",
         "left": "Ayr\u0131ld\u0131",
         "paid": "\u00d6dendi",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "unpaid": "\u00d6denmedi",
         "default_group_title_name_plain": "ungrouped",
         "subscriptions_in_group": "Subscriptions in group \"%{title}\"",

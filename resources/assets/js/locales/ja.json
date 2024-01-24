@@ -6,7 +6,7 @@
         "flash_success": "\u6210\u529f\u3057\u307e\u3057\u305f\uff01",
         "close": "\u9589\u3058\u308b",
         "split_transaction_title": "\u5206\u5272\u53d6\u5f15\u306e\u6982\u8981",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
         "split": "\u5206\u5272",
         "single_split": "\u5206\u5272",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">\u53d6\u5f15 #{ID}\u300c{title}\u300d<\/a> \u304c\u4fdd\u5b58\u3055\u308c\u307e\u3057\u305f\u3002",

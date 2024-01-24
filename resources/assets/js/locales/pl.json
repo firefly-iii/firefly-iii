@@ -6,7 +6,7 @@
         "flash_success": "Sukces!",
         "close": "Zamknij",
         "split_transaction_title": "Opis podzielonej transakcji",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
         "split": "Podziel",
         "single_split": "Podzia\u0142",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Transakcja #{ID} (\"{title}\")<\/a> zosta\u0142a zapisana.",

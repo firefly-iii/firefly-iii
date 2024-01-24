@@ -7,7 +7,7 @@
         "spent": "Uitgegeven",
         "left": "Over",
         "paid": "Betaald",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "unpaid": "Niet betaald",
         "default_group_title_name_plain": "ongegroepeerd",
         "subscriptions_in_group": "Abonnementen in groep \"%{title}\"",

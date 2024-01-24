@@ -7,7 +7,7 @@
         "spent": "\u652f\u51fa",
         "left": "\u5269\u9918",
         "paid": "\u5df2\u4ed8\u6b3e",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "unpaid": "\u672a\u4ed8\u6b3e",
         "default_group_title_name_plain": "ungrouped",
         "subscriptions_in_group": "Subscriptions in group \"%{title}\"",

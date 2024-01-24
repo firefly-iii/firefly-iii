@@ -7,7 +7,7 @@
         "spent": "\uc9c0\ucd9c",
         "left": "\ub0a8\uc74c",
         "paid": "\uc9c0\ubd88\ub428",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "unpaid": "\ubbf8\uc9c0\ubd88",
         "default_group_title_name_plain": "\uadf8\ub8f9 \ud574\uc81c\ub428",
         "subscriptions_in_group": "Subscriptions in group \"%{title}\"",

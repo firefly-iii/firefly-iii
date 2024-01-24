@@ -7,7 +7,7 @@
         "spent": "Gastat",
         "left": "Queda",
         "paid": "Pagat",
-        "errors_submission": "Hi ha hagut un error amb el teu enviament. Per favor, revisa els errors de sota: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "unpaid": "Pendent de pagament",
         "default_group_title_name_plain": "no agrupades",
         "subscriptions_in_group": "Subscripcions al grup \"%{title}\"",

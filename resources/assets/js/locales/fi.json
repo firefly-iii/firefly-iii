@@ -6,7 +6,7 @@
         "flash_success": "Valmista tuli!",
         "close": "Sulje",
         "split_transaction_title": "Jaetun tapahtuman kuvaus",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
         "split": "Jaa",
         "single_split": "Jako",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Tapahtuma #{ID} (\"{title}\")<\/a> on tallennettu.",

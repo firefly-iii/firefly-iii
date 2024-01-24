@@ -96,7 +96,7 @@
                                 <em class="fa {{ $mainTitleIcon }}"></em>
                             @endif
                             {{ $title }} @if($subTitle)
-                                <small class="text-muted">
+                                <small class="text-muted" id="pageSubTitle">
                                     {{$subTitle}}</small>
                             @endif</h3>
                     </div>

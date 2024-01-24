@@ -7,7 +7,7 @@
         "spent": "Wydano",
         "left": "Pozosta\u0142o",
         "paid": "Zap\u0142acone",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "unpaid": "Niezap\u0142acone",
         "default_group_title_name_plain": "bez grupy",
         "subscriptions_in_group": "Subskrypcje w grupie \"%{title}\"",

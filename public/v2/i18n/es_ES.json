@@ -7,7 +7,7 @@
         "spent": "Gastado",
         "left": "Disponible",
         "paid": "Pagado",
-        "errors_submission": "Hubo un error en tu env\u00edo. Por favor, revisa los siguientes errores: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "unpaid": "No pagado",
         "default_group_title_name_plain": "sin agrupar",
         "subscriptions_in_group": "Suscripciones en el grupo \"%{title}\"",

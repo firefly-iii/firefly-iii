@@ -7,7 +7,7 @@
         "spent": "Speso",
         "left": "Resto",
         "paid": "Pagati",
-        "errors_submission": "Errore durante l'invio. Controlla gli errori segnalati qui sotto: %{errorMessage}",
+        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
         "unpaid": "Da pagare",
         "default_group_title_name_plain": "non raggruppato",
         "subscriptions_in_group": "Abbonamenti nel gruppo \"%{title}\"",
