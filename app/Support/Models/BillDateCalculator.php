@@ -40,6 +40,7 @@ class BillDateCalculator
      */
     public function getPayDates(Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid): array
     {
+        $this->diffInMonths = 0;
         $earliest->startOfDay();
         $latest->endOfDay();
         $billStart->startOfDay();
