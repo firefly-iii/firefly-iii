@@ -48,15 +48,15 @@ class BillDateCalculator
         Log::debug(sprintf('Dates must be between %s and %s.', $earliest->format('Y-m-d'), $latest->format('Y-m-d')));
         Log::debug(sprintf('Bill started on %s, period is "%s", skip is %d, last paid = "%s".', $billStart->format('Y-m-d'), $period, $skip, $lastPaid?->format('Y-m-d')));
 
-        $daysUntilEOM = app('navigation')->daysUntilEndOfMonth($billStart);
+        $daysUntilEOM       = app('navigation')->daysUntilEndOfMonth($billStart);
         Log::debug(sprintf('For bill start, days until end of month is %d', $daysUntilEOM));
 
-        $set          = new Collection();
-        $currentStart = clone $earliest;
+        $set                = new Collection();
+        $currentStart       = clone $earliest;
 
         // 2023-06-23 subDay to fix 7655
         $currentStart->subDay();
-        $loop         = 0;
+        $loop               = 0;
 
         Log::debug('Start of loop');
         while ($currentStart <= $latest) {
@@ -116,7 +116,7 @@ class BillDateCalculator
             }
         }
         Log::debug('end of loop');
-        $simple       = $set->map(
+        $simple             = $set->map(
             static function (Carbon $date) {
                 return $date->format('Y-m-d');
             }
