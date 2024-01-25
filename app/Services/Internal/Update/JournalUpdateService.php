@@ -369,26 +369,26 @@ class JournalUpdateService
         }
 
 		// if the source account or destination account changed, fire an event
-		$sourceAccount 				= $this->getOriginalSourceAccount();
-		$destinationAccount 		= $this->getOriginalDestinationAccount();
-		if ($sourceAccount->id !== $source->id) {
-			event(new TriggeredAuditLog(
-				$this->transactionJournal->user,
-				$this->transactionJournal,
-				'update_source',
-				$sourceAccount->name,
-				$source->name
-			));
-		}
-		if ($destinationAccount->id !== $destination->id) {
-			event(new TriggeredAuditLog(
-				$this->transactionJournal->user,
-				$this->transactionJournal,
-				'update_destination',
-				$destinationAccount->name,
-				$destination->name
-			));
-		}
+        $sourceAccount 				= $this->getOriginalSourceAccount();
+        $destinationAccount 		= $this->getOriginalDestinationAccount();
+        if ($sourceAccount->id !== $source->id) {
+            event(new TriggeredAuditLog(
+                $this->transactionJournal->user,
+                $this->transactionJournal,
+                'update_source',
+                $sourceAccount->name,
+                $source->name
+            ));
+        }
+        if ($destinationAccount->id !== $destination->id) {
+            event(new TriggeredAuditLog(
+                $this->transactionJournal->user,
+                $this->transactionJournal,
+                'update_destination',
+                $destinationAccount->name,
+                $destination->name
+            ));
+        }
 
         $origSourceTransaction = $this->getSourceTransaction();
         $origSourceTransaction->account()->associate($source);
@@ -459,17 +459,17 @@ class JournalUpdateService
             $typeFactory = app(TransactionTypeFactory::class);
             $result      = $typeFactory->find($this->data['type']);
             if (null !== $result) {
-				// if the transaction type changed, fire an event
-				$newType = $this->transactionJournal->transactionType;
-				if ($result->type !== $newType->type) {
-					event(new TriggeredAuditLog(
-						$this->transactionJournal->user,
-						$this->transactionJournal,
-						'update_transaction_type',
-						trans('firefly.ale_transaction_'.str_replace(' ', '_', strtolower($newType->type))),
-						trans('firefly.ale_transaction_'.str_replace(' ', '_', strtolower($result->type)))
-					));
-				}
+                // if the transaction type changed, fire an event
+                $newType = $this->transactionJournal->transactionType;
+                if ($result->type !== $newType->type) {
+                    event(new TriggeredAuditLog(
+                        $this->transactionJournal->user,
+                        $this->transactionJournal,
+                        'update_transaction_type',
+                        trans('firefly.ale_transaction_'.str_replace(' ', '_', strtolower($newType->type))),
+                        trans('firefly.ale_transaction_'.str_replace(' ', '_', strtolower($result->type)))
+                    ));
+                }
                 app('log')->debug('Changed transaction type!');
                 $this->transactionJournal->transaction_type_id = $result->id;
                 $this->transactionJournal->save();
@@ -689,21 +689,21 @@ class JournalUpdateService
             return;
         }
         $origSourceTransaction         = $this->getSourceTransaction();
-		$destTransaction               = $this->getDestinationTransaction();
-		// if the amount changed, fire an event
-		$currencyId 				   = $origSourceTransaction->transaction_currency_id;
-		$currency					   = $this->currencyRepository->findCurrency($currencyId, null);
-		$newAmount 					   = app('steam')->bcround($amount, $currency->decimal_places);
-		$oldAmount 					   = app('steam')->bcround(app('steam')->positive($destTransaction->amount), $currency->decimal_places);
-		if (0 !== bccomp($oldAmount, $newAmount, $currency->decimal_places)) {
-			event(new TriggeredAuditLog(
-				$this->transactionJournal->user,
-				$this->transactionJournal,
-				'update_amount',
-				$oldAmount,
-				$newAmount
-			));
-		}
+        $destTransaction               = $this->getDestinationTransaction();
+        // if the amount changed, fire an event
+        $currencyId 				   = $origSourceTransaction->transaction_currency_id;
+        $currency					   = $this->currencyRepository->findCurrency($currencyId, null);
+        $newAmount 					   = app('steam')->positive($amount);
+        $oldAmount 					   = app('steam')->positive($destTransaction->amount);
+        if (0 !== bccomp($oldAmount, $newAmount, $currency->decimal_places)) {
+            event(new TriggeredAuditLog(
+                $this->transactionJournal->user,
+                $this->transactionJournal,
+                'update_amount',
+                app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $oldAmount, false),
+                app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $newAmount, false)
+            ));
+        }
         $origSourceTransaction->amount = app('steam')->negative($amount);
         $origSourceTransaction->save();
         $destTransaction->amount       = app('steam')->positive($amount);
@@ -742,6 +742,18 @@ class JournalUpdateService
 
         // add foreign currency info to source and destination if possible.
         if (null !== $foreignCurrency && null !== $foreignAmount) {
+            // if the amount changed, fire an event
+            $oldAmount                   = app('steam')->positive($dest->foreign_amount);
+            $newAmount                   = app('steam')->positive($foreignAmount);
+            if (0 !== bccomp($oldAmount, $newAmount, $foreignCurrency->decimal_places)) {
+                event(new TriggeredAuditLog(
+                    $this->transactionJournal->user,
+                    $this->transactionJournal,
+                    'update_foreign_amount',
+                    app('amount')->formatFlat($foreignCurrency->symbol, $foreignCurrency->decimal_places, $oldAmount, false),
+                    app('amount')->formatFlat($foreignCurrency->symbol, $foreignCurrency->decimal_places, $newAmount, false)
+                ));
+            }
             $source->foreign_currency_id = $foreignCurrency->id;
             $source->foreign_amount      = app('steam')->negative($foreignAmount);
             $source->save();
@@ -765,6 +777,19 @@ class JournalUpdateService
             return;
         }
         if ('0' === $amount) {
+            if (null !== $foreignCurrency) {
+                // if the amount changed, fire an event
+                $oldAmount                   = app('steam')->positive($dest->foreign_amount);
+                if (0 !== bccomp($oldAmount, $amount, $foreignCurrency->decimal_places)) {
+                    event(new TriggeredAuditLog(
+                        $this->transactionJournal->user,
+                        $this->transactionJournal,
+                        'update_foreign_amount',
+                        app('amount')->formatFlat($foreignCurrency->symbol, $foreignCurrency->decimal_places, $oldAmount, false),
+                        app('amount')->formatFlat($foreignCurrency->symbol, $foreignCurrency->decimal_places, $amount, false)
+                    ));
+                }
+            }
             $source->foreign_currency_id = null;
             $source->foreign_amount      = null;
             $source->save();
