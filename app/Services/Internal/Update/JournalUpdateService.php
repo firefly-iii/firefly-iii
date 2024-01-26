@@ -466,8 +466,8 @@ class JournalUpdateService
                         $this->transactionJournal->user,
                         $this->transactionJournal,
                         'update_transaction_type',
-                        'ale_transaction_'.str_replace(' ', '_', strtolower($newType->type)),
-                        'ale_transaction_'.str_replace(' ', '_', strtolower($result->type))
+                        $newType->type,
+                        $result->type
                     ));
                 }
                 app('log')->debug('Changed transaction type!');
