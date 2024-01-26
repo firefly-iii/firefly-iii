@@ -466,8 +466,8 @@ class JournalUpdateService
                         $this->transactionJournal->user,
                         $this->transactionJournal,
                         'update_transaction_type',
-                        trans('firefly.ale_transaction_'.str_replace(' ', '_', strtolower($newType->type))),
-                        trans('firefly.ale_transaction_'.str_replace(' ', '_', strtolower($result->type)))
+                        'ale_transaction_'.str_replace(' ', '_', strtolower($newType->type)),
+                        'ale_transaction_'.str_replace(' ', '_', strtolower($result->type))
                     ));
                 }
                 app('log')->debug('Changed transaction type!');
