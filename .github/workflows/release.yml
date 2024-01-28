@@ -116,22 +116,19 @@ jobs:
           .ci/phpcs.sh
       - name: Release
         run: |
-          echo "1"
           git config user.name github-actions
-          echo "2"
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          echo "3"
           git config advice.addIgnoredFile false
-          echo "4"
-          git add -A
-          echo "5"
-          git commit -m "Auto commit for release '$version' on $(date +'%Y-%m-%d')" || true
-          echo "6"
-          git push
+
           if [[ "develop" == "$version" ]]; then
-
             [[ -z $(git status --untracked-files=normal --porcelain) ]] && echo "this branch is clean, no need to push..." && exit 0;
+          fi
 
+          git add -A
+          git commit -m "Auto commit for release '$version' on $(date +'%Y-%m-%d')" || true
+          git push
+
+          if [[ "develop" == "$version" ]]; then
             echo "Create nightly release."
             git tag -a $version-$(date +'%Y%m%d') -m "Release '$version' on $(date +'%Y-%m-%d')"
             git push origin $version-$(date +'%Y%m%d')
