@@ -132,7 +132,7 @@ jobs:
             echo "Create nightly release."
             git tag -a $version-$(date +'%Y%m%d') -m "Release '$version' on $(date +'%Y-%m-%d')"
             git push origin $version-$(date +'%Y%m%d')
-            gh release create $version-$(date +'%Y%m%d') -p -t "Nightly develop release $(date +'%Y%m%d')" --verify-tag
+            gh release create $version-$(date +'%Y%m%d') -p -t "Nightly dev-release $(date +'%Y-%m-%d')" --verify-tag
           else
             echo "Create default release."
             git tag -a $version -m "Here be changelog"
