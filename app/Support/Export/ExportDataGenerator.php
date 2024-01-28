@@ -664,7 +664,11 @@ class ExportDataGenerator
      */
     private function exportRules(): string
     {
-        $header    = ['user_id', 'rule_id', 'row_contains', 'created_at', 'updated_at', 'group_id', 'title', 'description', 'order', 'active', 'stop_processing', 'strict', 'trigger_type', 'trigger_value', 'trigger_order', 'trigger_active', 'trigger_stop_processing', 'action_type', 'action_value', 'action_order', 'action_active', 'action_stop_processing'];
+        $header    = [
+            'user_id', 'rule_id', 'row_contains',
+            'created_at', 'updated_at', 'group_id', 'title', 'description', 'order', 'active', 'stop_processing', 'strict',
+            'trigger_type', 'trigger_value', 'trigger_order', 'trigger_active', 'trigger_stop_processing',
+            'action_type', 'action_value', 'action_order', 'action_active', 'action_stop_processing'];
         $ruleRepos = app(RuleRepositoryInterface::class);
         $ruleRepos->setUser($this->user);
         $rules     = $ruleRepos->getAll();
@@ -672,32 +676,37 @@ class ExportDataGenerator
 
         /** @var Rule $rule */
         foreach ($rules as $rule) {
-            $records[] = [
+            $entry     = [
                 $this->user->id, $rule->id,
                 'rule',
                 $rule->created_at->toAtomString(), $rule->updated_at->toAtomString(), $rule->ruleGroup->id, $rule->ruleGroup->title, $rule->title, $rule->description, $rule->order, $rule->active, $rule->stop_processing, $rule->strict,
+                null, null, null, null, null, null, null, null, null,
             ];
+            $records[] = $entry;
 
             /** @var RuleTrigger $trigger */
             foreach ($rule->ruleTriggers as $trigger) {
-                $records[] = [
+                $entry     = [
                     $this->user->id,
                     $rule->id,
                     'trigger',
-                    null, null, null, null, null, null, null, null, null, null,
+                    null, null, null, null, null, null, null, null, null,
                     $trigger->trigger_type, $trigger->trigger_value, $trigger->order, $trigger->active, $trigger->stop_processing,
+                    null, null, null, null, null,
                 ];
+                $records[] = $entry;
             }
 
             /** @var RuleAction $action */
             foreach ($rule->ruleActions as $action) {
-                $records[] = [
+                $entry     = [
                     $this->user->id,
                     $rule->id,
                     'action',
-                    null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+                    null, null, null, null, null, null, null, null, null, null, null, null, null, null,
                     $action->action_type, $action->action_value, $action->order, $action->active, $action->stop_processing,
                 ];
+                $records[] = $entry;
             }
         }
 
