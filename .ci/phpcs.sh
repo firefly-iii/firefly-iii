@@ -29,12 +29,12 @@ SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # cp .ci/.env.ci .env
 
 OUTPUT_FORMAT=txt
-EXTRA_PARAMS="-v"
+EXTRA_PARAMS=""
 
 if [[ $GITHUB_ACTIONS = "true" ]]
 then
-    OUTPUT_FORMAT=gitlab
-    EXTRA_PARAMS="--diff --dry-run"
+    OUTPUT_FORMAT=txt
+    EXTRA_PARAMS=""
 fi
 
 # clean up php code
