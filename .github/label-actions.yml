@@ -5,7 +5,9 @@ feature:
   issues:
     # Post a comment, `{issue-author}` is an optional placeholder
     comment: |
-      Hi there! This is an automatic reply. `Share and enjoy`
+      Hi there! 
+
+      This is an automatic reply. `Share and enjoy`
 
       This issue has been marked as a feature request. The requested (new) feature will become a part of Firefly III or the data importer in due course.
 
@@ -13,11 +15,29 @@ feature:
 
       Thank you for your contributions.
 
+epic:
+  issues:
+    # Post a comment, `{issue-author}` is an optional placeholder
+    comment: |
+      Hi there! 
+
+      This is an automatic reply. `Share and enjoy`
+
+      This issue has been marked as an epic. In epics, large amounts of works are collected that will be part of a major new feature. If you have more ideas that could be a part of this epic, feel free to reply.
+
+      *However*, please be aware there is NO need to reply with "+1" or "me too" or "I need this too" or whatever. Such comments are not helpful, and do not influence [the roadmap](https://roadmap.firefly-iii.org/). Your comment may be :skull: deleted. 
+
+      If you are merely interested in this epic's progress, you can subscribe to this issue to get updates.
+
+      Thank you for your contributions.
+
 enhancement:
   issues:
     # Post a comment, `{issue-author}` is an optional placeholder
     comment: |
-      Hi there! This is an automatic reply. `Share and enjoy`
+      Hi there! 
+
+      This is an automatic reply. `Share and enjoy`
 
       This issue has been marked as an enhancement. The requested enhancement to an existing feature will become a part of Firefly III or the data importer in due course.
 
@@ -25,12 +45,13 @@ enhancement:
 
       Thank you for your contributions.
 
-# The `solved` label is added to discussions
 triage:
   issues:
     # Post a comment, `{issue-author}` is an optional placeholder
     comment: |
-      Hi there! This is an automatic reply. `Share and enjoy`
+      Hi there! 
+
+      This is an automatic reply. `Share and enjoy`
 
       This issue has been marked as being in triage. The root cause is not known yet, or the issue needs more investigation. You can help by sharing debug information (from `/debug`) if you also have this issue or when you haven't already done so.
 
@@ -39,13 +60,14 @@ triage:
 needs-moar-debug:
   issues:
     comment: |
-      Hi there! This is an automatic reply. `Share and enjoy`
+      Hi there! 
 
-      To learn more about this issue, please share the output of the `/debug` page of your Firefly III installation.
+      This is an automatic reply. `Share and enjoy`
 
-      If this page is no available due to the issue you have, please make sure you share at least:
+      To learn more about this issue, please make sure you share at least:
 
-      1. Firefly III version
+      1. The table you can find on the `/debug` page
+      2. Firefly III version
       2. Docker, self-hosted, or hosted by a third party?
       3. Operating system and browser
 
@@ -56,7 +78,9 @@ needs-moar-debug:
 needs-moar-logs:
   issues:
     comment: |
-      Hi there! This is an automatic reply. `Share and enjoy`
+      Hi there! 
+
+      This is an automatic reply. `Share and enjoy`
 
       To learn more about this issue, please share the relevant log files from your Firefly III or data importer installation.
 
@@ -70,7 +94,9 @@ needs-moar-logs:
 v2-layout-issue:
   issues:
     comment: |
-      Hi there! This is an automatic reply. `Share and enjoy`
+      Hi there! 
+
+      This is an automatic reply. `Share and enjoy`
 
       It seems your issue is about the new v2-layout that is currently in development for Firefly III.
 
