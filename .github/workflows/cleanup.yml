@@ -62,6 +62,7 @@ jobs:
               'depsreview.yml',
               'label-actions.yml',
               'lock.yml',
+              'release.yml',
               'sonarcloud.yml',
               'stale.yml'
             ]

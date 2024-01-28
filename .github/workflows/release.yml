@@ -1,0 +1,156 @@
+name: 'Code - Create new release'
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release'
+        required: true
+        default: 'develop'
+  schedule:
+    - cron:  '30 2 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Switch branch
+        run: |
+          if [[ "develop" == "$version" ]]; then
+            git checkout --track origin/develop
+            git pull
+          else
+            git config user.name github-actions
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git checkout --track origin/develop
+            git pull
+            git checkout main
+            git merge develop
+          fi
+        env:
+          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, intl, zip, bcmath
+      - name: crowdin action
+        uses: crowdin/github-action@v1
+        with:
+          upload_sources: true
+          download_translations: true
+          push_translations: false
+          push_sources: false
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          CROWDIN_PROJECT_NR: ${{ secrets.CROWDIN_PROJECT_NR }}
+          CROWDIN_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
+      - name: Cleanup translations
+        id: cleanup-transactions
+        uses: JC5/firefly-iii-dev@v16
+        with:
+          action: 'ff3:crowdin-warning'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Cleanup changelog
+        id: cleanup-changelog
+        uses: JC5/firefly-iii-dev@v16
+        with:
+          action: 'ff3:changelog'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Generate JSON v1
+        id: json-v1
+        uses: JC5/firefly-iii-dev@v16
+        with:
+          action: 'ff3:json-translations v1'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Generate JSON v2
+        id: json-v2
+        uses: JC5/firefly-iii-dev@v16
+        with:
+          action: 'ff3:json-translations v2'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Code cleanup
+        id: code-cleanup
+        uses: JC5/firefly-iii-dev@v16
+        with:
+          action: 'ff3:code'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Build new JS
+        run: |
+          npm upgrade
+          npm run build
+      - name: Build old JS
+        id: old-js
+        uses: JC5/firefly-iii-dev@v16
+        with:
+          action: 'ff3:old-js'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Run CI
+        run: |
+          rm -rf vendor composer.lock
+          composer validate --strict
+          composer update --no-dev --no-scripts --no-plugins -q
+          sudo chown -R runner:docker resources/lang
+          .ci/phpcs.sh
+      - name: Release
+        run: |
+          echo "1"
+          git config user.name github-actions
+          echo "2"
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          echo "3"
+          git config advice.addIgnoredFile false
+          echo "4"
+          git add -A
+          echo "5"
+          git commit -m "Auto commit for release '$version' on $(date +'%Y-%m-%d')" || true
+          echo "6"
+          git push
+          if [[ "develop" == "$version" ]]; then
+
+            [[ -z $(git status --untracked-files=normal --porcelain) ]] && echo "this branch is clean, no need to push..." && exit 0;
+
+            echo "Create nightly release."
+            git tag -a $version-$(date +'%Y%m%d') -m "Release '$version' on $(date +'%Y-%m-%d')"
+            git push origin $version-$(date +'%Y%m%d')
+            gh release create $version-$(date +'%Y%m%d') -p -t "Nightly develop release $(date +'%Y%m%d')" --verify-tag
+          else
+            echo "Create default release."
+            git tag -a $version -m "Here be changelog"
+            echo "7"
+            git push origin $version
+            echo "8"
+            gh release create $version --notes-from-tag -t "$version" --verify-tag
+            echo "9"
+            git checkout develop
+            echo "10"
+            git merge main
+            echo "11"
+            git push
+            echo "12"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
