@@ -1299,7 +1299,7 @@ return [
     'no_location_set'                                        => 'Ubicació no establerta.',
     'meta_data'                                              => 'Meta dades',
     'location'                                               => 'Ubicació',
-    'location_first_split'                                   => 'The location for this transaction can be set on the first split of this transaction.',
+    'location_first_split'                                   => 'La ubicació d\'aquesta transacció pot ser establerta a la primera divisió de la transacció.',
     'without_date'                                           => 'Sense data',
     'result'                                                 => 'Resultat',
     'sums_apply_to_range'                                    => 'Totes les sumes s\'apliquen al rang seleccionat',
@@ -1951,7 +1951,7 @@ return [
  */
 
     // transactions:
-    'wait_loading_transaction'                               => 'Please wait for the form to load',
+    'wait_loading_transaction'                               => 'Per favor, espera que carregui el formulari',
     'wait_loading_data'                                      => 'Per favor, espera que carregui la teva informació...',
     'wait_attachments'                                       => 'Per favor, espera que els adjunts es carreguin.',
     'errors_upload'                                          => 'La pujada ha fallat. Per favor comprova la consola del teu navegador per a l\'error.',
@@ -2342,7 +2342,7 @@ return [
     'average'                                                => 'Mitjana',
     'balanceFor'                                             => 'Saldo per a :name',
     'no_tags'                                                => '(cap etiqueta)',
-    'nothing_found'                                          => '(nothing found)',
+    'nothing_found'                                          => '(no s\'ha trobat res)',
 
     // piggy banks:
     'event_history'                                          => 'Historial d\'esdeveniments',

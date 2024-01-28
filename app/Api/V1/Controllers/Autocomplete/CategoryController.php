@@ -46,7 +46,7 @@ class CategoryController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user    = auth()->user();
+                $user             = auth()->user();
                 $this->repository = app(CategoryRepositoryInterface::class);
                 $this->repository->setUser($user);
 

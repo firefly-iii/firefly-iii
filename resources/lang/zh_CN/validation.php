@@ -34,8 +34,8 @@
 declare(strict_types=1);
 
 return [
-    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
-    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
+    'bad_type_source'                 => 'Firefly III 无法确定基于此源账户的交易类型。',
+    'bad_type_destination'            => 'Firefly III 无法确定基于此目标帐户的交易类型。',
     'missing_where'                   => '数组中缺少"where"条目',
     'missing_update'                  => '数组中缺少 "update"条目',
     'invalid_where_key'               => 'JSON包含一个无效的"where"子句',
@@ -45,9 +45,9 @@ return [
     'invalid_query_currency'          => '查询包含不同货币的账户，这是不不允许的。',
     'iban'                            => '此 IBAN 无效',
     'zero_or_more'                    => '此值不能为负',
-    'more_than_zero'                  => 'The value must be more than zero.',
-    'more_than_zero_correct'          => 'The value must be zero or more.',
-    'no_asset_account'                => 'This is not an asset account.',
+    'more_than_zero'                  => '值必须大于零。',
+    'more_than_zero_correct'          => '值必须为零或更大。',
+    'no_asset_account'                => '这不是一个资产帐户。',
     'date_or_time'                    => '此值必须是有效的日期或时间 (ISO 8601)',
     'source_equals_destination'       => '来源账户与目标账户相同',
     'unique_account_number_for_user'  => '此账户号码已在使用中',
@@ -146,7 +146,7 @@ return [
     'min.array'                       => ':attribute 至少需要有 :min 个项目',
     'not_in'                          => '所选的 :attribute 无效',
     'numeric'                         => ':attribute 必须是数字',
-    'scientific_notation'             => 'The :attribute cannot use the scientific notation.',
+    'scientific_notation'             => ':attribute 不能使用科学记号。',
     'numeric_native'                  => '原始金额必须是数字',
     'numeric_destination'             => '目标金额必须是数字',
     'numeric_source'                  => '来源金额必须是数字',
