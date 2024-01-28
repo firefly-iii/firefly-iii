@@ -1,11 +1,13 @@
+"api_token_env": CROWDIN_TOKEN
 "api_key_env": CROWDIN_API_KEY
 "project_identifier_env": CROWDIN_PROJECT_ID
+"project_id_env": CROWDIN_PROJECT_NR
 "base_path_env": CROWDIN_BASE_PATH
 "preserve_hierarchy": false
 files: [
- {
-  source: "/resources/lang/en_US/*.php",
-  translation: /resources/lang/%locale_with_underscore%/%original_file_name%,
+  {
+    source: "/resources/lang/en_US/*.php",
+    translation: /resources/lang/%locale_with_underscore%/%original_file_name%,
 
- }
+  }
 ]
