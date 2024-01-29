@@ -118,7 +118,7 @@ class UpdateRequest extends FormRequest
             'transactions.*.foreign_currency_code'   => 'nullable|min:3|max:51|exists:transaction_currencies,code',
 
             // amount
-            'transactions.*.amount'                  => ['nullable', new IsValidPositiveAmount()],
+            'transactions.*.amount'                  => [new IsValidPositiveAmount()],
             'transactions.*.foreign_amount'          => ['nullable', new IsValidZeroOrMoreAmount()],
 
             // description
