@@ -36,6 +36,7 @@ use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -43,6 +44,7 @@ use Illuminate\Http\JsonResponse;
  */
 class BoxController extends Controller
 {
+    use DateCalculation;
     /**
      * This box has three types of info to display:
      * 0) If the user has available amount this period and has overspent: overspent box.
@@ -125,9 +127,9 @@ class BoxController extends Controller
             if (bccomp($leftToSpendAmount, '0') >= 0) {
                 app('log')->debug('Left to spend is positive or zero!');
                 $boxTitle         = (string)trans('firefly.left_to_spend');
-                $days             = $today->diffInDays($end) + 1;
+                $activeDaysLeft   = $this->activeDaysLeft($start, $end);   // see method description.
                 $display          = 1; // not overspent
-                $leftPerDayAmount = bcdiv($leftToSpendAmount, (string)$days);
+                $leftPerDayAmount = bcdiv($leftToSpendAmount, (string)$activeDaysLeft);
                 app('log')->debug(sprintf('Left to spend per day is %s', $leftPerDayAmount));
             }
         }
