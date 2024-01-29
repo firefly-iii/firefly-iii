@@ -122,8 +122,8 @@ class BoxController extends Controller
             // calculate with available budget.
             $leftToSpendAmount = bcadd($totalAvailableSum, $spentAmount);
             app('log')->debug(sprintf('So left to spend is %s', $leftToSpendAmount));
-            if (1 === bccomp($leftToSpendAmount, '0')) {
-                app('log')->debug('Left to spend is positive!');
+            if (bccomp($leftToSpendAmount, '0') >= 0) {
+                app('log')->debug('Left to spend is positive or zero!');
                 $boxTitle         = (string)trans('firefly.left_to_spend');
                 $days             = $today->diffInDays($end) + 1;
                 $display          = 1; // not overspent
