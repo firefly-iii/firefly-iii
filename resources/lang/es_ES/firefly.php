@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Gastos sin presupuesto',
     'transactions_no_budget'                                 => 'Gastos sin presupuesto entre :start y :end',
     'spent_between'                                          => 'Gastado entre :start y :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Fijar cantidad disponible',
     'update_available_amount'                                => 'Actualizar cantidad disponible',
     'ab_basic_modal_explain'                                 => 'Utilice este formulario para indicar cuánto espera poder presupuestar (en total, en :currency) en el período indicado.',

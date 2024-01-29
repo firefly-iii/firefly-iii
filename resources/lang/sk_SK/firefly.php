@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Výdavky bez rozpočtu',
     'transactions_no_budget'                                 => 'Výdavky bez rozpočtu medzi :start a :end',
     'spent_between'                                          => 'Už utratené medzi :start a :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Nastaviť sumu k dispozícii',
     'update_available_amount'                                => 'Aktualizovať sumu k dispozícii',
     'ab_basic_modal_explain'                                 => 'Pomocou tohto formulára zadajte, koľko očakávate, že budete môcť v uvedenom období zostaviť rozpočet (celkovo v :currency).',

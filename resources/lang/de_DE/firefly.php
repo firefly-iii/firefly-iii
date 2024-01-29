@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Ausgaben ohne Budget',
     'transactions_no_budget'                                 => 'Ausgaben ohne Budget zwischen :start und :end',
     'spent_between'                                          => 'Bereits zwischen :start und :end ausgegeben',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Verfügbaren Betrag festlegen',
     'update_available_amount'                                => 'Verfügbaren Betrag aktualisieren',
     'ab_basic_modal_explain'                                 => 'Verwenden Sie dieses Formular, um anzugeben, wie viel Sie erwarten, dass Sie im angegebenen Zeitraum vorsehen (insgesamt, in :currency) können.',
@@ -2555,8 +2556,8 @@ return [
     'after_update_create_another'                            => 'Nach dem Aktualisieren hierher zurückkehren, um weiter zu bearbeiten.',
     'store_as_new'                                           => 'Als neue Buchung speichern statt zu aktualisieren.',
     'reset_after'                                            => 'Formular nach der Übermittlung zurücksetzen',
-    'errors_submission'                                      => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission'                                      => 'Bei Ihren Eingaben stimmt etwas nicht. Bitte überprüfen Sie die unten stehenden Fehler.',
+    'errors_submission_v2'                                   => 'Bei Ihren Eingaben stimmt etwas nicht. Bitte überprüfen Sie die nachfolgenden Fehler: %{errorMessage}',
     'transaction_expand_split'                               => 'Aufteilung erweitern',
     'transaction_collapse_split'                             => 'Aufteilung reduzieren',
 

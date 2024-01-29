@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Uitgaven zonder budget',
     'transactions_no_budget'                                 => 'Uitgaven zonder budget tussen :start en :end',
     'spent_between'                                          => 'Al uitgegeven tussen :start en :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Stel beschikbaar bedrag in',
     'update_available_amount'                                => 'Update beschikbaar bedrag',
     'ab_basic_modal_explain'                                 => 'Gebruik dit formulier om aan te geven hoeveel je verwacht in de aangegeven periode (in totaal, in :currency) te kunnen begroten.',

@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Despeses sense pressupost',
     'transactions_no_budget'                                 => 'Despeses sense pressupost entre :start i :end',
     'spent_between'                                          => 'Ja t\'has gastat entre :start i :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Establir quantitat disponible',
     'update_available_amount'                                => 'Actualitzar quantitat disponible',
     'ab_basic_modal_explain'                                 => 'Utilitza aquest formulari per a indicar el pressupost que esperes tindre (en total, en :currency) en el període indicat.',

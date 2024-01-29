@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => '無預算支出',
     'transactions_no_budget'                                 => '自 :start 至 :end 的無預算支出',
     'spent_between'                                          => 'Already spent between :start and :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Set available amount',
     'update_available_amount'                                => 'Update available amount',
     'ab_basic_modal_explain'                                 => 'Use this form to indicate how much you expect to be able to budget (in total, in :currency) in the indicated period.',

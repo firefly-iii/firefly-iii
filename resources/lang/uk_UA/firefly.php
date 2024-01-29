@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Витрати без бюджету',
     'transactions_no_budget'                                 => 'Витрати без бюджету між :start і :end',
     'spent_between'                                          => 'Уже витрачено між :start і :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Встановити доступну суму',
     'update_available_amount'                                => 'Оновити доступну суму',
     'ab_basic_modal_explain'                                 => 'Скористайтеся цією формою, щоб вказати, скільки ви очікуєте від бюджету (загалом, у :currency) у вказаний період.',

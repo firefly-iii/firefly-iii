@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => '예산이 없는 지출',
     'transactions_no_budget'                                 => ':start과 :end 사이에 예산이 없는 지출',
     'spent_between'                                          => ':start와 :end 사이에 이미 사용되었습니다',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => '사용 가능한 금액 설정',
     'update_available_amount'                                => '사용 가능한 금액 업데이트',
     'ab_basic_modal_explain'                                 => '이 양식을 사용하여 지정한 기간에 예산을 책정할 수 있을 것으로 예상되는 금액(총액, :currency)을 표시하세요.',

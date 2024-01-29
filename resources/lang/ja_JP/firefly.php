@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => '予算外の支出',
     'transactions_no_budget'                                 => ':start から :end までの予算外の支出',
     'spent_between'                                          => ':start から :end までの支出済み',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => '利用可能な金額を設定',
     'update_available_amount'                                => '利用可能な金額を更新',
     'ab_basic_modal_explain'                                 => 'このフォームで、指定期間でいくらの予算(総額、:currency)になるかを示します。',

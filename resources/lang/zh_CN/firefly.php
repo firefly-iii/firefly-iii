@@ -1693,6 +1693,7 @@ return [
     'transactionsWithoutBudget'                              => '无预算支出',
     'transactions_no_budget'                                 => ':start – :end 的无预算支出',
     'spent_between'                                          => ':start – :end 的支出',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => '设置可用金额',
     'update_available_amount'                                => '更新可用金额',
     'ab_basic_modal_explain'                                 => '使用此表单来指定您预期在指定周期内的预算总额 (:currency)。',

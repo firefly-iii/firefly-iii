@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Wydatki bez budżetu',
     'transactions_no_budget'                                 => 'Wydatki bez budżetu między :start i :end',
     'spent_between'                                          => 'Wydano między :start i :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Ustaw dostępną kwotę',
     'update_available_amount'                                => 'Aktualizuj dostępną kwotę',
     'ab_basic_modal_explain'                                 => 'Użyj tego formularza aby wskazać, ile jesteś w stanie zabudżetować (w sumie, w :currency) we skazanym okresie.',

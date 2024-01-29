@@ -7,7 +7,7 @@
         "spent": "D\u00e9pens\u00e9",
         "left": "Reste",
         "paid": "Pay\u00e9",
-        "errors_submission_v2": "There was something wrong with your submission. Please check out the errors below: %{errorMessage}",
+        "errors_submission_v2": "Certaines informations ne sont pas correctes dans votre formulaire. Veuillez v\u00e9rifier les erreurs ci-dessous : %{errorMessage}",
         "unpaid": "Impay\u00e9",
         "default_group_title_name_plain": "non group\u00e9",
         "subscriptions_in_group": "Abonnements dans le groupe \"%{title}\"",

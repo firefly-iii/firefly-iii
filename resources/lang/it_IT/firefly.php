@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Spese senza budget',
     'transactions_no_budget'                                 => 'Spese senza budget tra :start e :end',
     'spent_between'                                          => 'Già spesi tra :start e :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Imposta importo disponibile',
     'update_available_amount'                                => 'Aggiorna importo disponibile',
     'ab_basic_modal_explain'                                 => 'Usa questo modulo per indicare quanto ti aspetti di mettere a budget (in totale, in :currency) nel periodo indicato.',

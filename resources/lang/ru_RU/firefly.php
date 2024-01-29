@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Расходы вне бюджета',
     'transactions_no_budget'                                 => 'Расходы вне бюджета между :start и :end',
     'spent_between'                                          => 'Уже потрачено между :start и :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Установить доступную сумму',
     'update_available_amount'                                => 'Обновить доступную сумму',
     'ab_basic_modal_explain'                                 => 'Используйте эту форму, чтобы указать какой бюджет вы планируете (всего, в :currency) на указанный период.',
@@ -2555,8 +2556,8 @@ return [
     'after_update_create_another'                            => 'После обновления вернитесь сюда, чтобы продолжить редактирование.',
     'store_as_new'                                           => 'Сохранить как новую транзакцию вместо обновления.',
     'reset_after'                                            => 'Сбросить форму после отправки',
-    'errors_submission'                                      => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission'                                      => 'С вашей публикацией произошла ошибка. Пожалуйста, проверьте ошибки ниже.',
+    'errors_submission_v2'                                   => 'С вашей публикацией произошла ошибка. Пожалуйста, проверьте следующие ошибки: %{errorMessage}',
     'transaction_expand_split'                               => 'Expand split',
     'transaction_collapse_split'                             => 'Collapse split',
 

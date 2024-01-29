@@ -6,7 +6,7 @@
         "flash_success": "Geschafft!",
         "close": "Schlie\u00dfen",
         "split_transaction_title": "Beschreibung der Splittbuchung",
-        "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
+        "errors_submission": "Bei Ihren Eingaben stimmt etwas nicht. Bitte \u00fcberpr\u00fcfen Sie die unten stehenden Fehler.",
         "split": "Teilen",
         "single_split": "Teilen",
         "transaction_stored_link": "<a href=\"transactions\/show\/{ID}\">Buchung #{ID} (\"{title}\")<\/a> wurde gespeichert.",

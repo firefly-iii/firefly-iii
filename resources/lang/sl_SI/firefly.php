@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Stroški brez proračuna',
     'transactions_no_budget'                                 => 'Stroški brez proračuna med :start in :end',
     'spent_between'                                          => 'Že porabljeno med :start in :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Nastavi razpoložljivo količino',
     'update_available_amount'                                => 'Posodobi razpoložljivo količino',
     'ab_basic_modal_explain'                                 => 'S tem obrazcem navedite, koliko pričakujete, da boste lahko dodali v proračun (skupaj, v :currency) v navedenem obdobju.',
@@ -2555,8 +2556,8 @@ return [
     'after_update_create_another'                            => 'Po posodobitvi se vrnite sem za nadaljevanje urejanja.',
     'store_as_new'                                           => 'Shranite kot novo transakcijo namesto posodabljanja.',
     'reset_after'                                            => 'Po predložitvi ponastavite obrazec',
-    'errors_submission'                                      => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission'                                      => 'Nekaj je bilo narobe z vašo oddajo. Preverite spodnje napake.',
+    'errors_submission_v2'                                   => 'Nekaj je bilo narobe z vašo oddajo. Preverite spodnje napake: %{errorMessage}',
     'transaction_expand_split'                               => 'Razširi razdelitev',
     'transaction_collapse_split'                             => 'Skrči razdelitev',
 

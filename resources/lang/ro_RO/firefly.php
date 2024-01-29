@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Cheltuieli fără buget',
     'transactions_no_budget'                                 => 'Cheltuieli fără buget între :start și :end',
     'spent_between'                                          => 'Cheltuit între :start și :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Setați suma disponibilă',
     'update_available_amount'                                => 'Actualizați suma disponibilă',
     'ab_basic_modal_explain'                                 => 'Utilizați acest formular pentru a indica cât de mult doriți să bugeți (în total, în :currency) în perioada indicată.',

@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Költségkeret nélküli költségek',
     'transactions_no_budget'                                 => 'Költségkeret nélküli költségek :start és :end között',
     'spent_between'                                          => 'Már elköltött :start és :end között',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Rendelkezésre álló összeg beállítása',
     'update_available_amount'                                => 'Rendelkezésre álló összeg frissítése',
     'ab_basic_modal_explain'                                 => 'Használja ezt az űrlapot a költségvetés beállításához (összesen, :currency devizában) a feltüntetett időszakban.',
@@ -2555,8 +2556,8 @@ return [
     'after_update_create_another'                            => 'A frissítés után térjen vissza ide a szerkesztés folytatásához.',
     'store_as_new'                                           => 'Tárolás új tranzakcióként frissítés helyett.',
     'reset_after'                                            => 'Űrlap törlése a beküldés után',
-    'errors_submission'                                      => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission'                                      => 'Hiba történt a beküldés során. Kérlek javítsd az alábbi hibákat.',
+    'errors_submission_v2'                                   => 'Hiba történt a beküldés során. Kérlek javítsd az alábbi hibákat: %{errorMessage}',
     'transaction_expand_split'                               => 'Expand split',
     'transaction_collapse_split'                             => 'Collapse split',
 

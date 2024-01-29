@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Despesas sem orçamentos',
     'transactions_no_budget'                                 => 'Despesas sem orçamento entre :start e :end',
     'spent_between'                                          => 'Gasto entre :start e :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Definir o valor disponível',
     'update_available_amount'                                => 'Atualizar o valor disponível',
     'ab_basic_modal_explain'                                 => 'Use este formulário para indicar quanto você espera gastar (no total, em :currency) no período indicado.',
@@ -2555,8 +2556,8 @@ return [
     'after_update_create_another'                            => 'Depois de atualizar, retorne aqui para continuar editando.',
     'store_as_new'                                           => 'Armazene como uma nova transação em vez de atualizar.',
     'reset_after'                                            => 'Limpar o formulário após o envio',
-    'errors_submission'                                      => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission'                                      => 'Algo deu errado com seu envio. Por favor, verifique os erros abaixo.',
+    'errors_submission_v2'                                   => 'Algo deu errado com seu envio. Por favor, verifique os erros abaixo: %{errorMessage}',
     'transaction_expand_split'                               => 'Exibir divisão',
     'transaction_collapse_split'                             => 'Esconder divisão',
 

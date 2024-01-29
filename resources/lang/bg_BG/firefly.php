@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Разходи без бюджет',
     'transactions_no_budget'                                 => 'Разходи без бюджет между :start и :end',
     'spent_between'                                          => 'Вече похарчени между :start и :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Задайте наличната сума',
     'update_available_amount'                                => 'Обновете наличната сума',
     'ab_basic_modal_explain'                                 => 'Използвайте тази форма, за да посочите колко очаквате да можете да бюджетирате (общо, във :currency) за посочения период.',

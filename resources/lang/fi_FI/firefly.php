@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Kulut ilman budjettia',
     'transactions_no_budget'                                 => 'Kulut ilman budjettia välillä :start ja :end',
     'spent_between'                                          => 'Jo kulutettu välillä :start ja :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Aseta käytettävissä oleva summa',
     'update_available_amount'                                => 'Päivitä käytettävissä oleva summa',
     'ab_basic_modal_explain'                                 => 'Käytä tätä lomaketta arvioidessasi kuinka paljon uskot pystyväsi budjetoimaan (kokonaisuudessaan, valuutassa :currency) valitulla jaksolla.',

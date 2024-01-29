@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Δαπάνες εκτός κάποιου προϋπολογισμού',
     'transactions_no_budget'                                 => 'Δαπάνες εκτός κάποιου προϋπολογισμού μεταξύ :start και :end',
     'spent_between'                                          => 'Δαπανήθηκαν ήδη μεταξύ :start και :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Ορισμός διαθέσιμου ποσού',
     'update_available_amount'                                => 'Ενημέρωση διαθέσιμου ποσού',
     'ab_basic_modal_explain'                                 => 'Χρησιμοποιήστε αυτή τη φόρμα για να υποδείξετε πόσα μπορείτε να προϋπολογίσετε (συνολικά, σε :currency) κατά την αναφερόμενη περίοδο.',

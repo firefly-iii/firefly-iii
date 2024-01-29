@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Utgifter uten budsjett',
     'transactions_no_budget'                                 => 'Utgifter uten budsjett mellom :start og :end',
     'spent_between'                                          => 'Allereie brukt mellom :start og :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Sett tilgjengeleg beløp',
     'update_available_amount'                                => 'Oppdater tilgjengeleg beløp',
     'ab_basic_modal_explain'                                 => 'Use this form to indicate how much you expect to be able to budget (in total, in :currency) in the indicated period.',

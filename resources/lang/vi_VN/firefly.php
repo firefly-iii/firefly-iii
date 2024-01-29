@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Chi phí không có ngân sách',
     'transactions_no_budget'                                 => 'Chi phí không có ngân sách giữa :start và :end',
     'spent_between'                                          => 'Đã dành giữa :start và :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Đặt số lượng có sẵn',
     'update_available_amount'                                => 'Cập nhật số tiền hiện có',
     'ab_basic_modal_explain'                                 => 'Sử dụng biểu mẫu này để cho biết số tiền bạn mong đợi có thể dự trù ngân sách (tổng cộng, bằng :currency) trong khoảng thời gian được chỉ định.',

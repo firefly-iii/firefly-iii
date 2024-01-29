@@ -1692,6 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Dépenses non budgétisées',
     'transactions_no_budget'                                 => 'Dépenses non budgétisées entre le :start et le :end',
     'spent_between'                                          => 'Déjà dépensé entre le :start et le :end',
+    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
     'set_available_amount'                                   => 'Définir le montant disponible',
     'update_available_amount'                                => 'Mettre à jour le montant disponible',
     'ab_basic_modal_explain'                                 => 'Utilisez ce formulaire pour indiquer combien vous vous attendez à pouvoir budgéter (au total, en :currency) dans la période indiquée.',
@@ -2555,8 +2556,8 @@ return [
     'after_update_create_another'                            => 'Après la mise à jour, revenir ici pour continuer l\'édition.',
     'store_as_new'                                           => 'Enregistrer comme une nouvelle opération au lieu de mettre à jour.',
     'reset_after'                                            => 'Réinitialiser le formulaire après soumission',
-    'errors_submission'                                      => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission'                                      => 'Certaines informations ne sont pas correctes dans votre formulaire. Veuillez vérifier les erreurs ci-dessous.',
+    'errors_submission_v2'                                   => 'Certaines informations ne sont pas correctes dans votre formulaire. Veuillez vérifier les erreurs ci-dessous : %{errorMessage}',
     'transaction_expand_split'                               => 'Développer la séparation',
     'transaction_collapse_split'                             => 'Réduire la séparation',
 
