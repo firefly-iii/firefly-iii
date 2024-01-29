@@ -8,7 +8,7 @@ on:
         required: true
         default: 'develop'
   schedule:
-    - cron:  '30 2 * * *'
+    - cron:  '15 0 * * *'
 
 jobs:
   build:
@@ -116,6 +116,7 @@ jobs:
           .ci/phpcs.sh
       - name: Release
         run: |
+          sudo timedatectl set-timezone Europe/Amsterdam
           git config user.name github-actions
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git config advice.addIgnoredFile false
@@ -136,17 +137,11 @@ jobs:
           else
             echo "Create default release."
             git tag -a $version -m "Here be changelog"
-            echo "7"
             git push origin $version
-            echo "8"
             gh release create $version --notes-from-tag -t "$version" --verify-tag
-            echo "9"
             git checkout develop
-            echo "10"
             git merge main
-            echo "11"
             git push
-            echo "12"
           fi
         env:
           GH_TOKEN: ${{ github.token }}
