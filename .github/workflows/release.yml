@@ -51,7 +51,7 @@ jobs:
           CROWDIN_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
       - name: Cleanup translations
         id: cleanup-transactions
-        uses: JC5/firefly-iii-dev@v16
+        uses: JC5/firefly-iii-dev@v29
         with:
           action: 'ff3:crowdin-warning'
           output: ''
@@ -60,7 +60,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Cleanup changelog
         id: cleanup-changelog
-        uses: JC5/firefly-iii-dev@v16
+        uses: JC5/firefly-iii-dev@v29
         with:
           action: 'ff3:changelog'
           output: ''
@@ -69,7 +69,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Generate JSON v1
         id: json-v1
-        uses: JC5/firefly-iii-dev@v16
+        uses: JC5/firefly-iii-dev@v29
         with:
           action: 'ff3:json-translations v1'
           output: ''
@@ -78,7 +78,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Generate JSON v2
         id: json-v2
-        uses: JC5/firefly-iii-dev@v16
+        uses: JC5/firefly-iii-dev@v29
         with:
           action: 'ff3:json-translations v2'
           output: ''
@@ -87,7 +87,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Code cleanup
         id: code-cleanup
-        uses: JC5/firefly-iii-dev@v16
+        uses: JC5/firefly-iii-dev@v29
         with:
           action: 'ff3:code'
           output: ''
@@ -100,7 +100,7 @@ jobs:
           npm run build
       - name: Build old JS
         id: old-js
-        uses: JC5/firefly-iii-dev@v16
+        uses: JC5/firefly-iii-dev@v29
         with:
           action: 'ff3:old-js'
           output: ''
