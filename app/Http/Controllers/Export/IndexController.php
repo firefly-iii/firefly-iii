@@ -30,6 +30,7 @@ use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response as LaravelResponse;
 use Illuminate\View\View;
 
@@ -63,7 +64,7 @@ class IndexController extends Controller
     /**
      * @throws FireflyException
      */
-    public function export(): LaravelResponse
+    public function export(): LaravelResponse|RedirectResponse
     {
         if(auth()->user()->hasRole('demo')) {
             session()->flash('info', (string) trans('firefly.demo_user_export'));
