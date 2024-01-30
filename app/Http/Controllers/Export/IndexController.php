@@ -65,6 +65,12 @@ class IndexController extends Controller
      */
     public function export(): LaravelResponse
     {
+        if(auth()->user()->hasRole('demo')) {
+            session()->flash('info', (string) trans('firefly.demo_user_export'));
+            return redirect(route('export.index'));
+    }
+
+
         /** @var ExportDataGenerator $generator */
         $generator = app(ExportDataGenerator::class);
         $generator->setUser(auth()->user());

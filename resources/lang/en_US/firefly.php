@@ -2369,6 +2369,7 @@ return [
     'block_code_bounced'                                     => 'Email message(s) bounced',
     'block_code_expired'                                     => 'Demo account expired',
     'no_block_code'                                          => 'No reason for block or user not blocked',
+    'demo_user_export' => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'User has not yet confirmed new email address',
     'admin_update_email'                                     => 'Contrary to the profile page, the user will NOT be notified their email address has changed!',
     'update_user'                                            => 'Update user',
