@@ -13,4 +13,4 @@ jobs:
         with:
           fetch-depth: 0
       - name: 'Dependency review'
-        uses: actions/dependency-review-action@v3
+        uses: actions/dependency-review-action@v4
