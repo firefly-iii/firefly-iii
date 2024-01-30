@@ -1692,7 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Költségkeret nélküli költségek',
     'transactions_no_budget'                                 => 'Költségkeret nélküli költségek :start és :end között',
     'spent_between'                                          => 'Már elköltött :start és :end között',
-    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
+    'spent_between_left'                                     => ':start és :end között :spent költöttél, így maradt :left.',
     'set_available_amount'                                   => 'Rendelkezésre álló összeg beállítása',
     'update_available_amount'                                => 'Rendelkezésre álló összeg frissítése',
     'ab_basic_modal_explain'                                 => 'Használja ezt az űrlapot a költségvetés beállításához (összesen, :currency devizában) a feltüntetett időszakban.',

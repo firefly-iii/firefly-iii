@@ -2556,8 +2556,8 @@ return [
     'after_update_create_another'                            => 'Després d\'actualitzar, torna ací per a seguir editant.',
     'store_as_new'                                           => 'Desa com a una nova transacció, en comptes d\'actualitzar.',
     'reset_after'                                            => 'Reiniciar el formulari després d\'enviar',
-    'errors_submission'                                      => 'There was something wrong with your submission. Please check out the errors below.',
-    'errors_submission_v2'                                   => 'There was something wrong with your submission. Please check out the errors below: %{errorMessage}',
+    'errors_submission'                                      => 'Hi ha hagut un error amb el teu enviament. Per favor, revisa els errors de sota.',
+    'errors_submission_v2'                                   => 'Hi ha hagut un error amb el teu enviament. Per favor, comprova els següents errors: %{errorMessage}',
     'transaction_expand_split'                               => 'Expandeix la divisió',
     'transaction_collapse_split'                             => 'Contrau la divisió',
 

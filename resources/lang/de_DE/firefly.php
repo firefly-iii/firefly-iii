@@ -1692,7 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Ausgaben ohne Budget',
     'transactions_no_budget'                                 => 'Ausgaben ohne Budget zwischen :start und :end',
     'spent_between'                                          => 'Bereits zwischen :start und :end ausgegeben',
-    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
+    'spent_between_left'                                     => ':spent zwischen :start und :end ausgegeben, :left verbleiben.',
     'set_available_amount'                                   => 'Verfügbaren Betrag festlegen',
     'update_available_amount'                                => 'Verfügbaren Betrag aktualisieren',
     'ab_basic_modal_explain'                                 => 'Verwenden Sie dieses Formular, um anzugeben, wie viel Sie erwarten, dass Sie im angegebenen Zeitraum vorsehen (insgesamt, in :currency) können.',

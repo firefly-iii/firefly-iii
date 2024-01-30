@@ -1692,7 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Dépenses non budgétisées',
     'transactions_no_budget'                                 => 'Dépenses non budgétisées entre le :start et le :end',
     'spent_between'                                          => 'Déjà dépensé entre le :start et le :end',
-    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
+    'spent_between_left'                                     => ':spent dépensé du :start au :end, :left restant.',
     'set_available_amount'                                   => 'Définir le montant disponible',
     'update_available_amount'                                => 'Mettre à jour le montant disponible',
     'ab_basic_modal_explain'                                 => 'Utilisez ce formulaire pour indiquer combien vous vous attendez à pouvoir budgéter (au total, en :currency) dans la période indiquée.',

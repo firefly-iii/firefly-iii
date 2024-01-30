@@ -45,6 +45,7 @@ use Illuminate\Http\JsonResponse;
 class BoxController extends Controller
 {
     use DateCalculation;
+
     /**
      * This box has three types of info to display:
      * 0) If the user has available amount this period and has overspent: overspent box.

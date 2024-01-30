@@ -1692,7 +1692,7 @@ return [
     'transactionsWithoutBudget'                              => 'Stroški brez proračuna',
     'transactions_no_budget'                                 => 'Stroški brez proračuna med :start in :end',
     'spent_between'                                          => 'Že porabljeno med :start in :end',
-    'spent_between_left'                                     => 'Spent :spent between :start and :end, leaving :left.',
+    'spent_between_left'                                     => 'Porabljeno :spent med :start in :end, preostane še :left.',
     'set_available_amount'                                   => 'Nastavi razpoložljivo količino',
     'update_available_amount'                                => 'Posodobi razpoložljivo količino',
     'ab_basic_modal_explain'                                 => 'S tem obrazcem navedite, koliko pričakujete, da boste lahko dodali v proračun (skupaj, v :currency) v navedenem obdobju.',

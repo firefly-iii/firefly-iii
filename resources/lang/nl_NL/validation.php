@@ -34,8 +34,8 @@
 declare(strict_types=1);
 
 return [
-    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
-    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
+    'bad_type_source'                 => 'Firefly III kan het transactietype niet bepalen op basis van deze bronrekening.',
+    'bad_type_destination'            => 'Firefly III kan het transactietype niet bepalen op basis van deze doelrekening.',
     'missing_where'                   => 'Array mist "where"-clausule',
     'missing_update'                  => 'Array mist "update"-clausule',
     'invalid_where_key'               => 'JSON bevat een ongeldige key in de "where"-clausule',
