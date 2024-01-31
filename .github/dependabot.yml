@@ -1,11 +1,16 @@
 version: 2
 updates:
 
+  # Check for updates to GitHub Actions every week
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
   # composer updates
   - package-ecosystem: "composer"
     directory: "/" # Location of package manifests
     target-branch: develop
-    labels: [ "bug" ]
     versioning-strategy: increase
     schedule:
       interval: "weekly"
@@ -14,15 +19,6 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     target-branch: develop
-    labels: [ "bug" ]
-    versioning-strategy: increase
-    schedule:
-      interval: "weekly"
-
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    target-branch: develop
-    labels: [ "bug" ]
     versioning-strategy: increase
     schedule:
       interval: "weekly"

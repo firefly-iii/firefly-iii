@@ -51,7 +51,7 @@ jobs:
           CROWDIN_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
       - name: Cleanup translations
         id: cleanup-transactions
-        uses: JC5/firefly-iii-dev@v16
+        uses: JC5/firefly-iii-dev@v29
         with:
           action: 'ff3:crowdin-warning'
           output: ''
@@ -60,16 +60,25 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Cleanup changelog
         id: cleanup-changelog
-        uses: JC5/firefly-iii-dev@v16
+        uses: JC5/firefly-iii-dev@v29
         with:
           action: 'ff3:changelog'
           output: ''
         env:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Extract changelog
+        id: extract-changelog
+        uses: JC5/firefly-iii-dev@v29
+        with:
+          action: 'ff3:extract-changelog'
+          output: 'output'
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Generate JSON v1
         id: json-v1
-        uses: JC5/firefly-iii-dev@v16
+        uses: JC5/firefly-iii-dev@v29
         with:
           action: 'ff3:json-translations v1'
           output: ''
@@ -78,7 +87,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Generate JSON v2
         id: json-v2
-        uses: JC5/firefly-iii-dev@v16
+        uses: JC5/firefly-iii-dev@v29
         with:
           action: 'ff3:json-translations v2'
           output: ''
@@ -87,7 +96,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Code cleanup
         id: code-cleanup
-        uses: JC5/firefly-iii-dev@v16
+        uses: JC5/firefly-iii-dev@v29
         with:
           action: 'ff3:code'
           output: ''
@@ -100,7 +109,7 @@ jobs:
           npm run build
       - name: Build old JS
         id: old-js
-        uses: JC5/firefly-iii-dev@v16
+        uses: JC5/firefly-iii-dev@v29
         with:
           action: 'ff3:old-js'
           output: ''
@@ -126,19 +135,25 @@ jobs:
           fi
 
           git add -A
+          if test -f "output.txt"; then
+            git reset output.txt
+          fi
           git commit -m "Auto commit for release '$version' on $(date +'%Y-%m-%d')" || true
           git push
 
           if [[ "develop" == "$version" ]]; then
             echo "Create nightly release."
-            git tag -a $version-$(date +'%Y%m%d') -m "Release '$version' on $(date +'%Y-%m-%d')"
+            git tag -a $version-$(date +'%Y%m%d') -m "Nightly development release '$version' on $(date +'%Y-%m-%d')"
             git push origin $version-$(date +'%Y%m%d')
-            gh release create $version-$(date +'%Y%m%d') -p -t "Nightly dev-release $(date +'%Y-%m-%d')" --verify-tag
+            gh release create $version-$(date +'%Y%m%d') -p --verify-tag \
+              -t "Development release for $(date +'%Y-%m-%d')" \
+              -n "Bi-weekly development release of Firefly III with the latest fixes, translations and features. This release was created on **$(date +'%Y-%m-%d')** and may contain bugs. Use at your own risk. Docker users can find this release under the `develop` tag."
           else
             echo "Create default release."
             git tag -a $version -m "Here be changelog"
             git push origin $version
-            gh release create $version --notes-from-tag -t "$version" --verify-tag
+            gh release create $version -F output.txt -t "$version" --verify-tag
+            rm -f output.txt
             git checkout develop
             git merge main
             git push

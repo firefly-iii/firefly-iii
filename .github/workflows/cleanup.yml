@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Prune cancelled/skipped runs
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GH_ACTIONS_PERSONAL_ACCESS_TOKEN }}
           script: |
@@ -42,7 +42,7 @@ jobs:
             }
 
       - name: Prune runs older than 3 days
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GH_ACTIONS_PERSONAL_ACCESS_TOKEN }}
           script: |
