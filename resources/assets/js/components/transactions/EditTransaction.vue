@@ -783,10 +783,10 @@ export default {
                 this.setDefaultErrors();
                 // do message if update or new:
                 if (this.storeAsNew) {
-                    this.success_message = this.$t('firefly.transaction_new_stored_link', {ID: groupId, title: title});
+                    this.success_message = this.$t('firefly.transaction_new_stored_link', {ID: groupId, title: this.escapeHtml(title)});
                     this.error_message = '';
                 } else {
-                    this.success_message = this.$t('firefly.transaction_updated_link', {ID: groupId, title: title});
+                    this.success_message = this.$t('firefly.transaction_updated_link', {ID: groupId, title: this.escapeHtml(title)});
                     this.error_message = '';
                 }
             } else {
@@ -917,6 +917,24 @@ export default {
 
         },
 
+        escapeHtml: function (string) {
+
+            let entityMap = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;',
+                '/': '&#x2F;',
+                '`': '&#x60;',
+                '=': '&#x3D;'
+            };
+
+            return String(string).replace(/[&<>"'`=\/]/g, function fromEntityMap(s) {
+                return entityMap[s];
+            });
+
+        },
 
         addTransaction: function (e) {
 
