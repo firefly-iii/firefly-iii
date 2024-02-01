@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'E-Mail-Nachricht(en) wurden abgewiesen',
     'block_code_expired'                                     => 'Demo-Konto abgelaufen',
     'no_block_code'                                          => 'Kein Grund für Block oder Benutzer nicht blockiert',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'Der Benutzer hat die neue E-Mail-Adresse noch nicht bestätigt',
     'admin_update_email'                                     => 'Im Gegensatz zur Profilseite wird der Benutzer NICHT benachrichtigt, dass seine E-Mail-Adresse geändert wurde!',
     'update_user'                                            => 'Benutzer aktualisieren',

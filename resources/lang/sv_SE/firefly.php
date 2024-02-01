@@ -2451,6 +2451,7 @@ return [
     'block_code_bounced'                                     => 'E-postmeddelande(n) studsade',
     'block_code_expired'                                     => 'Demo-konto har löpt ut',
     'no_block_code'                                          => 'Ingen anledning till blockering eller användare inte blockerad',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'Användaren har ännu inte bekräftat ny e-postadress',
     'admin_update_email'                                     => 'I motsats till profilsidan kommer användaren INTE att meddelas att deras e-postadress har ändrats!',
     'update_user'                                            => 'Uppdatera användare',

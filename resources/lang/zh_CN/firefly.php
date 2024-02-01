@@ -2451,6 +2451,7 @@ return [
     'block_code_bounced'                                     => '电子邮件被退回',
     'block_code_expired'                                     => '演示账户已过期',
     'no_block_code'                                          => '无封禁理由或用户未被封禁',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => '用户尚未确认新的电子邮件地址',
     'admin_update_email'                                     => '与个人档案页面相反，用户不会被通知他们的电子邮件地址已变更！',
     'update_user'                                            => '更新用户',

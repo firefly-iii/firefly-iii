@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'Messaggi email respinti',
     'block_code_expired'                                     => 'Conto demo scaduto',
     'no_block_code'                                          => 'Nessun motivo per bloccare o non bloccare un utente',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'L\'utente non ha ancora confermato il nuovo indirizzo emails',
     'admin_update_email'                                     => 'Contrariamente alla pagina del profilo, l\'utente NON riceverà alcuna notifica al proprio indirizzo email!',
     'update_user'                                            => 'Aggiorna utente',

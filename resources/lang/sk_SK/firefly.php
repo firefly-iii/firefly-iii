@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'E-mailové správy boli vrátené',
     'block_code_expired'                                     => 'Platnost demoúčtu skončila',
     'no_block_code'                                          => 'Nie je dôvod pre blokovanie, alebo použivateľ nebol zablokovaný',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'Poživateľ ešte nepotvrdil svoju e-mailovú adresu',
     'admin_update_email'                                     => 'Na rozdiel od profilovej stránky použivatel NEBUDE upozornený na zmenu svojej e-mailovej adresy!',
     'update_user'                                            => 'Upraviť použivateľa',

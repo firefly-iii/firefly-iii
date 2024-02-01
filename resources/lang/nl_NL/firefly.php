@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'Email kwam niet aan',
     'block_code_expired'                                     => 'Demo-account verlopen',
     'no_block_code'                                          => 'Geen reden of gebruiker niet geblokkeerd',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'De gebruiker heeft zijn nieuwe emailadres nog niet bevestigd',
     'admin_update_email'                                     => 'Integendeel tot de profielpagina krijgt de gebruiker hier geen notificatie van!',
     'update_user'                                            => 'Gebruiker bijwerken',

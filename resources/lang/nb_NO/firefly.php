@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'Epostmelding(er) kunne ikke leveres',
     'block_code_expired'                                     => 'Demo-konto utløpt',
     'no_block_code'                                          => 'Ingen grunn for utestengelse eller brukeren er ikke utestengt',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'Brukeren har ikke bekreftet ny e-postadresse ennå',
     'admin_update_email'                                     => 'I motsetning til profilsiden, vil brukeren IKKE bli varslet om at e-postadressen er endret!',
     'update_user'                                            => 'Oppdater bruker',

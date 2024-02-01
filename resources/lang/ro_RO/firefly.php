@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'Mesaje e-mail (uri) returnate',
     'block_code_expired'                                     => 'Contul Demo a expirat',
     'no_block_code'                                          => 'Nu există motive pentru blocarea sau blocarea utilizatorului',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'Utilizatorul nu a confirmat încă nicio adresă de e-mail nouă',
     'admin_update_email'                                     => 'Contrar paginii de profil, utilizatorul NU va fi anunțat că adresa sa de email a fost modificată!',
     'update_user'                                            => 'Actualizați user',

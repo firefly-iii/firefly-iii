@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'メールを配信できませんでした',
     'block_code_expired'                                     => 'デモアカウントの期限切れ',
     'no_block_code'                                          => 'ブロック理由がないかブロックされてません',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'ユーザーはまだ新しいメールアドレスを確認していません',
     'admin_update_email'                                     => 'プロフィールページとは違い、ユーザーにメールアドレスが変更されたことは通知されません。',
     'update_user'                                            => 'ユーザーを更新',

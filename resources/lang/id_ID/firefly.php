@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'Pesan email terpental',
     'block_code_expired'                                     => 'Akun demo kadaluarsa',
     'no_block_code'                                          => 'Tidak ada alasan untuk memblokir atau pengguna tidak diblokir',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'Pengguna belum mengkonfirmasi alamat email baru',
     'admin_update_email'                                     => 'Bertentangan dengan halaman profil, pengguna TIDAK akan diberitahu alamat email mereka telah berubah!',
     'update_user'                                            => 'Perbarui pengguna',

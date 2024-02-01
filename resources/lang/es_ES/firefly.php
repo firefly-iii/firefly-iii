@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'Mensaje (s) de correo rebotados',
     'block_code_expired'                                     => 'Cuenta de demostración vencida',
     'no_block_code'                                          => 'No hay razón para el bloqueo o usuario bloqueado',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'El usuario no ha confirmado aun una nueva dirección de correo',
     'admin_update_email'                                     => 'Contrario a la pagina de perfil, El usuario NO se notificara que su dirección de correo ha cambiado!',
     'update_user'                                            => 'Actualizar usuario',

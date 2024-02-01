@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => '電子郵件被退回',
     'block_code_expired'                                     => '演示帳戶已過期',
     'no_block_code'                                          => '無封鎖原因或使用者未被封鎖',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => '使用者尚未確認新的電子郵件地址',
     'admin_update_email'                                     => '與個人資料頁面相反，使用者不會被通知他們的電子郵件地址已變更！',
     'update_user'                                            => '更新使用者',

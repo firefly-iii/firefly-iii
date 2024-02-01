@@ -2451,6 +2451,7 @@ return [
     'block_code_bounced'                                     => 'E-posta mesajı geri çevrildi',
     'block_code_expired'                                     => 'Demo hesabı doldu',
     'no_block_code'                                          => 'Engellemek için bir neden yok ya da kullanıcı engellenmemiş',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'Kullanıcı henüz yeni bir e-posta adresi teyit etmedi',
     'admin_update_email'                                     => 'Profil sayfasının aksine kullanıcı e-posta adresleri değiştirildiğinde bildirim ALMAYACAKLAR!',
     'update_user'                                            => 'Kullanıcıyı güncelle',

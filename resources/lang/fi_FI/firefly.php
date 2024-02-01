@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'Sähköpostiviesti palautui',
     'block_code_expired'                                     => 'Demokäyttäjän tili on vanhentunut',
     'no_block_code'                                          => 'Ei syytä estoon tai käyttäjää ei ole estetty',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'Käyttäjä ei ole vielä vahvistanut uutta sähköpostiosoitetta',
     'admin_update_email'                                     => 'Profiilisivun tiedoista poiketen käyttäjää ei informoida sähköpostiosoitteen muutoksesta!',
     'update_user'                                            => 'Päivitä käyttäjä',

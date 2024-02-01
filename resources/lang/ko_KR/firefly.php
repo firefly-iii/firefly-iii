@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => '이메일 메시지가 반송됨',
     'block_code_expired'                                     => '데모 계정이 만료됨',
     'no_block_code'                                          => '차단 사유가 없거나 차단되지 않은 사용자',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => '사용자가 아직 새 이메일 주소를 확인하지 않았습니다',
     'admin_update_email'                                     => '프로필 페이지와 달리 이메일 주소가 변경되었다는 알림은 사용자에게 전송되지 않습니다!',
     'update_user'                                            => '사용자 업데이트',

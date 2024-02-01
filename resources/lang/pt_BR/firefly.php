@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'Mensagem(s) de email devolvidas',
     'block_code_expired'                                     => 'Conta de demonstração expirada',
     'no_block_code'                                          => 'Nenhuma razão para o bloqueio ou o usuário não está bloqueado',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'O usuário ainda não confirmou o novo endereço de e-mail',
     'admin_update_email'                                     => 'Ao contrário da página de perfil, o usuário NÃO será notificado de que seu endereço de e-mail mudou!',
     'update_user'                                            => 'Atualizar usuário',

@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'Visszapattant email üzenetek',
     'block_code_expired'                                     => 'A Demo számla lejárt',
     'no_block_code'                                          => 'Nincs oka a zárolásnak, vagy a felhasználó nincs zárolva',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'A felhasználó még nem erősítette meg az új email címét',
     'admin_update_email'                                     => 'A profil oldallal ellentétben a felhasználó NEM kap értesítést az email címe megváltozásáról!',
     'update_user'                                            => 'Felhasználó frissítése',

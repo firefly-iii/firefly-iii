@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'Elektronsko sporočilo je bilo zavrnjeno',
     'block_code_expired'                                     => 'Demo račun je potekel',
     'no_block_code'                                          => 'Brez razloga za blokiranje ali pa uporabnik ni blokiran',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'Uporabnik še ni potrdil novega elektronskega naslova',
     'admin_update_email'                                     => 'V nasprotju s stranjo profila, uporabnik NE bo obveščen o spremembi svojega elektronskega naslova!',
     'update_user'                                            => 'Posodobi uporabnika',

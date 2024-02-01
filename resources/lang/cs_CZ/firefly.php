@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'Email message(s) bounced',
     'block_code_expired'                                     => 'Platnost demoúčtu skončila',
     'no_block_code'                                          => 'Není důvod pro blokování nebo uživatel není blokován',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'Uživatel ještě nepotvrdil svou e-mailovou adresu',
     'admin_update_email'                                     => 'Narozdíl od profilové stránky uživatel NEBUDE upozorněn na změnu své e-mailové adresy!',
     'update_user'                                            => 'Aktualizovat uživatele',

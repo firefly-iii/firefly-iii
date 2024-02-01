@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'Correus electrònics retornats',
     'block_code_expired'                                     => 'El compte de prova ha expirat',
     'no_block_code'                                          => 'No hi ha cap motiu per a bloquejar, o l\'usuari no està bloquejat',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'L\'usuari encara no ha confirmat la seua direcció de correu electrònic',
     'admin_update_email'                                     => 'A diferència de la pàgina de perfil, l\'usuari NO serà notificat si es canvia la seva adreça electrònica!',
     'update_user'                                            => 'Actualitza l\'usuari',

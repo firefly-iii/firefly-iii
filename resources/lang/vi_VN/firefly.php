@@ -2450,6 +2450,7 @@ return [
     'block_code_bounced'                                     => 'Email (s) bị trả về',
     'block_code_expired'                                     => 'Tài khoản demo đã hết hạn',
     'no_block_code'                                          => 'Không có lý do chặn hoặc người dùng không bị chặn',
+    'demo_user_export'                                       => 'The demo user cannot export data',
     'block_code_email_changed'                               => 'Người dùng chưa xác nhận địa chỉ email mới',
     'admin_update_email'                                     => 'Trái với trang hồ sơ, người dùng sẽ KHÔNG được thông báo địa chỉ email của họ đã thay đổi!',
     'update_user'                                            => 'Cập nhật người dùng',
