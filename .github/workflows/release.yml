@@ -147,13 +147,13 @@ jobs:
             git push origin $version-$(date +'%Y%m%d')
             gh release create $version-$(date +'%Y%m%d') -p --verify-tag \
               -t "Development release for $(date +'%Y-%m-%d')" \
-              -n "Bi-weekly development release of Firefly III with the latest fixes, translations and features. This release was created on **$(date +'%Y-%m-%d')** and may contain bugs. Use at your own risk. Docker users can find this release under the `develop` tag."
+              -n "Bi-weekly development release of Firefly III with the latest fixes, translations and features. This release was created on **$(date +'%Y-%m-%d')** and may contain bugs. Use at your own risk. Docker users can find this release under the \`develop\` tag."
           else
             echo "Create default release."
             git tag -a $version -m "Here be changelog"
             git push origin $version
             gh release create $version -F output.txt -t "$version" --verify-tag
-            rm -f output.txt
+            rm output.txt
             git checkout develop
             git merge main
             git push
