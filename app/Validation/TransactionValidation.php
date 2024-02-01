@@ -536,7 +536,7 @@ trait TransactionValidation
         if ('' === $transaction['foreign_amount']) {
             return false;
         }
-        if (0 === bccomp('0', $transaction['foreign_amount'])) {
+        if (0 === bccomp('0', (string) $transaction['foreign_amount'])) {
             return false;
         }
 
