@@ -141,11 +141,16 @@ class RuleRepository implements RuleRepositoryInterface
             if ('user_action' === $trigger->trigger_type) {
                 continue;
             }
-            $needsContext = config(sprintf('search.operators.%s.needs_context', $trigger->trigger_type)) ?? true;
+            $triggerType  = $trigger->trigger_type;
+            if(str_starts_with($trigger->trigger_type, '-')) {
+                $triggerType = substr($trigger->trigger_type, 1);
+            }
+            $needsContext = config(sprintf('search.operators.%s.needs_context', $triggerType)) ?? true;
             if (false === $needsContext) {
                 $params[] = sprintf('%s:true', OperatorQuerySearch::getRootOperator($trigger->trigger_type));
             }
             if (true === $needsContext) {
+                var_dump('x');
                 $params[] = sprintf('%s:"%s"', OperatorQuerySearch::getRootOperator($trigger->trigger_type), $trigger->trigger_value);
             }
         }

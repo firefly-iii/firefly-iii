@@ -136,9 +136,13 @@ class SelectController extends Controller
         }
 
         foreach ($textTriggers as $textTrigger) {
+            $needsContext             = config(sprintf('search.operators.%s.needs_context', $textTrigger['type'])) ?? true;
             $trigger                  = new RuleTrigger();
             $trigger->trigger_type    = $textTrigger['type'];
             $trigger->trigger_value   = $textTrigger['value'];
+            if(false === $needsContext) {
+                $trigger->trigger_value = 'true';
+            }
             $trigger->stop_processing = $textTrigger['stop_processing'];
             if ($textTrigger['prohibited']) {
                 $trigger->trigger_type = sprintf('-%s', $textTrigger['type']);
