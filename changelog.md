@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.8 - 2024-02-04
+
+### Added
+
+- Added a trigger for v2 layouts that helps with debugging.
+- #8431
+- #8457
+
+### Removed
+
+- Reference to the "huntr" bug bounty platform, which is now some shitty AI scam.
+
+### Fixed
+
+- #8432
+- #8433
+- #8442
+- #8445
+- #8446
+- #8467
+- #8472
+- #8471
+- #8477
+
+### Security
+
+- [GHSA-29w6-c52g-m8jc](https://github.com/firefly-iii/firefly-iii/security/advisories/GHSA-29w6-c52g-m8jc) Demo users could trick each other into downloading poisoned CSV files, reported by @red5us
+
 ## 6.1.7 - 2024-01-21
 
 ### Added
