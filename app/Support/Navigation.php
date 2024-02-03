@@ -216,6 +216,7 @@ class Navigation
     public function endOfPeriod(Carbon $end, string $repeatFreq): Carbon
     {
         $currentEnd  = clone $end;
+        Log::debug(sprintf('endOfPeriod("%s", "%s")', $currentEnd->format('Y-m-d'), $repeatFreq));
 
         $functionMap = [
             '1D'        => 'endOfDay',
@@ -236,27 +237,25 @@ class Navigation
             'yearly'    => 'addYear',
             '1Y'        => 'addYear',
         ];
-        $modifierMap = [
-            'quarter'   => 3,
-            '3M'        => 3,
-            'quarterly' => 3,
-            'half-year' => 6,
-            'half_year' => 6,
-            '6M'        => 6,
-        ];
-
+        $modifierMap = ['quarter' => 3, '3M' => 3, 'quarterly' => 3, 'half-year' => 6, 'half_year' => 6, '6M' => 6];
         $subDay      = ['week', 'weekly', '1W', 'month', 'monthly', '1M', '3M', 'quarter', 'quarterly', '6M', 'half-year', 'half_year', '1Y', 'year', 'yearly'];
 
-        // if the range is custom, the end of the period
-        // is another X days (x is the difference between start)
-        // and end added to $theCurrentEnd
         if ('custom' === $repeatFreq) {
-            /** @var Carbon $tStart */
-            $tStart     = session('start', today(config('app.timezone'))->startOfMonth());
+            // if the repeat frequency is "custom", use the current session start/end to see how large the range is,
+            // and use that to "add" another period.
+            // if there is no session data available use "30 days" as a default.
+            $diffInDays = 30;
+            if (null !== session('start') && null !== session('end')) {
+                Log::debug('Session data available.');
 
-            /** @var Carbon $tEnd */
-            $tEnd       = session('end', today(config('app.timezone'))->endOfMonth());
-            $diffInDays = $tStart->diffInDays($tEnd);
+                /** @var Carbon $tStart */
+                $tStart     = session('start', today(config('app.timezone'))->startOfMonth());
+
+                /** @var Carbon $tEnd */
+                $tEnd       = session('end', today(config('app.timezone'))->endOfMonth());
+                $diffInDays = $tStart->diffInDays($tEnd);
+            }
+            Log::debug(sprintf('Diff in days is %d', $diffInDays));
             $currentEnd->addDays($diffInDays);
 
             return $currentEnd;

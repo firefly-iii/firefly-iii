@@ -74,6 +74,7 @@ class TriggerRequest extends FormRequest
         if(null === $this->get('accounts')) {
             return [];
         }
+
         return $this->get('accounts');
     }
 }
