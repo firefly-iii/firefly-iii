@@ -8,8 +8,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Added a trigger for v2 layouts that helps with debugging.
-- #8431
-- #8457
+- [Issue 8431](https://github.com/firefly-iii/firefly-iii/issues/8431) (The Opening/ Virtual Balance must less than or equal 100001709) reported by @binhtran1604
+- [Issue 8457](https://github.com/firefly-iii/firefly-iii/issues/8457) (Budgets - missing summary from the bottom) reported by @g7xtr
 
 ### Removed
 
@@ -17,16 +17,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #8432
-- #8433
-- #8442
-- #8445
-- #8446
-- #8467
-- #8472
-- #8471
-- #8477
-- #8497
+- [PR 8432](https://github.com/firefly-iii/firefly-iii/pull/8432) (Update favicons.twig) reported by @stevietv
+- [Issue 8433](https://github.com/firefly-iii/firefly-iii/issues/8433) (may be a wrong calculation) reported by @PterX
+- [Issue 8442](https://github.com/firefly-iii/firefly-iii/issues/8442) (v6.1.7 - Not expected this period) reported by @poudenes
+- [Issue 8445](https://github.com/firefly-iii/firefly-iii/issues/8445)
+- [Issue 8446](https://github.com/firefly-iii/firefly-iii/issues/8446) (There is an extra X ending symbol here) reported by @PterX
+- [Issue 8467](https://github.com/firefly-iii/firefly-iii/issues/8467) (API Endpoint /data/export/rules produces errorneous CSV output) reported by @not1q84-1
+- [Issue 8472](https://github.com/firefly-iii/firefly-iii/issues/8472) (When left to spend is 0, the info box is red) reported by @nicosomb
+- [Issue 8471](https://github.com/firefly-iii/firefly-iii/issues/8471) (Left to spend is not the same on dashboard and on budget page) reported by @nicosomb
+- [PR 8477](https://github.com/firefly-iii/firefly-iii/pull/8477) (Bump actions/checkout from 3 to 4) reported by @dependabot[bot]
+- [Issue 8497](https://github.com/firefly-iii/firefly-iii/issues/8497) (has_any_category:false not possible as a rule) reported by @shrippen
 
 ### Security
 

@@ -63,7 +63,7 @@ return [
  */
 
     'collect_info'            => 'Συλλέξτε περισσότερες πληροφορίες στον κατάλογο <code>storage/logs</code> όπου θα βρείτε αρχεία καταγραφής. Εάν χρησιμοποιείτε το Docker, χρησιμοποιήστε το <code>docker logs -f [container]</code>.',
-    'collect_info_more'       => 'You can read more about collecting error information in <a href="https://docs.firefly-iii.org/how-to/general/debug/">the FAQ</a>.',
+    'collect_info_more'       => 'Μπορείτε να διαβάσετε περισσότερα σχετικά με τη συλλογή πληροφοριών σφαλμάτων στο <a href="https://docs.firefly-iii.org/how-to/general/debug/">FAQ</a>.',
     'github_help'             => 'Λάβετε βοήθεια στο GitHub',
     'github_instructions'     => 'Είστε ευπρόσδεκτοι να ανοίξετε ένα νέο θέμα <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">στο GitHub</a></strong>.',
     'use_search'              => 'Χρησιμοποιήστε την αναζήτηση!',
