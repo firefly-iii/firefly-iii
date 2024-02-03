@@ -20,7 +20,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [PR 8432](https://github.com/firefly-iii/firefly-iii/pull/8432) (Update favicons.twig) reported by @stevietv
 - [Issue 8433](https://github.com/firefly-iii/firefly-iii/issues/8433) (may be a wrong calculation) reported by @PterX
 - [Issue 8442](https://github.com/firefly-iii/firefly-iii/issues/8442) (v6.1.7 - Not expected this period) reported by @poudenes
-- [Issue 8445](https://github.com/firefly-iii/firefly-iii/issues/8445)
+- [Discussion 8445](https://github.com/orgs/firefly-iii/discussions/8445) (Offering to Contribute to Firefly Documentation) reported by @poupouproject
 - [Issue 8446](https://github.com/firefly-iii/firefly-iii/issues/8446) (There is an extra X ending symbol here) reported by @PterX
 - [Issue 8467](https://github.com/firefly-iii/firefly-iii/issues/8467) (API Endpoint /data/export/rules produces errorneous CSV output) reported by @not1q84-1
 - [Issue 8472](https://github.com/firefly-iii/firefly-iii/issues/8472) (When left to spend is 0, the info box is red) reported by @nicosomb
