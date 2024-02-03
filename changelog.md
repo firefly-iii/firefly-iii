@@ -26,6 +26,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #8472
 - #8471
 - #8477
+- #8497
 
 ### Security
 
