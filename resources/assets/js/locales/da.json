@@ -141,9 +141,9 @@
         "payment_date": "Betalingsdato",
         "invoice_date": "Fakturadato",
         "internal_reference": "Intern reference",
-        "webhook_response": "Response",
-        "webhook_trigger": "Trigger",
-        "webhook_delivery": "Delivery"
+        "webhook_response": "Svar",
+        "webhook_trigger": "Udl\u00f8ser",
+        "webhook_delivery": "Levering"
     },
     "list": {
         "active": "Aktiv?",
@@ -155,6 +155,6 @@
     },
     "config": {
         "html_language": "da",
-        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
+        "date_time_fns": "MMMM g\u00f8r, yyyy @ HH:mm:ss"
     }
 }

@@ -34,8 +34,8 @@
 declare(strict_types=1);
 
 return [
-    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
-    'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
+    'bad_type_source'                 => 'Firefly III kan ikke bestemme transaktionstypen baseret på denne kildekonto.',
+    'bad_type_destination'            => 'Firefly III kan ikke bestemme transaktionstypen baseret på denne destinationskonto.',
     'missing_where'                   => 'Array mangler “Where”-sektion',
     'missing_update'                  => 'Array mangler “update”-sektion',
     'invalid_where_key'               => 'JSON indeholder en ugyldig nøgle til "where"-sektionen',
@@ -45,14 +45,14 @@ return [
     'invalid_query_currency'          => 'Din forespørgsel indeholder konti, der har forskellige valutaindstillinger, hvilket ikke er tilladt.',
     'iban'                            => 'Dette er ikke et gyldig IBAN.',
     'zero_or_more'                    => 'Denne værdi kan ikke være negativ.',
-    'more_than_zero'                  => 'The value must be more than zero.',
-    'more_than_zero_correct'          => 'The value must be zero or more.',
-    'no_asset_account'                => 'This is not an asset account.',
+    'more_than_zero'                  => 'Værdien skal være højere end nul.',
+    'more_than_zero_correct'          => 'Værdien skal være nul eller mere.',
+    'no_asset_account'                => 'Dette er ikke en aktivkonto.',
     'date_or_time'                    => 'Værdien skal være en gyldig dato eller tids værdi (ISO 8601).',
     'source_equals_destination'       => 'Kildekontoen er den samme som modtagerkontoen.',
     'unique_account_number_for_user'  => 'Det ser ud som om dette kontonummer allerede er i brug.',
     'unique_iban_for_user'            => 'Det ser ud til denne IBAN allerede er i brug.',
-    'reconciled_forbidden_field'      => 'This transaction is already reconciled, you cannot change the ":field"',
+    'reconciled_forbidden_field'      => 'Denne transaktion er allerede forsonet, du kan ikke ændre ":field"',
     'deleted_user'                    => 'På grund af sikkerhedspolikker, kan du ikke registrere med denne email adresse.',
     'rule_trigger_value'              => 'Denne værdi er ikke gyldig for den valgte trigger.',
     'rule_action_value'               => 'Denne værdi er ikke gyldig for den valgte handling.',
@@ -64,21 +64,21 @@ return [
     'transaction_types_equal'         => 'Alle opsplitninger skal være af samme type.',
     'invalid_transaction_type'        => 'Ugyldig overførelsestype.',
     'invalid_selection'               => 'Din markering er ikke gyldig.',
-    'belongs_user'                    => 'This value is linked to an object that does not seem to exist.',
-    'belongs_user_or_user_group'      => 'This value is linked to an object that does not seem to exist in your current financial administration.',
+    'belongs_user'                    => 'Denne værdi er knyttet til et objekt, der ikke ser ud til at eksistere.',
+    'belongs_user_or_user_group'      => 'Denne værdi er knyttet til et objekt, der ikke ser ud til at eksistere i din nuværende økonomiske administration.',
     'at_least_one_transaction'        => 'Kræver mindst en overførsel.',
-    'recurring_transaction_id'        => 'Need at least one transaction.',
-    'need_id_to_match'                => 'You need to submit this entry with an ID for the API to be able to match it.',
-    'too_many_unmatched'              => 'Too many submitted transactions cannot be matched to their respective database entries. Make sure existing entries have a valid ID.',
-    'id_does_not_match'               => 'Submitted ID #:id does not match expected ID. Make sure it matches or omit the field.',
+    'recurring_transaction_id'        => 'Kræver mindst en overførsel.',
+    'need_id_to_match'                => 'Du skal indsende denne post med et ID for, at APIet kan matche det.',
+    'too_many_unmatched'              => 'For mange indsendte transaktioner kan ikke matches med deres respektive databaseposter. Sørg for, at eksisterende poster har et gyldigt ID.',
+    'id_does_not_match'               => 'Indsendt ID #:id matcher ikke forventet ID. Sørg for at det matcher eller udelad feltet.',
     'at_least_one_repetition'         => 'Kræver mindst en gentagelse.',
     'require_repeat_until'            => 'Kræver enten et antal af gentagelser, eller en slutdato (repeat_until). Ikke begge.',
     'require_currency_info'           => 'Indholdet af dette felt er ugyldigt uden møntfodsinformation.',
     'not_transfer_account'            => 'Denne konto kan ikke benyttes til overførsler.',
     'require_currency_amount'         => 'Indholdet af dette felt er ugyldigt uden information om det udenlandske beløb.',
-    'require_foreign_currency'        => 'This field requires a number',
-    'require_foreign_dest'            => 'This field value must match the currency of the destination account.',
-    'require_foreign_src'             => 'This field value must match the currency of the source account.',
+    'require_foreign_currency'        => 'Dette felt kræver et tal',
+    'require_foreign_dest'            => 'Denne feltværdi skal matche valutaen på destinationskontoen.',
+    'require_foreign_src'             => 'Denne feltværdi skal matche valutaen på kildekontoen.',
     'equal_description'               => 'Overførselsbeskrivelse bør ikke være den samme som den generelle beskrivelse.',
     'file_invalid_mime'               => 'Filen ":name" er af typen ":mime", som ikke er gyldig som en ny upload.',
     'file_too_large'                  => 'Filen ":name" er for stor.',
@@ -146,7 +146,7 @@ return [
     'min.array'                       => ':attribute skal have mindst :min elementer.',
     'not_in'                          => 'Den valgte :attribute er ikke gyldig.',
     'numeric'                         => ':attribute skal være et tal.',
-    'scientific_notation'             => 'The :attribute cannot use the scientific notation.',
+    'scientific_notation'             => ':attribute kan ikke bruge den videnskabelige notation.',
     'numeric_native'                  => 'Det oprindelige beløb skal være et tal.',
     'numeric_destination'             => 'Bestemmelsesbeløbet skal være et tal.',
     'numeric_source'                  => 'Kildebeløbet skal være et tal.',
@@ -179,8 +179,8 @@ return [
     'unique_piggy_bank_for_user'      => '"Sparebøssens" navn skal være unikt.',
     'unique_object_group'             => 'Gruppenavnet skal være unikt',
     'starts_with'                     => 'Værdien skal starte med :values.',
-    'unique_webhook'                  => 'You already have a webhook with this combination of URL, trigger, response and delivery.',
-    'unique_existing_webhook'         => 'You already have another webhook with this combination of URL, trigger, response and delivery.',
+    'unique_webhook'                  => 'Du har allerede en webhook med denne kombination af URL, udløser, respons og levering.',
+    'unique_existing_webhook'         => 'Du har allerede en anden webhook med denne kombination af URL, udløser, respons og levering.',
     'same_account_type'               => 'Begge konti skal være af samme kontotype',
     'same_account_currency'           => 'Begge konti skal have samme valuta',
 
@@ -239,20 +239,20 @@ return [
 
     // validation of accounts:
     'withdrawal_source_need_data'     => 'Det er nødvendigt at have et gyldigt kildekonto ID og/eller gyldigt kildekontonavn for at fortsætte.',
-    'withdrawal_source_bad_data'      => '[a] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'withdrawal_dest_need_data'       => '[a] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_source_bad_data'      => '[a] Kunne ikke finde en gyldig kildekonto ved søgning efter ID ":id" eller navn ":name".',
+    'withdrawal_dest_need_data'       => '[a] Det er nødvendigt at have et gyldigt destinationskonto-ID og/eller et gyldigt destinationskontonavn for at fortsætte.',
     'withdrawal_dest_bad_data'        => 'Kunne ikke finde en gyldig destinationskonto, ved søgning efter ID ":id" eller navn ":name".',
 
-    'withdrawal_dest_iban_exists'     => 'This destination account IBAN is already in use by an asset account or a liability and cannot be used as a withdrawal destination.',
-    'deposit_src_iban_exists'         => 'This source account IBAN is already in use by an asset account or a liability and cannot be used as a deposit source.',
+    'withdrawal_dest_iban_exists'     => 'Denne destinationskonto-IBAN er allerede i brug af en aktivkonto eller en forpligtelse, og kan ikke anvendes som tilbagetrækningsdestination.',
+    'deposit_src_iban_exists'         => 'Denne kildekonto IBAN er allerede i brug af en aktivkonto eller en forpligtelse, og kan ikke anvendes som desponeringskilde.',
 
-    'reconciliation_source_bad_data'  => 'Could not find a valid reconciliation account when searching for ID ":id" or name ":name".',
+    'reconciliation_source_bad_data'  => 'Kunne ikke finde en gyldig afstemningskonto ved søgning for ID ":id" eller navn ":name".',
 
-    'generic_source_bad_data'         => '[e] Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'generic_source_bad_data'         => '[e] Kunne ikke finde en gyldig kildekonto ved søgning efter ID ":id" eller navn ":name".',
 
     'deposit_source_need_data'        => 'Det er nødvendigt at have et gyldigt kildekonto ID og/eller gyldigt kildekontonavn for at fortsætte.',
-    'deposit_source_bad_data'         => '[b] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'deposit_dest_need_data'          => '[b] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'deposit_source_bad_data'         => '[b] Kunne ikke finde en gyldig kildekonto ved søgning efter ID ":id" eller navn ":name".',
+    'deposit_dest_need_data'          => '[b] Det er nødvendigt at have et gyldigt destinationskonto-ID og/eller et gyldigt destinationskontonavn for at fortsætte.',
     'deposit_dest_bad_data'           => 'Kunne ikke finde en gyldig destinationskonto, ved søgning efter ID ":id" eller kontonavn ":name".',
     'deposit_dest_wrong_type'         => 'Den foreslåede destinationskonto er ikke af den rigtige type.',
 
@@ -268,22 +268,22 @@ return [
  */
 
     'transfer_source_need_data'       => 'Det er nødvendigt at have et gyldigt kildekonto ID og/eller gyldigt kildekontonavn for at fortsætte.',
-    'transfer_source_bad_data'        => '[c] Could not find a valid source account when searching for ID ":id" or name ":name".',
-    'transfer_dest_need_data'         => '[c] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'transfer_source_bad_data'        => '[c] Kunne ikke finde en gyldig kildekonto ved søgning efter ID ":id" eller navn ":name".',
+    'transfer_dest_need_data'         => '[c] Det er nødvendigt at have et gyldigt destinationskonto-ID og/eller et gyldigt destinationskontonavn for at fortsætte.',
     'transfer_dest_bad_data'          => 'Kunne ikke finde en gyldig destinationskonto, ved søgning efter ID ":id" eller kontonavn ":name".',
     'need_id_in_edit'                 => 'Hver opdeling skal have et transaction_journal_id (enten gyldigt ID eller 0).',
 
     'ob_source_need_data'             => 'Det er nødvendigt at have et gyldigt kildekonto ID og/eller gyldigt kildekontonavn for at fortsætte.',
     'lc_source_need_data'             => 'Du skal bruge et gyldigt konto-id for at fortsætte.',
-    'ob_dest_need_data'               => '[d] Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_need_data'               => '[d] Det er nødvendigt at have et gyldigt destinationskonto-ID og/eller et gyldigt destinationskontonavn for at fortsætte.',
     'ob_dest_bad_data'                => 'Kunne ikke finde en gyldig destinationskonto, ved søgning efter ID ":id" eller kontonavn ":name".',
-    'reconciliation_either_account'   => 'To submit a reconciliation, you must submit either a source or a destination account. Not both, not neither.',
+    'reconciliation_either_account'   => 'For at indsende en forsoning skal du indsende enten en kilde- eller destinationskonto. Ikke begge, eller ingen af dem.',
 
     'generic_invalid_source'          => 'Du kan ikke bruge denne konto som kildekonto.',
     'generic_invalid_destination'     => 'Du kan ikke bruge denne konto som destinationskonto.',
 
-    'generic_no_source'               => 'You must submit source account information or submit a transaction journal ID.',
-    'generic_no_destination'          => 'You must submit destination account information or submit a transaction journal ID.',
+    'generic_no_source'               => 'Du skal indsende kildekontooplysninger eller indsende et transaktionsjournal-ID.',
+    'generic_no_destination'          => 'Du skal indsende destinationskontooplysninger eller indsende et transkationsjournal-ID.',
 
     'gte.numeric'                     => 'Attributten :attribute skal være større end eller lig med :value.',
     'gt.numeric'                      => 'Attributten :attribute skal være større end :value.',
@@ -297,7 +297,7 @@ return [
     'auto_budget_period_mandatory'    => 'Perioden for autobudget skal udfyldes.',
 
     // no access to administration:
-    'no_access_user_group'            => 'You do not have the correct access rights for this administration.',
+    'no_access_user_group'            => 'Du har ikke de korrekte adgangsrettigheder for denne administration.',
 ];
 
 /*
