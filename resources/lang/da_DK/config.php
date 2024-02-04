@@ -63,13 +63,13 @@ return [
 
     // 'date_time'               => '%B %e, %Y, @ %T',
     'date_time_js'             => 'Do MMMM, YYYY @ HH:mm:ss',
-    'date_time_fns'            => 'MMMM do, yyyy @ HH:mm:ss',
+    'date_time_fns'            => 'MMMM gør, yyyy @ HH:mm:ss',
 
     // 'specific_day'            => '%e %B %Y',
     'specific_day_js'          => 'D MMMM YYYY',
 
     // 'week_in_year'            => 'Week %V, %G',
-    'week_in_year_js'          => '[Week] W, GGGG',
+    'week_in_year_js'          => '[Week] U, GGGG',
     'week_in_year_fns'         => "'Uge' w, yyyy",
 
     // 'year'                    => '%Y',
