@@ -7,8 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #8499
-- #8501
+- [Issue 8499](https://github.com/firefly-iii/firefly-iii/issues/8499) (Wrong version number after update to v6.1.8) reported by @memo-567
+- [Issue 8501](https://github.com/firefly-iii/firefly-iii/issues/8501) (Bulk delete page links to wrong tx) reported by @likuilin
 
 ## 6.1.8 - 2024-02-04
 
