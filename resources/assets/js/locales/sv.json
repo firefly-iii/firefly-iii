@@ -142,12 +142,12 @@
         "invoice_date": "Fakturadatum",
         "internal_reference": "Intern referens",
         "webhook_response": "Response",
-        "webhook_trigger": "Trigger",
+        "webhook_trigger": "Utl\u00f6sare",
         "webhook_delivery": "Delivery"
     },
     "list": {
         "active": "\u00c4r aktiv?",
-        "trigger": "Trigger",
+        "trigger": "Utl\u00f6sare",
         "response": "Svar",
         "delivery": "Leverans",
         "url": "URL",

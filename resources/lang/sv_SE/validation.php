@@ -34,7 +34,7 @@
 declare(strict_types=1);
 
 return [
-    'bad_type_source'                 => 'Firefly III can\'t determine the transaction type based on this source account.',
+    'bad_type_source'                 => 'Firefly III kan inte avgöra transaktionstypen baserat på detta källkonto.',
     'bad_type_destination'            => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                   => 'Array saknar "var"-klausul',
     'missing_update'                  => 'Array saknar "updaterings"-klausul',
@@ -46,8 +46,8 @@ return [
     'iban'                            => 'Detta är inte ett giltigt IBAN.',
     'zero_or_more'                    => 'Värdet får inte vara negativt.',
     'more_than_zero'                  => 'The value must be more than zero.',
-    'more_than_zero_correct'          => 'The value must be zero or more.',
-    'no_asset_account'                => 'This is not an asset account.',
+    'more_than_zero_correct'          => 'Värdet måste vara noll eller mer.',
+    'no_asset_account'                => 'Detta är inte ett tillgångskonto.',
     'date_or_time'                    => 'Värdet måste vara ett giltigt datum eller tid (ISO 8601).',
     'source_equals_destination'       => 'Källkontot motsvarar mottagarkontot.',
     'unique_account_number_for_user'  => 'Det ser ut som att detta kontonummer redan används.',

@@ -79,7 +79,7 @@ return [
     'reports_index_intro'                                     => 'Använd dessa rapporter för att få detaljerad insikt i din ekonomi.',
     'reports_index_inputReportType'                           => 'Välj en rapporttyp. Se hjälpsidorna för att se vad varje rapport visar.',
     'reports_index_inputAccountsSelect'                       => 'Det går att exkluder eller inkludera tillgångskonton som du tycker passar.',
-    'reports_index_inputDateRange'                            => 'The selected date range is entirely up to you: from one day to 10 years or more.',
+    'reports_index_inputDateRange'                            => 'Det valda datumintervallet är helt upp till dig: från en dag till 10 år eller mer.',
     'reports_index_extra-options-box'                         => 'Beroende på vilken rapport du har valt kan du välja extra filter och alternativ här. Se den här rutan när du ändrar rapporttyper.',
 
     // reports (reports)

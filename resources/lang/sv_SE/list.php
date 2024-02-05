@@ -177,7 +177,7 @@ return [
     'payment_info'            => 'Betalinformation',
     'expected_info'           => 'Nästa förväntade transaktion',
     'start_date'              => 'Startdatum',
-    'trigger'                 => 'Trigger',
+    'trigger'                 => 'Utlösare',
     'response'                => 'Svar',
     'delivery'                => 'Leverans',
     'url'                     => 'URL',
