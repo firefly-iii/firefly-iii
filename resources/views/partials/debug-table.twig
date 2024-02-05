@@ -12,7 +12,7 @@
     {# Firefly III version #}
     <tr>
         <td>Firefly III</td>
-        <td>v{{ FF_VERSION }} / v{{ config('firefly.api_version') }} / {{ system.db_version }} (exp. {{ config('firefly.db_version') }})
+        <td>{% if FF_VERSION starts with 'develop' %}{{ FF_VERSION }}{% else %}{{ FF_VERSION }}{% endif %} / v{{ config('firefly.api_version') }} / {{ system.db_version }} (exp. {{ config('firefly.db_version') }})
         </td>
     </tr>
     {# PHP version + settings #}
