@@ -65,7 +65,6 @@ return [
     // budgets: index
     'budgets_index'                  => [
         'intro'            => [],
-        'set_budget'       => ['element' => '#availableBar'],
         'see_expenses_bar' => ['element' => '#spentBar'],
         'navigate_periods' => ['element' => '#periodNavigator'],
         'new_budget'       => ['element' => '#createBudgetBox'],
