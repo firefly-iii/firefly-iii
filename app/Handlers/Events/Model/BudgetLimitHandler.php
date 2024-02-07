@@ -154,6 +154,7 @@ class BudgetLimitHandler
                         ]
                     );
                     $availableBudget->save();
+                    app('log')->debug(sprintf('ID of new AB is #%d', $availableBudget->id));
                 }
             }
 
