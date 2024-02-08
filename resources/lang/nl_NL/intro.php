@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => 'Budgetten worden gebruikt om je financiën te beheren en vormen een van de kernfuncties van Firefly III.',
-    'budgets_index_set_budget'                                => 'Stel je totale budget voor elke periode in, zodat Firefly III je kan vertellen of je alle beschikbare geld hebt gebudgetteerd.',
     'budgets_index_see_expenses_bar'                          => 'Het besteden van geld zal deze balk langzaam vullen.',
     'budgets_index_navigate_periods'                          => 'Navigeer door periodes heen om je budget vooraf te bepalen.',
     'budgets_index_new_budget'                                => 'Maak nieuwe budgetten naar wens.',

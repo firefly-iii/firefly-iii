@@ -58,7 +58,6 @@ return [
     // budgets index
     'budgets_index_intro'                                     => '預算用來管理您的財務，是 Firefly III 的
 核心功能之一。',
-    'budgets_index_set_budget'                                => '設定每個時期的總預算，讓 Firefly III 能告訴您，所有可用的錢是否都已設定預算。',
     'budgets_index_see_expenses_bar'                          => '消費金額會慢慢地填滿這個橫條。',
     'budgets_index_navigate_periods'                          => '往前後不同時期，輕鬆預先設定預算。',
     'budgets_index_new_budget'                                => '隨意建立新預算。',

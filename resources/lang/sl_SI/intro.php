@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => 'Proračuni se uporabljajo za upravljanje vaših financ in tvorijo eno od ključnih funkcij Firefly III.',
-    'budgets_index_set_budget'                                => 'Določite svoj celotni proračun za vsako obdobje, tako da vam lahko Firefly III pove, če ste predvideli vsa razpoložljiva sredstva.',
     'budgets_index_see_expenses_bar'                          => 'Poraba denarja bo počasi zapolnila to vrstico.',
     'budgets_index_navigate_periods'                          => 'Krmarjenje po obdobjih omogoča preprosto predčasno nastavitev proračunov.',
     'budgets_index_new_budget'                                => 'Ustvarite nove proračune, kot se vam zdi primerno.',

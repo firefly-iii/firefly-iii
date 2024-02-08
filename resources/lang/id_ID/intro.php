@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => 'Anggaran yang digunakan untuk mengelola keuangan anda dan membentuk salah satu fungsi inti dari Firefly III.',
-    'budgets_index_set_budget'                                => 'Tetapkan total anggaran Anda untuk setiap periode sehingga Firefly III dapat menginformasikan apakah semua uang Anda sudah dianggarkan atau belum.',
     'budgets_index_see_expenses_bar'                          => 'Menghabiskan uang secara perlahan dengan mengisi di bar ini.',
     'budgets_index_navigate_periods'                          => 'Menavigasi melalui periode dengan mudah menetapkan anggaraan sebelumnya.',
     'budgets_index_new_budget'                                => 'Buat anggaran baru sesuai keinginan anda.',

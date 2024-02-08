@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => '예산은 재정을 관리하는 데 사용되며 Firefly III의 핵심 기능 중 하나입니다.',
-    'budgets_index_set_budget'                                => '모든 기간에 대한 총 예산을 설정하면 Firefly III에서 사용 가능한 모든 예산을 책정했는지 여부를 알려줍니다.',
     'budgets_index_see_expenses_bar'                          => '돈을 쓰면 이 막대가 서서히 채워집니다.',
     'budgets_index_navigate_periods'                          => '기간을 탐색하여 예산을 미리 쉽게 설정할 수 있습니다.',
     'budgets_index_new_budget'                                => '필요에 따라 새 예산을 만들 수 있습니다.',

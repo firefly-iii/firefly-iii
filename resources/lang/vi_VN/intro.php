@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => 'Ngân sách được sử dụng để quản lý tài chính của bạn và tạo thành một trong những chức năng cốt lõi của Firefly III.',
-    'budgets_index_set_budget'                                => 'Đặt tổng ngân sách của bạn cho mọi thời kỳ để Firefly III có thể cho bạn biết nếu bạn đã lập ngân sách tất cả số tiền có sẵn.',
     'budgets_index_see_expenses_bar'                          => 'Khi tiêu tiền thanh này sẽ được lấp đầy từ từ.',
     'budgets_index_navigate_periods'                          => 'Điều hướng qua các thời kỳ để dễ dàng đặt ngân sách trước thời hạn.',
     'budgets_index_new_budget'                                => 'Tạo ngân sách mới khi bạn thấy phù hợp.',

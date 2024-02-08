@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => 'Els pressupostos s\'usen per gestionar les teves finances i són una de les funcions principals de Firefly III.',
-    'budgets_index_set_budget'                                => 'Configura el pressupost total per cada període, de tal manera que Firefly III et pugui indicar si has pressupostat tots els diners disponibles.',
     'budgets_index_see_expenses_bar'                          => 'Gastar diners anirà omplint a poc a poc aquesta barra.',
     'budgets_index_navigate_periods'                          => 'Navega a través dels períodes per configurar fàcilment els pressupostos amb antelació.',
     'budgets_index_new_budget'                                => 'Crea nous pressupostos tal com et sigui convenient.',

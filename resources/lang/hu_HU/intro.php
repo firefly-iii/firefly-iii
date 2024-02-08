@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => 'A költségkeretek a pénzügyek kezelésére szolgálnak, és a Firefly III egyik alapvető funkcióját képezik.',
-    'budgets_index_set_budget'                                => 'Ha a teljes költségkeret minden időszakra be van állítva, a Firefly III megmondhatja, ha az összes rendelkezésre álló pénz fel lett használva.',
     'budgets_index_see_expenses_bar'                          => 'A pénzköltés lassan fel fogja tölteni ezt a sávot.',
     'budgets_index_navigate_periods'                          => 'Az időszakokon átnavigálva könnyedén, még idő előtt be lehet állítani a költségkereteket.',
     'budgets_index_new_budget'                                => 'Új költségkeretet létrehozása.',

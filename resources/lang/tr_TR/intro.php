@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => 'Bütçeler, finansmanınızı yönetmek ve Firefly III\'nin temel işlevlerinden birini oluşturmak için kullanılır.',
-    'budgets_index_set_budget'                                => 'Toplam bütçenizi her dönem için belirleyin, böylelikle Firefly size mevcut tüm parayı bütçelendirdiğinizde söyleyebilir.',
     'budgets_index_see_expenses_bar'                          => 'Para harcamak yavaşça bu çubuğu dolduracaktır.',
     'budgets_index_navigate_periods'                          => 'Bütçeleri önceden kolayca ayarlamak için dönemleri gezinin.',
     'budgets_index_new_budget'                                => 'Uygun gördüğünüz yeni bütçeler oluşturun.',
