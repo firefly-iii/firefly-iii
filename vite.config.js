@@ -59,7 +59,7 @@ export default defineConfig({
 
     server: {
         usePolling: true,
-        allowedHosts: '*.sd.local',
+        allowedHosts: '*.sd.internal',
         host: '0.0.0.0',
         hmr: {host},
         cors: true

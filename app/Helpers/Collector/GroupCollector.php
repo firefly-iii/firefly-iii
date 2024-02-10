@@ -67,6 +67,8 @@ class GroupCollector implements GroupCollectorInterface
         $this->userGroup   = null;
         $this->limit       = null;
         $this->page        = null;
+        $this->startRow    = null;
+        $this->endRow      = null;
 
         $this->hasAccountInfo       = false;
         $this->hasCatInformation    = false;
@@ -473,6 +475,10 @@ class GroupCollector implements GroupCollectorInterface
 
             return $collection->slice($offset, $this->limit);
         }
+        // OR filter the array according to the start and end row variable
+        if (null !== $this->startRow && null !== $this->endRow) {
+            return $collection->slice((int)$this->startRow, (int)$this->endRow);
+        }
 
         return $collection;
     }
@@ -485,6 +491,10 @@ class GroupCollector implements GroupCollectorInterface
         $set = $this->getGroups();
         if (0 === $this->limit) {
             $this->setLimit(50);
+        }
+        if(null !== $this->startRow && null !== $this->endRow) {
+            $total = (int)($this->endRow - $this->startRow);
+            return new LengthAwarePaginator($set, $this->total, $total, 1);
         }
 
         return new LengthAwarePaginator($set, $this->total, $this->limit, $this->page);
@@ -1055,4 +1065,18 @@ class GroupCollector implements GroupCollectorInterface
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('source.amount', 'DESC');
     }
+
+    public function setEndRow(int $endRow): self
+    {
+        $this->endRow = $endRow;
+        return $this;
+    }
+
+    public function setStartRow(int $startRow): self
+    {
+        $this->startRow = $startRow;
+        return $this;
+    }
+
+
 }

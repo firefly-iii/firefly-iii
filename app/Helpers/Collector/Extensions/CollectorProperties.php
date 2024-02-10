@@ -50,6 +50,9 @@ trait CollectorProperties
     private array   $postFilters;
     private HasMany $query;
     private array   $stringFields;
+
+    private ?int $startRow;
+    private ?int $endRow;
     /*
      * This array is used to collect ALL tags the user may search for (using 'setTags').
      * This way the user can call 'setTags' multiple times and get a joined result.

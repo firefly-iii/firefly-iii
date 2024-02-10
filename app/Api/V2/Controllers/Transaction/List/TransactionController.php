@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Transaction\List;
 
 use FireflyIII\Api\V2\Controllers\Controller;
+use FireflyIII\Api\V2\Request\Model\Transaction\ListByCountRequest;
 use FireflyIII\Api\V2\Request\Model\Transaction\ListRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Transformers\V2\TransactionGroupTransformer;
@@ -34,24 +35,25 @@ use Illuminate\Http\JsonResponse;
  */
 class TransactionController extends Controller
 {
-    public function list(ListRequest $request): JsonResponse
+    public function listByCount(ListByCountRequest $request): JsonResponse
     {
+
+
         // collect transactions:
-        $pageSize  = $this->parameters->get('limit');
-        $page      = $request->getPage();
-        $page      = max($page, 1);
+        $pageSize = $this->parameters->get('limit');
+        $page     = $request->getPage();
+        $page     = max($page, 1);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUserGroup(auth()->user()->userGroup)
-            ->withAPIInformation()
-            ->setLimit($pageSize)
-            ->setPage($page)
-            ->setTypes($request->getTransactionTypes())
-        ;
+                  ->withAPIInformation()
+                  ->setStartRow($request->getStartRow())
+                  ->setEndRow($request->getEndRow())
+                  ->setTypes($request->getTransactionTypes());
 
-        $start     = $this->parameters->get('start');
-        $end       = $this->parameters->get('end');
+        $start = $this->parameters->get('start');
+        $end   = $this->parameters->get('end');
         if (null !== $start) {
             $collector->setStart($start);
         }
@@ -74,7 +76,49 @@ class TransactionController extends Controller
 
         return response()
             ->json($this->jsonApiList('transactions', $paginator, new TransactionGroupTransformer()))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+            ->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+
+    public function list(ListRequest $request): JsonResponse
+    {
+        // collect transactions:
+        $pageSize = $this->parameters->get('limit');
+        $page     = $request->getPage();
+        $page     = max($page, 1);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUserGroup(auth()->user()->userGroup)
+                  ->withAPIInformation()
+                  ->setLimit($pageSize)
+                  ->setPage($page)
+                  ->setTypes($request->getTransactionTypes());
+
+        $start = $this->parameters->get('start');
+        $end   = $this->parameters->get('end');
+        if (null !== $start) {
+            $collector->setStart($start);
+        }
+        if (null !== $end) {
+            $collector->setEnd($end);
+        }
+
+        //        $collector->dumpQuery();
+        //        exit;
+
+        $paginator = $collector->getPaginatedGroups();
+        $params    = $request->buildParams($pageSize);
+        $paginator->setPath(
+            sprintf(
+                '%s?%s',
+                route('api.v2.transactions.list'),
+                $params
+            )
+        );
+
+        return response()
+            ->json($this->jsonApiList('transactions', $paginator, new TransactionGroupTransformer()))
+            ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

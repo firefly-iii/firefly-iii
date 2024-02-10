@@ -24,8 +24,110 @@ import i18next from "i18next";
 import {format} from "date-fns";
 import formatMoney from "../../util/format-money.js";
 import Get from "../../api/v2/model/transaction/get.js";
+import Put from "../../api/v2/model/transaction/put.js";
+
+import {createGrid, ModuleRegistry} from "@ag-grid-community/core";
+
+import '@ag-grid-community/styles/ag-grid.css';
+import '@ag-grid-community/styles/ag-theme-alpine.css';
+import '../../css/grid-ff3-theme.css';
+
+import TransactionDataSource from "../../support/ag-grid/TransactionDataSource.js";
+import {InfiniteRowModelModule} from '@ag-grid-community/infinite-row-model';
+
+const ds = new TransactionDataSource();
+ds.setType('withdrawal');
+
+document.addEventListener('cellEditRequest', () => {
+    console.log('Loaded through event listener.');
+    //loadPage();
+});
+let rowImmutableStore = [];
+
+let dataTable;
+const editableFields = ['description'];
+
+const onCellEditRequestMethod = (event) => {
+    const data = event.data;
+    console.log(event);
+    const field = event.colDef.field;
+    const newValue = event.newValue;
+    if(!editableFields.includes(field)) {
+        console.log('Field ' + field + ' is not editable.');
+        return;
+    }
+
+    console.log('New value for field "'+field+'" in transaction journal #' + data.transaction_journal_id + ' of group #'+data.id+' is "' + newValue + '"');
+    data[field] = newValue;
+    let rowNode = dataTable.getRowNode(String(event.rowIndex));
+    rowNode.updateData(data);
+
+    // then push update to Firefly III over API:
+    let submission = {
+        transactions: [
+            {
+                transaction_journal_id: data.transaction_journal_id,
+            }
+        ]
+    };
+    submission.transactions[0][field] = newValue;
+
+    let putter = new Put();
+    putter.put(submission, {id: data.id});
 
 
+};
+
+
+const gridOptions = {
+    rowModelType: 'infinite',
+    datasource: ds,
+    onCellEditRequest: onCellEditRequestMethod,
+    readOnlyEdit: true,
+    // Row Data: The data to be displayed.
+    // rowData: [
+    // { description: "Tesla", model: "Model Y", price: 64950, electric: true },
+    // { description: "Ford", model: "F-Series", price: 33850, electric: false },
+    // { description: "Toyota", model: "Corolla", price: 29600, electric: false },
+    // ],
+    // Column Definitions: Defines & controls grid columns.
+    columnDefs: [
+        {
+            field: "icon",
+            editable: false,
+            headerName: '',
+            sortable: false,
+            width: 40,
+            cellRenderer: function (params) {
+                return '<a href="#"><em class="' + params.value + '"></em></a>';
+            }
+        },
+        {
+            field: "description",
+            cellDataType: 'text',
+            editable: true,
+            cellRenderer: function (params) {
+                if (params.getValue()) {
+                    return '<a href="#">' + params.getValue() + '</a>';
+                }
+                return '';
+            }
+
+        },
+        {field: "amount"},
+        {
+            field: "date",
+            cellDataType: 'date',
+        },
+        {field: "from"},
+        {field: "to"},
+        {field: "category"},
+        {field: "budget"},
+    ]
+};
+
+
+ModuleRegistry.registerModules([InfiniteRowModelModule]);
 let index = function () {
     return {
         // notifications
@@ -59,6 +161,8 @@ let index = function () {
             },
         },
 
+        table: null,
+
         formatMoney(amount, currencyCode) {
             return formatMoney(amount, currencyCode);
         },
@@ -70,7 +174,12 @@ let index = function () {
             this.notifications.wait.text = i18next.t('firefly.wait_loading_data')
             // TODO need date range.
             // TODO handle page number
-            this.getTransactions(this.page);
+            //this.getTransactions(this.page);
+
+            // Your Javascript code to create the grid
+            dataTable = createGrid(document.querySelector('#grid'), gridOptions);
+
+
         },
         getTransactions(page) {
             const urlParts = window.location.href.split('/');
@@ -103,7 +212,10 @@ let index = function () {
                     for (let ii in current.attributes.transactions) {
                         if (current.attributes.transactions.hasOwnProperty(ii)) {
                             let transaction = current.attributes.transactions[ii];
+
+
                             transaction.split = isSplit;
+                            tranaction.icon = 'fa fa-solid fa-arrow-left';
                             transaction.firstSplit = firstSplit;
                             transaction.group_title = current.attributes.group_title;
                             transaction.id = current.id;
@@ -114,14 +226,17 @@ let index = function () {
 
                             // set firstSplit = false for next run if applicable.
                             firstSplit = false;
-                            console.log(transaction);
+                            //console.log(transaction);
                             this.transactions.push(transaction);
+                            //this.gridOptions.rowData.push(transaction);
                         }
                     }
                 }
             }
             // only now, disable wait thing.
             this.notifications.wait.show = false;
+            console.log('refresh!');
+            //this.table.refreshCells();
 
         },
     }

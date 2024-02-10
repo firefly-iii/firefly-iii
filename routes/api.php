@@ -160,6 +160,16 @@ Route::group(
         Route::put('{userGroupTransaction}', ['uses' => 'UpdateController@update', 'as' => 'update']);
     }
 );
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Transaction\List',
+        'prefix'    => 'v2/transactions-inf',
+        'as'        => 'api.v2.transactions-inf.',
+    ],
+    static function (): void {
+        Route::get('', ['uses' => 'TransactionController@listByCount', 'as' => 'list-by-count']);
+    }
+);
 
 // V2 API route for budgets and budget limits:
 // TODO Validate from here down.

@@ -527,6 +527,16 @@ interface GroupCollectorInterface
     public function setPage(int $page): self;
 
     /**
+     * Set the page to get.
+     */
+    public function setStartRow(int $startRow): self;
+
+    /**
+     * Set the page to get.
+     */
+    public function setEndRow(int $endRow): self;
+
+    /**
      * Set the start and end time of the results to return.
      */
     public function setRange(Carbon $start, Carbon $end): self;

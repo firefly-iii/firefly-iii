@@ -1,6 +1,6 @@
 /*
- * get.js
- * Copyright (c) 2023 james@firefly-iii.org
+ * grid-ff3-theme.css
+ * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -15,26 +15,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-
-import {api} from "../../../../boot/axios";
-
-export default class Get {
-
-    /**
-     *
-     * @param params
-     * @returns {Promise<AxiosResponse<any>>}
-     */
-    list(params) {
-        return api.get('/api/v2/transactions', {params: params});
-    }
-    listByCount(params) {
-        return api.get('/api/v2/transactions-inf', {params: params});
-    }
-    show(id, params){
-        return api.get('/api/v2/transactions/' + id, {params: params});
-    }
+/* ag-theme-acmecorp.css */
+.ag-theme-firefly-iii {
+    /* --ag-odd-row-background-color: #f00; */
 }
