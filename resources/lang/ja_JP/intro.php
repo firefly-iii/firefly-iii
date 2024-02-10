@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => '予算はあなたの財務を管理するために使用され、Firefly III の一つの主要機能を構成します。',
-    'budgets_index_set_budget'                                => 'Firefly IIIがあなたが割り当て可能なすべての金額を予算計上したかどうか伝えられるように。あなたの毎期間の合計予算を設定してください。',
     'budgets_index_see_expenses_bar'                          => '支出金額が少しずつこのバーを満たします。',
     'budgets_index_navigate_periods'                          => '期間を操作することで、予算を事前に簡単に設定できます。',
     'budgets_index_new_budget'                                => 'あなたが妥当だと考える新しい予算を設定してください。',

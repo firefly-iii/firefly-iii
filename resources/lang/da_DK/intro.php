@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => 'Budgetter bruges til at styre dine finanser og udgør en af de centrale funktioner i Firefly III.',
-    'budgets_index_set_budget'                                => 'Opret dit samlede budget for hver periode, så Firefly III kan fortælle dig, om du har budgetteret alle tilgængelige midler.',
     'budgets_index_see_expenses_bar'                          => 'Efterhånden som penge forbruges, vil denne bjælke langsomt udfyldes.',
     'budgets_index_navigate_periods'                          => 'Naviger gennem perioder for nemt at kunne oprette budgetter fremadrettet.',
     'budgets_index_new_budget'                                => 'Opret nye budgetter, som du finder passende.',

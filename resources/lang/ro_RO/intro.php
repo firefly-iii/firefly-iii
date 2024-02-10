@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => 'Bugetele sunt folosite pentru a vă gestiona finanțele; ele sunt una dintre funcțiile de bază ale Firefly III.',
-    'budgets_index_set_budget'                                => 'Stabiliți bugetul total pentru fiecare perioadă, astfel încât Firefly III vă poate spune dacă ați bugetat toți banii disponibili.',
     'budgets_index_see_expenses_bar'                          => 'Banii cheltuiți vor umple încet această linie.',
     'budgets_index_navigate_periods'                          => 'Navigați prin perioade de timp pentru a stabili cu ușurință bugetele viitoare.',
     'budgets_index_new_budget'                                => 'Creați bugete noi după cum doriți.',

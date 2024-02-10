@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => 'Budsjett vert brukt til å handtera økonomien din og er ein av kjernefunksjonane i Firefly III.',
-    'budgets_index_set_budget'                                => 'Sett ditt totale budsjett for kvar periode så Firefly III kan fortelja deg om du har budsjettert med alle tilgjengelege pengar.',
     'budgets_index_see_expenses_bar'                          => 'Når du brukar pengar vil denne linja fyllast opp.',
     'budgets_index_navigate_periods'                          => 'Naviger gjennom periodar for å enkelt definera budsjett på førehand.',
     'budgets_index_new_budget'                                => 'Opprett nye budsjett etter behov.',

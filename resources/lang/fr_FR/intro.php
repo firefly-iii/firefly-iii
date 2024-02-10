@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => 'Les budgets sont utilisés pour gérer vos finances et forment l\'une des principales fonctions de Firefly III.',
-    'budgets_index_set_budget'                                => 'Définissez votre budget total pour chaque période afin que Firefly III puisse vous dire si vous avez budgétisé tout l\'argent disponible.',
     'budgets_index_see_expenses_bar'                          => 'Dépenser de l\'argent va lentement remplir cette barre.',
     'budgets_index_navigate_periods'                          => 'Parcourez des périodes pour régler facilement les budgets à l\'avance.',
     'budgets_index_new_budget'                                => 'Créez de nouveaux budgets comme bon vous semble.',

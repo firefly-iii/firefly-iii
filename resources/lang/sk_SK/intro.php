@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => 'Rozpočty slúžia na správu vašich financií a tvoria jednu z hlavných funkcií Firefly III.',
-    'budgets_index_set_budget'                                => 'Nastavte celkový rozpočet pre každé z období a Firefly III vám povie, ak ste vyčerpali všetky dostupné peniaze.',
     'budgets_index_see_expenses_bar'                          => 'Utratené peniaze budou postupne plniť tento pruh.',
     'budgets_index_navigate_periods'                          => 'Prechádzajte obdobiami a jednoducho nastavujte rozpočty vopred.',
     'budgets_index_new_budget'                                => 'Vytvárajte nové rozpočty ako uznáte za vhodné.',

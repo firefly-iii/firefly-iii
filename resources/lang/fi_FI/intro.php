@@ -57,7 +57,6 @@ return [
 
     // budgets index
     'budgets_index_intro'                                     => 'Budjetteja käytetään talouden hallintaan ja ne muodostavat yhden Firefly III:n ydintoiminnoista.',
-    'budgets_index_set_budget'                                => 'Aseta kokonaisbudjettisi jokaiselle jaksolle, jotta Firefly III voi kertoa, oletko budjetoinut kaikki käytettävissä olevat rahat.',
     'budgets_index_see_expenses_bar'                          => 'Rahan kulutus täyttää hitaasti tämän palkin.',
     'budgets_index_navigate_periods'                          => 'Selaa ajanjaksoja ja määritä helposti budjetteja etukäteen.',
     'budgets_index_new_budget'                                => 'Luo uusia budjetteja mielesi mukaan.',

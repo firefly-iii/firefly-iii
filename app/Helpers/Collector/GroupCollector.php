@@ -70,6 +70,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->startRow    = null;
         $this->endRow      = null;
 
+
         $this->hasAccountInfo       = false;
         $this->hasCatInformation    = false;
         $this->hasBudgetInformation = false;
@@ -290,7 +291,7 @@ class GroupCollector implements GroupCollectorInterface
             if (is_int($param)) {
                 $replace = (string)$param;
             }
-            $pos = strpos($query, '?');
+            $pos     = strpos($query, '?');
             if (false !== $pos) {
                 $query = substr_replace($query, $replace, $pos, 1);
             }
@@ -458,13 +459,13 @@ class GroupCollector implements GroupCollectorInterface
             // add to query:
             $this->query->orWhereIn('transaction_journals.transaction_group_id', $groupIds);
         }
-        $result = $this->query->get($this->fields);
+        $result      = $this->query->get($this->fields);
 
         // now to parse this into an array.
-        $collection = $this->parseArray($result);
+        $collection  = $this->parseArray($result);
 
         // filter the array using all available post filters:
-        $collection = $this->postFilterCollection($collection);
+        $collection  = $this->postFilterCollection($collection);
 
         // count it and continue:
         $this->total = $collection->count();
@@ -678,11 +679,12 @@ class GroupCollector implements GroupCollectorInterface
         // include source + destination account name and type.
         $this->withAccountInformation()
             // include category ID + name (if any)
-             ->withCategoryInformation()
+            ->withCategoryInformation()
             // include budget ID + name (if any)
-             ->withBudgetInformation()
+            ->withBudgetInformation()
             // include bill ID + name (if any)
-             ->withBillInformation();
+            ->withBillInformation()
+        ;
 
         return $this;
     }
@@ -701,12 +703,12 @@ class GroupCollector implements GroupCollectorInterface
 
         /** @var TransactionJournal $augumentedJournal */
         foreach ($collection as $augumentedJournal) {
-            $groupId = (int)$augumentedJournal->transaction_group_id;
+            $groupId   = (int)$augumentedJournal->transaction_group_id;
 
             if (!array_key_exists($groupId, $groups)) {
                 // make new array
-                $parsedGroup = $this->parseAugmentedJournal($augumentedJournal);
-                $groupArray  = [
+                $parsedGroup                            = $this->parseAugmentedJournal($augumentedJournal);
+                $groupArray                             = [
                     'id'               => (int)$augumentedJournal->transaction_group_id,
                     'user_id'          => $augumentedJournal->user_id,
                     'user_group_id'    => $augumentedJournal->user_group_id,
@@ -778,7 +780,7 @@ class GroupCollector implements GroupCollectorInterface
         }
 
         // try to process meta date value (if present)
-        $dates = ['interest_date', 'payment_date', 'invoice_date', 'book_date', 'due_date', 'process_date'];
+        $dates                   = ['interest_date', 'payment_date', 'invoice_date', 'book_date', 'due_date', 'process_date'];
         if (array_key_exists('meta_name', $result) && in_array($result['meta_name'], $dates, true)) {
             $name = $result['meta_name'];
             if (array_key_exists('meta_data', $result) && '' !== (string)$result['meta_data']) {
@@ -787,15 +789,15 @@ class GroupCollector implements GroupCollectorInterface
         }
 
         // convert values to integers:
-        $result = $this->convertToInteger($result);
+        $result                  = $this->convertToInteger($result);
 
         // convert back to strings because SQLite is dumb like that.
-        $result = $this->convertToStrings($result);
+        $result                  = $this->convertToStrings($result);
 
-        $result['reconciled'] = 1 === (int)$result['reconciled'];
+        $result['reconciled']    = 1 === (int)$result['reconciled'];
         if (array_key_exists('tag_id', $result) && null !== $result['tag_id']) { // assume the other fields are present as well.
-            $tagId   = (int)$augumentedJournal['tag_id'];
-            $tagDate = null;
+            $tagId                  = (int)$augumentedJournal['tag_id'];
+            $tagDate                = null;
 
             try {
                 $tagDate = Carbon::parse($augumentedJournal['tag_date']);
@@ -859,9 +861,9 @@ class GroupCollector implements GroupCollectorInterface
     {
         $newArray = $newJournal->toArray();
         if (array_key_exists('tag_id', $newArray)) { // assume the other fields are present as well.
-            $tagId = (int)$newJournal['tag_id'];
+            $tagId                           = (int)$newJournal['tag_id'];
 
-            $tagDate = null;
+            $tagDate                         = null;
 
             try {
                 $tagDate = Carbon::parse($newArray['tag_date']);
@@ -884,7 +886,7 @@ class GroupCollector implements GroupCollectorInterface
     {
         $newArray = $newJournal->toArray();
         if (array_key_exists('attachment_id', $newArray)) {
-            $attachmentId = (int)$newJournal['attachment_id'];
+            $attachmentId                                  = (int)$newJournal['attachment_id'];
 
             $existingJournal['attachments'][$attachmentId] = [
                 'id' => $attachmentId,
@@ -903,7 +905,7 @@ class GroupCollector implements GroupCollectorInterface
         foreach ($groups as $groudId => $group) {
             /** @var array $transaction */
             foreach ($group['transactions'] as $transaction) {
-                $currencyId = (int)$transaction['currency_id'];
+                $currencyId                                      = (int)$transaction['currency_id'];
                 if (null === $transaction['amount']) {
                     throw new FireflyException(sprintf('Amount is NULL for a transaction in group #%d, please investigate.', $groudId));
                 }
@@ -919,7 +921,7 @@ class GroupCollector implements GroupCollectorInterface
                 $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
 
                 if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
-                    $currencyId = (int)$transaction['foreign_currency_id'];
+                    $currencyId                                      = (int)$transaction['foreign_currency_id'];
 
                     // set default:
                     if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
@@ -952,7 +954,7 @@ class GroupCollector implements GroupCollectorInterface
          */
         foreach ($this->postFilters as $function) {
             app('log')->debug('Applying filter...');
-            $nextCollection = new Collection();
+            $nextCollection    = new Collection();
 
             // loop everything in the current collection
             // and save it (or not) in the new collection.
@@ -999,7 +1001,8 @@ class GroupCollector implements GroupCollectorInterface
                 'transactions as source',
                 static function (JoinClause $join): void {
                     $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
-                         ->where('source.amount', '<', 0);
+                        ->where('source.amount', '<', 0)
+                    ;
                 }
             )
             // join destination transaction
@@ -1007,7 +1010,8 @@ class GroupCollector implements GroupCollectorInterface
                 'transactions as destination',
                 static function (JoinClause $join): void {
                     $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
-                         ->where('destination.amount', '>', 0);
+                        ->where('destination.amount', '>', 0)
+                    ;
                 }
             )
             // left join transaction type.
@@ -1022,7 +1026,8 @@ class GroupCollector implements GroupCollectorInterface
             ->orderBy('transaction_journals.order', 'ASC')
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
-            ->orderBy('source.amount', 'DESC');
+            ->orderBy('source.amount', 'DESC')
+        ;
     }
 
     /**
@@ -1040,7 +1045,8 @@ class GroupCollector implements GroupCollectorInterface
                 'transactions as source',
                 static function (JoinClause $join): void {
                     $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
-                         ->where('source.amount', '<', 0);
+                        ->where('source.amount', '<', 0)
+                    ;
                 }
             )
             // join destination transaction
@@ -1048,7 +1054,8 @@ class GroupCollector implements GroupCollectorInterface
                 'transactions as destination',
                 static function (JoinClause $join): void {
                     $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
-                         ->where('destination.amount', '>', 0);
+                        ->where('destination.amount', '>', 0)
+                    ;
                 }
             )
             // left join transaction type.
