@@ -1,7 +1,8 @@
 {
     "config": {
         "html_language": "sk",
-        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss"
+        "date_time_fns": "MMMM do, yyyy @ HH:mm:ss",
+        "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
         "spent": "Utraten\u00e9",

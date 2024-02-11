@@ -65,6 +65,7 @@ export default class TransactionDataSource {
 
                         let entry = {};
                         // split info
+
                         entry.split = isSplit;
                         entry.firstSplit = firstSplit;
 
@@ -78,11 +79,45 @@ export default class TransactionDataSource {
                         // create actual transaction:
                         entry.id = parseInt(current.id);
                         entry.transaction_journal_id = parseInt(transaction.transaction_journal_id);
-                        entry.icon = 'fa fa-solid fa-arrow-left';
-                        entry.date = new Date(transaction.date);
                         entry.description = transaction.description;
+                        entry.date = new Date(transaction.date);
+
+                        // complex fields
+                        entry.from = {
+                            name: transaction.source_name,
+                            id: transaction.source_id,
+                            type: transaction.source_type,
+                        };
+                        entry.to = {
+                            name: transaction.destination_name,
+                            id: transaction.destination_id,
+                            type: transaction.destination_type,
+                        };
+                        entry.category = {
+                            name: transaction.category_name,
+                            id: transaction.category_id,
+                        };
+                        entry.budget = {
+                            name: transaction.budget_name,
+                            id: transaction.budget_id,
+                        };
+
+                        entry.amount = {
+                            id: parseInt(current.id),
+                            transaction_journal_id: parseInt(transaction.transaction_journal_id),
+                            type: transaction.type,
+                            amount: transaction.amount,
+                            currency_code: transaction.currency_code,
+                            decimal_places: transaction.currency_decimal_places,
+                            foreign_amount: transaction.foreign_amount,
+                            foreign_currency_code: transaction.foreign_currency_code,
+                            foreign_decimal_places: transaction.foreign_currency_decimal_places,
+                        };
+
+                        entry.icon = {classes: 'fa fa-solid fa-arrow-left', id: entry.id};
 
                         // set firstSplit = false for next run if applicable.
+                        //console.log(transaction);
                         firstSplit = false;
                         transactions.push(entry);
                     }

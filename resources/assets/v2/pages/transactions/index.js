@@ -32,8 +32,11 @@ import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-alpine.css';
 import '../../css/grid-ff3-theme.css';
 
+import AmountEditor from "../../support/ag-grid/AmountEditor.js";
+
 import TransactionDataSource from "../../support/ag-grid/TransactionDataSource.js";
 import {InfiniteRowModelModule} from '@ag-grid-community/infinite-row-model';
+import DateTimeEditor from "../../support/ag-grid/DateTimeEditor.js";
 
 const ds = new TransactionDataSource();
 ds.setType('withdrawal');
@@ -45,19 +48,25 @@ document.addEventListener('cellEditRequest', () => {
 let rowImmutableStore = [];
 
 let dataTable;
-const editableFields = ['description'];
+const editableFields = ['description', 'amount', 'date'];
 
 const onCellEditRequestMethod = (event) => {
+    console.log('onCellEditRequestMethod');
     const data = event.data;
-    console.log(event);
     const field = event.colDef.field;
-    const newValue = event.newValue;
-    if(!editableFields.includes(field)) {
+    let newValue = event.newValue;
+    if (!editableFields.includes(field)) {
         console.log('Field ' + field + ' is not editable.');
         return;
     }
 
-    console.log('New value for field "'+field+'" in transaction journal #' + data.transaction_journal_id + ' of group #'+data.id+' is "' + newValue + '"');
+    // this needs to be better
+    if('amount' === field) {
+        newValue = event.newValue.amount;
+        console.log('New value is now' + newValue);
+    }
+
+    console.log('New value for field "' + field + '" in transaction journal #' + data.transaction_journal_id + ' of group #' + data.id + ' is "' + newValue + '"');
     data[field] = newValue;
     let rowNode = dataTable.getRowNode(String(event.rowIndex));
     rowNode.updateData(data);
@@ -78,6 +87,16 @@ const onCellEditRequestMethod = (event) => {
 
 };
 
+document.addEventListener('cellValueChanged', () => {
+    console.log('I just realized a cell value has changed.');
+});
+document.addEventListener('onCellValueChanged', () => {
+    console.log('I just realized a cell value has changed.');
+});
+
+let doOnCellValueChanged = function(e) {
+    console.log('I just realized a cell value has changed.');
+};
 
 const gridOptions = {
     rowModelType: 'infinite',
@@ -99,30 +118,124 @@ const gridOptions = {
             sortable: false,
             width: 40,
             cellRenderer: function (params) {
-                return '<a href="#"><em class="' + params.value + '"></em></a>';
+                if (params.getValue()) {
+                    return '<a href="./transactions/show/' + parseInt(params.value.id) + '"><em class="' + params.value.classes + '"></em></a>';
+                }
+                return '';
             }
         },
         {
             field: "description",
             cellDataType: 'text',
             editable: true,
-            cellRenderer: function (params) {
+            // cellRenderer: function (params) {
+            //     if (params.getValue()) {
+            //         return '<a href="#">' + params.getValue() + '</a>';
+            //     }
+            //     return '';
+            // }
+
+        },
+        {
+            field: "amount",
+            editable: function(params) {
+                // only when NO foreign amount.
+                return null === params.data.amount.foreign_amount && null === params.data.amount.foreign_currency_code;
+            },
+            cellEditor: AmountEditor,
+            cellRenderer(params) {
                 if (params.getValue()) {
-                    return '<a href="#">' + params.getValue() + '</a>';
+                    let returnString = '';
+                    let amount=  parseFloat(params.getValue().amount);
+                    let obj = params.getValue();
+                    let stringClass = 'text-danger';
+                    if (obj.type === 'withdrawal') {
+                        amount = amount * -1;
+                    }
+                    if (obj.type === 'deposit') {
+                        stringClass = 'text-success';
+                    }
+                    if (obj.type === 'transfer') {
+                        stringClass = 'text-info';
+                    }
+                    returnString += '<span class="' + stringClass + '">' + formatMoney(amount, params.getValue().currency_code) + '</span>';
+
+                    // foreign amount:
+                    if (obj.foreign_amount) {
+                        let foreignAmount=  parseFloat(params.getValue().foreign_amount);
+                        if (obj.type === 'withdrawal') {
+                            foreignAmount = foreignAmount * -1;
+                        }
+                        returnString += ' (<span class="' + stringClass + '">' + formatMoney(foreignAmount, obj.foreign_currency_code) + '</span>)';
+                    }
+                    return returnString;
                 }
                 return '';
             }
 
         },
-        {field: "amount"},
         {
             field: "date",
+            editable: true,
             cellDataType: 'date',
+            cellEditor: DateTimeEditor,
+            cellEditorPopup: true,
+            cellEditorPopupPosition: 'under',
+            cellRenderer(params) {
+                if (params.getValue()) {
+                    return format(params.getValue(), i18next.t('config.date_time_fns_short'));
+                }
+                return '';
+            }
         },
-        {field: "from"},
-        {field: "to"},
-        {field: "category"},
-        {field: "budget"},
+        {
+            field: "from",
+            cellDataType: 'text',
+            cellRenderer: function (params) {
+                if (params.getValue()) {
+                    let obj = params.getValue();
+                    return '<a href="./accounts/show/'+obj.id+'">' + obj.name + '</a>';
+                }
+                return '';
+            }
+        },
+        {
+            field: "to",
+            cellDataType: 'text',
+            cellRenderer: function (params) {
+                if (params.getValue()) {
+                    let obj = params.getValue();
+                    return '<a href="./accounts/show/'+obj.id+'">' + obj.name + '</a>';
+                }
+                return '';
+            }
+        },
+        {
+            field: "category",
+            cellDataType: 'text',
+            cellRenderer: function (params) {
+                if (params.getValue()) {
+                    let obj = params.getValue();
+                    if(null !== obj.id) {
+                        return '<a href="./categories/show/' + obj.id + '">' + obj.name + '</a>';
+                    }
+                }
+                return '';
+            }
+        },
+        {
+            field: "budget",
+            cellDataType: 'text',
+            cellRenderer: function (params) {
+                if (params.getValue()) {
+                    let obj = params.getValue();
+                    if(null !== obj.id) {
+                        return '<a href="./budgets/show/' + obj.id + '">' + obj.name + '</a>';
+                    }
+                }
+                return '';
+            }
+        },
     ]
 };
 

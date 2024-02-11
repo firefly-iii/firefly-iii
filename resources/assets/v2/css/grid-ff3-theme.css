@@ -22,3 +22,11 @@
 .ag-theme-firefly-iii {
     /* --ag-odd-row-background-color: #f00; */
 }
+.ag-theme-firefly-iii .ag-root {
+    border:0;
+}
+.ag-theme-firefly-iii .ag-root-wrapper
+{
+    border:0;
+}
+

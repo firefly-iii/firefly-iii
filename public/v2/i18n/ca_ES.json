@@ -1,7 +1,8 @@
 {
     "config": {
         "html_language": "ca",
-        "date_time_fns": "D [de\/d'] MMMM yyyy [a les] HH:mm:ss"
+        "date_time_fns": "D [de\/d'] MMMM yyyy [a les] HH:mm:ss",
+        "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
         "spent": "Gastat",

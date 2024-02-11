@@ -1,7 +1,8 @@
 {
     "config": {
         "html_language": "pt",
-        "date_time_fns": "DO [de] MMMM YYYY, @ HH:mm:ss"
+        "date_time_fns": "DO [de] MMMM YYYY, @ HH:mm:ss",
+        "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
         "spent": "Gasto",

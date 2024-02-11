@@ -55,7 +55,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-0">
                             <div id="grid" class="ag-theme-alpine-auto-dark ag-theme-firefly-iii" style="height: 500px">
 
                             </div>

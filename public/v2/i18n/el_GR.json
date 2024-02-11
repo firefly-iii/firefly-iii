@@ -1,7 +1,8 @@
 {
     "config": {
         "html_language": "el",
-        "date_time_fns": "do MMMM yyyy @ HH:mm:ss"
+        "date_time_fns": "do MMMM yyyy @ HH:mm:ss",
+        "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
     },
     "firefly": {
         "spent": "\u0394\u03b1\u03c0\u03b1\u03bd\u03ae\u03b8\u03b7\u03ba\u03b1\u03bd",
