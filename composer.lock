@@ -3613,16 +3613,16 @@
         },
         {
             "name": "mailchimp/transactional",
-            "version": "1.0.57",
+            "version": "1.0.59",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailchimp/mailchimp-transactional-php.git",
-                "reference": "248ef0e65349f3c567827f00bc6b16a65379c947"
+                "reference": "1783927027820dc1c624fd04abf5012a57f96feb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailchimp/mailchimp-transactional-php/zipball/248ef0e65349f3c567827f00bc6b16a65379c947",
-                "reference": "248ef0e65349f3c567827f00bc6b16a65379c947",
+                "url": "https://api.github.com/repos/mailchimp/mailchimp-transactional-php/zipball/1783927027820dc1c624fd04abf5012a57f96feb",
+                "reference": "1783927027820dc1c624fd04abf5012a57f96feb",
                 "shasum": ""
             },
             "require": {
@@ -3661,9 +3661,9 @@
                 "swagger"
             ],
             "support": {
-                "source": "https://github.com/mailchimp/mailchimp-transactional-php/tree/v1.0.57"
+                "source": "https://github.com/mailchimp/mailchimp-transactional-php/tree/v1.0.59"
             },
-            "time": "2024-02-07T22:08:23+00:00"
+            "time": "2024-02-10T01:12:26+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -5881,16 +5881,16 @@
         },
         {
             "name": "spatie/laravel-ignition",
-            "version": "2.4.1",
+            "version": "2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-ignition.git",
-                "reference": "005e1e7b1232f3b22d7e7be3f602693efc7dba67"
+                "reference": "351504f4570e32908839fc5a2dc53bf77d02f85e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-ignition/zipball/005e1e7b1232f3b22d7e7be3f602693efc7dba67",
-                "reference": "005e1e7b1232f3b22d7e7be3f602693efc7dba67",
+                "url": "https://api.github.com/repos/spatie/laravel-ignition/zipball/351504f4570e32908839fc5a2dc53bf77d02f85e",
+                "reference": "351504f4570e32908839fc5a2dc53bf77d02f85e",
                 "shasum": ""
             },
             "require": {
@@ -5969,7 +5969,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-01-12T13:14:58+00:00"
+            "time": "2024-02-09T16:08:40+00:00"
         },
         {
             "name": "spatie/period",

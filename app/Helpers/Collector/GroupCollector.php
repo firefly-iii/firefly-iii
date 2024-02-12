@@ -61,15 +61,14 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function __construct()
     {
-        $this->postFilters = [];
-        $this->tags        = [];
-        $this->user        = null;
-        $this->userGroup   = null;
-        $this->limit       = null;
-        $this->page        = null;
-        $this->startRow    = null;
-        $this->endRow      = null;
-
+        $this->postFilters          = [];
+        $this->tags                 = [];
+        $this->user                 = null;
+        $this->userGroup            = null;
+        $this->limit                = null;
+        $this->page                 = null;
+        $this->startRow             = null;
+        $this->endRow               = null;
 
         $this->hasAccountInfo       = false;
         $this->hasCatInformation    = false;
@@ -495,6 +494,7 @@ class GroupCollector implements GroupCollectorInterface
         }
         if(null !== $this->startRow && null !== $this->endRow) {
             $total = (int)($this->endRow - $this->startRow);
+
             return new LengthAwarePaginator($set, $this->total, $total, 1);
         }
 
@@ -685,6 +685,20 @@ class GroupCollector implements GroupCollectorInterface
             // include bill ID + name (if any)
             ->withBillInformation()
         ;
+
+        return $this;
+    }
+
+    public function setEndRow(int $endRow): self
+    {
+        $this->endRow = $endRow;
+
+        return $this;
+    }
+
+    public function setStartRow(int $startRow): self
+    {
+        $this->startRow = $startRow;
 
         return $this;
     }
@@ -1070,20 +1084,7 @@ class GroupCollector implements GroupCollectorInterface
             ->orderBy('transaction_journals.order', 'ASC')
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
-            ->orderBy('source.amount', 'DESC');
+            ->orderBy('source.amount', 'DESC')
+        ;
     }
-
-    public function setEndRow(int $endRow): self
-    {
-        $this->endRow = $endRow;
-        return $this;
-    }
-
-    public function setStartRow(int $startRow): self
-    {
-        $this->startRow = $startRow;
-        return $this;
-    }
-
-
 }

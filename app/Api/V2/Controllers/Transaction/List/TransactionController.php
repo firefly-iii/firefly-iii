@@ -37,23 +37,22 @@ class TransactionController extends Controller
 {
     public function listByCount(ListByCountRequest $request): JsonResponse
     {
-
-
         // collect transactions:
-        $pageSize = $this->parameters->get('limit');
-        $page     = $request->getPage();
-        $page     = max($page, 1);
+        $pageSize  = $this->parameters->get('limit');
+        $page      = $request->getPage();
+        $page      = max($page, 1);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUserGroup(auth()->user()->userGroup)
-                  ->withAPIInformation()
-                  ->setStartRow($request->getStartRow())
-                  ->setEndRow($request->getEndRow())
-                  ->setTypes($request->getTransactionTypes());
+            ->withAPIInformation()
+            ->setStartRow($request->getStartRow())
+            ->setEndRow($request->getEndRow())
+            ->setTypes($request->getTransactionTypes())
+        ;
 
-        $start = $this->parameters->get('start');
-        $end   = $this->parameters->get('end');
+        $start     = $this->parameters->get('start');
+        $end       = $this->parameters->get('end');
         if (null !== $start) {
             $collector->setStart($start);
         }
@@ -76,27 +75,28 @@ class TransactionController extends Controller
 
         return response()
             ->json($this->jsonApiList('transactions', $paginator, new TransactionGroupTransformer()))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
-
 
     public function list(ListRequest $request): JsonResponse
     {
         // collect transactions:
-        $pageSize = $this->parameters->get('limit');
-        $page     = $request->getPage();
-        $page     = max($page, 1);
+        $pageSize  = $this->parameters->get('limit');
+        $page      = $request->getPage();
+        $page      = max($page, 1);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUserGroup(auth()->user()->userGroup)
-                  ->withAPIInformation()
-                  ->setLimit($pageSize)
-                  ->setPage($page)
-                  ->setTypes($request->getTransactionTypes());
+            ->withAPIInformation()
+            ->setLimit($pageSize)
+            ->setPage($page)
+            ->setTypes($request->getTransactionTypes())
+        ;
 
-        $start = $this->parameters->get('start');
-        $end   = $this->parameters->get('end');
+        $start     = $this->parameters->get('start');
+        $end       = $this->parameters->get('end');
         if (null !== $start) {
             $collector->setStart($start);
         }
