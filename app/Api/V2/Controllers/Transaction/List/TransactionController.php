@@ -60,11 +60,8 @@ class TransactionController extends Controller
             $collector->setEnd($end);
         }
 
-        //        $collector->dumpQuery();
-        //        exit;
-
         $paginator = $collector->getPaginatedGroups();
-        $params    = $request->buildParams($pageSize);
+        $params    = $request->buildParams();
         $paginator->setPath(
             sprintf(
                 '%s?%s',
@@ -119,6 +116,7 @@ class TransactionController extends Controller
 
         return response()
             ->json($this->jsonApiList('transactions', $paginator, new TransactionGroupTransformer()))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

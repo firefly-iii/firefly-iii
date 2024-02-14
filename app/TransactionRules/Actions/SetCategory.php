@@ -89,7 +89,7 @@ class SetCategory implements ActionInterface
         $oldCategory     = $object->categories()->first();
         $oldCategoryName = $oldCategory?->name;
         if ((int)$oldCategory?->id === $category->id) {
-            //event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_linked_to_category', ['name' => $category->name])));
+            // event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_linked_to_category', ['name' => $category->name])));
 
             return false;
         }

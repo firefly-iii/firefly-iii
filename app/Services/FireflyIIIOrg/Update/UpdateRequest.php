@@ -44,7 +44,7 @@ class UpdateRequest implements UpdateRequestInterface
         ];
 
         // try to get array from update server:
-        $updateInfo = $this->contactServer($channel);
+        $updateInfo  = $this->contactServer($channel);
         if ('error' === $updateInfo['level']) {
             app('log')->error('Update information contains an error.');
             app('log')->error($updateInfo['message']);
@@ -61,14 +61,14 @@ class UpdateRequest implements UpdateRequestInterface
     {
         app('log')->debug(sprintf('Now in contactServer(%s)', $channel));
         // always fall back to current version:
-        $return = [
+        $return            = [
             'version' => config('firefly.version'),
             'date'    => today(config('app.timezone'))->startOfDay(),
             'level'   => 'error',
             'message' => (string)trans('firefly.unknown_error'),
         ];
 
-        $url = config('firefly.update_endpoint');
+        $url               = config('firefly.update_endpoint');
         app('log')->debug(sprintf('Going to call %s', $url));
 
         try {
@@ -96,7 +96,7 @@ class UpdateRequest implements UpdateRequestInterface
 
             return $return;
         }
-        $body = (string)$res->getBody();
+        $body              = (string)$res->getBody();
 
         try {
             $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
@@ -115,8 +115,8 @@ class UpdateRequest implements UpdateRequestInterface
         }
 
         // parse response a bit. No message yet.
-        $response = $json['firefly_iii'][$channel];
-        $date     = Carbon::createFromFormat('Y-m-d', $response['date']);
+        $response          = $json['firefly_iii'][$channel];
+        $date              = Carbon::createFromFormat('Y-m-d', $response['date']);
         if (false === $date) {
             $date = today(config('app.timezone'));
         }
@@ -129,15 +129,19 @@ class UpdateRequest implements UpdateRequestInterface
         return $return;
     }
 
+    /**
+     * TODO make shorter
+     *
+     * @param array $information
+     *
+     * @return array
+     */
     private function parseResult(array $information): array
     {
         app('log')->debug('Now in parseResult()', $information);
-        $return  = [
-            'level'   => 'error',
-            'message' => (string)trans('firefly.unknown_error'),
-        ];
-        $current = config('firefly.version');
-        $latest  = $information['version'];
+        $return            = [];
+        $current           = config('firefly.version');
+        $latest            = $information['version'];
 
         // strip the 'v' from the version if it's there.
         if (str_starts_with($latest, 'v')) {
@@ -145,22 +149,25 @@ class UpdateRequest implements UpdateRequestInterface
         }
         if (str_starts_with($current, 'develop')) {
             Log::debug(sprintf('User is running develop version "%s"', $current));
-            $parts   = explode('/', $current);
-            $devDate = Carbon::createFromFormat('Y-m-d', $parts[1]);
+            $parts             = explode('/', $current);
+            /** @var Carbon $devDate */
+            $devDate           = Carbon::createFromFormat('Y-m-d', $parts[1]);
 
             if ($devDate->lte($information['date'])) {
                 Log::debug(sprintf('This development release is older, release = %s, latest version %s = %s', $devDate->format('Y-m-d'), $latest, $information['date']->format('Y-m-d')));
                 $return['level']   = 'info';
                 $return['message'] = (string)trans('firefly.update_current_dev_older', ['version' => $current, 'new_version' => $latest]);
+
                 return $return;
             }
             Log::debug(sprintf('This development release is newer, release = %s, latest version %s = %s', $devDate->format('Y-m-d'), $latest, $information['date']->format('Y-m-d')));
             $return['level']   = 'info';
             $return['message'] = (string)trans('firefly.update_current_dev_newer', ['version' => $current, 'new_version' => $latest]);
+
             return $return;
         }
 
-        $compare = version_compare($latest, $current);
+        $compare           = version_compare($latest, $current);
 
         app('log')->debug(sprintf('Current version is "%s", latest is "%s", result is: %d', $current, $latest, $compare));
 
@@ -183,10 +190,10 @@ class UpdateRequest implements UpdateRequestInterface
 
         // a newer version is available!
         /** @var Carbon $released */
-        $released     = $information['date'];
-        $today        = today(config('app.timezone'))->startOfDay();
-        $diff         = $today->diffInDays($released);
-        $expectedDiff = config('firefly.update_minimum_age') ?? 6;
+        $released          = $information['date'];
+        $today             = today(config('app.timezone'))->startOfDay();
+        $diff              = $today->diffInDays($released);
+        $expectedDiff      = config('firefly.update_minimum_age') ?? 6;
         // it's still very fresh, and user wants a stable release:
         if ($diff <= $expectedDiff) {
             $return['level']   = 'info';
@@ -217,13 +224,13 @@ class UpdateRequest implements UpdateRequestInterface
 
         // add warning in case of alpha or beta:
         // append warning if beta or alpha.
-        $isBeta = $information['is_beta'] ?? false;
+        $isBeta            = $information['is_beta'] ?? false;
         if (true === $isBeta) {
             $return['message'] = sprintf('%s %s', $return['message'], trans('firefly.update_version_beta'));
             app('log')->debug('New release is also a beta!');
         }
 
-        $isAlpha = $information['is_alpha'] ?? false;
+        $isAlpha           = $information['is_alpha'] ?? false;
         if (true === $isAlpha) {
             $return['message'] = sprintf('%s %s', $return['message'], trans('firefly.update_version_alpha'));
             app('log')->debug('New release is also a alpha!');

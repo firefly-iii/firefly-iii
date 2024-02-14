@@ -28,8 +28,8 @@ use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Notifications\User\RuleActionFailed;
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
-use Log;
 
 /**
  * Class RuleHandler
@@ -57,6 +57,7 @@ class RuleHandler
         $ruleTitle   = $rule->title;
         $ruleLink    = route('rules.edit', [$rule->id]);
         $params      = [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink];
+
         try {
             Notification::send($user, new RuleActionFailed($params));
         } catch(ClientException $e) {
@@ -85,6 +86,7 @@ class RuleHandler
         $ruleTitle   = $rule->title;
         $ruleLink    = route('rules.edit', [$rule->id]);
         $params      = [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink];
+
         try {
             Notification::send($user, new RuleActionFailed($params));
         } catch(ClientException $e) {

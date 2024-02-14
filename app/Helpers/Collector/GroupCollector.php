@@ -477,7 +477,7 @@ class GroupCollector implements GroupCollectorInterface
         }
         // OR filter the array according to the start and end row variable
         if (null !== $this->startRow && null !== $this->endRow) {
-            return $collection->slice((int)$this->startRow, (int)$this->endRow);
+            return $collection->slice($this->startRow, $this->endRow);
         }
 
         return $collection;
@@ -493,7 +493,7 @@ class GroupCollector implements GroupCollectorInterface
             $this->setLimit(50);
         }
         if(null !== $this->startRow && null !== $this->endRow) {
-            $total = (int)($this->endRow - $this->startRow);
+            $total = $this->endRow - $this->startRow;
 
             return new LengthAwarePaginator($set, $this->total, $total, 1);
         }
