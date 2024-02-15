@@ -308,6 +308,8 @@ return [
     'update_new_version_alert'                               => 'Firefly III:sta on julkaistu uusi versio. Käytät versiota :your_version, viimeisin versio :new_version on julkaistu :date.',
     'update_version_beta'                                    => 'Tämä on BETA versio. Saatat törmätä hankaluuksiin.',
     'update_version_alpha'                                   => 'Tämä on ALPHA versio. Saatat törmätä hankaluuksiin.',
+    'update_current_dev_older'                               => 'You are running development release ":version", which is older than the latest release :new_version. Please update!',
+    'update_current_dev_newer'                               => 'You are running development release ":version", which is newer than the latest release :new_version.',
     'update_current_version_alert'                           => 'Käytät versiota :version, se on viimeisin julkaistu versio.',
     'update_newer_version_alert'                             => 'Käytät versiota :your_version, joka on uudempi kuin viimeisin julkaistu versio, :new_version.',
     'update_check_error'                                     => 'Päivityksiä tarkistettaessa tapahtui virhe: :error',

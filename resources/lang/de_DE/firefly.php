@@ -308,6 +308,8 @@ return [
     'update_new_version_alert'                               => 'Eine neue Version von Firefly III ist verfügbar. Sie verwenden :your_version, die neueste Version ist :new_version, die am :date veröffentlicht wurde.',
     'update_version_beta'                                    => 'Seien Sie vorsichtig bei der Verwendung dieser BETA-Version. Sie könnte noch Fehler enthaltern.',
     'update_version_alpha'                                   => 'Seien Sie vorsichtig bei der Verwendung dieser APLPHA-Version. Sie kann Fehler enthaltern.',
+    'update_current_dev_older'                               => 'You are running development release ":version", which is older than the latest release :new_version. Please update!',
+    'update_current_dev_newer'                               => 'You are running development release ":version", which is newer than the latest release :new_version.',
     'update_current_version_alert'                           => 'Sie verwenden Version :version. Dies ist die neueste verfügbare Version.',
     'update_newer_version_alert'                             => 'Sie verwenden :your_version. Ihre Version ist neuer als die neueste Version (:new_version).',
     'update_check_error'                                     => 'Bei der Suche nach Aktualisierungen ist ein Fehler aufgetreten: :error',

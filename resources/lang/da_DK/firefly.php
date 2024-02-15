@@ -308,6 +308,8 @@ return [
     'update_new_version_alert'                               => 'En ny version af Firefly III er tilgængelig. Du bruger :your_version, den nyeste version er :new_version, som blev udgivet den :date.',
     'update_version_beta'                                    => 'Denne version er en BETA version. Du kan løbe ind i problemer.',
     'update_version_alpha'                                   => 'Denne version er en ALPHA version. Du kan løbe ind i problemer.',
+    'update_current_dev_older'                               => 'You are running development release ":version", which is older than the latest release :new_version. Please update!',
+    'update_current_dev_newer'                               => 'You are running development release ":version", which is newer than the latest release :new_version.',
     'update_current_version_alert'                           => 'Du bruger :version, som er den seneste tilgængelige udgivelse.',
     'update_newer_version_alert'                             => 'Du bruger :your_version, som er nyere end den seneste udgivelse, :new_version.',
     'update_check_error'                                     => 'Der opstod en fejl under søgning efter opdateringer: :error',

@@ -308,6 +308,8 @@ return [
     'update_new_version_alert'                               => '发现可用的 Firefly III 新版本，您正在运行的版本是 :your_version，最新版本是 :new_version（发布于 :date）。',
     'update_version_beta'                                    => '此版本是 BETA 版本。您可能会遇到问题。',
     'update_version_alpha'                                   => '此版本是 ALPHA 版本。您可能会遇到问题。',
+    'update_current_dev_older'                               => 'You are running development release ":version", which is older than the latest release :new_version. Please update!',
+    'update_current_dev_newer'                               => 'You are running development release ":version", which is newer than the latest release :new_version.',
     'update_current_version_alert'                           => '您正在运行 :version，这是最新的可用版本。',
     'update_newer_version_alert'                             => '您正在运行 :your_version，它比最新发布的 :new_version 更新。',
     'update_check_error'                                     => '检查更新时发生错误：:error',

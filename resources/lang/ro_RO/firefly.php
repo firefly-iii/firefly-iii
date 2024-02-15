@@ -308,6 +308,8 @@ return [
     'update_new_version_alert'                               => 'O nouă versiune de Firefly III este disponibilă. Dvs. aveți :your_version, ultima versiune este :new_version lansată în data de :date.',
     'update_version_beta'                                    => 'Această versiune este o versiune BETA. Este posibil să aveți probleme.',
     'update_version_alpha'                                   => 'Această versiune este o versiune ALFA. Este posibil să aveți probleme.',
+    'update_current_dev_older'                               => 'You are running development release ":version", which is older than the latest release :new_version. Please update!',
+    'update_current_dev_newer'                               => 'You are running development release ":version", which is newer than the latest release :new_version.',
     'update_current_version_alert'                           => 'Aveți versiunea :version, care este ultima disponibilă.',
     'update_newer_version_alert'                             => 'Aveți versiunea :your_version, care este mai nouă decât cea mai recentă versiune, :new_version.',
     'update_check_error'                                     => 'A apărut o eroare la verificarea actualizărilor: :error',

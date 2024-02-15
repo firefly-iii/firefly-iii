@@ -308,6 +308,8 @@ return [
     'update_new_version_alert'                               => 'Μία νέα έκδοση του Firefly III είναι διαθέσιμη. Έχετε την v:your_version, ενώ η τελευταία έκδοση είναι η v:new_version που κυκλοφόρησε στις :date.',
     'update_version_beta'                                    => 'Αυτή είναι μια BETA δοκιμαστική έκδοση. Μπορεί να συναντήσετε προβλήματα.',
     'update_version_alpha'                                   => 'Αυτή είναι μια ALPHA δοκιμαστική έκδοση. Μπορεί να συναντήσετε προβλήματα.',
+    'update_current_dev_older'                               => 'You are running development release ":version", which is older than the latest release :new_version. Please update!',
+    'update_current_dev_newer'                               => 'You are running development release ":version", which is newer than the latest release :new_version.',
     'update_current_version_alert'                           => 'Έχετε την έκδοση v:version, που είναι η τελευταία διαθέσιμη.',
     'update_newer_version_alert'                             => 'Έχετε την έκδοση v:your_version, που είναι νεότερη από την τελευταία έκδοση, v:new_version.',
     'update_check_error'                                     => 'Παρουσιάστηκε σφάλμα κατά τον έλεγχο για ενημερώσεις: :error',

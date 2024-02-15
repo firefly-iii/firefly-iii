@@ -309,6 +309,8 @@ return [
     'update_new_version_alert'                               => 'Firefly III\'ün yeni versiyonu mevcut. Şuan kullandığınız :your_version, son versiyon ise :date tarihinde yayınlanan :new_version versiyonu.',
     'update_version_beta'                                    => 'Bu bir BETA versiyonudur. Bazı hatalar ile karşılaşabilirsiniz.',
     'update_version_alpha'                                   => 'Bu bir ALPHA versiyonudur. Bazı hatalar ile karşılaşabilirsiniz.',
+    'update_current_dev_older'                               => 'You are running development release ":version", which is older than the latest release :new_version. Please update!',
+    'update_current_dev_newer'                               => 'You are running development release ":version", which is newer than the latest release :new_version.',
     'update_current_version_alert'                           => 'En son mevcut olan :version versiyonunu kullanıyorsunuz.',
     'update_newer_version_alert'                             => 'Son mevcut olan :new_version versiyonundan daha yeni olan :your_version versiyonu kullanıyorsunuz.',
     'update_check_error'                                     => 'Güncellemeler kontrol edilirken bir hata oluştu: :error',

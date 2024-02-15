@@ -308,6 +308,8 @@ return [
     'update_new_version_alert'                               => 'Er is een nieuwe versie van Firefly III beschikbaar. Je gebruikt :your_version, de nieuwste versie is :new_version die werd uitgebracht op :date.',
     'update_version_beta'                                    => 'Dit is een BETA versie. Er kunnen bugs in zitten.',
     'update_version_alpha'                                   => 'Dit is een ALPHA versie. Er kunnen bugs in zitten.',
+    'update_current_dev_older'                               => 'You are running development release ":version", which is older than the latest release :new_version. Please update!',
+    'update_current_dev_newer'                               => 'You are running development release ":version", which is newer than the latest release :new_version.',
     'update_current_version_alert'                           => 'Je gebruikt :version, de nieuwste beschikbare versie.',
     'update_newer_version_alert'                             => 'Je gebruikt :your_version, wat nieuwer is dan de nieuwste versie, :new_version.',
     'update_check_error'                                     => 'Er is een fout opgetreden bij het controleren op updates: :error',

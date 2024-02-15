@@ -234,7 +234,7 @@ return [
     // Webhooks
     'webhooks'                                               => 'Webhooki',
     'webhooks_breadcrumb'                                    => 'Webhooki',
-    'webhooks_menu_disabled'                                 => 'disabled',
+    'webhooks_menu_disabled'                                 => 'wyłączone',
     'no_webhook_messages'                                    => 'Brak wiadomości webhook',
     'webhook_trigger_STORE_TRANSACTION'                      => 'Po utworzeniu transakcji',
     'webhook_trigger_UPDATE_TRANSACTION'                     => 'Po zmodyfikowaniu transakcji',
@@ -308,6 +308,8 @@ return [
     'update_new_version_alert'                               => 'Dostępna jest nowa wersja Firefly III. Używasz wersji :your_version, najnowsza wersja to :new_version wydana :date.',
     'update_version_beta'                                    => 'Ta wersja jest wersją BETA. Możesz napotkać błędy.',
     'update_version_alpha'                                   => 'Ta wersja jest wersją ALPHA. Możesz napotkać błędy.',
+    'update_current_dev_older'                               => 'You are running development release ":version", which is older than the latest release :new_version. Please update!',
+    'update_current_dev_newer'                               => 'You are running development release ":version", which is newer than the latest release :new_version.',
     'update_current_version_alert'                           => 'Używasz wersji :version, która jest najnowszą dostępną wersją.',
     'update_newer_version_alert'                             => 'Używasz wersji :your_version, która jest nowsza niż najnowsza wersja, :new_version.',
     'update_check_error'                                     => 'Wystąpił błąd podczas sprawdzania aktualizacji :error',

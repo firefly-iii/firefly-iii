@@ -542,16 +542,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "3.8.1",
+            "version": "3.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "c9ea252cdce4da324ede3d6c5913dd89f769afd2"
+                "reference": "a19a1d05ca211f41089dffcc387733a6875196cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/c9ea252cdce4da324ede3d6c5913dd89f769afd2",
-                "reference": "c9ea252cdce4da324ede3d6c5913dd89f769afd2",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/a19a1d05ca211f41089dffcc387733a6875196cb",
+                "reference": "a19a1d05ca211f41089dffcc387733a6875196cb",
                 "shasum": ""
             },
             "require": {
@@ -635,7 +635,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-                "source": "https://github.com/doctrine/dbal/tree/3.8.1"
+                "source": "https://github.com/doctrine/dbal/tree/3.8.2"
             },
             "funding": [
                 {
@@ -651,7 +651,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-03T17:33:49+00:00"
+            "time": "2024-02-12T18:36:36+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -2219,16 +2219,16 @@
         },
         {
             "name": "laravel/passport",
-            "version": "v11.10.4",
+            "version": "v11.10.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/passport.git",
-                "reference": "8a75495f431e52df2ffa178851c402d7a5e8f037"
+                "reference": "4d81207941d6efc198857847d9e4c17520f28d75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/passport/zipball/8a75495f431e52df2ffa178851c402d7a5e8f037",
-                "reference": "8a75495f431e52df2ffa178851c402d7a5e8f037",
+                "url": "https://api.github.com/repos/laravel/passport/zipball/4d81207941d6efc198857847d9e4c17520f28d75",
+                "reference": "4d81207941d6efc198857847d9e4c17520f28d75",
                 "shasum": ""
             },
             "require": {
@@ -2293,7 +2293,7 @@
                 "issues": "https://github.com/laravel/passport/issues",
                 "source": "https://github.com/laravel/passport"
             },
-            "time": "2024-01-30T15:44:09+00:00"
+            "time": "2024-02-09T16:27:49+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -8990,36 +8990,36 @@
     "packages-dev": [
         {
             "name": "barryvdh/laravel-debugbar",
-            "version": "v3.9.2",
+            "version": "v3.10.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-debugbar.git",
-                "reference": "bfd0131c146973cab164e50f5cdd8a67cc60cab1"
+                "reference": "09d3dc77d7dc1b063e3728a6029c39ee0fbebf1d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/bfd0131c146973cab164e50f5cdd8a67cc60cab1",
-                "reference": "bfd0131c146973cab164e50f5cdd8a67cc60cab1",
+                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/09d3dc77d7dc1b063e3728a6029c39ee0fbebf1d",
+                "reference": "09d3dc77d7dc1b063e3728a6029c39ee0fbebf1d",
                 "shasum": ""
             },
             "require": {
-                "illuminate/routing": "^9|^10",
-                "illuminate/session": "^9|^10",
-                "illuminate/support": "^9|^10",
-                "maximebf/debugbar": "^1.18.2",
+                "illuminate/routing": "^9|^10|^11",
+                "illuminate/session": "^9|^10|^11",
+                "illuminate/support": "^9|^10|^11",
+                "maximebf/debugbar": "~1.20.1",
                 "php": "^8.0",
-                "symfony/finder": "^6"
+                "symfony/finder": "^6|^7"
             },
             "require-dev": {
                 "mockery/mockery": "^1.3.3",
-                "orchestra/testbench-dusk": "^5|^6|^7|^8",
+                "orchestra/testbench-dusk": "^5|^6|^7|^8|^9",
                 "phpunit/phpunit": "^8.5.30|^9.0",
                 "squizlabs/php_codesniffer": "^3.5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.8-dev"
+                    "dev-master": "3.10-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -9058,7 +9058,7 @@
             ],
             "support": {
                 "issues": "https://github.com/barryvdh/laravel-debugbar/issues",
-                "source": "https://github.com/barryvdh/laravel-debugbar/tree/v3.9.2"
+                "source": "https://github.com/barryvdh/laravel-debugbar/tree/v3.10.4"
             },
             "funding": [
                 {
@@ -9070,43 +9070,43 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-08-25T18:43:57+00:00"
+            "time": "2024-02-14T08:52:12+00:00"
         },
         {
             "name": "barryvdh/laravel-ide-helper",
-            "version": "v2.14.0",
+            "version": "v2.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "485c756f6cff408d6b273274c5e86112c3973d98"
+                "reference": "dca3ebe81ea385632651791cb8b3db42153c380c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/485c756f6cff408d6b273274c5e86112c3973d98",
-                "reference": "485c756f6cff408d6b273274c5e86112c3973d98",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/dca3ebe81ea385632651791cb8b3db42153c380c",
+                "reference": "dca3ebe81ea385632651791cb8b3db42153c380c",
                 "shasum": ""
             },
             "require": {
                 "barryvdh/reflection-docblock": "^2.0.6",
                 "composer/class-map-generator": "^1.0",
-                "doctrine/dbal": "^2.6 || ^3",
+                "doctrine/dbal": "^2.6 || ^3.1.4",
                 "ext-json": "*",
-                "illuminate/console": "^8 || ^9 || ^10",
-                "illuminate/filesystem": "^8 || ^9 || ^10",
-                "illuminate/support": "^8 || ^9 || ^10",
+                "illuminate/console": "^9 || ^10",
+                "illuminate/filesystem": "^9 || ^10",
+                "illuminate/support": "^9 || ^10",
                 "nikic/php-parser": "^4.18 || ^5",
-                "php": "^7.3 || ^8.0",
+                "php": "^8.0",
                 "phpdocumentor/type-resolver": "^1.1.0"
             },
             "require-dev": {
                 "ext-pdo_sqlite": "*",
-                "friendsofphp/php-cs-fixer": "^2",
-                "illuminate/config": "^8 || ^9 || ^10",
-                "illuminate/view": "^8 || ^9 || ^10",
+                "friendsofphp/php-cs-fixer": "^3",
+                "illuminate/config": "^9 || ^10",
+                "illuminate/view": "^9 || ^10",
                 "mockery/mockery": "^1.4",
-                "orchestra/testbench": "^6 || ^7 || ^8",
-                "phpunit/phpunit": "^8.5 || ^9",
-                "spatie/phpunit-snapshot-assertions": "^3 || ^4",
+                "orchestra/testbench": "^7 || ^8",
+                "phpunit/phpunit": "^9",
+                "spatie/phpunit-snapshot-assertions": "^4",
                 "vimeo/psalm": "^5.4"
             },
             "suggest": {
@@ -9115,7 +9115,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.14-dev"
+                    "dev-master": "2.15-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -9152,7 +9152,7 @@
             ],
             "support": {
                 "issues": "https://github.com/barryvdh/laravel-ide-helper/issues",
-                "source": "https://github.com/barryvdh/laravel-ide-helper/tree/v2.14.0"
+                "source": "https://github.com/barryvdh/laravel-ide-helper/tree/v2.15.0"
             },
             "funding": [
                 {
@@ -9164,7 +9164,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-02-05T08:16:36+00:00"
+            "time": "2024-02-14T11:19:26+00:00"
         },
         {
             "name": "barryvdh/reflection-docblock",
@@ -9550,16 +9550,16 @@
         },
         {
             "name": "larastan/larastan",
-            "version": "v2.8.1",
+            "version": "v2.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/larastan/larastan.git",
-                "reference": "b7cc6a29c457a7d4f3de90466392ae9ad3e17022"
+                "reference": "35fa9cbe1895e76215bbe74571a344f2705fbe01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/larastan/larastan/zipball/b7cc6a29c457a7d4f3de90466392ae9ad3e17022",
-                "reference": "b7cc6a29c457a7d4f3de90466392ae9ad3e17022",
+                "url": "https://api.github.com/repos/larastan/larastan/zipball/35fa9cbe1895e76215bbe74571a344f2705fbe01",
+                "reference": "35fa9cbe1895e76215bbe74571a344f2705fbe01",
                 "shasum": ""
             },
             "require": {
@@ -9627,7 +9627,7 @@
             ],
             "support": {
                 "issues": "https://github.com/larastan/larastan/issues",
-                "source": "https://github.com/larastan/larastan/tree/v2.8.1"
+                "source": "https://github.com/larastan/larastan/tree/v2.9.0"
             },
             "funding": [
                 {
@@ -9647,26 +9647,26 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2024-01-08T09:11:17+00:00"
+            "time": "2024-02-13T11:49:22+00:00"
         },
         {
             "name": "maximebf/debugbar",
-            "version": "v1.19.1",
+            "version": "v1.20.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maximebf/php-debugbar.git",
-                "reference": "03dd40a1826f4d585ef93ef83afa2a9874a00523"
+                "reference": "06ebf922ccedfa4cc43015825697ee8c1fb80f7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maximebf/php-debugbar/zipball/03dd40a1826f4d585ef93ef83afa2a9874a00523",
-                "reference": "03dd40a1826f4d585ef93ef83afa2a9874a00523",
+                "url": "https://api.github.com/repos/maximebf/php-debugbar/zipball/06ebf922ccedfa4cc43015825697ee8c1fb80f7e",
+                "reference": "06ebf922ccedfa4cc43015825697ee8c1fb80f7e",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1|^8",
                 "psr/log": "^1|^2|^3",
-                "symfony/var-dumper": "^4|^5|^6"
+                "symfony/var-dumper": "^4|^5|^6|^7"
             },
             "require-dev": {
                 "phpunit/phpunit": ">=7.5.20 <10.0",
@@ -9680,7 +9680,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.18-dev"
+                    "dev-master": "1.20-dev"
                 }
             },
             "autoload": {
@@ -9711,9 +9711,9 @@
             ],
             "support": {
                 "issues": "https://github.com/maximebf/php-debugbar/issues",
-                "source": "https://github.com/maximebf/php-debugbar/tree/v1.19.1"
+                "source": "https://github.com/maximebf/php-debugbar/tree/v1.20.1"
             },
-            "time": "2023-10-12T08:10:52+00:00"
+            "time": "2024-02-13T19:03:14+00:00"
         },
         {
             "name": "mockery/mockery",
@@ -10318,16 +10318,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.57",
+            "version": "1.10.58",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "1627b1d03446904aaa77593f370c5201d2ecc34e"
+                "reference": "a23518379ec4defd9e47cbf81019526861623ec2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/1627b1d03446904aaa77593f370c5201d2ecc34e",
-                "reference": "1627b1d03446904aaa77593f370c5201d2ecc34e",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a23518379ec4defd9e47cbf81019526861623ec2",
+                "reference": "a23518379ec4defd9e47cbf81019526861623ec2",
                 "shasum": ""
             },
             "require": {
@@ -10376,7 +10376,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-24T11:51:34+00:00"
+            "time": "2024-02-12T20:02:57+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",

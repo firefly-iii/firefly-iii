@@ -308,6 +308,8 @@ return [
     'update_new_version_alert'                               => 'Доступна новая версия Firefly III. Вы используете версию v:your_version, самая свежая версия - v:new_version (выпущена :date).',
     'update_version_beta'                                    => 'Эта версия является БЕТА-версией. Вы можете столкнуться с проблемами.',
     'update_version_alpha'                                   => 'Эта версия является АЛЬФА-версией. Вы можете столкнуться с проблемами.',
+    'update_current_dev_older'                               => 'You are running development release ":version", which is older than the latest release :new_version. Please update!',
+    'update_current_dev_newer'                               => 'You are running development release ":version", which is newer than the latest release :new_version.',
     'update_current_version_alert'                           => 'Вы используете v:version, которая является последним доступным релизом.',
     'update_newer_version_alert'                             => 'Вы используете версию v:your_version, которая новее последнего релиза (v:new_version).',
     'update_check_error'                                     => 'Произошла ошибка при проверке обновлений: :error',

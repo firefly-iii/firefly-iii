@@ -308,6 +308,8 @@ return [
     'update_new_version_alert'                               => 'Một phiên bản mới của Firefly III có sẵn. Bạn đang chạy :your_version, phiên bản mới nhất là :new_version được phát hành vào :date.',
     'update_version_beta'                                    => 'Phiên bản này là phiên bản BETA. Bạn có thể gặp vấn đề.',
     'update_version_alpha'                                   => 'Phiên bản này là phiên bản ALPHA. Bạn có thể gặp vấn đề.',
+    'update_current_dev_older'                               => 'You are running development release ":version", which is older than the latest release :new_version. Please update!',
+    'update_current_dev_newer'                               => 'You are running development release ":version", which is newer than the latest release :new_version.',
     'update_current_version_alert'                           => 'Bạn đang chạy :version , đây là phiên bản mới nhất có sẵn.',
     'update_newer_version_alert'                             => 'Bạn đang chạy :your_version, mới hơn bản phát hành mới nhất , :new_version.',
     'update_check_error'                                     => 'Đã xảy ra lỗi trong khi kiểm tra cập nhật: :error',

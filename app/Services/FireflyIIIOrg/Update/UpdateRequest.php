@@ -131,10 +131,6 @@ class UpdateRequest implements UpdateRequestInterface
 
     /**
      * TODO make shorter
-     *
-     * @param array $information
-     *
-     * @return array
      */
     private function parseResult(array $information): array
     {
@@ -150,6 +146,7 @@ class UpdateRequest implements UpdateRequestInterface
         if (str_starts_with($current, 'develop')) {
             Log::debug(sprintf('User is running develop version "%s"', $current));
             $parts             = explode('/', $current);
+
             /** @var Carbon $devDate */
             $devDate           = Carbon::createFromFormat('Y-m-d', $parts[1]);
 

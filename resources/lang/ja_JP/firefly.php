@@ -308,6 +308,8 @@ return [
     'update_new_version_alert'                               => 'Firefly III の新しいバージョンが利用可能です。あなたは現在 :your_version を実行していますが、最新バージョンは :date にリリースされた :new_version です。',
     'update_version_beta'                                    => 'このバージョンはベータ版です。問題が発生する可能性があります。',
     'update_version_alpha'                                   => 'このバージョンはアルファ版です。問題が発生する可能性があります。',
+    'update_current_dev_older'                               => 'You are running development release ":version", which is older than the latest release :new_version. Please update!',
+    'update_current_dev_newer'                               => 'You are running development release ":version", which is newer than the latest release :new_version.',
     'update_current_version_alert'                           => '最新のリリースである :version を利用しています。',
     'update_newer_version_alert'                             => '最新の :new_version よりも新しい :your_version を利用しています。',
     'update_check_error'                                     => 'アップデートの確認中にエラーが発生しました: :error',

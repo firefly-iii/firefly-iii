@@ -308,6 +308,8 @@ return [
     'update_new_version_alert'                               => 'A Firefly III új verziója elérhető. A jelenleg használt verzió :your_version, a legújabb verzió pedig :new_version, amely ekkor jelent meg: :date.',
     'update_version_beta'                                    => 'Ez egy BETA verzió. Előfordulhatnak problémák.',
     'update_version_alpha'                                   => 'Ez egy ALPHA verzió. Előfordulhatnak problémák.',
+    'update_current_dev_older'                               => 'You are running development release ":version", which is older than the latest release :new_version. Please update!',
+    'update_current_dev_newer'                               => 'You are running development release ":version", which is newer than the latest release :new_version.',
     'update_current_version_alert'                           => 'A jelenlegi verzió :version, ez egyben a legfrissebb elérhető verzió is.',
     'update_newer_version_alert'                             => 'A jelenlegi verzió :your_version, amely újabb, mint a legfrissebb kiadott verzió, ami a :new_version.',
     'update_check_error'                                     => 'Hiba történt a frissítések ellenőrzése közben: :error',

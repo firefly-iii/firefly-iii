@@ -308,6 +308,8 @@ return [
     'update_new_version_alert'                               => 'Je k dispozici nová verze Firefly III. Nyní provozujete verzi :your_version, nejnovější verze je :new_version, která byla vydaná :date.',
     'update_version_beta'                                    => 'Tato verze je BETA verze. Můžete narazit na problémy.',
     'update_version_alpha'                                   => 'Tato verze je ALFA verze. Můžete narazit na problémy.',
+    'update_current_dev_older'                               => 'You are running development release ":version", which is older than the latest release :new_version. Please update!',
+    'update_current_dev_newer'                               => 'You are running development release ":version", which is newer than the latest release :new_version.',
     'update_current_version_alert'                           => 'Provozujete verzi :version, která je nejnovější dostupnou verzí.',
     'update_newer_version_alert'                             => 'Používáte verzi :your_version, která je novější než poslední stabilní verze :new_version.',
     'update_check_error'                                     => 'Došlo k chybě při kontrole aktualizací: :error',
