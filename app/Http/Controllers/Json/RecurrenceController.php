@@ -78,7 +78,7 @@ class RecurrenceController extends Controller
         $weekend                       = (int) $request->get('weekend');
         $repetitionMoment              = '';
         $skip                          = (int) $request->get('skip');
-        $skip                          = $skip < 1 || $skip > 31 ? 1 : $skip;
+        $skip                          = $skip < 0 || $skip > 31 ? 0 : $skip;
         $weekend                       = $weekend < 1 || $weekend > 4 ? 1 : $weekend;
 
         if (false === $start || false === $end || false === $firstDate || false === $endDate) {
