@@ -68,6 +68,9 @@ class ForgotPasswordController extends Controller
             return view('error', compact('message'));
         }
 
+        // validate host header.
+        $this->validateHost();
+
         $this->validateEmail($request);
 
         // verify if the user is not a demo user. If so, we give him back an error.
@@ -117,5 +120,20 @@ class ForgotPasswordController extends Controller
         }
 
         return view('auth.passwords.email')->with(compact('allowRegistration', 'pageTitle'));
+    }
+
+    /**
+     * @return void
+     * @throws FireflyException
+     */
+    private function validateHost(): void {
+        $configuredHost = parse_url((string)config('app.url'),  PHP_URL_HOST);
+        if(false === $configuredHost || null === $configuredHost) {
+            throw new FireflyException('Please set a valid and correct Firefly III URL in the APP_URL environment variable.');
+        }
+        $host = request()->host();
+        if($configuredHost !== $host) {
+            throw new FireflyException('The Host-header does not match the host in the APP_URL environment variable. Please make sure these match. See also: https://bit.ly/FF3-host-header');
+        }
     }
 }
