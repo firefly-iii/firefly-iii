@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\AccountType;
@@ -178,7 +177,9 @@ class DebugController extends Controller
             'db_version'      => app('fireflyconfig')->get('db_version', 1)->data,
             'php_version'     => PHP_VERSION,
             'php_os'          => PHP_OS,
+            'uname'           => php_uname('m'),
             'interface'       => \PHP_SAPI,
+            'bits'            => \PHP_INT_SIZE * 8,
             'bcscale'         => bcscale(),
             'display_errors'  => ini_get('display_errors'),
             'error_reporting' => $this->errorReporting((int)ini_get('error_reporting')),

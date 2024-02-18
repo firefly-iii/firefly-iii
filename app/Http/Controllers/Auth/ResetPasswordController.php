@@ -81,7 +81,6 @@ class ResetPasswordController extends Controller
             return view('error', compact('message'));
         }
 
-
         $rules    = [
             'token'    => 'required',
             'email'    => 'required|email',
