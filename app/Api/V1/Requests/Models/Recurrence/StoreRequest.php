@@ -132,7 +132,7 @@ class StoreRequest extends FormRequest
                 $this->validateAccountInformation($validator);
             }
         );
-        if($validator->fails()) {
+        if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
         }
     }

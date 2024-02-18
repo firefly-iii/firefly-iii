@@ -206,7 +206,7 @@ class UpdateRequest extends FormRequest
                 $this->validateAccountInformationUpdate($validator, $transactionGroup);
             }
         );
-        if($validator->fails()) {
+        if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
         }
     }

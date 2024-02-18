@@ -19,7 +19,7 @@ class IsValidPositiveAmount implements ValidationRule
     {
         $value = (string)$value;
         // must not be empty:
-        if($this->emptyString($value)) {
+        if ($this->emptyString($value)) {
             $fail('validation.filled')->translate();
             $message = sprintf('IsValidPositiveAmount: "%s" cannot be empty.', $value);
             Log::debug($message);
@@ -29,7 +29,7 @@ class IsValidPositiveAmount implements ValidationRule
         }
 
         // must be a number:
-        if(!$this->isValidNumber($value)) {
+        if (!$this->isValidNumber($value)) {
             $fail('validation.numeric')->translate();
             $message = sprintf('IsValidPositiveAmount: "%s" is not a number.', $value);
             Log::debug($message);
@@ -38,7 +38,7 @@ class IsValidPositiveAmount implements ValidationRule
             return;
         }
         // must not be scientific notation:
-        if($this->scientificNumber($value)) {
+        if ($this->scientificNumber($value)) {
             $fail('validation.scientific_notation')->translate();
             $message = sprintf('IsValidPositiveAmount: "%s" cannot be in the scientific notation.', $value);
             Log::debug($message);
@@ -47,7 +47,7 @@ class IsValidPositiveAmount implements ValidationRule
             return;
         }
         // must be more than zero:
-        if($this->lessOrEqualToZero($value)) {
+        if ($this->lessOrEqualToZero($value)) {
             $fail('validation.more_than_zero')->translate();
             $message = sprintf('IsValidPositiveAmount: "%s" must be more than zero.', $value);
             Log::debug($message);
@@ -56,7 +56,7 @@ class IsValidPositiveAmount implements ValidationRule
             return;
         }
         // must be less than a large number
-        if($this->moreThanLots($value)) {
+        if ($this->moreThanLots($value)) {
             $fail('validation.lte.numeric')->translate(['value' => self::BIG_AMOUNT]);
             $message = sprintf('IsValidPositiveAmount: "%s" must be less than %s.', $value, self::BIG_AMOUNT);
             Log::debug($message);

@@ -74,7 +74,7 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        if(true === auth()->user()->hasRole('demo')) {
+        if (true === auth()->user()->hasRole('demo')) {
             Log::channel('audit')->warning(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
 
             throw new NotFoundHttpException();
@@ -98,7 +98,7 @@ class StoreController extends Controller
      */
     public function upload(Request $request, Attachment $attachment): JsonResponse
     {
-        if(true === auth()->user()->hasRole('demo')) {
+        if (true === auth()->user()->hasRole('demo')) {
             Log::channel('audit')->warning(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
 
             throw new NotFoundHttpException();
