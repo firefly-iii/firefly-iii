@@ -142,7 +142,7 @@ class RuleRepository implements RuleRepositoryInterface
                 continue;
             }
             $triggerType  = $trigger->trigger_type;
-            if(str_starts_with($trigger->trigger_type, '-')) {
+            if (str_starts_with($trigger->trigger_type, '-')) {
                 $triggerType = substr($trigger->trigger_type, 1);
             }
             $needsContext = config(sprintf('search.operators.%s.needs_context', $triggerType)) ?? true;
@@ -484,7 +484,7 @@ class RuleRepository implements RuleRepositoryInterface
                 'no_external_id',
                 'any_external_id',
             ];
-            if(in_array($type, $needTrue, true)) {
+            if (in_array($type, $needTrue, true)) {
                 $value = '';
             }
 

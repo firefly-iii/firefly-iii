@@ -36,7 +36,7 @@ function searchFailure() {
 }
 
 function presentSearchResults(data) {
-    if(typeof data === 'undefined') {
+    if (typeof data === 'undefined') {
         searchFailure();
         return;
     }

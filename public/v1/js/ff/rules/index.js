@@ -106,7 +106,7 @@ $(function () {
 
       $('.rule-trigger-list').each(function(i,v) {
           var obj = $(v);
-          if(obj.data('count') > 2) {
+          if (obj.data('count') > 2) {
               obj.hide();
               $('.rule-triggers-show[data-id="' + obj.data('id') + '"]').show();
           }
@@ -120,7 +120,7 @@ $(function () {
 
     $('.rule-action-list').each(function(i,v) {
         var obj = $(v);
-        if(obj.data('count') > 1) {
+        if (obj.data('count') > 1) {
             obj.hide();
             $('.rule-actions-show[data-id="' + obj.data('id') + '"]').show();
         }

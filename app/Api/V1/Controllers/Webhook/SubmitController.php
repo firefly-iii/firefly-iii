@@ -57,7 +57,7 @@ class SubmitController extends Controller
      */
     public function submit(Webhook $webhook): JsonResponse
     {
-        if(false === config('firefly.allow_webhooks')) {
+        if (false === config('firefly.allow_webhooks')) {
             Log::channel('audit')->info(sprintf('User tries to submit webhook #%d, but webhooks are DISABLED.', $webhook->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
