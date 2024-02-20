@@ -35,36 +35,39 @@ $finder = PhpCsFixer\Finder::create()
 
 
 $config = new PhpCsFixer\Config();
-return $config->setRules([
-                             'no_unused_imports'             => true,
-                             '@PhpCsFixer'                   => true,
-                             '@PHP83Migration'               => true,
-                             '@PhpCsFixer:risky'             => true,
-                             '@PSR12:risky'                  => true,
-                             'declare_strict_types'          => true,
-                             'strict_param'                  => true,
-                             'comment_to_phpdoc'             => false, // breaks phpstan lines in combination with PHPStorm.
-                             'array_syntax'                  => ['syntax' => 'short'],
-                             'native_function_invocation'    => false, // annoying
-                             'php_unit_data_provider_name'   => false, // bloody annoying long test names
-                             'static_lambda'                 => false, // breaks the Response macro for API's.
-                             'phpdoc_summary'                => false, // annoying.
-                             'single_space_around_construct' => [
-                                 'constructs_followed_by_a_single_space' => [
-                                     'protected',
-                                 ],
-                             ],
-                             'statement_indentation'         => true,
-                             'type_declaration_spaces'       => false,
-                             'cast_spaces'                   => false,
-                             'binary_operator_spaces'        => [
-                                 'default' => 'at_least_single_space',
-                                 'operators' => [
-                                     '=>' => 'align_single_space_by_scope',
-                                     '='  => 'align_single_space_minimal_by_scope',
-                                     '??='  => 'align_single_space_minimal_by_scope',
-                                 ],
-                             ],
-                             'void_return'                   => true,
-                         ])
+return $config->setRules(
+    [
+        // rule sets
+        '@PHP83Migration'               => true,
+        '@PhpCsFixer'                   => true,
+        '@PhpCsFixer:risky'             => true,
+        '@PSR12'                        => true,
+        '@PSR12:risky'                  => true,
+        'declare_strict_types'          => true,
+        'strict_param'                  => true,
+        'no_unused_imports'             => true,
+        'single_space_around_construct' => true,
+        'statement_indentation'         => true,
+        'void_return'                   => true,
+
+        // disabled rules
+        'native_function_invocation'    => false, // annoying
+        'php_unit_data_provider_name'   => false, // bloody annoying long test names
+        'static_lambda'                 => false, // breaks the Response macro for API's.
+        'phpdoc_summary'                => false, // annoying.
+        'comment_to_phpdoc'             => false, // breaks phpstan lines in combination with PHPStorm.
+        'type_declaration_spaces'       => false,
+        'cast_spaces'                   => false,
+
+        // complex rules
+        'array_syntax'                  => ['syntax' => 'short'],
+        'binary_operator_spaces'        => [
+            'default'   => 'at_least_single_space',
+            'operators' => [
+                '=>'  => 'align_single_space_by_scope',
+                '='   => 'align_single_space_minimal_by_scope',
+                '??=' => 'align_single_space_minimal_by_scope',
+            ],
+        ],
+    ])
               ->setFinder($finder);
