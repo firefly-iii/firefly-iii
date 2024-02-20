@@ -226,7 +226,8 @@ class UpdateRequest implements UpdateRequestInterface
     private function parseDevelopResult(string $current, string $latest, array $information): array
     {
         Log::debug(sprintf('User is running develop version "%s"', $current));
-        $parts = explode('/', $current);
+        $parts  = explode('/', $current);
+        $return = [];
 
         /** @var Carbon $devDate */
         $devDate = Carbon::createFromFormat('Y-m-d', $parts[1]);
