@@ -38,10 +38,6 @@ class TransactionController extends Controller
     public function listByCount(ListByCountRequest $request): JsonResponse
     {
         // collect transactions:
-        $pageSize  = $this->parameters->get('limit');
-        $page      = $request->getPage();
-        $page      = max($page, 1);
-
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUserGroup(auth()->user()->userGroup)
