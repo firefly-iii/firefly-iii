@@ -62,7 +62,7 @@ class DestroyController extends Controller
      */
     public function destroy(Webhook $webhook): JsonResponse
     {
-        if(false === config('firefly.allow_webhooks')) {
+        if (false === config('firefly.allow_webhooks')) {
             Log::channel('audit')->warning(sprintf('User tries to destroy webhook #%d. but webhooks are DISABLED.', $webhook->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
@@ -120,7 +120,7 @@ class DestroyController extends Controller
             throw new FireflyException('200040: Webhook and webhook message are no match');
         }
 
-        if(false === config('firefly.allow_webhooks')) {
+        if (false === config('firefly.allow_webhooks')) {
             Log::channel('audit')->warning(sprintf('User tries to destroy webhook #%d, message #%d, but webhooks are DISABLED.', $webhook->id, $message->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');

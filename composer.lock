@@ -2932,16 +2932,16 @@
         },
         {
             "name": "league/csv",
-            "version": "9.14.0",
+            "version": "9.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/csv.git",
-                "reference": "34bf0df7340b60824b9449b5c526fcc3325070d5"
+                "reference": "fa7e2441c0bc9b2360f4314fd6c954f7ff40d435"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/csv/zipball/34bf0df7340b60824b9449b5c526fcc3325070d5",
-                "reference": "34bf0df7340b60824b9449b5c526fcc3325070d5",
+                "url": "https://api.github.com/repos/thephpleague/csv/zipball/fa7e2441c0bc9b2360f4314fd6c954f7ff40d435",
+                "reference": "fa7e2441c0bc9b2360f4314fd6c954f7ff40d435",
                 "shasum": ""
             },
             "require": {
@@ -2956,12 +2956,12 @@
                 "ext-xdebug": "*",
                 "friendsofphp/php-cs-fixer": "^v3.22.0",
                 "phpbench/phpbench": "^1.2.15",
-                "phpstan/phpstan": "^1.10.50",
+                "phpstan/phpstan": "^1.10.57",
                 "phpstan/phpstan-deprecation-rules": "^1.1.4",
                 "phpstan/phpstan-phpunit": "^1.3.15",
                 "phpstan/phpstan-strict-rules": "^1.5.2",
-                "phpunit/phpunit": "^10.5.3",
-                "symfony/var-dumper": "^6.4.0"
+                "phpunit/phpunit": "^10.5.9",
+                "symfony/var-dumper": "^6.4.2"
             },
             "suggest": {
                 "ext-dom": "Required to use the XMLConverter and the HTMLConverter classes",
@@ -3017,7 +3017,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-12-29T07:34:53+00:00"
+            "time": "2024-02-20T20:00:00+00:00"
         },
         {
             "name": "league/event",
@@ -5803,16 +5803,16 @@
         },
         {
             "name": "spatie/laravel-html",
-            "version": "3.4.0",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-html.git",
-                "reference": "20bd3185ae085b2eced952bc5191cb8eb922250e"
+                "reference": "ead179a8b6802647027486049f5209bd23b610a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-html/zipball/20bd3185ae085b2eced952bc5191cb8eb922250e",
-                "reference": "20bd3185ae085b2eced952bc5191cb8eb922250e",
+                "url": "https://api.github.com/repos/spatie/laravel-html/zipball/ead179a8b6802647027486049f5209bd23b610a9",
+                "reference": "ead179a8b6802647027486049f5209bd23b610a9",
                 "shasum": ""
             },
             "require": {
@@ -5869,7 +5869,7 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-html/tree/3.4.0"
+                "source": "https://github.com/spatie/laravel-html/tree/3.5.0"
             },
             "funding": [
                 {
@@ -5877,7 +5877,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2024-01-05T16:35:10+00:00"
+            "time": "2024-02-20T15:17:00+00:00"
         },
         {
             "name": "spatie/laravel-ignition",
@@ -9859,16 +9859,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.0.0",
+            "version": "v5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "4a21235f7e56e713259a6f76bf4b5ea08502b9dc"
+                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/4a21235f7e56e713259a6f76bf4b5ea08502b9dc",
-                "reference": "4a21235f7e56e713259a6f76bf4b5ea08502b9dc",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/2218c2252c874a4624ab2f613d86ac32d227bc69",
+                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69",
                 "shasum": ""
             },
             "require": {
@@ -9911,9 +9911,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.1"
             },
-            "time": "2024-01-07T17:17:35+00:00"
+            "time": "2024-02-21T19:24:10+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -10081,16 +10081,16 @@
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "1.8.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "fad452781b3d774e3337b0c0b245dd8e5a4455fc"
+                "reference": "bc3dc91a5e9b14aa06d1d9e90647c5c5a2cc5353"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/fad452781b3d774e3337b0c0b245dd8e5a4455fc",
-                "reference": "fad452781b3d774e3337b0c0b245dd8e5a4455fc",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/bc3dc91a5e9b14aa06d1d9e90647c5c5a2cc5353",
+                "reference": "bc3dc91a5e9b14aa06d1d9e90647c5c5a2cc5353",
                 "shasum": ""
             },
             "require": {
@@ -10133,9 +10133,9 @@
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
             "support": {
                 "issues": "https://github.com/phpDocumentor/TypeResolver/issues",
-                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.8.0"
+                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.8.1"
             },
-            "time": "2024-01-11T11:49:22+00:00"
+            "time": "2024-01-18T19:15:27+00:00"
         },
         {
             "name": "phpmyadmin/sql-parser",
@@ -10318,16 +10318,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.58",
+            "version": "1.10.59",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "a23518379ec4defd9e47cbf81019526861623ec2"
+                "reference": "e607609388d3a6d418a50a49f7940e8086798281"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a23518379ec4defd9e47cbf81019526861623ec2",
-                "reference": "a23518379ec4defd9e47cbf81019526861623ec2",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e607609388d3a6d418a50a49f7940e8086798281",
+                "reference": "e607609388d3a6d418a50a49f7940e8086798281",
                 "shasum": ""
             },
             "require": {
@@ -10376,7 +10376,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-12T20:02:57+00:00"
+            "time": "2024-02-20T13:59:13+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",

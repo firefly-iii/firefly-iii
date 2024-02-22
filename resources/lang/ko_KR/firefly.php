@@ -1171,7 +1171,7 @@ return [
     'rule_trigger_not_exists'                                => '거래가 존재하지 않습니다',
     'rule_trigger_not_has_attachments'                       => '거래에 첨부 파일이 없음',
     'rule_trigger_not_has_any_category'                      => '거래에 카테고리가 없음',
-    'rule_trigger_not_has_any_budget'                        => '거래에 카테고리가 없음',
+    'rule_trigger_not_has_any_budget'                        => 'Transaction has no budget',
     'rule_trigger_not_has_any_bill'                          => '거레에 청구서가 없음',
     'rule_trigger_not_has_any_tag'                           => '거래에 태그가 없음',
     'rule_trigger_not_any_notes'                             => '거래에 메모가 없음',

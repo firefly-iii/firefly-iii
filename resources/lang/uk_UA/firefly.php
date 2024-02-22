@@ -1171,7 +1171,7 @@ return [
     'rule_trigger_not_exists'                                => 'Операція не існує',
     'rule_trigger_not_has_attachments'                       => 'Операція не має вкладень',
     'rule_trigger_not_has_any_category'                      => 'Операція не має категорії',
-    'rule_trigger_not_has_any_budget'                        => 'Операція не має категорії',
+    'rule_trigger_not_has_any_budget'                        => 'Transaction has no budget',
     'rule_trigger_not_has_any_bill'                          => 'Операція не має рахунків до сплати',
     'rule_trigger_not_has_any_tag'                           => 'Операція не має тегів',
     'rule_trigger_not_any_notes'                             => 'Операція не містить приміток',

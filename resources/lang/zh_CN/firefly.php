@@ -1171,7 +1171,7 @@ return [
     'rule_trigger_not_exists'                                => '交易不存在',
     'rule_trigger_not_has_attachments'                       => '交易不含附件',
     'rule_trigger_not_has_any_category'                      => '交易不含分类',
-    'rule_trigger_not_has_any_budget'                        => '交易不含分类',
+    'rule_trigger_not_has_any_budget'                        => 'Transaction has no budget',
     'rule_trigger_not_has_any_bill'                          => '交易不含账单',
     'rule_trigger_not_has_any_tag'                           => '交易不含标签',
     'rule_trigger_not_any_notes'                             => '交易不含备注',

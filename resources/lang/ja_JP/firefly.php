@@ -1171,7 +1171,7 @@ return [
     'rule_trigger_not_exists'                                => '存在しない取引',
     'rule_trigger_not_has_attachments'                       => '添付ファイルがない取引',
     'rule_trigger_not_has_any_category'                      => 'カテゴリのない取引',
-    'rule_trigger_not_has_any_budget'                        => 'カテゴリのない取引',
+    'rule_trigger_not_has_any_budget'                        => 'Transaction has no budget',
     'rule_trigger_not_has_any_bill'                          => '請求がない取引',
     'rule_trigger_not_has_any_tag'                           => 'タグがない取引',
     'rule_trigger_not_any_notes'                             => '備考がない取引',

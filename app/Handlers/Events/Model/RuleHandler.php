@@ -60,7 +60,7 @@ class RuleHandler
 
         try {
             Notification::send($user, new RuleActionFailed($params));
-        } catch(ClientException $e) {
+        } catch (ClientException $e) {
             Log::error(sprintf('[a] Error sending notification that the rule action failed: %s', $e->getMessage()));
         }
     }
@@ -89,7 +89,7 @@ class RuleHandler
 
         try {
             Notification::send($user, new RuleActionFailed($params));
-        } catch(ClientException $e) {
+        } catch (ClientException $e) {
             Log::error(sprintf('[b] Error sending notification that the rule action failed: %s', $e->getMessage()));
         }
     }

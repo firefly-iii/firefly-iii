@@ -1171,7 +1171,7 @@ return [
     'rule_trigger_not_exists'                                => 'Транзакция не существует',
     'rule_trigger_not_has_attachments'                       => 'У транзакции нет вложений',
     'rule_trigger_not_has_any_category'                      => 'У транзакции нет категории',
-    'rule_trigger_not_has_any_budget'                        => 'У транзакции нет категории',
+    'rule_trigger_not_has_any_budget'                        => 'Transaction has no budget',
     'rule_trigger_not_has_any_bill'                          => 'У транзакции нет счета на оплату',
     'rule_trigger_not_has_any_tag'                           => 'У транзакции нет тегов',
     'rule_trigger_not_any_notes'                             => 'У транзакции нет заметок',

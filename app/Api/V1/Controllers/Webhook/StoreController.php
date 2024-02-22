@@ -60,7 +60,7 @@ class StoreController extends Controller
     public function store(CreateRequest $request): JsonResponse
     {
         $data        = $request->getData();
-        if(false === config('firefly.allow_webhooks')) {
+        if (false === config('firefly.allow_webhooks')) {
             Log::channel('audit')->info('User tries to store new webhook, but webhooks are DISABLED.', $data);
 
             throw new NotFoundHttpException('Webhooks are not enabled.');

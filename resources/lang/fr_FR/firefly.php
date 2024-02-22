@@ -1171,7 +1171,7 @@ return [
     'rule_trigger_not_exists'                                => 'L\'opération n\'existe pas',
     'rule_trigger_not_has_attachments'                       => 'L\'opération n\'a pas de pièce jointe',
     'rule_trigger_not_has_any_category'                      => 'L\'opération n\'a pas de catégorie',
-    'rule_trigger_not_has_any_budget'                        => 'L\'opération n\'a pas de catégorie',
+    'rule_trigger_not_has_any_budget'                        => 'Transaction has no budget',
     'rule_trigger_not_has_any_bill'                          => 'L\'opération n\'a pas de facture',
     'rule_trigger_not_has_any_tag'                           => 'L\'opération n\'a pas de tag',
     'rule_trigger_not_any_notes'                             => 'L\'opération n\'a pas de note',

@@ -73,12 +73,12 @@ class UpgradeFireflyInstructions extends Command
         }
 
         // validate some settings.
-        if('' === $text && 'local' === (string)config('app.env')) {
+        if ('' === $text && 'local' === (string)config('app.env')) {
             $text = 'Please set APP_ENV=production for a safer environment.';
         }
 
         $prefix  = 'v';
-        if(str_starts_with($version, 'develop')) {
+        if (str_starts_with($version, 'develop')) {
             $prefix = '';
         }
 
@@ -193,12 +193,12 @@ class UpgradeFireflyInstructions extends Command
         }
 
         // validate some settings.
-        if('' === $text && 'local' === (string)config('app.env')) {
+        if ('' === $text && 'local' === (string)config('app.env')) {
             $text = 'Please set APP_ENV=production for a safer environment.';
         }
 
         $prefix  = 'v';
-        if(str_starts_with($version, 'develop')) {
+        if (str_starts_with($version, 'develop')) {
             $prefix = '';
         }
 

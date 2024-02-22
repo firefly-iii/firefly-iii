@@ -1171,7 +1171,7 @@ return [
     'rule_trigger_not_exists'                                => 'Transakcija ne obstaja',
     'rule_trigger_not_has_attachments'                       => 'Transakcija nima prilog',
     'rule_trigger_not_has_any_category'                      => 'Transakcija nima kategorije',
-    'rule_trigger_not_has_any_budget'                        => 'Transakcija nima kategorije',
+    'rule_trigger_not_has_any_budget'                        => 'Transaction has no budget',
     'rule_trigger_not_has_any_bill'                          => 'Transakcija nima računa',
     'rule_trigger_not_has_any_tag'                           => 'Transakcija nima oznak',
     'rule_trigger_not_any_notes'                             => 'Transakcija nima opomb',

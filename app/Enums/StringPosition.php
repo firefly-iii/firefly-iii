@@ -30,8 +30,8 @@ namespace FireflyIII\Enums;
  */
 enum StringPosition
 {
-    case         STARTS;
-    case         ENDS;
-    case         CONTAINS;
-    case         IS;
+    case STARTS;
+    case ENDS;
+    case CONTAINS;
+    case IS;
 }

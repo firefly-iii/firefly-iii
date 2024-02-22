@@ -1171,7 +1171,7 @@ return [
     'rule_trigger_not_exists'                                => 'Transakcja nie istnieje',
     'rule_trigger_not_has_attachments'                       => 'Transakcja nie ma załączników',
     'rule_trigger_not_has_any_category'                      => 'Transakcja nie ma kategorii',
-    'rule_trigger_not_has_any_budget'                        => 'Transakcje bez kategorii',
+    'rule_trigger_not_has_any_budget'                        => 'Transaction has no budget',
     'rule_trigger_not_has_any_bill'                          => 'Transakcja bez rachunku',
     'rule_trigger_not_has_any_tag'                           => 'Transakcja bez tagów',
     'rule_trigger_not_any_notes'                             => 'Transakcja bez notatek',

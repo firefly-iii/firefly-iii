@@ -1171,7 +1171,7 @@ return [
     'rule_trigger_not_exists'                                => 'Buchung existiert nicht',
     'rule_trigger_not_has_attachments'                       => 'Buchung hat keine Anhänge',
     'rule_trigger_not_has_any_category'                      => 'Buchung ohne Kategorie',
-    'rule_trigger_not_has_any_budget'                        => 'Buchung hat keine Kategorie',
+    'rule_trigger_not_has_any_budget'                        => 'Transaction has no budget',
     'rule_trigger_not_has_any_bill'                          => 'Buchung ist keine Rechnung zugewiesen',
     'rule_trigger_not_has_any_tag'                           => 'Buchung hat keine Schlagwörter',
     'rule_trigger_not_any_notes'                             => 'Buchung hat keine Notizen',

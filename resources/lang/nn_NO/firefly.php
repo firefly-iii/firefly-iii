@@ -1171,7 +1171,7 @@ return [
     'rule_trigger_not_exists'                                => 'Transaksjonen eksisterer ikkje',
     'rule_trigger_not_has_attachments'                       => 'Transaksjonen har ingen vedlegg',
     'rule_trigger_not_has_any_category'                      => 'Transaksjonen har ingen kategori',
-    'rule_trigger_not_has_any_budget'                        => 'Transaksjonen har ingen kategori',
+    'rule_trigger_not_has_any_budget'                        => 'Transaction has no budget',
     'rule_trigger_not_has_any_bill'                          => 'Transaksjonen har ingen rekningar',
     'rule_trigger_not_has_any_tag'                           => 'Transaksjonen har ingen nøkkelord',
     'rule_trigger_not_any_notes'                             => 'Transaksjonen har ingen notat',

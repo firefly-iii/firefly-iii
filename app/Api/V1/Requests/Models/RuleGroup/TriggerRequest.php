@@ -71,7 +71,7 @@ class TriggerRequest extends FormRequest
 
     private function getAccounts(): array
     {
-        if(null === $this->get('accounts')) {
+        if (null === $this->get('accounts')) {
             return [];
         }
 

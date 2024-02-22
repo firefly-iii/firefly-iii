@@ -1171,7 +1171,7 @@ return [
     'rule_trigger_not_exists'                                => 'La transacció no existeix',
     'rule_trigger_not_has_attachments'                       => 'La transacció no té fitxers adjunts',
     'rule_trigger_not_has_any_category'                      => 'La transacció no té categoria',
-    'rule_trigger_not_has_any_budget'                        => 'La transacció no té categoria',
+    'rule_trigger_not_has_any_budget'                        => 'Transaction has no budget',
     'rule_trigger_not_has_any_bill'                          => 'La transacció no té factura',
     'rule_trigger_not_has_any_tag'                           => 'La transacció no té etiquetes',
     'rule_trigger_not_any_notes'                             => 'La transacció no té notes',

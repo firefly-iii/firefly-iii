@@ -1171,7 +1171,7 @@ return [
     'rule_trigger_not_exists'                                => 'Transactie bestaat niet',
     'rule_trigger_not_has_attachments'                       => 'Transactie heeft geen bijlagen',
     'rule_trigger_not_has_any_category'                      => 'Transactie heeft geen categorie',
-    'rule_trigger_not_has_any_budget'                        => 'Transactie heeft geen categorie',
+    'rule_trigger_not_has_any_budget'                        => 'Transaction has no budget',
     'rule_trigger_not_has_any_bill'                          => 'Transactie heeft geen contract',
     'rule_trigger_not_has_any_tag'                           => 'Transactie heeft geen tags',
     'rule_trigger_not_any_notes'                             => 'Transactie heeft geen notities',

@@ -1,1 +1,0 @@
-import{a as t}from"./format-money-671dc543.js";class n{list(a){return t.get("/api/v2/transactions",{params:a})}listByCount(a){return t.get("/api/v2/transactions-inf",{params:a})}show(a,s){return t.get("/api/v2/transactions/"+a,{params:s})}}export{n as G};

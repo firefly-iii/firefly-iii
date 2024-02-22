@@ -1171,7 +1171,7 @@ return [
     'rule_trigger_not_exists'                                => 'Transaction does not exist',
     'rule_trigger_not_has_attachments'                       => 'Transaction has no attachments',
     'rule_trigger_not_has_any_category'                      => 'Transaction has no category',
-    'rule_trigger_not_has_any_budget'                        => 'Transaction has no category',
+    'rule_trigger_not_has_any_budget'                        => 'Transaction has no budget',
     'rule_trigger_not_has_any_bill'                          => 'Η συναλλαγή δεν έχει πάγιο έξοδο',
     'rule_trigger_not_has_any_tag'                           => 'Transaction has no tags',
     'rule_trigger_not_any_notes'                             => 'Transaction has no notes',

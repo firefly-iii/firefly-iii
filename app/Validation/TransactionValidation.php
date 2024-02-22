@@ -620,7 +620,7 @@ trait TransactionValidation
 
                 break;
 
-            case'transfer':
+            case 'transfer':
                 if (count($sources) > 1 || count($dests) > 1) {
                     $validator->errors()->add('transactions.0.source_id', (string) trans('validation.all_accounts_equal'));
                     $validator->errors()->add('transactions.0.destination_id', (string) trans('validation.all_accounts_equal'));

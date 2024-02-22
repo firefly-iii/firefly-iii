@@ -80,7 +80,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $tagId                                                                  = (int)$tag['id'];
                 $tagName                                                                = (string)$tag['name'];
                 $journalId                                                              = (int)$journal['transaction_journal_id'];
-                if(!in_array($tagId, $tagIds, true)) {
+                if (!in_array($tagId, $tagIds, true)) {
                     continue;
                 }
 
@@ -164,7 +164,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $tagName                                                                = (string)$tag['name'];
                 $journalId                                                              = (int)$journal['transaction_journal_id'];
 
-                if(!in_array($tagId, $tagIds, true)) {
+                if (!in_array($tagId, $tagIds, true)) {
                     continue;
                 }
 

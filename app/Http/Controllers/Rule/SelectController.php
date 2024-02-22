@@ -140,7 +140,7 @@ class SelectController extends Controller
             $trigger                  = new RuleTrigger();
             $trigger->trigger_type    = $textTrigger['type'];
             $trigger->trigger_value   = $textTrigger['value'];
-            if(false === $needsContext) {
+            if (false === $needsContext) {
                 $trigger->trigger_value = 'true';
             }
             $trigger->stop_processing = $textTrigger['stop_processing'];

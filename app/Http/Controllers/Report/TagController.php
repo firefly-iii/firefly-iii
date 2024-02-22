@@ -387,7 +387,7 @@ class TagController extends Controller
             /** @var array $tag */
             foreach ($currency['tags'] as $tag) {
                 $tagId = $tag['id'];
-                if(!array_key_exists($tagId, $report)) {
+                if (!array_key_exists($tagId, $report)) {
                     continue;
                 }
                 foreach ($tag['transaction_journals'] as $journal) {
@@ -425,7 +425,7 @@ class TagController extends Controller
             /** @var array $tag */
             foreach ($currency['tags'] as $tag) {
                 $tagId = $tag['id'];
-                if(!array_key_exists($tagId, $report)) {
+                if (!array_key_exists($tagId, $report)) {
                     continue;
                 }
                 foreach ($tag['transaction_journals'] as $journal) {
