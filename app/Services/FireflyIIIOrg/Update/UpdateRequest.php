@@ -162,9 +162,6 @@ class UpdateRequest implements UpdateRequestInterface
         // a newer version is available!
         /** @var Carbon $released */
         $released     = $information['date'];
-        $today        = today(config('app.timezone'))->startOfDay();
-        $diff         = $today->diffInDays($released);
-        $expectedDiff = config('firefly.update_minimum_age') ?? 6;
         $isBeta       = $information['is_beta'] ?? false;
         $isAlpha      = $information['is_alpha'] ?? false;
 
@@ -214,7 +211,7 @@ class UpdateRequest implements UpdateRequestInterface
         return $return;
     }
 
-    private function runsSameVersion(string $current)
+    private function runsSameVersion(string $current): array
     {
         $return = [
             'level'   => 'info',
