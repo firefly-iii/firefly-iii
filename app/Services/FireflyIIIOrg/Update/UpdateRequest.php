@@ -135,95 +135,52 @@ class UpdateRequest implements UpdateRequestInterface
     private function parseResult(array $information): array
     {
         app('log')->debug('Now in parseResult()', $information);
-        $return            = [];
-        $current           = (string)config('firefly.version');
-        $latest            = $information['version'];
+        $current      = (string)config('firefly.version');
+        $latest       = (string)$information['version'];
 
         // strip the 'v' from the version if it's there.
         if (str_starts_with($latest, 'v')) {
             $latest = substr($latest, 1);
         }
         if (str_starts_with($current, 'develop')) {
-            return $this->parseDevelopResult($current, $latest, $information);
+            return $this->parseResultDevelop($current, $latest, $information);
         }
 
-        $compare           = version_compare($latest, $current);
+        $compare      = version_compare($latest, $current);
 
         app('log')->debug(sprintf('Current version is "%s", latest is "%s", result is: %d', $current, $latest, $compare));
 
         // -1: you're running a newer version:
         if (-1 === $compare) {
-            $return['level']   = 'info';
-            $return['message'] = (string)trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $latest]);
-            app('log')->debug('User is running a newer version', $return);
-
-            return $return;
+            return $this->runsNewerVersion($current, $latest);
         }
         // running the current version:
         if (0 === $compare) {
-            $return['level']   = 'info';
-            $return['message'] = (string)trans('firefly.update_current_version_alert', ['version' => $current]);
-            app('log')->debug('User is the current version.', $return);
-
-            return $return;
+            return $this->runsSameVersion($current);
         }
 
         // a newer version is available!
         /** @var Carbon $released */
-        $released          = $information['date'];
-        $today             = today(config('app.timezone'))->startOfDay();
-        $diff              = $today->diffInDays($released);
-        $expectedDiff      = config('firefly.update_minimum_age') ?? 6;
-        // it's still very fresh, and user wants a stable release:
-        if ($diff <= $expectedDiff) {
-            $return['level']   = 'info';
-            $return['message'] = (string)trans(
-                'firefly.just_new_release',
-                [
-                    'version' => $latest,
-                    'date'    => $released->isoFormat((string)trans('config.month_and_day_js')),
-                    'days'    => $expectedDiff,
-                ]
-            );
-            app('log')->debug('Release is very fresh.', $return);
+        $released     = $information['date'];
+        $today        = today(config('app.timezone'))->startOfDay();
+        $diff         = $today->diffInDays($released);
+        $expectedDiff = config('firefly.update_minimum_age') ?? 6;
+        $isBeta       = $information['is_beta'] ?? false;
+        $isAlpha      = $information['is_alpha'] ?? false;
 
-            return $return;
-        }
-
-        // it's been around for a while:
-        $return['level']   = 'success';
-        $return['message'] = (string)trans(
-            'firefly.update_new_version_alert',
-            [
-                'your_version' => $current,
-                'new_version'  => $latest,
-                'date'         => $released->isoFormat((string)trans('config.month_and_day_js')),
-            ]
-        );
-        app('log')->debug('New release is old enough.');
-
-        // add warning in case of alpha or beta:
-        // append warning if beta or alpha.
-        $isBeta            = $information['is_beta'] ?? false;
-        if (true === $isBeta) {
-            $return['message'] = sprintf('%s %s', $return['message'], trans('firefly.update_version_beta'));
-            app('log')->debug('New release is also a beta!');
-        }
-
-        $isAlpha           = $information['is_alpha'] ?? false;
+        // it's new but alpha:
         if (true === $isAlpha) {
-            $return['message'] = sprintf('%s %s', $return['message'], trans('firefly.update_version_alpha'));
-            app('log')->debug('New release is also a alpha!');
+            return $this->releasedNewAlpha($current, $latest, $released);
         }
-        app('log')->debug('New release is here!', $return);
 
-        // send event, this may result in a notification.
-        event(new NewVersionAvailable($return['message']));
+        if (true === $isBeta) {
+            return $this->releasedNewBeta($current, $latest, $released);
+        }
 
-        return $return;
+        return $this->releasedNewVersion($current, $latest, $released);
     }
 
-    private function parseDevelopResult(string $current, string $latest, array $information): array
+    private function parseResultDevelop(string $current, string $latest, array $information): array
     {
         Log::debug(sprintf('User is running develop version "%s"', $current));
         $parts             = explode('/', $current);
@@ -244,5 +201,83 @@ class UpdateRequest implements UpdateRequestInterface
         $return['message'] = (string)trans('firefly.update_current_dev_newer', ['version' => $current, 'new_version' => $latest]);
 
         return $return;
+    }
+
+    private function runsNewerVersion(string $current, string $latest): array
+    {
+        $return = [
+            'level'   => 'info',
+            'message' => (string)trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $latest]),
+        ];
+        app('log')->debug('User is running a newer version', $return);
+
+        return $return;
+    }
+
+    private function runsSameVersion(string $current)
+    {
+        $return = [
+            'level'   => 'info',
+            'message' => (string)trans('firefly.update_current_version_alert', ['version' => $current]),
+        ];
+        app('log')->debug('User is the current version.', $return);
+
+        return $return;
+    }
+
+    private function releasedNewAlpha(string $current, string $latest, Carbon $date): array
+    {
+        app('log')->debug('New release is also a alpha!');
+        $message = (string)trans(
+            'firefly.update_new_version_alert',
+            [
+                'your_version' => $current,
+                'new_version'  => $latest,
+                'date'         => $date->isoFormat((string)trans('config.month_and_day_js')),
+            ]
+        );
+
+        return [
+            'level'   => 'success',
+            'message' => sprintf('%s %s', $message, trans('firefly.update_version_alpha')),
+        ];
+    }
+
+    private function releasedNewBeta(string $current, string $latest, Carbon $date): array
+    {
+        app('log')->debug('New release is also a beta!');
+        $message = (string)trans(
+            'firefly.update_new_version_alert',
+            [
+                'your_version' => $current,
+                'new_version'  => $latest,
+                'date'         => $date->isoFormat((string)trans('config.month_and_day_js')),
+            ]
+        );
+
+        return [
+            'level'   => 'success',
+            'message' => sprintf('%s %s', $message, trans('firefly.update_version_beta')),
+        ];
+    }
+
+    private function releasedNewVersion(string $current, string $latest, Carbon $date): array
+    {
+        app('log')->debug('New release is old enough.');
+        $message = (string)trans(
+            'firefly.update_new_version_alert',
+            [
+                'your_version' => $current,
+                'new_version'  => $latest,
+                'date'         => $date->isoFormat((string)trans('config.month_and_day_js')),
+            ]
+        );
+        app('log')->debug('New release is here!', [$message]);
+        event(new NewVersionAvailable($message));
+
+        return [
+            'level'   => 'success',
+            'message' => $message,
+        ];
     }
 }
