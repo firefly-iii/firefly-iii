@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\AccountType;
@@ -138,21 +139,6 @@ class DebugController extends Controller
         }
 
         return view('debug', compact('table', 'now', 'logContent'));
-    }
-
-    /**
-     * Flash all types of messages.
-     *
-     * @return Redirector|RedirectResponse
-     */
-    public function testFlash(Request $request)
-    {
-        $request->session()->flash('success', 'This is a success message.');
-        $request->session()->flash('info', 'This is an info message.');
-        $request->session()->flash('warning', 'This is a warning.');
-        $request->session()->flash('error', 'This is an error!');
-
-        return redirect(route('home'));
     }
 
     private function generateTable(): string
@@ -335,5 +321,20 @@ class DebugController extends Controller
         }
 
         return implode(' ', $flags);
+    }
+
+    /**
+     * Flash all types of messages.
+     *
+     * @return Redirector|RedirectResponse
+     */
+    public function testFlash(Request $request)
+    {
+        $request->session()->flash('success', 'This is a success message.');
+        $request->session()->flash('info', 'This is an info message.');
+        $request->session()->flash('warning', 'This is a warning.');
+        $request->session()->flash('error', 'This is an error!');
+
+        return redirect(route('home'));
     }
 }

@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 trait CollectorProperties
 {
     public const string TEST = 'Test';
+    private ?int $endRow;
     private bool    $expandGroupSearch;
     private array   $fields;
     private bool    $hasAccountInfo;
@@ -49,10 +50,8 @@ trait CollectorProperties
     private ?int    $page;
     private array   $postFilters;
     private HasMany $query;
-    private array   $stringFields;
-
     private ?int $startRow;
-    private ?int $endRow;
+    private array   $stringFields;
     /*
      * This array is used to collect ALL tags the user may search for (using 'setTags').
      * This way the user can call 'setTags' multiple times and get a joined result.

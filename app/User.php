@@ -364,16 +364,77 @@ class User extends Authenticatable
     }
 
     /**
-     * Does the user have role X in group Y?
+     * Does the user have role X, Y or Z in group A?
      */
-    public function hasSpecificRoleInGroup(UserGroup $userGroup, UserRoleEnum $role): bool
+    private function hasAnyRoleInGroup(UserGroup $userGroup, array $roles): bool
     {
-        return $this->hasAnyRoleInGroup($userGroup, [$role]);
+        app('log')->debug(sprintf('in hasAnyRoleInGroup(%s)', implode(', ', $roles)));
+
+        /** @var Collection $dbRoles */
+        $dbRoles          = UserRole::whereIn('title', $roles)->get();
+        if (0 === $dbRoles->count()) {
+            app('log')->error(sprintf('Could not find role(s): %s. Probably migration mishap.', implode(', ', $roles)));
+
+            return false;
+        }
+        $dbRolesIds       = $dbRoles->pluck('id')->toArray();
+        $dbRolesTitles    = $dbRoles->pluck('title')->toArray();
+
+        /** @var Collection $groupMemberships */
+        $groupMemberships = $this->groupMemberships()
+            ->whereIn('user_role_id', $dbRolesIds)
+            ->where('user_group_id', $userGroup->id)->get()
+        ;
+        if (0 === $groupMemberships->count()) {
+            app('log')->error(sprintf(
+                'User #%d "%s" does not have roles %s in user group #%d "%s"',
+                $this->id,
+                $this->email,
+                implode(', ', $roles),
+                $userGroup->id,
+                $userGroup->title
+            ));
+
+            return false;
+        }
+        foreach ($groupMemberships as $membership) {
+            app('log')->debug(sprintf(
+                'User #%d "%s" has role "%s" in user group #%d "%s"',
+                $this->id,
+                $this->email,
+                $membership->userRole->title,
+                $userGroup->id,
+                $userGroup->title
+            ));
+            if (in_array($membership->userRole->title, $dbRolesTitles, true)) {
+                app('log')->debug(sprintf('Return true, found role "%s"', $membership->userRole->title));
+
+                return true;
+            }
+        }
+        app('log')->error(sprintf(
+            'User #%d "%s" does not have roles %s in user group #%d "%s"',
+            $this->id,
+            $this->email,
+            implode(', ', $roles),
+            $userGroup->id,
+            $userGroup->title
+        ));
+
+        return false;
     }
 
     public function groupMemberships(): HasMany
     {
         return $this->hasMany(GroupMembership::class)->with(['userGroup', 'userRole']);
+    }
+
+    /**
+     * Does the user have role X in group Y?
+     */
+    public function hasSpecificRoleInGroup(UserGroup $userGroup, UserRoleEnum $role): bool
+    {
+        return $this->hasAnyRoleInGroup($userGroup, [$role]);
     }
 
     /**
@@ -495,6 +556,8 @@ class User extends Authenticatable
         return $this->hasMany(RuleGroup::class);
     }
 
+    // start LDAP related code
+
     /**
      * Link to rules.
      */
@@ -502,8 +565,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Rule::class);
     }
-
-    // start LDAP related code
 
     /**
      * Send the password reset notification.
@@ -584,66 +645,5 @@ class User extends Authenticatable
     public function webhooks(): HasMany
     {
         return $this->hasMany(Webhook::class);
-    }
-
-    /**
-     * Does the user have role X, Y or Z in group A?
-     */
-    private function hasAnyRoleInGroup(UserGroup $userGroup, array $roles): bool
-    {
-        app('log')->debug(sprintf('in hasAnyRoleInGroup(%s)', implode(', ', $roles)));
-
-        /** @var Collection $dbRoles */
-        $dbRoles          = UserRole::whereIn('title', $roles)->get();
-        if (0 === $dbRoles->count()) {
-            app('log')->error(sprintf('Could not find role(s): %s. Probably migration mishap.', implode(', ', $roles)));
-
-            return false;
-        }
-        $dbRolesIds       = $dbRoles->pluck('id')->toArray();
-        $dbRolesTitles    = $dbRoles->pluck('title')->toArray();
-
-        /** @var Collection $groupMemberships */
-        $groupMemberships = $this->groupMemberships()
-            ->whereIn('user_role_id', $dbRolesIds)
-            ->where('user_group_id', $userGroup->id)->get()
-        ;
-        if (0 === $groupMemberships->count()) {
-            app('log')->error(sprintf(
-                'User #%d "%s" does not have roles %s in user group #%d "%s"',
-                $this->id,
-                $this->email,
-                implode(', ', $roles),
-                $userGroup->id,
-                $userGroup->title
-            ));
-
-            return false;
-        }
-        foreach ($groupMemberships as $membership) {
-            app('log')->debug(sprintf(
-                'User #%d "%s" has role "%s" in user group #%d "%s"',
-                $this->id,
-                $this->email,
-                $membership->userRole->title,
-                $userGroup->id,
-                $userGroup->title
-            ));
-            if (in_array($membership->userRole->title, $dbRolesTitles, true)) {
-                app('log')->debug(sprintf('Return true, found role "%s"', $membership->userRole->title));
-
-                return true;
-            }
-        }
-        app('log')->error(sprintf(
-            'User #%d "%s" does not have roles %s in user group #%d "%s"',
-            $this->id,
-            $this->email,
-            implode(', ', $roles),
-            $userGroup->id,
-            $userGroup->title
-        ));
-
-        return false;
     }
 }

@@ -130,26 +130,6 @@ class InstallController extends Controller
     }
 
     /**
-     * Create specific RSA keys.
-     */
-    public function keys(): void
-    {
-        $key                      = RSA::createKey(4096);
-
-        [$publicKey, $privateKey] = [
-            Passport::keyPath('oauth-public.key'),
-            Passport::keyPath('oauth-private.key'),
-        ];
-
-        if (file_exists($publicKey) || file_exists($privateKey)) {
-            return;
-        }
-
-        file_put_contents($publicKey, (string)$key->getPublicKey());
-        file_put_contents($privateKey, $key->toString('PKCS1'));
-    }
-
-    /**
      * @throws FireflyException
      */
     private function executeCommand(string $command, array $args): bool
@@ -172,5 +152,25 @@ class InstallController extends Controller
         app('preferences')->mark();
 
         return true;
+    }
+
+    /**
+     * Create specific RSA keys.
+     */
+    public function keys(): void
+    {
+        $key                      = RSA::createKey(4096);
+
+        [$publicKey, $privateKey] = [
+            Passport::keyPath('oauth-public.key'),
+            Passport::keyPath('oauth-private.key'),
+        ];
+
+        if (file_exists($publicKey) || file_exists($privateKey)) {
+            return;
+        }
+
+        file_put_contents($publicKey, (string)$key->getPublicKey());
+        file_put_contents($privateKey, $key->toString('PKCS1'));
     }
 }

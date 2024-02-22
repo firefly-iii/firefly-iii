@@ -49,20 +49,6 @@ class BudgetLimitHandler
         $this->updateAvailableBudget($event->budgetLimit);
     }
 
-    public function deleted(Deleted $event): void
-    {
-        app('log')->debug(sprintf('BudgetLimitHandler::deleted(#%s)', $event->budgetLimit->id));
-        $budgetLimit     = $event->budgetLimit;
-        $budgetLimit->id = 0;
-        $this->updateAvailableBudget($event->budgetLimit);
-    }
-
-    public function updated(Updated $event): void
-    {
-        app('log')->debug(sprintf('BudgetLimitHandler::updated(#%s)', $event->budgetLimit->id));
-        $this->updateAvailableBudget($event->budgetLimit);
-    }
-
     private function updateAvailableBudget(BudgetLimit $budgetLimit): void
     {
         app('log')->debug(sprintf('Now in updateAvailableBudget(#%d)', $budgetLimit->id));
@@ -247,5 +233,19 @@ class BudgetLimitHandler
         );
 
         return $amount;
+    }
+
+    public function deleted(Deleted $event): void
+    {
+        app('log')->debug(sprintf('BudgetLimitHandler::deleted(#%s)', $event->budgetLimit->id));
+        $budgetLimit     = $event->budgetLimit;
+        $budgetLimit->id = 0;
+        $this->updateAvailableBudget($event->budgetLimit);
+    }
+
+    public function updated(Updated $event): void
+    {
+        app('log')->debug(sprintf('BudgetLimitHandler::updated(#%s)', $event->budgetLimit->id));
+        $this->updateAvailableBudget($event->budgetLimit);
     }
 }

@@ -72,10 +72,10 @@ class TagController extends Controller
         $filtered = $result->map(
             static function (Tag $item) {
                 return [
-                    'id'      => (string) $item->id,
-                    'name'    => $item->tag,
-                    'value'   => (string) $item->id,
-                    'label'   => $item->tag,
+                    'id'    => (string)$item->id,
+                    'name'  => $item->tag,
+                    'value' => (string)$item->id,
+                    'label' => $item->tag,
                 ];
             }
         );

@@ -57,13 +57,6 @@ class ListByCountRequest extends FormRequest
         return http_build_query($array);
     }
 
-    public function getPage(): int
-    {
-        $page = $this->convertInteger('page');
-
-        return 0 === $page || $page > 65536 ? 1 : $page;
-    }
-
     public function getStartRow(): int
     {
         $startRow = $this->convertInteger('start_row');
@@ -86,6 +79,13 @@ class ListByCountRequest extends FormRequest
     public function getEndDate(): ?Carbon
     {
         return $this->getCarbonDate('end');
+    }
+
+    public function getPage(): int
+    {
+        $page = $this->convertInteger('page');
+
+        return 0 === $page || $page > 65536 ? 1 : $page;
     }
 
     public function getTransactionTypes(): array

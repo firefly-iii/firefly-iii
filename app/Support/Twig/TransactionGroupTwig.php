@@ -71,86 +71,6 @@ class TransactionGroupTwig extends AbstractExtension
     }
 
     /**
-     * Shows the amount for a single journal object.
-     */
-    public function journalObjectAmount(): TwigFunction
-    {
-        return new TwigFunction(
-            'journalObjectAmount',
-            function (TransactionJournal $journal): string {
-                $result = $this->normalJournalObjectAmount($journal);
-                // now append foreign amount, if any.
-                if ($this->journalObjectHasForeign($journal)) {
-                    $foreign = $this->foreignJournalObjectAmount($journal);
-                    $result  = sprintf('%s (%s)', $result, $foreign);
-                }
-
-                return $result;
-            },
-            ['is_safe' => ['html']]
-        );
-    }
-
-    public function journalHasMeta(): TwigFunction
-    {
-        return new TwigFunction(
-            'journalHasMeta',
-            static function (int $journalId, string $metaField) {
-                $count = \DB::table('journal_meta')
-                    ->where('name', $metaField)
-                    ->where('transaction_journal_id', $journalId)
-                    ->whereNull('deleted_at')
-                    ->count()
-                ;
-
-                return 1 === $count;
-            }
-        );
-    }
-
-    public function journalGetMetaDate(): TwigFunction
-    {
-        return new TwigFunction(
-            'journalGetMetaDate',
-            static function (int $journalId, string $metaField) {
-                /** @var null|TransactionJournalMeta $entry */
-                $entry = \DB::table('journal_meta')
-                    ->where('name', $metaField)
-                    ->where('transaction_journal_id', $journalId)
-                    ->whereNull('deleted_at')
-                    ->first()
-                ;
-                if (null === $entry) {
-                    return today(config('app.timezone'));
-                }
-
-                return new Carbon(json_decode($entry->data, false));
-            }
-        );
-    }
-
-    public function journalGetMetaField(): TwigFunction
-    {
-        return new TwigFunction(
-            'journalGetMetaField',
-            static function (int $journalId, string $metaField) {
-                /** @var null|TransactionJournalMeta $entry */
-                $entry = \DB::table('journal_meta')
-                    ->where('name', $metaField)
-                    ->where('transaction_journal_id', $journalId)
-                    ->whereNull('deleted_at')
-                    ->first()
-                ;
-                if (null === $entry) {
-                    return '';
-                }
-
-                return json_decode($entry->data, true);
-            }
-        );
-    }
-
-    /**
      * Generate normal amount for transaction from a transaction group.
      */
     private function normalJournalArrayAmount(array $array): string
@@ -217,6 +137,27 @@ class TransactionGroupTwig extends AbstractExtension
     }
 
     /**
+     * Shows the amount for a single journal object.
+     */
+    public function journalObjectAmount(): TwigFunction
+    {
+        return new TwigFunction(
+            'journalObjectAmount',
+            function (TransactionJournal $journal): string {
+                $result = $this->normalJournalObjectAmount($journal);
+                // now append foreign amount, if any.
+                if ($this->journalObjectHasForeign($journal)) {
+                    $foreign = $this->foreignJournalObjectAmount($journal);
+                    $result  = sprintf('%s (%s)', $result, $foreign);
+                }
+
+                return $result;
+            },
+            ['is_safe' => ['html']]
+        );
+    }
+
+    /**
      * Generate normal amount for transaction from a transaction group.
      */
     private function normalJournalObjectAmount(TransactionJournal $journal): string
@@ -274,5 +215,64 @@ class TransactionGroupTwig extends AbstractExtension
         }
 
         return $result;
+    }
+
+    public function journalHasMeta(): TwigFunction
+    {
+        return new TwigFunction(
+            'journalHasMeta',
+            static function (int $journalId, string $metaField) {
+                $count = \DB::table('journal_meta')
+                    ->where('name', $metaField)
+                    ->where('transaction_journal_id', $journalId)
+                    ->whereNull('deleted_at')
+                    ->count()
+                ;
+
+                return 1 === $count;
+            }
+        );
+    }
+
+    public function journalGetMetaDate(): TwigFunction
+    {
+        return new TwigFunction(
+            'journalGetMetaDate',
+            static function (int $journalId, string $metaField) {
+                /** @var null|TransactionJournalMeta $entry */
+                $entry = \DB::table('journal_meta')
+                    ->where('name', $metaField)
+                    ->where('transaction_journal_id', $journalId)
+                    ->whereNull('deleted_at')
+                    ->first()
+                ;
+                if (null === $entry) {
+                    return today(config('app.timezone'));
+                }
+
+                return new Carbon(json_decode($entry->data, false));
+            }
+        );
+    }
+
+    public function journalGetMetaField(): TwigFunction
+    {
+        return new TwigFunction(
+            'journalGetMetaField',
+            static function (int $journalId, string $metaField) {
+                /** @var null|TransactionJournalMeta $entry */
+                $entry = \DB::table('journal_meta')
+                    ->where('name', $metaField)
+                    ->where('transaction_journal_id', $journalId)
+                    ->whereNull('deleted_at')
+                    ->first()
+                ;
+                if (null === $entry) {
+                    return '';
+                }
+
+                return json_decode($entry->data, true);
+            }
+        );
     }
 }

@@ -126,23 +126,23 @@ class AccountController extends Controller
                 $currency = $default;
             }
             $currentSet        = [
-                'label'                            => $account->name,
+                'label'                          => $account->name,
                 // the currency that belongs to the account.
-                'currency_id'                      => (string)$currency->id,
-                'currency_code'                    => $currency->code,
-                'currency_symbol'                  => $currency->symbol,
-                'currency_decimal_places'          => $currency->decimal_places,
+                'currency_id'                    => (string)$currency->id,
+                'currency_code'                  => $currency->code,
+                'currency_symbol'                => $currency->symbol,
+                'currency_decimal_places'        => $currency->decimal_places,
 
                 // the default currency of the user (could be the same!)
-                'native_currency_id'               => (string)$default->id,
-                'native_currency_code'             => $default->code,
-                'native_currency_symbol'           => $default->symbol,
-                'native_currency_decimal_places'   => $default->decimal_places,
-                'start'                            => $start->toAtomString(),
-                'end'                              => $end->toAtomString(),
-                'period'                           => '1D',
-                'entries'                          => [],
-                'native_entries'                   => [],
+                'native_currency_id'             => (string)$default->id,
+                'native_currency_code'           => $default->code,
+                'native_currency_symbol'         => $default->symbol,
+                'native_currency_decimal_places' => $default->decimal_places,
+                'start'                          => $start->toAtomString(),
+                'end'                            => $end->toAtomString(),
+                'period'                         => '1D',
+                'entries'                        => [],
+                'native_entries'                 => [],
             ];
             $currentStart      = clone $start;
             $range             = app('steam')->balanceInRange($account, $start, clone $end, $currency);

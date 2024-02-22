@@ -77,13 +77,6 @@ class CreateAutoBudgetLimits implements ShouldQueue
         }
     }
 
-    public function setDate(Carbon $date): void
-    {
-        $newDate    = clone $date;
-        $newDate->startOfDay();
-        $this->date = $newDate;
-    }
-
     /**
      * @throws FireflyException
      */
@@ -361,5 +354,12 @@ class CreateAutoBudgetLimits implements ShouldQueue
             $this->createBudgetLimit($autoBudget, $start, $end, '1');
         }
         app('log')->debug(sprintf('Done with auto budget #%d', $autoBudget->id));
+    }
+
+    public function setDate(Carbon $date): void
+    {
+        $newDate    = clone $date;
+        $newDate->startOfDay();
+        $this->date = $newDate;
     }
 }

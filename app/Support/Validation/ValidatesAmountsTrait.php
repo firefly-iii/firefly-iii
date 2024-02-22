@@ -38,24 +38,9 @@ trait ValidatesAmountsTrait
         return is_numeric($value);
     }
 
-    final protected function scientificNumber(string $value): bool
-    {
-        return str_contains(strtoupper($value), 'E');
-    }
-
     final protected function lessOrEqualToZero(string $value): bool
     {
         return -1 === bccomp($value, '0') || 0 === bccomp($value, '0');
-    }
-
-    final protected function zeroOrMore(string $value): bool
-    {
-        return 1 === bccomp($value, '0') || 0 === bccomp($value, '0');
-    }
-
-    final protected function moreThanLots(string $value): bool
-    {
-        return 1 === bccomp($value, self::BIG_AMOUNT) || 0 === bccomp($value, self::BIG_AMOUNT);
     }
 
     final protected function lessThanLots(string $value): bool
@@ -63,5 +48,20 @@ trait ValidatesAmountsTrait
         $amount = bcmul('-1', self::BIG_AMOUNT);
 
         return -1 === bccomp($value, $amount) || 0 === bccomp($value, $amount);
+    }
+
+    final protected function moreThanLots(string $value): bool
+    {
+        return 1 === bccomp($value, self::BIG_AMOUNT) || 0 === bccomp($value, self::BIG_AMOUNT);
+    }
+
+    final protected function scientificNumber(string $value): bool
+    {
+        return str_contains(strtoupper($value), 'E');
+    }
+
+    final protected function zeroOrMore(string $value): bool
+    {
+        return 1 === bccomp($value, '0') || 0 === bccomp($value, '0');
     }
 }

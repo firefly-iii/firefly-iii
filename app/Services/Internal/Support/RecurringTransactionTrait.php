@@ -125,7 +125,7 @@ trait RecurringTransactionTrait
             if (!$validator->validateDestination(['id' => $destination->id])) {
                 throw new FireflyException(sprintf('Destination invalid: %s', $validator->destError));
             }
-            if (array_key_exists('foreign_amount', $array) && '' === (string) $array['foreign_amount']) {
+            if (array_key_exists('foreign_amount', $array) && '' === (string)$array['foreign_amount']) {
                 unset($array['foreign_amount']);
             }
             // TODO typeOverrule. The account validator may have a different opinion on the type of the transaction.
@@ -137,25 +137,25 @@ trait RecurringTransactionTrait
                     'source_id'               => $source->id,
                     'destination_id'          => $destination->id,
                     'amount'                  => $array['amount'],
-                    'foreign_amount'          => array_key_exists('foreign_amount', $array) ? (string) $array['foreign_amount'] : null,
+                    'foreign_amount'          => array_key_exists('foreign_amount', $array) ? (string)$array['foreign_amount'] : null,
                     'description'             => $array['description'],
                 ]
             );
             $transaction->save();
 
             if (array_key_exists('budget_id', $array)) {
-                $this->setBudget($transaction, (int) $array['budget_id']);
+                $this->setBudget($transaction, (int)$array['budget_id']);
             }
             if (array_key_exists('bill_id', $array)) {
-                $this->setBill($transaction, (int) $array['bill_id']);
+                $this->setBill($transaction, (int)$array['bill_id']);
             }
             if (array_key_exists('category_id', $array)) {
-                $this->setCategory($transaction, (int) $array['category_id']);
+                $this->setCategory($transaction, (int)$array['category_id']);
             }
 
             // same for piggy bank
             if (array_key_exists('piggy_bank_id', $array)) {
-                $this->updatePiggyBank($transaction, (int) $array['piggy_bank_id']);
+                $this->updatePiggyBank($transaction, (int)$array['piggy_bank_id']);
             }
 
             if (array_key_exists('tags', $array) && is_array($array['tags'])) {
@@ -167,8 +167,8 @@ trait RecurringTransactionTrait
     protected function findAccount(array $expectedTypes, ?int $accountId, ?string $accountName): Account
     {
         $result       = null;
-        $accountId    = (int) $accountId;
-        $accountName  = (string) $accountName;
+        $accountId    = (int)$accountId;
+        $accountName  = (string)$accountName;
 
         /** @var AccountRepositoryInterface $repository */
         $repository   = app(AccountRepositoryInterface::class);
@@ -208,61 +208,6 @@ trait RecurringTransactionTrait
         }
 
         return $result ?? $repository->getCashAccount();
-    }
-
-    protected function updatePiggyBank(RecurrenceTransaction $transaction, int $piggyId): void
-    {
-        /** @var PiggyBankFactory $factory */
-        $factory   = app(PiggyBankFactory::class);
-        $factory->setUser($transaction->recurrence->user);
-        $piggyBank = $factory->find($piggyId, null);
-        if (null !== $piggyBank) {
-            /** @var null|RecurrenceMeta $entry */
-            $entry        = $transaction->recurrenceTransactionMeta()->where('name', 'piggy_bank_id')->first();
-            if (null === $entry) {
-                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name' => 'piggy_bank_id', 'value' => $piggyBank->id]);
-            }
-            $entry->value = $piggyBank->id;
-            $entry->save();
-        }
-        if (null === $piggyBank) {
-            // delete if present
-            $transaction->recurrenceTransactionMeta()->where('name', 'piggy_bank_id')->delete();
-        }
-    }
-
-    protected function updateTags(RecurrenceTransaction $transaction, array $tags): void
-    {
-        if (0 !== count($tags)) {
-            /** @var null|RecurrenceMeta $entry */
-            $entry        = $transaction->recurrenceTransactionMeta()->where('name', 'tags')->first();
-            if (null === $entry) {
-                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name' => 'tags', 'value' => json_encode($tags)]);
-            }
-            $entry->value = json_encode($tags);
-            $entry->save();
-        }
-        if (0 === count($tags)) {
-            // delete if present
-            $transaction->recurrenceTransactionMeta()->where('name', 'tags')->delete();
-        }
-    }
-
-    protected function deleteRepetitions(Recurrence $recurrence): void
-    {
-        $recurrence->recurrenceRepetitions()->delete();
-    }
-
-    protected function deleteTransactions(Recurrence $recurrence): void
-    {
-        app('log')->debug('deleteTransactions()');
-
-        /** @var RecurrenceTransaction $transaction */
-        foreach ($recurrence->recurrenceTransactions as $transaction) {
-            $transaction->recurrenceTransactionMeta()->delete();
-
-            $transaction->delete();
-        }
     }
 
     private function setBudget(RecurrenceTransaction $transaction, int $budgetId): void
@@ -324,5 +269,60 @@ trait RecurringTransactionTrait
         }
         $meta->value     = $category->id;
         $meta->save();
+    }
+
+    protected function updatePiggyBank(RecurrenceTransaction $transaction, int $piggyId): void
+    {
+        /** @var PiggyBankFactory $factory */
+        $factory   = app(PiggyBankFactory::class);
+        $factory->setUser($transaction->recurrence->user);
+        $piggyBank = $factory->find($piggyId, null);
+        if (null !== $piggyBank) {
+            /** @var null|RecurrenceMeta $entry */
+            $entry        = $transaction->recurrenceTransactionMeta()->where('name', 'piggy_bank_id')->first();
+            if (null === $entry) {
+                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name' => 'piggy_bank_id', 'value' => $piggyBank->id]);
+            }
+            $entry->value = $piggyBank->id;
+            $entry->save();
+        }
+        if (null === $piggyBank) {
+            // delete if present
+            $transaction->recurrenceTransactionMeta()->where('name', 'piggy_bank_id')->delete();
+        }
+    }
+
+    protected function updateTags(RecurrenceTransaction $transaction, array $tags): void
+    {
+        if (0 !== count($tags)) {
+            /** @var null|RecurrenceMeta $entry */
+            $entry        = $transaction->recurrenceTransactionMeta()->where('name', 'tags')->first();
+            if (null === $entry) {
+                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name' => 'tags', 'value' => json_encode($tags)]);
+            }
+            $entry->value = json_encode($tags);
+            $entry->save();
+        }
+        if (0 === count($tags)) {
+            // delete if present
+            $transaction->recurrenceTransactionMeta()->where('name', 'tags')->delete();
+        }
+    }
+
+    protected function deleteRepetitions(Recurrence $recurrence): void
+    {
+        $recurrence->recurrenceRepetitions()->delete();
+    }
+
+    protected function deleteTransactions(Recurrence $recurrence): void
+    {
+        app('log')->debug('deleteTransactions()');
+
+        /** @var RecurrenceTransaction $transaction */
+        foreach ($recurrence->recurrenceTransactions as $transaction) {
+            $transaction->recurrenceTransactionMeta()->delete();
+
+            $transaction->delete();
+        }
     }
 }

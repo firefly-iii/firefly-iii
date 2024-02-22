@@ -121,21 +121,6 @@ class AccountFactory
         return $return;
     }
 
-    public function find(string $accountName, string $accountType): ?Account
-    {
-        app('log')->debug(sprintf('Now in AccountFactory::find("%s", "%s")', $accountName, $accountType));
-        $type = AccountType::whereType($accountType)->first();
-
-        // @var Account|null
-        return $this->user->accounts()->where('account_type_id', $type->id)->where('name', $accountName)->first();
-    }
-
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-        $this->accountRepository->setUser($user);
-    }
-
     /**
      * @throws FireflyException
      */
@@ -167,6 +152,15 @@ class AccountFactory
         app('log')->debug(sprintf('Found account type based on %d and "%s": "%s"', $accountTypeId, $accountTypeName, $result->type));
 
         return $result;
+    }
+
+    public function find(string $accountName, string $accountType): ?Account
+    {
+        app('log')->debug(sprintf('Now in AccountFactory::find("%s", "%s")', $accountName, $accountType));
+        $type = AccountType::whereType($accountType)->first();
+
+        // @var Account|null
+        return $this->user->accounts()->where('account_type_id', $type->id)->where('name', $accountName)->first();
     }
 
     /**
@@ -364,5 +358,11 @@ class AccountFactory
         $updateService = app(AccountUpdateService::class);
         $updateService->setUser($account->user);
         $updateService->update($account, ['order' => $order]);
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+        $this->accountRepository->setUser($user);
     }
 }

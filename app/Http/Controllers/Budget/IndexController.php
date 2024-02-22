@@ -159,24 +159,6 @@ class IndexController extends Controller
         );
     }
 
-    public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
-    {
-        $this->abRepository->cleanup();
-        $budgetIds = $request->get('budgetIds');
-
-        foreach ($budgetIds as $index => $budgetId) {
-            $budgetId = (int)$budgetId;
-            $budget   = $repository->find($budgetId);
-            if (null !== $budget) {
-                app('log')->debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
-                $repository->setBudgetOrder($budget, $index + 1);
-            }
-        }
-        app('preferences')->mark();
-
-        return response()->json(['OK']);
-    }
-
     private function getAllAvailableBudgets(Carbon $start, Carbon $end): array
     {
         // get all available budgets.
@@ -296,11 +278,11 @@ class IndexController extends Controller
                 // also calculate how much left from budgeted:
                 $sums['left'][$currencyId]
                                                          ??= [
-                                                             'amount'                  => '0',
-                                                             'currency_id'             => $budgeted['currency_id'],
-                                                             'currency_symbol'         => $budgeted['currency_symbol'],
-                                                             'currency_decimal_places' => $budgeted['currency_decimal_places'],
-                                                         ];
+                        'amount'                  => '0',
+                        'currency_id'             => $budgeted['currency_id'],
+                        'currency_symbol'         => $budgeted['currency_symbol'],
+                        'currency_decimal_places' => $budgeted['currency_decimal_places'],
+                    ];
             }
         }
 
@@ -315,5 +297,23 @@ class IndexController extends Controller
         }
 
         return $sums;
+    }
+
+    public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
+    {
+        $this->abRepository->cleanup();
+        $budgetIds = $request->get('budgetIds');
+
+        foreach ($budgetIds as $index => $budgetId) {
+            $budgetId = (int)$budgetId;
+            $budget   = $repository->find($budgetId);
+            if (null !== $budget) {
+                app('log')->debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
+                $repository->setBudgetOrder($budget, $index + 1);
+            }
+        }
+        app('preferences')->mark();
+
+        return response()->json(['OK']);
     }
 }

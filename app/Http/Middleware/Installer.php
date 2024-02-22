@@ -74,22 +74,6 @@ class Installer
     }
 
     /**
-     * Is access denied error.
-     */
-    protected function isAccessDenied(string $message): bool
-    {
-        return false !== stripos($message, 'Access denied');
-    }
-
-    /**
-     * Is no tables exist error.
-     */
-    protected function noTablesExist(string $message): bool
-    {
-        return false !== stripos($message, 'Base table or view not found');
-    }
-
-    /**
      * Check if the tables are created and accounted for.
      *
      * @throws FireflyException
@@ -123,6 +107,22 @@ class Installer
         // app('log')->debug('Everything seems OK with the tables.');
 
         return false;
+    }
+
+    /**
+     * Is access denied error.
+     */
+    protected function isAccessDenied(string $message): bool
+    {
+        return false !== stripos($message, 'Access denied');
+    }
+
+    /**
+     * Is no tables exist error.
+     */
+    protected function noTablesExist(string $message): bool
+    {
+        return false !== stripos($message, 'Base table or view not found');
     }
 
     /**

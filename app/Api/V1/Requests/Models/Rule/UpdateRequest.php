@@ -70,6 +70,50 @@ class UpdateRequest extends FormRequest
         return $return;
     }
 
+    private function getRuleTriggers(): ?array
+    {
+        if (!$this->has('triggers')) {
+            return null;
+        }
+        $triggers = $this->get('triggers');
+        $return   = [];
+        if (is_array($triggers)) {
+            foreach ($triggers as $trigger) {
+                $active         = array_key_exists('active', $trigger) ? $trigger['active'] : true;
+                $stopProcessing = array_key_exists('stop_processing', $trigger) ? $trigger['stop_processing'] : false;
+                $return[]       = [
+                    'type'            => $trigger['type'],
+                    'value'           => $trigger['value'],
+                    'active'          => $active,
+                    'stop_processing' => $stopProcessing,
+                ];
+            }
+        }
+
+        return $return;
+    }
+
+    private function getRuleActions(): ?array
+    {
+        if (!$this->has('actions')) {
+            return null;
+        }
+        $actions = $this->get('actions');
+        $return  = [];
+        if (is_array($actions)) {
+            foreach ($actions as $action) {
+                $return[] = [
+                    'type'            => $action['type'],
+                    'value'           => $action['value'],
+                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
+                ];
+            }
+        }
+
+        return $return;
+    }
+
     /**
      * The rules that the incoming request must be matched against.
      */
@@ -203,49 +247,5 @@ class UpdateRequest extends FormRequest
         if (true === $allInactive) {
             $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string)trans('validation.at_least_one_active_action'));
         }
-    }
-
-    private function getRuleTriggers(): ?array
-    {
-        if (!$this->has('triggers')) {
-            return null;
-        }
-        $triggers = $this->get('triggers');
-        $return   = [];
-        if (is_array($triggers)) {
-            foreach ($triggers as $trigger) {
-                $active         = array_key_exists('active', $trigger) ? $trigger['active'] : true;
-                $stopProcessing = array_key_exists('stop_processing', $trigger) ? $trigger['stop_processing'] : false;
-                $return[]       = [
-                    'type'            => $trigger['type'],
-                    'value'           => $trigger['value'],
-                    'active'          => $active,
-                    'stop_processing' => $stopProcessing,
-                ];
-            }
-        }
-
-        return $return;
-    }
-
-    private function getRuleActions(): ?array
-    {
-        if (!$this->has('actions')) {
-            return null;
-        }
-        $actions = $this->get('actions');
-        $return  = [];
-        if (is_array($actions)) {
-            foreach ($actions as $action) {
-                $return[] = [
-                    'type'            => $action['type'],
-                    'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
-                ];
-            }
-        }
-
-        return $return;
     }
 }

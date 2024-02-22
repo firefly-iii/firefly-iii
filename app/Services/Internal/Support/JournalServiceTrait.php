@@ -110,124 +110,6 @@ trait JournalServiceTrait
         return $result;
     }
 
-    /**
-     * @throws FireflyException
-     */
-    protected function getAmount(string $amount): string
-    {
-        if ('' === $amount) {
-            throw new FireflyException(sprintf('The amount cannot be an empty string: "%s"', $amount));
-        }
-        app('log')->debug(sprintf('Now in getAmount("%s")', $amount));
-        if (0 === bccomp('0', $amount)) {
-            throw new FireflyException(sprintf('The amount seems to be zero: "%s"', $amount));
-        }
-
-        return $amount;
-    }
-
-    protected function getForeignAmount(?string $amount): ?string
-    {
-        if (null === $amount) {
-            app('log')->debug('No foreign amount info in array. Return NULL');
-
-            return null;
-        }
-        if ('' === $amount) {
-            app('log')->debug('Foreign amount is empty string, return NULL.');
-
-            return null;
-        }
-        if (0 === bccomp('0', $amount)) {
-            app('log')->debug('Foreign amount is 0.0, return NULL.');
-
-            return null;
-        }
-        app('log')->debug(sprintf('Foreign amount is %s', $amount));
-
-        return $amount;
-    }
-
-    protected function storeBudget(TransactionJournal $journal, NullArrayObject $data): void
-    {
-        if (TransactionType::WITHDRAWAL !== $journal->transactionType->type) {
-            $journal->budgets()->sync([]);
-
-            return;
-        }
-        $budget = $this->budgetRepository->findBudget($data['budget_id'], $data['budget_name']);
-        if (null !== $budget) {
-            app('log')->debug(sprintf('Link budget #%d to journal #%d', $budget->id, $journal->id));
-            $journal->budgets()->sync([$budget->id]);
-
-            return;
-        }
-        // if the budget is NULL, sync empty.
-        $journal->budgets()->sync([]);
-    }
-
-    protected function storeCategory(TransactionJournal $journal, NullArrayObject $data): void
-    {
-        $category = $this->categoryRepository->findCategory($data['category_id'], $data['category_name']);
-        if (null !== $category) {
-            app('log')->debug(sprintf('Link category #%d to journal #%d', $category->id, $journal->id));
-            $journal->categories()->sync([$category->id]);
-
-            return;
-        }
-        // if the category is NULL, sync empty.
-        $journal->categories()->sync([]);
-    }
-
-    protected function storeNotes(TransactionJournal $journal, ?string $notes): void
-    {
-        $notes = (string)$notes;
-        $note  = $journal->notes()->first();
-        if ('' !== $notes) {
-            if (null === $note) {
-                $note = new Note();
-                $note->noteable()->associate($journal);
-            }
-            $note->text = $notes;
-            $note->save();
-            app('log')->debug(sprintf('Stored notes for journal #%d', $journal->id));
-
-            return;
-        }
-        // try to delete existing notes.
-        $note?->delete();
-    }
-
-    /**
-     * Link tags to journal.
-     */
-    protected function storeTags(TransactionJournal $journal, ?array $tags): void
-    {
-        app('log')->debug('Now in storeTags()', $tags ?? []);
-        $this->tagFactory->setUser($journal->user);
-        $set = [];
-        if (!is_array($tags)) {
-            app('log')->debug('Tags is not an array, break.');
-
-            return;
-        }
-        app('log')->debug('Start of loop.');
-        foreach ($tags as $string) {
-            $string = (string)$string;
-            app('log')->debug(sprintf('Now at tag "%s"', $string));
-            if ('' !== $string) {
-                $tag = $this->tagFactory->findOrCreate($string);
-                if (null !== $tag) {
-                    $set[] = $tag->id;
-                }
-            }
-        }
-        $set = array_unique($set);
-        app('log')->debug('End of loop.');
-        app('log')->debug(sprintf('Total nr. of tags: %d', count($tags)), $tags);
-        $journal->tags()->sync($set);
-    }
-
     private function findAccountById(array $data, array $types): ?Account
     {
         // first attempt, find by ID.
@@ -434,5 +316,123 @@ trait JournalServiceTrait
         app('log')->debug('Cannot return cash account, return input instead.');
 
         return $account;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    protected function getAmount(string $amount): string
+    {
+        if ('' === $amount) {
+            throw new FireflyException(sprintf('The amount cannot be an empty string: "%s"', $amount));
+        }
+        app('log')->debug(sprintf('Now in getAmount("%s")', $amount));
+        if (0 === bccomp('0', $amount)) {
+            throw new FireflyException(sprintf('The amount seems to be zero: "%s"', $amount));
+        }
+
+        return $amount;
+    }
+
+    protected function getForeignAmount(?string $amount): ?string
+    {
+        if (null === $amount) {
+            app('log')->debug('No foreign amount info in array. Return NULL');
+
+            return null;
+        }
+        if ('' === $amount) {
+            app('log')->debug('Foreign amount is empty string, return NULL.');
+
+            return null;
+        }
+        if (0 === bccomp('0', $amount)) {
+            app('log')->debug('Foreign amount is 0.0, return NULL.');
+
+            return null;
+        }
+        app('log')->debug(sprintf('Foreign amount is %s', $amount));
+
+        return $amount;
+    }
+
+    protected function storeBudget(TransactionJournal $journal, NullArrayObject $data): void
+    {
+        if (TransactionType::WITHDRAWAL !== $journal->transactionType->type) {
+            $journal->budgets()->sync([]);
+
+            return;
+        }
+        $budget = $this->budgetRepository->findBudget($data['budget_id'], $data['budget_name']);
+        if (null !== $budget) {
+            app('log')->debug(sprintf('Link budget #%d to journal #%d', $budget->id, $journal->id));
+            $journal->budgets()->sync([$budget->id]);
+
+            return;
+        }
+        // if the budget is NULL, sync empty.
+        $journal->budgets()->sync([]);
+    }
+
+    protected function storeCategory(TransactionJournal $journal, NullArrayObject $data): void
+    {
+        $category = $this->categoryRepository->findCategory($data['category_id'], $data['category_name']);
+        if (null !== $category) {
+            app('log')->debug(sprintf('Link category #%d to journal #%d', $category->id, $journal->id));
+            $journal->categories()->sync([$category->id]);
+
+            return;
+        }
+        // if the category is NULL, sync empty.
+        $journal->categories()->sync([]);
+    }
+
+    protected function storeNotes(TransactionJournal $journal, ?string $notes): void
+    {
+        $notes = (string)$notes;
+        $note  = $journal->notes()->first();
+        if ('' !== $notes) {
+            if (null === $note) {
+                $note = new Note();
+                $note->noteable()->associate($journal);
+            }
+            $note->text = $notes;
+            $note->save();
+            app('log')->debug(sprintf('Stored notes for journal #%d', $journal->id));
+
+            return;
+        }
+        // try to delete existing notes.
+        $note?->delete();
+    }
+
+    /**
+     * Link tags to journal.
+     */
+    protected function storeTags(TransactionJournal $journal, ?array $tags): void
+    {
+        app('log')->debug('Now in storeTags()', $tags ?? []);
+        $this->tagFactory->setUser($journal->user);
+        $set = [];
+        if (!is_array($tags)) {
+            app('log')->debug('Tags is not an array, break.');
+
+            return;
+        }
+        app('log')->debug('Start of loop.');
+        foreach ($tags as $string) {
+            $string = (string)$string;
+            app('log')->debug(sprintf('Now at tag "%s"', $string));
+            if ('' !== $string) {
+                $tag = $this->tagFactory->findOrCreate($string);
+                if (null !== $tag) {
+                    $set[] = $tag->id;
+                }
+            }
+        }
+        $set = array_unique($set);
+        app('log')->debug('End of loop.');
+        app('log')->debug(sprintf('Total nr. of tags: %d', count($tags)), $tags);
+        $journal->tags()->sync($set);
     }
 }

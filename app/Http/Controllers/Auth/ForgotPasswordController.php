@@ -96,6 +96,21 @@ class ForgotPasswordController extends Controller
     }
 
     /**
+     * @throws FireflyException
+     */
+    private function validateHost(): void
+    {
+        $configuredHost = parse_url((string)config('app.url'), PHP_URL_HOST);
+        if (false === $configuredHost || null === $configuredHost) {
+            throw new FireflyException('Please set a valid and correct Firefly III URL in the APP_URL environment variable.');
+        }
+        $host           = request()->host();
+        if ($configuredHost !== $host) {
+            throw new FireflyException('The Host-header does not match the host in the APP_URL environment variable. Please make sure these match. See also: https://bit.ly/FF3-host-header');
+        }
+    }
+
+    /**
      * Show form for email recovery.
      *
      * @return Factory|View
@@ -120,20 +135,5 @@ class ForgotPasswordController extends Controller
         }
 
         return view('auth.passwords.email')->with(compact('allowRegistration', 'pageTitle'));
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function validateHost(): void
-    {
-        $configuredHost = parse_url((string)config('app.url'), PHP_URL_HOST);
-        if (false === $configuredHost || null === $configuredHost) {
-            throw new FireflyException('Please set a valid and correct Firefly III URL in the APP_URL environment variable.');
-        }
-        $host           = request()->host();
-        if ($configuredHost !== $host) {
-            throw new FireflyException('The Host-header does not match the host in the APP_URL environment variable. Please make sure these match. See also: https://bit.ly/FF3-host-header');
-        }
     }
 }

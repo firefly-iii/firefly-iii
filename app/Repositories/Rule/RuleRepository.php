@@ -280,6 +280,26 @@ class RuleRepository implements RuleRepositoryInterface
         return $this->user->rules()->find($ruleId);
     }
 
+    private function setRuleTrigger(string $moment, Rule $rule): void
+    {
+        /** @var null|RuleTrigger $trigger */
+        $trigger                  = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first();
+        if (null !== $trigger) {
+            $trigger->trigger_value = $moment;
+            $trigger->save();
+
+            return;
+        }
+        $trigger                  = new RuleTrigger();
+        $trigger->order           = 0;
+        $trigger->trigger_type    = 'user_action';
+        $trigger->trigger_value   = $moment;
+        $trigger->rule_id         = $rule->id;
+        $trigger->active          = true;
+        $trigger->stop_processing = false;
+        $trigger->save();
+    }
+
     public function resetRuleOrder(RuleGroup $ruleGroup): bool
     {
         $groupRepository = app(RuleGroupRepositoryInterface::class);
@@ -336,6 +356,59 @@ class RuleRepository implements RuleRepositoryInterface
         return (int)$ruleGroup->rules()->max('order');
     }
 
+    private function storeTriggers(Rule $rule, array $data): void
+    {
+        $order = 1;
+        foreach ($data['triggers'] as $trigger) {
+            $value          = $trigger['value'] ?? '';
+            $stopProcessing = $trigger['stop_processing'] ?? false;
+            $active         = $trigger['active'] ?? true;
+            $type           = $trigger['type'];
+            if (true === ($trigger['prohibited'] ?? false) && !str_starts_with($type, '-')) {
+                $type = sprintf('-%s', $type);
+            }
+
+            // empty the value in case the rule needs no context
+            // TODO create a helper to automatically return these.
+            $needTrue       = [
+                'reconciled',
+                'has_attachments',
+                'has_any_category',
+                'has_any_budget',
+                'has_any_bill',
+                'has_any_tag',
+                'any_notes',
+                'any_external_url',
+                'has_no_attachments',
+                'has_no_category',
+                'has_no_budget',
+                'has_no_bill',
+                'has_no_tag',
+                'no_notes',
+                'no_external_url',
+                'source_is_cash',
+                'destination_is_cash',
+                'account_is_cash',
+                'exists',
+                'no_external_id',
+                'any_external_id',
+            ];
+            if (in_array($type, $needTrue, true)) {
+                $value = '';
+            }
+
+            $triggerValues  = [
+                'action'          => $type,
+                'value'           => $value,
+                'stop_processing' => $stopProcessing,
+                'order'           => $order,
+                'active'          => $active,
+            ];
+            $this->storeTrigger($rule, $triggerValues);
+            ++$order;
+        }
+    }
+
     public function storeTrigger(Rule $rule, array $values): RuleTrigger
     {
         $ruleTrigger                  = new RuleTrigger();
@@ -348,6 +421,25 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleTrigger->save();
 
         return $ruleTrigger;
+    }
+
+    private function storeActions(Rule $rule, array $data): void
+    {
+        $order = 1;
+        foreach ($data['actions'] as $action) {
+            $value          = $action['value'] ?? '';
+            $stopProcessing = $action['stop_processing'] ?? false;
+            $active         = $action['active'] ?? true;
+            $actionValues   = [
+                'action'          => $action['type'],
+                'value'           => $value,
+                'stop_processing' => $stopProcessing,
+                'order'           => $order,
+                'active'          => $active,
+            ];
+            $this->storeAction($rule, $actionValues);
+            ++$order;
+        }
     }
 
     public function storeAction(Rule $rule, array $values): RuleAction
@@ -425,97 +517,5 @@ class RuleRepository implements RuleRepositoryInterface
         $this->setOrder($rule, $order);
 
         return $rule;
-    }
-
-    private function setRuleTrigger(string $moment, Rule $rule): void
-    {
-        /** @var null|RuleTrigger $trigger */
-        $trigger                  = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first();
-        if (null !== $trigger) {
-            $trigger->trigger_value = $moment;
-            $trigger->save();
-
-            return;
-        }
-        $trigger                  = new RuleTrigger();
-        $trigger->order           = 0;
-        $trigger->trigger_type    = 'user_action';
-        $trigger->trigger_value   = $moment;
-        $trigger->rule_id         = $rule->id;
-        $trigger->active          = true;
-        $trigger->stop_processing = false;
-        $trigger->save();
-    }
-
-    private function storeTriggers(Rule $rule, array $data): void
-    {
-        $order = 1;
-        foreach ($data['triggers'] as $trigger) {
-            $value          = $trigger['value'] ?? '';
-            $stopProcessing = $trigger['stop_processing'] ?? false;
-            $active         = $trigger['active'] ?? true;
-            $type           = $trigger['type'];
-            if (true === ($trigger['prohibited'] ?? false) && !str_starts_with($type, '-')) {
-                $type = sprintf('-%s', $type);
-            }
-
-            // empty the value in case the rule needs no context
-            // TODO create a helper to automatically return these.
-            $needTrue       = [
-                'reconciled',
-                'has_attachments',
-                'has_any_category',
-                'has_any_budget',
-                'has_any_bill',
-                'has_any_tag',
-                'any_notes',
-                'any_external_url',
-                'has_no_attachments',
-                'has_no_category',
-                'has_no_budget',
-                'has_no_bill',
-                'has_no_tag',
-                'no_notes',
-                'no_external_url',
-                'source_is_cash',
-                'destination_is_cash',
-                'account_is_cash',
-                'exists',
-                'no_external_id',
-                'any_external_id',
-            ];
-            if (in_array($type, $needTrue, true)) {
-                $value = '';
-            }
-
-            $triggerValues  = [
-                'action'          => $type,
-                'value'           => $value,
-                'stop_processing' => $stopProcessing,
-                'order'           => $order,
-                'active'          => $active,
-            ];
-            $this->storeTrigger($rule, $triggerValues);
-            ++$order;
-        }
-    }
-
-    private function storeActions(Rule $rule, array $data): void
-    {
-        $order = 1;
-        foreach ($data['actions'] as $action) {
-            $value          = $action['value'] ?? '';
-            $stopProcessing = $action['stop_processing'] ?? false;
-            $active         = $action['active'] ?? true;
-            $actionValues   = [
-                'action'          => $action['type'],
-                'value'           => $value,
-                'stop_processing' => $stopProcessing,
-                'order'           => $order,
-                'active'          => $active,
-            ];
-            $this->storeAction($rule, $actionValues);
-            ++$order;
-        }
     }
 }

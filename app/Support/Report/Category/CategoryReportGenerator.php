@@ -82,27 +82,6 @@ class CategoryReportGenerator
         }
     }
 
-    public function setAccounts(Collection $accounts): void
-    {
-        $this->accounts = $accounts;
-    }
-
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
-    }
-
-    public function setUser(User $user): void
-    {
-        $this->noCatRepository->setUser($user);
-        $this->opsRepository->setUser($user);
-    }
-
     /**
      * Process one of the spent arrays from the operations method.
      */
@@ -182,5 +161,26 @@ class CategoryReportGenerator
                 $journal['amount']
             ) : $this->report['categories'][$key]['earned'];
         }
+    }
+
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->noCatRepository->setUser($user);
+        $this->opsRepository->setUser($user);
     }
 }

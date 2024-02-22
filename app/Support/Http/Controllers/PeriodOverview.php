@@ -140,6 +140,99 @@ trait PeriodOverview
     }
 
     /**
+     * Filter a list of journals by a set of dates, and then group them by currency.
+     */
+    private function filterJournalsByDate(array $array, Carbon $start, Carbon $end): array
+    {
+        $result = [];
+
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            if ($journal['date'] <= $end && $journal['date'] >= $start) {
+                $result[] = $journal;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return only transactions where $account is the source.
+     */
+    private function filterTransferredAway(Account $account, array $journals): array
+    {
+        $return = [];
+
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            if ($account->id === (int)$journal['source_account_id']) {
+                $return[] = $journal;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * Return only transactions where $account is the source.
+     */
+    private function filterTransferredIn(Account $account, array $journals): array
+    {
+        $return = [];
+
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            if ($account->id === (int)$journal['destination_account_id']) {
+                $return[] = $journal;
+            }
+        }
+
+        return $return;
+    }
+
+    private function groupByCurrency(array $journals): array
+    {
+        $return = [];
+
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $currencyId                    = (int)$journal['currency_id'];
+            $foreignCurrencyId             = $journal['foreign_currency_id'];
+            if (!array_key_exists($currencyId, $return)) {
+                $return[$currencyId] = [
+                    'amount'                  => '0',
+                    'count'                   => 0,
+                    'currency_id'             => $currencyId,
+                    'currency_name'           => $journal['currency_name'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                ];
+            }
+            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $journal['amount'] ?? '0');
+            ++$return[$currencyId]['count'];
+
+            if (null !== $foreignCurrencyId && null !== $journal['foreign_amount']) {
+                if (!array_key_exists($foreignCurrencyId, $return)) {
+                    $return[$foreignCurrencyId] = [
+                        'amount'                  => '0',
+                        'count'                   => 0,
+                        'currency_id'             => (int)$foreignCurrencyId,
+                        'currency_name'           => $journal['foreign_currency_name'],
+                        'currency_code'           => $journal['foreign_currency_code'],
+                        'currency_symbol'         => $journal['foreign_currency_symbol'],
+                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
+                    ];
+                }
+                ++$return[$foreignCurrencyId]['count'];
+                $return[$foreignCurrencyId]['amount'] = bcadd($return[$foreignCurrencyId]['amount'], $journal['foreign_amount']);
+            }
+        }
+
+        return $return;
+    }
+
+    /**
      * Overview for single category. Has been refactored recently.
      *
      * @throws FireflyException
@@ -406,6 +499,27 @@ trait PeriodOverview
         return $entries;
     }
 
+    private function filterJournalsByTag(array $set, Tag $tag): array
+    {
+        $return = [];
+        foreach ($set as $entry) {
+            $found    = false;
+
+            /** @var array $localTag */
+            foreach ($entry['tags'] as $localTag) {
+                if ($localTag['id'] === $tag->id) {
+                    $found = true;
+                }
+            }
+            if (false === $found) {
+                continue;
+            }
+            $return[] = $entry;
+        }
+
+        return $return;
+    }
+
     /**
      * @throws FireflyException
      */
@@ -452,129 +566,15 @@ trait PeriodOverview
             }
             $entries[]
                          = [
-                             'title'              => $title,
-                             'route'              => route('transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                             'total_transactions' => count($spent) + count($earned) + count($transferred),
-                             'spent'              => $this->groupByCurrency($spent),
-                             'earned'             => $this->groupByCurrency($earned),
-                             'transferred'        => $this->groupByCurrency($transferred),
-                         ];
+                    'title'              => $title,
+                    'route'              => route('transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                    'total_transactions' => count($spent) + count($earned) + count($transferred),
+                    'spent'              => $this->groupByCurrency($spent),
+                    'earned'             => $this->groupByCurrency($earned),
+                    'transferred'        => $this->groupByCurrency($transferred),
+                ];
         }
 
         return $entries;
-    }
-
-    /**
-     * Filter a list of journals by a set of dates, and then group them by currency.
-     */
-    private function filterJournalsByDate(array $array, Carbon $start, Carbon $end): array
-    {
-        $result = [];
-
-        /** @var array $journal */
-        foreach ($array as $journal) {
-            if ($journal['date'] <= $end && $journal['date'] >= $start) {
-                $result[] = $journal;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Return only transactions where $account is the source.
-     */
-    private function filterTransferredAway(Account $account, array $journals): array
-    {
-        $return = [];
-
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            if ($account->id === (int) $journal['source_account_id']) {
-                $return[] = $journal;
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * Return only transactions where $account is the source.
-     */
-    private function filterTransferredIn(Account $account, array $journals): array
-    {
-        $return = [];
-
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            if ($account->id === (int) $journal['destination_account_id']) {
-                $return[] = $journal;
-            }
-        }
-
-        return $return;
-    }
-
-    private function groupByCurrency(array $journals): array
-    {
-        $return = [];
-
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            $currencyId                    = (int) $journal['currency_id'];
-            $foreignCurrencyId             = $journal['foreign_currency_id'];
-            if (!array_key_exists($currencyId, $return)) {
-                $return[$currencyId] = [
-                    'amount'                  => '0',
-                    'count'                   => 0,
-                    'currency_id'             => $currencyId,
-                    'currency_name'           => $journal['currency_name'],
-                    'currency_code'           => $journal['currency_code'],
-                    'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_decimal_places' => $journal['currency_decimal_places'],
-                ];
-            }
-            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $journal['amount'] ?? '0');
-            ++$return[$currencyId]['count'];
-
-            if (null !== $foreignCurrencyId && null !== $journal['foreign_amount']) {
-                if (!array_key_exists($foreignCurrencyId, $return)) {
-                    $return[$foreignCurrencyId] = [
-                        'amount'                  => '0',
-                        'count'                   => 0,
-                        'currency_id'             => (int) $foreignCurrencyId,
-                        'currency_name'           => $journal['foreign_currency_name'],
-                        'currency_code'           => $journal['foreign_currency_code'],
-                        'currency_symbol'         => $journal['foreign_currency_symbol'],
-                        'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
-                    ];
-                }
-                ++$return[$foreignCurrencyId]['count'];
-                $return[$foreignCurrencyId]['amount'] = bcadd($return[$foreignCurrencyId]['amount'], $journal['foreign_amount']);
-            }
-        }
-
-        return $return;
-    }
-
-    private function filterJournalsByTag(array $set, Tag $tag): array
-    {
-        $return = [];
-        foreach ($set as $entry) {
-            $found    = false;
-
-            /** @var array $localTag */
-            foreach ($entry['tags'] as $localTag) {
-                if ($localTag['id'] === $tag->id) {
-                    $found = true;
-                }
-            }
-            if (false === $found) {
-                continue;
-            }
-            $return[] = $entry;
-        }
-
-        return $return;
     }
 }

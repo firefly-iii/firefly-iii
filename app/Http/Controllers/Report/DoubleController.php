@@ -41,7 +41,7 @@ class DoubleController extends Controller
 {
     use AugumentData;
 
-    protected AccountRepositoryInterface $accountRepository;
+    protected AccountRepositoryInterface  $accountRepository;
     private OperationsRepositoryInterface $opsRepository;
 
     /**
@@ -279,6 +279,24 @@ class DoubleController extends Controller
     }
 
     /**
+     * TODO this method is duplicated.
+     */
+    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
+    {
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->name === $name && $account->id !== $id) {
+                return $account->name;
+            }
+            if (null !== $account->iban && $account->iban === $iban && $account->id !== $id) {
+                return $account->iban;
+            }
+        }
+
+        return $name;
+    }
+
+    /**
      * @return Factory|View
      */
     public function operationsPerAsset(Collection $accounts, Collection $double, Carbon $start, Carbon $end)
@@ -467,23 +485,5 @@ class DoubleController extends Controller
         }
 
         return $result;
-    }
-
-    /**
-     * TODO this method is duplicated.
-     */
-    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
-    {
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if ($account->name === $name && $account->id !== $id) {
-                return $account->name;
-            }
-            if (null !== $account->iban && $account->iban === $iban && $account->id !== $id) {
-                return $account->iban;
-            }
-        }
-
-        return $name;
     }
 }

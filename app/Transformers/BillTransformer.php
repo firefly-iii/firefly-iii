@@ -138,7 +138,7 @@ class BillTransformer extends AbstractTransformer
             'id'                       => $bill->id,
             'created_at'               => $bill->created_at->toAtomString(),
             'updated_at'               => $bill->updated_at->toAtomString(),
-            'currency_id'              => (string) $bill->transaction_currency_id,
+            'currency_id'              => (string)$bill->transaction_currency_id,
             'currency_code'            => $currency->code,
             'currency_symbol'          => $currency->symbol,
             'currency_decimal_places'  => $currency->decimal_places,
@@ -153,7 +153,7 @@ class BillTransformer extends AbstractTransformer
             'active'                   => $bill->active,
             'order'                    => $bill->order,
             'notes'                    => $notes,
-            'object_group_id'          => null !== $objectGroupId ? (string) $objectGroupId : null,
+            'object_group_id'          => null !== $objectGroupId ? (string)$objectGroupId : null,
             'object_group_order'       => $objectGroupOrder,
             'object_group_title'       => $objectGroupTitle,
 
@@ -207,8 +207,8 @@ class BillTransformer extends AbstractTransformer
         $result       = [];
         foreach ($set as $entry) {
             $result[] = [
-                'transaction_group_id'   => (string) $entry->transaction_group_id,
-                'transaction_journal_id' => (string) $entry->id,
+                'transaction_group_id'   => (string)$entry->transaction_group_id,
+                'transaction_journal_id' => (string)$entry->id,
                 'date'                   => $entry->date->format('Y-m-d'),
                 'date_object'            => $entry->date,
             ];

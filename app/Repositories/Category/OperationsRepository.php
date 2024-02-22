@@ -116,6 +116,14 @@ class OperationsRepository implements OperationsRepositoryInterface
     }
 
     /**
+     * Returns a list of all the categories belonging to a user.
+     */
+    private function getCategories(): Collection
+    {
+        return $this->user->categories()->get();
+    }
+
+    /**
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have the specified category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
@@ -419,13 +427,5 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
 
         return $array;
-    }
-
-    /**
-     * Returns a list of all the categories belonging to a user.
-     */
-    private function getCategories(): Collection
-    {
-        return $this->user->categories()->get();
     }
 }

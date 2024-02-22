@@ -106,7 +106,7 @@ class PiggyBankTransformer extends AbstractTransformer
             $id                         = (int)$entry->object_group_id;
             $order                      = $entry->order;
             $this->groups[$piggyBankId] = [
-                'object_group_id'    => (string) $id,
+                'object_group_id'    => (string)$id,
                 'object_group_title' => $entry->title,
                 'object_group_order' => $order,
             ];

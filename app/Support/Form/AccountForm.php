@@ -55,6 +55,37 @@ class AccountForm
         return $this->select($name, $grouped, $value, $options);
     }
 
+    private function getAccountsGrouped(array $types, AccountRepositoryInterface $repository = null): array
+    {
+        if (null === $repository) {
+            $repository = $this->getAccountRepository();
+        }
+        $accountList    = $repository->getActiveAccountsByType($types);
+        $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
+        $grouped        = [];
+
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $role                        = (string)$repository->getMetaValue($account, 'account_role');
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = sprintf('l_%s', $account->accountType->type);
+            }
+            if ('' === $role) {
+                $role = 'no_account_type';
+                if (AccountType::EXPENSE === $account->accountType->type) {
+                    $role = 'expense_account';
+                }
+                if (AccountType::REVENUE === $account->accountType->type) {
+                    $role = 'revenue_account';
+                }
+            }
+            $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
+            $grouped[$key][$account->id] = $account->name;
+        }
+
+        return $grouped;
+    }
+
     /**
      * Grouped dropdown list of all accounts that are valid as the destination of a withdrawal.
      */
@@ -126,36 +157,5 @@ class AccountForm
         $grouped = $this->getAccountsGrouped($types);
 
         return $this->select($name, $grouped, $value, $options);
-    }
-
-    private function getAccountsGrouped(array $types, AccountRepositoryInterface $repository = null): array
-    {
-        if (null === $repository) {
-            $repository = $this->getAccountRepository();
-        }
-        $accountList    = $repository->getActiveAccountsByType($types);
-        $liabilityTypes = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
-        $grouped        = [];
-
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $role                        = (string)$repository->getMetaValue($account, 'account_role');
-            if (in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = sprintf('l_%s', $account->accountType->type);
-            }
-            if ('' === $role) {
-                $role = 'no_account_type';
-                if (AccountType::EXPENSE === $account->accountType->type) {
-                    $role = 'expense_account';
-                }
-                if (AccountType::REVENUE === $account->accountType->type) {
-                    $role = 'revenue_account';
-                }
-            }
-            $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
-            $grouped[$key][$account->id] = $account->name;
-        }
-
-        return $grouped;
     }
 }

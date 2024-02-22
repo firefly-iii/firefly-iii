@@ -135,8 +135,8 @@ class UpdateRequest implements UpdateRequestInterface
     private function parseResult(array $information): array
     {
         app('log')->debug('Now in parseResult()', $information);
-        $current      = (string)config('firefly.version');
-        $latest       = (string)$information['version'];
+        $current  = (string)config('firefly.version');
+        $latest   = (string)$information['version'];
 
         // strip the 'v' from the version if it's there.
         if (str_starts_with($latest, 'v')) {
@@ -146,7 +146,7 @@ class UpdateRequest implements UpdateRequestInterface
             return $this->parseResultDevelop($current, $latest, $information);
         }
 
-        $compare      = version_compare($latest, $current);
+        $compare  = version_compare($latest, $current);
 
         app('log')->debug(sprintf('Current version is "%s", latest is "%s", result is: %d', $current, $latest, $compare));
 
@@ -161,9 +161,9 @@ class UpdateRequest implements UpdateRequestInterface
 
         // a newer version is available!
         /** @var Carbon $released */
-        $released     = $information['date'];
-        $isBeta       = $information['is_beta'] ?? false;
-        $isAlpha      = $information['is_alpha'] ?? false;
+        $released = $information['date'];
+        $isBeta   = $information['is_beta'] ?? false;
+        $isAlpha  = $information['is_alpha'] ?? false;
 
         // it's new but alpha:
         if (true === $isAlpha) {

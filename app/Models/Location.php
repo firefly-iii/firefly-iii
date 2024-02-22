@@ -63,8 +63,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @method static Builder|Location whereUpdatedAt($value)
  * @method static Builder|Location whereZoomLevel($value)
  *
- * @property Collection<int, \FireflyIII\Models\TransactionJournal> $transactionJournals
- * @property null|int                                               $transaction_journals_count
+ * @property Collection<int, TransactionJournal> $transactionJournals
+ * @property null|int                            $transaction_journals_count
  *
  * @mixin Eloquent
  */
@@ -74,13 +74,13 @@ class Location extends Model
 
     protected $casts
                         = [
-                            'created_at' => 'datetime',
-                            'updated_at' => 'datetime',
-                            'deleted_at' => 'datetime',
-                            'zoomLevel'  => 'int',
-                            'latitude'   => 'float',
-                            'longitude'  => 'float',
-                        ];
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+            'zoomLevel'  => 'int',
+            'latitude'   => 'float',
+            'longitude'  => 'float',
+        ];
 
     protected $fillable = ['locatable_id', 'locatable_type', 'latitude', 'longitude', 'zoom_level'];
 
@@ -101,17 +101,17 @@ class Location extends Model
         return $this->morphMany(Account::class, 'locatable');
     }
 
-    public function transactionJournals(): MorphMany
-    {
-        return $this->morphMany(TransactionJournal::class, 'locatable');
-    }
-
     /**
      * Get all the owning attachable models.
      */
     public function locatable(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function transactionJournals(): MorphMany
+    {
+        return $this->morphMany(TransactionJournal::class, 'locatable');
     }
 
     protected function locatableId(): Attribute

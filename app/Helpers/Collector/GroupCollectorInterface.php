@@ -402,6 +402,11 @@ interface GroupCollectorInterface
     public function setAfter(Carbon $date): self;
 
     /**
+     * Limit results to a SPECIFIC set of tags.
+     */
+    public function setAllTags(Collection $tags): self;
+
+    /**
      * Collect transactions before a specific date.
      */
     public function setBefore(Carbon $date): self;
@@ -460,6 +465,11 @@ interface GroupCollectorInterface
      * Set the end time of the results to return.
      */
     public function setEnd(Carbon $end): self;
+
+    /**
+     * Set the page to get.
+     */
+    public function setEndRow(int $endRow): self;
 
     public function setExpandGroupSearch(bool $expandGroupSearch): self;
 
@@ -527,16 +537,6 @@ interface GroupCollectorInterface
     public function setPage(int $page): self;
 
     /**
-     * Set the page to get.
-     */
-    public function setStartRow(int $startRow): self;
-
-    /**
-     * Set the page to get.
-     */
-    public function setEndRow(int $endRow): self;
-
-    /**
      * Set the start and end time of the results to return.
      */
     public function setRange(Carbon $start, Carbon $end): self;
@@ -564,6 +564,11 @@ interface GroupCollectorInterface
     public function setStart(Carbon $start): self;
 
     /**
+     * Set the page to get.
+     */
+    public function setStartRow(int $startRow): self;
+
+    /**
      * Limit results to a specific tag.
      */
     public function setTag(Tag $tag): self;
@@ -572,11 +577,6 @@ interface GroupCollectorInterface
      * Limit results to any of the specified tags.
      */
     public function setTags(Collection $tags): self;
-
-    /**
-     * Limit results to a SPECIFIC set of tags.
-     */
-    public function setAllTags(Collection $tags): self;
 
     /**
      * Limit the search to one specific transaction group.

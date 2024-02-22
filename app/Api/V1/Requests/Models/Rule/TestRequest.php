@@ -47,16 +47,6 @@ class TestRequest extends FormRequest
         ];
     }
 
-    public function rules(): array
-    {
-        return [
-            'start'      => 'date',
-            'end'        => 'date|after_or_equal:start',
-            'accounts'   => '',
-            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
-        ];
-    }
-
     private function getPage(): int
     {
         return 0 === (int)$this->query('page') ? 1 : (int)$this->query('page');
@@ -80,5 +70,15 @@ class TestRequest extends FormRequest
     private function getAccounts(): array
     {
         return $this->get('accounts');
+    }
+
+    public function rules(): array
+    {
+        return [
+            'start'      => 'date',
+            'end'        => 'date|after_or_equal:start',
+            'accounts'   => '',
+            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
+        ];
     }
 }

@@ -94,6 +94,11 @@ class CategoryController extends Controller
         return response()->json($data);
     }
 
+    private function getDate(): Carbon
+    {
+        return today(config('app.timezone'));
+    }
+
     /**
      * Shows the category chart on the front page.
      * TODO test method for category refactor.
@@ -139,6 +144,85 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return response()->json($data);
+    }
+
+    /**
+     * Generate report chart for either with or without category.
+     */
+    private function reportPeriodChart(Collection $accounts, Carbon $start, Carbon $end, ?Category $category): array
+    {
+        $income     = [];
+        $expenses   = [];
+        $categoryId = 0;
+        if (null === $category) {
+            /** @var NoCategoryRepositoryInterface $noCatRepository */
+            $noCatRepository = app(NoCategoryRepositoryInterface::class);
+
+            // this gives us all currencies
+            $expenses        = $noCatRepository->listExpenses($start, $end, $accounts);
+            $income          = $noCatRepository->listIncome($start, $end, $accounts);
+        }
+
+        if (null !== $category) {
+            /** @var OperationsRepositoryInterface $opsRepository */
+            $opsRepository = app(OperationsRepositoryInterface::class);
+            $categoryId    = $category->id;
+            // this gives us all currencies
+            $collection    = new Collection([$category]);
+            $expenses      = $opsRepository->listExpenses($start, $end, null, $collection);
+            $income        = $opsRepository->listIncome($start, $end, null, $collection);
+        }
+        $currencies = array_unique(array_merge(array_keys($income), array_keys($expenses)));
+        $periods    = app('navigation')->listOfPeriods($start, $end);
+        $format     = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $chartData  = [];
+        // make empty data array:
+        // double foreach (bad) to make empty array:
+        foreach ($currencies as $currencyId) {
+            $currencyInfo = $expenses[$currencyId] ?? $income[$currencyId];
+            $outKey       = sprintf('%d-out', $currencyId);
+            $inKey        = sprintf('%d-in', $currencyId);
+            $chartData[$outKey]
+                          = [
+                              'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currencyInfo['currency_name']),
+                              'entries'         => [],
+                              'type'            => 'bar',
+                              'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
+                          ];
+
+            $chartData[$inKey]
+                          = [
+                    'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
+                    'entries'         => [],
+                    'type'            => 'bar',
+                    'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
+                ];
+            // loop empty periods:
+            foreach (array_keys($periods) as $period) {
+                $label                                 = $periods[$period];
+                $chartData[$outKey]['entries'][$label] = '0';
+                $chartData[$inKey]['entries'][$label]  = '0';
+            }
+            // loop income and expenses for this category.:
+            $outSet       = $expenses[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
+            foreach ($outSet['transaction_journals'] as $journal) {
+                $amount                               = app('steam')->positive($journal['amount']);
+                $date                                 = $journal['date']->isoFormat($format);
+                $chartData[$outKey]['entries'][$date] ??= '0';
+
+                $chartData[$outKey]['entries'][$date] = bcadd($amount, $chartData[$outKey]['entries'][$date]);
+            }
+
+            $inSet        = $income[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
+            foreach ($inSet['transaction_journals'] as $journal) {
+                $amount                              = app('steam')->positive($journal['amount']);
+                $date                                = $journal['date']->isoFormat($format);
+                $chartData[$inKey]['entries'][$date] ??= '0';
+                $chartData[$inKey]['entries'][$date] = bcadd($amount, $chartData[$inKey]['entries'][$date]);
+            }
+        }
+
+        return $this->generator->multiSet($chartData);
     }
 
     /**
@@ -194,89 +278,5 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return response()->json($data);
-    }
-
-    private function getDate(): Carbon
-    {
-        return today(config('app.timezone'));
-    }
-
-    /**
-     * Generate report chart for either with or without category.
-     */
-    private function reportPeriodChart(Collection $accounts, Carbon $start, Carbon $end, ?Category $category): array
-    {
-        $income     = [];
-        $expenses   = [];
-        $categoryId = 0;
-        if (null === $category) {
-            /** @var NoCategoryRepositoryInterface $noCatRepository */
-            $noCatRepository = app(NoCategoryRepositoryInterface::class);
-
-            // this gives us all currencies
-            $expenses        = $noCatRepository->listExpenses($start, $end, $accounts);
-            $income          = $noCatRepository->listIncome($start, $end, $accounts);
-        }
-
-        if (null !== $category) {
-            /** @var OperationsRepositoryInterface $opsRepository */
-            $opsRepository = app(OperationsRepositoryInterface::class);
-            $categoryId    = $category->id;
-            // this gives us all currencies
-            $collection    = new Collection([$category]);
-            $expenses      = $opsRepository->listExpenses($start, $end, null, $collection);
-            $income        = $opsRepository->listIncome($start, $end, null, $collection);
-        }
-        $currencies = array_unique(array_merge(array_keys($income), array_keys($expenses)));
-        $periods    = app('navigation')->listOfPeriods($start, $end);
-        $format     = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $chartData  = [];
-        // make empty data array:
-        // double foreach (bad) to make empty array:
-        foreach ($currencies as $currencyId) {
-            $currencyInfo = $expenses[$currencyId] ?? $income[$currencyId];
-            $outKey       = sprintf('%d-out', $currencyId);
-            $inKey        = sprintf('%d-in', $currencyId);
-            $chartData[$outKey]
-                          = [
-                              'label'           => sprintf('%s (%s)', (string)trans('firefly.spent'), $currencyInfo['currency_name']),
-                              'entries'         => [],
-                              'type'            => 'bar',
-                              'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
-                          ];
-
-            $chartData[$inKey]
-                          = [
-                              'label'           => sprintf('%s (%s)', (string)trans('firefly.earned'), $currencyInfo['currency_name']),
-                              'entries'         => [],
-                              'type'            => 'bar',
-                              'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
-                          ];
-            // loop empty periods:
-            foreach (array_keys($periods) as $period) {
-                $label                                 = $periods[$period];
-                $chartData[$outKey]['entries'][$label] = '0';
-                $chartData[$inKey]['entries'][$label]  = '0';
-            }
-            // loop income and expenses for this category.:
-            $outSet       = $expenses[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
-            foreach ($outSet['transaction_journals'] as $journal) {
-                $amount                               = app('steam')->positive($journal['amount']);
-                $date                                 = $journal['date']->isoFormat($format);
-                $chartData[$outKey]['entries'][$date] ??= '0';
-
-                $chartData[$outKey]['entries'][$date] = bcadd($amount, $chartData[$outKey]['entries'][$date]);
-            }
-
-            $inSet        = $income[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
-            foreach ($inSet['transaction_journals'] as $journal) {
-                $amount                              = app('steam')->positive($journal['amount']);
-                $date                                = $journal['date']->isoFormat($format);
-                $chartData[$inKey]['entries'][$date] ??= '0';
-                $chartData[$inKey]['entries'][$date] = bcadd($amount, $chartData[$inKey]['entries'][$date]);
-            }
-        }
-
-        return $this->generator->multiSet($chartData);
     }
 }

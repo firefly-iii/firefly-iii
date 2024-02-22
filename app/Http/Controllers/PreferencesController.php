@@ -49,7 +49,7 @@ class PreferencesController extends Controller
 
         $this->middleware(
             static function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.preferences'));
+                app('view')->share('title', (string)trans('firefly.preferences'));
                 app('view')->share('mainTitleIcon', 'fa-gear');
 
                 return $next($request);
@@ -72,8 +72,8 @@ class PreferencesController extends Controller
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $type                                                                        = $account->accountType->type;
-            $role                                                                        = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
+            $type                                                                       = $account->accountType->type;
+            $role                                                                       = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
 
             if (in_array($type, [AccountType::MORTGAGE, AccountType::DEBT, AccountType::LOAN], true)) {
                 $role = sprintf('opt_group_l_%s', $type);
@@ -82,7 +82,7 @@ class PreferencesController extends Controller
             if ('opt_group_' === $role) {
                 $role = 'opt_group_defaultAsset';
             }
-            $groupedAccounts[(string) trans(sprintf('firefly.%s', $role))][$account->id] = $account->name;
+            $groupedAccounts[(string)trans(sprintf('firefly.%s', $role))][$account->id] = $account->name;
         }
         ksort($groupedAccounts);
 
@@ -105,7 +105,7 @@ class PreferencesController extends Controller
         if (is_array($fiscalYearStartStr)) {
             $fiscalYearStartStr = '01-01';
         }
-        $fiscalYearStart       = sprintf('%s-%s', date('Y'), (string) $fiscalYearStartStr);
+        $fiscalYearStart       = sprintf('%s-%s', date('Y'), (string)$fiscalYearStartStr);
         $tjOptionalFields      = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $availableDarkModes    = config('firefly.available_dark_modes');
 
@@ -120,12 +120,12 @@ class PreferencesController extends Controller
         // list of locales also has "equal" which makes it equal to whatever the language is.
 
         try {
-            $locales = json_decode((string) file_get_contents(resource_path(sprintf('lang/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
+            $locales = json_decode((string)file_get_contents(resource_path(sprintf('lang/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
             app('log')->error($e->getMessage());
             $locales = [];
         }
-        $locales               = ['equal' => (string) trans('firefly.equal_to_language')] + $locales;
+        $locales               = ['equal' => (string)trans('firefly.equal_to_language')] + $locales;
         // an important fallback is that the frontPageAccount array gets refilled automatically
         // when it turns up empty.
         if (0 === count($frontPageAccounts)) {
@@ -158,7 +158,7 @@ class PreferencesController extends Controller
         $frontPageAccounts = [];
         if (is_array($request->get('frontPageAccounts')) && count($request->get('frontPageAccounts')) > 0) {
             foreach ($request->get('frontPageAccounts') as $id) {
-                $frontPageAccounts[] = (int) $id;
+                $frontPageAccounts[] = (int)$id;
             }
             app('preferences')->set('frontPageAccounts', $frontPageAccounts);
         }
@@ -184,7 +184,7 @@ class PreferencesController extends Controller
 
         // slack URL:
         if (!auth()->user()->hasRole('demo')) {
-            $url = (string) $request->get('slackUrl');
+            $url = (string)$request->get('slackUrl');
             if (UrlValidator::isValidWebhookURL($url)) {
                 app('preferences')->set('slack_webhook_url', $url);
             }
@@ -194,8 +194,8 @@ class PreferencesController extends Controller
         }
 
         // custom fiscal year
-        $customFiscalYear  = 1 === (int) $request->get('customFiscalYear');
-        $string            = strtotime((string) $request->get('fiscalYearStart'));
+        $customFiscalYear  = 1 === (int)$request->get('customFiscalYear');
+        $string            = strtotime((string)$request->get('fiscalYearStart'));
         if (false !== $string) {
             $fiscalYearStart = date('m-d', $string);
             app('preferences')->set('customFiscalYear', $customFiscalYear);
@@ -204,7 +204,7 @@ class PreferencesController extends Controller
 
         // save page size:
         app('preferences')->set('listPageSize', 50);
-        $listPageSize      = (int) $request->get('listPageSize');
+        $listPageSize      = (int)$request->get('listPageSize');
         if ($listPageSize > 0 && $listPageSize < 1337) {
             app('preferences')->set('listPageSize', $listPageSize);
         }
@@ -252,7 +252,7 @@ class PreferencesController extends Controller
             app('preferences')->set('darkMode', $darkMode);
         }
 
-        session()->flash('success', (string) trans('firefly.saved_preferences'));
+        session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();
 
         return redirect(route('preferences.index'));

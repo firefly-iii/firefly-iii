@@ -73,16 +73,6 @@ class CreditRecalculateService
         $this->processWork();
     }
 
-    public function setAccount(?Account $account): void
-    {
-        $this->account = $account;
-    }
-
-    public function setGroup(TransactionGroup $group): void
-    {
-        $this->group = $group;
-    }
-
     private function processGroup(): void
     {
         /** @var TransactionJournal $journal */
@@ -171,7 +161,7 @@ class CreditRecalculateService
         app('log')->debug(sprintf('Now processing account #%d ("%s"). All amounts with 2 decimals!', $account->id, $account->name));
         // get opening balance (if present)
         $this->repository->setUser($account->user);
-        $direction      = (string) $this->repository->getMetaValue($account, 'liability_direction');
+        $direction      = (string)$this->repository->getMetaValue($account, 'liability_direction');
         $openingBalance = $this->repository->getOpeningBalance($account);
         if (null !== $openingBalance) {
             app('log')->debug(sprintf('Found opening balance transaction journal #%d', $openingBalance->id));
@@ -460,5 +450,15 @@ class CreditRecalculateService
     private function isTransferOut(string $amount, string $transactionType): bool
     {
         return TransactionType::TRANSFER === $transactionType && -1 === bccomp($amount, '0');
+    }
+
+    public function setAccount(?Account $account): void
+    {
+        $this->account = $account;
+    }
+
+    public function setGroup(TransactionGroup $group): void
+    {
+        $this->group = $group;
     }
 }

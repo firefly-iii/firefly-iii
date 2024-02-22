@@ -124,11 +124,11 @@ class BudgetController extends Controller
         foreach ($rows as $row) {
             $current  = [
                 'label'                          => $budget->name,
-                'currency_id'                    => (string) $row['currency_id'],
+                'currency_id'                    => (string)$row['currency_id'],
                 'currency_code'                  => $row['currency_code'],
                 'currency_name'                  => $row['currency_name'],
                 'currency_decimal_places'        => $row['currency_decimal_places'],
-                'native_currency_id'             => (string) $row['native_currency_id'],
+                'native_currency_id'             => (string)$row['native_currency_id'],
                 'native_currency_code'           => $row['native_currency_code'],
                 'native_currency_name'           => $row['native_currency_name'],
                 'native_currency_decimal_places' => $row['native_currency_decimal_places'],
@@ -189,12 +189,12 @@ class BudgetController extends Controller
         foreach ($array as $currencyId => $block) {
             $this->currencies[$currencyId] ??= TransactionCurrency::find($currencyId);
             $return[$currencyId]           ??= [
-                'currency_id'                    => (string) $currencyId,
+                'currency_id'                    => (string)$currencyId,
                 'currency_code'                  => $block['currency_code'],
                 'currency_name'                  => $block['currency_name'],
                 'currency_symbol'                => $block['currency_symbol'],
-                'currency_decimal_places'        => (int) $block['currency_decimal_places'],
-                'native_currency_id'             => (string) $this->currency->id,
+                'currency_decimal_places'        => (int)$block['currency_decimal_places'],
+                'native_currency_id'             => (string)$this->currency->id,
                 'native_currency_code'           => $this->currency->code,
                 'native_currency_name'           => $this->currency->name,
                 'native_currency_symbol'         => $this->currency->symbol,

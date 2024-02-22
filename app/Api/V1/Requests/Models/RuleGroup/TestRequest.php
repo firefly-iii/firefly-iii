@@ -46,16 +46,6 @@ class TestRequest extends FormRequest
         ];
     }
 
-    public function rules(): array
-    {
-        return [
-            'start'      => 'date',
-            'end'        => 'date|after_or_equal:start',
-            'accounts'   => '',
-            'accounts.*' => 'exists:accounts,id|belongsToUser:accounts',
-        ];
-    }
-
     private function getDate(string $field): ?Carbon
     {
         $value  = $this->query($field);
@@ -74,5 +64,15 @@ class TestRequest extends FormRequest
     private function getAccounts(): array
     {
         return $this->get('accounts');
+    }
+
+    public function rules(): array
+    {
+        return [
+            'start'      => 'date',
+            'end'        => 'date|after_or_equal:start',
+            'accounts'   => '',
+            'accounts.*' => 'exists:accounts,id|belongsToUser:accounts',
+        ];
     }
 }

@@ -400,6 +400,21 @@ class RecurringRepository implements RecurringRepositoryInterface
         return $this->filterMaxDate($repeatUntil, $occurrences);
     }
 
+    private function filterMaxDate(?Carbon $max, array $occurrences): array
+    {
+        if (null === $max) {
+            return $occurrences;
+        }
+        $filtered = [];
+        foreach ($occurrences as $date) {
+            if ($date->lte($max)) {
+                $filtered[] = $date;
+            }
+        }
+
+        return $filtered;
+    }
+
     /**
      * Parse the repetition in a string that is user readable.
      *
@@ -554,20 +569,5 @@ class RecurringRepository implements RecurringRepositoryInterface
         $service = app(RecurrenceUpdateService::class);
 
         return $service->update($recurrence, $data);
-    }
-
-    private function filterMaxDate(?Carbon $max, array $occurrences): array
-    {
-        if (null === $max) {
-            return $occurrences;
-        }
-        $filtered = [];
-        foreach ($occurrences as $date) {
-            if ($date->lte($max)) {
-                $filtered[] = $date;
-            }
-        }
-
-        return $filtered;
     }
 }

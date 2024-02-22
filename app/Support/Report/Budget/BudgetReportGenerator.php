@@ -92,59 +92,6 @@ class BudgetReportGenerator
     }
 
     /**
-     * Generates the data necessary to create the card that displays
-     * the budget overview in the general report.
-     */
-    public function general(): void
-    {
-        $this->report = [
-            'budgets' => [],
-            'sums'    => [],
-        ];
-
-        $this->generalBudgetReport();
-        $this->noBudgetReport();
-        $this->percentageReport();
-    }
-
-    public function getReport(): array
-    {
-        return $this->report;
-    }
-
-    public function setAccounts(Collection $accounts): void
-    {
-        $this->accounts = $accounts;
-    }
-
-    public function setBudgets(Collection $budgets): void
-    {
-        $this->budgets = $budgets;
-    }
-
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    public function setUser(User $user): void
-    {
-        $this->repository->setUser($user);
-        $this->blRepository->setUser($user);
-        $this->opsRepository->setUser($user);
-        $this->nbRepository->setUser($user);
-        $this->currency = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
-    }
-
-    /**
      * Process each row of expenses collected for the "Account per budget" partial
      */
     private function processExpenses(array $expenses): void
@@ -179,6 +126,22 @@ class BudgetReportGenerator
             $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId]
                              = bcadd($this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId], $journal['amount']);
         }
+    }
+
+    /**
+     * Generates the data necessary to create the card that displays
+     * the budget overview in the general report.
+     */
+    public function general(): void
+    {
+        $this->report = [
+            'budgets' => [],
+            'sums'    => [],
+        ];
+
+        $this->generalBudgetReport();
+        $this->noBudgetReport();
+        $this->percentageReport();
     }
 
     /**
@@ -250,16 +213,16 @@ class BudgetReportGenerator
         // make sum information:
         $this->report['sums'][$currencyId]
                                                                        ??= [
-                                                                           'budgeted'                => '0',
-                                                                           'spent'                   => '0',
-                                                                           'left'                    => '0',
-                                                                           'overspent'               => '0',
-                                                                           'currency_id'             => $currencyId,
-                                                                           'currency_code'           => $limitCurrency->code,
-                                                                           'currency_name'           => $limitCurrency->name,
-                                                                           'currency_symbol'         => $limitCurrency->symbol,
-                                                                           'currency_decimal_places' => $limitCurrency->decimal_places,
-                                                                       ];
+                                                            'budgeted'                => '0',
+                                                            'spent'                   => '0',
+                                                            'left'                    => '0',
+                                                            'overspent'               => '0',
+                                                            'currency_id'             => $currencyId,
+                                                            'currency_code'           => $limitCurrency->code,
+                                                            'currency_name'           => $limitCurrency->name,
+                                                            'currency_symbol'         => $limitCurrency->symbol,
+                                                            'currency_decimal_places' => $limitCurrency->decimal_places,
+                                                        ];
         $this->report['sums'][$currencyId]['budgeted']  = bcadd($this->report['sums'][$currencyId]['budgeted'], $limit->amount);
         $this->report['sums'][$currencyId]['spent']     = bcadd($this->report['sums'][$currencyId]['spent'], $spent);
         $this->report['sums'][$currencyId]['left']      = bcadd($this->report['sums'][$currencyId]['left'], bcadd($limit->amount, $spent));
@@ -348,5 +311,42 @@ class BudgetReportGenerator
                 $this->report['budgets'][$budgetId]['budget_limits'][$limitId]['budgeted_pct'] = $budgetedPct;
             }
         }
+    }
+
+    public function getReport(): array
+    {
+        return $this->report;
+    }
+
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
+    public function setBudgets(Collection $budgets): void
+    {
+        $this->budgets = $budgets;
+    }
+
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    public function setUser(User $user): void
+    {
+        $this->repository->setUser($user);
+        $this->blRepository->setUser($user);
+        $this->opsRepository->setUser($user);
+        $this->nbRepository->setUser($user);
+        $this->currency = app('amount')->getDefaultCurrencyByUserGroup($user->userGroup);
     }
 }

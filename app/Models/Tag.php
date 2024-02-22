@@ -93,14 +93,14 @@ class Tag extends Model
 
     protected $casts
                         = [
-                            'created_at' => 'datetime',
-                            'updated_at' => 'datetime',
-                            'deleted_at' => 'datetime',
-                            'date'       => 'date',
-                            'zoomLevel'  => 'int',
-                            'latitude'   => 'float',
-                            'longitude'  => 'float',
-                        ];
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+            'date'       => 'date',
+            'zoomLevel'  => 'int',
+            'latitude'   => 'float',
+            'longitude'  => 'float',
+        ];
 
     protected $fillable = ['user_id', 'user_group_id', 'tag', 'date', 'description', 'tagMode'];
 

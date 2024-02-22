@@ -66,12 +66,12 @@ class RuleTrigger extends Model
 
     protected $casts
                         = [
-                            'created_at'      => 'datetime',
-                            'updated_at'      => 'datetime',
-                            'active'          => 'boolean',
-                            'order'           => 'int',
-                            'stop_processing' => 'boolean',
-                        ];
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'active'          => 'boolean',
+            'order'           => 'int',
+            'stop_processing' => 'boolean',
+        ];
 
     protected $fillable = ['rule_id', 'trigger_type', 'trigger_value', 'order', 'active', 'stop_processing'];
 

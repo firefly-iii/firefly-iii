@@ -150,6 +150,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         return null;
     }
 
+    private function countJournals(TransactionCurrency $currency): int
+    {
+        $count = $currency->transactions()->whereNull('deleted_at')->count() + $currency->transactionJournals()->whereNull('deleted_at')->count();
+
+        // also count foreign:
+        return $count + Transaction::where('foreign_currency_id', $currency->id)->count();
+    }
+
     /**
      * Returns ALL currencies, regardless of whether they are enabled or not.
      */
@@ -371,13 +379,5 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $service = app(CurrencyUpdateService::class);
 
         return $service->update($currency, $data);
-    }
-
-    private function countJournals(TransactionCurrency $currency): int
-    {
-        $count = $currency->transactions()->whereNull('deleted_at')->count() + $currency->transactionJournals()->whereNull('deleted_at')->count();
-
-        // also count foreign:
-        return $count + Transaction::where('foreign_currency_id', $currency->id)->count();
     }
 }

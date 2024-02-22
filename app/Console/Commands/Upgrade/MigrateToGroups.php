@@ -104,7 +104,7 @@ class MigrateToGroups extends Command
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
-            return (bool) $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false;
@@ -191,22 +191,6 @@ class MigrateToGroups extends Command
                 return $transaction->amount > 0;
             }
         );
-    }
-
-    private function findOpposingTransaction(TransactionJournal $journal, Transaction $transaction): ?Transaction
-    {
-        $set = $journal->transactions->filter(
-            static function (Transaction $subject) use ($transaction) {
-                $amount     = (float) $transaction->amount * -1 === (float) $subject->amount;  // intentional float
-                $identifier = $transaction->identifier === $subject->identifier;
-                app('log')->debug(sprintf('Amount the same? %s', var_export($amount, true)));
-                app('log')->debug(sprintf('ID the same?     %s', var_export($identifier, true)));
-
-                return $amount && $identifier;
-            }
-        );
-
-        return $set->first();
     }
 
     /**
@@ -297,6 +281,22 @@ class MigrateToGroups extends Command
             'payment_date'        => $paymentDate,
             'invoice_date'        => $invoiceDate,
         ];
+    }
+
+    private function findOpposingTransaction(TransactionJournal $journal, Transaction $transaction): ?Transaction
+    {
+        $set = $journal->transactions->filter(
+            static function (Transaction $subject) use ($transaction) {
+                $amount     = (float)$transaction->amount * -1 === (float)$subject->amount;  // intentional float
+                $identifier = $transaction->identifier === $subject->identifier;
+                app('log')->debug(sprintf('Amount the same? %s', var_export($amount, true)));
+                app('log')->debug(sprintf('ID the same?     %s', var_export($identifier, true)));
+
+                return $amount && $identifier;
+            }
+        );
+
+        return $set->first();
     }
 
     private function getTransactionBudget(Transaction $left, Transaction $right): ?int

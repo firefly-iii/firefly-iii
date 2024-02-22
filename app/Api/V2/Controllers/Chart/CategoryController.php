@@ -112,22 +112,22 @@ class CategoryController extends Controller
             }
             // create arrays
             $return[$key] ??= [
-                'label'                            => $categoryName,
-                'currency_id'                      => (string)$currency->id,
-                'currency_code'                    => $currency->code,
-                'currency_name'                    => $currency->name,
-                'currency_symbol'                  => $currency->symbol,
-                'currency_decimal_places'          => $currency->decimal_places,
-                'native_currency_id'               => (string)$default->id,
-                'native_currency_code'             => $default->code,
-                'native_currency_name'             => $default->name,
-                'native_currency_symbol'           => $default->symbol,
-                'native_currency_decimal_places'   => $default->decimal_places,
-                'period'                           => null,
-                'start'                            => $start->toAtomString(),
-                'end'                              => $end->toAtomString(),
-                'amount'                           => '0',
-                'native_amount'                    => '0',
+                'label'                          => $categoryName,
+                'currency_id'                    => (string)$currency->id,
+                'currency_code'                  => $currency->code,
+                'currency_name'                  => $currency->name,
+                'currency_symbol'                => $currency->symbol,
+                'currency_decimal_places'        => $currency->decimal_places,
+                'native_currency_id'             => (string)$default->id,
+                'native_currency_code'           => $default->code,
+                'native_currency_name'           => $default->name,
+                'native_currency_symbol'         => $default->symbol,
+                'native_currency_decimal_places' => $default->decimal_places,
+                'period'                         => null,
+                'start'                          => $start->toAtomString(),
+                'end'                            => $end->toAtomString(),
+                'amount'                         => '0',
+                'native_amount'                  => '0',
             ];
 
             // add monies
