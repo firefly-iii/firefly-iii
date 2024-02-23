@@ -85,13 +85,13 @@ class RuleGroup extends Model
 
     protected $casts
                         = [
-            'created_at'      => 'datetime',
-            'updated_at'      => 'datetime',
-            'deleted_at'      => 'datetime',
-            'active'          => 'boolean',
-            'stop_processing' => 'boolean',
-            'order'           => 'int',
-        ];
+                            'created_at'      => 'datetime',
+                            'updated_at'      => 'datetime',
+                            'deleted_at'      => 'datetime',
+                            'active'          => 'boolean',
+                            'stop_processing' => 'boolean',
+                            'order'           => 'int',
+                        ];
 
     protected $fillable = ['user_id', 'user_group_id', 'stop_processing', 'order', 'title', 'description', 'active'];
 

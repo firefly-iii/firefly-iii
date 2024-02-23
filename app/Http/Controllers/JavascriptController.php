@@ -144,6 +144,7 @@ class JavascriptController extends Controller
 
         return response()
             ->view('v2.javascript.variables', $data)
-            ->header('Content-Type', 'text/javascript');
+            ->header('Content-Type', 'text/javascript')
+        ;
     }
 }

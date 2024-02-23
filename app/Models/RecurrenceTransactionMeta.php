@@ -67,12 +67,12 @@ class RecurrenceTransactionMeta extends Model
 
     protected $casts
                         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'name'       => 'string',
-            'value'      => 'string',
-        ];
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                            'deleted_at' => 'datetime',
+                            'name'       => 'string',
+                            'value'      => 'string',
+                        ];
 
     protected $fillable = ['rt_id', 'name', 'value'];
 
