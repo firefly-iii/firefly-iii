@@ -180,6 +180,12 @@ let transactions = function () {
                 console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 return;
             }
+            if ('Expense account' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
+                this.groupProperties.transactionType = 'deposit';
+                console.warn('FORCE transaction type to be "' + this.groupProperties.transactionType + '".');
+                this.entries[0].source_account.id = null;
+                return;
+            }
             if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Asset account' === destType) {
                 this.groupProperties.transactionType = 'deposit';
                 console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');

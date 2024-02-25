@@ -88,26 +88,28 @@ class InfiniteListRequest extends FormRequest
         return 0 === $page || $page > 65536 ? 1 : $page;
     }
 
-    public function getSortInstructions(): array {
+    public function getSortInstructions(): array
+    {
         $allowed = config('firefly.sorting.allowed.transactions');
-        $set = $this->get('sorting', []);
-        $result=  [];
-        if(0 === count($set)) {
+        $set     = $this->get('sorting', []);
+        $result  = [];
+        if (0 === count($set)) {
             return [];
         }
-        foreach($set as $info) {
-            $column = $info['column'] ?? 'NOPE';
-            $direction = $info['direction'] ?? 'NOPE';
-            if('asc' !== $direction && 'desc' !== $direction) {
+        foreach ($set as $info) {
+            $column          = $info['column'] ?? 'NOPE';
+            $direction       = $info['direction'] ?? 'NOPE';
+            if ('asc' !== $direction && 'desc' !== $direction) {
                 // skip invalid direction
                 continue;
             }
-            if(in_array($column, $allowed, true) === false) {
+            if (false === in_array($column, $allowed, true)) {
                 // skip invalid column
                 continue;
             }
             $result[$column] = $direction;
         }
+
         return $result;
     }
 

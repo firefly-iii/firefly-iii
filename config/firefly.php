@@ -914,9 +914,9 @@ return [
     'preselected_accounts'         => ['all', 'assets', 'liabilities'],
 
     // allowed sort columns for API's
-    'sorting' => [
+    'sorting'                      => [
         'allowed' => [
-            'transactions' => ['description','amount'],
+            'transactions' => ['description', 'amount'],
         ],
     ],
 ];

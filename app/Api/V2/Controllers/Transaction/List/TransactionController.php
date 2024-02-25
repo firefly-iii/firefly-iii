@@ -83,7 +83,7 @@ class TransactionController extends Controller
 
         // collect transactions:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector->setUserGroup(auth()->user()->userGroup)
             ->withAPIInformation()
             ->setStartRow($request->getStartRow())
@@ -92,8 +92,8 @@ class TransactionController extends Controller
             ->setSorting($instructions)
         ;
 
-        $start     = $this->parameters->get('start');
-        $end       = $this->parameters->get('end');
+        $start        = $this->parameters->get('start');
+        $end          = $this->parameters->get('end');
         if (null !== $start) {
             $collector->setStart($start);
         }
@@ -101,8 +101,8 @@ class TransactionController extends Controller
             $collector->setEnd($end);
         }
 
-        $paginator = $collector->getPaginatedGroups();
-        $params    = $request->buildParams();
+        $paginator    = $collector->getPaginatedGroups();
+        $params       = $request->buildParams();
         $paginator->setPath(
             sprintf(
                 '%s?%s',
