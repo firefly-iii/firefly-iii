@@ -285,6 +285,25 @@ interface GroupCollectorInterface
      */
     public function getPaginatedGroups(): LengthAwarePaginator;
 
+    /**
+     *
+     *
+     * @param array $instructions
+     *
+     * @return self
+     */
+    public function setSorting(array $instructions): self;
+
+
+    /**
+     * Sort the collection on a column.
+     *
+     * @param Collection $collection
+     *
+     * @return Collection
+     */
+    public function sortCollection(Collection $collection): Collection;
+
     public function hasAnyTag(): self;
 
     /**

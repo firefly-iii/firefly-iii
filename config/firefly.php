@@ -912,4 +912,11 @@ return [
 
     // preselected account lists possibilities:
     'preselected_accounts'         => ['all', 'assets', 'liabilities'],
+
+    // allowed sort columns for API's
+    'sorting' => [
+        'allowed' => [
+            'transactions' => ['description','amount'],
+        ],
+    ],
 ];

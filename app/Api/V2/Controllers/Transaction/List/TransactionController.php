@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V2\Controllers\Transaction\List;
 
 use FireflyIII\Api\V2\Controllers\Controller;
-use FireflyIII\Api\V2\Request\Model\Transaction\ListByCountRequest;
+use FireflyIII\Api\V2\Request\Model\Transaction\InfiniteListRequest;
 use FireflyIII\Api\V2\Request\Model\Transaction\ListRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Transformers\V2\TransactionGroupTransformer;
@@ -60,9 +60,6 @@ class TransactionController extends Controller
             $collector->setEnd($end);
         }
 
-        //        $collector->dumpQuery();
-        //        exit;
-
         $paginator = $collector->getPaginatedGroups();
         $params    = $request->buildParams($pageSize);
         $paginator->setPath(
@@ -79,8 +76,11 @@ class TransactionController extends Controller
         ;
     }
 
-    public function listByCount(ListByCountRequest $request): JsonResponse
+    public function infiniteList(InfiniteListRequest $request): JsonResponse
     {
+        // get sort instructions
+        $instructions = $request->getSortInstructions();
+
         // collect transactions:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -89,6 +89,7 @@ class TransactionController extends Controller
             ->setStartRow($request->getStartRow())
             ->setEndRow($request->getEndRow())
             ->setTypes($request->getTransactionTypes())
+            ->setSorting($instructions)
         ;
 
         $start     = $this->parameters->get('start');
@@ -105,7 +106,7 @@ class TransactionController extends Controller
         $paginator->setPath(
             sprintf(
                 '%s?%s',
-                route('api.v2.transactions.list'),
+                route('api.v2.infinite.transactions.list'),
                 $params
             )
         );

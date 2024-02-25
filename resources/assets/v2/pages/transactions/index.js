@@ -23,7 +23,6 @@ import dates from "../shared/dates.js";
 import i18next from "i18next";
 import {format} from "date-fns";
 import formatMoney from "../../util/format-money.js";
-import Get from "../../api/v2/model/transaction/get.js";
 import Put from "../../api/v2/model/transaction/put.js";
 
 import {createGrid, ModuleRegistry} from "@ag-grid-community/core";
@@ -39,7 +38,11 @@ import {InfiniteRowModelModule} from '@ag-grid-community/infinite-row-model';
 import DateTimeEditor from "../../support/ag-grid/DateTimeEditor.js";
 
 const ds = new TransactionDataSource();
-ds.setType('withdrawal');
+
+// set type from URL
+const urlParts = window.location.href.split('/');
+const type = urlParts[urlParts.length - 1];
+ds.setType(type);
 
 document.addEventListener('cellEditRequest', () => {
     console.log('Loaded through event listener.');
@@ -61,7 +64,7 @@ const onCellEditRequestMethod = (event) => {
     }
 
     // this needs to be better
-    if('amount' === field) {
+    if ('amount' === field) {
         newValue = event.newValue.amount;
         console.log('New value is now' + newValue);
     }
@@ -94,7 +97,7 @@ document.addEventListener('onCellValueChanged', () => {
     console.log('I just realized a cell value has changed.');
 });
 
-let doOnCellValueChanged = function(e) {
+let doOnCellValueChanged = function (e) {
     console.log('I just realized a cell value has changed.');
 };
 
@@ -138,7 +141,7 @@ const gridOptions = {
         },
         {
             field: "amount",
-            editable: function(params) {
+            editable: function (params) {
                 // only when NO foreign amount.
                 return null === params.data.amount.foreign_amount && null === params.data.amount.foreign_currency_code;
             },
@@ -146,7 +149,7 @@ const gridOptions = {
             cellRenderer(params) {
                 if (params.getValue()) {
                     let returnString = '';
-                    let amount=  parseFloat(params.getValue().amount);
+                    let amount = parseFloat(params.getValue().amount);
                     let obj = params.getValue();
                     let stringClass = 'text-danger';
                     if (obj.type === 'withdrawal') {
@@ -162,7 +165,7 @@ const gridOptions = {
 
                     // foreign amount:
                     if (obj.foreign_amount) {
-                        let foreignAmount=  parseFloat(params.getValue().foreign_amount);
+                        let foreignAmount = parseFloat(params.getValue().foreign_amount);
                         if (obj.type === 'withdrawal') {
                             foreignAmount = foreignAmount * -1;
                         }
@@ -194,7 +197,7 @@ const gridOptions = {
             cellRenderer: function (params) {
                 if (params.getValue()) {
                     let obj = params.getValue();
-                    return '<a href="./accounts/show/'+obj.id+'">' + obj.name + '</a>';
+                    return '<a href="./accounts/show/' + obj.id + '">' + obj.name + '</a>';
                 }
                 return '';
             }
@@ -205,7 +208,7 @@ const gridOptions = {
             cellRenderer: function (params) {
                 if (params.getValue()) {
                     let obj = params.getValue();
-                    return '<a href="./accounts/show/'+obj.id+'">' + obj.name + '</a>';
+                    return '<a href="./accounts/show/' + obj.id + '">' + obj.name + '</a>';
                 }
                 return '';
             }
@@ -216,7 +219,7 @@ const gridOptions = {
             cellRenderer: function (params) {
                 if (params.getValue()) {
                     let obj = params.getValue();
-                    if(null !== obj.id) {
+                    if (null !== obj.id) {
                         return '<a href="./categories/show/' + obj.id + '">' + obj.name + '</a>';
                     }
                 }
@@ -229,7 +232,7 @@ const gridOptions = {
             cellRenderer: function (params) {
                 if (params.getValue()) {
                     let obj = params.getValue();
-                    if(null !== obj.id) {
+                    if (null !== obj.id) {
                         return '<a href="./budgets/show/' + obj.id + '">' + obj.name + '</a>';
                     }
                 }
@@ -294,25 +297,25 @@ let index = function () {
 
 
         },
-        getTransactions(page) {
-            const urlParts = window.location.href.split('/');
-            const type = urlParts[urlParts.length - 1];
-            let getter = new Get();
-
-            getter.list({page: page, type: type}).then(response => {
-                this.parseTransactions(response.data.data)
-
-                // set meta data
-                this.totalPages = response.data.meta.pagination.total_pages;
-                this.perPage = response.data.meta.pagination.per_page;
-                this.page = response.data.meta.pagination.current_page;
-            }).catch(error => {
-                // todo this is auto generated
-                this.notifications.wait.show = false;
-                this.notifications.error.show = true;
-                this.notifications.error.text = error.response.data.message;
-            });
-        },
+        // getTransactions(page) {
+        //     const urlParts = window.location.href.split('/');
+        //     const type = urlParts[urlParts.length - 1];
+        //     let getter = new Get();
+        //
+        //     getter.list({page: page, type: type}).then(response => {
+        //         this.parseTransactions(response.data.data)
+        //
+        //         // set meta data
+        //         this.totalPages = response.data.meta.pagination.total_pages;
+        //         this.perPage = response.data.meta.pagination.per_page;
+        //         this.page = response.data.meta.pagination.current_page;
+        //     }).catch(error => {
+        //         // to do this is auto generated
+        //         this.notifications.wait.show = false;
+        //         this.notifications.error.show = true;
+        //         this.notifications.error.text = error.response.data.message;
+        //     });
+        // },
         parseTransactions(data) {
             // no parse, just save
             for (let i in data) {

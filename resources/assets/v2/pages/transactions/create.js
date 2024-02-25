@@ -175,6 +175,11 @@ let transactions = function () {
                 console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
                 return;
             }
+            if ('unknown' === sourceType && ['Asset account', 'Debt', 'Loan', 'Mortgage'].includes(destType)) {
+                this.groupProperties.transactionType = 'deposit';
+                console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');
+                return;
+            }
             if (['Debt', 'Loan', 'Mortgage'].includes(sourceType) && 'Asset account' === destType) {
                 this.groupProperties.transactionType = 'deposit';
                 console.log('Transaction type is detected to be "' + this.groupProperties.transactionType + '".');

@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 trait CollectorProperties
 {
+
+    public array $sorting;
     public const string TEST = 'Test';
     private ?int $endRow;
     private bool    $expandGroupSearch;

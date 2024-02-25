@@ -24,6 +24,7 @@ export default class TransactionDataSource {
     constructor() {
         this.type = 'all';
         this.rowCount = null;
+        this.sortModel = null;
     }
 
 
@@ -32,9 +33,19 @@ export default class TransactionDataSource {
     }
 
     getRows(params) {
+        console.log('The sort model used is: ', params.sortModel);
+        let sorting = [];
+
+        for(let i in params.sortModel) {
+            if(params.sortModel.hasOwnProperty(i)) {
+                let sort = params.sortModel[i];
+                sorting.push({column: sort.colId, direction: sort.sort});
+            }
+        }
+
         let getter = new Get();
 
-        getter.listByCount({start_row: params.startRow, end_row: params.endRow, type: this.type}).then(response => {
+        getter.infiniteList({start_row: params.startRow, end_row: params.endRow, type: this.type, sorting: sorting}).then(response => {
             this.parseTransactions(response.data.data, params.successCallback);
 
             // set meta data

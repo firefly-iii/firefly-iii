@@ -31,10 +31,10 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class ListRequest
+ * Class InfiniteListRequest
  * Used specifically to list transactions.
  */
-class ListByCountRequest extends FormRequest
+class InfiniteListRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
@@ -86,6 +86,29 @@ class ListByCountRequest extends FormRequest
         $page = $this->convertInteger('page');
 
         return 0 === $page || $page > 65536 ? 1 : $page;
+    }
+
+    public function getSortInstructions(): array {
+        $allowed = config('firefly.sorting.allowed.transactions');
+        $set = $this->get('sorting', []);
+        $result=  [];
+        if(0 === count($set)) {
+            return [];
+        }
+        foreach($set as $info) {
+            $column = $info['column'] ?? 'NOPE';
+            $direction = $info['direction'] ?? 'NOPE';
+            if('asc' !== $direction && 'desc' !== $direction) {
+                // skip invalid direction
+                continue;
+            }
+            if(in_array($column, $allowed, true) === false) {
+                // skip invalid column
+                continue;
+            }
+            $result[$column] = $direction;
+        }
+        return $result;
     }
 
     public function getTransactionTypes(): array
