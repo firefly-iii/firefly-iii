@@ -1095,6 +1095,10 @@ class GroupCollector implements GroupCollectorInterface
     #[\Override]
     public function sortCollection(Collection $collection): Collection
     {
+        /**
+         * @var string $field
+         * @var string $direction
+         */
         foreach ($this->sorting as $field => $direction) {
             $func       = 'ASC' === $direction ? 'sortBy' : 'sortByDesc';
             $collection = $collection->{$func}(function (array $product, int $key) use ($field) {
