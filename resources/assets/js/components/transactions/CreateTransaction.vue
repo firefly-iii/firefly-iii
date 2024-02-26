@@ -746,6 +746,10 @@ export default {
                             case 'budget_id':
                             case 'bill_id':
                             case 'description':
+                            case 'type':
+                                this.transactions[transactionIndex].errors.source_account = [this.$t('firefly.select_source_account')];
+                                this.transactions[transactionIndex].errors.destination_account = [this.$t('firefly.select_dest_account')];
+                                break;
                             case 'tags':
                                 this.transactions[transactionIndex].errors[fieldName] = errors.errors[key];
                                 break;
