@@ -1541,6 +1541,8 @@ return [
     'submission_options'                                  => 'Opcions de tramesa',
     'apply_rules_checkbox'                                => 'Aplicar regles',
     'fire_webhooks_checkbox'                              => 'Disparar webhooks',
+    'select_source_account'                               => 'Please select or type a valid source account name',
+    'select_dest_account'                                 => 'Please select or type a valid destination account name',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'                  => 'Aquesta transacció ja és una retirada',

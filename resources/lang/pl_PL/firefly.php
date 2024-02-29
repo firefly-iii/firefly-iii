@@ -1541,6 +1541,8 @@ return [
     'submission_options'                                  => 'Opcje zapisu',
     'apply_rules_checkbox'                                => 'Zastosuj reguły',
     'fire_webhooks_checkbox'                              => 'Uruchom webhooki',
+    'select_source_account'                               => 'Please select or type a valid source account name',
+    'select_dest_account'                                 => 'Please select or type a valid destination account name',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'                  => 'Ta transakcja jest już wypłatą',

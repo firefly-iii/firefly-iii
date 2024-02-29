@@ -1541,6 +1541,8 @@ return [
     'submission_options'                                  => '제출 옵션',
     'apply_rules_checkbox'                                => '규칙 적용',
     'fire_webhooks_checkbox'                              => '웹훅 실행',
+    'select_source_account'                               => 'Please select or type a valid source account name',
+    'select_dest_account'                                 => 'Please select or type a valid destination account name',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'                  => '이 거래는 이미 출금되었습니다',

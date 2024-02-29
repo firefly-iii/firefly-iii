@@ -1541,6 +1541,8 @@ return [
     'submission_options'                                  => 'Alternativer for innsending',
     'apply_rules_checkbox'                                => 'Bruk regler',
     'fire_webhooks_checkbox'                              => 'Fire webhooks',
+    'select_source_account'                               => 'Please select or type a valid source account name',
+    'select_dest_account'                                 => 'Please select or type a valid destination account name',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'                  => 'Denne transaksjonen er allerede et uttak',
