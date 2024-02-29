@@ -116,7 +116,6 @@ class IndexController extends Controller
 
         // get all available budgets:
         $availableBudgets = $this->getAllAvailableBudgets($start, $end);
-
         // get all active budgets:
         $budgets          = $this->getAllBudgets($start, $end, $currencies, $defaultCurrency);
         $sums             = $this->getSums($budgets);
