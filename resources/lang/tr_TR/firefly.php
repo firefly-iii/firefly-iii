@@ -1542,6 +1542,8 @@ return [
     'submission_options'                                  => 'Submission options',
     'apply_rules_checkbox'                                => 'Apply rules',
     'fire_webhooks_checkbox'                              => 'Fire webhooks',
+    'select_source_account'                               => 'Please select or type a valid source account name',
+    'select_dest_account'                                 => 'Please select or type a valid destination account name',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'                  => 'Bu işlem zaten bir para çekme işlemidir',

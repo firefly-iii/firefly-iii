@@ -1542,6 +1542,8 @@ return [
     'submission_options'                                  => '提交选项',
     'apply_rules_checkbox'                                => '应用规则',
     'fire_webhooks_checkbox'                              => '触发 webhook',
+    'select_source_account'                               => 'Please select or type a valid source account name',
+    'select_dest_account'                                 => 'Please select or type a valid destination account name',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'                  => '此交易已经为支出',

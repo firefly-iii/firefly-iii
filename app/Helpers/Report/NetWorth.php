@@ -51,7 +51,7 @@ class NetWorth implements NetWorthInterface
 
     private CurrencyRepositoryInterface $currencyRepos;
     private User                        $user;
-    private null|UserGroup            $userGroup;
+    private ?UserGroup            $userGroup;
 
     /**
      * This method collects the user's net worth in ALL the user's currencies

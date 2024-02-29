@@ -1541,6 +1541,8 @@ return [
     'submission_options'                                  => 'Übermittlungsoptionen',
     'apply_rules_checkbox'                                => 'Regeln anwenden',
     'fire_webhooks_checkbox'                              => 'Webhooks abfeuern',
+    'select_source_account'                               => 'Please select or type a valid source account name',
+    'select_dest_account'                                 => 'Please select or type a valid destination account name',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'                  => 'Diese Buchung ist bereits eine Ausgabe',

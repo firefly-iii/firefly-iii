@@ -1526,7 +1526,7 @@ return [
     'delete_attachment'                                   => 'Izbriši prilogo ":name"',
     'attachment_deleted'                                  => 'Priloga ":name" izbrisana',
     'liabilities_deleted'                                 => 'Izbrisana odgovornost ":name"',
-    'attachment_updated'                                  => 'Priloga ":name" je posodobljenaj',
+    'attachment_updated'                                  => 'Priloga ":name" je posodobljena',
     'upload_max_file_size'                                => 'Največja velikost datoteke: :size',
     'list_all_attachments'                                => 'Seznam vseh prilog',
 
@@ -1541,6 +1541,8 @@ return [
     'submission_options'                                  => 'Možnosti oddaje',
     'apply_rules_checkbox'                                => 'Uporabite pravila',
     'fire_webhooks_checkbox'                              => 'Sprožite Webhooke',
+    'select_source_account'                               => 'Please select or type a valid source account name',
+    'select_dest_account'                                 => 'Please select or type a valid destination account name',
 
     // convert stuff:
     'convert_is_already_type_Withdrawal'                  => 'Ta transakcija je že odliv',

@@ -645,7 +645,7 @@ class FireflyValidator extends Validator
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function validateUniqueCurrencyCode(null|string $attribute, null|string $value): bool
+    public function validateUniqueCurrencyCode(?string $attribute, ?string $value): bool
     {
         return $this->validateUniqueCurrency('code', (string)$attribute, (string)$value);
     }
@@ -658,12 +658,12 @@ class FireflyValidator extends Validator
         return 0 === \DB::table('transaction_currencies')->where($field, $value)->whereNull('deleted_at')->count();
     }
 
-    public function validateUniqueCurrencyName(null|string $attribute, null|string $value): bool
+    public function validateUniqueCurrencyName(?string $attribute, ?string $value): bool
     {
         return $this->validateUniqueCurrency('name', (string)$attribute, (string)$value);
     }
 
-    public function validateUniqueCurrencySymbol(null|string $attribute, null|string $value): bool
+    public function validateUniqueCurrencySymbol(?string $attribute, ?string $value): bool
     {
         return $this->validateUniqueCurrency('symbol', (string)$attribute, (string)$value);
     }
