@@ -1101,7 +1101,7 @@ class GroupCollector implements GroupCollectorInterface
          */
         foreach ($this->sorting as $field => $direction) {
             $func       = 'ASC' === $direction ? 'sortBy' : 'sortByDesc';
-            $collection = $collection->{$func}(function (array $product, int $key) use ($field) {
+            $collection = $collection->{$func}(function (array $product, int $key) use ($field) { // @phpstan-ignore-line
                 // depends on $field:
                 if ('description' === $field) {
                     if (1 === count($product['transactions'])) {

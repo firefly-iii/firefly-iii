@@ -201,8 +201,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
             $availableBudget             = new AvailableBudget();
             $availableBudget->user()->associate($this->user);
             $availableBudget->transactionCurrency()->associate($currency);
-            $availableBudget->start_date = $start->startOfDay()->format('Y-m-d');
-            $availableBudget->end_date   = $end->endOfDay()->format('Y-m-d');
+            $availableBudget->start_date = $start->startOfDay()->format('Y-m-d'); // @phpstan-ignore-line
+            $availableBudget->end_date   = $end->endOfDay()->format('Y-m-d'); // @phpstan-ignore-line
         }
         $availableBudget->amount = $amount;
         $availableBudget->save();

@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 trait CollectorProperties
 {
+    /** @var array<int, string> */
     public array $sorting;
     public const string TEST = 'Test';
     private ?int $endRow;
