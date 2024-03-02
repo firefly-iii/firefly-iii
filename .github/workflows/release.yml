@@ -51,7 +51,7 @@ jobs:
           CROWDIN_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
       - name: Cleanup translations
         id: cleanup-transactions
-        uses: JC5/firefly-iii-dev@v33
+        uses: JC5/firefly-iii-dev@v34
         with:
           action: 'ff3:crowdin-warning'
           output: ''
@@ -60,7 +60,7 @@ jobs:
           GH_TOKEN: ''
       - name: Cleanup changelog
         id: cleanup-changelog
-        uses: JC5/firefly-iii-dev@v33
+        uses: JC5/firefly-iii-dev@v34
         with:
           action: 'ff3:changelog'
           output: ''
@@ -69,7 +69,7 @@ jobs:
           GH_TOKEN: ${{ secrets.CHANGELOG_TOKEN }}
       - name: Extract changelog
         id: extract-changelog
-        uses: JC5/firefly-iii-dev@v33
+        uses: JC5/firefly-iii-dev@v34
         with:
           action: 'ff3:extract-changelog'
           output: 'output'
@@ -78,7 +78,7 @@ jobs:
           GH_TOKEN: ""
       - name: Replace version
         id: replace-version
-        uses: JC5/firefly-iii-dev@v33
+        uses: JC5/firefly-iii-dev@v34
         with:
           action: 'ff3:version'
           output: ''
@@ -88,7 +88,7 @@ jobs:
           FF_III_VERSION: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
       - name: Generate JSON v1
         id: json-v1
-        uses: JC5/firefly-iii-dev@v33
+        uses: JC5/firefly-iii-dev@v34
         with:
           action: 'ff3:json-translations v1'
           output: ''
@@ -97,7 +97,7 @@ jobs:
           GH_TOKEN: ''
       - name: Generate JSON v2
         id: json-v2
-        uses: JC5/firefly-iii-dev@v33
+        uses: JC5/firefly-iii-dev@v34
         with:
           action: 'ff3:json-translations v2'
           output: ''
@@ -106,7 +106,7 @@ jobs:
           GH_TOKEN: ''
       - name: Code cleanup
         id: code-cleanup
-        uses: JC5/firefly-iii-dev@v33
+        uses: JC5/firefly-iii-dev@v34
         with:
           action: 'ff3:code'
           output: ''
@@ -119,7 +119,7 @@ jobs:
           npm run build
       - name: Build old JS
         id: old-js
-        uses: JC5/firefly-iii-dev@v33
+        uses: JC5/firefly-iii-dev@v34
         with:
           action: 'ff3:old-js'
           output: ''
