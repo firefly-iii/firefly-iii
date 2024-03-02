@@ -112,6 +112,34 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         return $collection;
     }
 
+    /**
+     * Because there is the chance that a group with this name already exists,
+     * Firefly III runs a little loop of combinations to make sure the group name is unique.
+     */
+    private function createNewUserGroup(User $user): UserGroup
+    {
+        $loop          = 0;
+        $groupName     = $user->email;
+        $exists        = true;
+        $existingGroup = null;
+        while ($exists && $loop < 10) {
+            $existingGroup = $this->findByName($groupName);
+            if (null === $existingGroup) {
+                $exists        = false;
+
+                /** @var null|UserGroup $existingGroup */
+                $existingGroup = $this->store(['user' => $user, 'title' => $groupName]);
+            }
+            if (null !== $existingGroup) {
+                // group already exists
+                $groupName = sprintf('%s-%s', $user->email, substr(sha1(rand(1000, 9999).microtime()), 0, 4));
+            }
+            ++$loop;
+        }
+
+        return $existingGroup;
+    }
+
     public function findByName(string $title): ?UserGroup
     {
         return UserGroup::whereTitle($title)->first();
@@ -213,8 +241,8 @@ class UserGroupRepository implements UserGroupRepositoryInterface
             if (
                 0 === $ownerCount
                 && (0 === count($data['roles'])
-                 || (count($data['roles']) > 0 // @phpstan-ignore-line
-                  && !in_array(UserRoleEnum::OWNER->value, $data['roles'], true)))) {
+                    || (count($data['roles']) > 0 // @phpstan-ignore-line
+                        && !in_array(UserRoleEnum::OWNER->value, $data['roles'], true)))) {
                 app('log')->debug('User needs to keep owner role in this group, refuse to act');
 
                 throw new FireflyException('The last owner in this user group must keep the "owner" role.');
@@ -237,34 +265,6 @@ class UserGroupRepository implements UserGroupRepositoryInterface
         }
 
         return $userGroup;
-    }
-
-    /**
-     * Because there is the chance that a group with this name already exists,
-     * Firefly III runs a little loop of combinations to make sure the group name is unique.
-     */
-    private function createNewUserGroup(User $user): UserGroup
-    {
-        $loop          = 0;
-        $groupName     = $user->email;
-        $exists        = true;
-        $existingGroup = null;
-        while ($exists && $loop < 10) {
-            $existingGroup = $this->findByName($groupName);
-            if (null === $existingGroup) {
-                $exists        = false;
-
-                /** @var null|UserGroup $existingGroup */
-                $existingGroup = $this->store(['user' => $user, 'title' => $groupName]);
-            }
-            if (null !== $existingGroup) {
-                // group already exists
-                $groupName = sprintf('%s-%s', $user->email, substr(sha1(rand(1000, 9999).microtime()), 0, 4));
-            }
-            ++$loop;
-        }
-
-        return $existingGroup;
     }
 
     private function simplifyListByName(array $roles): array

@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.1.10 - 2024-03-03
+
+### Added
+
+- Add missing translations for rule page.
+
+### Changed
+
+- The update checker can also deal with development releases
+- Rule actions no longer complain when the category is already set
+
+### Removed
+
+- Unused translation on budget page
+
+### Fixed
+
+- #8521
+- #8544 
+- #8555 
+- #8557
+- #8575
+- #8578
+- Errors in incoming webhook URLs are properly caught
+
+### Security
+
+- Improved Host header validation to prevent a potential attack, reported by Raqib Iskenderli 
+
 ## 6.1.9 - 2024-02-06
 
 ### Fixed

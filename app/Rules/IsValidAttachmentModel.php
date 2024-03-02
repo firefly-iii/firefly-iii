@@ -57,6 +57,15 @@ class IsValidAttachmentModel implements ValidationRule
         $this->model = $model;
     }
 
+    private function normalizeModel(string $model): string
+    {
+        $search  = ['FireflyIII\Models\\'];
+        $replace = '';
+        $model   = str_replace($search, $replace, $model);
+
+        return sprintf('FireflyIII\Models\%s', $model);
+    }
+
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -82,15 +91,6 @@ class IsValidAttachmentModel implements ValidationRule
         if (false === $result) {
             $fail('validation.model_id_invalid')->translate();
         }
-    }
-
-    private function normalizeModel(string $model): string
-    {
-        $search  = ['FireflyIII\Models\\'];
-        $replace = '';
-        $model   = str_replace($search, $replace, $model);
-
-        return sprintf('FireflyIII\Models\%s', $model);
     }
 
     private function validateAccount(int $value): bool

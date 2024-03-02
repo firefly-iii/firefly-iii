@@ -40,7 +40,7 @@ class BudgetObserver
         $budgetLimits = $budget->budgetlimits()->get();
 
         /** @var BudgetLimit $budgetLimit */
-        foreach($budgetLimits as $budgetLimit) {
+        foreach ($budgetLimits as $budgetLimit) {
             // this loop exists so several events are fired.
             $budgetLimit->delete();
         }

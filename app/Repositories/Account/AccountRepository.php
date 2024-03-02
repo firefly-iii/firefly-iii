@@ -389,7 +389,7 @@ class AccountRepository implements AccountRepositoryInterface
         if (!in_array($type, $list, true)) {
             return null;
         }
-        $currencyId = (int) $this->getMetaValue($account, 'currency_id');
+        $currencyId = (int)$this->getMetaValue($account, 'currency_id');
         if ($currencyId > 0) {
             return TransactionCurrency::find($currencyId);
         }
@@ -411,7 +411,7 @@ class AccountRepository implements AccountRepositoryInterface
             return null;
         }
         if (1 === $result->count()) {
-            return (string) $result->first()->data;
+            return (string)$result->first()->data;
         }
 
         return null;
@@ -432,8 +432,8 @@ class AccountRepository implements AccountRepositoryInterface
         $info        = $account->transactions()->get(['transaction_currency_id', 'foreign_currency_id'])->toArray();
         $currencyIds = [];
         foreach ($info as $entry) {
-            $currencyIds[] = (int) $entry['transaction_currency_id'];
-            $currencyIds[] = (int) $entry['foreign_currency_id'];
+            $currencyIds[] = (int)$entry['transaction_currency_id'];
+            $currencyIds[] = (int)$entry['foreign_currency_id'];
         }
         $currencyIds = array_unique($currencyIds);
 
@@ -456,14 +456,14 @@ class AccountRepository implements AccountRepositoryInterface
             AccountType::MORTGAGE => [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE],
         ];
         if (array_key_exists(ucfirst($type), $sets)) {
-            $order = (int) $this->getAccountsByType($sets[ucfirst($type)])->max('order');
+            $order = (int)$this->getAccountsByType($sets[ucfirst($type)])->max('order');
             app('log')->debug(sprintf('Return max order of "%s" set: %d', $type, $order));
 
             return $order;
         }
         $specials = [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION];
 
-        $order    = (int) $this->getAccountsByType($specials)->max('order');
+        $order    = (int)$this->getAccountsByType($specials)->max('order');
         app('log')->debug(sprintf('Return max order of "%s" set (specials!): %d', $type, $order));
 
         return $order;
@@ -544,7 +544,7 @@ class AccountRepository implements AccountRepositoryInterface
 
                     continue;
                 }
-                if ($index !== (int) $account->order) {
+                if ($index !== (int)$account->order) {
                     app('log')->debug(sprintf('Account #%d ("%s"): order should %d be but is %d.', $account->id, $account->name, $index, $account->order));
                     $account->order = $index;
                     $account->save();

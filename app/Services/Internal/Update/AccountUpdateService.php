@@ -109,55 +109,6 @@ class AccountUpdateService
         $this->user = $user;
     }
 
-    public function updateAccountOrder(Account $account, array $data): Account
-    {
-        // skip if no order info
-        if (!array_key_exists('order', $data) || $data['order'] === $account->order) {
-            app('log')->debug(sprintf('Account order will not be touched because its not set or already at %d.', $account->order));
-
-            return $account;
-        }
-        // skip if not of orderable type.
-        $type           = $account->accountType->type;
-        if (!in_array($type, [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], true)) {
-            app('log')->debug('Will not change order of this account.');
-
-            return $account;
-        }
-        // get account type ID's because a join and an update is hard:
-        $oldOrder       = $account->order;
-        $newOrder       = $data['order'];
-        app('log')->debug(sprintf('Order is set to be updated from %s to %s', $oldOrder, $newOrder));
-        $list           = $this->getTypeIds([AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT]);
-        if (AccountType::ASSET === $type) {
-            $list = $this->getTypeIds([AccountType::ASSET]);
-        }
-
-        if ($newOrder > $oldOrder) {
-            $this->user->accounts()->where('accounts.order', '<=', $newOrder)->where('accounts.order', '>', $oldOrder)
-                ->where('accounts.id', '!=', $account->id)
-                ->whereIn('accounts.account_type_id', $list)
-                ->decrement('order')
-            ;
-            $account->order = $newOrder;
-            app('log')->debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
-            $account->save();
-
-            return $account;
-        }
-
-        $this->user->accounts()->where('accounts.order', '>=', $newOrder)->where('accounts.order', '<', $oldOrder)
-            ->where('accounts.id', '!=', $account->id)
-            ->whereIn('accounts.account_type_id', $list)
-            ->increment('order')
-        ;
-        $account->order = $newOrder;
-        app('log')->debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
-        $account->save();
-
-        return $account;
-    }
-
     private function updateAccount(Account $account, array $data): Account
     {
         // update the account itself:
@@ -207,6 +158,55 @@ class AccountUpdateService
     private function getAccountType(string $type): AccountType
     {
         return AccountType::whereType(ucfirst($type))->first();
+    }
+
+    public function updateAccountOrder(Account $account, array $data): Account
+    {
+        // skip if no order info
+        if (!array_key_exists('order', $data) || $data['order'] === $account->order) {
+            app('log')->debug(sprintf('Account order will not be touched because its not set or already at %d.', $account->order));
+
+            return $account;
+        }
+        // skip if not of orderable type.
+        $type           = $account->accountType->type;
+        if (!in_array($type, [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT], true)) {
+            app('log')->debug('Will not change order of this account.');
+
+            return $account;
+        }
+        // get account type ID's because a join and an update is hard:
+        $oldOrder       = $account->order;
+        $newOrder       = $data['order'];
+        app('log')->debug(sprintf('Order is set to be updated from %s to %s', $oldOrder, $newOrder));
+        $list           = $this->getTypeIds([AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT]);
+        if (AccountType::ASSET === $type) {
+            $list = $this->getTypeIds([AccountType::ASSET]);
+        }
+
+        if ($newOrder > $oldOrder) {
+            $this->user->accounts()->where('accounts.order', '<=', $newOrder)->where('accounts.order', '>', $oldOrder)
+                ->where('accounts.id', '!=', $account->id)
+                ->whereIn('accounts.account_type_id', $list)
+                ->decrement('order')
+            ;
+            $account->order = $newOrder;
+            app('log')->debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
+            $account->save();
+
+            return $account;
+        }
+
+        $this->user->accounts()->where('accounts.order', '>=', $newOrder)->where('accounts.order', '<', $oldOrder)
+            ->where('accounts.id', '!=', $account->id)
+            ->whereIn('accounts.account_type_id', $list)
+            ->increment('order')
+        ;
+        $account->order = $newOrder;
+        app('log')->debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
+        $account->save();
+
+        return $account;
     }
 
     private function getTypeIds(array $array): array

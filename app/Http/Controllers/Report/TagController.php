@@ -279,8 +279,8 @@ class TagController extends Controller
                     ];
                     ++$result[$key]['transactions'];
                     $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
-                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
-                    $result[$key]['avg_float'] = (float) $result[$key]['avg'];
+                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
+                    $result[$key]['avg_float'] = (float)$result[$key]['avg'];
                 }
             }
         }
@@ -329,8 +329,8 @@ class TagController extends Controller
                     ];
                     ++$result[$key]['transactions'];
                     $result[$key]['sum']       = bcadd($journal['amount'], $result[$key]['sum']);
-                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
-                    $result[$key]['avg_float'] = (float) $result[$key]['avg'];
+                    $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string)$result[$key]['transactions']);
+                    $result[$key]['avg_float'] = (float)$result[$key]['avg'];
                 }
             }
         }
@@ -387,7 +387,7 @@ class TagController extends Controller
             /** @var array $tag */
             foreach ($currency['tags'] as $tag) {
                 $tagId = $tag['id'];
-                if(!array_key_exists($tagId, $report)) {
+                if (!array_key_exists($tagId, $report)) {
                     continue;
                 }
                 foreach ($tag['transaction_journals'] as $journal) {
@@ -425,7 +425,7 @@ class TagController extends Controller
             /** @var array $tag */
             foreach ($currency['tags'] as $tag) {
                 $tagId = $tag['id'];
-                if(!array_key_exists($tagId, $report)) {
+                if (!array_key_exists($tagId, $report)) {
                     continue;
                 }
                 foreach ($tag['transaction_journals'] as $journal) {
@@ -466,7 +466,7 @@ class TagController extends Controller
                     $result[] = [
                         'description'              => $journal['description'],
                         'transaction_group_id'     => $journal['transaction_group_id'],
-                        'amount_float'             => (float) $journal['amount'],
+                        'amount_float'             => (float)$journal['amount'],
                         'amount'                   => $journal['amount'],
                         'date'                     => $journal['date']->isoFormat($this->monthAndDayFormat),
                         'date_sort'                => $journal['date']->format('Y-m-d'),
@@ -514,7 +514,7 @@ class TagController extends Controller
                     $result[] = [
                         'description'             => $journal['description'],
                         'transaction_group_id'    => $journal['transaction_group_id'],
-                        'amount_float'            => (float) $journal['amount'], // intentional float.
+                        'amount_float'            => (float)$journal['amount'], // intentional float.
                         'amount'                  => $journal['amount'],
                         'date'                    => $journal['date']->isoFormat($this->monthAndDayFormat),
                         'date_sort'               => $journal['date']->format('Y-m-d'),

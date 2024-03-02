@@ -81,6 +81,27 @@ trait AttachmentCollection
         return $this;
     }
 
+    /**
+     * Join table to get attachment information.
+     */
+    private function joinAttachmentTables(): void
+    {
+        if (false === $this->hasJoinedAttTables) {
+            // join some extra tables:
+            $this->hasJoinedAttTables = true;
+            $this->query->leftJoin('attachments', 'attachments.attachable_id', '=', 'transaction_journals.id')
+                ->where(
+                    static function (EloquentBuilder $q1): void { // @phpstan-ignore-line
+                        $q1->where('attachments.attachable_type', TransactionJournal::class);
+                        $q1->where('attachments.uploaded', true);
+                        $q1->whereNull('attachments.deleted_at');
+                        $q1->orWhereNull('attachments.attachable_type');
+                    }
+                )
+            ;
+        }
+    }
+
     public function withAttachmentInformation(): GroupCollectorInterface
     {
         $this->fields[] = 'attachments.id as attachment_id';
@@ -510,26 +531,5 @@ trait AttachmentCollection
         });
 
         return $this;
-    }
-
-    /**
-     * Join table to get attachment information.
-     */
-    private function joinAttachmentTables(): void
-    {
-        if (false === $this->hasJoinedAttTables) {
-            // join some extra tables:
-            $this->hasJoinedAttTables = true;
-            $this->query->leftJoin('attachments', 'attachments.attachable_id', '=', 'transaction_journals.id')
-                ->where(
-                    static function (EloquentBuilder $q1): void { // @phpstan-ignore-line
-                        $q1->where('attachments.attachable_type', TransactionJournal::class);
-                        $q1->where('attachments.uploaded', true);
-                        $q1->whereNull('attachments.deleted_at');
-                        $q1->orWhereNull('attachments.attachable_type');
-                    }
-                )
-            ;
-        }
     }
 }

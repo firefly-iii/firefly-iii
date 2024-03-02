@@ -189,6 +189,14 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
     }
 
+    private function getBudgets(): Collection
+    {
+        /** @var BudgetRepositoryInterface $repos */
+        $repos = app(BudgetRepositoryInterface::class);
+
+        return $repos->getActiveBudgets();
+    }
+
     /**
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
@@ -287,13 +295,5 @@ class OperationsRepository implements OperationsRepositoryInterface
         }
 
         return $array;
-    }
-
-    private function getBudgets(): Collection
-    {
-        /** @var BudgetRepositoryInterface $repos */
-        $repos = app(BudgetRepositoryInterface::class);
-
-        return $repos->getActiveBudgets();
     }
 }

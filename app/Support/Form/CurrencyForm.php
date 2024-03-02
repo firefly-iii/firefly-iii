@@ -48,64 +48,6 @@ class CurrencyForm
     }
 
     /**
-     * TODO describe and cleanup.
-     *
-     * @param mixed $value
-     *
-     * @throws FireflyException
-     */
-    public function balanceAll(string $name, $value = null, array $options = null): string
-    {
-        return $this->allCurrencyField($name, 'balance', $value, $options);
-    }
-
-    /**
-     * TODO cleanup and describe
-     *
-     * @param mixed $value
-     */
-    public function currencyList(string $name, $value = null, array $options = null): string
-    {
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
-
-        // get all currencies:
-        $list          = $currencyRepos->get();
-        $array         = [];
-
-        /** @var TransactionCurrency $currency */
-        foreach ($list as $currency) {
-            $array[$currency->id] = $currency->name.' ('.$currency->symbol.')';
-        }
-
-        return $this->select($name, $array, $value, $options);
-    }
-
-    /**
-     * TODO cleanup and describe
-     *
-     * @param mixed $value
-     */
-    public function currencyListEmpty(string $name, $value = null, array $options = null): string
-    {
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
-
-        // get all currencies:
-        $list          = $currencyRepos->get();
-        $array         = [
-            0 => (string)trans('firefly.no_currency'),
-        ];
-
-        /** @var TransactionCurrency $currency */
-        foreach ($list as $currency) {
-            $array[$currency->id] = $currency->name.' ('.$currency->symbol.')';
-        }
-
-        return $this->select($name, $array, $value, $options);
-    }
-
-    /**
      * @throws FireflyException
      */
     protected function currencyField(string $name, string $view, mixed $value = null, array $options = null): string
@@ -155,6 +97,18 @@ class CurrencyForm
         }
 
         return $html;
+    }
+
+    /**
+     * TODO describe and cleanup.
+     *
+     * @param mixed $value
+     *
+     * @throws FireflyException
+     */
+    public function balanceAll(string $name, $value = null, array $options = null): string
+    {
+        return $this->allCurrencyField($name, 'balance', $value, $options);
     }
 
     /**
@@ -212,5 +166,51 @@ class CurrencyForm
         }
 
         return $html;
+    }
+
+    /**
+     * TODO cleanup and describe
+     *
+     * @param mixed $value
+     */
+    public function currencyList(string $name, $value = null, array $options = null): string
+    {
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        // get all currencies:
+        $list          = $currencyRepos->get();
+        $array         = [];
+
+        /** @var TransactionCurrency $currency */
+        foreach ($list as $currency) {
+            $array[$currency->id] = $currency->name.' ('.$currency->symbol.')';
+        }
+
+        return $this->select($name, $array, $value, $options);
+    }
+
+    /**
+     * TODO cleanup and describe
+     *
+     * @param mixed $value
+     */
+    public function currencyListEmpty(string $name, $value = null, array $options = null): string
+    {
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        // get all currencies:
+        $list          = $currencyRepos->get();
+        $array         = [
+            0 => (string)trans('firefly.no_currency'),
+        ];
+
+        /** @var TransactionCurrency $currency */
+        foreach ($list as $currency) {
+            $array[$currency->id] = $currency->name.' ('.$currency->symbol.')';
+        }
+
+        return $this->select($name, $array, $value, $options);
     }
 }

@@ -300,8 +300,10 @@
 
                                     <!-- do foreign amount -->
                                     {% if null != journal.foreign_amount %}
-                                        {% if first.transactiontype.type == 'Withdrawal' or first.transactiontype.type == 'Deposit' %}
+                                        {% if first.transactiontype.type == 'Withdrawal' %}
                                             ({{ formatAmountBySymbol(journal.foreign_amount*-1, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
+                                        {% elseif first.transactiontype.type == 'Deposit' %}
+                                            ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places) }})
                                         {% elseif first.transactiontype.type == 'Transfer' %}
                                             <span class="text-info money-transfer">
                                         ({{ formatAmountBySymbol(journal.foreign_amount, journal.foreign_currency_symbol, journal.foreign_currency_decimal_places, false) }})

@@ -142,49 +142,6 @@ class TransactionJournalFactory
     }
 
     /**
-     * Set the user.
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-        $this->currencyRepository->setUser($this->user);
-        $this->tagFactory->setUser($user);
-        $this->billRepository->setUser($this->user);
-        $this->budgetRepository->setUser($this->user);
-        $this->categoryRepository->setUser($this->user);
-        $this->piggyRepository->setUser($this->user);
-        $this->accountRepository->setUser($this->user);
-    }
-
-    public function setErrorOnHash(bool $errorOnHash): void
-    {
-        $this->errorOnHash = $errorOnHash;
-        if (true === $errorOnHash) {
-            app('log')->info('Will trigger duplication alert for this journal.');
-        }
-    }
-
-    protected function storeMeta(TransactionJournal $journal, NullArrayObject $data, string $field): void
-    {
-        $set     = [
-            'journal' => $journal,
-            'name'    => $field,
-            'data'    => (string) ($data[$field] ?? ''),
-        ];
-        if ($data[$field] instanceof Carbon) {
-            $data[$field]->setTimezone(config('app.timezone'));
-            app('log')->debug(sprintf('%s Date: %s (%s)', $field, $data[$field], $data[$field]->timezone->getName()));
-            $set['data'] = $data[$field]->format('Y-m-d H:i:s');
-        }
-
-        app('log')->debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
-
-        /** @var TransactionJournalMetaFactory $factory */
-        $factory = app(TransactionJournalMetaFactory::class);
-        $factory->updateOrCreate($set);
-    }
-
-    /**
      * TODO typeOverrule: the account validator may have another opinion on the transaction type. not sure what to do
      * with this.
      *
@@ -203,11 +160,11 @@ class TransactionJournalFactory
         $type                  = $this->typeRepository->findTransactionType(null, $row['type']);
         $carbon                = $row['date'] ?? today(config('app.timezone'));
         $order                 = $row['order'] ?? 0;
-        $currency              = $this->currencyRepository->findCurrency((int) $row['currency_id'], $row['currency_code']);
+        $currency              = $this->currencyRepository->findCurrency((int)$row['currency_id'], $row['currency_code']);
         $foreignCurrency       = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);
-        $bill                  = $this->billRepository->findBill((int) $row['bill_id'], $row['bill_name']);
+        $bill                  = $this->billRepository->findBill((int)$row['bill_id'], $row['bill_name']);
         $billId                = TransactionType::WITHDRAWAL === $type->type && null !== $bill ? $bill->id : null;
-        $description           = (string) $row['description'];
+        $description           = (string)$row['description'];
 
         // Manipulate basic fields
         $carbon->setTimezone(config('app.timezone'));
@@ -286,7 +243,7 @@ class TransactionJournalFactory
         $transactionFactory->setReconciled($row['reconciled'] ?? false);
 
         try {
-            $negative = $transactionFactory->createNegative((string) $row['amount'], (string) $row['foreign_amount']);
+            $negative = $transactionFactory->createNegative((string)$row['amount'], (string)$row['foreign_amount']);
         } catch (FireflyException $e) {
             app('log')->error(sprintf('Exception creating negative transaction: %s', $e->getMessage()));
             $this->forceDeleteOnError(new Collection([$journal]));
@@ -305,7 +262,7 @@ class TransactionJournalFactory
         $transactionFactory->setReconciled($row['reconciled'] ?? false);
 
         try {
-            $transactionFactory->createPositive((string) $row['amount'], (string) $row['foreign_amount']);
+            $transactionFactory->createPositive((string)$row['amount'], (string)$row['foreign_amount']);
         } catch (FireflyException $e) {
             app('log')->error(sprintf('Exception creating positive transaction: %s', $e->getMessage()));
             $this->forceTrDelete($negative);
@@ -324,18 +281,6 @@ class TransactionJournalFactory
         $this->storeLocation($journal, $row);
 
         return $journal;
-    }
-
-    private function storeLocation(TransactionJournal $journal, NullArrayObject $data): void
-    {
-        if (true === $data['store_location']) {
-            $location             = new Location();
-            $location->longitude  = $data['longitude'];
-            $location->latitude   = $data['latitude'];
-            $location->zoom_level = $data['zoom_level'];
-            $location->locatable()->associate($journal);
-            $location->save();
-        }
     }
 
     private function hashArray(NullArrayObject $row): string
@@ -382,7 +327,7 @@ class TransactionJournalFactory
             app('log')->warning(sprintf('Found a duplicate in errorIfDuplicate because hash %s is not unique!', $hash));
             $journal = $result->transactionJournal()->withTrashed()->first();
             $group   = $journal?->transactionGroup()->withTrashed()->first();
-            $groupId = (int) $group?->id;
+            $groupId = (int)$group?->id;
 
             throw new DuplicateTransactionException(sprintf('Duplicate of transaction #%d.', $groupId));
         }
@@ -400,10 +345,10 @@ class TransactionJournalFactory
 
         // validate source account.
         $array            = [
-            'id'     => null !== $data['source_id'] ? (int) $data['source_id'] : null,
-            'name'   => null !== $data['source_name'] ? (string) $data['source_name'] : null,
-            'iban'   => null !== $data['source_iban'] ? (string) $data['source_iban'] : null,
-            'number' => null !== $data['source_number'] ? (string) $data['source_number'] : null,
+            'id'     => null !== $data['source_id'] ? (int)$data['source_id'] : null,
+            'name'   => null !== $data['source_name'] ? (string)$data['source_name'] : null,
+            'iban'   => null !== $data['source_iban'] ? (string)$data['source_iban'] : null,
+            'number' => null !== $data['source_number'] ? (string)$data['source_number'] : null,
         ];
         $validSource      = $this->accountValidator->validateSource($array);
 
@@ -415,10 +360,10 @@ class TransactionJournalFactory
 
         // validate destination account
         $array            = [
-            'id'     => null !== $data['destination_id'] ? (int) $data['destination_id'] : null,
-            'name'   => null !== $data['destination_name'] ? (string) $data['destination_name'] : null,
-            'iban'   => null !== $data['destination_iban'] ? (string) $data['destination_iban'] : null,
-            'number' => null !== $data['destination_number'] ? (string) $data['destination_number'] : null,
+            'id'     => null !== $data['destination_id'] ? (int)$data['destination_id'] : null,
+            'name'   => null !== $data['destination_name'] ? (string)$data['destination_name'] : null,
+            'iban'   => null !== $data['destination_iban'] ? (string)$data['destination_iban'] : null,
+            'number' => null !== $data['destination_number'] ? (string)$data['destination_number'] : null,
         ];
 
         $validDestination = $this->accountValidator->validateDestination($array);
@@ -426,6 +371,21 @@ class TransactionJournalFactory
         if (false === $validDestination) {
             throw new FireflyException(sprintf('Destination: %s', $this->accountValidator->destError));
         }
+    }
+
+    /**
+     * Set the user.
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+        $this->currencyRepository->setUser($this->user);
+        $this->tagFactory->setUser($user);
+        $this->billRepository->setUser($this->user);
+        $this->budgetRepository->setUser($this->user);
+        $this->categoryRepository->setUser($this->user);
+        $this->piggyRepository->setUser($this->user);
+        $this->accountRepository->setUser($this->user);
     }
 
     private function reconciliationSanityCheck(?Account $sourceAccount, ?Account $destinationAccount): array
@@ -550,7 +510,7 @@ class TransactionJournalFactory
     {
         app('log')->debug('Will now store piggy event.');
 
-        $piggyBank = $this->piggyRepository->findPiggyBank((int) $data['piggy_bank_id'], $data['piggy_bank_name']);
+        $piggyBank = $this->piggyRepository->findPiggyBank((int)$data['piggy_bank_id'], $data['piggy_bank_name']);
 
         if (null !== $piggyBank) {
             $this->piggyEventFactory->create($journal, $piggyBank);
@@ -565,6 +525,46 @@ class TransactionJournalFactory
     {
         foreach ($this->fields as $field) {
             $this->storeMeta($journal, $transaction, $field);
+        }
+    }
+
+    protected function storeMeta(TransactionJournal $journal, NullArrayObject $data, string $field): void
+    {
+        $set     = [
+            'journal' => $journal,
+            'name'    => $field,
+            'data'    => (string)($data[$field] ?? ''),
+        ];
+        if ($data[$field] instanceof Carbon) {
+            $data[$field]->setTimezone(config('app.timezone'));
+            app('log')->debug(sprintf('%s Date: %s (%s)', $field, $data[$field], $data[$field]->timezone->getName()));
+            $set['data'] = $data[$field]->format('Y-m-d H:i:s');
+        }
+
+        app('log')->debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
+
+        /** @var TransactionJournalMetaFactory $factory */
+        $factory = app(TransactionJournalMetaFactory::class);
+        $factory->updateOrCreate($set);
+    }
+
+    private function storeLocation(TransactionJournal $journal, NullArrayObject $data): void
+    {
+        if (true === $data['store_location']) {
+            $location             = new Location();
+            $location->longitude  = $data['longitude'];
+            $location->latitude   = $data['latitude'];
+            $location->zoom_level = $data['zoom_level'];
+            $location->locatable()->associate($journal);
+            $location->save();
+        }
+    }
+
+    public function setErrorOnHash(bool $errorOnHash): void
+    {
+        $this->errorOnHash = $errorOnHash;
+        if (true === $errorOnHash) {
+            app('log')->info('Will trigger duplication alert for this journal.');
         }
     }
 }

@@ -29,54 +29,18 @@ use Illuminate\Support\Facades\Log;
 
 class SummaryBalanceGrouped
 {
-    private const string SUM             = 'sum';
-    private TransactionCurrency $default;
-    private array               $amounts = [];
-    private array               $keys;
-    private array               $currencies;
+    private const string SUM                     = 'sum';
+    private array                       $amounts = [];
+    private array                       $currencies;
     private CurrencyRepositoryInterface $currencyRepository;
+    private TransactionCurrency         $default;
+    private array                       $keys;
 
     public function __construct()
     {
         $this->keys               = [self::SUM];
         $this->currencies         = [];
         $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-    }
-
-    public function groupTransactions(string $key, array $journals): void
-    {
-        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
-        Log::debug(sprintf('Now in groupTransactions with key "%s" and %d journal(s)', $key, count($journals)));
-        $converter    = new ExchangeRateConverter();
-        $this->keys[] = $key;
-        $multiplier   = 'income' === $key ? '-1' : '1';
-
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            // transaction info:
-            $currencyId                            = (int)$journal['currency_id'];
-            $amount                                = bcmul($journal['amount'], $multiplier);
-            $currency                              = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
-            $this->currencies[$currencyId]         = $currency;
-            $nativeAmount                          = $converter->convert($currency, $this->default, $journal['date'], $amount);
-            if ((int)$journal['foreign_currency_id'] === $this->default->id) {
-                // use foreign amount instead
-                $nativeAmount = $journal['foreign_amount'];
-            }
-            // prep the arrays
-            $this->amounts[$key]                   ??= [];
-            $this->amounts[$key][$currencyId]      ??= '0';
-            $this->amounts[$key]['native']         ??= '0';
-            $this->amounts[self::SUM][$currencyId] ??= '0';
-            $this->amounts[self::SUM]['native']    ??= '0';
-
-            // add values:
-            $this->amounts[$key][$currencyId]      = bcadd($this->amounts[$key][$currencyId], $amount);
-            $this->amounts[self::SUM][$currencyId] = bcadd($this->amounts[self::SUM][$currencyId], $amount);
-            $this->amounts[$key]['native']         = bcadd($this->amounts[$key]['native'], $nativeAmount);
-            $this->amounts[self::SUM]['native']    = bcadd($this->amounts[self::SUM]['native'], $nativeAmount);
-        }
-        $converter->summarize();
     }
 
     public function groupData(): array
@@ -130,6 +94,42 @@ class SummaryBalanceGrouped
         }
 
         return $return;
+    }
+
+    public function groupTransactions(string $key, array $journals): void
+    {
+        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+        Log::debug(sprintf('Now in groupTransactions with key "%s" and %d journal(s)', $key, count($journals)));
+        $converter    = new ExchangeRateConverter();
+        $this->keys[] = $key;
+        $multiplier   = 'income' === $key ? '-1' : '1';
+
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            // transaction info:
+            $currencyId                            = (int)$journal['currency_id'];
+            $amount                                = bcmul($journal['amount'], $multiplier);
+            $currency                              = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
+            $this->currencies[$currencyId]         = $currency;
+            $nativeAmount                          = $converter->convert($currency, $this->default, $journal['date'], $amount);
+            if ((int)$journal['foreign_currency_id'] === $this->default->id) {
+                // use foreign amount instead
+                $nativeAmount = $journal['foreign_amount'];
+            }
+            // prep the arrays
+            $this->amounts[$key]                   ??= [];
+            $this->amounts[$key][$currencyId]      ??= '0';
+            $this->amounts[$key]['native']         ??= '0';
+            $this->amounts[self::SUM][$currencyId] ??= '0';
+            $this->amounts[self::SUM]['native']    ??= '0';
+
+            // add values:
+            $this->amounts[$key][$currencyId]      = bcadd($this->amounts[$key][$currencyId], $amount);
+            $this->amounts[self::SUM][$currencyId] = bcadd($this->amounts[self::SUM][$currencyId], $amount);
+            $this->amounts[$key]['native']         = bcadd($this->amounts[$key]['native'], $nativeAmount);
+            $this->amounts[self::SUM]['native']    = bcadd($this->amounts[self::SUM]['native'], $nativeAmount);
+        }
+        $converter->summarize();
     }
 
     public function setDefault(TransactionCurrency $default): void

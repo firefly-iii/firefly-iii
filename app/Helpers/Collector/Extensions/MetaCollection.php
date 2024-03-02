@@ -171,6 +171,19 @@ trait MetaCollection
         return $this;
     }
 
+    /**
+     * Join table to get tag information.
+     */
+    protected function joinMetaDataTables(): void
+    {
+        if (false === $this->hasJoinedMetaTables) {
+            $this->hasJoinedMetaTables = true;
+            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
+            $this->fields[]            = 'journal_meta.name as meta_name';
+            $this->fields[]            = 'journal_meta.data as meta_data';
+        }
+    }
+
     public function excludeExternalUrl(string $url): GroupCollectorInterface
     {
         $this->joinMetaDataTables();
@@ -369,6 +382,19 @@ trait MetaCollection
         return $this;
     }
 
+    /**
+     * Join table to get tag information.
+     */
+    protected function joinTagTables(): void
+    {
+        if (false === $this->hasJoinedTagTables) {
+            // join some extra tables:
+            $this->hasJoinedTagTables = true;
+            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
+        }
+    }
+
     public function internalReferenceContains(string $internalReference): GroupCollectorInterface
     {
         $internalReference = (string)json_encode($internalReference);
@@ -540,6 +566,63 @@ trait MetaCollection
     }
 
     /**
+     * Limit results to a SPECIFIC set of tags.
+     */
+    public function setAllTags(Collection $tags): GroupCollectorInterface
+    {
+        Log::debug(sprintf('Now in setAllTags(%d tag(s))', $tags->count()));
+        $this->withTagInformation();
+        $this->query->whereNotNull('tag_transaction_journal.tag_id');
+
+        // this method adds a "postFilter" to the collector.
+        $list                = $tags->pluck('tag')->toArray();
+        $list                = array_map('strtolower', $list);
+        $filter              = static function (array $object) use ($list): bool|array {
+            $includedJournals       = [];
+            $return                 = $object;
+            unset($return['transactions']);
+            $return['transactions'] = [];
+            Log::debug(sprintf('Now in setAllTags(%s) filter', implode(', ', $list)));
+            $expectedTagCount       = count($list);
+            $foundTagCount          = 0;
+            foreach ($object['transactions'] as $transaction) {
+                $transactionTagCount = count($transaction['tags']);
+                app('log')->debug(sprintf('Transaction #%d has %d tag(s)', $transaction['transaction_journal_id'], $transactionTagCount));
+                if ($transactionTagCount < $expectedTagCount) {
+                    app('log')->debug(sprintf('Transaction has %d tag(s), we expect %d tag(s), return false.', $transactionTagCount, $expectedTagCount));
+
+                    return false;
+                }
+                foreach ($transaction['tags'] as $tag) {
+                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
+                    if (in_array(strtolower($tag['name']), $list, true)) {
+                        app('log')->debug(sprintf('Transaction has tag "%s" so count++.', $tag['name']));
+                        ++$foundTagCount;
+                        $journalId = $transaction['transaction_journal_id'];
+                        // #8377 prevent adding a transaction twice when multiple tag searches find this transaction
+                        if (!in_array($journalId, $includedJournals, true)) {
+                            $includedJournals[]       = $journalId;
+                            $return['transactions'][] = $transaction;
+                        }
+                    }
+                }
+            }
+            Log::debug(sprintf('Found %d tags, need at least %d.', $foundTagCount, $expectedTagCount));
+
+            // found at least the expected tags.
+            $result                 = $foundTagCount >= $expectedTagCount;
+            if (true === $result) {
+                return $return;
+            }
+
+            return false;
+        };
+        $this->postFilters[] = $filter;
+
+        return $this;
+    }
+
+    /**
      * Limit the search to a specific bill.
      */
     public function setBill(Bill $bill): GroupCollectorInterface
@@ -665,63 +748,6 @@ trait MetaCollection
     {
         $this->withTagInformation();
         $this->setTags(new Collection([$tag]));
-
-        return $this;
-    }
-
-    /**
-     * Limit results to a SPECIFIC set of tags.
-     */
-    public function setAllTags(Collection $tags): GroupCollectorInterface
-    {
-        Log::debug(sprintf('Now in setAllTags(%d tag(s))', $tags->count()));
-        $this->withTagInformation();
-        $this->query->whereNotNull('tag_transaction_journal.tag_id');
-
-        // this method adds a "postFilter" to the collector.
-        $list                = $tags->pluck('tag')->toArray();
-        $list                = array_map('strtolower', $list);
-        $filter              = static function (array $object) use ($list): bool|array {
-            $includedJournals       = [];
-            $return                 = $object;
-            unset($return['transactions']);
-            $return['transactions'] = [];
-            Log::debug(sprintf('Now in setAllTags(%s) filter', implode(', ', $list)));
-            $expectedTagCount       = count($list);
-            $foundTagCount          = 0;
-            foreach ($object['transactions'] as $transaction) {
-                $transactionTagCount = count($transaction['tags']);
-                app('log')->debug(sprintf('Transaction #%d has %d tag(s)', $transaction['transaction_journal_id'], $transactionTagCount));
-                if ($transactionTagCount < $expectedTagCount) {
-                    app('log')->debug(sprintf('Transaction has %d tag(s), we expect %d tag(s), return false.', $transactionTagCount, $expectedTagCount));
-
-                    return false;
-                }
-                foreach ($transaction['tags'] as $tag) {
-                    Log::debug(sprintf('"%s" versus', strtolower($tag['name'])), $list);
-                    if (in_array(strtolower($tag['name']), $list, true)) {
-                        app('log')->debug(sprintf('Transaction has tag "%s" so count++.', $tag['name']));
-                        ++$foundTagCount;
-                        $journalId = $transaction['transaction_journal_id'];
-                        // #8377 prevent adding a transaction twice when multiple tag searches find this transaction
-                        if (!in_array($journalId, $includedJournals, true)) {
-                            $includedJournals[]       = $journalId;
-                            $return['transactions'][] = $transaction;
-                        }
-                    }
-                }
-            }
-            Log::debug(sprintf('Found %d tags, need at least %d.', $foundTagCount, $expectedTagCount));
-
-            // found at least the expected tags.
-            $result                 = $foundTagCount >= $expectedTagCount;
-            if (true === $result) {
-                return $return;
-            }
-
-            return false;
-        };
-        $this->postFilters[] = $filter;
 
         return $this;
     }
@@ -937,31 +963,5 @@ trait MetaCollection
         $this->query->whereNull('tag_transaction_journal.tag_id');
 
         return $this;
-    }
-
-    /**
-     * Join table to get tag information.
-     */
-    protected function joinMetaDataTables(): void
-    {
-        if (false === $this->hasJoinedMetaTables) {
-            $this->hasJoinedMetaTables = true;
-            $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
-            $this->fields[]            = 'journal_meta.name as meta_name';
-            $this->fields[]            = 'journal_meta.data as meta_data';
-        }
-    }
-
-    /**
-     * Join table to get tag information.
-     */
-    protected function joinTagTables(): void
-    {
-        if (false === $this->hasJoinedTagTables) {
-            // join some extra tables:
-            $this->hasJoinedTagTables = true;
-            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
-        }
     }
 }

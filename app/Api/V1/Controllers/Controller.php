@@ -77,38 +77,6 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * Method to help build URL's.
-     */
-    final protected function buildParams(): string
-    {
-        $return = '?';
-        $params = [];
-        foreach ($this->parameters as $key => $value) {
-            if ('page' === $key) {
-                continue;
-            }
-            if ($value instanceof Carbon) {
-                $params[$key] = $value->format('Y-m-d');
-
-                continue;
-            }
-            $params[$key] = $value;
-        }
-
-        return $return.http_build_query($params);
-    }
-
-    final protected function getManager(): Manager
-    {
-        // create some objects:
-        $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost().'/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        return $manager;
-    }
-
-    /**
      * Method to grab all parameters from the URL.
      */
     private function getParameters(): ParameterBag
@@ -215,5 +183,37 @@ abstract class Controller extends BaseController
         $bag->set('sort', $sortParameters);
 
         return $bag;
+    }
+
+    /**
+     * Method to help build URL's.
+     */
+    final protected function buildParams(): string
+    {
+        $return = '?';
+        $params = [];
+        foreach ($this->parameters as $key => $value) {
+            if ('page' === $key) {
+                continue;
+            }
+            if ($value instanceof Carbon) {
+                $params[$key] = $value->format('Y-m-d');
+
+                continue;
+            }
+            $params[$key] = $value;
+        }
+
+        return $return.http_build_query($params);
+    }
+
+    final protected function getManager(): Manager
+    {
+        // create some objects:
+        $manager = new Manager();
+        $baseUrl = request()->getSchemeAndHttpHost().'/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        return $manager;
     }
 }

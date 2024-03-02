@@ -201,8 +201,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
             $availableBudget             = new AvailableBudget();
             $availableBudget->user()->associate($this->user);
             $availableBudget->transactionCurrency()->associate($currency);
-            $availableBudget->start_date = $start->startOfDay();
-            $availableBudget->end_date   = $end->endOfDay();
+            $availableBudget->start_date = $start->startOfDay()->format('Y-m-d'); // @phpstan-ignore-line
+            $availableBudget->end_date   = $end->endOfDay()->format('Y-m-d'); // @phpstan-ignore-line
         }
         $availableBudget->amount = $amount;
         $availableBudget->save();
@@ -234,8 +234,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
                 'user_group_id'           => $this->user->user_group_id,
                 'transaction_currency_id' => $data['currency_id'],
                 'amount'                  => $data['amount'],
-                'start_date'              => $start,
-                'end_date'                => $end,
+                'start_date'              => $start->format('Y-m-d'),
+                'end_date'                => $end->format('Y-m-d'),
             ]
         );
     }
@@ -256,7 +256,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
             $start = $data['start'];
             if ($start instanceof Carbon) {
                 $start                       = $data['start']->startOfDay();
-                $availableBudget->start_date = $start;
+                $availableBudget->start_date = $start->format('Y-m-d');
                 $availableBudget->save();
             }
         }
@@ -265,7 +265,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
             $end = $data['end'];
             if ($end instanceof Carbon) {
                 $end                       = $data['end']->endOfDay();
-                $availableBudget->end_date = $end;
+                $availableBudget->end_date = $end->format('Y-m-d');
                 $availableBudget->save();
             }
         }

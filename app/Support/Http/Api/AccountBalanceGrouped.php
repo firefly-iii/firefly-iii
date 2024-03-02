@@ -58,11 +58,11 @@ class AccountBalanceGrouped
             // income and expense array prepped:
             $income       = [
                 'label'                          => 'earned',
-                'currency_id'                    => (string) $currency['currency_id'],
+                'currency_id'                    => (string)$currency['currency_id'],
                 'currency_symbol'                => $currency['currency_symbol'],
                 'currency_code'                  => $currency['currency_code'],
                 'currency_decimal_places'        => $currency['currency_decimal_places'],
-                'native_currency_id'             => (string) $currency['native_currency_id'],
+                'native_currency_id'             => (string)$currency['native_currency_id'],
                 'native_currency_symbol'         => $currency['native_currency_symbol'],
                 'native_currency_code'           => $currency['native_currency_code'],
                 'native_currency_decimal_places' => $currency['native_currency_decimal_places'],
@@ -74,11 +74,11 @@ class AccountBalanceGrouped
             ];
             $expense      = [
                 'label'                          => 'spent',
-                'currency_id'                    => (string) $currency['currency_id'],
+                'currency_id'                    => (string)$currency['currency_id'],
                 'currency_symbol'                => $currency['currency_symbol'],
                 'currency_code'                  => $currency['currency_code'],
                 'currency_decimal_places'        => $currency['currency_decimal_places'],
-                'native_currency_id'             => (string) $currency['native_currency_id'],
+                'native_currency_id'             => (string)$currency['native_currency_id'],
                 'native_currency_symbol'         => $currency['native_currency_symbol'],
                 'native_currency_code'           => $currency['native_currency_code'],
                 'native_currency_decimal_places' => $currency['native_currency_decimal_places'],
@@ -126,19 +126,19 @@ class AccountBalanceGrouped
         foreach ($this->journals as $journal) {
             // format the date according to the period
             $period                                          = $journal['date']->format($this->carbonFormat);
-            $currencyId                                      = (int) $journal['currency_id'];
+            $currencyId                                      = (int)$journal['currency_id'];
             $currency                                        = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
             $this->currencies[$currencyId]                   = $currency; // may just re-assign itself, don't mind.
 
             // set the array with monetary info, if it does not exist.
             $this->data[$currencyId]          ??= [
-                'currency_id'                    => (string) $currencyId,
+                'currency_id'                    => (string)$currencyId,
                 'currency_symbol'                => $journal['currency_symbol'],
                 'currency_code'                  => $journal['currency_code'],
                 'currency_name'                  => $journal['currency_name'],
                 'currency_decimal_places'        => $journal['currency_decimal_places'],
                 // native currency info (could be the same)
-                'native_currency_id'             => (string) $this->default->id,
+                'native_currency_id'             => (string)$this->default->id,
                 'native_currency_code'           => $this->default->code,
                 'native_currency_symbol'         => $this->default->symbol,
                 'native_currency_decimal_places' => $this->default->decimal_places,
@@ -183,7 +183,7 @@ class AccountBalanceGrouped
             $amountConverted                                 = bcmul($amount, $rate);
 
             // perhaps transaction already has the foreign amount in the native currency.
-            if ((int) $journal['foreign_currency_id'] === $this->default->id) {
+            if ((int)$journal['foreign_currency_id'] === $this->default->id) {
                 $amountConverted = $journal['foreign_amount'] ?? '0';
                 $amountConverted = 'earned' === $key ? app('steam')->positive($amountConverted) : app('steam')->negative($amountConverted);
             }
@@ -209,12 +209,12 @@ class AccountBalanceGrouped
         $defaultCurrencyId              = $default->id;
         $this->currencies               = [$default->id => $default]; // currency cache
         $this->data[$defaultCurrencyId] = [
-            'currency_id'                    => (string) $defaultCurrencyId,
+            'currency_id'                    => (string)$defaultCurrencyId,
             'currency_symbol'                => $default->symbol,
             'currency_code'                  => $default->code,
             'currency_name'                  => $default->name,
             'currency_decimal_places'        => $default->decimal_places,
-            'native_currency_id'             => (string) $defaultCurrencyId,
+            'native_currency_id'             => (string)$defaultCurrencyId,
             'native_currency_symbol'         => $default->symbol,
             'native_currency_code'           => $default->code,
             'native_currency_name'           => $default->name,

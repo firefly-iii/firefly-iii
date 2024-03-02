@@ -190,16 +190,6 @@ trait ConvertsDataTypes
     }
 
     /**
-     * Abstract method that always exists in the Request classes that use this
-     * trait, OR a stub needs to be added by any other class that uses this train.
-     *
-     * @param mixed $key
-     *
-     * @return mixed
-     */
-    abstract public function has($key);
-
-    /**
      * @param mixed $array
      */
     protected function arrayFromValue($array): ?array
@@ -339,6 +329,16 @@ trait ConvertsDataTypes
 
         return $return;
     }
+
+    /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     *
+     * @param mixed $key
+     *
+     * @return mixed
+     */
+    abstract public function has($key);
 
     /**
      * Return date or NULL.

@@ -484,6 +484,106 @@ class FireflyValidator extends Validator
         return $this->validateByAccountName($value);
     }
 
+    private function validateAccountAnonymously(): bool
+    {
+        if (!array_key_exists('user_id', $this->data)) {
+            return false;
+        }
+
+        /** @var User $user */
+        $user   = User::find($this->data['user_id']);
+        $type   = AccountType::find($this->data['account_type_id'])->first();
+        $value  = $this->data['name'];
+
+        /** @var null|Account $result */
+        $result = $user->accounts()->where('account_type_id', $type->id)->where('name', $value)->first();
+
+        return null === $result;
+    }
+
+    private function validateByAccountTypeString(string $value, array $parameters, string $type): bool
+    {
+        /** @var null|array $search */
+        $search         = \Config::get('firefly.accountTypeByIdentifier.'.$type);
+
+        if (null === $search) {
+            return false;
+        }
+
+        $accountTypes   = AccountType::whereIn('type', $search)->get();
+        $ignore         = (int)($parameters[0] ?? 0.0);
+        $accountTypeIds = $accountTypes->pluck('id')->toArray();
+
+        /** @var null|Account $result */
+        $result         = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)
+            ->where('name', $value)
+            ->first()
+        ;
+
+        return null === $result;
+    }
+
+    /**
+     * @param mixed $value
+     * @param mixed $parameters
+     */
+    private function validateByAccountTypeId($value, $parameters): bool
+    {
+        $type   = AccountType::find($this->data['account_type_id'])->first();
+        $ignore = (int)($parameters[0] ?? 0.0);
+
+        /** @var null|Account $result */
+        $result = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
+            ->where('name', $value)
+            ->first()
+        ;
+
+        return null === $result;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function validateByParameterId(int $accountId, $value): bool
+    {
+        /** @var Account $existingAccount */
+        $existingAccount = Account::find($accountId);
+
+        $type            = $existingAccount->accountType;
+        $ignore          = $existingAccount->id;
+
+        $entry           = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
+            ->where('name', $value)
+            ->first()
+        ;
+
+        return null === $entry;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    private function validateByAccountId($value): bool
+    {
+        /** @var Account $existingAccount */
+        $existingAccount = Account::find($this->data['id']);
+
+        $type            = $existingAccount->accountType;
+        $ignore          = $existingAccount->id;
+
+        $entry           = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
+            ->where('name', $value)
+            ->first()
+        ;
+
+        return null === $entry;
+    }
+
+    private function validateByAccountName(string $value): bool
+    {
+        return 0 === auth()->user()->accounts()->where('name', $value)->count();
+    }
+
     /**
      * @param mixed $attribute
      * @param mixed $value
@@ -545,7 +645,7 @@ class FireflyValidator extends Validator
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function validateUniqueCurrencyCode(null|string $attribute, null|string $value): bool
+    public function validateUniqueCurrencyCode(?string $attribute, ?string $value): bool
     {
         return $this->validateUniqueCurrency('code', (string)$attribute, (string)$value);
     }
@@ -558,12 +658,12 @@ class FireflyValidator extends Validator
         return 0 === \DB::table('transaction_currencies')->where($field, $value)->whereNull('deleted_at')->count();
     }
 
-    public function validateUniqueCurrencyName(null|string $attribute, null|string $value): bool
+    public function validateUniqueCurrencyName(?string $attribute, ?string $value): bool
     {
         return $this->validateUniqueCurrency('name', (string)$attribute, (string)$value);
     }
 
-    public function validateUniqueCurrencySymbol(null|string $attribute, null|string $value): bool
+    public function validateUniqueCurrencySymbol(?string $attribute, ?string $value): bool
     {
         return $this->validateUniqueCurrency('symbol', (string)$attribute, (string)$value);
     }
@@ -729,105 +829,5 @@ class FireflyValidator extends Validator
         }
 
         return false;
-    }
-
-    private function validateAccountAnonymously(): bool
-    {
-        if (!array_key_exists('user_id', $this->data)) {
-            return false;
-        }
-
-        /** @var User $user */
-        $user   = User::find($this->data['user_id']);
-        $type   = AccountType::find($this->data['account_type_id'])->first();
-        $value  = $this->data['name'];
-
-        /** @var null|Account $result */
-        $result = $user->accounts()->where('account_type_id', $type->id)->where('name', $value)->first();
-
-        return null === $result;
-    }
-
-    private function validateByAccountTypeString(string $value, array $parameters, string $type): bool
-    {
-        /** @var null|array $search */
-        $search         = \Config::get('firefly.accountTypeByIdentifier.'.$type);
-
-        if (null === $search) {
-            return false;
-        }
-
-        $accountTypes   = AccountType::whereIn('type', $search)->get();
-        $ignore         = (int)($parameters[0] ?? 0.0);
-        $accountTypeIds = $accountTypes->pluck('id')->toArray();
-
-        /** @var null|Account $result */
-        $result         = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)
-            ->where('name', $value)
-            ->first()
-        ;
-
-        return null === $result;
-    }
-
-    /**
-     * @param mixed $value
-     * @param mixed $parameters
-     */
-    private function validateByAccountTypeId($value, $parameters): bool
-    {
-        $type   = AccountType::find($this->data['account_type_id'])->first();
-        $ignore = (int)($parameters[0] ?? 0.0);
-
-        /** @var null|Account $result */
-        $result = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
-            ->where('name', $value)
-            ->first()
-        ;
-
-        return null === $result;
-    }
-
-    /**
-     * @param mixed $value
-     */
-    private function validateByParameterId(int $accountId, $value): bool
-    {
-        /** @var Account $existingAccount */
-        $existingAccount = Account::find($accountId);
-
-        $type            = $existingAccount->accountType;
-        $ignore          = $existingAccount->id;
-
-        $entry           = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
-            ->where('name', $value)
-            ->first()
-        ;
-
-        return null === $entry;
-    }
-
-    /**
-     * @param mixed $value
-     */
-    private function validateByAccountId($value): bool
-    {
-        /** @var Account $existingAccount */
-        $existingAccount = Account::find($this->data['id']);
-
-        $type            = $existingAccount->accountType;
-        $ignore          = $existingAccount->id;
-
-        $entry           = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
-            ->where('name', $value)
-            ->first()
-        ;
-
-        return null === $entry;
-    }
-
-    private function validateByAccountName(string $value): bool
-    {
-        return 0 === auth()->user()->accounts()->where('name', $value)->count();
     }
 }

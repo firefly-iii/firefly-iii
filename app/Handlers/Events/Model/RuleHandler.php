@@ -27,6 +27,8 @@ namespace FireflyIII\Handlers\Events\Model;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Notifications\User\RuleActionFailed;
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 /**
@@ -56,7 +58,11 @@ class RuleHandler
         $ruleLink    = route('rules.edit', [$rule->id]);
         $params      = [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink];
 
-        Notification::send($user, new RuleActionFailed($params));
+        try {
+            Notification::send($user, new RuleActionFailed($params));
+        } catch (ClientException $e) {
+            Log::error(sprintf('[a] Error sending notification that the rule action failed: %s', $e->getMessage()));
+        }
     }
 
     public function ruleActionFailedOnObject(RuleActionFailedOnObject $event): void
@@ -81,6 +87,10 @@ class RuleHandler
         $ruleLink    = route('rules.edit', [$rule->id]);
         $params      = [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink];
 
-        Notification::send($user, new RuleActionFailed($params));
+        try {
+            Notification::send($user, new RuleActionFailed($params));
+        } catch (ClientException $e) {
+            Log::error(sprintf('[b] Error sending notification that the rule action failed: %s', $e->getMessage()));
+        }
     }
 }

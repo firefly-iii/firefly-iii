@@ -118,23 +118,6 @@ class BasicController extends Controller
         return response()->json($return);
     }
 
-    /**
-     * Check if date is outside session range.
-     */
-    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
-    {
-        $result = false;
-        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
-            $result = true;
-        }
-        // start and end in the past? use $end
-        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
-            $result = true;
-        }
-
-        return $result;
-    }
-
     private function getBalanceInformation(Carbon $start, Carbon $end): array
     {
         // prep some arrays:
@@ -152,7 +135,7 @@ class BasicController extends Controller
 
         /** @var array $transactionJournal */
         foreach ($set as $transactionJournal) {
-            $currencyId           = (int) $transactionJournal['currency_id'];
+            $currencyId           = (int)$transactionJournal['currency_id'];
             $incomes[$currencyId] ??= '0';
             $incomes[$currencyId] = bcadd(
                 $incomes[$currencyId],
@@ -170,7 +153,7 @@ class BasicController extends Controller
 
         /** @var array $transactionJournal */
         foreach ($set as $transactionJournal) {
-            $currencyId            = (int) $transactionJournal['currency_id'];
+            $currencyId            = (int)$transactionJournal['currency_id'];
             $expenses[$currencyId] ??= '0';
             $expenses[$currencyId] = bcadd($expenses[$currencyId], $transactionJournal['amount']);
             $sums[$currencyId]     ??= '0';
@@ -189,7 +172,7 @@ class BasicController extends Controller
                 'key'                     => sprintf('balance-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_balance_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => $sums[$currencyId] ?? '0',
-                'currency_id'             => (string) $currency->id,
+                'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
@@ -202,7 +185,7 @@ class BasicController extends Controller
                 'key'                     => sprintf('spent-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_spent_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => $expenses[$currencyId] ?? '0',
-                'currency_id'             => (string) $currency->id,
+                'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
@@ -214,7 +197,7 @@ class BasicController extends Controller
                 'key'                     => sprintf('earned-in-%s', $currency->code),
                 'title'                   => trans('firefly.box_earned_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => $incomes[$currencyId] ?? '0',
-                'currency_id'             => (string) $currency->id,
+                'currency_id'             => (string)$currency->id,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
@@ -248,7 +231,7 @@ class BasicController extends Controller
                 'key'                     => sprintf('bills-paid-in-%s', $info['code']),
                 'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency' => $info['symbol']]),
                 'monetary_value'          => $amount,
-                'currency_id'             => (string) $info['id'],
+                'currency_id'             => (string)$info['id'],
                 'currency_code'           => $info['code'],
                 'currency_symbol'         => $info['symbol'],
                 'currency_decimal_places' => $info['decimal_places'],
@@ -267,7 +250,7 @@ class BasicController extends Controller
                 'key'                     => sprintf('bills-unpaid-in-%s', $info['code']),
                 'title'                   => trans('firefly.box_bill_unpaid_in_currency', ['currency' => $info['symbol']]),
                 'monetary_value'          => $amount,
-                'currency_id'             => (string) $info['id'],
+                'currency_id'             => (string)$info['id'],
                 'currency_code'           => $info['code'],
                 'currency_symbol'         => $info['symbol'],
                 'currency_decimal_places' => $info['decimal_places'],
@@ -294,21 +277,21 @@ class BasicController extends Controller
 
         foreach ($spent as $row) {
             // either an amount was budgeted or 0 is available.
-            $amount          = (string) ($available[$row['currency_id']] ?? '0');
+            $amount          = (string)($available[$row['currency_id']] ?? '0');
             $spentInCurrency = $row['sum'];
             $leftToSpend     = bcadd($amount, $spentInCurrency);
 
             $days            = $today->diffInDays($end) + 1;
             $perDay          = '0';
             if (0 !== $days && bccomp($leftToSpend, '0') > -1) {
-                $perDay = bcdiv($leftToSpend, (string) $days);
+                $perDay = bcdiv($leftToSpend, (string)$days);
             }
 
             $return[]        = [
                 'key'                     => sprintf('left-to-spend-in-%s', $row['currency_code']),
                 'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $row['currency_symbol']]),
                 'monetary_value'          => $leftToSpend,
-                'currency_id'             => (string) $row['currency_id'],
+                'currency_id'             => (string)$row['currency_id'],
                 'currency_code'           => $row['currency_code'],
                 'currency_symbol'         => $row['currency_symbol'],
                 'currency_decimal_places' => $row['currency_decimal_places'],
@@ -368,7 +351,7 @@ class BasicController extends Controller
                 'key'                     => sprintf('net-worth-in-%s', $data['currency_code']),
                 'title'                   => trans('firefly.box_net_worth_in_currency', ['currency' => $data['currency_symbol']]),
                 'monetary_value'          => $amount,
-                'currency_id'             => (string) $data['currency_id'],
+                'currency_id'             => (string)$data['currency_id'],
                 'currency_code'           => $data['currency_code'],
                 'currency_symbol'         => $data['currency_symbol'],
                 'currency_decimal_places' => $data['currency_decimal_places'],
@@ -379,5 +362,22 @@ class BasicController extends Controller
         }
 
         return $return;
+    }
+
+    /**
+     * Check if date is outside session range.
+     */
+    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
+    {
+        $result = false;
+        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
+            $result = true;
+        }
+        // start and end in the past? use $end
+        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
+            $result = true;
+        }
+
+        return $result;
     }
 }

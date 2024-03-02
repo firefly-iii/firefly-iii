@@ -112,11 +112,11 @@ class RuleActionFailed extends Notification
             $slackUrl = '';
         }
         if (UrlValidator::isValidWebhookURL((string)$slackUrl)) {
-            app('log')->debug('Will send ruleActionFailed through Slack!');
+            app('log')->debug('Will send ruleActionFailed through Slack or Discord!');
 
             return ['slack'];
         }
-        app('log')->debug('Will NOT send ruleActionFailed through Slack');
+        app('log')->debug('Will NOT send ruleActionFailed through Slack or Discord');
 
         return [];
     }

@@ -5,6 +5,8 @@
         "flash_warning": "Opozorilo!",
         "flash_success": "Uspelo je!",
         "close": "Zapri",
+        "select_dest_account": "Please select or type a valid destination account name",
+        "select_source_account": "Please select or type a valid source account name",
         "split_transaction_title": "Opis razdeljene transakcije",
         "errors_submission": "Nekaj je bilo narobe z va\u0161o oddajo. Preverite spodnje napake.",
         "split": "Razdeli",

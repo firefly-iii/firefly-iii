@@ -133,6 +133,25 @@ class LoginController extends Controller
     }
 
     /**
+     * Get the failed login response instance.
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @throws ValidationException
+     */
+    protected function sendFailedLoginResponse(Request $request): void
+    {
+        $exception             = ValidationException::withMessages(
+            [
+                $this->username() => [trans('auth.failed')],
+            ]
+        );
+        $exception->redirectTo = route('login');
+
+        throw $exception;
+    }
+
+    /**
      * Log the user out of the application.
      *
      * @return Redirector|RedirectResponse|Response
@@ -209,24 +228,5 @@ class LoginController extends Controller
         $usernameField     = $this->username();
 
         return view('auth.login', compact('allowRegistration', 'email', 'remember', 'allowReset', 'title', 'usernameField'));
-    }
-
-    /**
-     * Get the failed login response instance.
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @throws ValidationException
-     */
-    protected function sendFailedLoginResponse(Request $request): void
-    {
-        $exception             = ValidationException::withMessages(
-            [
-                $this->username() => [trans('auth.failed')],
-            ]
-        );
-        $exception->redirectTo = route('login');
-
-        throw $exception;
     }
 }

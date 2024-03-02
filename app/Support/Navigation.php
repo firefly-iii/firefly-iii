@@ -216,7 +216,6 @@ class Navigation
     public function endOfPeriod(Carbon $end, string $repeatFreq): Carbon
     {
         $currentEnd  = clone $end;
-        Log::debug(sprintf('endOfPeriod("%s", "%s")', $currentEnd->format('Y-m-d'), $repeatFreq));
 
         $functionMap = [
             '1D'        => 'endOfDay',

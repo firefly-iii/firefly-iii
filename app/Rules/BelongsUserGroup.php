@@ -78,32 +78,6 @@ class BelongsUserGroup implements ValidationRule
         }
     }
 
-    protected function countField(string $class, string $field, string $value): int
-    {
-        $value   = trim($value);
-        $objects = [];
-        // get all objects belonging to user:
-        if (PiggyBank::class === $class) {
-            $objects = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                ->where('accounts.user_group_id', '=', $this->userGroup->id)->get(['piggy_banks.*'])
-            ;
-        }
-        if (PiggyBank::class !== $class) {
-            $objects = $class::where('user_group_id', '=', $this->userGroup->id)->get();
-        }
-        $count   = 0;
-        foreach ($objects as $object) {
-            $objectValue = trim((string)$object->{$field}); // @phpstan-ignore-line
-            app('log')->debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));
-            if ($objectValue === $value) {
-                ++$count;
-                app('log')->debug(sprintf('Hit! Count is now %d', $count));
-            }
-        }
-
-        return $count;
-    }
-
     private function parseAttribute(string $attribute): string
     {
         $parts = explode('.', $attribute);
@@ -132,6 +106,32 @@ class BelongsUserGroup implements ValidationRule
         $count = $this->countField(PiggyBank::class, 'name', $value);
 
         return 1 === $count;
+    }
+
+    protected function countField(string $class, string $field, string $value): int
+    {
+        $value   = trim($value);
+        $objects = [];
+        // get all objects belonging to user:
+        if (PiggyBank::class === $class) {
+            $objects = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
+                ->where('accounts.user_group_id', '=', $this->userGroup->id)->get(['piggy_banks.*'])
+            ;
+        }
+        if (PiggyBank::class !== $class) {
+            $objects = $class::where('user_group_id', '=', $this->userGroup->id)->get();
+        }
+        $count   = 0;
+        foreach ($objects as $object) {
+            $objectValue = trim((string)$object->{$field}); // @phpstan-ignore-line
+            app('log')->debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));
+            if ($objectValue === $value) {
+                ++$count;
+                app('log')->debug(sprintf('Hit! Count is now %d', $count));
+            }
+        }
+
+        return $count;
     }
 
     private function validateBillId(int $value): bool

@@ -508,6 +508,52 @@ trait AccountServiceTrait
     }
 
     /**
+     * TODO refactor to "getfirstjournal"
+     *
+     * @throws FireflyException
+     */
+    private function getObJournal(TransactionGroup $group): TransactionJournal
+    {
+        /** @var null|TransactionJournal $journal */
+        $journal = $group->transactionJournals()->first();
+        if (null === $journal) {
+            throw new FireflyException(sprintf('Group #%d has no OB journal', $group->id));
+        }
+
+        return $journal;
+    }
+
+    /**
+     * TODO Rename to getOpposingTransaction
+     *
+     * @throws FireflyException
+     */
+    private function getOBTransaction(TransactionJournal $journal, Account $account): Transaction
+    {
+        /** @var null|Transaction $transaction */
+        $transaction = $journal->transactions()->where('account_id', '!=', $account->id)->first();
+        if (null === $transaction) {
+            throw new FireflyException(sprintf('Could not get OB transaction for journal #%d', $journal->id));
+        }
+
+        return $transaction;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function getNotOBTransaction(TransactionJournal $journal, Account $account): Transaction
+    {
+        /** @var null|Transaction $transaction */
+        $transaction = $journal->transactions()->where('account_id', $account->id)->first();
+        if (null === $transaction) {
+            throw new FireflyException(sprintf('Could not get non-OB transaction for journal #%d', $journal->id));
+        }
+
+        return $transaction;
+    }
+
+    /**
      * Update or create the opening balance group.
      * Since opening balance and date can still be empty strings, it may fail.
      *
@@ -656,51 +702,5 @@ trait AccountServiceTrait
         }
 
         return $group;
-    }
-
-    /**
-     * TODO refactor to "getfirstjournal"
-     *
-     * @throws FireflyException
-     */
-    private function getObJournal(TransactionGroup $group): TransactionJournal
-    {
-        /** @var null|TransactionJournal $journal */
-        $journal = $group->transactionJournals()->first();
-        if (null === $journal) {
-            throw new FireflyException(sprintf('Group #%d has no OB journal', $group->id));
-        }
-
-        return $journal;
-    }
-
-    /**
-     * TODO Rename to getOpposingTransaction
-     *
-     * @throws FireflyException
-     */
-    private function getOBTransaction(TransactionJournal $journal, Account $account): Transaction
-    {
-        /** @var null|Transaction $transaction */
-        $transaction = $journal->transactions()->where('account_id', '!=', $account->id)->first();
-        if (null === $transaction) {
-            throw new FireflyException(sprintf('Could not get OB transaction for journal #%d', $journal->id));
-        }
-
-        return $transaction;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function getNotOBTransaction(TransactionJournal $journal, Account $account): Transaction
-    {
-        /** @var null|Transaction $transaction */
-        $transaction = $journal->transactions()->where('account_id', $account->id)->first();
-        if (null === $transaction) {
-            throw new FireflyException(sprintf('Could not get non-OB transaction for journal #%d', $journal->id));
-        }
-
-        return $transaction;
     }
 }

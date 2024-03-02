@@ -88,13 +88,6 @@ class DownloadExchangeRates implements ShouldQueue
         }
     }
 
-    public function setDate(Carbon $date): void
-    {
-        $newDate    = clone $date;
-        $newDate->startOfDay();
-        $this->date = $newDate;
-    }
-
     /**
      * @throws GuzzleException
      */
@@ -184,5 +177,12 @@ class DownloadExchangeRates implements ShouldQueue
                 $this->repository->setExchangeRate($from, $to, $date, $rate);
             }
         }
+    }
+
+    public function setDate(Carbon $date): void
+    {
+        $newDate    = clone $date;
+        $newDate->startOfDay();
+        $this->date = $newDate;
     }
 }

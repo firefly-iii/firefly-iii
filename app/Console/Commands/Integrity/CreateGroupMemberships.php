@@ -58,6 +58,19 @@ class CreateGroupMemberships extends Command
     }
 
     /**
+     * @throws FireflyException
+     */
+    private function createGroupMemberships(): void
+    {
+        $users = User::get();
+
+        /** @var User $user */
+        foreach ($users as $user) {
+            self::createGroupMembership($user);
+        }
+    }
+
+    /**
      * TODO move to helper.
      *
      * @throws FireflyException
@@ -91,19 +104,6 @@ class CreateGroupMemberships extends Command
         if (null === $user->user_group_id) {
             $user->user_group_id = $userGroup->id;
             $user->save();
-        }
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function createGroupMemberships(): void
-    {
-        $users = User::get();
-
-        /** @var User $user */
-        foreach ($users as $user) {
-            self::createGroupMembership($user);
         }
     }
 }

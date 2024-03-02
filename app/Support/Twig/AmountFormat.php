@@ -43,15 +43,6 @@ class AmountFormat extends AbstractExtension
         ];
     }
 
-    public function getFunctions(): array
-    {
-        return [
-            $this->formatAmountByAccount(),
-            $this->formatAmountBySymbol(),
-            $this->formatAmountByCurrency(),
-        ];
-    }
-
     protected function formatAmount(): TwigFilter
     {
         return new TwigFilter(
@@ -76,6 +67,15 @@ class AmountFormat extends AbstractExtension
             },
             ['is_safe' => ['html']]
         );
+    }
+
+    public function getFunctions(): array
+    {
+        return [
+            $this->formatAmountByAccount(),
+            $this->formatAmountBySymbol(),
+            $this->formatAmountByCurrency(),
+        ];
     }
 
     /**

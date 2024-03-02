@@ -126,26 +126,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
     }
 
     /**
-     * Set the involved budgets.
-     */
-    public function setBudgets(Collection $budgets): ReportGeneratorInterface
-    {
-        $this->budgets = $budgets;
-
-        return $this;
-    }
-
-    /**
-     * Set the involved accounts.
-     */
-    public function setAccounts(Collection $accounts): ReportGeneratorInterface
-    {
-        $this->accounts = $accounts;
-
-        return $this;
-    }
-
-    /**
      * Get the expenses.
      */
     protected function getExpenses(): array
@@ -169,5 +149,25 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $this->expenses = $journals;
 
         return $journals;
+    }
+
+    /**
+     * Set the involved budgets.
+     */
+    public function setBudgets(Collection $budgets): ReportGeneratorInterface
+    {
+        $this->budgets = $budgets;
+
+        return $this;
+    }
+
+    /**
+     * Set the involved accounts.
+     */
+    public function setAccounts(Collection $accounts): ReportGeneratorInterface
+    {
+        $this->accounts = $accounts;
+
+        return $this;
     }
 }

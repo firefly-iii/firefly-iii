@@ -46,14 +46,6 @@ class TriggerRequest extends FormRequest
         ];
     }
 
-    public function rules(): array
-    {
-        return [
-            'start' => 'date',
-            'end'   => 'date|after_or_equal:start',
-        ];
-    }
-
     private function getDate(string $field): ?Carbon
     {
         $value  = $this->query($field);
@@ -71,10 +63,18 @@ class TriggerRequest extends FormRequest
 
     private function getAccounts(): array
     {
-        if(null === $this->get('accounts')) {
+        if (null === $this->get('accounts')) {
             return [];
         }
 
         return $this->get('accounts');
+    }
+
+    public function rules(): array
+    {
+        return [
+            'start' => 'date',
+            'end'   => 'date|after_or_equal:start',
+        ];
     }
 }

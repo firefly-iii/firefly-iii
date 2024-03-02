@@ -78,29 +78,6 @@ class FrontpageChartGenerator
         return $data;
     }
 
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
-    }
-
-    /**
-     * A basic setter for the user. Also updates the repositories with the right user.
-     */
-    public function setUser(User $user): void
-    {
-        $this->budgetRepository->setUser($user);
-        $this->blRepository->setUser($user);
-        $this->opsRepository->setUser($user);
-
-        $locale                  = app('steam')->getLocale();
-        $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
-    }
-
     /**
      * For each budget, gets all budget limits for the current time range.
      * When no limits are present, the time range is used to collect information on money spent.
@@ -195,5 +172,28 @@ class FrontpageChartGenerator
         $data[2]['entries'][$title] = 1 === bccomp($limit->amount, $sumSpent) ? '0' : bcmul(bcadd($entry['sum'], $limit->amount), '-1'); // overspent
 
         return $data;
+    }
+
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * A basic setter for the user. Also updates the repositories with the right user.
+     */
+    public function setUser(User $user): void
+    {
+        $this->budgetRepository->setUser($user);
+        $this->blRepository->setUser($user);
+        $this->opsRepository->setUser($user);
+
+        $locale                  = app('steam')->getLocale();
+        $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
     }
 }

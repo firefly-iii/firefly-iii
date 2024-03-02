@@ -152,23 +152,6 @@ class CreateRecurringTransactions implements ShouldQueue
         app('preferences')->mark();
     }
 
-    public function setDate(Carbon $date): void
-    {
-        $newDate    = clone $date;
-        $newDate->startOfDay();
-        $this->date = $newDate;
-    }
-
-    public function setForce(bool $force): void
-    {
-        $this->force = $force;
-    }
-
-    public function setRecurrences(Collection $recurrences): void
-    {
-        $this->recurrences = $recurrences;
-    }
-
     private function filterRecurrences(Collection $recurrences): Collection
     {
         return $recurrences->filter(
@@ -464,5 +447,22 @@ class CreateRecurringTransactions implements ShouldQueue
         }
 
         return $return;
+    }
+
+    public function setDate(Carbon $date): void
+    {
+        $newDate    = clone $date;
+        $newDate->startOfDay();
+        $this->date = $newDate;
+    }
+
+    public function setForce(bool $force): void
+    {
+        $this->force = $force;
+    }
+
+    public function setRecurrences(Collection $recurrences): void
+    {
+        $this->recurrences = $recurrences;
     }
 }

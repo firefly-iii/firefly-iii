@@ -77,6 +77,27 @@ trait ConvertsExchangeRates
     }
 
     /**
+     * @deprecated
+     */
+    private function getPreference(): void
+    {
+        $this->enabled = config('cer.currency_conversion');
+    }
+
+    /**
+     * @deprecated
+     */
+    private function getCurrency(int $currencyId): TransactionCurrency
+    {
+        $result = TransactionCurrency::find($currencyId);
+        if (null === $result) {
+            return app('amount')->getDefaultCurrency();
+        }
+
+        return $result;
+    }
+
+    /**
      * For a sum of entries, get the exchange rate to the native currency of
      * the user.
      *
@@ -131,27 +152,6 @@ trait ConvertsExchangeRates
         }
 
         return $return;
-    }
-
-    /**
-     * @deprecated
-     */
-    private function getPreference(): void
-    {
-        $this->enabled = config('cer.currency_conversion');
-    }
-
-    /**
-     * @deprecated
-     */
-    private function getCurrency(int $currencyId): TransactionCurrency
-    {
-        $result = TransactionCurrency::find($currencyId);
-        if (null === $result) {
-            return app('amount')->getDefaultCurrency();
-        }
-
-        return $result;
     }
 
     /**

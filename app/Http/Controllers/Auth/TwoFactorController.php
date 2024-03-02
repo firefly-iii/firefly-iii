@@ -31,7 +31,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use PragmaRX\Google2FALaravel\Support\Authenticator;
-use Preferences;
 
 /**
  * Class TwoFactorController.

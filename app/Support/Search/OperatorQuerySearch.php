@@ -162,87 +162,6 @@ class OperatorQuerySearch implements SearchInterface
 
     /**
      * @throws FireflyException
-     */
-    public static function getRootOperator(string $operator): string
-    {
-        $original = $operator;
-        // if the string starts with "-" (not), we can remove it and recycle
-        // the configuration from the original operator.
-        if (str_starts_with($operator, '-')) {
-            $operator = substr($operator, 1);
-        }
-
-        $config   = config(sprintf('search.operators.%s', $operator));
-        if (null === $config) {
-            throw new FireflyException(sprintf('No configuration for search operator "%s"', $operator));
-        }
-        if (true === $config['alias']) {
-            $return = $config['alias_for'];
-            if (str_starts_with($original, '-')) {
-                $return = sprintf('-%s', $config['alias_for']);
-            }
-            app('log')->debug(sprintf('"%s" is an alias for "%s", so return that instead.', $original, $return));
-
-            return $return;
-        }
-        app('log')->debug(sprintf('"%s" is not an alias.', $operator));
-
-        return $original;
-    }
-
-    public function searchTime(): float
-    {
-        return microtime(true) - $this->startTime;
-    }
-
-    public function searchTransactions(): LengthAwarePaginator
-    {
-        $this->parseTagInstructions();
-        if (0 === count($this->getWords()) && 0 === count($this->getOperators())) {
-            return new LengthAwarePaginator([], 0, 5, 1);
-        }
-
-        return $this->collector->getPaginatedGroups();
-    }
-
-    public function getWords(): array
-    {
-        return $this->words;
-    }
-
-    public function setDate(Carbon $date): void
-    {
-        $this->date = $date;
-    }
-
-    public function setPage(int $page): void
-    {
-        $this->page = $page;
-        $this->collector->setPage($this->page);
-    }
-
-    public function setUser(User $user): void
-    {
-        $this->accountRepository->setUser($user);
-        $this->billRepository->setUser($user);
-        $this->categoryRepository->setUser($user);
-        $this->budgetRepository->setUser($user);
-        $this->tagRepository->setUser($user);
-        $this->collector = app(GroupCollectorInterface::class);
-        $this->collector->setUser($user);
-        $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
-
-        $this->setLimit((int)app('preferences')->getForUser($user, 'listPageSize', 50)->data);
-    }
-
-    public function setLimit(int $limit): void
-    {
-        $this->limit = $limit;
-        $this->collector->setLimit($this->limit);
-    }
-
-    /**
-     * @throws FireflyException
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
@@ -1900,6 +1819,36 @@ class OperatorQuerySearch implements SearchInterface
     }
 
     /**
+     * @throws FireflyException
+     */
+    public static function getRootOperator(string $operator): string
+    {
+        $original = $operator;
+        // if the string starts with "-" (not), we can remove it and recycle
+        // the configuration from the original operator.
+        if (str_starts_with($operator, '-')) {
+            $operator = substr($operator, 1);
+        }
+
+        $config   = config(sprintf('search.operators.%s', $operator));
+        if (null === $config) {
+            throw new FireflyException(sprintf('No configuration for search operator "%s"', $operator));
+        }
+        if (true === $config['alias']) {
+            $return = $config['alias_for'];
+            if (str_starts_with($original, '-')) {
+                $return = sprintf('-%s', $config['alias_for']);
+            }
+            app('log')->debug(sprintf('"%s" is an alias for "%s", so return that instead.', $original, $return));
+
+            return $return;
+        }
+        app('log')->debug(sprintf('"%s" is not an alias.', $operator));
+
+        return $original;
+    }
+
+    /**
      * searchDirection: 1 = source (default), 2 = destination, 3 = both
      * stringPosition: 1 = start (default), 2 = end, 3 = contains, 4 = is
      *
@@ -2731,6 +2680,21 @@ class OperatorQuerySearch implements SearchInterface
         }
     }
 
+    public function searchTime(): float
+    {
+        return microtime(true) - $this->startTime;
+    }
+
+    public function searchTransactions(): LengthAwarePaginator
+    {
+        $this->parseTagInstructions();
+        if (0 === count($this->getWords()) && 0 === count($this->getOperators())) {
+            return new LengthAwarePaginator([], 0, 5, 1);
+        }
+
+        return $this->collector->getPaginatedGroups();
+    }
+
     private function parseTagInstructions(): void
     {
         app('log')->debug('Now in parseTagInstructions()');
@@ -2761,5 +2725,41 @@ class OperatorQuerySearch implements SearchInterface
             }
             $this->collector->setAllTags($collection);
         }
+    }
+
+    public function getWords(): array
+    {
+        return $this->words;
+    }
+
+    public function setDate(Carbon $date): void
+    {
+        $this->date = $date;
+    }
+
+    public function setPage(int $page): void
+    {
+        $this->page = $page;
+        $this->collector->setPage($this->page);
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->accountRepository->setUser($user);
+        $this->billRepository->setUser($user);
+        $this->categoryRepository->setUser($user);
+        $this->budgetRepository->setUser($user);
+        $this->tagRepository->setUser($user);
+        $this->collector = app(GroupCollectorInterface::class);
+        $this->collector->setUser($user);
+        $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
+
+        $this->setLimit((int)app('preferences')->getForUser($user, 'listPageSize', 50)->data);
+    }
+
+    public function setLimit(int $limit): void
+    {
+        $this->limit = $limit;
+        $this->collector->setLimit($this->limit);
     }
 }

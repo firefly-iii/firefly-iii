@@ -58,6 +58,28 @@ class RuleFormRequest extends FormRequest
         ];
     }
 
+    private function getRuleTriggerData(): array
+    {
+        $return      = [];
+        $triggerData = $this->get('triggers');
+        if (is_array($triggerData)) {
+            foreach ($triggerData as $trigger) {
+                $stopProcessing = $trigger['stop_processing'] ?? '0';
+                $prohibited     = $trigger['prohibited'] ?? '0';
+                $set            = [
+                    'type'            => $trigger['type'] ?? 'invalid',
+                    'value'           => $trigger['value'] ?? '',
+                    'stop_processing' => 1 === (int)$stopProcessing,
+                    'prohibited'      => 1 === (int)$prohibited,
+                ];
+                $set            = self::replaceAmountTrigger($set);
+                $return[]       = $set;
+            }
+        }
+
+        return $return;
+    }
+
     public static function replaceAmountTrigger(array $array): array
     {
         // do some sneaky search and replace.
@@ -81,6 +103,24 @@ class RuleFormRequest extends FormRequest
         }
 
         return $array;
+    }
+
+    private function getRuleActionData(): array
+    {
+        $return     = [];
+        $actionData = $this->get('actions');
+        if (is_array($actionData)) {
+            foreach ($actionData as $action) {
+                $stopProcessing = $action['stop_processing'] ?? '0';
+                $return[]       = [
+                    'type'            => $action['type'] ?? 'invalid',
+                    'value'           => $action['value'] ?? '',
+                    'stop_processing' => 1 === (int)$stopProcessing,
+                ];
+            }
+        }
+
+        return $return;
     }
 
     /**
@@ -123,48 +163,8 @@ class RuleFormRequest extends FormRequest
 
     public function withValidator(Validator $validator): void
     {
-        if($validator->fails()) {
+        if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
         }
-    }
-
-    private function getRuleTriggerData(): array
-    {
-        $return      = [];
-        $triggerData = $this->get('triggers');
-        if (is_array($triggerData)) {
-            foreach ($triggerData as $trigger) {
-                $stopProcessing = $trigger['stop_processing'] ?? '0';
-                $prohibited     = $trigger['prohibited'] ?? '0';
-                $set            = [
-                    'type'            => $trigger['type'] ?? 'invalid',
-                    'value'           => $trigger['value'] ?? '',
-                    'stop_processing' => 1 === (int) $stopProcessing,
-                    'prohibited'      => 1 === (int) $prohibited,
-                ];
-                $set            = self::replaceAmountTrigger($set);
-                $return[]       = $set;
-            }
-        }
-
-        return $return;
-    }
-
-    private function getRuleActionData(): array
-    {
-        $return     = [];
-        $actionData = $this->get('actions');
-        if (is_array($actionData)) {
-            foreach ($actionData as $action) {
-                $stopProcessing = $action['stop_processing'] ?? '0';
-                $return[]       = [
-                    'type'            => $action['type'] ?? 'invalid',
-                    'value'           => $action['value'] ?? '',
-                    'stop_processing' => 1 === (int) $stopProcessing,
-                ];
-            }
-        }
-
-        return $return;
     }
 }

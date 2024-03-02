@@ -5,6 +5,8 @@
         "flash_warning": "Atenci\u00f3!",
         "flash_success": "\u00c8xit!",
         "close": "Tancar",
+        "select_dest_account": "Please select or type a valid destination account name",
+        "select_source_account": "Please select or type a valid source account name",
         "split_transaction_title": "Descripci\u00f3 de la transacci\u00f3 dividida",
         "errors_submission": "Hi ha hagut un error amb el teu enviament. Per favor, revisa els errors de sota.",
         "split": "Dividir",

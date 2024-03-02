@@ -80,7 +80,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $tagId                                                                  = (int)$tag['id'];
                 $tagName                                                                = (string)$tag['name'];
                 $journalId                                                              = (int)$journal['transaction_journal_id'];
-                if(!in_array($tagId, $tagIds, true)) {
+                if (!in_array($tagId, $tagIds, true)) {
                     continue;
                 }
 
@@ -118,6 +118,14 @@ class OperationsRepository implements OperationsRepositoryInterface
         if ($user instanceof User) {
             $this->user = $user;
         }
+    }
+
+    private function getTags(): Collection
+    {
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
+
+        return $repository->get();
     }
 
     /**
@@ -164,7 +172,7 @@ class OperationsRepository implements OperationsRepositoryInterface
                 $tagName                                                                = (string)$tag['name'];
                 $journalId                                                              = (int)$journal['transaction_journal_id'];
 
-                if(!in_array($tagId, $tagIds, true)) {
+                if (!in_array($tagId, $tagIds, true)) {
                     continue;
                 }
 
@@ -214,13 +222,5 @@ class OperationsRepository implements OperationsRepositoryInterface
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         throw new FireflyException(sprintf('%s is not yet implemented.', __METHOD__));
-    }
-
-    private function getTags(): Collection
-    {
-        /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class);
-
-        return $repository->get();
     }
 }

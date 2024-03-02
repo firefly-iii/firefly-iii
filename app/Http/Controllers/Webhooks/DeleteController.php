@@ -63,7 +63,7 @@ class DeleteController extends Controller
      */
     public function index(Webhook $webhook)
     {
-        if(false === config('firefly.allow_webhooks')) {
+        if (false === config('firefly.allow_webhooks')) {
             Log::channel('audit')->warning('User visits webhook delete page, but webhooks are DISABLED.');
 
             throw new NotFoundHttpException('Webhooks are not enabled.');

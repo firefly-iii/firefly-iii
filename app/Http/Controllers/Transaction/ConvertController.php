@@ -135,38 +135,6 @@ class ConvertController extends Controller
         );
     }
 
-    /**
-     * Do the conversion.
-     *
-     * @return Redirector|RedirectResponse
-     */
-    public function postIndex(Request $request, TransactionType $destinationType, TransactionGroup $group)
-    {
-        if (!$this->isEditableGroup($group)) {
-            return $this->redirectGroupToAccount($group);
-        }
-
-        /** @var TransactionJournal $journal */
-        foreach ($group->transactionJournals as $journal) {
-            // catch FF exception.
-            try {
-                $this->convertJournal($journal, $destinationType, $request->all());
-            } catch (FireflyException $e) {
-                session()->flash('error', $e->getMessage());
-
-                return redirect()->route('transactions.convert.index', [strtolower($destinationType->type), $group->id])->withInput();
-            }
-        }
-
-        // correct transfers:
-        $group->refresh();
-
-        session()->flash('success', (string)trans('firefly.converted_to_'.$destinationType->type));
-        event(new UpdatedTransactionGroup($group, true, true));
-
-        return redirect(route('transactions.show', [$group->id]));
-    }
-
     private function getValidDepositSources(): array
     {
         // make repositories
@@ -289,6 +257,38 @@ class ConvertController extends Controller
         }
 
         return $grouped;
+    }
+
+    /**
+     * Do the conversion.
+     *
+     * @return Redirector|RedirectResponse
+     */
+    public function postIndex(Request $request, TransactionType $destinationType, TransactionGroup $group)
+    {
+        if (!$this->isEditableGroup($group)) {
+            return $this->redirectGroupToAccount($group);
+        }
+
+        /** @var TransactionJournal $journal */
+        foreach ($group->transactionJournals as $journal) {
+            // catch FF exception.
+            try {
+                $this->convertJournal($journal, $destinationType, $request->all());
+            } catch (FireflyException $e) {
+                session()->flash('error', $e->getMessage());
+
+                return redirect()->route('transactions.convert.index', [strtolower($destinationType->type), $group->id])->withInput();
+            }
+        }
+
+        // correct transfers:
+        $group->refresh();
+
+        session()->flash('success', (string)trans('firefly.converted_to_'.$destinationType->type));
+        event(new UpdatedTransactionGroup($group, true, true));
+
+        return redirect(route('transactions.show', [$group->id]));
     }
 
     /**

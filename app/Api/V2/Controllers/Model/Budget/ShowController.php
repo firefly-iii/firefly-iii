@@ -52,20 +52,6 @@ class ShowController extends Controller
     }
 
     /**
-     * Show a budget.
-     */
-    public function show(Budget $budget): JsonResponse
-    {
-        $transformer = new BudgetTransformer();
-        $transformer->setParameters($this->parameters);
-
-        return response()
-            ->api($this->jsonApiObject('budgets', $budget, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
-    }
-
-    /**
      * 2023-10-29 removed the cerSum reference, not sure where this is used atm
      * so removed from api.php. Also applies to "spent" method.
      *
@@ -78,6 +64,20 @@ class ShowController extends Controller
         $result = $this->repository->budgetedInPeriodForBudget($budget, $data['start'], $data['end']);
 
         return response()->json($result);
+    }
+
+    /**
+     * Show a budget.
+     */
+    public function show(Budget $budget): JsonResponse
+    {
+        $transformer = new BudgetTransformer();
+        $transformer->setParameters($this->parameters);
+
+        return response()
+            ->api($this->jsonApiObject('budgets', $budget, $transformer))
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 
     /**

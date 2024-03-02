@@ -18,7 +18,7 @@
     {# PHP version + settings #}
     <tr>
         <td>PHP version</td>
-        <td>{{ system.php_version|escape }} / {{ system.interface }} / {{ system.php_os }}</td>
+        <td>{{ system.php_version|escape }} ({{ system.bits }}bits) / {{ system.interface }} / {{ system.php_os }} {{ system.uname }}</td>
     </tr>
     <tr>
         <td>BCscale</td>

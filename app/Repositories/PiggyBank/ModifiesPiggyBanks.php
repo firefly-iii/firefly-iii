@@ -279,6 +279,25 @@ trait ModifiesPiggyBanks
         return true;
     }
 
+    private function updateNote(PiggyBank $piggyBank, string $note): bool
+    {
+        if ('' === $note) {
+            $dbNote = $piggyBank->notes()->first();
+            $dbNote?->delete();
+
+            return true;
+        }
+        $dbNote       = $piggyBank->notes()->first();
+        if (null === $dbNote) {
+            $dbNote = new Note();
+            $dbNote->noteable()->associate($piggyBank);
+        }
+        $dbNote->text = trim($note);
+        $dbNote->save();
+
+        return true;
+    }
+
     public function update(PiggyBank $piggyBank, array $data): PiggyBank
     {
         $piggyBank  = $this->updateProperties($piggyBank, $data);
@@ -337,25 +356,6 @@ trait ModifiesPiggyBanks
         }
 
         return $piggyBank;
-    }
-
-    private function updateNote(PiggyBank $piggyBank, string $note): bool
-    {
-        if ('' === $note) {
-            $dbNote = $piggyBank->notes()->first();
-            $dbNote?->delete();
-
-            return true;
-        }
-        $dbNote       = $piggyBank->notes()->first();
-        if (null === $dbNote) {
-            $dbNote = new Note();
-            $dbNote->noteable()->associate($piggyBank);
-        }
-        $dbNote->text = trim($note);
-        $dbNote->save();
-
-        return true;
     }
 
     private function updateProperties(PiggyBank $piggyBank, array $data): PiggyBank

@@ -5,6 +5,8 @@
         "flash_warning": "Varovanie!",
         "flash_success": "Hotovo!",
         "close": "Zavrie\u0165",
+        "select_dest_account": "Please select or type a valid destination account name",
+        "select_source_account": "Please select or type a valid source account name",
         "split_transaction_title": "Popis roz\u00fa\u010dtovania",
         "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
         "split": "Roz\u00fa\u010dtova\u0165",

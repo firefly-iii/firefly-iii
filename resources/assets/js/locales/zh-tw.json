@@ -5,6 +5,8 @@
         "flash_warning": "\u8b66\u544a\uff01",
         "flash_success": "\u6210\u529f\uff01",
         "close": "\u95dc\u9589",
+        "select_dest_account": "Please select or type a valid destination account name",
+        "select_source_account": "Please select or type a valid source account name",
         "split_transaction_title": "\u62c6\u5206\u4ea4\u6613\u7684\u63cf\u8ff0",
         "errors_submission": "There was something wrong with your submission. Please check out the errors below.",
         "split": "\u5206\u5272",

@@ -77,7 +77,7 @@ class MoveNotesToDescription implements ActionInterface
         }
         $before              = $object->description;
         $beforeNote          = $note->text;
-        $object->description = (string) $this->clearString($note->text);
+        $object->description = (string)$this->clearString($note->text);
         $object->save();
         $note->delete();
 

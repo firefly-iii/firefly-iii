@@ -64,6 +64,42 @@ class StoreRequest extends FormRequest
         return $data;
     }
 
+    private function getRuleTriggers(): array
+    {
+        $triggers = $this->get('triggers');
+        $return   = [];
+        if (is_array($triggers)) {
+            foreach ($triggers as $trigger) {
+                $return[] = [
+                    'type'            => $trigger['type'],
+                    'value'           => $trigger['value'],
+                    'active'          => $this->convertBoolean((string)($trigger['active'] ?? 'true')),
+                    'stop_processing' => $this->convertBoolean((string)($trigger['stop_processing'] ?? 'false')),
+                ];
+            }
+        }
+
+        return $return;
+    }
+
+    private function getRuleActions(): array
+    {
+        $actions = $this->get('actions');
+        $return  = [];
+        if (is_array($actions)) {
+            foreach ($actions as $action) {
+                $return[] = [
+                    'type'            => $action['type'],
+                    'value'           => $action['value'],
+                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'true')),
+                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
+                ];
+            }
+        }
+
+        return $return;
+    }
+
     /**
      * The rules that the incoming request must be matched against.
      */
@@ -109,7 +145,7 @@ class StoreRequest extends FormRequest
                 $this->atLeastOneActiveAction($validator);
             }
         );
-        if($validator->fails()) {
+        if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
         }
     }
@@ -196,41 +232,5 @@ class StoreRequest extends FormRequest
         if (true === $allInactive) {
             $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string)trans('validation.at_least_one_active_action'));
         }
-    }
-
-    private function getRuleTriggers(): array
-    {
-        $triggers = $this->get('triggers');
-        $return   = [];
-        if (is_array($triggers)) {
-            foreach ($triggers as $trigger) {
-                $return[] = [
-                    'type'            => $trigger['type'],
-                    'value'           => $trigger['value'],
-                    'active'          => $this->convertBoolean((string)($trigger['active'] ?? 'true')),
-                    'stop_processing' => $this->convertBoolean((string)($trigger['stop_processing'] ?? 'false')),
-                ];
-            }
-        }
-
-        return $return;
-    }
-
-    private function getRuleActions(): array
-    {
-        $actions = $this->get('actions');
-        $return  = [];
-        if (is_array($actions)) {
-            foreach ($actions as $action) {
-                $return[] = [
-                    'type'            => $action['type'],
-                    'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'true')),
-                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
-                ];
-            }
-        }
-
-        return $return;
     }
 }

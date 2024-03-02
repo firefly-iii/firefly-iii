@@ -39,7 +39,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\UserGroups\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
-use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -104,12 +103,12 @@ class BudgetRepository implements BudgetRepositoryInterface
                 $rate                                = $converter->getCurrencyRate($currency, $defaultCurrency, $end);
                 $currencyCode                        = $currency->code;
                 $return[$currencyCode] ??= [
-                    'currency_id'                    => (string) $currency->id,
+                    'currency_id'                    => (string)$currency->id,
                     'currency_name'                  => $currency->name,
                     'currency_symbol'                => $currency->symbol,
                     'currency_code'                  => $currency->code,
                     'currency_decimal_places'        => $currency->decimal_places,
-                    'native_currency_id'             => (string) $defaultCurrency->id,
+                    'native_currency_id'             => (string)$defaultCurrency->id,
                     'native_currency_name'           => $defaultCurrency->name,
                     'native_currency_symbol'         => $defaultCurrency->symbol,
                     'native_currency_code'           => $defaultCurrency->code,
@@ -135,13 +134,13 @@ class BudgetRepository implements BudgetRepositoryInterface
                 }
                 $total                               = $limit->start_date->diffInDays($limit->end_date) + 1; // include the day itself.
                 $days                                = $this->daysInOverlap($limit, $start, $end);
-                $amount                              = bcmul(bcdiv($limit->amount, (string) $total), (string) $days);
+                $amount                              = bcmul(bcdiv($limit->amount, (string)$total), (string)$days);
                 $return[$currencyCode]['sum']        = bcadd($return[$currencyCode]['sum'], $amount);
                 $return[$currencyCode]['native_sum'] = bcmul($rate, $return[$currencyCode]['sum']);
                 app('log')->debug(
                     sprintf(
                         'Amount per day: %s (%s over %d days). Total amount for %d days: %s',
-                        bcdiv($limit->amount, (string) $total),
+                        bcdiv($limit->amount, (string)$total),
                         $limit->amount,
                         $total,
                         $days,
@@ -170,6 +169,40 @@ class BudgetRepository implements BudgetRepositoryInterface
         ;
     }
 
+    /**
+     * How many days of this budget limit are between start and end?
+     */
+    private function daysInOverlap(BudgetLimit $limit, Carbon $start, Carbon $end): int
+    {
+        // start1 = $start
+        // start2 = $limit->start_date
+        // start1 = $end
+        // start2 = $limit->end_date
+
+        // limit is larger than start and end (inclusive)
+        //    |-----------|
+        //  |----------------|
+        if ($start->gte($limit->start_date) && $end->lte($limit->end_date)) {
+            return $start->diffInDays($end) + 1; // add one day
+        }
+        // limit starts earlier and limit ends first:
+        //    |-----------|
+        // |-------|
+        if ($limit->start_date->lte($start) && $limit->end_date->lte($end)) {
+            // return days in the range $start-$limit_end
+            return $start->diffInDays($limit->end_date) + 1; // add one day, the day itself
+        }
+        // limit starts later and limit ends earlier
+        //    |-----------|
+        //           |-------|
+        if ($limit->start_date->gte($start) && $limit->end_date->gte($end)) {
+            // return days in the range $limit_start - $end
+            return $limit->start_date->diffInDays($end) + 1; // add one day, the day itself
+        }
+
+        return 0;
+    }
+
     public function budgetedInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array
     {
         app('log')->debug(sprintf('Now in budgetedInPeriod(#%d, "%s", "%s")', $budget->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
@@ -187,7 +220,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             app('log')->debug(sprintf('Budget limit #%d', $limit->id));
             $currency                     = $limit->transactionCurrency;
             $return[$currency->id] ??= [
-                'id'             => (string) $currency->id,
+                'id'             => (string)$currency->id,
                 'name'           => $currency->name,
                 'symbol'         => $currency->symbol,
                 'code'           => $currency->code,
@@ -210,12 +243,12 @@ class BudgetRepository implements BudgetRepositoryInterface
             }
             $total                        = $limit->start_date->diffInDays($limit->end_date) + 1; // include the day itself.
             $days                         = $this->daysInOverlap($limit, $start, $end);
-            $amount                       = bcmul(bcdiv($limit->amount, (string) $total), (string) $days);
+            $amount                       = bcmul(bcdiv($limit->amount, (string)$total), (string)$days);
             $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
             app('log')->debug(
                 sprintf(
                     'Amount per day: %s (%s over %d days). Total amount for %d days: %s',
-                    bcdiv($limit->amount, (string) $total),
+                    bcdiv($limit->amount, (string)$total),
                     $limit->amount,
                     $total,
                     $days,
@@ -264,7 +297,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $budget->active = $data['active'];
         }
         if (array_key_exists('notes', $data)) {
-            $this->setNoteText($budget, (string) $data['notes']);
+            $this->setNoteText($budget, (string)$data['notes']);
         }
         $budget->save();
 
@@ -291,9 +324,113 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $budget;
     }
 
+    private function updateRuleActions(string $oldName, string $newName): void
+    {
+        $types   = ['set_budget'];
+        $actions = RuleAction::leftJoin('rules', 'rules.id', '=', 'rule_actions.rule_id')
+            ->where('rules.user_id', $this->user->id)
+            ->whereIn('rule_actions.action_type', $types)
+            ->where('rule_actions.action_value', $oldName)
+            ->get(['rule_actions.*'])
+        ;
+        app('log')->debug(sprintf('Found %d actions to update.', $actions->count()));
+
+        /** @var RuleAction $action */
+        foreach ($actions as $action) {
+            $action->action_value = $newName;
+            $action->save();
+            app('log')->debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
+        }
+    }
+
+    private function updateRuleTriggers(string $oldName, string $newName): void
+    {
+        $types    = ['budget_is'];
+        $triggers = RuleTrigger::leftJoin('rules', 'rules.id', '=', 'rule_triggers.rule_id')
+            ->where('rules.user_id', $this->user->id)
+            ->whereIn('rule_triggers.trigger_type', $types)
+            ->where('rule_triggers.trigger_value', $oldName)
+            ->get(['rule_triggers.*'])
+        ;
+        app('log')->debug(sprintf('Found %d triggers to update.', $triggers->count()));
+
+        /** @var RuleTrigger $trigger */
+        foreach ($triggers as $trigger) {
+            $trigger->trigger_value = $newName;
+            $trigger->save();
+            app('log')->debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
+        }
+    }
+
+    private function setNoteText(Budget $budget, string $text): void
+    {
+        $dbNote = $budget->notes()->first();
+        if ('' !== $text) {
+            if (null === $dbNote) {
+                $dbNote = new Note();
+                $dbNote->noteable()->associate($budget);
+            }
+            $dbNote->text = trim($text);
+            $dbNote->save();
+
+            return;
+        }
+        if (null !== $dbNote) {
+            $dbNote->delete();
+        }
+    }
+
     public function getAutoBudget(Budget $budget): ?AutoBudget
     {
         return $budget->autoBudgets()->first();
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function updateAutoBudget(Budget $budget, array $data): void
+    {
+        // update or create auto-budget:
+        $autoBudget = $this->getAutoBudget($budget);
+
+        // grab default currency:
+        $currency   = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
+
+        if (null === $autoBudget) {
+            // at this point it's a blind assumption auto_budget_type is 1 or 2.
+            $autoBudget                          = new AutoBudget();
+            $autoBudget->auto_budget_type        = $data['auto_budget_type'];
+            $autoBudget->budget_id               = $budget->id;
+            $autoBudget->transaction_currency_id = $currency->id;
+        }
+
+        // set or update the currency.
+        if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
+            /** @var CurrencyRepositoryInterface $repos */
+            $repos        = app(CurrencyRepositoryInterface::class);
+            $currencyId   = (int)($data['currency_id'] ?? 0);
+            $currencyCode = (string)($data['currency_code'] ?? '');
+            $currency     = $repos->find($currencyId);
+            if (null === $currency) {
+                $currency = $repos->findByCode($currencyCode);
+            }
+            if (null !== $currency) {
+                $autoBudget->transaction_currency_id = $currency->id;
+            }
+        }
+
+        // change values if submitted or presented:
+        if (array_key_exists('auto_budget_type', $data)) {
+            $autoBudget->auto_budget_type = $data['auto_budget_type'];
+        }
+        if (array_key_exists('auto_budget_amount', $data)) {
+            $autoBudget->amount = $data['auto_budget_amount'];
+        }
+        if (array_key_exists('auto_budget_period', $data)) {
+            $autoBudget->period = $data['auto_budget_period'];
+        }
+
+        $autoBudget->save();
     }
 
     /**
@@ -326,8 +463,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         foreach ($budgets as $budget) {
             \DB::table('budget_transaction')->where('budget_id', $budget->id)->delete();
             \DB::table('budget_transaction_journal')->where('budget_id', $budget->id)->delete();
-            RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', (string) $budget->id)->delete();
-            RuleAction::where('action_type', 'set_budget')->where('action_value', (string) $budget->id)->delete();
+            RecurrenceTransactionMeta::where('name', 'budget_id')->where('value', (string)$budget->id)->delete();
+            RuleAction::where('action_type', 'set_budget')->where('action_value', (string)$budget->id)->delete();
             $budget->delete();
         }
         Log::channel('audit')->info('Delete all budgets through destroyAll');
@@ -352,7 +489,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         app('log')->debug('Now in findBudget()');
         app('log')->debug(sprintf('Searching for budget with ID #%d...', $budgetId));
-        $result = $this->find((int) $budgetId);
+        $result = $this->find((int)$budgetId);
         if (null === $result && null !== $budgetName && '' !== $budgetName) {
             app('log')->debug(sprintf('Searching for budget with name %s...', $budgetName));
             $result = $this->findByName($budgetName);
@@ -488,9 +625,9 @@ class BudgetRepository implements BudgetRepositoryInterface
         $array      = [];
 
         foreach ($journals as $journal) {
-            $currencyId                = (int) $journal['currency_id'];
+            $currencyId                = (int)$journal['currency_id'];
             $array[$currencyId] ??= [
-                'id'             => (string) $currencyId,
+                'id'             => (string)$currencyId,
                 'name'           => $journal['currency_name'],
                 'symbol'         => $journal['currency_symbol'],
                 'code'           => $journal['currency_code'],
@@ -500,10 +637,10 @@ class BudgetRepository implements BudgetRepositoryInterface
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
 
             // also do foreign amount:
-            $foreignId                 = (int) $journal['foreign_currency_id'];
+            $foreignId                 = (int)$journal['foreign_currency_id'];
             if (0 !== $foreignId) {
                 $array[$foreignId] ??= [
-                    'id'             => (string) $foreignId,
+                    'id'             => (string)$foreignId,
                     'name'           => $journal['foreign_currency_name'],
                     'symbol'         => $journal['foreign_currency_symbol'],
                     'code'           => $journal['foreign_currency_code'],
@@ -550,9 +687,9 @@ class BudgetRepository implements BudgetRepositoryInterface
         $array      = [];
 
         foreach ($journals as $journal) {
-            $currencyId                = (int) $journal['currency_id'];
+            $currencyId                = (int)$journal['currency_id'];
             $array[$currencyId] ??= [
-                'id'             => (string) $currencyId,
+                'id'             => (string)$currencyId,
                 'name'           => $journal['currency_name'],
                 'symbol'         => $journal['currency_symbol'],
                 'code'           => $journal['currency_code'],
@@ -562,10 +699,10 @@ class BudgetRepository implements BudgetRepositoryInterface
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], app('steam')->negative($journal['amount']));
 
             // also do foreign amount:
-            $foreignId                 = (int) $journal['foreign_currency_id'];
+            $foreignId                 = (int)$journal['foreign_currency_id'];
             if (0 !== $foreignId) {
                 $array[$foreignId] ??= [
-                    'id'             => (string) $foreignId,
+                    'id'             => (string)$foreignId,
                     'name'           => $journal['foreign_currency_name'],
                     'symbol'         => $journal['foreign_currency_symbol'],
                     'code'           => $journal['foreign_currency_code'],
@@ -607,7 +744,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         // set notes
         if (array_key_exists('notes', $data)) {
-            $this->setNoteText($newBudget, (string) $data['notes']);
+            $this->setNoteText($newBudget, (string)$data['notes']);
         }
 
         if (!array_key_exists('auto_budget_type', $data) || !array_key_exists('auto_budget_amount', $data) || !array_key_exists('auto_budget_period', $data)) {
@@ -635,10 +772,10 @@ class BudgetRepository implements BudgetRepositoryInterface
         $repos                               = app(CurrencyRepositoryInterface::class);
         $currency                            = null;
         if (array_key_exists('currency_id', $data)) {
-            $currency = $repos->find((int) $data['currency_id']);
+            $currency = $repos->find((int)$data['currency_id']);
         }
         if (array_key_exists('currency_code', $data)) {
-            $currency = $repos->findByCode((string) $data['currency_code']);
+            $currency = $repos->findByCode((string)$data['currency_code']);
         }
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
@@ -674,144 +811,6 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     public function getMaxOrder(): int
     {
-        return (int) $this->user->budgets()->max('order');
-    }
-
-    /**
-     * How many days of this budget limit are between start and end?
-     */
-    private function daysInOverlap(BudgetLimit $limit, Carbon $start, Carbon $end): int
-    {
-        // start1 = $start
-        // start2 = $limit->start_date
-        // start1 = $end
-        // start2 = $limit->end_date
-
-        // limit is larger than start and end (inclusive)
-        //    |-----------|
-        //  |----------------|
-        if ($start->gte($limit->start_date) && $end->lte($limit->end_date)) {
-            return $start->diffInDays($end) + 1; // add one day
-        }
-        // limit starts earlier and limit ends first:
-        //    |-----------|
-        // |-------|
-        if ($limit->start_date->lte($start) && $limit->end_date->lte($end)) {
-            // return days in the range $start-$limit_end
-            return $start->diffInDays($limit->end_date) + 1; // add one day, the day itself
-        }
-        // limit starts later and limit ends earlier
-        //    |-----------|
-        //           |-------|
-        if ($limit->start_date->gte($start) && $limit->end_date->gte($end)) {
-            // return days in the range $limit_start - $end
-            return $limit->start_date->diffInDays($end) + 1; // add one day, the day itself
-        }
-
-        return 0;
-    }
-
-    private function updateRuleActions(string $oldName, string $newName): void
-    {
-        $types   = ['set_budget'];
-        $actions = RuleAction::leftJoin('rules', 'rules.id', '=', 'rule_actions.rule_id')
-            ->where('rules.user_id', $this->user->id)
-            ->whereIn('rule_actions.action_type', $types)
-            ->where('rule_actions.action_value', $oldName)
-            ->get(['rule_actions.*'])
-        ;
-        app('log')->debug(sprintf('Found %d actions to update.', $actions->count()));
-
-        /** @var RuleAction $action */
-        foreach ($actions as $action) {
-            $action->action_value = $newName;
-            $action->save();
-            app('log')->debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
-        }
-    }
-
-    private function updateRuleTriggers(string $oldName, string $newName): void
-    {
-        $types    = ['budget_is'];
-        $triggers = RuleTrigger::leftJoin('rules', 'rules.id', '=', 'rule_triggers.rule_id')
-            ->where('rules.user_id', $this->user->id)
-            ->whereIn('rule_triggers.trigger_type', $types)
-            ->where('rule_triggers.trigger_value', $oldName)
-            ->get(['rule_triggers.*'])
-        ;
-        app('log')->debug(sprintf('Found %d triggers to update.', $triggers->count()));
-
-        /** @var RuleTrigger $trigger */
-        foreach ($triggers as $trigger) {
-            $trigger->trigger_value = $newName;
-            $trigger->save();
-            app('log')->debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
-        }
-    }
-
-    private function setNoteText(Budget $budget, string $text): void
-    {
-        $dbNote = $budget->notes()->first();
-        if ('' !== $text) {
-            if (null === $dbNote) {
-                $dbNote = new Note();
-                $dbNote->noteable()->associate($budget);
-            }
-            $dbNote->text = trim($text);
-            $dbNote->save();
-
-            return;
-        }
-        if (null !== $dbNote) {
-            $dbNote->delete();
-        }
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function updateAutoBudget(Budget $budget, array $data): void
-    {
-        // update or create auto-budget:
-        $autoBudget = $this->getAutoBudget($budget);
-
-        // grab default currency:
-        $currency   = app('amount')->getDefaultCurrencyByUserGroup($this->user->userGroup);
-
-        if (null === $autoBudget) {
-            // at this point it's a blind assumption auto_budget_type is 1 or 2.
-            $autoBudget                          = new AutoBudget();
-            $autoBudget->auto_budget_type        = $data['auto_budget_type'];
-            $autoBudget->budget_id               = $budget->id;
-            $autoBudget->transaction_currency_id = $currency->id;
-        }
-
-        // set or update the currency.
-        if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
-            /** @var CurrencyRepositoryInterface $repos */
-            $repos        = app(CurrencyRepositoryInterface::class);
-            $currencyId   = (int) ($data['currency_id'] ?? 0);
-            $currencyCode = (string) ($data['currency_code'] ?? '');
-            $currency     = $repos->find($currencyId);
-            if (null === $currency) {
-                $currency = $repos->findByCode($currencyCode);
-            }
-            if (null !== $currency) {
-                $autoBudget->transaction_currency_id = $currency->id;
-            }
-        }
-
-        // change values if submitted or presented:
-        if (array_key_exists('auto_budget_type', $data)) {
-            $autoBudget->auto_budget_type = $data['auto_budget_type'];
-        }
-        if (array_key_exists('auto_budget_amount', $data)) {
-            $autoBudget->amount = $data['auto_budget_amount'];
-        }
-        if (array_key_exists('auto_budget_period', $data)) {
-            $autoBudget->period = $data['auto_budget_period'];
-        }
-
-        $autoBudget->save();
+        return (int)$this->user->budgets()->max('order');
     }
 }

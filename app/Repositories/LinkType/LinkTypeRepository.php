@@ -245,6 +245,25 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         ;
     }
 
+    /**
+     * @throws \Exception
+     */
+    private function setNoteText(TransactionJournalLink $link, string $text): void
+    {
+        $dbNote = $link->notes()->first();
+        if ('' !== $text) {
+            if (null === $dbNote) {
+                $dbNote = new Note();
+                $dbNote->noteable()->associate($link);
+            }
+            $dbNote->text = trim($text);
+            $dbNote->save();
+
+            return;
+        }
+        $dbNote?->delete();
+    }
+
     public function switchLinkById(int $linkId): bool
     {
         /** @var null|TransactionJournalLink $link */
@@ -292,24 +311,5 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         }
 
         return $journalLink;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    private function setNoteText(TransactionJournalLink $link, string $text): void
-    {
-        $dbNote = $link->notes()->first();
-        if ('' !== $text) {
-            if (null === $dbNote) {
-                $dbNote = new Note();
-                $dbNote->noteable()->associate($link);
-            }
-            $dbNote->text = trim($text);
-            $dbNote->save();
-
-            return;
-        }
-        $dbNote?->delete();
     }
 }

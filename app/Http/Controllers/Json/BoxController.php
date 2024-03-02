@@ -129,7 +129,7 @@ class BoxController extends Controller
                 app('log')->debug('Left to spend is positive or zero!');
                 $boxTitle         = (string)trans('firefly.left_to_spend');
                 $activeDaysLeft   = $this->activeDaysLeft($start, $end);   // see method description.
-                $display          = 1; // not overspent
+                $display          = 1;                                     // not overspent
                 $leftPerDayAmount = bcdiv($leftToSpendAmount, (string)$activeDaysLeft);
                 app('log')->debug(sprintf('Left to spend per day is %s', $leftPerDayAmount));
             }

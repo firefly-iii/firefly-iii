@@ -110,6 +110,31 @@ class RegisterController extends Controller
     }
 
     /**
+     * @throws FireflyException
+     */
+    protected function allowedToRegister(): bool
+    {
+        // is allowed to register?
+        $allowRegistration = true;
+
+        try {
+            $singleUserMode = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
+            $singleUserMode = true;
+        }
+        $userCount         = User::count();
+        $guard             = config('auth.defaults.guard');
+        if (true === $singleUserMode && $userCount > 0 && 'web' === $guard) {
+            $allowRegistration = false;
+        }
+        if ('web' !== $guard) {
+            $allowRegistration = false;
+        }
+
+        return $allowRegistration;
+    }
+
+    /**
      * Show the application registration form if the invitation code is valid.
      *
      * @return Factory|View
@@ -163,30 +188,5 @@ class RegisterController extends Controller
         $email             = $request->old('email');
 
         return view('auth.register', compact('isDemoSite', 'email', 'pageTitle'));
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    protected function allowedToRegister(): bool
-    {
-        // is allowed to register?
-        $allowRegistration = true;
-
-        try {
-            $singleUserMode = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
-        } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
-            $singleUserMode = true;
-        }
-        $userCount         = User::count();
-        $guard             = config('auth.defaults.guard');
-        if (true === $singleUserMode && $userCount > 0 && 'web' === $guard) {
-            $allowRegistration = false;
-        }
-        if ('web' !== $guard) {
-            $allowRegistration = false;
-        }
-
-        return $allowRegistration;
     }
 }

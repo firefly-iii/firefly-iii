@@ -104,7 +104,7 @@ class UpdateRequest extends FormRequest
                 $this->validateAutoBudgetAmount($validator);
             }
         );
-        if($validator->fails()) {
+        if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', __CLASS__), $validator->errors()->toArray());
         }
     }

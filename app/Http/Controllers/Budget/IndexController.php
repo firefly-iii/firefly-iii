@@ -116,7 +116,6 @@ class IndexController extends Controller
 
         // get all available budgets:
         $availableBudgets = $this->getAllAvailableBudgets($start, $end);
-
         // get all active budgets:
         $budgets          = $this->getAllBudgets($start, $end, $currencies, $defaultCurrency);
         $sums             = $this->getSums($budgets);
@@ -157,24 +156,6 @@ class IndexController extends Controller
                 'sums'
             )
         );
-    }
-
-    public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
-    {
-        $this->abRepository->cleanup();
-        $budgetIds = $request->get('budgetIds');
-
-        foreach ($budgetIds as $index => $budgetId) {
-            $budgetId = (int)$budgetId;
-            $budget   = $repository->find($budgetId);
-            if (null !== $budget) {
-                app('log')->debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
-                $repository->setBudgetOrder($budget, $index + 1);
-            }
-        }
-        app('preferences')->mark();
-
-        return response()->json(['OK']);
     }
 
     private function getAllAvailableBudgets(Carbon $start, Carbon $end): array
@@ -315,5 +296,23 @@ class IndexController extends Controller
         }
 
         return $sums;
+    }
+
+    public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
+    {
+        $this->abRepository->cleanup();
+        $budgetIds = $request->get('budgetIds');
+
+        foreach ($budgetIds as $index => $budgetId) {
+            $budgetId = (int)$budgetId;
+            $budget   = $repository->find($budgetId);
+            if (null !== $budget) {
+                app('log')->debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
+                $repository->setBudgetOrder($budget, $index + 1);
+            }
+        }
+        app('preferences')->mark();
+
+        return response()->json(['OK']);
     }
 }

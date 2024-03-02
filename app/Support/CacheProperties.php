@@ -73,14 +73,6 @@ class CacheProperties
         return \Cache::has($this->hash);
     }
 
-    /**
-     * @param mixed $data
-     */
-    public function store($data): void
-    {
-        \Cache::forever($this->hash, $data);
-    }
-
     private function hash(): void
     {
         $content    = '';
@@ -93,5 +85,13 @@ class CacheProperties
             }
         }
         $this->hash = substr(hash('sha256', $content), 0, 16);
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function store($data): void
+    {
+        \Cache::forever($this->hash, $data);
     }
 }

@@ -90,6 +90,46 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         return $result;
     }
 
+    private function expandJournal(TransactionJournal $journal): array
+    {
+        $array                      = $journal->toArray();
+        $array['transactions']      = [];
+        $array['meta']              = $journal->transactionJournalMeta->toArray();
+        $array['tags']              = $journal->tags->toArray();
+        $array['categories']        = $journal->categories->toArray();
+        $array['budgets']           = $journal->budgets->toArray();
+        $array['notes']             = $journal->notes->toArray();
+        $array['locations']         = [];
+        $array['attachments']       = $journal->attachments->toArray();
+        $array['links']             = [];
+        $array['piggy_bank_events'] = $journal->piggyBankEvents->toArray();
+
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $array['transactions'][] = $this->expandTransaction($transaction);
+        }
+
+        return $array;
+    }
+
+    private function expandTransaction(Transaction $transaction): array
+    {
+        $array               = $transaction->toArray();
+        $array['account']    = $transaction->account->toArray();
+        $array['budgets']    = [];
+        $array['categories'] = [];
+
+        foreach ($transaction->categories as $category) {
+            $array['categories'][] = $category->toArray();
+        }
+
+        foreach ($transaction->budgets as $budget) {
+            $array['budgets'][] = $budget->toArray();
+        }
+
+        return $array;
+    }
+
     /**
      * Return all attachments for all journals in the group.
      */
@@ -196,6 +236,48 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                     'foreign_amount' => $foreignAmount,
                 ];
             }
+        }
+
+        return $return;
+    }
+
+    private function getFormattedAmount(TransactionJournal $journal): string
+    {
+        /** @var Transaction $transaction */
+        $transaction = $journal->transactions->first();
+        $currency    = $transaction->transactionCurrency;
+        $type        = $journal->transactionType->type;
+        $amount      = app('steam')->positive($transaction->amount);
+        $return      = '';
+        if (TransactionType::WITHDRAWAL === $type) {
+            $return = app('amount')->formatAnything($currency, app('steam')->negative($amount));
+        }
+        if (TransactionType::WITHDRAWAL !== $type) {
+            $return = app('amount')->formatAnything($currency, $amount);
+        }
+
+        return $return;
+    }
+
+    private function getFormattedForeignAmount(TransactionJournal $journal): string
+    {
+        /** @var Transaction $transaction */
+        $transaction = $journal->transactions->first();
+        if (null === $transaction->foreign_amount || '' === $transaction->foreign_amount) {
+            return '';
+        }
+        if (0 === bccomp('0', $transaction->foreign_amount)) {
+            return '';
+        }
+        $currency    = $transaction->foreignCurrency;
+        $type        = $journal->transactionType->type;
+        $amount      = app('steam')->positive($transaction->foreign_amount);
+        $return      = '';
+        if (TransactionType::WITHDRAWAL === $type) {
+            $return = app('amount')->formatAnything($currency, app('steam')->negative($amount));
+        }
+        if (TransactionType::WITHDRAWAL !== $type) {
+            $return = app('amount')->formatAnything($currency, $amount);
         }
 
         return $return;
@@ -350,87 +432,5 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         $service = app(GroupUpdateService::class);
 
         return $service->update($transactionGroup, $data);
-    }
-
-    private function expandJournal(TransactionJournal $journal): array
-    {
-        $array                      = $journal->toArray();
-        $array['transactions']      = [];
-        $array['meta']              = $journal->transactionJournalMeta->toArray();
-        $array['tags']              = $journal->tags->toArray();
-        $array['categories']        = $journal->categories->toArray();
-        $array['budgets']           = $journal->budgets->toArray();
-        $array['notes']             = $journal->notes->toArray();
-        $array['locations']         = [];
-        $array['attachments']       = $journal->attachments->toArray();
-        $array['links']             = [];
-        $array['piggy_bank_events'] = $journal->piggyBankEvents->toArray();
-
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            $array['transactions'][] = $this->expandTransaction($transaction);
-        }
-
-        return $array;
-    }
-
-    private function expandTransaction(Transaction $transaction): array
-    {
-        $array               = $transaction->toArray();
-        $array['account']    = $transaction->account->toArray();
-        $array['budgets']    = [];
-        $array['categories'] = [];
-
-        foreach ($transaction->categories as $category) {
-            $array['categories'][] = $category->toArray();
-        }
-
-        foreach ($transaction->budgets as $budget) {
-            $array['budgets'][] = $budget->toArray();
-        }
-
-        return $array;
-    }
-
-    private function getFormattedAmount(TransactionJournal $journal): string
-    {
-        /** @var Transaction $transaction */
-        $transaction = $journal->transactions->first();
-        $currency    = $transaction->transactionCurrency;
-        $type        = $journal->transactionType->type;
-        $amount      = app('steam')->positive($transaction->amount);
-        $return      = '';
-        if (TransactionType::WITHDRAWAL === $type) {
-            $return = app('amount')->formatAnything($currency, app('steam')->negative($amount));
-        }
-        if (TransactionType::WITHDRAWAL !== $type) {
-            $return = app('amount')->formatAnything($currency, $amount);
-        }
-
-        return $return;
-    }
-
-    private function getFormattedForeignAmount(TransactionJournal $journal): string
-    {
-        /** @var Transaction $transaction */
-        $transaction = $journal->transactions->first();
-        if (null === $transaction->foreign_amount || '' === $transaction->foreign_amount) {
-            return '';
-        }
-        if (0 === bccomp('0', $transaction->foreign_amount)) {
-            return '';
-        }
-        $currency    = $transaction->foreignCurrency;
-        $type        = $journal->transactionType->type;
-        $amount      = app('steam')->positive($transaction->foreign_amount);
-        $return      = '';
-        if (TransactionType::WITHDRAWAL === $type) {
-            $return = app('amount')->formatAnything($currency, app('steam')->negative($amount));
-        }
-        if (TransactionType::WITHDRAWAL !== $type) {
-            $return = app('amount')->formatAnything($currency, $amount);
-        }
-
-        return $return;
     }
 }

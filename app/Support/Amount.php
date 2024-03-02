@@ -63,7 +63,7 @@ class Amount
         $fmt->setSymbol(\NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result  = (string) $fmt->format((float) $rounded); // intentional float
+        $result  = (string)$fmt->format((float)$rounded); // intentional float
 
         if (true === $coloured) {
             if (1 === bccomp($rounded, '0')) {
@@ -158,6 +158,41 @@ class Amount
     }
 
     /**
+     * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.MissingImport)
+     */
+    private function getLocaleInfo(): array
+    {
+        // get config from preference, not from translation:
+        $locale                    = app('steam')->getLocale();
+        $array                     = app('steam')->getLocaleArray($locale);
+
+        setlocale(LC_MONETARY, $array);
+        $info                      = localeconv();
+
+        // correct variables
+        $info['n_cs_precedes']     = $this->getLocaleField($info, 'n_cs_precedes');
+        $info['p_cs_precedes']     = $this->getLocaleField($info, 'p_cs_precedes');
+
+        $info['n_sep_by_space']    = $this->getLocaleField($info, 'n_sep_by_space');
+        $info['p_sep_by_space']    = $this->getLocaleField($info, 'p_sep_by_space');
+
+        $fmt                       = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+
+        $info['mon_decimal_point'] = $fmt->getSymbol(\NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
+        $info['mon_thousands_sep'] = $fmt->getSymbol(\NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL);
+
+        return $info;
+    }
+
+    private function getLocaleField(array $info, string $field): bool
+    {
+        return (is_bool($info[$field]) && true === $info[$field])
+               || (is_int($info[$field]) && 1 === $info[$field]);
+    }
+
+    /**
      * bool $sepBySpace is $localeconv['n_sep_by_space']
      * int $signPosn = $localeconv['n_sign_posn']
      * string $sign = $localeconv['negative_sign']
@@ -229,40 +264,5 @@ class Amount
         }
 
         return $format;
-    }
-
-    /**
-     * @throws FireflyException
-     *
-     * @SuppressWarnings(PHPMD.MissingImport)
-     */
-    private function getLocaleInfo(): array
-    {
-        // get config from preference, not from translation:
-        $locale                    = app('steam')->getLocale();
-        $array                     = app('steam')->getLocaleArray($locale);
-
-        setlocale(LC_MONETARY, $array);
-        $info                      = localeconv();
-
-        // correct variables
-        $info['n_cs_precedes']     = $this->getLocaleField($info, 'n_cs_precedes');
-        $info['p_cs_precedes']     = $this->getLocaleField($info, 'p_cs_precedes');
-
-        $info['n_sep_by_space']    = $this->getLocaleField($info, 'n_sep_by_space');
-        $info['p_sep_by_space']    = $this->getLocaleField($info, 'p_sep_by_space');
-
-        $fmt                       = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
-
-        $info['mon_decimal_point'] = $fmt->getSymbol(\NumberFormatter::MONETARY_SEPARATOR_SYMBOL);
-        $info['mon_thousands_sep'] = $fmt->getSymbol(\NumberFormatter::MONETARY_GROUPING_SEPARATOR_SYMBOL);
-
-        return $info;
-    }
-
-    private function getLocaleField(array $info, string $field): bool
-    {
-        return (is_bool($info[$field]) && true === $info[$field])
-               || (is_int($info[$field]) && 1 === $info[$field]);
     }
 }

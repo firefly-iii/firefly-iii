@@ -115,7 +115,7 @@ return [
         'handle_debts' => true,
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.1.9',
+    'version'                      => 'develop/2024-02-08',
     'api_version'                  => '2.0.12',
     'db_version'                   => 22,
 
@@ -912,4 +912,11 @@ return [
 
     // preselected account lists possibilities:
     'preselected_accounts'         => ['all', 'assets', 'liabilities'],
+
+    // allowed sort columns for API's
+    'sorting'                      => [
+        'allowed' => [
+            'transactions' => ['description', 'amount'],
+        ],
+    ],
 ];

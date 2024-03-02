@@ -28,43 +28,6 @@ namespace FireflyIII\Support\Request;
  */
 trait AppendsLocationData
 {
-    /**
-     * Abstract method.
-     *
-     * @param mixed $key
-     *
-     * @return bool
-     */
-    abstract public function has($key);
-
-    /**
-     * Abstract method.
-     *
-     * @return string
-     */
-    abstract public function method();
-
-    /**
-     * Abstract method.
-     *
-     * @param mixed ...$patterns
-     *
-     * @return mixed
-     */
-    abstract public function routeIs(...$patterns);
-
-    /**
-     * Abstract method stolen from "InteractsWithInput".
-     *
-     * @param null $key
-     * @param bool $default
-     *
-     * @return mixed
-     *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     */
-    abstract public function boolean($key = null, $default = false);
-
     public function addFromromTransactionStore(array $information, array $return): array
     {
         $return['store_location'] = false;
@@ -81,6 +44,29 @@ trait AppendsLocationData
 
         return $return;
     }
+
+    private function validLongitude(string $longitude): bool
+    {
+        $number = (float)$longitude;
+
+        return $number >= -180 && $number <= 180;
+    }
+
+    private function validLatitude(string $latitude): bool
+    {
+        $number = (float)$latitude;
+
+        return $number >= -90 && $number <= 90;
+    }
+
+    /**
+     * Abstract method.
+     *
+     * @param mixed $key
+     *
+     * @return bool
+     */
+    abstract public function has($key);
 
     /**
      * Read the submitted Request data and add new or updated Location data to the array.
@@ -136,20 +122,6 @@ trait AppendsLocationData
         return $data;
     }
 
-    private function validLongitude(string $longitude): bool
-    {
-        $number = (float) $longitude;
-
-        return $number >= -180 && $number <= 180;
-    }
-
-    private function validLatitude(string $latitude): bool
-    {
-        $number = (float) $latitude;
-
-        return $number >= -90 && $number <= 90;
-    }
-
     private function getLocationKey(?string $prefix, string $key): string
     {
         if (null === $prefix) {
@@ -196,6 +168,34 @@ trait AppendsLocationData
 
         return false;
     }
+
+    /**
+     * Abstract method.
+     *
+     * @return string
+     */
+    abstract public function method();
+
+    /**
+     * Abstract method.
+     *
+     * @param mixed ...$patterns
+     *
+     * @return mixed
+     */
+    abstract public function routeIs(...$patterns);
+
+    /**
+     * Abstract method stolen from "InteractsWithInput".
+     *
+     * @param null $key
+     * @param bool $default
+     *
+     * @return mixed
+     *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
+    abstract public function boolean($key = null, $default = false);
 
     private function isValidPUT(?string $prefix): bool
     {

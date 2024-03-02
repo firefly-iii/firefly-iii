@@ -135,24 +135,6 @@ class IndexController extends Controller
     }
 
     /**
-     * Set the order of a bill.
-     */
-    public function setOrder(Request $request, Bill $bill): JsonResponse
-    {
-        $objectGroupTitle = (string)$request->get('objectGroupTitle');
-        $newOrder         = (int)$request->get('order');
-        $this->repository->setOrder($bill, $newOrder);
-        if ('' !== $objectGroupTitle) {
-            $this->repository->setObjectGroup($bill, $objectGroupTitle);
-        }
-        if ('' === $objectGroupTitle) {
-            $this->repository->removeObjectGroup($bill);
-        }
-
-        return response()->json(['data' => 'OK']);
-    }
-
-    /**
      * @throws FireflyException
      */
     private function getSums(array $bills): array
@@ -267,5 +249,23 @@ class IndexController extends Controller
         }
 
         return $totals;
+    }
+
+    /**
+     * Set the order of a bill.
+     */
+    public function setOrder(Request $request, Bill $bill): JsonResponse
+    {
+        $objectGroupTitle = (string)$request->get('objectGroupTitle');
+        $newOrder         = (int)$request->get('order');
+        $this->repository->setOrder($bill, $newOrder);
+        if ('' !== $objectGroupTitle) {
+            $this->repository->setObjectGroup($bill, $objectGroupTitle);
+        }
+        if ('' === $objectGroupTitle) {
+            $this->repository->removeObjectGroup($bill);
+        }
+
+        return response()->json(['data' => 'OK']);
     }
 }

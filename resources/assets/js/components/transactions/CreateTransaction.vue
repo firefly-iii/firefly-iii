@@ -749,6 +749,12 @@ export default {
                             case 'tags':
                                 this.transactions[transactionIndex].errors[fieldName] = errors.errors[key];
                                 break;
+                            case 'type':
+                                if(errors.errors[key].length > 0) {
+                                    this.transactions[transactionIndex].errors.source_account = [this.$t('firefly.select_source_account')];
+                                    this.transactions[transactionIndex].errors.destination_account = [this.$t('firefly.select_dest_account')];
+                                }
+                                break;
                             case 'source_name':
                             case 'source_id':
                                 this.transactions[transactionIndex].errors.source_account =
