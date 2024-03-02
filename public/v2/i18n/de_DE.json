@@ -2,7 +2,7 @@
     "config": {
         "html_language": "de",
         "date_time_fns": "dd. MMM. yyyy um HH:mm:ss",
-        "date_time_fns_short": "MMMM do, yyyy @ HH:mm"
+        "date_time_fns_short": "dd. MMM. yyyy um HH:mm"
     },
     "firefly": {
         "spent": "Ausgegeben",
