@@ -117,7 +117,7 @@ return [
     ],
     'version'                      => '6.1.10',
     'api_version'                  => '2.0.12',
-    'db_version'                   => 22,
+    'db_version'                   => 23,
 
     // generic settings
     'maxUploadSize'                => 1073741824, // 1 GB
