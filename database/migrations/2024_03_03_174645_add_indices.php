@@ -17,15 +17,15 @@ return new class extends Migration {
         // add missing indices
         $set = [
             'account_meta'                 => ['account_id'],
-            'accounts'                     => ['id', 'user_id', 'user_group_id', 'account_type_id'],
-            'budgets'                      => ['id', 'user_id', 'user_group_id'],
+            'accounts'                     => ['user_id', 'user_group_id', 'account_type_id'],
+            'budgets'                      => ['user_id', 'user_group_id'],
             'journal_meta'                 => ['transaction_journal_id', 'data', 'name'],
             'category_transaction_journal' => ['transaction_journal_id'],
-            'categories'                   => ['id', 'user_id', 'user_group_id'],
-            'transaction_currencies'       => ['id', 'code'],
-            'transaction_groups'           => ['id', 'user_id', 'user_group_id'],
-            'transaction_journals'         => ['id', 'user_id', 'user_group_id', 'date', 'transaction_group_id', 'transaction_type_id', 'transaction_currency_id', 'bill_id'],
-            'transactions'                 => ['id', 'user_id', 'user_group_id', 'account_id', 'transaction_journal_id', 'transaction_currency_id', 'foreign_currency_id'],
+            'categories'                   => ['user_id', 'user_group_id'],
+            'transaction_currencies'       => ['code'],
+            'transaction_groups'           => ['user_id', 'user_group_id'],
+            'transaction_journals'         => ['user_id', 'user_group_id', 'date', 'transaction_group_id', 'transaction_type_id', 'transaction_currency_id', 'bill_id'],
+            'transactions'                 => ['user_id', 'user_group_id', 'account_id', 'transaction_journal_id', 'transaction_currency_id', 'foreign_currency_id'],
         ];
 
         foreach ($set as $table => $fields) {
