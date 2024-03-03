@@ -75,6 +75,7 @@ class ReconcileController extends Controller
         $clearedAmount   = '0';
         $route           = '';
 
+
         if (null === $start && null === $end) {
             throw new FireflyException('Invalid dates submitted.');
         }
@@ -176,6 +177,7 @@ class ReconcileController extends Controller
         }
         $startDate      = clone $start;
         $startDate->subDay();
+        $end->endOfDay();
 
         $currency       = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
         $startBalance   = app('steam')->bcround(app('steam')->balance($account, $startDate), $currency->decimal_places);
