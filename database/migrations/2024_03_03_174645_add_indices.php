@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class () extends Migration {
     private const string QUERY_ERROR = 'Could not execute query (table "%s", field "%s"): %s';
     private const string EXPL        = 'If the index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.';
 
@@ -25,7 +27,7 @@ return new class extends Migration {
             'transaction_currencies'       => ['code'],
             'transaction_groups'           => ['user_id', 'user_group_id'],
             'transaction_journals'         => ['user_id', 'user_group_id', 'date', 'transaction_group_id', 'transaction_type_id', 'transaction_currency_id', 'bill_id'],
-            'transactions'                 => ['user_id', 'user_group_id', 'account_id', 'transaction_journal_id', 'transaction_currency_id', 'foreign_currency_id'],
+            'transactions'                 => ['account_id', 'transaction_journal_id', 'transaction_currency_id', 'foreign_currency_id'],
         ];
 
         foreach ($set as $table => $fields) {
@@ -43,14 +45,10 @@ return new class extends Migration {
                 }
             }
         }
-
     }
 
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
-        //
-    }
+    public function down(): void {}
 };
