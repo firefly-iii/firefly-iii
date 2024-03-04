@@ -917,6 +917,7 @@ return [
     'sorting'                      => [
         'allowed' => [
             'transactions' => ['description', 'amount'],
+            'accounts' => ['name'],
         ],
     ],
 ];

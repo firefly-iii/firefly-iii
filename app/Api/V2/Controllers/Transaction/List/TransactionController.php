@@ -79,7 +79,7 @@ class TransactionController extends Controller
     public function infiniteList(InfiniteListRequest $request): JsonResponse
     {
         // get sort instructions
-        $instructions = $request->getSortInstructions();
+        $instructions = $request->getSortInstructions('transactions');
 
         // collect transactions:
         /** @var GroupCollectorInterface $collector */

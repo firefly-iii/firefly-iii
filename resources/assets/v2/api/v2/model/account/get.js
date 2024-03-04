@@ -29,12 +29,16 @@ export default class Get {
      * @param date
      * @returns {Promise<AxiosResponse<any>>}
      */
-    get(identifier, date) {
+    list(identifier, date) {
         let params = {date: format(date, 'y-MM-dd').slice(0, 10)};
         if (!date) {
             return api.get('/api/v2/accounts/' + identifier);
         }
         return api.get('/api/v2/accounts/' + identifier, {params: params});
+    }
+
+    infiniteList(params) {
+        return api.get('/api/v2/infinite/accounts', {params: params});
     }
 
     /**

@@ -49,6 +49,20 @@ interface AccountRepositoryInterface
 
     public function getAccountsByType(array $types, ?array $sort = []): Collection;
 
+    public function countAccounts(array $types): int;
+
+    /**
+     * Used in the infinite accounts list.
+     *
+     * @param array $types
+     * @param array $sort
+     * @param int   $startRow
+     * @param int   $endRow
+     *
+     * @return Collection
+     */
+public function getAccountsInOrder(array $types,  array $sort, int $startRow, int $endRow): Collection;
+
     public function getActiveAccountsByType(array $types): Collection;
 
     /**
@@ -61,4 +75,9 @@ interface AccountRepositoryInterface
     public function setUser(User $user): void;
 
     public function setUserGroup(UserGroup $userGroup): void;
+
+    /**
+     * Reset order types of the mentioned accounts.
+     */
+    public function resetAccountOrder(): void;
 }

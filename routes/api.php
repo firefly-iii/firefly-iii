@@ -172,8 +172,19 @@ Route::group(
     }
 );
 
+// infinite accounts list:
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Account',
+        'prefix'    => 'v2/infinite/accounts',
+        'as'        => 'api.v2.infinite.accounts.',
+    ],
+    static function (): void {
+        Route::get('', ['uses' => 'IndexController@infiniteList', 'as' => 'list']);
+    }
+);
+
 // V2 API route for budgets and budget limits:
-// TODO Validate from here down.
 Route::group(
     [
         'namespace' => 'FireflyIII\Api\V2\Controllers\Model',

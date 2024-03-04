@@ -114,7 +114,7 @@ class AccountTransformer extends AbstractTransformer
 
         // no currency? use default
         $currency      = $this->default;
-        if (0 !== (int)$this->accountMeta[$id]['currency_id']) {
+        if (array_key_exists($id, $this->accountMeta) && 0 !== (int)$this->accountMeta[$id]['currency_id']) {
             $currency = $this->currencies[(int)$this->accountMeta[$id]['currency_id']];
         }
         // amounts and calculation.

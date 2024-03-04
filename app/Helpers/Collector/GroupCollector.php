@@ -792,6 +792,7 @@ class GroupCollector implements GroupCollectorInterface
             $this->setLimit(50);
         }
         if (null !== $this->startRow && null !== $this->endRow) {
+            /** @var int $total */
             $total = $this->endRow - $this->startRow;
 
             return new LengthAwarePaginator($set, $this->total, $total, 1);
