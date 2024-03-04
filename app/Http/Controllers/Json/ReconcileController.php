@@ -75,7 +75,6 @@ class ReconcileController extends Controller
         $clearedAmount   = '0';
         $route           = '';
 
-
         if (null === $start && null === $end) {
             throw new FireflyException('Invalid dates submitted.');
         }
