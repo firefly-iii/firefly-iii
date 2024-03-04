@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a290b73e0cc243be7afa30409d4069a4",
+    "content-hash": "58ae8806859163b7e368713d917a12e0",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -542,16 +542,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "3.8.2",
+            "version": "3.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "a19a1d05ca211f41089dffcc387733a6875196cb"
+                "reference": "db922ba9436b7b18a23d1653a0b41ff2369ca41c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/a19a1d05ca211f41089dffcc387733a6875196cb",
-                "reference": "a19a1d05ca211f41089dffcc387733a6875196cb",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/db922ba9436b7b18a23d1653a0b41ff2369ca41c",
+                "reference": "db922ba9436b7b18a23d1653a0b41ff2369ca41c",
                 "shasum": ""
             },
             "require": {
@@ -567,12 +567,12 @@
                 "doctrine/coding-standard": "12.0.0",
                 "fig/log-test": "^1",
                 "jetbrains/phpstorm-stubs": "2023.1",
-                "phpstan/phpstan": "1.10.57",
+                "phpstan/phpstan": "1.10.58",
                 "phpstan/phpstan-strict-rules": "^1.5",
                 "phpunit/phpunit": "9.6.16",
                 "psalm/plugin-phpunit": "0.18.4",
                 "slevomat/coding-standard": "8.13.1",
-                "squizlabs/php_codesniffer": "3.8.1",
+                "squizlabs/php_codesniffer": "3.9.0",
                 "symfony/cache": "^5.4|^6.0|^7.0",
                 "symfony/console": "^4.4|^5.4|^6.0|^7.0",
                 "vimeo/psalm": "4.30.0"
@@ -635,7 +635,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-                "source": "https://github.com/doctrine/dbal/tree/3.8.2"
+                "source": "https://github.com/doctrine/dbal/tree/3.8.3"
             },
             "funding": [
                 {
@@ -651,7 +651,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-12T18:36:36+00:00"
+            "time": "2024-03-03T15:55:06+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -4476,16 +4476,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "3.0.36",
+            "version": "3.0.37",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "c2fb5136162d4be18fdd4da9980696f3aee96d7b"
+                "reference": "cfa2013d0f68c062055180dd4328cc8b9d1f30b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/c2fb5136162d4be18fdd4da9980696f3aee96d7b",
-                "reference": "c2fb5136162d4be18fdd4da9980696f3aee96d7b",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/cfa2013d0f68c062055180dd4328cc8b9d1f30b8",
+                "reference": "cfa2013d0f68c062055180dd4328cc8b9d1f30b8",
                 "shasum": ""
             },
             "require": {
@@ -4566,7 +4566,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpseclib/phpseclib/issues",
-                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.36"
+                "source": "https://github.com/phpseclib/phpseclib/tree/3.0.37"
             },
             "funding": [
                 {
@@ -4582,7 +4582,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-26T05:13:14+00:00"
+            "time": "2024-03-03T02:14:58+00:00"
         },
         {
             "name": "pragmarx/google2fa",
@@ -9075,48 +9075,48 @@
         },
         {
             "name": "barryvdh/laravel-ide-helper",
-            "version": "v2.15.1",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "77831852bb7bc54f287246d32eb91274eaf87f8b"
+                "reference": "bc1d67f01ce8c77e3f97d48ba51fa1d81874f622"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/77831852bb7bc54f287246d32eb91274eaf87f8b",
-                "reference": "77831852bb7bc54f287246d32eb91274eaf87f8b",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/bc1d67f01ce8c77e3f97d48ba51fa1d81874f622",
+                "reference": "bc1d67f01ce8c77e3f97d48ba51fa1d81874f622",
                 "shasum": ""
             },
             "require": {
-                "barryvdh/reflection-docblock": "^2.0.6",
+                "barryvdh/reflection-docblock": "^2.1.1",
                 "composer/class-map-generator": "^1.0",
-                "doctrine/dbal": "^2.6 || ^3.1.4",
                 "ext-json": "*",
-                "illuminate/console": "^9 || ^10",
-                "illuminate/filesystem": "^9 || ^10",
-                "illuminate/support": "^9 || ^10",
+                "illuminate/console": "^10 || ^11",
+                "illuminate/database": "^10.38 || ^11",
+                "illuminate/filesystem": "^10 || ^11",
+                "illuminate/support": "^10 || ^11",
                 "nikic/php-parser": "^4.18 || ^5",
-                "php": "^8.0",
+                "php": "^8.1",
                 "phpdocumentor/type-resolver": "^1.1.0"
             },
             "require-dev": {
                 "ext-pdo_sqlite": "*",
                 "friendsofphp/php-cs-fixer": "^3",
-                "illuminate/config": "^9 || ^10",
-                "illuminate/view": "^9 || ^10",
+                "illuminate/config": "^9 || ^10 || ^11",
+                "illuminate/view": "^9 || ^10 || ^11",
                 "mockery/mockery": "^1.4",
-                "orchestra/testbench": "^7 || ^8",
-                "phpunit/phpunit": "^9",
-                "spatie/phpunit-snapshot-assertions": "^4",
+                "orchestra/testbench": "^8 || ^9",
+                "phpunit/phpunit": "^10.5",
+                "spatie/phpunit-snapshot-assertions": "^4 || ^5",
                 "vimeo/psalm": "^5.4"
             },
             "suggest": {
-                "illuminate/events": "Required for automatic helper generation (^6|^7|^8|^9|^10)."
+                "illuminate/events": "Required for automatic helper generation (^6|^7|^8|^9|^10|^11)."
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.15-dev"
+                    "dev-master": "3.0-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -9153,7 +9153,7 @@
             ],
             "support": {
                 "issues": "https://github.com/barryvdh/laravel-ide-helper/issues",
-                "source": "https://github.com/barryvdh/laravel-ide-helper/tree/v2.15.1"
+                "source": "https://github.com/barryvdh/laravel-ide-helper/tree/v3.0.0"
             },
             "funding": [
                 {
@@ -9165,7 +9165,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-02-15T14:23:20+00:00"
+            "time": "2024-03-01T12:53:18+00:00"
         },
         {
             "name": "barryvdh/reflection-docblock",
@@ -9919,20 +9919,21 @@
         },
         {
             "name": "phar-io/manifest",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phar-io/manifest.git",
-                "reference": "97803eca37d319dfa7826cc2437fc020857acb53"
+                "reference": "54750ef60c58e43759730615a392c31c80e23176"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phar-io/manifest/zipball/97803eca37d319dfa7826cc2437fc020857acb53",
-                "reference": "97803eca37d319dfa7826cc2437fc020857acb53",
+                "url": "https://api.github.com/repos/phar-io/manifest/zipball/54750ef60c58e43759730615a392c31c80e23176",
+                "reference": "54750ef60c58e43759730615a392c31c80e23176",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
+                "ext-libxml": "*",
                 "ext-phar": "*",
                 "ext-xmlwriter": "*",
                 "phar-io/version": "^3.0.1",
@@ -9973,9 +9974,15 @@
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
             "support": {
                 "issues": "https://github.com/phar-io/manifest/issues",
-                "source": "https://github.com/phar-io/manifest/tree/2.0.3"
+                "source": "https://github.com/phar-io/manifest/tree/2.0.4"
             },
-            "time": "2021-07-20T11:28:43+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/theseer",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-03-03T12:33:53+00:00"
         },
         {
             "name": "phar-io/version",
@@ -11872,16 +11879,16 @@
         },
         {
             "name": "theseer/tokenizer",
-            "version": "1.2.2",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theseer/tokenizer.git",
-                "reference": "b2ad5003ca10d4ee50a12da31de12a5774ba6b96"
+                "reference": "737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/b2ad5003ca10d4ee50a12da31de12a5774ba6b96",
-                "reference": "b2ad5003ca10d4ee50a12da31de12a5774ba6b96",
+                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2",
+                "reference": "737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2",
                 "shasum": ""
             },
             "require": {
@@ -11910,7 +11917,7 @@
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "support": {
                 "issues": "https://github.com/theseer/tokenizer/issues",
-                "source": "https://github.com/theseer/tokenizer/tree/1.2.2"
+                "source": "https://github.com/theseer/tokenizer/tree/1.2.3"
             },
             "funding": [
                 {
@@ -11918,7 +11925,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-11-20T00:12:19+00:00"
+            "time": "2024-03-03T12:36:25+00:00"
         }
     ],
     "aliases": [],
