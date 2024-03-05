@@ -1,3 +1,9 @@
+<li class="nav-item">
+    <a class="nav-link" href="{{ route(Route::current()->getName(), Route::current()->parameters()) }}?force_default_layout=true">
+        <i class="fa-solid fa-landmark"></i>
+    </a>
+
+</li>
 <li class="nav-item dropdown">
     <a class="nav-link" data-bs-toggle="dropdown" href="#">
         <i class="fa-solid fa-gears"></i>

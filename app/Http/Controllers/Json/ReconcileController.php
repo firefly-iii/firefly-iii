@@ -34,7 +34,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class ReconcileController
@@ -119,10 +118,10 @@ class ReconcileController extends Controller
                 $clearedAmount = $this->processJournal($account, $accountCurrency, $journal, $clearedAmount);
             }
         }
-        Log::debug(sprintf('Start balance: "%s"', $startBalance));
-        Log::debug(sprintf('End balance: "%s"', $endBalance));
-        Log::debug(sprintf('Cleared amount: "%s"', $clearedAmount));
-        Log::debug(sprintf('Amount: "%s"', $amount));
+        \Log::debug(sprintf('Start balance: "%s"', $startBalance));
+        \Log::debug(sprintf('End balance: "%s"', $endBalance));
+        \Log::debug(sprintf('Cleared amount: "%s"', $clearedAmount));
+        \Log::debug(sprintf('Amount: "%s"', $amount));
         $difference      = bcadd(bcadd(bcsub($startBalance, $endBalance), $clearedAmount), $amount);
         $diffCompare     = bccomp($difference, '0');
         $countCleared    = count($clearedJournals);

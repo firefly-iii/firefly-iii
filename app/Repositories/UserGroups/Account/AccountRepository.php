@@ -252,10 +252,8 @@ class AccountRepository implements AccountRepositoryInterface
         }
     }
 
-    /**
-     * @inheritDoc
-     */
-    #[\Override] public function getAccountsInOrder(array $types, array $sort, int $startRow, int $endRow): Collection
+    #[\Override]
+    public function getAccountsInOrder(array $types, array $sort, int $startRow, int $endRow): Collection
     {
         $query = $this->userGroup->accounts();
         if (0 !== count($types)) {
@@ -280,12 +278,14 @@ class AccountRepository implements AccountRepositoryInterface
         return $query->get(['accounts.*']);
     }
 
-    #[\Override] public function countAccounts(array $types): int
+    #[\Override]
+    public function countAccounts(array $types): int
     {
         $query = $this->userGroup->accounts();
         if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }
+
         return $query->count();
     }
 }

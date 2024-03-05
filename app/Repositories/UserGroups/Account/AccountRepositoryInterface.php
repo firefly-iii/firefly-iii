@@ -53,15 +53,8 @@ interface AccountRepositoryInterface
 
     /**
      * Used in the infinite accounts list.
-     *
-     * @param array $types
-     * @param array $sort
-     * @param int   $startRow
-     * @param int   $endRow
-     *
-     * @return Collection
      */
-public function getAccountsInOrder(array $types,  array $sort, int $startRow, int $endRow): Collection;
+    public function getAccountsInOrder(array $types, array $sort, int $startRow, int $endRow): Collection;
 
     public function getActiveAccountsByType(array $types): Collection;
 
