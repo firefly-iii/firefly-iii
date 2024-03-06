@@ -73,15 +73,17 @@ class OperatorQuerySearch implements SearchInterface
     private CurrencyRepositoryInterface $currencyRepository;
     private array                       $excludeTags;
     private array                       $includeTags;
-    private array                       $invalidOperators;
-    private int                         $limit;
-    private Collection                  $operators;
-    private int                         $page;
-    private array                       $prohibitedWords;
-    private float                       $startTime;
-    private TagRepositoryInterface      $tagRepository;
-    private array                       $validOperators;
-    private array                       $words;
+    // added to fix #8632
+    private array                  $includeAnyTags;
+    private array                  $invalidOperators;
+    private int                    $limit;
+    private Collection             $operators;
+    private int                    $page;
+    private array                  $prohibitedWords;
+    private float                  $startTime;
+    private TagRepositoryInterface $tagRepository;
+    private array                  $validOperators;
+    private array                  $words;
 
     /**
      * OperatorQuerySearch constructor.
@@ -93,6 +95,7 @@ class OperatorQuerySearch implements SearchInterface
         $this->page               = 1;
         $this->words              = [];
         $this->excludeTags        = [];
+        $this->includeAnyTags     = [];
         $this->includeTags        = [];
         $this->prohibitedWords    = [];
         $this->invalidOperators   = [];
@@ -1112,8 +1115,9 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 if ($tags->count() > 0) {
-                    $ids               = array_values($tags->pluck('id')->toArray());
-                    $this->includeTags = array_unique(array_merge($this->includeTags, $ids));
+                    // changed from includeTags to includeAnyTags for #8632
+                    $ids                  = array_values($tags->pluck('id')->toArray());
+                    $this->includeAnyTags = array_unique(array_merge($this->includeAnyTags, $ids));
                 }
 
                 break;
@@ -1125,8 +1129,9 @@ class OperatorQuerySearch implements SearchInterface
                     $this->collector->findNothing();
                 }
                 if ($tags->count() > 0) {
-                    $ids               = array_values($tags->pluck('id')->toArray());
-                    $this->includeTags = array_unique(array_merge($this->includeTags, $ids));
+                    // changed from includeTags to includeAnyTags for #8632
+                    $ids                  = array_values($tags->pluck('id')->toArray());
+                    $this->includeAnyTags = array_unique(array_merge($this->includeAnyTags, $ids));
                 }
 
                 break;
@@ -2724,6 +2729,19 @@ class OperatorQuerySearch implements SearchInterface
                 }
             }
             $this->collector->setAllTags($collection);
+        }
+        // if include ANY tags, include them: (see #8632)
+        if (count($this->includeAnyTags) > 0) {
+            app('log')->debug(sprintf('%d include ANY tag(s)', count($this->includeAnyTags)));
+            $collection = new Collection();
+            foreach ($this->includeAnyTags as $tagId) {
+                $tag = $this->tagRepository->find($tagId);
+                if (null !== $tag) {
+                    app('log')->debug(sprintf('Include ANY tag "%s"', $tag->tag));
+                    $collection->push($tag);
+                }
+            }
+            $this->collector->setTags($collection);
         }
     }
 

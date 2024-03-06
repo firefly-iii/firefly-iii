@@ -34,6 +34,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ReconcileController
@@ -73,7 +74,6 @@ class ReconcileController extends Controller
         $accountCurrency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
         $amount          = '0';
         $clearedAmount   = '0';
-        $route           = '';
 
         if (null === $start && null === $end) {
             throw new FireflyException('Invalid dates submitted.');
@@ -103,14 +103,11 @@ class ReconcileController extends Controller
             $clearedJournals = $collector->getExtractedJournals();
         }
 
-        app('log')->debug('Start transaction loop');
-
         /** @var array $journal */
         foreach ($journals as $journal) {
             $amount = $this->processJournal($account, $accountCurrency, $journal, $amount);
         }
         app('log')->debug(sprintf('Final amount is %s', $amount));
-        app('log')->debug('End transaction loop');
 
         /** @var array $journal */
         foreach ($clearedJournals as $journal) {
@@ -118,35 +115,17 @@ class ReconcileController extends Controller
                 $clearedAmount = $this->processJournal($account, $accountCurrency, $journal, $clearedAmount);
             }
         }
-        \Log::debug(sprintf('Start balance: "%s"', $startBalance));
-        \Log::debug(sprintf('End balance: "%s"', $endBalance));
-        \Log::debug(sprintf('Cleared amount: "%s"', $clearedAmount));
-        \Log::debug(sprintf('Amount: "%s"', $amount));
+        Log::debug(sprintf('Start balance: "%s"', $startBalance));
+        Log::debug(sprintf('End balance: "%s"', $endBalance));
+        Log::debug(sprintf('Cleared amount: "%s"', $clearedAmount));
+        Log::debug(sprintf('Amount: "%s"', $amount));
         $difference      = bcadd(bcadd(bcsub($startBalance, $endBalance), $clearedAmount), $amount);
         $diffCompare     = bccomp($difference, '0');
         $countCleared    = count($clearedJournals);
-
         $reconSum        = bcadd(bcadd($startBalance, $amount), $clearedAmount);
 
         try {
-            $view = view(
-                'accounts.reconcile.overview',
-                compact(
-                    'account',
-                    'start',
-                    'diffCompare',
-                    'difference',
-                    'end',
-                    'clearedAmount',
-                    'startBalance',
-                    'endBalance',
-                    'amount',
-                    'route',
-                    'countCleared',
-                    'reconSum',
-                    'selectedIds'
-                )
-            )->render();
+            $view = view('accounts.reconcile.overview', compact('account', 'start', 'diffCompare', 'difference', 'end', 'clearedAmount', 'startBalance', 'endBalance', 'amount', 'route', 'countCleared', 'reconSum', 'selectedIds'))->render();
         } catch (\Throwable $e) {
             app('log')->debug(sprintf('View error: %s', $e->getMessage()));
             app('log')->error($e->getTraceAsString());
@@ -155,10 +134,7 @@ class ReconcileController extends Controller
             throw new FireflyException($view, 0, $e);
         }
 
-        $return          = [
-            'post_url' => $route,
-            'html'     => $view,
-        ];
+        $return          = ['post_url' => $route, 'html' => $view];
 
         return response()->json($return);
     }
