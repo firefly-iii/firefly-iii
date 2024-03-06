@@ -72,31 +72,6 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $this->run();
     }
 
-    public function getVersion(): int
-    {
-        return $this->version;
-    }
-
-    public function setObjects(Collection $objects): void
-    {
-        $this->objects = $objects;
-    }
-
-    public function setTrigger(int $trigger): void
-    {
-        $this->trigger = $trigger;
-    }
-
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    public function setWebhooks(Collection $webhooks): void
-    {
-        $this->webhooks = $webhooks;
-    }
-
     private function getWebhooks(): Collection
     {
         return $this->user->webhooks()->where('active', true)->where('trigger', $this->trigger)->get(['webhooks.*']);
@@ -206,6 +181,11 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $this->storeMessage($webhook, $basicMessage);
     }
 
+    public function getVersion(): int
+    {
+        return $this->version;
+    }
+
     private function collectAccounts(TransactionGroup $transactionGroup): Collection
     {
         $accounts = new Collection();
@@ -231,5 +211,25 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $webhookMessage->message = $message;
         $webhookMessage->save();
         app('log')->debug(sprintf('Stored new webhook message #%d', $webhookMessage->id));
+    }
+
+    public function setObjects(Collection $objects): void
+    {
+        $this->objects = $objects;
+    }
+
+    public function setTrigger(int $trigger): void
+    {
+        $this->trigger = $trigger;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function setWebhooks(Collection $webhooks): void
+    {
+        $this->webhooks = $webhooks;
     }
 }

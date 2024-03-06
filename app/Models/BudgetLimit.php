@@ -74,18 +74,18 @@ class BudgetLimit extends Model
 
     protected $casts
                         = [
-                            'created_at'  => 'datetime',
-                            'updated_at'  => 'datetime',
-                            'start_date'  => 'date',
-                            'end_date'    => 'date',
-                            'auto_budget' => 'boolean',
-                        ];
+            'created_at'  => 'datetime',
+            'updated_at'  => 'datetime',
+            'start_date'  => 'date',
+            'end_date'    => 'date',
+            'auto_budget' => 'boolean',
+        ];
     protected $dispatchesEvents
                         = [
-                            'created' => Created::class,
-                            'updated' => Updated::class,
-                            'deleted' => Deleted::class,
-                        ];
+            'created' => Created::class,
+            'updated' => Updated::class,
+            'deleted' => Deleted::class,
+        ];
 
     protected $fillable = ['budget_id', 'start_date', 'end_date', 'amount', 'transaction_currency_id'];
 

@@ -83,6 +83,13 @@ class InfiniteListRequest extends FormRequest
         return $this->getCarbonDate('end');
     }
 
+    public function getAccountTypes(): array
+    {
+        $type = (string)$this->get('type', 'default');
+
+        return $this->mapAccountTypes($type);
+    }
+
     public function getPage(): int
     {
         $page = $this->convertInteger('page');
@@ -120,13 +127,6 @@ class InfiniteListRequest extends FormRequest
         $type = (string)$this->get('type', 'default');
 
         return $this->mapTransactionTypes($type);
-    }
-
-    public function getAccountTypes(): array
-    {
-        $type = (string)$this->get('type', 'default');
-
-        return $this->mapAccountTypes($type);
     }
 
     public function rules(): array

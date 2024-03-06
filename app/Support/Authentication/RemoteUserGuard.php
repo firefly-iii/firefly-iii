@@ -39,7 +39,7 @@ class RemoteUserGuard implements Guard
 {
     protected Application  $application;
     protected UserProvider $provider;
-    protected ?User  $user;
+    protected ?User        $user;
 
     /**
      * Create a new authentication guard.

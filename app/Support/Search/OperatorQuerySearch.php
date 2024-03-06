@@ -72,9 +72,9 @@ class OperatorQuerySearch implements SearchInterface
     private GroupCollectorInterface     $collector;
     private CurrencyRepositoryInterface $currencyRepository;
     private array                       $excludeTags;
-    private array                       $includeTags;
-    // added to fix #8632
     private array                  $includeAnyTags;
+    // added to fix #8632
+    private array                       $includeTags;
     private array                  $invalidOperators;
     private int                    $limit;
     private Collection             $operators;

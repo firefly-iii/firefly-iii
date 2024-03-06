@@ -35,47 +35,6 @@ use Illuminate\Http\JsonResponse;
  */
 class TransactionController extends Controller
 {
-    public function list(ListRequest $request): JsonResponse
-    {
-        // collect transactions:
-        $pageSize  = $this->parameters->get('limit');
-        $page      = $request->getPage();
-        $page      = max($page, 1);
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setUserGroup(auth()->user()->userGroup)
-            ->withAPIInformation()
-            ->setLimit($pageSize)
-            ->setPage($page)
-            ->setTypes($request->getTransactionTypes())
-        ;
-
-        $start     = $this->parameters->get('start');
-        $end       = $this->parameters->get('end');
-        if (null !== $start) {
-            $collector->setStart($start);
-        }
-        if (null !== $end) {
-            $collector->setEnd($end);
-        }
-
-        $paginator = $collector->getPaginatedGroups();
-        $params    = $request->buildParams($pageSize);
-        $paginator->setPath(
-            sprintf(
-                '%s?%s',
-                route('api.v2.transactions.list'),
-                $params
-            )
-        );
-
-        return response()
-            ->json($this->jsonApiList('transactions', $paginator, new TransactionGroupTransformer()))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
-    }
-
     public function infiniteList(InfiniteListRequest $request): JsonResponse
     {
         // get sort instructions
@@ -115,5 +74,45 @@ class TransactionController extends Controller
             ->json($this->jsonApiList('transactions', $paginator, new TransactionGroupTransformer()))
             ->header('Content-Type', self::CONTENT_TYPE)
         ;
+    }
+
+    public function list(ListRequest $request): JsonResponse
+    {
+        // collect transactions:
+        $pageSize  = $this->parameters->get('limit');
+        $page      = $request->getPage();
+        $page      = max($page, 1);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUserGroup(auth()->user()->userGroup)
+            ->withAPIInformation()
+            ->setLimit($pageSize)
+            ->setPage($page)
+            ->setTypes($request->getTransactionTypes())
+        ;
+
+        $start     = $this->parameters->get('start');
+        $end       = $this->parameters->get('end');
+        if (null !== $start) {
+            $collector->setStart($start);
+        }
+        if (null !== $end) {
+            $collector->setEnd($end);
+        }
+
+        $paginator = $collector->getPaginatedGroups();
+        $params    = $request->buildParams($pageSize);
+        $paginator->setPath(
+            sprintf(
+                '%s?%s',
+                route('api.v2.transactions.list'),
+                $params
+            )
+        );
+
+        return response()
+            ->json($this->jsonApiList('transactions', $paginator, new TransactionGroupTransformer()))
+            ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

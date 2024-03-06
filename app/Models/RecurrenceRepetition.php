@@ -76,14 +76,14 @@ class RecurrenceRepetition extends Model
 
     protected $casts
                                            = [
-                                               'created_at'        => 'datetime',
-                                               'updated_at'        => 'datetime',
-                                               'deleted_at'        => 'datetime',
-                                               'repetition_type'   => 'string',
-                                               'repetition_moment' => 'string',
-                                               'repetition_skip'   => 'int',
-                                               'weekend'           => 'int',
-                                           ];
+            'created_at'        => 'datetime',
+            'updated_at'        => 'datetime',
+            'deleted_at'        => 'datetime',
+            'repetition_type'   => 'string',
+            'repetition_moment' => 'string',
+            'repetition_skip'   => 'int',
+            'weekend'           => 'int',
+        ];
 
     protected $fillable                    = ['recurrence_id', 'weekend', 'repetition_type', 'repetition_moment', 'repetition_skip'];
 

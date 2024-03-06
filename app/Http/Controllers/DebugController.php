@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Models\AccountType;

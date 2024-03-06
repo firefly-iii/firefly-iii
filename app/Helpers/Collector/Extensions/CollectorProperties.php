@@ -33,10 +33,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 trait CollectorProperties
 {
+    public const string TEST = 'Test';
+
     /** @var array<int, string> */
     public array $sorting;
-    public const string TEST = 'Test';
-    private ?int $endRow;
+    private ?int    $endRow;
     private bool    $expandGroupSearch;
     private array   $fields;
     private bool    $hasAccountInfo;
@@ -52,7 +53,7 @@ trait CollectorProperties
     private ?int    $page;
     private array   $postFilters;
     private HasMany $query;
-    private ?int $startRow;
+    private ?int    $startRow;
     private array   $stringFields;
     /*
      * This array is used to collect ALL tags the user may search for (using 'setTags').

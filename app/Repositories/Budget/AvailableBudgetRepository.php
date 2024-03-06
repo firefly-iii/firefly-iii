@@ -202,7 +202,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface
             $availableBudget->user()->associate($this->user);
             $availableBudget->transactionCurrency()->associate($currency);
             $availableBudget->start_date = $start->startOfDay()->format('Y-m-d'); // @phpstan-ignore-line
-            $availableBudget->end_date   = $end->endOfDay()->format('Y-m-d'); // @phpstan-ignore-line
+            $availableBudget->end_date   = $end->endOfDay()->format('Y-m-d');     // @phpstan-ignore-line
         }
         $availableBudget->amount = $amount;
         $availableBudget->save();
