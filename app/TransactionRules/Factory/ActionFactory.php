@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Factory;
@@ -27,6 +28,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Support\Domain;
 use FireflyIII\TransactionRules\Actions\ActionInterface;
+use FireflyIII\TransactionRules\Expressions\ActionExpressionEvaluator;
+use FireflyIII\TransactionRules\Factory\ExpressionLanguageFactory;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -56,7 +59,10 @@ class ActionFactory
         $class = self::getActionClass($action->action_type);
         Log::debug(sprintf('self::getActionClass("%s") = "%s"', $action->action_type, $class));
 
-        return new $class($action);
+        $expressionLanguage = ExpressionLanguageFactory::get();
+        $expressionEvaluator = new ActionExpressionEvaluator($expressionLanguage, $action->action_value);
+
+        return new $class($action, $expressionEvaluator);
     }
 
     /**
