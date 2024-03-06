@@ -104,6 +104,7 @@ Route::group(
         'as'        => 'api.v2.accounts.',
     ],
     static function (): void {
+        Route::get('', ['uses' => 'IndexController@index', 'as' => 'show']);
         Route::get('{account}', ['uses' => 'ShowController@show', 'as' => 'show']);
     }
 );
@@ -169,18 +170,6 @@ Route::group(
     ],
     static function (): void {
         Route::get('', ['uses' => 'TransactionController@infiniteList', 'as' => 'list']);
-    }
-);
-
-// infinite accounts list:
-Route::group(
-    [
-        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Account',
-        'prefix'    => 'v2/infinite/accounts',
-        'as'        => 'api.v2.infinite.accounts.',
-    ],
-    static function (): void {
-        Route::get('', ['uses' => 'IndexController@infiniteList', 'as' => 'list']);
     }
 );
 

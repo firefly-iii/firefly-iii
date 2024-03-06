@@ -49,16 +49,50 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col">
-                                    <h3 class="card-title">Accounts</h3>
+                                    <h3 class="card-title">Accounts (ungrouped)</h3>
                                 </div>
                                 <div class="col text-end">
                                 </div>
                             </div>
                         </div>
                         <div class="card-body p-0">
-                            <div id="grid" class="ag-theme-alpine-auto-dark ag-theme-firefly-iii" style="height: 500px;">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>Active?</td>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Account number</td>
+                                    <td>Current balance</td>
+                                    <td>Last activity</td>
+                                    <td>Balance difference</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <template x-for="(account, index) in accounts" :key="index">
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        <a :href="'./accounts/show/' + account.id">
+                                            <span x-text="account.name"></span>
+                                        </a>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                </template>
+                                </tbody>
 
-                            </div>
+                            </table>
                         </div>
                     </div>
 
