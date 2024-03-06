@@ -82,7 +82,7 @@ The most exciting features are:
 Then the things that make you go "yeah OK, makes sense".
 
 * A [double-entry](https://en.wikipedia.org/wiki/Double-entry_bookkeeping_system) bookkeeping system.
-* Save towards a goal using [piggy banks](https://docs.firefly-iii.org/explanation/financial-concepts/piggies/).
+* Save towards a goal using [piggy banks](https://docs.firefly-iii.org/explanation/financial-concepts/piggy-banks/).
 * View [income and expense reports](https://docs.firefly-iii.org/how-to/firefly-iii/finances/reports/).
 
 And the things you would hope for but not expect:
