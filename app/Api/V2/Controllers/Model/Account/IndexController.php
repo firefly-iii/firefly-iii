@@ -28,7 +28,6 @@ use FireflyIII\Api\V2\Request\Model\Account\IndexRequest;
 use FireflyIII\Api\V2\Request\Model\Transaction\InfiniteListRequest;
 use FireflyIII\Repositories\UserGroups\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\V2\AccountTransformer;
-use FireflyIII\Transformers\V2\BillTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -64,11 +63,11 @@ class IndexController extends Controller
     public function index(IndexRequest $request): JsonResponse
     {
         $this->repository->resetAccountOrder();
-        $types = $request->getAccountTypes();
-        $accounts       = $this->repository->getAccountsByType($types);
+        $types       = $request->getAccountTypes();
+        $accounts    = $this->repository->getAccountsByType($types);
         $pageSize    = $this->parameters->get('limit');
         $count       = $accounts->count();
-        $accounts       = $accounts->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $accounts    = $accounts->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator   = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
         $transformer = new AccountTransformer();
         $transformer->setParameters($this->parameters); // give params to transformer
@@ -76,7 +75,7 @@ class IndexController extends Controller
         return response()
             ->json($this->jsonApiList('accounts', $paginator, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE)
-            ;
+        ;
     }
 
     public function infiniteList(InfiniteListRequest $request): JsonResponse

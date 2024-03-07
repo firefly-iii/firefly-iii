@@ -56,10 +56,10 @@ return [
  */
 
     // invite
-    'invitation_created_subject'              => 'An invitation has been created',
-    'invitation_created_body'                 => 'Admin user ":email" created a user invitation which can be used by whoever is behind email address ":invitee". The invite will be valid for 48hrs.',
-    'invite_user_subject'                     => 'You\'ve been invited to create a Firefly III account.',
-    'invitation_introduction'                 => 'You\'ve been invited to create a Firefly III account on **:host**. Firefly III  is a personal, self-hosted, private personal finance manager. All the cool kids are using it.',
+    'invitation_created_subject'              => 'คำเชิญถูกสร้างขึ้นสร้างแล้ว',
+    'invitation_created_body'                 => 'ผู้ดูแลระบบ ":email" ได้สร้างคำเชิญให้ผู้ใช้ตามที่อยู่อีเมล ":invitee" คำเชิญจะมีอายุการใช้งาน 48 ชั่วโมง',
+    'invite_user_subject'                     => 'คุณได้รับเชิญให้สร้างบัญชี Firefly III',
+    'invitation_introduction'                 => 'คุณได้รับเชิญให้สร้างบัญชี Firefly III บน **:host** Firefly III เป็นผู้จัดการการเงินส่วนบุคคลส่วนตัวที่โฮสต์เอง',
     'invitation_invited_by'                   => 'You\'ve been invited by ":admin" and this invitation was sent to ":invitee". That\'s you, right?',
     'invitation_url'                          => 'The invitation is valid for 48 hours and can be redeemed by surfing to [Firefly III](:url). Enjoy!',
 

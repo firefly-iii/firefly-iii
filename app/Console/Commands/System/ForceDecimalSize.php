@@ -74,19 +74,19 @@ class ForceDecimalSize extends Command
     private string $regularExpression;
     private array  $tables
                                 = [
-            'accounts'                 => ['virtual_balance'],
-            'auto_budgets'             => ['amount'],
-            'available_budgets'        => ['amount'],
-            'bills'                    => ['amount_min', 'amount_max'],
-            'budget_limits'            => ['amount'],
-            'currency_exchange_rates'  => ['rate', 'user_rate'],
-            'limit_repetitions'        => ['amount'],
-            'piggy_bank_events'        => ['amount'],
-            'piggy_bank_repetitions'   => ['currentamount'],
-            'piggy_banks'              => ['targetamount'],
-            'recurrences_transactions' => ['amount', 'foreign_amount'],
-            'transactions'             => ['amount', 'foreign_amount'],
-        ];
+                                    'accounts'                 => ['virtual_balance'],
+                                    'auto_budgets'             => ['amount'],
+                                    'available_budgets'        => ['amount'],
+                                    'bills'                    => ['amount_min', 'amount_max'],
+                                    'budget_limits'            => ['amount'],
+                                    'currency_exchange_rates'  => ['rate', 'user_rate'],
+                                    'limit_repetitions'        => ['amount'],
+                                    'piggy_bank_events'        => ['amount'],
+                                    'piggy_bank_repetitions'   => ['currentamount'],
+                                    'piggy_banks'              => ['targetamount'],
+                                    'recurrences_transactions' => ['amount', 'foreign_amount'],
+                                    'transactions'             => ['amount', 'foreign_amount'],
+                                ];
 
     /**
      * Execute the console command.

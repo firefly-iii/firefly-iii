@@ -114,36 +114,36 @@ class Bill extends Model
 
     protected $casts
                       = [
-            'created_at'      => 'datetime',
-            'updated_at'      => 'datetime',
-            'deleted_at'      => 'datetime',
-            'date'            => 'date',
-            'end_date'        => 'date',
-            'extension_date'  => 'date',
-            'skip'            => 'int',
-            'automatch'       => 'boolean',
-            'active'          => 'boolean',
-            'name_encrypted'  => 'boolean',
-            'match_encrypted' => 'boolean',
-        ];
+                          'created_at'      => 'datetime',
+                          'updated_at'      => 'datetime',
+                          'deleted_at'      => 'datetime',
+                          'date'            => 'date',
+                          'end_date'        => 'date',
+                          'extension_date'  => 'date',
+                          'skip'            => 'int',
+                          'automatch'       => 'boolean',
+                          'active'          => 'boolean',
+                          'name_encrypted'  => 'boolean',
+                          'match_encrypted' => 'boolean',
+                      ];
 
     protected $fillable
                       = [
-            'name',
-            'match',
-            'amount_min',
-            'user_id',
-            'user_group_id',
-            'amount_max',
-            'date',
-            'repeat_freq',
-            'skip',
-            'automatch',
-            'active',
-            'transaction_currency_id',
-            'end_date',
-            'extension_date',
-        ];
+                          'name',
+                          'match',
+                          'amount_min',
+                          'user_id',
+                          'user_group_id',
+                          'amount_max',
+                          'date',
+                          'repeat_freq',
+                          'skip',
+                          'automatch',
+                          'active',
+                          'transaction_currency_id',
+                          'end_date',
+                          'extension_date',
+                      ];
 
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
 

@@ -59,9 +59,9 @@ class AccountMeta extends Model
 
     protected $casts
                         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
+                            'created_at' => 'datetime',
+                            'updated_at' => 'datetime',
+                        ];
 
     protected $fillable = ['account_id', 'name', 'data'];
 
